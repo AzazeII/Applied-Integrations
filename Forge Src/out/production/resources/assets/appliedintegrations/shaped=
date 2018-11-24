@@ -1,0 +1,26 @@
+shaped=
+	mc:iron_ingot ae2:ItemMaterial.FormationCore mc:iron_ingot,
+	redstone mc:piston redstone
+	-> ai:Energy.ExportBus
+
+shapeless=
+	ae2:ItemPart.ExportBus redstone
+	-> ai:Energy.ExportBus
+
+shaped=
+	redstone ae2:ItemMaterial.AnnihilationCore redstone,
+	mc:iron_ingot mc:sticky_piston mc:iron_ingot
+	-> ai:Energy.ImportBus
+
+shapeless=
+	ae2:ItemPart.ImportBus redstone
+	-> ai:Energy.ImportBus
+
+shapeless=
+	monitor ae2:ItemMaterial.FormationCore ae2:ItemMaterial.AnnihilationCore ae2:ItemMaterial.LogicProcessor redstone redstone
+	-> ai:Energy.terminal
+
+
+shapeless=
+	interface mc:sticky_piston mc:piston redstone redstone
+	-> ai:Energy.StorageBus
