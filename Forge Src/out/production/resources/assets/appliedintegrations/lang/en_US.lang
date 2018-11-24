@@ -1,0 +1,7 @@
+﻿itemGroup.appliedintegrations.name=Applied Integrations
+
+item.appliedintegrations.aeparts.Energy.ImportBus.name=ME Energy import bus
+item.appliedintegrations.aeparts.Energy.ExportBus.name=ME Energy export bus
+item.appliedintegrations.aeparts.Energy.Interface.name=ME Energy interface
+item.appliedintegrations.aeparts.Energy.terminal.name=ME Energy terminal
+item.appliedintegrations.aeparts.Energy.StorageBus.name=ME Energy storage bus
