@@ -98,8 +98,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyStoragePart.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="510">
-              <caret line="105" column="48" selection-start-line="105" selection-start-column="48" selection-end-line="105" selection-end-column="48" />
+            <state relative-caret-position="600">
+              <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
             </state>
           </provider>
         </entry>
@@ -200,7 +200,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>AILog.info</find>
       <find>client</find>
       <find>receive</find>
       <find>RF</find>
@@ -225,14 +224,14 @@
       <find>getClient</find>
       <find>Filter not null</find>
       <find>notify</find>
-      <find>essentia</find>
       <find>getMaxE</find>
       <find>Aspect</find>
       <find>aspect</find>
       <find>QuE</find>
+      <find>Energys</find>
+      <find>essentia</find>
     </findStrings>
     <replaceStrings>
-      <replace>EnergyStorageCell</replace>
       <replace>getHostSelectedEnergy</replace>
       <replace>QueStrings</replace>
       <replace>IEnergyReceiver</replace>
@@ -262,6 +261,7 @@
       <replace>this.getSide()</replace>
       <replace>protected</replace>
       <replace>energy</replace>
+      <replace>Energies</replace>
     </replaceStrings>
     <dirStrings>
       <dir />
@@ -463,7 +463,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543082685948" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1543082698087" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.5" />
@@ -556,7 +556,7 @@
     <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22790202" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.22790202" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -568,7 +568,7 @@
       <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
-      <window_info anchor="bottom" id="Find" order="5" sideWeight="0.48136315" visible="true" weight="0.0" />
+      <window_info active="true" anchor="bottom" id="Find" order="5" sideWeight="0.48136315" visible="true" weight="0.0" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
       <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.49739584" weight="0.0" />
@@ -990,8 +990,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyStoragePart.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="105" column="48" selection-start-line="105" selection-start-column="48" selection-end-line="105" selection-end-column="48" />
+        <state relative-caret-position="600">
+          <caret line="111" lean-forward="true" selection-start-line="111" selection-end-line="111" />
         </state>
       </provider>
     </entry>
