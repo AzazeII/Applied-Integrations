@@ -5,7 +5,7 @@ import java.util.List;
 
 
 import AppliedIntegrations.API.IEnergyDuality;
-import AppliedIntegrations.API.IInventoryUpdateReceiver;
+import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
@@ -19,10 +19,8 @@ import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.InvOperation;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Render.TextureManager;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.EffectiveSide;
-import AppliedIntegrations.Utils.AIPrivateInventory;
-import AppliedIntegrations.grid.EnergyMonitor;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
@@ -68,7 +66,7 @@ import static AppliedIntegrations.API.LiquidAIEnergy.RF;
  */
 public class PartEnergyStorage
 		extends AIPart
-		implements IEnergyDuality,IGridTickable, ICellContainer, IEnergyMachine, IAEAppEngInventory, IPriorityHost, IInventoryUpdateReceiver {
+		implements IEnergyDuality,IGridTickable, ICellContainer, IEnergyMachine, IAEAppEngInventory, IPriorityHost, IInventoryHost {
 
 	public static final int FILTER_SIZE = 9;
 
@@ -100,7 +98,7 @@ public class PartEnergyStorage
 	/**
 	 * Upgrade inventory
 	 */
-	private final AIPrivateInventory upgradeInventory = new AIPrivateInventory("StorageBusUpgradeInv",5,1,this );
+	private final AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("StorageBusUpgradeInv",5,1,this );
 
 	/**
 	 * Storage bus priority
@@ -328,7 +326,7 @@ public class PartEnergyStorage
 	 *
 	 * @return
 	 */
-	public AIPrivateInventory getUpgradeInventory()
+	public AIGridNodeInventory getUpgradeInventory()
 	{
 		return this.upgradeInventory;
 	}
@@ -340,7 +338,7 @@ public class PartEnergyStorage
 		}
 
 
-		if (EffectiveSide.isServerSide()) {
+		if(this.getHostTile().getWorldObj().isRemote == false){
 			player.openGui(AppliedIntegrations.instance, 3, this.getHostTile().getWorldObj(),
 					this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
 		}

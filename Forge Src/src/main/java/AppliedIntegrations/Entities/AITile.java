@@ -1,8 +1,11 @@
 package AppliedIntegrations.Entities;
 
+import AppliedIntegrations.Entities.Server.TileServerPort;
+import AppliedIntegrations.Entities.Server.TileServerRib;
 import appeng.api.AEApi;
 import appeng.api.networking.*;
 import appeng.api.networking.security.IActionHost;
+import appeng.api.parts.IPartHost;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
@@ -13,6 +16,10 @@ import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -31,14 +38,14 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler",modid = "CoFHAPI",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
-public abstract class AITile extends TileEntity implements IEnergySink,IEnergyReceiver,IInventory,IActionHost,IGridHost,IGridBlock {
+public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock {
 
     public IGridNode theGridNode = null;
     public IGridConnection theConnection;
     private IGridBlock gridBlock;
     private IGridNode node = null;
 
-    private boolean loaded = false;
+    protected boolean loaded = false;
     private boolean cached = false;
 
     public Object getServerGuiElement( final EntityPlayer player )
@@ -50,62 +57,24 @@ public abstract class AITile extends TileEntity implements IEnergySink,IEnergyRe
         return null;
     }
 
+    /**
+     * Prepare a Packet to send the state of the {@link TileEntity} to the Client
+     */
     @Override
-    public int getSizeInventory() {
-        return 0;
+    public Packet getDescriptionPacket() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        writeToNBT(nbt);
+        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
     }
 
+    /**
+     * Process a Packet to update the state of the {@link TileEntity} on the Client
+     */
     @Override
-    public ItemStack getStackInSlot(int p_70301_1_) {
-        return null;
-    }
-
-    @Override
-    public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
-        return null;
-    }
-
-    @Override
-    public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
-        return null;
-    }
-
-    @Override
-    public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
-
-    }
-
-    public String getInventoryName() {
-        return null;
-    }
-
-    public boolean hasCustomInventoryName() {
-        return false;
-    }
-
-    @Override
-    public int getInventoryStackLimit() {
-        return 64;
-    }
-
-    @Override
-    public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
-        return true;
-    }
-
-    @Override
-    public void openInventory() {
-
-    }
-
-    @Override
-    public void closeInventory() {
-
-    }
-
-    @Override
-    public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
-        return true;
+    public void onDataPacket(NetworkManager pNet, S35PacketUpdateTileEntity pPacket) {
+        super.onDataPacket(pNet, pPacket);
+        NBTTagCompound nbt = pPacket.func_148857_g();
+        readFromNBT(nbt);
     }
     @Override
     public double getIdlePowerUsage() {
@@ -142,7 +111,6 @@ public abstract class AITile extends TileEntity implements IEnergySink,IEnergyRe
         // TODO Auto-generated method stub
 
     }
-
     @Override
     public void setNetworkStatus(IGrid grid, int channelsInUse) {
         // TODO Auto-generated method stub
@@ -173,7 +141,13 @@ public abstract class AITile extends TileEntity implements IEnergySink,IEnergyRe
         // TODO Auto-generated method stub
 
     }
+    public boolean isServer() {
+        return !isClient();
+    }
 
+    public boolean isClient() {
+        return getWorldObj().isRemote;
+    }
     @Override
     public ItemStack getMachineRepresentation() {
         // TODO Auto-generated method stub
@@ -216,5 +190,8 @@ public abstract class AITile extends TileEntity implements IEnergySink,IEnergyRe
             loaded = true;
             createAELink();
         }
+    }
+    public void notifyBlock(){
+        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
     }
 }

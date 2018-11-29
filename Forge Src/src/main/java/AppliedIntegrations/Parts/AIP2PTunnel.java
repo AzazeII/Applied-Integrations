@@ -1,13 +1,12 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.Parts.AIPart;
-import AppliedIntegrations.Utils.AIPrivateInventory;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartRenderHelper;
 import appeng.client.texture.CableBusTextures;
-import appeng.parts.p2p.PartP2PTunnel;
 import com.google.common.base.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,7 +24,7 @@ public class AIP2PTunnel extends AIPart {
     }
 
     @Override
-    protected AIPrivateInventory getUpgradeInventory() {
+    protected AIGridNodeInventory getUpgradeInventory() {
         return null;
     }
 

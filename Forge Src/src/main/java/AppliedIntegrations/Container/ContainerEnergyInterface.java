@@ -7,31 +7,22 @@ import AppliedIntegrations.Entities.TileEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketClientFilter;
 import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.AIPrivateInventory;
-import appeng.api.util.DimensionalCoord;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.container.slot.SlotRestrictedInput;
 import com.google.common.collect.Maps;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerFurnace;
-import net.minecraft.inventory.ContainerPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
-import scala.Enumeration;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static AppliedIntegrations.API.IEnergyInterface.FlowMode.Gui;
-import static AppliedIntegrations.API.IEnergyInterface.FlowMode.Machine;
 import static AppliedIntegrations.API.LiquidAIEnergy.*;
 
 public class ContainerEnergyInterface extends ContainerWithNetworkTool {
@@ -95,7 +86,7 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
                     this.UPGRADE_X_POS + 1, this.UPGRADE_Y_POS);
         }
     }
-    private void addCraftingSlots(AIPrivateInventory upgradeInventory) {
+    private void addCraftingSlots(AIGridNodeInventory upgradeInventory) {
         for(int i=0;i<8;i++){
             this.addSlotToContainer(new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN,upgradeInventory,i,8+(i*18),(4*18)+149,
                     player.inventory));

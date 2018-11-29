@@ -106,6 +106,7 @@ public class BlockEnergyInterface extends BlockContainer implements ITileEntityP
 		}
 		return null;
 	}
+
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister IconRegistry) {

@@ -1,5 +1,17 @@
 itemGroup.appliedintegrations=Applied Integrations
 
+tile.ME Logic Bus Rib.name=МЭ Ребро Шины Логики
+tile.ME Logic Bus Core.name=МЭ Ядро Шины Логики
+tile.ME Logic Bus Housing.name=МЭ Обшивка Шины Логики
+tile.ME Logic Bus Port.name=МЭ Порт Шины Логики
+
+tile.ME Server Core.name=МЭ Ядро Сервера
+tile.ME Server Housing.name=МЭ Обшивка Сервера
+tile.ME Server Rib.name=МЭ Ребро Сервера
+tile.ME Server Port.name=МЭ Порт Сервера
+tile.ME Server Security Terminal.name=МЭ Терминал Безопасности Сервера
+
+
 
 tile.ME Energy Interface.name=МЭ Интерфейс Энергии
 ME Energy Interface=МЭ Интерфейс Энергии
@@ -7,6 +19,8 @@ ME Energy Export Bus=МЭ Шина Экспорта Энергии
 ME Energy Import Bus=МЭ Шина Импорта Энергии
 ME Energy Storage Bus=МЭ Шина Хранения Энергии
 ME Energy Terminal=МЭ Терминал Энергии
+
+
 
 Energy Stored=Энергии Хранится
 

@@ -8,7 +8,7 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.AIPrivateInventory;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -32,6 +32,7 @@ import cpw.mods.fml.common.Optional;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.event.EnergyTileUnloadEvent;
 
+import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -58,7 +59,7 @@ import static net.minecraftforge.common.util.ForgeDirection.UNKNOWN;
 		@Optional.Interface(iface = "ic2.api.energy.*", modid = "IC2", striprefs = true),
 		@Optional.Interface(iface = "cofh.api.energy.*",modid = "CoFHAPI",striprefs = true)
 })
-public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnergyDuality,INetworkToolAgent,IEnergyInterface,ITileStorageMonitorable,IStorageMonitorable,IInventoryUpdateReceiver {
+public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnergyDuality, IEnergySink,IEnergyReceiver,INetworkToolAgent,IEnergyInterface,ITileStorageMonitorable,IStorageMonitorable,IInventoryHost {
 
 	private static final boolean DualityMode = true;
 	private static float Entropy;
@@ -93,7 +94,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	private int torque;
 	private int omega;
 	private int alpha;
-	private AIPrivateInventory slotInventory = new AIPrivateInventory("slot.inventory",9,1,this);
+	private AIGridNodeInventory slotInventory = new AIGridNodeInventory("slot.inventory",9,1,this);
 	private float lastTemperature;
 
 	public TileEnergyInterface() {
@@ -279,7 +280,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		{
 			return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player),this,player);
 		}
-		private AIPrivateInventory upgradeInventory = new AIPrivateInventory("", 1,
+		private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("", 1,
 				1, this) {
 
 			@Override
@@ -295,7 +296,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 				return false;
 			}
 		};
-		public AIPrivateInventory getUpgradeInventory(){
+		public AIGridNodeInventory getUpgradeInventory(){
 			return this.upgradeInventory;
 		}
 		@Override
@@ -647,7 +648,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		this.forward = dir;
 	}
 
-	public AIPrivateInventory getSlotInventory() {
+	public AIGridNodeInventory getSlotInventory() {
 		return this.slotInventory;
 	}
 

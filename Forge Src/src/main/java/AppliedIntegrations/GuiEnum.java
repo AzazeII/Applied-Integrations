@@ -2,6 +2,9 @@ package AppliedIntegrations;
 
 import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.Entities.AITile;
+import AppliedIntegrations.Entities.Server.TileServerCore;
+import AppliedIntegrations.Entities.Server.TileServerRib;
+import AppliedIntegrations.Entities.Server.TileServerSecurity;
 import AppliedIntegrations.Entities.TileEnergyInterface;
 import AppliedIntegrations.Parts.IO.PartEnergyExport;
 import AppliedIntegrations.Parts.IO.PartEnergyImport;
@@ -17,7 +20,9 @@ public enum GuiEnum {
     GuiStoragePart(new PartEnergyStorage(),3),
     GuiImportPart(new PartEnergyImport(),4),
     GuiExportPart(new PartEnergyExport(),5),
-    GuiTerminalPart(new PartEnergyTerminal(),7);
+    GuiServerStorage(new TileServerCore(), 6),
+    GuiTerminalPart(new PartEnergyTerminal(),7),
+    GuiTerminalSecurity(new TileServerSecurity(), 8);
     AIPart part;
     AITile tile;
     boolean isPart;
@@ -36,6 +41,7 @@ public enum GuiEnum {
         this.ID = ID;
         this.isPart = false;
     }
+
     Object GetServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z,boolean isPart){
      if(isPart){
          return part.getServerGuiElement(player);

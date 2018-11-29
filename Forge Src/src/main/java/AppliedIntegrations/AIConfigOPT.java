@@ -24,8 +24,7 @@ public class AIConfigOPT {
         FMLCommonHandler.instance().bus().register(AppliedIntegrations.instance);
         final String param = AppliedIntegrations.AIConfig.CATEGORY_GENERAL + AppliedIntegrations.AIConfig.CATEGORY_SPLITTER + "Parameters";
         AppliedIntegrations.AIConfig.addCustomCategoryComment(param,"Parameters of machines in mod");
-        interfaceMaxStorage = AppliedIntegrations.AIConfig.get(param, IMS_Name,IMS_Default).getInt(IMS_Default);
-
+        interfaceMaxStorage = AppliedIntegrations.AIConfig.get(param, IMS_Name,IMS_Default).getInt();
 
         if(AppliedIntegrations.AIConfig.hasChanged()){
             AppliedIntegrations.AIConfig.save();

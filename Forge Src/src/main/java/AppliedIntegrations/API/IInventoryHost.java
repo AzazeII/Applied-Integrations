@@ -2,7 +2,7 @@ package AppliedIntegrations.API;
 /**
  * @Author Azazell
  */
-public interface IInventoryUpdateReceiver {
+public interface IInventoryHost {
 
 	public void onInventoryChanged();
 }

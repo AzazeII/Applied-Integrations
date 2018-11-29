@@ -16,6 +16,17 @@ item.appliedintegrationsstorage.energy.terminal.name=ME Wireless Energy Terminal
 item.appliedintegrationsitem.chaos.manipulator.name=Advanced ME Entropy Manipulator
 
 
+tile.ME Server Security Terminal.name=ME Server Security Terminal
+tile.ME Logic Bus Rib.name=ME Logic Bus Rib
+tile.ME Logic Bus Core.name=ME Logic Bus Core
+tile.ME Logic Bus Housing.name=ME Logic Bus Housing
+tile.ME Logic Bus Port.name=ME Logic Bus Port
+
+tile.ME Server Core.name=ME Server Core
+tile.ME Server Housing.name=ME Server Housing
+tile.ME Server Rib.name=ME Server Rib
+tile.ME Server Port.name=ME Server Port
+
 tile.ME Energy Interface.name=ME Energy Interface
 ME Energy Interface=ME Energy Interface
 ME Energy Import Bus=ME Energy Import Bus

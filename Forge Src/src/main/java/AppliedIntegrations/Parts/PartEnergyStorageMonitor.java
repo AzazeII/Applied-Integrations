@@ -1,28 +1,14 @@
 package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.API.EnergyStack;
-import AppliedIntegrations.API.Grid.IAIEnergyWatcher;
-import AppliedIntegrations.API.Grid.IAIEnergyWatcherHost;
-import AppliedIntegrations.API.Grid.IMEEnergyMonitor;
-import AppliedIntegrations.API.IEnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.Blocks.BlockEnergyInterface;
 import AppliedIntegrations.Render.TextureManager;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.EffectiveSide;
-import AppliedIntegrations.Utils.AIPrivateInventory;
-import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.WrenchUtil;
 import appeng.api.AEApi;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.implementations.IPowerChannelState;
-import appeng.api.implementations.parts.IPartStorageMonitor;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergyWatcher;
-import appeng.api.networking.energy.IEnergyWatcherHost;
 import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
@@ -30,46 +16,30 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartRenderHelper;
-import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AEColor;
 import appeng.client.texture.CableBusTextures;
-import appeng.core.localization.PlayerMessages;
-import appeng.util.Platform;
-import appeng.util.ReadableNumberConverter;
-import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GLAllocation;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import java.awt.*;
 import java.io.IOException;
-import java.util.Iterator;
 
 /**
  * @Author Azazell
@@ -92,7 +62,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
     }
 
     @Override
-    protected AIPrivateInventory getUpgradeInventory() {
+    protected AIGridNodeInventory getUpgradeInventory() {
         return null;
     }
 

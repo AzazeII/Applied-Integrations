@@ -15,7 +15,7 @@ import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.InvOperation;
 import AppliedIntegrations.Render.TextureManager;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.AIPrivateInventory;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Network.NetworkHandler;
 
 import appeng.api.AEApi;
@@ -102,7 +102,7 @@ import static cpw.mods.fml.relauncher.Side.CLIENT;
 public class PartEnergyInterface
 		extends AIPart
 		implements IEnergyDuality,IInventory,IEnergyInterface,IEnergyReceiver,
-		ITileStorageMonitorable, IInventoryUpdateReceiver,IEnergyMachine,IAEAppEngInventory, IPriorityHost,IGridTickable,IStorageMonitorable,ICraftingProvider,IPowerChannelState {
+		ITileStorageMonitorable, IInventoryHost,IEnergyMachine,IAEAppEngInventory, IPriorityHost,IGridTickable,IStorageMonitorable,ICraftingProvider,IPowerChannelState {
 
 	private static boolean EUloaded = false;
 	public FlowMode flowMode = FlowMode.Gui;
@@ -158,7 +158,7 @@ public class PartEnergyInterface
 	}
 
     // Registring Inventory for slots of upgrades
-	private AIPrivateInventory upgradeInventory = new AIPrivateInventory("", 1, 1, this) {
+	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("", 1, 1, this) {
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 			if(!(itemstack == null))
@@ -178,7 +178,7 @@ public class PartEnergyInterface
 	}
 
 	@Override
-	public AIPrivateInventory getUpgradeInventory() {
+	public AIGridNodeInventory getUpgradeInventory() {
 		return upgradeInventory;
 	}
 
@@ -1019,7 +1019,7 @@ public class PartEnergyInterface
 		return storage.getFluidInventory();
 	}
 
-	private AIPrivateInventory slotInventory = new AIPrivateInventory("slotInventory",9,1,this);
+	private AIGridNodeInventory slotInventory = new AIGridNodeInventory("slotInventory",9,1,this);
 
 	/**
 	 *

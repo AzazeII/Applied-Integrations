@@ -8,7 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @Author Azazell
  */
-public interface QuantumEnergisticsApi {
+public interface AppliedIntegrationsAPI {
 	public void addEnergyToShowBlacklist(Class<? extends LiquidAIEnergy> clazz);
 
 	public void addEnergyToShowBlacklist(LiquidAIEnergy Energy);
@@ -22,12 +22,6 @@ public interface QuantumEnergisticsApi {
 	public boolean canEnergySeeInTerminal(LiquidAIEnergy Energy);
 
 	public boolean canStoreEnergy(LiquidAIEnergy Energy);
-
-	/**
-	 * @deprecated incorrect spelling
-	 */
-	@Deprecated
-	public String getVerion();
 
 	public String getVersion();
 

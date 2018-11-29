@@ -209,7 +209,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 				//drawSpring(83,UNKNOWN,springValue);
 				//springValue+=1;
 			}
-			AILog.chatLog(AIConfigOPT.interfaceMaxStorage+"");
 			this.energySlot.drawWidget();
 			this.energySlot.setEnergy(this.LinkedFilter, 1);
 		}

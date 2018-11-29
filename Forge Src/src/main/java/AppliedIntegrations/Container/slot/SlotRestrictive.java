@@ -6,8 +6,7 @@ import net.minecraft.item.ItemStack;
 /**
  * @Author Azazell
  */
-public class
-SlotRestrictive
+public class SlotRestrictive
         extends Slot
 {
     private int myIndex;

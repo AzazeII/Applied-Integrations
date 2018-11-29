@@ -176,8 +176,11 @@ public class PartEnergyExport extends AIOPart {
 	@Override
 	public boolean onActivate( final EntityPlayer player, final Vec3 position )
 	{
-		player.openGui(AppliedIntegrations.instance,5,player.worldObj,hostTile.xCoord,hostTile.yCoord,hostTile.zCoord);
-		return true;
+		if(this.getHostTile().getWorldObj().isRemote == false) {
+			player.openGui(AppliedIntegrations.instance, 5, player.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
+			return true;
+		}
+		return false;
 	}
 
 	@Override

@@ -52,7 +52,7 @@ public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
         }
 
         for (int i = 0; i < 9; i++) {
-            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, (207)-47));// 173
+            addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, (207)-47));
         }
     }
 

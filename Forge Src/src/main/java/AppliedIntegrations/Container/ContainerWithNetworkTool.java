@@ -5,7 +5,7 @@ import AppliedIntegrations.Container.slot.SlotNetworkTool;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
 import AppliedIntegrations.Parts.AIOPart;
-import AppliedIntegrations.Utils.AIPrivateInventory;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.AEApi;
 import appeng.api.implementations.guiobjects.IGuiItem;
 import appeng.api.implementations.guiobjects.INetworkTool;
@@ -79,7 +79,7 @@ super(player);
         super(player);
     }
 
-    protected void addUpgradeSlots(final AIPrivateInventory upgradeInventory, final int count, final int xPosition, final int yPosition )
+    protected void addUpgradeSlots(final AIGridNodeInventory upgradeInventory, final int count, final int xPosition, final int yPosition )
     {
         Slot upgradeSlot = null;
 

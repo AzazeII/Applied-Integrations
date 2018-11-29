@@ -1,6 +1,6 @@
 package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.API.IInventoryUpdateReceiver;
+import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
@@ -9,10 +9,9 @@ import AppliedIntegrations.Gui.GuiEnergyIO;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketServerFilter;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.EffectiveSide;
 
-import AppliedIntegrations.Utils.AIPrivateInventory;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
@@ -44,7 +43,7 @@ import static cpw.mods.fml.relauncher.Side.CLIENT;
 
 public abstract class AIOPart
         extends AIPart
-        implements IGridTickable, IEnergyMachine, IAEAppEngInventory,IInventoryUpdateReceiver
+        implements IGridTickable, IEnergyMachine, IAEAppEngInventory, IInventoryHost
 {
     /**
      * How much energy can be transfered per second.
@@ -209,7 +208,7 @@ public abstract class AIOPart
             System.arraycopy( AIOPart.TIER2_INDEXS, 0, this.availableFilterSlots, 5, 4 );
         }
     }
-    private AIPrivateInventory upgradeInventory = new AIPrivateInventory("ME Energy Export/Import Bus", 4,
+    private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("ME Energy Export/Import Bus", 4,
             1, this) {
 
         @Override
@@ -263,7 +262,7 @@ public abstract class AIOPart
     }
 
     @Override
-    public AIPrivateInventory getUpgradeInventory() {
+    public AIGridNodeInventory getUpgradeInventory() {
         return this.upgradeInventory;
     }
     private void updateUpgradeState()

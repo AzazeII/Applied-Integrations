@@ -1,6 +1,5 @@
 package AppliedIntegrations.Container;
 
-import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
 import AppliedIntegrations.API.IEnergySelectorContainer;
 import AppliedIntegrations.API.LiquidAIEnergy;
 
@@ -8,34 +7,12 @@ import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
-import AppliedIntegrations.Gui.SortMode;
 import AppliedIntegrations.Parts.PartEnergyTerminal;
-import AppliedIntegrations.Utils.EffectiveSide;
-import appeng.api.AEApi;
-import appeng.api.config.ViewItems;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.security.PlayerSource;
-import appeng.api.networking.storage.IBaseMonitor;
-import appeng.api.parts.IPart;
-import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.IMEMonitorHandlerReceiver;
-import appeng.api.storage.ITerminalHost;
-import appeng.api.storage.data.IAEFluidStack;
 
-import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IItemList;
-import appeng.api.util.IConfigManager;
-import appeng.api.util.IConfigurableObject;
-import appeng.util.IConfigManagerHost;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.SlotFurnace;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-
-import javax.annotation.Nonnull;
 
 /**
  * @Author Azazell
@@ -67,7 +44,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
      */
     private static final int INPUT_POSITION_Y = OUTPUT_POSITION_Y;
     
-    private AIInternalInventory privateInventory = new AIInternalInventory( AppliedIntegrations.modid + ".item.energy.cell.inventory", 2, 64 )
+    private AIGridNodeInventory privateInventory = new AIGridNodeInventory( AppliedIntegrations.modid + ".item.energy.cell.inventory", 2, 64 )
     {
         @Override
         public boolean isItemValidForSlot( final int slotID, final ItemStack itemStack )

@@ -1,10 +1,7 @@
 package AppliedIntegrations.Network;
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Network.Packets.PacketBarChange;
-import AppliedIntegrations.Network.Packets.PacketClientFilter;
-import AppliedIntegrations.Network.Packets.PacketProgressBar;
-import AppliedIntegrations.Network.Packets.PacketServerFilter;
+import AppliedIntegrations.Network.Packets.*;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -32,6 +29,7 @@ public class NetworkHandler {
         NetworkHandler.registerMessage(PacketServerFilter.class,Side.SERVER);
         NetworkHandler.registerMessage(PacketServerFilter.class,Side.CLIENT);
 
+        NetworkHandler.registerMessage(PacketMEServer.class, Side.CLIENT);
 
 
     }

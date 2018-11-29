@@ -60,10 +60,26 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
         putInMap(World.class,AIPacket::readWorld,AIPacket::writeWorld);
         putInMap(ForgeDirection.class, AIPacket::readDirection,AIPacket::writeDirection);
         putInMap(AppliedCoord.class,AIPacket::readLoc, AIPacket::writeLoc);
+        // tile
+        putInMap(TileEntity.class,AIPacket::readTile,AIPacket::writeTile);
 
     }
 
+    private static void writeTile(TileEntity tile, ByteBuf byteBuf) {
 
+        writeWorld(tile.getWorldObj(),byteBuf);
+
+        byteBuf.writeInt(tile.xCoord);
+        byteBuf.writeInt(tile.yCoord);
+        byteBuf.writeInt(tile.zCoord);
+
+    }
+
+    private static TileEntity readTile(ByteBuf byteBuf) {
+
+        World w = readWorld(byteBuf);
+        return w.getTileEntity(byteBuf.readInt(),byteBuf.readInt(),byteBuf.readInt());
+    }
 
 
     @Override

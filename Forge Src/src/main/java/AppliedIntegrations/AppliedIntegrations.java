@@ -2,8 +2,8 @@ package AppliedIntegrations;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.PlatformEvent;
-import AppliedIntegrations.Blocks.BlockEnergyInterface;
-import AppliedIntegrations.Entities.TileEnergyInterface;
+import AppliedIntegrations.Blocks.BlocksEnum;
+import AppliedIntegrations.Entities.TileEnum;
 import AppliedIntegrations.Gui.resetData;
 import AppliedIntegrations.Layers.LayerRotaryCraft;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -41,7 +41,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import javax.annotation.Nullable;
 
-@Mod (modid = "appliedintegrations", name="Applied Integrations", version = "2.5", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
+@Mod (modid = "appliedintegrations", name="Applied Integrations", version = "2.8.1", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
 /**
  * @Author Azazell
  */
@@ -93,11 +93,10 @@ public class AppliedIntegrations implements IGuiHandler {
 		}
 
 		// instanciate interface
-		EInterface = new BlockEnergyInterface();
-		// register energy interface in block form
-		GameRegistry.registerBlock(EInterface, "EInterface");
-		// register energy interface in tile form
-		GameRegistry.registerTileEntity(TileEnergyInterface.class, "TileEnergyInterface");
+		EInterface = BlocksEnum.BEI.b;
+		registerBlocks();
+		registerTiles();
+
 		// For all liquidEnergies register it
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 				FluidRegistry.registerFluid(energy);
@@ -161,8 +160,22 @@ public class AppliedIntegrations implements IGuiHandler {
 			GameRegistry.registerItem(current.getItem(), current.getStatName());
 		}
 	}
-	public void registerBlock(){
+	public void registerBlocks(){
+		for(BlocksEnum b : BlocksEnum.values()) {
+			// blocks
+			GameRegistry.registerBlock(b.b, b.enumName);
+			b.b.setCreativeTab(this.AI);
+			b.b.setBlockTextureName(this.modid+":"+b.enumName);
+		}
+	}
+	public void registerTiles(){
+		for(TileEnum t : TileEnum.values()){
+			try {
+				GameRegistry.registerTileEntity(t.getTileClass(), t.getTileID());
+			}catch (Exception e){
 
+			}
+		}
 	}
 	public static AppliedIntegrations getInstance() {
 		return instance;
@@ -174,8 +187,9 @@ public class AppliedIntegrations implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		for(GuiEnum guiEnum : GuiEnum.values()){
-			if (guiEnum.ID == ID)
-				return guiEnum.GetServerGuiElement(ID,player,world,x,y,z,guiEnum.isPart);
+			if (guiEnum.ID == ID) {
+					return guiEnum.GetServerGuiElement(ID, player, world, x, y, z, guiEnum.isPart);
+			}
 		}
 		return null;
 	}
@@ -183,8 +197,9 @@ public class AppliedIntegrations implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		for(GuiEnum guiEnum : GuiEnum.values()){
-			if (guiEnum.ID == ID)
-		return	guiEnum.GetClientGuiElement(ID,player,world,x,y,z,guiEnum.isPart);
+			if (guiEnum.ID == ID) {
+					return guiEnum.GetClientGuiElement(ID, player, world, x, y, z, guiEnum.isPart);
+			}
 		}
 		return null;
 	}

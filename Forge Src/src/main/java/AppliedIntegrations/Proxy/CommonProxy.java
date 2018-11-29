@@ -2,6 +2,7 @@ package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlockEnergyInterface;
+import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Entities.TileEnum;
 
 import AppliedIntegrations.Items.ItemEnum;
@@ -12,6 +13,7 @@ import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeHandler;
 import appeng.api.recipes.IRecipeLoader;
+import appeng.api.util.AEColor;
 import appeng.block.networking.BlockEnergyCell;
 import appeng.core.Api;
 import appeng.core.api.definitions.ApiBlocks;
@@ -165,6 +167,42 @@ public class CommonProxy
         GameRegistry.addShapedRecipe(new ItemStack(ItemEnum.CHAOSMANIPULATOR.getItem()), new Object[]{" FI", " MA", "L  ", 'L', new ItemStack(Items.iron_ingot),'F',
         new ItemStack(ItemEnum.ENERGYFORMATIONCORE.getItem()),'A',new ItemStack(ItemEnum.ENERGYANNIHILATIONCORE.getItem()),'I', AppliedIntegrations.EInterface, 'M', Api.INSTANCE.items()
         .itemEntropyManipulator.item()});
+        /*----------------------------------------------------- Server Multiblock --------------------------------------------------------------*/
+        // Core
+            GameRegistry.addShapedRecipe(new ItemStack(BlocksEnum.BSCore.b, 1), new Object[]{"ccc",
+                    "esd",
+                    "ccc", 'd', new ItemStack(AEApi.instance().blocks().blockEnergyCellDense.item()),
+                    's', new ItemStack(AEApi.instance().blocks().blockController.block()),
+                    'e', new ItemStack(AEApi.instance().blocks().blockIOPort.block()),
+                    'c', new ItemStack(ItemMultiPart.instance,1,60)});
+        // Port
+            GameRegistry.addShapedRecipe(new ItemStack(BlocksEnum.BSPort.b, 1), new Object[]{"iii",
+                    ".c.",
+                    "iii", 'c', new ItemStack(ItemMultiPart.instance,1,60)
+                    ,'i', Items.iron_ingot,'.',LogicProc});
+        // Rib
+        GameRegistry.addShapedRecipe(new ItemStack(BlocksEnum.BSRib.b, 1), new Object[]{
+                "aaa",
+                "cac",
+                "aaa",
+                'c', new ItemStack(ItemMultiPart.instance,1,60)
+                ,'a',AEApi.instance().blocks().blockQuartzPillar.block()});
+        // Housing
+        GameRegistry.addShapedRecipe(new ItemStack(BlocksEnum.BSHousing.b), new Object[]{
+                    "iii",
+                    "pdp",
+                    "iii",
+                    'i', Items.iron_ingot,'p',EngProc,'d',AEApi.instance().blocks().blockDrive.block()
+            });
+
+        // terminal
+        GameRegistry.addShapedRecipe(new ItemStack(BlocksEnum.BSSecurity.b), new Object[]{
+                "ini",
+                "ese",
+                "imi",
+                'i', Items.iron_ingot,'e',AEApi.instance().materials().materialFluixPearl.stack(1),'s', AEApi.instance().blocks().blockSecurity.block(),
+                'm', AEApi.instance().items().itemNetworkTool.item(), 'n', AEApi.instance().items().itemMemoryCard.item()
+        });
     }
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
         return ctx.getServerHandler().playerEntity;

@@ -11,7 +11,7 @@ import AppliedIntegrations.Gui.SortMode;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketTerminalChange;
 import AppliedIntegrations.Render.TextureManager;
-import AppliedIntegrations.Utils.AIPrivateInventory;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.config.ViewItems;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;
@@ -97,7 +97,7 @@ public class PartEnergyTerminal
 	 */
 	public LiquidAIEnergy selectedEnergy = null;
 
-	private AIPrivateInventory inventory = new AIPrivateInventory( AppliedIntegrations.modid + ".part.Energy.terminal", 2, 64 )
+	private AIGridNodeInventory inventory = new AIGridNodeInventory( AppliedIntegrations.modid + ".part.Energy.terminal", 2, 64 )
 	{
 		@Override
 		public boolean isItemValidForSlot( final int slotId, final ItemStack itemStack )
@@ -138,7 +138,7 @@ public class PartEnergyTerminal
 	}
 
 	@Override
-	protected AIPrivateInventory getUpgradeInventory() {
+	protected AIGridNodeInventory getUpgradeInventory() {
 		return null;
 	}
 
@@ -208,7 +208,7 @@ public class PartEnergyTerminal
 		return PartEnergyTerminal.IDLE_POWER_DRAIN;
 	}
 
-	public AIPrivateInventory getInventory()
+	public AIGridNodeInventory getInventory()
 	{
 		return this.inventory;
 	}

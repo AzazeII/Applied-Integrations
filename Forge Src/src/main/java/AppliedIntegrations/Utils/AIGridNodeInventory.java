@@ -1,6 +1,6 @@
 package AppliedIntegrations.Utils;
 
-import AppliedIntegrations.API.IInventoryUpdateReceiver;
+import AppliedIntegrations.API.IInventoryHost;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -9,19 +9,19 @@ import net.minecraft.nbt.NBTTagList;
 /**
  * @Author Azazell
  */
-public class AIPrivateInventory implements IInventory {
+public class AIGridNodeInventory implements IInventory {
 
     public ItemStack[] slots;
     public String customName;
     private int stackLimit;
-    private IInventoryUpdateReceiver receiver;
+    private IInventoryHost receiver;
 
-    public AIPrivateInventory(String _customName, int _size, int _stackLimit) {
+    public AIGridNodeInventory(String _customName, int _size, int _stackLimit) {
         this(_customName, _size, _stackLimit, null);
     }
 
-    public AIPrivateInventory(String _customName, int _size, int _stackLimit,
-                              IInventoryUpdateReceiver _receiver) {
+    public AIGridNodeInventory(String _customName, int _size, int _stackLimit,
+                               IInventoryHost _receiver) {
         this.slots = new ItemStack[_size];
         this.customName = _customName;
         this.stackLimit = _stackLimit;

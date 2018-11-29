@@ -6,6 +6,7 @@ import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Inventory.HandlerItemEnergyCell;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.EffectiveSide;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.security.BaseActionSource;
@@ -54,7 +55,7 @@ public class ContainerChestCellHandler
     /**
      * Import and export inventory slots.
      */
-    private AIInternalInventory privateInventory = new AIInternalInventory( AppliedIntegrations.modid + ".item.energy.cell.inventory", 2, 64 )
+    private AIGridNodeInventory privateInventory = new AIGridNodeInventory( AppliedIntegrations.modid + ".item.energy.cell.inventory", 2, 64 )
     {
         @Override
         public boolean isItemValidForSlot( final int slotID, final ItemStack itemStack )

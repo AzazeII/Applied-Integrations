@@ -2,7 +2,7 @@ package AppliedIntegrations.API.Parts;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.AIPrivateInventory;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AIUtils;
 import AppliedIntegrations.grid.AEPartGridBlock;
 import AppliedIntegrations.AppliedIntegrations;
@@ -154,7 +154,7 @@ public abstract class AIPart
 		// Fire the neighbor changed event
 		this.onNeighborChanged();
 	}
-	protected abstract AIPrivateInventory getUpgradeInventory();
+	protected abstract AIGridNodeInventory getUpgradeInventory();
 
 	protected boolean doesPlayerHavePermission( final EntityPlayer player, final SecurityPermissions permission )
 	{

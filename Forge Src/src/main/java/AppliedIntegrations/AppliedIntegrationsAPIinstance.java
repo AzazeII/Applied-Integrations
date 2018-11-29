@@ -9,7 +9,7 @@ import net.minecraftforge.fluids.FluidStack;
 /**
  * @Author Azazell
  */
-public class AppliedIntegrationsAPIinstance implements QuantumEnergisticsApi{
+public class AppliedIntegrationsAPIinstance implements AppliedIntegrationsAPI {
 
 	@Override
 	public void addEnergyToShowBlacklist(Class<? extends LiquidAIEnergy> clazz) {
@@ -53,11 +53,6 @@ public class AppliedIntegrationsAPIinstance implements QuantumEnergisticsApi{
 		return false;
 	}
 
-	@Override
-	public String getVerion() {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public String getVersion() {
