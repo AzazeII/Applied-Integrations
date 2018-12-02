@@ -3,6 +3,7 @@ package AppliedIntegrations.Container;
 import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.Container.slot.SlotMEServer;
 import AppliedIntegrations.Entities.Server.TileServerCore;
+import appeng.api.AEApi;
 import appeng.client.me.SlotME;
 import appeng.container.slot.SlotRestrictedInput;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,40 +57,37 @@ public class ContainerMEServer extends Container
 
     @Override
     public boolean canInteractWith(EntityPlayer p) {
-        return master.inv.isUseableByPlayer(p);
+        return true;
     }
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer p, int i)
     {
         ItemStack itemstack = null;
-        Slot slot = (Slot) inventorySlots.get(i);
+        Slot slot = (Slot)inventorySlots.get(i);
         if (slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (i < master.inv.getSizeInventory())
+            if (AEApi.instance().registries().cell().isCellHandled(itemstack))
             {
-                if (!mergeItemStack(itemstack1,  master.inv.getSizeInventory(), inventorySlots.size(), true))
+                if (i < 3)
+                {
+                    if (!mergeItemStack(itemstack1, 3, 38, false))
+                    {
+                        return null;
+                    }
+                } else if (!mergeItemStack(itemstack1, 0, 3, false))
                 {
                     return null;
                 }
-            }
-            else if (!master.acceptsStack(itemstack1))
-            {
-                return null;
-            }
-            else if (!mergeItemStack(itemstack1, 0, master.inv.getSizeInventory(), false))
-            {
-                return null;
-            }
-            if (itemstack1.stackSize == 0)
-            {
-                slot.putStack(null);
-            }
-            else
-            {
-                slot.onSlotChanged();
+                if (itemstack1.stackSize == 0)
+                {
+                    slot.putStack(null);
+                } else
+                {
+                    slot.onSlotChanged();
+                }
             }
         }
         return itemstack;

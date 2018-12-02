@@ -56,7 +56,7 @@ item.appliedintegrationsenergy.formation.core.name=МЭ Энерго-Ядро Ф
 item.appliedintegrationsenergy.annihilation.core.name=МЭ Энерго-Ядро Уничтожения
 item.appliedintegrationscasing.energy.name=МЭ Корпус Энерго-Ячейки
 item.appliedintegrationsstorage.energy.terminal.name=МЭ Беспроводной Терминал Энергии
-item.appliedintegrationsitem.chaos.manipulator.name=Улучшенный МЭ Манипулятор Энтропии
+item.appliedintegrationsitem.chaos.manipulator.name=Инструмент Манипуляции МЭ Сети
 
 Used=Использовано
 of=Из

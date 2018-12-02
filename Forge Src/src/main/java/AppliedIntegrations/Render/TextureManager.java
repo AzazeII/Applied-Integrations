@@ -17,6 +17,14 @@ import static AppliedIntegrations.AppliedIntegrations.modid;
     @SideOnly(Side.CLIENT)
     public enum TextureManager
     {
+        ST_OFF(TextureTypes.Block,new String[]{"MEServerSecurityTop_off"} ),
+
+        ST_SIDE(TextureTypes.Block, new String[]{"MEServerSecuritySide"}),
+
+        ST_BOTTOM(TextureTypes.Block, new String[]{"MEServerSecurityBottom"}),
+
+        ST_TOP(TextureTypes.Block, new String[]{"MEServerSecurityTop"}),
+
         Corners(TextureTypes.Part,new String[]{"corner.medium.variant"}),
 
         BUS_COLOR (TextureTypes.Part, new String[] { "bus.color.border", "bus.color.light", "bus.color.side" }),

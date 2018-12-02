@@ -52,4 +52,8 @@ public class NetworkHandler {
     public static final void sendToServer(IMessage message) {
         NetworkHandler.Handler.sendToServer(message);
     }
+
+    public static final void sendToAll(IMessage message){
+        NetworkHandler.Handler.sendToAll(message);
+    }
 }

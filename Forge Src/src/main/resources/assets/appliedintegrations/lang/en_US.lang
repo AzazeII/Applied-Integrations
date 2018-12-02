@@ -13,7 +13,7 @@ item.appliedintegrationsenergy.formation.core.name=ME Energy Formation Core
 item.appliedintegrationsenergy.annihilation.core.name=ME Energy Annihilation Core
 item.appliedintegrationscasing.energy.name=ME Energy Cell Casing
 item.appliedintegrationsstorage.energy.terminal.name=ME Wireless Energy Terminal
-item.appliedintegrationsitem.chaos.manipulator.name=Advanced ME Entropy Manipulator
+item.appliedintegrationsitem.chaos.manipulator.name=ME Network Manipulation Tool
 
 
 tile.ME Server Security Terminal.name=ME Server Security Terminal

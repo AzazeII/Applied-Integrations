@@ -17,6 +17,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
@@ -48,19 +52,12 @@ public class TileServerSecurity extends AIMultiBlockTile {
                     if(master.isFormed) {
                         master.addSlave(this);
                         setMaster(master);
-                        master.MainNetwork = grid;
                     }
                     return;
                 }
             }
-        }else{
-            if(isServer()) {
-                Container c = Minecraft.getMinecraft().thePlayer.openContainer;
-                if (c instanceof ContainerServerPacketTracer) {
-                    AILog.chatLog("Has container");
-                    NetworkHandler.sendTo(new PacketMEServer<>(this.master), (EntityPlayerMP) ((ContainerServerPacketTracer) c).player);
-                }
-            }
+        }else if(hasMaster()){
+            getMaster().updateGUI(this);
         }
 
     }
@@ -71,9 +68,6 @@ public class TileServerSecurity extends AIMultiBlockTile {
     @Override
     public Object getClientGuiElement( final EntityPlayer player )
     {
-        if(hasMaster()) {
-
-        }
         return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),getMaster(),xCoord,yCoord,zCoord,player);
     }
     @Override
@@ -81,7 +75,7 @@ public class TileServerSecurity extends AIMultiBlockTile {
         if (!worldObj.isRemote) {
             if (theGridNode == null)
                 theGridNode = AEApi.instance().createGridNode(this);
-            theGridNode.updateState();
+                theGridNode.updateState();
         }
     }
     @Override

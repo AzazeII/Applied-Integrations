@@ -2,18 +2,18 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.Entities.Server.TileServerCore;
 import AppliedIntegrations.Entities.Server.TileServerRib;
-import AppliedIntegrations.Utils.AILog;
+import appeng.util.Platform;
+import com.google.common.collect.Lists;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import javafx.application.Platform;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import scala.App;
+
+import java.util.List;
 
 public class BlockServerRib extends AIMultiBlock {
     private static IIcon BasicIcon;
@@ -22,9 +22,9 @@ public class BlockServerRib extends AIMultiBlock {
     private static IIcon altIcon_a;
     private static IIcon altIcon_b;
 
-    private static IIcon altIconRed_a;
-    private static IIcon altIconRed_b;
-    private IIcon RedIcon;
+    private static IIcon iconOff_a;
+    private static IIcon iconOff_b;
+    private IIcon iconOff;
 
     public BlockServerRib() {
         this.setBlockName("ME Server Rib");
@@ -34,7 +34,19 @@ public class BlockServerRib extends AIMultiBlock {
     @SideOnly(Side.CLIENT)
     public IIcon getIcon(int side, int meta) {
         if(isAlt){
-            if(meta == 1)
+            if(meta == 10){
+                return iconOff_a;
+            }else if(meta == 20){
+                return iconOff_b;
+            }else if(meta == 30){
+                if(side == 0 || side == 1){
+                    return iconOff_b;
+                }else{
+                    return iconOff_a;
+                }
+            }else if(meta == 40){
+                return iconOff;
+            }else if(meta == 1)
                 return altIcon_a;
             else if(meta == 2)
                 return altIcon_b;
@@ -44,22 +56,6 @@ public class BlockServerRib extends AIMultiBlock {
              }else{
                  return altIcon_a;
              }
-            }else if(meta == 10){
-                return altIconRed_a;
-            }else if(meta == 20){
-                return altIconRed_a;
-            }else if(meta == 30){
-                if(side == 0 || side == 1){
-                    return altIconRed_b;
-                }else{
-                    return altIconRed_a;
-                }
-            }else if(meta == 40){
-                if(side == 0 || side == 1){
-                    return altIconRed_b;
-                }else{
-                    return altIconRed_a;
-                }
             }else
                 return BasicIcon;
         }else{
@@ -73,9 +69,9 @@ public class BlockServerRib extends AIMultiBlock {
         altIcon_a = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameALT_a");
         altIcon_b = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameALT_b");
 
-        RedIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameR");
-        altIconRed_a = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameALTR_a");
-        altIconRed_b = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameALTR_b");
+        iconOff = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameOFF");
+        iconOff_a = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameOFF_a");
+        iconOff_b = IconRegistry.registerIcon(AppliedIntegrations.modid+":ServerFrameOFF_b");
 
     }
     @Override
@@ -90,6 +86,11 @@ public class BlockServerRib extends AIMultiBlock {
                     return true;
                 }
             }
+        }else{
+            final List<ItemStack> list = Lists.newArrayList( appeng.util.Platform.getBlockDrops(world,x,y,z) );
+            Platform.spawnDrops( world, x, y, z,list);
+            world.setBlockToAir( x, y, z );
+            return true;
         }
         return false;
     }

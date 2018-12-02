@@ -41,7 +41,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import javax.annotation.Nullable;
 
-@Mod (modid = "appliedintegrations", name="Applied Integrations", version = "2.8.1", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
+@Mod (modid = "appliedintegrations", name="Applied Integrations", version = "2.9", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
 /**
  * @Author Azazell
  */
@@ -131,7 +131,9 @@ public class AppliedIntegrations implements IGuiHandler {
 		// Register Blacklisted Fluids to EC list
 			this.addLiquidToBlackList();
 		// Register Cache, and monitor
-		AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );
+		//AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );
+
+
 		AEApi.instance().partHelper().registerNewLayer(LayerRotaryCraft.class.getName(), LayerRotaryCraft.class.getName());
 		proxy.addRecipes();
 

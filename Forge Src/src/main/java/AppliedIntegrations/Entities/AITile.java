@@ -25,6 +25,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
 
+import static net.minecraftforge.common.util.ForgeDirection.UNKNOWN;
+
 @Optional.InterfaceList(value = { // ()____()
         @Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent",modid = "IC2",striprefs = true),
         @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink",modid = "IC2",striprefs = true),
@@ -57,25 +59,6 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return null;
     }
 
-    /**
-     * Prepare a Packet to send the state of the {@link TileEntity} to the Client
-     */
-    @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        writeToNBT(nbt);
-        return new S35PacketUpdateTileEntity(xCoord, yCoord, zCoord, 1, nbt);
-    }
-
-    /**
-     * Process a Packet to update the state of the {@link TileEntity} on the Client
-     */
-    @Override
-    public void onDataPacket(NetworkManager pNet, S35PacketUpdateTileEntity pPacket) {
-        super.onDataPacket(pNet, pPacket);
-        NBTTagCompound nbt = pPacket.func_148857_g();
-        readFromNBT(nbt);
-    }
     @Override
     public double getIdlePowerUsage() {
         // TODO Auto-generated method stub
@@ -122,9 +105,11 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return EnumSet.of(ForgeDirection.SOUTH,ForgeDirection.DOWN,ForgeDirection.EAST,ForgeDirection.UP,ForgeDirection.NORTH,ForgeDirection.WEST);
     }
     public void createAELink() {
-        if (!worldObj.isRemote) {
-            if (theGridNode == null) theGridNode = AEApi.instance().createGridNode(this);
-            theGridNode.updateState();
+        if(worldObj != null) {
+            if (!worldObj.isRemote) {
+                if (theGridNode == null) theGridNode = AEApi.instance().createGridNode(this);
+                theGridNode.updateState();
+            }
         }
     }
     public void destroyAELink() {
@@ -150,11 +135,15 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     }
     @Override
     public ItemStack getMachineRepresentation() {
-        // TODO Auto-generated method stub
-        return null;
+        DimensionalCoord location = this.getLocation();
+        if (location == null)
+            return null;
+        return new ItemStack(location.getWorld().getBlock(location.x, location.y, location.z), 1, location.getWorld().getBlockMetadata(location.x, location.y, location.z));
 
     }
-
+    public IGridNode getGridNode() {
+        return getGridNode(UNKNOWN);
+    }
     @Override
     public IGridNode getGridNode(ForgeDirection dir) {
         // TODO Auto-generated method stub
@@ -193,5 +182,11 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     }
     public void notifyBlock(){
         worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+    }
+
+    protected IGrid getNetwork(){
+        if(getGridNode() != null)
+            return getGridNode().getGrid();
+        return null;
     }
 }

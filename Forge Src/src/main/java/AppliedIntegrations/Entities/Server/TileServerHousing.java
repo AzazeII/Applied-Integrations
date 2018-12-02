@@ -14,15 +14,19 @@ public class TileServerHousing extends AIMultiBlockTile {
 
     @Override
     public EnumSet<ForgeDirection> getConnectableSides() {
-        EnumSet<ForgeDirection> set = EnumSet.noneOf(ForgeDirection.class);
+        if(hasMaster()) {
+            EnumSet<ForgeDirection> set = EnumSet.noneOf(ForgeDirection.class);
 
-        for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-            if (worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerCore ||
-                    worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerRib) {
-                set.add(side);
+            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+                if (worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerCore ||
+                        worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerRib ||
+                        worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerHousing) {
+                    set.add(side);
+                }
             }
-        }
 
-        return set;
+            return set;
+        }
+        return null;
     }
 }

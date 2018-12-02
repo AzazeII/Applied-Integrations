@@ -20,6 +20,7 @@ import java.util.Iterator;
 
 public class TileServerPort  extends AIMultiBlockTile {
 
+    private ForgeDirection side = ForgeDirection.UNKNOWN;
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
@@ -31,6 +32,10 @@ public class TileServerPort  extends AIMultiBlockTile {
 
     }
 
+    @Override
+    public void validate(){
+        this.updateGrid();
+    }
     public void updateGrid() {
         if(hasMaster()){
             if(theGridNode == null)
@@ -38,11 +43,22 @@ public class TileServerPort  extends AIMultiBlockTile {
             if(theGridNode.getGrid() == null)
                 return;
             IGrid Network = theGridNode.getGrid();
-            if(Network.getNodes().size() > 1 && !getMaster().portNetworks.contains(Network)) {
-                getMaster().portNetworks.add(Network);
+
+            TileServerCore core = getMaster();
+
+            if(Network.getNodes().size() > 1 && !core.portNetworks.containsValue(Network)) {
+                core.portNetworks.put(side,Network);
+                core.ServerNetworkMap.put(Network,getMaster().getNextNetID());
             }else{
-                getMaster().portNetworks.remove(Network);
+                core.portNetworks.remove(side);
+                if(core.ServerNetworkMap.get(Network) != null)
+                    getMaster().ServerNetworkMap.remove(getMaster().ServerNetworkMap.get(Network));
             }
         }
+    }
+
+
+    public void setDir(ForgeDirection side) {
+        this.side = side;
     }
 }

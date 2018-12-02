@@ -26,7 +26,6 @@ public class OverlayEntropyManipulator {
         private int displayTickCount;
         private long lastTick;
         private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/OverlayMTool.png");
-        private ResourceLocation selection = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/OverlaySelection.png");
         int zLevel = 0;
         // List of all states listed at right corner of player's screen
         private List<Object> ListOfStates = new ArrayList<Object>();
@@ -34,7 +33,7 @@ public class OverlayEntropyManipulator {
             MinecraftForge.EVENT_BUS.register(this);
         }
 
-        @SubscribeEvent
+        //@SubscribeEvent
         public void renderOverlay(RenderGameOverlayEvent event) {
             Minecraft minecraft = Minecraft.getMinecraft();
             ItemStack item = minecraft.thePlayer.getCurrentEquippedItem();
@@ -47,15 +46,14 @@ public class OverlayEntropyManipulator {
                 toolChaosManipulator toolEntropyManipulator = (toolChaosManipulator)item.getItem();
 
                 Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-                drawEntropyStates(10,200+toolEntropyManipulator.getMode().index*18,j,j*4+6);
+                //drawEntropyStates(10,200+toolEntropyManipulator.getMode().index*18,j,j*4+6);
 
-                Minecraft.getMinecraft().renderEngine.bindTexture(selection);
-                drawSelection(10,200,j,j*4+6);
+
             }
 
 
         }
-        @SubscribeEvent
+        //@SubscribeEvent
         public void onMouseEvent(MouseEvent event) {
             EntityClientPlayerMP player = Minecraft.getMinecraft().thePlayer;
             if(player != null && player.isSneaking()) {
@@ -66,7 +64,7 @@ public class OverlayEntropyManipulator {
                         if (item instanceof toolChaosManipulator) {
                             toolChaosManipulator tool = (toolChaosManipulator) item;
 
-                            tool.nextMode(false);
+                            //tool.nextMode(false);
                             event.setCanceled(true);
                         }
                     }
@@ -77,7 +75,7 @@ public class OverlayEntropyManipulator {
                         if (item instanceof toolChaosManipulator) {
                             toolChaosManipulator tool = (toolChaosManipulator) item;
 
-                            tool.nextMode(true);
+                            //tool.nextMode(true);
                             event.setCanceled(true);
                         }
                     }

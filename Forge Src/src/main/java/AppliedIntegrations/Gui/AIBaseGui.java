@@ -11,12 +11,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.util.ResourceLocation;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.lwjgl.opengl.GL11.GL_LINES;
 
 /**
  * @Author Azazell
@@ -235,7 +239,7 @@ public abstract class AIBaseGui
      * @see #onButtonClicked(GuiButton, int )
      */
     @Override
-    public final void actionPerformed( final GuiButton button )
+    public void actionPerformed( final GuiButton button )
     {
         this.onButtonClicked( button, AIGuiHelper.MOUSE_BUTTON_LEFT );
     }
@@ -263,7 +267,18 @@ public abstract class AIBaseGui
             this.tooltip.clear();
         }
     }
-
+    protected void drawRoundedHollowBox(int x,int y,int height,int width,int color){
+        drawVerticalLine(x-5, y-1-4, y-height+3, color);//left
+        drawHorizontalLine(x, x+width-1, y-height, color);//upper line
+        drawVerticalLine(x+4+width, y-1-4, y-height+3, color);//right
+        drawHorizontalLine(x, x+width-1, y-2, color);//lower line
+        for (int i=0;i<4;i++){
+            drawRect(x-i, y-2-i, x-1-i, y-1-i, color);//lower left
+            drawRect(x+i+width, y-2-i, x+1+i+width, y-1-i, color);//lower right
+            drawRect(x-i, y-height+i, x-1-i, y+1-height+i, color);//upper left
+            drawRect(x+i+width, y-height+i, x+1+width+i, y+1-height+i, color);//upper right
+        }
+    }
     @Override
     public final FontRenderer getFontRenderer()
     {
@@ -289,4 +304,15 @@ public abstract class AIBaseGui
     }
 
 
+    protected void drawVertexLine(ResourceLocation texture,int xS,int yS,int xN, int yN) {
+        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+
+        Tessellator tessellator = Tessellator.instance;
+
+        tessellator.startDrawing(GL_LINES);
+        tessellator.addVertex(xS,yS,0);
+        tessellator.addVertex(xN,yN,0);
+
+        tessellator.draw();
+    }
 }

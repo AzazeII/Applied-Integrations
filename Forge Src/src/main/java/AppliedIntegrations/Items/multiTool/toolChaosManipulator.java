@@ -39,8 +39,7 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "buildcraft.api.tools.IToolWrench", modid = "BuildCraft|Core", striprefs = true)
 })
 
-public class toolChaosManipulator extends AEBasePoweredItem implements IMemoryCard,IAEWrench {
-    private toolModes mode = toolModes.networkTool;
+public class toolChaosManipulator extends AEBasePoweredItem implements IAEWrench {
     public toolChaosManipulator() {
 
         super(10000000D, com.google.common.base.Optional.<String>absent());
@@ -55,82 +54,11 @@ public class toolChaosManipulator extends AEBasePoweredItem implements IMemoryCa
 
         new OverlayEntropyManipulator(); // Iniciate event bus register
     }
-    public toolModes getMode(){return this.mode;}
-    @Override
-    public boolean onItemUse(ItemStack item, EntityPlayer p, World w, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-        switch (mode){
-            case entropyManipulator:
-                return new ToolEntropyManipulator().onItemUse(item,p,w,x,y,z,side,hitX,hitY,hitZ);
-            case memoryCard:
-                return new ToolMemoryCard().onItemUse(item,p,w,x,y,z,side,hitX,hitY,hitZ);
-            case networkTool:
-                return new ToolNetworkTool().onItemUse(item,p,w,x,y,z,side,hitX,hitY,hitZ);
-            case colorApplicator:
-                return new ToolColorApplicator().onItemUse(item,p,w,x,y,z,side,hitX,hitY,hitZ);
-        }
-        return true;
-    }
-    public void nextMode(boolean rev) {
-        this.mode = this.mode.getNext(mode,rev);
-    }
+
 
     @Override
     public boolean canWrench(ItemStack wrench, EntityPlayer player, int x, int y, int z) {
-        return this.mode == toolModes.networkTool;
+        return true;
     }
 
-    @Override
-    public void setMemoryCardContents(ItemStack is, String SettingsName, NBTTagCompound data) {
-        if(this.mode == toolModes.memoryCard) {
-            final NBTTagCompound c = Platform.openNbtData(is);
-            c.setString("configurationManipulator", SettingsName);
-            c.setTag("Data", data);
-        }
-    }
-
-    @Override
-    public String getSettingsName(ItemStack is) {
-        if(this.mode == toolModes.memoryCard) {
-            return "configurationManipulator";
-        }
-        return null;
-    }
-
-    @Override
-    public NBTTagCompound getData(ItemStack is) {
-        if(this.mode == toolModes.memoryCard) {
-            final NBTTagCompound c = Platform.openNbtData(is);
-            NBTTagCompound o = c.getCompoundTag("Data");
-            if (o == null) {
-                o = new NBTTagCompound();
-            }
-            return (NBTTagCompound) o.copy();
-        }
-        return null;
-    }
-
-    @Override
-    public void notifyUser(EntityPlayer player, MemoryCardMessages msg) {
-        if(EffectiveSide.isClientSide())
-        {
-            return;
-        }
-
-        switch( msg )
-        {
-            case SETTINGS_CLEARED:
-                player.addChatMessage( PlayerMessages.SettingCleared.get() );
-                break;
-            case INVALID_MACHINE:
-                player.addChatMessage( PlayerMessages.InvalidMachine.get() );
-                break;
-            case SETTINGS_LOADED:
-                player.addChatMessage( PlayerMessages.LoadedSettings.get() );
-                break;
-            case SETTINGS_SAVED:
-                player.addChatMessage( PlayerMessages.SavedSettings.get() );
-                break;
-            default:
-        }
-    }
 }

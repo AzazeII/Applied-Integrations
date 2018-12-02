@@ -7,21 +7,23 @@ import AppliedIntegrations.Entities.AIMultiBlockTile;
 import AppliedIntegrations.Entities.AITile;
 import AppliedIntegrations.Entities.IAIMultiBlock;
 import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
+import AppliedIntegrations.Gui.ServerGUI.NetworkData;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.networking.*;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
-import appeng.api.networking.events.MENetworkChannelsChanged;
-import appeng.api.networking.events.MENetworkEventSubscribe;
-import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.storage.*;
-import appeng.api.util.AECableType;
 import appeng.api.util.INetworkToolAgent;
+import appeng.api.util.IReadOnlyCollection;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -31,21 +33,35 @@ import java.util.*;
 public class TileServerCore extends AITile implements IAIMultiBlock, ICellContainer, INetworkToolAgent, IInventoryHost {
 
     public static final int BLOCKS_IN_STRUCTURE = Patterns.ME_SERVER.length+1;
+
+    private static final int RESERVED_MASTER_ID = 1;
+    private int AVAILABLE_ID = RESERVED_MASTER_ID+1;
+
     // List of blocks in multiblock
     public Vector<IAIMultiBlock> Slaves = new Vector<>();
 
-    public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1,this);
+    public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1,this){
+        @Override
+        public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+            return AEApi.instance().registries().cell().isCellHandled(itemstack);
+        }
+    };
 
     // ME Inventories
     private List<IMEInventoryHandler> items = new LinkedList<>();
     private List<IMEInventoryHandler> fluids = new LinkedList<>();
 
+    /**
+     * Server network map
+     * Map of ids of IGrids, which contains Server
+     */
+    public LinkedHashMap<IGrid, Integer> ServerNetworkMap = new LinkedHashMap<>();
     // Networks in ports
-    public Vector<IGrid> portNetworks = new Vector<>();
+    public LinkedHashMap<ForgeDirection,IGrid> portNetworks = new LinkedHashMap<>();
+
     // Network of owner
     public IGrid MainNetwork;
 
-    private boolean tryForm;
     public boolean isFormed;
 
     public boolean isConflicting;
@@ -56,45 +72,35 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     // Wait for updating
     public int blocksToPlace = 0;
 
-
     @Override
     public void updateEntity() {
         super.updateEntity();
         if (isFormed) {
+            if(!ServerNetworkMap.containsValue(RESERVED_MASTER_ID) && MainNetwork != null){
+                ServerNetworkMap.put(MainNetwork,RESERVED_MASTER_ID);
+            }
+
             for (IAIMultiBlock slave : Slaves) {
-                slave.notifyBlock();
-            }
-            /*if (MainNetwork != null) {
-                for (IGrid grid : portNetworks) {
-                    if (grid == MainNetwork) {
-                        for (IAIMultiBlock slave : Slaves) {
-                            if (slave instanceof TileServerRib) {
-                                if (!isConflicting) {
-                                    TileServerRib rib = (TileServerRib) slave;
-                                    rib.notifyConflict();
-                                    isConflicting = true;
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                }
 
-            }*/
-
-        /*if(tryForm){
-            isFormed = false;
-            if(worldObj != null) {
-                this.tryConstruct(null);
-                tryForm = false;
             }
-        }*/
+
         }
     }
-    @Override
+    /*@Override
     public void validate(){
-        tryForm = true;
-    }
+        Timer t = new Timer();
+
+        TimerTask formTile = new TimerTask() {
+            @Override
+            public void run() {
+                if(worldObj != null) {
+                    tryConstruct(null);
+                }
+            }
+        };
+
+        t.schedule(formTile,50);
+    }*/
     @Override
     public void notifyBlock(){
         worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
@@ -155,42 +161,50 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
                     }
                     Slaves.add(toUpdate.get(i));
                 }
-
+                for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS){
+                    TileEntity tile = worldObj.getTileEntity(xCoord+side.offsetX*2,yCoord+side.offsetY*2,zCoord+side.offsetZ*2);
+                    if(tile instanceof TileServerPort){
+                        TileServerPort port = (TileServerPort)tile;
+                        port.setDir(side);
+                        port.updateGrid();
+                    }
+                }
             }
 
             isFormed = true;
             if(p!=null)
                 p.addChatComponentMessage(new ChatComponentText("ME Server Formed!"));
         }
-
     }
 
+    public int getNextNetID(){
+        return this.AVAILABLE_ID++;
+    }
 
     public void DestroyMultiBlock(){
         for(IAIMultiBlock tile : Slaves){
             if(tile instanceof TileServerRib){
                 TileServerRib Rib = (TileServerRib)tile;
                 Rib.changeAlt(false);
-                Rib.destroyAELink();
             }
             if(tile instanceof TileServerPort){
                 TileServerPort port = (TileServerPort)tile;
-                port.destroyAELink();
             }
             tile.setMaster(null);
-            ((AIMultiBlockTile)tile).getGridNode(ForgeDirection.UNKNOWN).updateState();
-
+            ((AIMultiBlockTile)tile).destroyAELink();
+        }
+        for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS){
+            portNetworks.remove(dir);
         }
 
+        MainNetwork = null;
+
+        ServerNetworkMap = new LinkedHashMap<>();
 
         isFormed = false;
 
     }
 
-
-    public boolean acceptsStack(ItemStack stack){
-        return AEApi.instance().registries().cell().isCellHandled(stack);
-    }
 
     @Override
     public boolean hasMaster() {
@@ -215,16 +229,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     }
     @Override
     public Object getServerGuiElement( final EntityPlayer player ) {
-        if(hasMaster())
-            return new ContainerMEServer(player,this);
-        return null;
+        return new ContainerMEServer(player,this);
     }
     @Override
     public Object getClientGuiElement( final EntityPlayer player )
     {
-        if(hasMaster())
-            return new GuiMEServer((ContainerMEServer)this.getServerGuiElement(player));
-        return null;
+        return new GuiMEServer((ContainerMEServer)this.getServerGuiElement(player));
     }
 
     @Override
@@ -233,32 +243,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
             this.blinkTimers[slot] = 15;
     }
 
-    @Override
-    public IGridNode getActionableNode() {
-        return super.getGridNode(ForgeDirection.UNKNOWN);
-    }
-
-    @Override
-    public IGridNode getGridNode(ForgeDirection dir) {
-        return super.getGridNode(dir);
-    }
-
-    @Override
-    public AECableType getCableConnectionType(ForgeDirection dir) {
-        return super.getCableConnectionType(dir);
-    }
 
     @Override
     public void securityBreak() {
 
     }
 
-    @Override
-    public EnumSet<ForgeDirection> getConnectableSides() {
-        if(isFormed)
-            return EnumSet.allOf(ForgeDirection.class);
-        return EnumSet.noneOf(ForgeDirection.class);
-    }
     @Override
     public EnumSet<GridFlags> getFlags() {
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
@@ -270,24 +260,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     public int getPriority() {
         return 0;
     }
-    @MENetworkEventSubscribe
-    public void updateChannels(MENetworkChannelsChanged channel) {
-        IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
-        if (node != null) {
-            this.markDirty();
-            node.updateState();
-        }
-        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
-    }
-    @MENetworkEventSubscribe
-    public void powerChange(MENetworkPowerStatusChange event) {
-        IGridNode node = getGridNode(ForgeDirection.UNKNOWN);
-        if (node != null) {
-            this.markDirty();
-            node.updateState();
-        }
-        node.getGrid().postEvent(new MENetworkCellArrayUpdate());
-    }
+
     @Override
     public void onInventoryChanged() {
         this.items = updateHandlers(StorageChannel.ITEMS);
@@ -365,7 +338,37 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
         return true;
     }
 
+    public boolean isServerNetwork(IGrid grid){
+        if(grid != null){
+            IReadOnlyCollection<Class<? extends IGridHost>> collection = grid.getMachinesClasses();
+
+            return collection.contains(TileServerCore.class);
+        }
+        return false;
+    }
+
     public void addSlave(AIMultiBlockTile slave) {
         Slaves.add(slave);
     }
+
+    public void updateGUI(TileServerSecurity port) {
+        if(isFormed) {
+            if (ServerNetworkMap.containsValue(RESERVED_MASTER_ID)) {
+                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, ForgeDirection.UNKNOWN, RESERVED_MASTER_ID)));
+                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                    IGrid grid = portNetworks.get(dir);
+                    if(ServerNetworkMap.get(grid) != null) {
+                        if (ServerNetworkMap.get(grid) != RESERVED_MASTER_ID) {
+                            if (isServerNetwork(grid))
+                                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, dir, ServerNetworkMap.get(grid))));
+                            else
+                                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(false, dir, RESERVED_MASTER_ID)));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 }

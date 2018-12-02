@@ -1,7 +1,6 @@
 package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Entities.Server.TileServerRib;
 import AppliedIntegrations.Entities.Server.TileServerSecurity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -51,9 +50,9 @@ public class BlockServerSecurity extends Block implements ITileEntityProvider {
     public IIcon getIcon(int side, int meta) {
         ForgeDirection dir = ForgeDirection.getOrientation(side);
         ForgeDirection Fw;
-        if(meta == 1)
+        if(meta == 0)
             Fw = UP;
-        else if(meta == 0)
+        else if(meta == 1)
             Fw = DOWN;
         else
             Fw = ForgeDirection.getOrientation(meta);
@@ -70,8 +69,8 @@ public class BlockServerSecurity extends Block implements ITileEntityProvider {
                     case WEST:
                         return Monitor_W;
 
-                        default:
-                            return Monitor_W;
+                    default:
+                        return Monitor_W;
                 }
             }else{
                 return TopIcon;
@@ -158,15 +157,16 @@ public class BlockServerSecurity extends Block implements ITileEntityProvider {
     @SideOnly(Side.CLIENT)
     public void registerBlockIcons(IIconRegister IconRegistry) {
         SideIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecuritySide");
-
-        SideIcon_d = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecuritySide_down");
         SideIcon_r = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecuritySide_right");
         SideIcon_l = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecuritySide_left");
+        SideIcon_d = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecuritySide_down");
 
-        Monitor_S = TopIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_S");
-        Monitor_N = TopIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_N");
-        Monitor_W = TopIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_W");
-        Monitor_E = TopIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_E");
+
+        Monitor_S = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_S");
+        Monitor_N = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_N");
+        Monitor_E = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_E");
+        Monitor_W = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop_W");
+
 
         BottomIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityBottom");
         TopIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":MEServerSecurityTop");
@@ -182,12 +182,12 @@ public class BlockServerSecurity extends Block implements ITileEntityProvider {
 
         if(entity.posY > y){
             tile.fw = UP;
-            world.setBlockMetadataWithNotify(x, y, z, 1, 2);
+            world.setBlockMetadataWithNotify(x, y, z, 0, 2);
             save = false;
 
         }if(entity.posY < y-1){
             tile.fw = DOWN;
-            world.setBlockMetadataWithNotify(x, y, z, 0, 2);
+            world.setBlockMetadataWithNotify(x, y, z, 1, 2);
             save = false;
 
         }if (l == 0)
@@ -239,4 +239,5 @@ public class BlockServerSecurity extends Block implements ITileEntityProvider {
         }
         return false;
     }
+
 }

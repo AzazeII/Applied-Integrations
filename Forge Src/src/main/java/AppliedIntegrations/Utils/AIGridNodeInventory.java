@@ -87,16 +87,7 @@ public class AIGridNodeInventory implements IInventory {
         return false;
     }
 
-    /**
-     * Increases the stack size of a slot.
-     *
-     * @param slotId
-     *        ID of the slot
-     * @param amount
-     *        amount to be drained
-     *
-     * @return the added Stack
-     */
+
     public ItemStack incrStackSize(int slotId, int amount) {
         ItemStack slot = this.slots[slotId];
         if (slot == null)

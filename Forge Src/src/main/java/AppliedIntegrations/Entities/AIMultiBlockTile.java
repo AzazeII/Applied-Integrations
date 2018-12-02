@@ -3,10 +3,15 @@ package AppliedIntegrations.Entities;
 import AppliedIntegrations.Entities.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridMultiblock;
+import appeng.api.networking.IGridNode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.Iterator;
 
 public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
 
@@ -24,7 +29,9 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     }
     @Override
     public EnumSet<ForgeDirection> getConnectableSides() {
-        return EnumSet.allOf(ForgeDirection.class);
+        if(hasMaster())
+            return EnumSet.allOf(ForgeDirection.class);
+        return null;
     }
 
     @Override
@@ -77,4 +84,5 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     public void notifyBlock(){
         worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
     }
+
 }
