@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.GL_LINES;
+import static org.lwjgl.opengl.GL11.GL_POLYGON;
 
 /**
  * @Author Azazell
@@ -309,8 +310,10 @@ public abstract class AIBaseGui
 
         Tessellator tessellator = Tessellator.instance;
 
-        tessellator.startDrawing(GL_LINES);
+        tessellator.startDrawingQuads();
         tessellator.addVertex(xS,yS,0);
+        tessellator.addVertex(xS,yS+5,0);
+        tessellator.addVertex(xN,yN+5,0);
         tessellator.addVertex(xN,yN,0);
 
         tessellator.draw();

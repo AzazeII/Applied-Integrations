@@ -1,6 +1,7 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
 import AppliedIntegrations.Utils.AILog;
@@ -11,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class NetworkGui extends AIGuiButton {
@@ -25,9 +27,10 @@ public class NetworkGui extends AIGuiButton {
 
     public boolean isLinked;
     public float zoom;
+    private boolean renderOverlay;
 
-    public NetworkGui(ServerPacketTracer rootGUI,int ID, ForgeDirection side, int linkedTo) {
-        super(ID, 0,0,null);
+    public NetworkGui(int posX,int posY,ServerPacketTracer rootGUI,int ID, ForgeDirection side, int linkedTo) {
+        super(ID, posX,posY,null);
 
         this.dir = side;
         this.LinkedServer = linkedTo;
@@ -49,6 +52,26 @@ public class NetworkGui extends AIGuiButton {
 
         this.drawTexturedRect( texture, x, y, 0, 0, 16,16,16,16,this.zoom );
 
+        if (renderOverlay){
+
+            Tessellator tessellator = Tessellator.instance;
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+            GL11.glColor4f(1, 1, 0, 1);
+            tessellator.startDrawingQuads();
+
+            tessellator.addVertex(x,y,0);
+            tessellator.addVertex(x+width,y,0);
+            tessellator.addVertex(x+width,y+height,0);
+            tessellator.addVertex(x,y+height,0);
+
+
+            tessellator.draw();
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glDisable(GL11.GL_BLEND);
+        }
+
         if(!isLinked)
             this.drawTexturedRect(lightOff,x,y-14,0,0,16,16,16,16,this.zoom);
         else
@@ -56,10 +79,28 @@ public class NetworkGui extends AIGuiButton {
 
         GL11.glPopMatrix();
     }
-
-    public void renderGui(float zoom,int x,int y) {
+    @Override
+    public boolean isMouseOverButton( final int mouseX, final int mouseY )
+    {
+        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.yPosition, this.xPosition, 16, 16, mouseX, mouseY, root.guiLeft(), root.guiTop() );
+    }
+    public void renderGui(float zoom) {
         this.zoom = zoom;
 
-        drawButton(Minecraft.getMinecraft(),x,y);
+        drawButton(Minecraft.getMinecraft(),this.xPosition,this.yPosition);
+    }
+
+    public List<String> getTip() {
+        List<String> tip = new ArrayList<>();
+        tip.add("ME Network");
+        tip.add("Connected On Direction: "+this.dir.name());
+        return tip;
+    }
+
+    public void mouseClicked() {
+        if(renderOverlay == true)
+            renderOverlay = false;
+        else
+            renderOverlay = true;
     }
 }

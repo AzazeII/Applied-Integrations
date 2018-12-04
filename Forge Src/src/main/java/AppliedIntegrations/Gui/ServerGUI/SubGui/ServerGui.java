@@ -1,7 +1,9 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
+import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -9,24 +11,27 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
 public class ServerGui extends AIGuiButton {
 
-    public Vector<NetworkGui> linkedNetworks = new Vector<>();
+    public NetworkGui[] LinkedNetworks = new NetworkGui[6];
     private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/Server.png");
 
     private boolean renderOverlay;
     private float zoom;
 
+    public ServerPacketTracer rootGui;
     public boolean isMainServer;
 
-    public ServerGui(final int ID, int pX, int pY, boolean option )
+    public ServerGui(final int ID, int pX, int pY, boolean option, ServerPacketTracer rootGUI)
     {
         super(ID,pX,pY,null);
         this.isMainServer = option;
+        this.rootGui = rootGUI;
     }
 
     @Override
@@ -34,6 +39,20 @@ public class ServerGui extends AIGuiButton {
 
     }
 
+    public List<String> getTip(){
+
+        int counter = 0;
+        for(NetworkGui g : LinkedNetworks){
+            if(g != null)
+                counter+=1;
+        }
+
+        List<String> tip = new ArrayList<>();
+        tip.add("ME Main Server");
+        tip.add("Connected: "+counter+"/6 Users");
+
+        return tip;
+    }
     @Override
     public void drawButton( final Minecraft minecraftInstance, final int x, final int y )
     {
@@ -53,7 +72,6 @@ public class ServerGui extends AIGuiButton {
             GL11.glColor4f(1, 1, 0, 1);
             tessellator.startDrawingQuads();
 
-            // Left side
             tessellator.addVertex(x,y,0);
             tessellator.addVertex(x+width,y,0);
             tessellator.addVertex(x+width,y+height,0);

@@ -17,6 +17,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.Random;
+
 import static net.minecraftforge.common.util.ForgeDirection.*;
 
 public class BlockServerSecurity extends Block implements ITileEntityProvider {
@@ -152,6 +154,14 @@ public class BlockServerSecurity extends Block implements ITileEntityProvider {
             }
         }
         return null;
+    }
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void randomDisplayTick(World w, int x, int y, int z, Random p_149734_5_) {
+        if(this.isActive)
+            this.setLightLevel(5F);
+        else
+            this.setLightLevel(0F);
     }
     @Override
     @SideOnly(Side.CLIENT)

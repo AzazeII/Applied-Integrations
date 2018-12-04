@@ -1,6 +1,7 @@
 package AppliedIntegrations.Gui.Buttons;
 
 import AppliedIntegrations.AppliedIntegrations;
+import appeng.client.gui.widgets.ITooltip;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.ResourceLocation;

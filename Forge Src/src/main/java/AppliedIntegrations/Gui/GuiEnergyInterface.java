@@ -58,7 +58,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 	private List<WidgetEnergySlot> EnergySlotList = new ArrayList<WidgetEnergySlot>();
 
 	private GuiButtonAETab priority;
-	private GuiImgButton redstoneControlButton;
+
 	private InterfaceEnergyButtons[] buttons;
 	private EntityPlayer player;
 	private int hash;
@@ -263,11 +263,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 				GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop - 3, AEStateIconsEnum.WRENCH,
 				"gui.appliedenergistics2.Priority");
 		this.buttonList.add(priority);
-
-		// Register control button and it's tooltip
-		this.redstoneControlButton = new GuiImgButton(5, this, this.guiLeft - 17, this.guiTop + 8, Settings.REDSTONE_CONTROLLED, LOW_SIGNAL);
-		this.buttonList.add(redstoneControlButton);
-		this.buttonTooltip.add(redstoneControlButton.getMessage());
 
 	}
 

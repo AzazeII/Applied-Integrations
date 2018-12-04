@@ -14,6 +14,7 @@ import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.networking.*;
+import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.storage.*;
 import appeng.api.util.INetworkToolAgent;
@@ -86,6 +87,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
 
         }
     }
+
     /*@Override
     public void validate(){
         Timer t = new Timer();
@@ -101,6 +103,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
 
         t.schedule(formTile,50);
     }*/
+
     @Override
     public void notifyBlock(){
         worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
