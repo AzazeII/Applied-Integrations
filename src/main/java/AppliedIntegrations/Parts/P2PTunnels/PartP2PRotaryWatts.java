@@ -1,15 +1,10 @@
 package AppliedIntegrations.Parts.P2PTunnels;
 
-import AppliedIntegrations.API.IEnergyDuality;
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.Parts.AIP2PTunnel;
 import AppliedIntegrations.Parts.PartEnum;
 import Reika.RotaryCraft.API.Interfaces.Transducerable;
 import Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver;
-import appeng.api.config.SecurityPermissions;
-import appeng.parts.p2p.PartP2PTunnel;
 import cpw.mods.fml.common.Optional;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 

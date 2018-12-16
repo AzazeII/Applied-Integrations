@@ -1,6 +1,6 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import appeng.api.networking.*;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.PartItemStack;

@@ -1,9 +1,8 @@
 package AppliedIntegrations;
 
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Entities.AITile;
 import AppliedIntegrations.Entities.Server.TileServerCore;
-import AppliedIntegrations.Entities.Server.TileServerRib;
 import AppliedIntegrations.Entities.Server.TileServerSecurity;
 import AppliedIntegrations.Entities.TileEnergyInterface;
 import AppliedIntegrations.Parts.IO.PartEnergyExport;

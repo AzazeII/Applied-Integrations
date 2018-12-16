@@ -1,6 +1,5 @@
 package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.WrenchUtil;
 import appeng.api.config.SecurityPermissions;

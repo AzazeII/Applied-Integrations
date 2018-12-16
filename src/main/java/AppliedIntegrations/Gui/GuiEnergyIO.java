@@ -1,18 +1,16 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketClientFilter;
 import AppliedIntegrations.Parts.IO.PartEnergyExport;
 import AppliedIntegrations.Parts.IO.PartEnergyImport;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Utils.AILog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -28,12 +26,14 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+
 /**
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
 public class GuiEnergyIO
-        extends AIBaseGui implements IFilterGUI,IPartGui {
+        extends PartGui implements IFilterGUI {
     ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.io.bus.png");
 
 
@@ -61,9 +61,7 @@ public class GuiEnergyIO
     private static final int TITLE_POS_X = 6, TITLE_POS_Y = 5;
     private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
 
-    public int x,y,z;
-    public World w;
-    public ForgeDirection side;
+    public volatile AIOPart part;
 
 
     /**
@@ -72,26 +70,15 @@ public class GuiEnergyIO
     private static final int REDSTONE_CONTROL_BUTTON_POS_Y = 2, REDSTONE_CONTROL_BUTTON_POS_X = -18, REDSTONE_CONTROL_BUTTON_SIZE = 16,
             REDSTONE_CONTROL_BUTTON_ID = 0;
 
-    public AIOPart part;
     private List<LiquidAIEnergy> filter = new ArrayList<LiquidAIEnergy>();
     String stringName;
-    EntityPlayer player;
+    public EntityPlayer player;
     private boolean[] configMatrix = {false,false,false,
                                     false,true,false,
                                     false,false,false};
-    public GuiEnergyIO(Container container,int x,int y,int z, ForgeDirection side, AIOPart part, EntityPlayer player) {
+    public GuiEnergyIO(Container container, EntityPlayer player) {
         super(container);
-        this.part = part;
         this.player = player;
-
-        if(side != null) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
-
-            this.w = player.getEntityWorld();
-            this.side = side;
-        }
 
         if(part instanceof PartEnergyExport)
             this.stringName = StatCollector.translateToLocal("ME Energy Export Bus");
@@ -126,6 +113,21 @@ public class GuiEnergyIO
 
             if( ( !hoverUnderlayRendered ) && ( slotWidget.shouldRender ) && ( slotWidget.isMouseOverWidget( mouseX, mouseY ) ) )
             {
+                AILog.chatLog(x+"");
+                AILog.chatLog(y+"");
+                AILog.chatLog(z+"");
+
+
+                if(slotWidget.d == null){
+                    AILog.chatLog("dir is null");
+                    slotWidget.x = part.getX();
+                    slotWidget.y = part.getY();
+                    slotWidget.z = part.getZ();
+
+                    slotWidget.w = this.player.worldObj;
+                    slotWidget.d = part.getSide();
+                }
+
                 slotWidget.drawMouseHoverUnderlay();
 
                 slotUnderMouse = slotWidget;
@@ -161,7 +163,8 @@ public class GuiEnergyIO
                 // Calculate the y position
                 int yPos = this.WIDGET_Y_POSITION + ( row * AIWidget.WIDGET_SIZE );
 
-                this.energySlotList.add( new WidgetEnergySlot( this, this.player,x,y,z,side,w, index, xPos, yPos, this.configMatrix[index]) );
+                this.energySlotList.add( new WidgetEnergySlot( this, this.player,
+                        index, xPos, yPos, this.configMatrix[index]) );
             }
         }
 
@@ -173,11 +176,24 @@ public class GuiEnergyIO
         super.mouseClicked( mouseX, mouseY, mouseButton );
 
         // Loop over all widgets
-        for( WidgetEnergySlot energySlot : this.energySlotList )
+        for( WidgetEnergySlot currentWidget : this.energySlotList )
         {
+            if(this.part != null){
+                if(currentWidget.w == null){
+                    currentWidget.x = part.getX();
+                    currentWidget.y = part.getY();
+                    currentWidget.z = part.getZ();
+
+                    currentWidget.w = part.getHostTile().getWorldObj();
+                    currentWidget.d = part.getSide();
+                }
+            }
+
             // Is the mouse over this widget?
-            if( energySlot.isMouseOverWidget( mouseX, mouseY ) )
+            if( currentWidget.isMouseOverWidget( mouseX, mouseY ) )
             {
+                AILog.chatLog("called");
+
                 // Get the Energy of the currently held item
                 LiquidAIEnergy itemEnergy = Utils.getEnergyFromItemStack(player.inventory.getItemStack());
 
@@ -193,10 +209,10 @@ public class GuiEnergyIO
                     }
 
                 }else{
-                    energySlot.mouseClicked(null);
+                    currentWidget.mouseClicked(null);
                 }
                 // Inform the slot it was clicked
-                energySlot.mouseClicked( itemEnergy );
+                currentWidget.mouseClicked( itemEnergy );
                 //part.updateFilter(0,itemEnergy);
                 // Stop searching
                 break;
@@ -232,28 +248,10 @@ public class GuiEnergyIO
         return null;
     }
 
-    @Override
-    public int getX() {
-        return x;
-    }
 
     @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public int getZ() {
-        return z;
-    }
-
-    @Override
-    public ForgeDirection getSide() {
-        return side;
-    }
-
-    @Override
-    public World getWorld() {
-        return w;
+    public void setX(int x){
+        this.x = x;
+        AILog.chatLog(x+"");
     }
 }

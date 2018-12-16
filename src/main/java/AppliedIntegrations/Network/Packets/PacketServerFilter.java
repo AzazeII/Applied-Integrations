@@ -1,23 +1,19 @@
 package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
-import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.IPartGui;
+import AppliedIntegrations.Gui.PartGui;
 import AppliedIntegrations.Network.AIPacket;
 import AppliedIntegrations.Utils.AILog;
+import appeng.api.config.SecurityPermissions;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.RF;
 /**
  * @Author Azazell
  */
@@ -35,11 +31,11 @@ public class PacketServerFilter extends AIPacket<PacketServerFilter> {
 
         Gui gui = Minecraft.getMinecraft().currentScreen;
         if (gui instanceof IFilterGUI) {
-            if(gui instanceof IPartGui){
-                IPartGui IPG = (IPartGui)gui;
+            if (gui instanceof PartGui) {
+                PartGui IPG = (PartGui) gui;
                 // Check if we are updating correct GUI
-                if(IPG.getX() == x && IPG.getY() == y && IPG.getSide() == s && IPG.getWorld() == w && IPG.getZ() == z) {
-                        ((IFilterGUI) gui).updateEnergies(energy, index);
+                if (IPG.getX() == x && IPG.getY() == y && IPG.getSide() == s && IPG.getWorld() == w && IPG.getZ() == z) {
+                    ((IFilterGUI) gui).updateEnergies(energy, index);
                 }
             }
         }

@@ -2,19 +2,20 @@ package AppliedIntegrations.Gui.ServerGUI;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
-import AppliedIntegrations.Container.ContainerServerPacketTracer;
+import AppliedIntegrations.Container.Server.ContainerServerPacketTracer;
 import AppliedIntegrations.Entities.Server.TileServerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkGui;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.PortDirections;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.ServerGui;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketServerFeedback;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.client.gui.widgets.GuiToggleButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -22,12 +23,14 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Vector;
 
+import static AppliedIntegrations.Gui.ServerGUI.NetworkPermissions.*;
+
 public class ServerPacketTracer extends AIBaseGui {
+
+    public volatile TileServerCore mInstance;
 
     private final int GUI_X = 342;
     private final int GUI_Y = 139;
@@ -59,21 +62,23 @@ public class ServerPacketTracer extends AIBaseGui {
 
     private LinkedHashMap<ForgeDirection, NetworkGui> netInterface = new LinkedHashMap<>();
 
-    private GuiToggleButton[] energy = new GuiToggleButton[3];
-    private GuiToggleButton[] item = new GuiToggleButton[3];
-    private GuiToggleButton[] fluid = new GuiToggleButton[3];
-    private GuiToggleButton[] essentia = new GuiToggleButton[3];
-    private GuiToggleButton[] gas = new GuiToggleButton[3];
-    private GuiToggleButton[] mana = new GuiToggleButton[3];
+    private GuiServerButton[] energy = new GuiServerButton[3];
+    private GuiServerButton[] item = new GuiServerButton[3];
+    private GuiServerButton[] fluid = new GuiServerButton[3];
+    private GuiServerButton[] essentia = new GuiServerButton[3];
+    private GuiServerButton[] gas = new GuiServerButton[3];
+    private GuiServerButton[] mana = new GuiServerButton[3];
 
     private GuiToggleButton extract;
     private GuiToggleButton inject;
     private GuiToggleButton craft;
 
-    private GuiToggleButton energyGrid;
+    private GuiServerButton energyGrid;
+
+    public EntityPlayer player;
 
     /**
-     * Map of all server from server id
+     * Map of all servers from server id
      */
     public LinkedHashMap<Integer,ServerGui> ServerMap = new LinkedHashMap<>();
 
@@ -82,8 +87,10 @@ public class ServerPacketTracer extends AIBaseGui {
     private ServerGui MasterServerGui;
     private AIGuiButton selectedNetwork;
 
-    public ServerPacketTracer(ContainerServerPacketTracer container, TileServerCore master, int x, int y, int z, EntityPlayer player) {
+    public ServerPacketTracer(ContainerServerPacketTracer container, TileServerCore master,EntityPlayer player) {
         super(container);
+
+        this.player = player;
 
     }
     @Override
@@ -93,7 +100,18 @@ public class ServerPacketTracer extends AIBaseGui {
                 if(g.isMouseOverButton(mX,mY)) {
                     selectedNetwork = g;
                     return;
+                }else if(g.isMouseOverMarker(mX,mY)){
+                    g.isLinked = !g.isLinked;
                 }
+        }
+        for(GuiToggleButton btn : SettingList){
+            if(btn instanceof GuiServerButton){
+                GuiServerButton button = (GuiServerButton)btn;
+                if(button.visible){
+                   button.doAction();
+                   return;
+                }
+            }
         }
         selectedNetwork = null;
     }
@@ -127,34 +145,42 @@ public class ServerPacketTracer extends AIBaseGui {
 
         //---------------------------------------------------------------------------------------------------- Declare buttons in bar ----------------------------------------------------------------------------------------------------//
 
-        int xCoord = BAR_X + 69;
+        int xCoord = BAR_X-273;
+        int yCoord = this.guiTop/2-70;
 
-        this.buttonList.add(this.inject = new GuiToggleButton(xCoord,this.guiTop+2,11 * 16, 12 * 16,SecurityPermissions.INJECT.getUnlocalizedName(), SecurityPermissions.INJECT.getUnlocalizedTip()));
-        this.buttonList.add(this.extract = new GuiToggleButton(xCoord+16,this.guiTop+2,11 * 16 + 1, 12 * 16 + 1,SecurityPermissions.EXTRACT.getUnlocalizedName(), SecurityPermissions.EXTRACT.getUnlocalizedTip()));
-        this.buttonList.add(this.craft = new GuiToggleButton(xCoord+32,this.guiTop+2,11 * 16 + 2, 12 * 16 + 2,SecurityPermissions.CRAFT.getUnlocalizedName(), SecurityPermissions.CRAFT.getUnlocalizedTip()));
+        SettingList.add(this.inject = new GuiToggleButton(xCoord,yCoord+2,11 * 16, 12 * 16,SecurityPermissions.INJECT.getUnlocalizedName(), SecurityPermissions.INJECT.getUnlocalizedTip()));
+        SettingList.add(this.extract = new GuiToggleButton(xCoord+16,yCoord+2,11 * 16 + 1, 12 * 16 + 1,SecurityPermissions.EXTRACT.getUnlocalizedName(), SecurityPermissions.EXTRACT.getUnlocalizedTip()));
+        SettingList.add(this.craft = new GuiToggleButton(xCoord+32,yCoord+2,11 * 16 + 2, 12 * 16 + 2,SecurityPermissions.CRAFT.getUnlocalizedName(), SecurityPermissions.CRAFT.getUnlocalizedTip()));
 
-        for(int i=0; i<3; i++) {
-            this.buttonList.add(this.item[i] = new GuiToggleButton(xCoord+16*i,this.guiTop+20,0,16,"",""));
-            this.buttonList.add(this.fluid[i] = new GuiToggleButton(xCoord+16*i,this.guiTop+38, 0,16,"",""));
-            this.buttonList.add(this.gas[i] = new GuiToggleButton(xCoord+16*i,this.guiTop+56,0,16,"",""));
-            this.buttonList.add(this.energy[i] = new GuiToggleButton(xCoord+16*i,this.guiTop+74,0,16,"",""));
-            this.buttonList.add(this.mana[i] = new GuiToggleButton(xCoord+16*i,this.guiTop+92,0,16,"",""));
+        for(int i=0;i<3;i++){
 
-            this.SettingList.add(this.item[i]);
-            this.SettingList.add(this.fluid[i]);
-            this.SettingList.add(this.gas[i]);
-            this.SettingList.add(this.energy[i]);
-            this.SettingList.add(this.mana[i]);
+            SettingList.add(this.item[i] = new GuiServerButton(xCoord+i*16,yCoord+20,Items,this));
+            SettingList.add(this.fluid[i] = new GuiServerButton(xCoord+i*16,yCoord+38,Fluid,this));
+            SettingList.add(this.gas[i] = new GuiServerButton(xCoord+i*16,yCoord+56,Gas,this));
+            SettingList.add(this.essentia[i] = new GuiServerButton(xCoord+i*16,yCoord+72,Essentia,this));
+            SettingList.add(this.energy[i] = new GuiServerButton(xCoord+i*16,yCoord+90,Energy,this));
+            SettingList.add(this.mana[i] = new GuiServerButton(xCoord+i*16,yCoord+108,Mana,this));
 
         }
 
-        this.buttonList.add(this.energyGrid = new GuiToggleButton(xCoord+16, this.guiTop+110,0,16,"",""));
+        SettingList.add(this.energyGrid = new GuiServerButton(xCoord+16, yCoord+126,EnergyGrid,this));
 
-        this.SettingList.add(this.inject);
-        this.SettingList.add(this.extract);
-        this.SettingList.add(this.craft);
-        this.SettingList.add(this.energyGrid);
+        for(GuiToggleButton btn : SettingList){
+            if(btn instanceof GuiServerButton){
+                GuiServerButton button = (GuiServerButton)btn;
+                button.setAction(()->{
 
+                    AILog.chatLog("Actions called!");
+                    button.isActive = !button.isActive;
+
+                    if(selectedNetwork instanceof NetworkGui) {
+                        NetworkHandler.sendToServer(new PacketServerFeedback(this.mInstance,button.isActive, ((NetworkGui) selectedNetwork).LinkedServer,
+                                ((NetworkGui) selectedNetwork).dir, ((NetworkGui) selectedNetwork).networkPermissions));
+                    }
+
+                });
+            }
+        }
     }
 
     /**
@@ -168,22 +194,21 @@ public class ServerPacketTracer extends AIBaseGui {
                 drawHoveringText(g.getTip(),mX,mY,fontRendererObj);
             }
         }*/
+        for(GuiToggleButton btn : SettingList){
+            if(btn instanceof GuiServerButton){
+                GuiServerButton button = (GuiServerButton)btn;
+                if(button.visible){
+                    if(button.isMouseOverButton(mX,mY)){
+                        drawHoveringText(button.getTip(),mX,mY,fontRendererObj);
+                    }
+                }
+            }
+        }
         for(NetworkGui g : netInterface.values()){
             if(g.isMouseOverButton(mX,mY)){
                 drawHoveringText(g.getTip(),mX,mY,fontRendererObj);
             }
         }
-        for(GuiToggleButton btn : SettingList){
-            if(AIGuiHelper.INSTANCE.isPointInRegion( btn.yPosition, btn.xPosition, btn.height, btn.width, mX, mY )){
-                if(btn.visible) {
-                    List<String> list = new ArrayList<>();
-                    list.add(btn.getMessage());
-
-                    drawHoveringText(list, mX, mY, fontRendererObj);
-                }
-            }
-        }
-
     }
 
     /**
@@ -194,12 +219,6 @@ public class ServerPacketTracer extends AIBaseGui {
         super.drawGuiContainerForegroundLayer(mouseX,mouseY);
         this.fontRendererObj.drawString(StatCollector.translateToLocal("ME Server Network Tracer"), 9, 2, 4210752);
 
-        for(Object button : this.buttonList){
-            if(button instanceof GuiButton){
-                GuiButton guiButton = (GuiButton)button;
-                guiButton.visible = selectedNetwork != null;
-            }
-        }
         for(ServerGui sG : ServerMap.values()){
             if(sG != null) {
                 if (sG.isMainServer) {
@@ -267,6 +286,18 @@ public class ServerPacketTracer extends AIBaseGui {
 
                 sG.renderGui(0.3F);
             }
+        }
+
+        for(GuiToggleButton btn : this.SettingList){
+            btn.visible = selectedNetwork != null;
+
+            btn.drawButton(Minecraft.getMinecraft(),btn.xPosition,btn.yPosition);
+        }
+
+        try{
+            AILog.chatLog(this.mInstance.xCoord+"");
+        }catch (NullPointerException e){
+            AILog.chatLog(e.getMessage());
         }
     }
 

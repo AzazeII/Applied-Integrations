@@ -10,6 +10,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * @Author Azazell
+ */
 public class PacketGuiChange extends AIPacket<PacketGuiChange> {
 
     public PacketGuiChange(){

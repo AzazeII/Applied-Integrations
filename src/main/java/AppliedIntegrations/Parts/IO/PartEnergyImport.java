@@ -90,6 +90,7 @@ public class PartEnergyImport extends AIOPart
 	}
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall ) {
+		super.tickingRequest(node,ticksSinceLastCall);
 		// Get the world
 		World world = this.hostTile.getWorldObj();
 
@@ -256,15 +257,6 @@ public class PartEnergyImport extends AIOPart
 			rh.setBounds(6, 6, 11, 10, 10, 12);
 			rh.renderBlock(x, y, z, renderer);
 		}
-	}
-	@Override
-	public boolean onActivate( final EntityPlayer player, final Vec3 position )
-	{
-		if(this.getHostTile().getWorldObj().isRemote == false) {
-			player.openGui(AppliedIntegrations.instance, 4, player.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
-			return true;
-		}
-		return false;
 	}
 	@Override
 	public Object getServerGuiElement( final EntityPlayer player ) {

@@ -3,7 +3,7 @@ package AppliedIntegrations.Container;
 import AppliedIntegrations.API.IEnergySelectorContainer;
 import AppliedIntegrations.API.LiquidAIEnergy;
 
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;

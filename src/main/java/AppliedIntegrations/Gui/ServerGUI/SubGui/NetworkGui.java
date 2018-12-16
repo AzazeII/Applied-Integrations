@@ -3,8 +3,10 @@ package AppliedIntegrations.Gui.ServerGUI.SubGui;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
+import AppliedIntegrations.Gui.ServerGUI.ButtonAction;
 import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
+import appeng.api.config.SecurityPermissions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -13,6 +15,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class NetworkGui extends AIGuiButton {
@@ -28,6 +32,12 @@ public class NetworkGui extends AIGuiButton {
     public boolean isLinked;
     public float zoom;
     private boolean renderOverlay;
+
+
+    /**
+     * All permissions of this network
+     */
+    public LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions = new LinkedHashMap<>();
 
     public NetworkGui(int posX,int posY,ServerPacketTracer rootGUI,int ID, ForgeDirection side, int linkedTo) {
         super(ID, posX,posY,null);
@@ -79,6 +89,12 @@ public class NetworkGui extends AIGuiButton {
 
         GL11.glPopMatrix();
     }
+
+    public boolean isMouseOverMarker( final int mouseX, final int mouseY)
+    {
+        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.yPosition+16, this.xPosition+4, 8, 4, mouseX, mouseY, root.guiLeft(), root.guiTop() );
+    }
+
     @Override
     public boolean isMouseOverButton( final int mouseX, final int mouseY )
     {

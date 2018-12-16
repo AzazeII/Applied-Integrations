@@ -2,24 +2,28 @@ package AppliedIntegrations.Entities.Server;
 
 import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.Multiblocks.Patterns;
-import AppliedIntegrations.Container.ContainerMEServer;
+import AppliedIntegrations.Container.Server.ContainerMEServer;
 import AppliedIntegrations.Entities.AIMultiBlockTile;
 import AppliedIntegrations.Entities.AITile;
 import AppliedIntegrations.Entities.IAIMultiBlock;
 import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
 import AppliedIntegrations.Gui.ServerGUI.NetworkData;
+import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
+import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.*;
-import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.storage.*;
 import appeng.api.util.INetworkToolAgent;
 import appeng.api.util.IReadOnlyCollection;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -48,6 +52,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
         }
     };
 
+
     // ME Inventories
     private List<IMEInventoryHandler> items = new LinkedList<>();
     private List<IMEInventoryHandler> fluids = new LinkedList<>();
@@ -57,8 +62,14 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
      * Map of ids of IGrids, which contains Server
      */
     public LinkedHashMap<IGrid, Integer> ServerNetworkMap = new LinkedHashMap<>();
+
     // Networks in ports
     public LinkedHashMap<ForgeDirection,IGrid> portNetworks = new LinkedHashMap<>();
+
+    /**
+     * Metadata - data of data
+     */
+    public Vector<NetworkData> dataMap = new Vector<>();
 
     // Network of owner
     public IGrid MainNetwork;
@@ -72,6 +83,13 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
 
     // Wait for updating
     public int blocksToPlace = 0;
+    private boolean updateRequested;
+
+    public void requestUpdate(){
+        AILog.chatLog("Updating");
+
+        updateRequested = true;
+    }
 
     @Override
     public void updateEntity() {
@@ -83,6 +101,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
 
             for (IAIMultiBlock slave : Slaves) {
 
+            }
+            if(updateRequested){
+                Gui g = Minecraft.getMinecraft().currentScreen;
+                if(g instanceof ServerPacketTracer){
+                    ServerPacketTracer SPT = (ServerPacketTracer)g;
+                    SPT.mInstance = this;
+
+                    updateRequested = false;
+                }
             }
 
         }
@@ -354,18 +381,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
         Slaves.add(slave);
     }
 
-    public void updateGUI(TileServerSecurity port) {
+    public void updateGUI(TileServerSecurity sender) {
         if(isFormed) {
             if (ServerNetworkMap.containsValue(RESERVED_MASTER_ID)) {
-                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, ForgeDirection.UNKNOWN, RESERVED_MASTER_ID)));
+                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, ForgeDirection.UNKNOWN, RESERVED_MASTER_ID),xCoord,yCoord,zCoord,worldObj));
                 for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
                     IGrid grid = portNetworks.get(dir);
                     if(ServerNetworkMap.get(grid) != null) {
                         if (ServerNetworkMap.get(grid) != RESERVED_MASTER_ID) {
-                            if (isServerNetwork(grid))
-                                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, dir, ServerNetworkMap.get(grid))));
-                            else
-                                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(false, dir, RESERVED_MASTER_ID)));
+                            NetworkHandler.sendToAll(new PacketMEServer(new NetworkData( isServerNetwork(grid), dir, ServerNetworkMap.get(grid)),xCoord,yCoord,zCoord,worldObj));
                         }
                     }
                 }
@@ -374,4 +398,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     }
 
 
+    public void onFeedback(boolean Connected, int serverID, ForgeDirection port, LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions) {
+        if(Connected){
+
+        }else{
+
+        }
+    }
 }

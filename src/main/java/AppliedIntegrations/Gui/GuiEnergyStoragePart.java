@@ -1,7 +1,6 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
@@ -24,10 +23,13 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
+import static AppliedIntegrations.AppliedIntegrations.AI;
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+
 @SideOnly(Side.CLIENT)
 public class GuiEnergyStoragePart
-        extends AIBaseGui
-        implements IFilterGUI,IPartGui
+        extends PartGui
+        implements IFilterGUI
 {
     /**
      * The number of columns in the gui.
@@ -113,7 +115,7 @@ public class GuiEnergyStoragePart
     /**
      * Storage bus associated with this gui
      */
-    public PartEnergyStorage storageBus;
+    public volatile PartEnergyStorage storageBus;
 
     /**
      * Title of the gui
@@ -125,14 +127,6 @@ public class GuiEnergyStoragePart
      */
     private boolean isVoidAllowed = false;
 
-    public int x;
-    public int y;
-    public int z;
-    public World world;
-    public ForgeDirection side;
-
-
-
     /**
      * Creates the GUI.
      *
@@ -141,7 +135,7 @@ public class GuiEnergyStoragePart
      * @param player
      * The inventory container.
      */
-    public GuiEnergyStoragePart( ContainerEnergyStorage CEI,final PartEnergyStorage storageBus, final EntityPlayer player,int x,int y,int z,ForgeDirection side )
+    public GuiEnergyStoragePart( ContainerEnergyStorage CEI,final PartEnergyStorage storageBus, final EntityPlayer player)
     {
         // Call super
         super( CEI );
@@ -158,19 +152,7 @@ public class GuiEnergyStoragePart
         this.xSize = ( this.hasNetworkTool ? GuiEnergyStoragePart.GUI_WIDTH_NETWORK_TOOL : GuiEnergyStoragePart.GUI_WIDTH_NO_TOOL );
         this.ySize = 251;
 
-        if(side != null) {
-            this.x = x;
-            this.y = y;
-            this.z = z;
 
-            this.world = player.getEntityWorld();
-            this.side = side;
-
-            AILog.chatLog(x+"");
-            AILog.chatLog(y+"");
-            AILog.chatLog(z+"");
-
-        }
     }
 
     /**
@@ -215,6 +197,17 @@ public class GuiEnergyStoragePart
         // Draw widgets
         for( WidgetEnergySlot currentWidget : this.EnergyWidgetList )
         {
+            if(this.storageBus != null){
+                if(currentWidget.d == null){
+                    currentWidget.x = storageBus.getX();
+                    currentWidget.y = storageBus.getY();
+                    currentWidget.z = storageBus.getZ();
+
+                    currentWidget.w = this.player.worldObj;
+                    currentWidget.d = storageBus.getSide();
+                }
+            }
+
             if( ( slotUnderMouse == null ) && ( currentWidget.shouldRender ) && ( currentWidget.isMouseOverWidget( mouseX, mouseY ) ) )
             {
                 // Draw the underlay
@@ -298,7 +291,7 @@ public class GuiEnergyStoragePart
         {
             for( int column = 0; column < GuiEnergyStoragePart.WIDGET_ROWS; column++ )
             {
-                this.EnergyWidgetList.add( new WidgetEnergySlot( this, this.player,x,y,z,side,world,
+                this.EnergyWidgetList.add( new WidgetEnergySlot( this, this.player,
                         ( row * this.WIDGET_COLUMNS ) + column,
                         this.WIDGET_X_POS + ( AIWidget.WIDGET_SIZE * column )-6,
                         this.WIDGET_Y_POS + ( AIWidget.WIDGET_SIZE * row ) -1,true));
@@ -324,28 +317,4 @@ public class GuiEnergyStoragePart
         return null;
     }
 
-    @Override
-    public int getX() {
-        return x;
-    }
-
-    @Override
-    public int getY() {
-        return y;
-    }
-
-    @Override
-    public int getZ() {
-        return z;
-    }
-
-    @Override
-    public ForgeDirection getSide() {
-        return this.side;
-    }
-
-    @Override
-    public World getWorld() {
-        return this.world;
-    }
 }

@@ -1,4 +1,4 @@
-package AppliedIntegrations.Container.slot;
+package AppliedIntegrations.Container.Server;
 
 import AppliedIntegrations.AppliedIntegrations;
 import appeng.api.AEApi;

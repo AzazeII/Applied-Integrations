@@ -1,6 +1,6 @@
 package AppliedIntegrations.Container;
 
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Entities.AITile;
 
 import AppliedIntegrations.Utils.AIUtils;

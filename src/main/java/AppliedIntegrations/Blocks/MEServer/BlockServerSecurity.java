@@ -2,11 +2,13 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Entities.Server.TileServerSecurity;
+import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -243,9 +245,18 @@ public class BlockServerSecurity extends Block implements ITileEntityProvider {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float par7, float par8, float par9) {
         super.onBlockActivated(world,x,y,z,p,side,par7,par8,par9);
-        if(!p.isSneaking()) {
-            p.openGui(AppliedIntegrations.instance, 8, world, x, y, z);
-            return true;
+        if(!world.isRemote) {
+            if (!p.isSneaking()) {
+                p.openGui(AppliedIntegrations.instance, 8, world, x, y, z);
+
+                if(world.getTileEntity(x,y,z)!=null) {
+                    TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(x, y, z);
+
+                    if(tile.hasMaster())
+                        tile.getMaster().requestUpdate();
+                }
+                return true;
+            }
         }
         return false;
     }

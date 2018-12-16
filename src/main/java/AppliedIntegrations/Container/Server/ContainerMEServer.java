@@ -1,11 +1,8 @@
-package AppliedIntegrations.Container;
+package AppliedIntegrations.Container.Server;
 
-import AppliedIntegrations.API.Parts.AIPart;
-import AppliedIntegrations.Container.slot.SlotMEServer;
+import AppliedIntegrations.API.AppliedCoord;
 import AppliedIntegrations.Entities.Server.TileServerCore;
 import appeng.api.AEApi;
-import appeng.client.me.SlotME;
-import appeng.container.slot.SlotRestrictedInput;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
@@ -15,6 +12,7 @@ import net.minecraft.item.ItemStack;
 public class ContainerMEServer extends Container
 {
     private TileServerCore master;
+
 
     public ContainerMEServer(EntityPlayer player, TileServerCore master) {
 

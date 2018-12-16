@@ -1,6 +1,6 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

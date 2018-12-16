@@ -2,7 +2,7 @@ package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
 
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.AIOPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

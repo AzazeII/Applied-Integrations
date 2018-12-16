@@ -5,8 +5,13 @@ import AppliedIntegrations.Blocks.AIMultiBlock;
 import AppliedIntegrations.Entities.IAIMultiBlock;
 import AppliedIntegrations.Entities.Server.TileServerCore;
 import AppliedIntegrations.Entities.Server.TileServerRib;
+import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.Utils.AILog;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -16,6 +21,8 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 public class BlockServerCore extends AIMultiBlock {
 
@@ -56,9 +63,13 @@ public class BlockServerCore extends AIMultiBlock {
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float par7, float par8, float par9) {
         super.onBlockActivated(world,x,y,z,p,side,par7,par8,par9);
-        if(!p.isSneaking()) {
-            p.openGui(AppliedIntegrations.instance, 6, world, x, y, z);
-            return true;
+            if (!p.isSneaking()) {
+                if(!world.isRemote) {
+                    world.markBlockForUpdate(x,y,z);
+                    p.openGui(AppliedIntegrations.instance, 6, world, x, y, z);
+
+                    return true;
+            }
         }
         return false;
     }

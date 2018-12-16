@@ -2,9 +2,6 @@ package AppliedIntegrations.Gui.Widgets;
 
 import AppliedIntegrations.API.AppliedCoord;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
-import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Gui.GuiTextureManager;
 import AppliedIntegrations.Gui.IWidgetHost;
 
@@ -16,7 +13,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
@@ -39,7 +35,10 @@ public class WidgetEnergySlot
     public ForgeDirection d;
     public World w;
 
-
+    public WidgetEnergySlot(final IWidgetHost hostGui, final EntityPlayer player,final int id, final int posX,
+                            final int posY, final boolean shouldRender){
+        this(hostGui,player,0,0,0,null,null,id,posX,posY,true);
+    }
     public WidgetEnergySlot(final IWidgetHost hostGui, final EntityPlayer player,int x,int y,int z,ForgeDirection d,World w, final int id, final int posX,
                             final int posY, final boolean shouldRender){
         super(hostGui,null,posX,posY,player);
@@ -104,8 +103,15 @@ public class WidgetEnergySlot
     }
     public void mouseClicked( final LiquidAIEnergy energy )
     {
-        this.setEnergy( energy, 1 );
-        NetworkHandler.sendToServer(new PacketClientFilter(x,y,z,d,w,energy,id));
+
+        AILog.chatLog(x+"");
+        AILog.chatLog(y+"");
+        AILog.chatLog(z+"");
+
+        if(this.d != null) {
+            this.setEnergy(energy, 1);
+            NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));
+        }
     }
 
     @Override

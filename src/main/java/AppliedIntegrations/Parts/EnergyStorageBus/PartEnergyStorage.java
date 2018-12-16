@@ -2,12 +2,17 @@ package AppliedIntegrations.Parts.EnergyStorageBus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 
 import AppliedIntegrations.API.IEnergyDuality;
 import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
+import AppliedIntegrations.Network.Packets.PacketServerFilter;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerEnergyStorage;
@@ -46,8 +51,11 @@ import appeng.helpers.IPriorityHost;
 import cofh.api.energy.EnergyStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,6 +68,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import javax.annotation.Nullable;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.RF;
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**
  * @Author Azazell
@@ -105,6 +114,8 @@ public class PartEnergyStorage
 	 */
 	private int priority = 0;
 	private TileEntity facingContainer;
+	private boolean updateRequested;
+	public Vector<ContainerEnergyStorage> listeners = new Vector<>();
 
 	/**
 	 * Creates the bus
@@ -244,7 +255,7 @@ public class PartEnergyStorage
 	 */
 	@Override
 	public Object getClientGuiElement( final EntityPlayer player ) {
-		return new GuiEnergyStoragePart( (ContainerEnergyStorage)getServerGuiElement(player),this, player, this.getX(),this.getY(),this.getZ(),this.getSide());
+		return new GuiEnergyStoragePart( (ContainerEnergyStorage)getServerGuiElement(player),this, player);
 	}
 
 	/**
@@ -337,10 +348,12 @@ public class PartEnergyStorage
 			return false;
 		}
 
-
-		if(this.getHostTile().getWorldObj().isRemote == false){
-			player.openGui(AppliedIntegrations.instance, 3, this.getHostTile().getWorldObj(),
-					this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
+		if(getLogicalSide().isServer()) {
+			if (!this.getHostTile().getWorldObj().isRemote) {
+				player.openGui(AppliedIntegrations.instance, 3, this.getHostTile().getWorldObj(),
+						this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
+				this.updateRequested = true;
+			}
 		}
 		return true;
 	}
@@ -554,6 +567,18 @@ public class PartEnergyStorage
 		// Update the handler.
 		this.handler.tickingRequest( node, TicksSinceLastCall );
 		this.onNeighborChanged();
+
+		if(updateRequested) {
+			for (ContainerEnergyStorage storage : this.listeners) {
+				Gui g = Minecraft.getMinecraft().currentScreen;
+				if (g instanceof GuiEnergyStoragePart) {
+					NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
+							(EntityPlayerMP)storage.player);
+					updateRequested = false;
+				}
+			}
+		}
+
 		// Keep chugging along
 		return TickRateModulation.SAME;
 	}

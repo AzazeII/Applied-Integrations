@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts;
 
 
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Parts.IO.PartEnergyExport;
 import AppliedIntegrations.Parts.IO.PartEnergyImport;

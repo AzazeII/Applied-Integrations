@@ -1,7 +1,7 @@
 package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -60,6 +60,7 @@ public class ContainerEnergyStorage
 
 		// Set the part
 		this.storageBus = part;
+		part.listeners.add(this);
 
 		for( int i = 0; i < PartEnergyStorage.FILTER_SIZE; ++i )
 		{
@@ -99,6 +100,13 @@ public class ContainerEnergyStorage
 
 
 		return false;
+	}
+
+	@Override
+	public void onContainerClosed(EntityPlayer p)
+	{
+		super.onContainerClosed(p);
+		this.storageBus.listeners.remove(this);
 	}
 
 	@Override

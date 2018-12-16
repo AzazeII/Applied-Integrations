@@ -1,22 +1,14 @@
 package AppliedIntegrations.Container;
 
 
-import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
-import AppliedIntegrations.Network.AIPacket;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketClientFilter;
-import AppliedIntegrations.Utils.EffectiveSide;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.AIPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 import java.util.HashMap;
 
 /**

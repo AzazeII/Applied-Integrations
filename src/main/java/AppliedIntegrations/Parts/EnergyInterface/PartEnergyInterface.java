@@ -1,7 +1,9 @@
 package AppliedIntegrations.Parts.EnergyInterface;
 
 import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Gui.PartGui;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Network.Packets.PacketBarChange;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
@@ -58,6 +60,7 @@ import ic2.api.energy.tile.IEnergySink;
 
 import mekanism.api.energy.IStrictEnergyAcceptor;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -138,6 +141,7 @@ public class PartEnergyInterface
 	public boolean SyncMarked = false;
 	private String realContainer;
 	public int hash;
+	private boolean updateRequested;
 
 	public boolean canConnectEnergy(ForgeDirection from) {
 		return from==this.getSide();
@@ -154,7 +158,7 @@ public class PartEnergyInterface
 	public LiquidAIEnergy FilteredEnergy = null;
 
 	public PartEnergyInterface() {
-		super(PartEnum.EnergyInterface, new SecurityPermissions[]{SecurityPermissions.INJECT, SecurityPermissions.EXTRACT});
+		super(PartEnum.EnergyInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
 	}
 
     // Registring Inventory for slots of upgrades
@@ -250,10 +254,10 @@ public class PartEnergyInterface
 	}
 	@Override
 	public boolean onActivate(EntityPlayer player, Vec3 position) {
-		if(this.getHostTile().getWorldObj().isRemote == false){
+		if(!this.getHostTile().getWorldObj().isRemote){
 			this.LinkedGui = (GuiEnergyInterface)this.getClientGuiElement(player);
 			player.openGui(AppliedIntegrations.instance, 1, this.getHostTile().getWorldObj(), this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
-
+			updateRequested = true;
 		}
 		return true;
 	}
@@ -272,7 +276,7 @@ public class PartEnergyInterface
 	public Object getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player),
-				this, this.getX(),this.getY(),this.getZ(),this.getSide(), player );
+				this, player.worldObj, this.getX(),this.getY(),this.getZ(),this.getSide(), player );
 	}
 	@Override
 	public Object getServerGuiElement(EntityPlayer player)
@@ -724,13 +728,26 @@ public class PartEnergyInterface
 		}
 	}
 
+	/**
+	 *  marks GUI, as gui of THIS machine
+	 */
+	private void initGuiCoordinates(){
+		for( ContainerEnergyInterface listener : this.LinkedListeners){
+			if(listener!=null) {
+				AILog.chatLog("updating");
+				NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
+						(EntityPlayerMP)listener.player);
+				updateRequested = false;
+			}
+		}
+	}
 	private void notifyListenersOfFilterEnergyChange()
 	{
 		for( ContainerEnergyInterface listener : this.LinkedListeners)
 		{
 			if(listener!=null) {
-				NetworkHandler.sendToServer(new PacketServerFilter(this.FilteredEnergy,0,this.getX(),this.getY(),this.getZ()
-						,this.getSide(),this.getHostTile().getWorldObj()));
+				NetworkHandler.sendTo(new PacketServerFilter(this.FilteredEnergy,0,this.getX(),this.getY(),this.getZ()
+						,this.getSide(),this.getHostTile().getWorldObj()), (EntityPlayerMP)listener.player);
 			}
 		}
 	}
@@ -780,6 +797,11 @@ public class PartEnergyInterface
 	@Override
 	public TickRateModulation tickingRequest( final IGridNode node, final int TicksSinceLastCall )
 	{
+		if(updateRequested){
+			// Check if we have gui to update
+			if(Minecraft.getMinecraft().currentScreen instanceof PartGui)
+				this.initGuiCoordinates();
+		}
 			try {
 				if (this.isActive()) {
 						DoInjectDualityWork(Actionable.MODULATE);

@@ -2,10 +2,9 @@ package AppliedIntegrations.Gui.ServerGUI;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
-import AppliedIntegrations.Container.ContainerMEServer;
+import AppliedIntegrations.Container.Server.ContainerMEServer;
 import AppliedIntegrations.Gui.AIBaseGui;
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 

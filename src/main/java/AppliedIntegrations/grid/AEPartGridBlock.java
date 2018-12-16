@@ -1,7 +1,6 @@
 package AppliedIntegrations.grid;
 
-import AppliedIntegrations.API.Grid.IMEEnergyMonitor;
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import appeng.api.networking.*;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.security.ISecurityGrid;

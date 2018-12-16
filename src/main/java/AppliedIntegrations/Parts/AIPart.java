@@ -1,5 +1,4 @@
-package AppliedIntegrations.API.Parts;
-import AppliedIntegrations.Parts.PartEnum;
+package AppliedIntegrations.Parts;
 import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -742,11 +741,6 @@ public abstract class AIPart
 		this.updateStatus();
 	}
 
-	/**
-	 * Setup the part based on the passed item.
-	 *
-	 * @param itemPart
-	 */
 	public void setupPartFromItem( final ItemStack itemPart )
 	{
 		if( itemPart.hasTagCompound() )
@@ -761,10 +755,6 @@ public abstract class AIPart
 		this.updateStatus();
 	}
 
-	/**
-	 * General call to WriteNBT, assumes a world save. DO NOT call this from a
-	 * subclass's writeToNBT method.
-	 */
 	@Override
 	public void writeToNBT( final NBTTagCompound data )
 	{
@@ -772,12 +762,6 @@ public abstract class AIPart
 		this.writeToNBT( data, PartItemStack.World );
 	}
 
-	/**
-	 * Saves NBT data specific to the save type.
-	 *
-	 * @param data
-	 * @param saveType
-	 */
 	public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType )
 	{
 		if( saveType == PartItemStack.World )

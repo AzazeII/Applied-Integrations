@@ -1,6 +1,6 @@
 package AppliedIntegrations;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.PlatformEvent;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Entities.TileEnum;
@@ -10,8 +10,6 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Render.TextureManager;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.GridEnergyCache;
-import AppliedIntegrations.grid.IEnergyAIGrid;
 import appeng.api.AEApi;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.*;
@@ -23,6 +21,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.network.IGuiHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.Side;
 import extracells.api.ECApi;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -205,6 +204,17 @@ public class AppliedIntegrations implements IGuiHandler {
 		}
 		return null;
 	}
+
+	public static Side getLogicalSide(){
+		Thread thr = Thread.currentThread();
+		if ((thr.getName().equals("Server thread")))
+		{
+			return Side.SERVER;
+		}
+
+		return Side.CLIENT;
+	}
+
 	public static void launchGui(AIPart AIPart, EntityPlayer player, World worldObj, int xCoord, int yCoord,
 								 int zCoord) {
 		// TODO Auto-generated method stub

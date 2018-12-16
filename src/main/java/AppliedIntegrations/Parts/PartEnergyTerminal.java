@@ -2,7 +2,6 @@ package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerEnergyTerminal;

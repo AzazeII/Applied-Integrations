@@ -1,26 +1,16 @@
 package AppliedIntegrations.Entities.Server;
 
+import AppliedIntegrations.API.AppliedCoord;
 import AppliedIntegrations.Blocks.MEServer.BlockServerSecurity;
-import AppliedIntegrations.Container.ContainerServerPacketTracer;
+import AppliedIntegrations.Container.Server.ContainerServerPacketTracer;
 import AppliedIntegrations.Entities.AIMultiBlockTile;
-import AppliedIntegrations.Entities.AITile;
 import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketMEServer;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.me.MachineSet;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
@@ -30,6 +20,8 @@ public class TileServerSecurity extends AIMultiBlockTile {
 
     public ForgeDirection fw;
     public Vector<ContainerServerPacketTracer> Listeners = new Vector<>();
+
+
 
     @Override
     public void updateEntity() {
@@ -56,19 +48,17 @@ public class TileServerSecurity extends AIMultiBlockTile {
                     return;
                 }
             }
-        }else if(hasMaster()){
-            getMaster().updateGUI(this);
         }
 
     }
     @Override
     public Object getServerGuiElement( final EntityPlayer player ) {
-        return new ContainerServerPacketTracer(this,player);
+            return new ContainerServerPacketTracer(getMaster(),player);
     }
     @Override
     public Object getClientGuiElement( final EntityPlayer player )
     {
-        return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),getMaster(),xCoord,yCoord,zCoord,player);
+            return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),getMaster(),player);
     }
     @Override
     public void createAELink() {

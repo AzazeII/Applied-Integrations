@@ -4,6 +4,7 @@ import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Network.AIPacket;
 import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
+import AppliedIntegrations.Utils.AILog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
@@ -29,9 +30,11 @@ public class PacketProgressBar extends AIPacket<PacketProgressBar> {
         Gui g = Minecraft.getMinecraft().currentScreen;
         if(g instanceof GuiEnergyInterface){
             GuiEnergyInterface GEI = (GuiEnergyInterface)g;
+
             // Check if we are updating correct GUI
-            if(GEI.getX() == x && GEI.getY() == y && GEI.getZ() == z && GEI.getSide() == side && GEI.getWorld() == w)
+            if(GEI.getX() == x && GEI.getY() == y && GEI.getZ() == z && GEI.getSide() == side && GEI.getWorld() == w) {
                 GEI.storage = sender.getEnergyStorage(sender.bar).getEnergyStored();
+            }
         }
     }
     @Override

@@ -1,10 +1,11 @@
 package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
+import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Network.AIPacket;
 import AppliedIntegrations.Parts.IEnergyMachine;
+import AppliedIntegrations.Utils.AILog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.world.World;
@@ -25,6 +26,8 @@ public class PacketClientFilter extends AIPacket<PacketClientFilter> {
 
     // Only neutral point between client, and server
     public PacketClientFilter( int x,int y,int z,ForgeDirection side, World w, LiquidAIEnergy energy, int index) {
+        AILog.chatLog("called");
+
         this.energy = energy;
         this.index = index;
 

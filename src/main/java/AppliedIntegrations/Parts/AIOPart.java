@@ -2,13 +2,16 @@ package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.GuiEnergyIO;
 
+import AppliedIntegrations.Gui.GuiEnergyStoragePart;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketServerFilter;
+import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.EffectiveSide;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -24,7 +27,10 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
 import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -119,6 +125,7 @@ public abstract class AIOPart
     protected byte upgradeSpeedCount = 0;
 
     protected boolean redstoneControlled;
+    private boolean updateRequested;
 
     public AIOPart(final PartEnum associatedPart, final SecurityPermissions... interactionPermissions )
     {
@@ -248,7 +255,7 @@ public abstract class AIOPart
             int i=0;
             for(LiquidAIEnergy energy : this.filteredEnergies) {
                 TileEntity host = this.getHostTile();
-                NetworkHandler.sendToServer(new PacketServerFilter(energy,i,host.xCoord,host.yCoord,host.zCoord,this.getSide(),host.getWorldObj()));
+                NetworkHandler.sendTo(new PacketServerFilter(energy,i,host.xCoord,host.yCoord,host.zCoord,this.getSide(),host.getWorldObj()),(EntityPlayerMP)listener.player);
                 i++;
             }
         }
@@ -377,9 +384,7 @@ public abstract class AIOPart
     public final Object getClientGuiElement( final EntityPlayer player )
     {
 
-        return new GuiEnergyIO(
-                (Container)this.getServerGuiElement(player),this.getX()
-                ,this.getY(),this.getZ(),this.getSide(),this,player);
+        return new GuiEnergyIO((Container)this.getServerGuiElement(player),player);
     }
 
     @Override
@@ -437,6 +442,12 @@ public abstract class AIOPart
     {
         boolean activated = super.onActivate( player, position );
         this.updateUpgradeState();
+
+        if(!this.getHostTile().getWorldObj().isRemote) {
+            player.openGui(AppliedIntegrations.instance, 5, player.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
+            this.updateRequested = true;
+            return true;
+        }
         return activated;
     }
 
@@ -613,7 +624,25 @@ public abstract class AIOPart
         }
         this.notifyListenersOfFilterEnergyChange();
 
+        if(updateRequested){
+            Gui g = Minecraft.getMinecraft().currentScreen;
+            if(g instanceof GuiEnergyIO){
+                AILog.chatLog("Updating");
+                if(getInstanceListener() != null)
+                    NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
+                            (EntityPlayerMP)getInstanceListener().player);
+                updateRequested = false;
+            }
+        }
+
         return TickRateModulation.IDLE;
+    }
+
+    private ContainerPartEnergyIOBus getInstanceListener() {
+        Container c = Minecraft.getMinecraft().thePlayer.openContainer;
+        if(c instanceof ContainerPartEnergyIOBus)
+            return (ContainerPartEnergyIOBus)c;
+        return null;
     }
 
     @Override

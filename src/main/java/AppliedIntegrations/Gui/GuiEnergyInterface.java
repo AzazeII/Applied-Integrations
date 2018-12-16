@@ -21,7 +21,9 @@ import appeng.client.gui.implementations.GuiPriority;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
+import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
@@ -40,7 +42,7 @@ import static net.minecraftforge.common.util.ForgeDirection.*;
 /**
  * @Author Azazell
  */
-public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetHost,IPartGui {
+public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHost {
 	private static final ResourceLocation GuiOmega = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/omegaSpring.png");
 	private static RedstoneMode RSMode = LOW_SIGNAL;
 	private IEnergyInterface Einterface;
@@ -76,15 +78,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 	@resetData
 	public int storage;
 
-	@Nonnull
-	private static int x, y, z;
-	@Nonnull
-	private static ForgeDirection dir;
-	@Nonnull
-	private static World w;
-
-
-	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part, int x, int y, int z, ForgeDirection side, EntityPlayer player) {
+	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part,World w, int x, int y, int z, ForgeDirection side, EntityPlayer player) {
 		super(CEI);
 		this.player = player;
 
@@ -93,7 +87,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 			this.y = y;
 			this.z = z;
 			this.dir = side;
-			this.w = player.getEntityWorld();
+			this.w = w;
 
 		}
 
@@ -183,6 +177,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+
+
 		//binding correct Gui
 		if (LinkedMetric == RF || LinkedMetric == J || LinkedMetric == EU)
 			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/" + LinkedMetric.getTag() + "Bar.png");
@@ -202,6 +198,16 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 		} else if (this.Einterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
 
+			if( this.energySlot.d == null){
+				if( getSide() != null ){
+					this.energySlot.x = getX();
+					this.energySlot.y = getY();
+					this.energySlot.z = getZ();
+
+					this.energySlot.d = getSide();
+					this.energySlot.w = getWorld();
+				}
+			}
 			if (this.LinkedMetric != WA) {
 				drawPower(83, 13, mouseX - 10, mouseY - 10, 10, UNKNOWN);
 			} else {
@@ -252,9 +258,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 	public void initGui() {
 		super.initGui();
 
-		this.energySlot = new WidgetEnergySlot(this, this.player,
-				x, y, z, dir, w,
-				4, 79, 111, true);
+		this.energySlot = new WidgetEnergySlot(this, this.player, 4, 79, 111, true);
 
 		this.EnergySlotList.add(this.energySlot);
 
@@ -374,29 +378,5 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI,IWidgetH
 		return this.LinkedContainer;
 	}
 
-	@Override
-	public int getX() {
-		return x;
-	}
-
-	@Override
-	public int getY() {
-		return y;
-	}
-
-	@Override
-	public int getZ() {
-		return z;
-	}
-
-	@Override
-	public ForgeDirection getSide() {
-		return dir;
-	}
-
-	@Override
-	public World getWorld() {
-		return w;
-	}
 }
 

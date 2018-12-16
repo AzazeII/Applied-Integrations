@@ -6,46 +6,33 @@ package AppliedIntegrations.Gui;
  */
 import AppliedIntegrations.API.EnergyStack;
 import AppliedIntegrations.API.IEnergySelectorContainer;
-import AppliedIntegrations.API.IEnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
-import AppliedIntegrations.Container.ContainerEnergyTerminalDuality;
 import AppliedIntegrations.Container.ContainerEnergyTerminal;
-import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 
 import AppliedIntegrations.Parts.PartEnergyTerminal;
-import AppliedIntegrations.AIStrings;
-import appeng.api.config.ViewItems;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.RF;
 
 @SideOnly(Side.CLIENT)
 public class GuiEnergyTerminalDuality
-        extends AIBaseGui
-        implements IEnergySelectorGui,IPartGui {
+        extends PartGui
+        implements IEnergySelectorGui {
     private static WidgetEnergySelector[] ArrayOfWidgets;
     private ResourceLocation mainTexture = new ResourceLocation(AppliedIntegrations.modid,"textures/gui/energy.terminal.png");
 
@@ -126,31 +113,6 @@ public class GuiEnergyTerminalDuality
 
     @Override
     public AIContainer getNodeContainer() {
-        return null;
-    }
-
-    @Override
-    public int getX() {
-        return 0;
-    }
-
-    @Override
-    public int getY() {
-        return 0;
-    }
-
-    @Override
-    public int getZ() {
-        return 0;
-    }
-
-    @Override
-    public ForgeDirection getSide() {
-        return null;
-    }
-
-    @Override
-    public World getWorld() {
         return null;
     }
 }

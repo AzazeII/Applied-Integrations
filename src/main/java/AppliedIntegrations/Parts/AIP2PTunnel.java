@@ -1,6 +1,5 @@
 package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.API.Parts.AIPart;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;

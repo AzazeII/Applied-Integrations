@@ -1,9 +1,7 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.API.Parts.AIPart;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.AIPart;
 import appeng.api.AEApi;
-import appeng.api.config.PowerUnits;
 import appeng.api.parts.IPartHost;
 import appeng.api.storage.data.IAEFluidStack;
 import cofh.api.energy.IEnergyContainerItem;
@@ -12,7 +10,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
-import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
 import mekanism.api.energy.IStrictEnergyAcceptor;
@@ -21,12 +18,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-
-import java.util.List;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.EU;
 import static AppliedIntegrations.API.LiquidAIEnergy.J;
