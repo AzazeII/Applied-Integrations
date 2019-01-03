@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 /**
  * @Author Azazell
+ * @Usage This packet needed to send data from any slave of MEServer to me server packet tracer gui.
  */
 public class PacketMEServer extends AIPacket<PacketMEServer> {
 

@@ -4,6 +4,7 @@ import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Network.AIPacket;
+import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Utils.AILog;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
@@ -11,10 +12,12 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
+import java.util.function.Function;
+
 /**
  * @Author Azazell
+ * @Usage This packet needed to write feedback from gui to part, send it when your filter in gui is updated
  */
-// Sends data from client to server (gui to part)
 public class PacketClientFilter extends AIPacket<PacketClientFilter> {
 
     public LiquidAIEnergy energy;
@@ -24,17 +27,17 @@ public class PacketClientFilter extends AIPacket<PacketClientFilter> {
 
     public PacketClientFilter(){}
 
-    // Only neutral point between client, and server
     public PacketClientFilter( int x,int y,int z,ForgeDirection side, World w, LiquidAIEnergy energy, int index) {
-        AILog.chatLog("called");
 
         this.energy = energy;
         this.index = index;
 
         this.part = Utils.getPartByParams(x,y,z,side,w);
 
+        AILog.debugObject(this, false);
+
         if(part != null) {
-            ((IEnergyMachine)part).updateFilter(energy, 0);
+            ((IEnergyMachine)part).updateFilter(energy, index);
         }
     }
     @Override

@@ -1,10 +1,13 @@
 package AppliedIntegrations.Utils;
 
+import AppliedIntegrations.Network.Packets.PacketClientFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.Field;
 
 
 public class AILog
@@ -25,11 +28,23 @@ public class AILog
         log.info(message, params );
     }
 
-    public static void chatLog(final String message){
+    public static void chatLog(final String message) {
         Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText(message));
     }
-
     public static void chatLog(final String message, EntityPlayer player){
         player.addChatComponentMessage(new ChatComponentText(message));
+    }
+
+    public static void debugObject(Object obj, boolean useChatLog) {
+        for(Field f : obj.getClass().getFields()){
+            try {
+                if(useChatLog)
+                    chatLog(f.get(obj).toString());
+                else
+                    info(f.get(obj).toString());
+            }catch (IllegalAccessException except){
+
+            }
+        }
     }
 }

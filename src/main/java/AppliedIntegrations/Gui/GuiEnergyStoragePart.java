@@ -1,6 +1,7 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
@@ -23,6 +24,7 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
+import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
 import static AppliedIntegrations.AppliedIntegrations.AI;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
@@ -194,19 +196,19 @@ public class GuiEnergyStoragePart
 
         WidgetEnergySlot slotUnderMouse = null;
 
-        // Draw widgets
+
         for( WidgetEnergySlot currentWidget : this.EnergyWidgetList )
         {
-            if(this.storageBus != null){
-                if(currentWidget.d == null){
-                    currentWidget.x = storageBus.getX();
-                    currentWidget.y = storageBus.getY();
-                    currentWidget.z = storageBus.getZ();
 
-                    currentWidget.w = this.player.worldObj;
-                    currentWidget.d = storageBus.getSide();
-                }
+            if(currentWidget.d == null){
+                currentWidget.x = this.getX();
+                currentWidget.y = this.getY();
+                currentWidget.z = this.getZ();
+
+                currentWidget.w = this.player.worldObj;
+                currentWidget.d = this.getSide();
             }
+
 
             if( ( slotUnderMouse == null ) && ( currentWidget.shouldRender ) && ( currentWidget.isMouseOverWidget( mouseX, mouseY ) ) )
             {
@@ -230,55 +232,23 @@ public class GuiEnergyStoragePart
     }
 
     @Override
-    protected void mouseClicked( final int mouseX, final int mouseY, final int mouseButton )
-    {
+    protected void mouseClicked( final int mouseX, final int mouseY, final int mouseButton ) {
         // Call super
-        super.mouseClicked( mouseX, mouseY, mouseButton );
+        super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        for( WidgetEnergySlot EnergySlot : this.EnergyWidgetList )
-        {
-            if( EnergySlot.isMouseOverWidget( mouseX, mouseY ) )
-            {
+        for (WidgetEnergySlot EnergySlot : this.EnergyWidgetList) {
+            if (EnergySlot.isMouseOverWidget(mouseX, mouseY)) {
                 // Get the Energy of the currently held item
-                LiquidAIEnergy itemEnergy = EnergySlot.getEnergy();
+                LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
 
-                // Is there an Energy?
-                if( itemEnergy != null )
-                {
-                    // Are we already filtering for this Energy?
-                    if( this.filteredEnergies.contains( itemEnergy ) )
-                    {
-                        // Ignore
-                        return;
-                    }
+                if (EnergySlot.getEnergy() == itemEnergy)
+                    return;
 
-                }
-
-                EnergySlot.mouseClicked( itemEnergy );
+                EnergySlot.mouseClicked(itemEnergy);
 
                 break;
             }
         }
-    }
-
-    /**
-     * Called when a button is clicked.
-     */
-    @Override
-    protected void onButtonClicked(final GuiButton button, final int mouseButton )
-    {
-        // Was the priority button clicked?
-        if( button.id == GuiEnergyStoragePart.BUTTON_PRIORITY_ID )
-        {
-            // Get the storage buses host
-            TileEntity host = this.storageBus.getHostTile();
-
-            // Get the side the storage bus is attached to
-            ForgeDirection side = this.storageBus.getSide();
-
-
-        }
-
     }
 
     @Override

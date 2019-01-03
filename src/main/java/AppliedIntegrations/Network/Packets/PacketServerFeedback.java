@@ -16,6 +16,7 @@ import java.util.LinkedHashMap;
 
 /**
  * @Author Azazell
+ * @Usage This packet needed to update network permissions on me server @Link[port]
  */
 public class PacketServerFeedback extends AIPacket<PacketServerFeedback> {
 

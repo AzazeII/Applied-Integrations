@@ -111,22 +111,20 @@ public class GuiEnergyIO
         {
             WidgetEnergySlot slotWidget = this.energySlotList.get( i );
 
+            if(slotWidget.d == null){
+                if(getSide() != null) {
+                    slotWidget.x = getX();
+                    slotWidget.y = getY();
+                    slotWidget.z = getZ();
+
+                    slotWidget.w = getWorld();
+                    slotWidget.d = getSide();
+                }
+            }
+
             if( ( !hoverUnderlayRendered ) && ( slotWidget.shouldRender ) && ( slotWidget.isMouseOverWidget( mouseX, mouseY ) ) )
             {
-                AILog.chatLog(x+"");
-                AILog.chatLog(y+"");
-                AILog.chatLog(z+"");
 
-
-                if(slotWidget.d == null){
-                    AILog.chatLog("dir is null");
-                    slotWidget.x = part.getX();
-                    slotWidget.y = part.getY();
-                    slotWidget.z = part.getZ();
-
-                    slotWidget.w = this.player.worldObj;
-                    slotWidget.d = part.getSide();
-                }
 
                 slotWidget.drawMouseHoverUnderlay();
 
@@ -178,22 +176,9 @@ public class GuiEnergyIO
         // Loop over all widgets
         for( WidgetEnergySlot currentWidget : this.energySlotList )
         {
-            if(this.part != null){
-                if(currentWidget.w == null){
-                    currentWidget.x = part.getX();
-                    currentWidget.y = part.getY();
-                    currentWidget.z = part.getZ();
-
-                    currentWidget.w = part.getHostTile().getWorldObj();
-                    currentWidget.d = part.getSide();
-                }
-            }
-
             // Is the mouse over this widget?
             if( currentWidget.isMouseOverWidget( mouseX, mouseY ) )
             {
-                AILog.chatLog("called");
-
                 // Get the Energy of the currently held item
                 LiquidAIEnergy itemEnergy = Utils.getEnergyFromItemStack(player.inventory.getItemStack());
 
@@ -248,10 +233,4 @@ public class GuiEnergyIO
         return null;
     }
 
-
-    @Override
-    public void setX(int x){
-        this.x = x;
-        AILog.chatLog(x+"");
-    }
 }

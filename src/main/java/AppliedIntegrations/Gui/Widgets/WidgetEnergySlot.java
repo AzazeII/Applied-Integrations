@@ -103,11 +103,6 @@ public class WidgetEnergySlot
     }
     public void mouseClicked( final LiquidAIEnergy energy )
     {
-
-        AILog.chatLog(x+"");
-        AILog.chatLog(y+"");
-        AILog.chatLog(z+"");
-
         if(this.d != null) {
             this.setEnergy(energy, 1);
             NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));

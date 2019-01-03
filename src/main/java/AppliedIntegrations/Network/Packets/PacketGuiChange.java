@@ -12,6 +12,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @Author Azazell
+ * @Usage This packet changes current player's gui
  */
 public class PacketGuiChange extends AIPacket<PacketGuiChange> {
 

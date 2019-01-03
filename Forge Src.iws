@@ -73,6 +73,11 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="Forge Src" type="f1a62948:ProjectNode" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="Forge Src" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -83,22 +88,40 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyInterface.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketCoordinateInit.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="828">
-              <caret line="379" selection-start-line="379" selection-end-line="379" />
+            <state relative-caret-position="240">
+              <caret line="16" column="132" selection-start-line="16" selection-start-column="132" selection-end-line="16" selection-end-column="132" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFeedback.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/Overlook.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="180">
+              <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketClientFilter.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
-              <caret line="18" column="3" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+              <caret line="18" column="107" selection-start-line="18" selection-start-column="107" selection-end-line="18" selection-end-column="107" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketGuiChange.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="14" column="50" selection-start-line="14" selection-start-column="50" selection-end-line="14" selection-end-column="50" />
             </state>
           </provider>
         </entry>
@@ -106,83 +129,56 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketMEServer.java">
           <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="15" column="100" selection-start-line="15" selection-start-column="100" selection-end-line="15" selection-end-column="100" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFilter.java">
+          <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="90">
-              <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeSrc-1.7.10-10.13.4.1614-1.7.10-sources.jar!/net/minecraft/world/chunk/IChunkProvider.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="765">
-              <caret line="55" column="9" selection-start-line="55" selection-start-column="9" selection-end-line="55" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeSrc-1.7.10-10.13.4.1614-1.7.10-sources.jar!/net/minecraft/world/World.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="57990">
-              <caret line="4027" column="26" selection-start-line="4027" selection-start-column="26" selection-end-line="4027" selection-end-column="26" />
-              <folding>
-                <element signature="e#140673#140674#0" expanded="true" />
-                <element signature="e#140714#140715#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketCoordinateInit.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="300">
-              <caret line="20" column="11" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1418#1419#0" expanded="true" />
-                <element signature="e#1445#1446#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyStoragePart.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-2195">
-              <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
+              <caret line="20" column="72" selection-start-line="20" selection-start-column="72" selection-end-line="20" selection-end-column="72" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyIO.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketTerminalChange.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1353">
-              <caret line="255" column="5" selection-start-line="255" selection-start-column="5" selection-end-line="255" selection-end-column="5" />
+            <state relative-caret-position="90">
+              <caret line="15" column="75" selection-start-line="15" selection-start-column="75" selection-end-line="15" selection-end-column="75" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyInterface/PartEnergyInterface.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketProgressBar.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="316">
-              <caret line="800" column="45" selection-start-line="800" selection-start-column="45" selection-end-line="800" selection-end-column="45" />
+            <state relative-caret-position="75">
+              <caret line="17" column="152" selection-start-line="17" selection-start-column="152" selection-end-line="17" selection-end-column="152" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/PartGui.java">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFeedback.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
+            <state relative-caret-position="270">
+              <caret line="18" column="83" selection-start-line="18" selection-start-column="83" selection-end-line="18" selection-end-column="83" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketBarChange.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="90">
+              <caret line="15" column="143" selection-start-line="15" selection-start-column="143" selection-end-line="15" selection-end-column="143" />
             </state>
           </provider>
         </entry>
@@ -202,10 +198,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>getDispl</find>
-      <find>getStack</find>
-      <find>func</find>
-      <find>transfer</find>
       <find>render</find>
       <find>getIcon</find>
       <find>update</find>
@@ -223,15 +215,19 @@
       <find>getServerG</find>
       <find>getServerGu</find>
       <find>onActivate</find>
-      <find>onActivat</find>
       <find>Ticking</find>
       <find>reque</find>
       <find>tickingRequest</find>
       <find>closed</find>
-      <find>activate</find>
       <find>tickingR</find>
       <find>func_175734_a</find>
       <find>WeightedRandom.getRandomItem</find>
+      <find>onActivat</find>
+      <find>activate</find>
+      <find>updateEnergy</find>
+      <find>tickingReq</find>
+      <find>updateFilter</find>
+      <find>post</find>
     </findStrings>
     <replaceStrings>
       <replace>this.modid</replace>
@@ -276,12 +272,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/ServerGui.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/ServerNodeGui.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/NetworkGui.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/Tracer/SubGui/ServerNodeGui.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/SubGui/ServerPorts.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/SubGui/ServerNodeGui.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/SubGui/PortDirections.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/AIBaseGui.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Entities/Server/TileServerPort.java" />
@@ -301,32 +291,38 @@
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/AppliedIntegrations.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/Server/ContainerMEServer.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/API/AppliedCoord.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFeedback.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketGuiChange.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketMEServer.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/Server/ContainerServerPacketTracer.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Entities/Server/TileServerSecurity.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Blocks/MEServer/BlockServerCore.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Blocks/MEServer/BlockServerSecurity.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Entities/Server/TileServerCore.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/ServerPacketTracer.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IO/PartEnergyExport.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketClientFilter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/Widgets/WidgetEnergySlot.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/IPartGui.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyStoragePart.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/ContainerEnergyStorage.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyTerminalDuality.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IO/PartEnergyImport.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFilter.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyStorageBus/PartEnergyStorage.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/AIOPart.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketProgressBar.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/PartGui.java" />
-        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketCoordinateInit.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyInterface/PartEnergyInterface.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyInterface.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/ContainerPartEnergyIOBus.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IO/PartEnergyExport.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/AIOPart.java" />
         <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyIO.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Inventory/HandlerEnergyStorageBusBase.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/Widgets/WidgetEnergySlot.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyStoragePart.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/NetworkHandler.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Utils/AILog.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyStorageBus/PartEnergyStorage.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketCoordinateInit.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketBarChange.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketClientFilter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketGuiChange.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketMEServer.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketProgressBar.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFeedback.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFilter.java" />
+        <option value="$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketTerminalChange.java" />
       </list>
     </option>
   </component>
@@ -353,6 +349,7 @@
     </navigator>
     <panes>
       <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -489,6 +486,16 @@
               <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
               <item name="java" type="462c0819:PsiDirectoryNode" />
               <item name="AppliedIntegrations" type="462c0819:PsiDirectoryNode" />
+              <item name="Gui" type="462c0819:PsiDirectoryNode" />
+              <item name="Widgets" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="Forge Src" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Forge Src" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="8a07ba80:GradleTreeStructureProvider$GradleModuleDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="AppliedIntegrations" type="462c0819:PsiDirectoryNode" />
               <item name="Network" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -583,7 +590,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -593,7 +599,7 @@
     <property name="MemberChooser.copyJavadoc" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.sorted" value="false" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544955757855" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1545490010075" />
     <property name="project.structure.last.edited" value="Modules" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.5" />
@@ -629,12 +635,92 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="JAR Application.ExtraCells-1.7.10-2.3.14b200.jar">
+  <component name="RunManager" selected="Application.Minecraft Client">
+    <configuration name="Forge Client" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="GradleStart" />
+      <module name="com.azazell.appliedintegrations.Forge_Src.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Minecraft Client" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="GradleStart" />
+      <module name="com.azazell.appliedintegrations.Forge_Src.main" />
+      <option name="VM_PARAMETERS" value="-Xincgc -Xmx2G -Xms2G" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/eclipse" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="false" factoryName="Application" name="Minecraft Client" type="Application">
+      <extension enabled="false" name="coverage" runner="idea" sample_coverage="true" />
+      <option name="MAIN_CLASS_NAME" value="GradleStart" />
+      <option name="VM_PARAMETERS" value="-Xincgc -Xmx1024M -Xms1024M" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/eclipse" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Forge Src" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
+    <configuration name="Minecraft Server" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="GradleStartServer" />
+      <module name="com.azazell.appliedintegrations.Forge_Src.main" />
+      <option name="VM_PARAMETERS" value="-Xincgc -Dfml.ignoreInvalidMinecraftCertificates=true" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/eclipse" />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="false" factoryName="Application" name="Minecraft Server" type="Application">
+      <extension enabled="false" name="coverage" runner="idea" sample_coverage="true" />
+      <option name="MAIN_CLASS_NAME" value="GradleStartServer" />
+      <option name="VM_PARAMETERS" value="-Xincgc -Dfml.ignoreInvalidMinecraftCertificates=true" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$/eclipse" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" value="" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="Forge Src" />
+      <envs />
+      <RunnerSettings RunnerId="Run" />
+      <ConfigurationWrapper RunnerId="Run" />
+      <method />
+    </configuration>
     <configuration default="true" type="Application" factoryName="Application">
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
+    </configuration>
+    <configuration name="Forge Src" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" value="" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+      <method v="2" />
     </configuration>
     <configuration default="true" type="JUnit" factoryName="JUnit">
       <option name="WORKING_DIRECTORY" value="%MODULE_WORKING_DIR%" />
@@ -659,11 +745,16 @@
       </method>
     </configuration>
     <list>
+      <item itemvalue="Application.Minecraft Client" />
+      <item itemvalue="Application.Minecraft Server" />
+      <item itemvalue="Application.Forge Client" />
+      <item itemvalue="Gradle.Forge Src" />
       <item itemvalue="JAR Application.appliedenergistics2-rv3-beta-6-client.jar" />
       <item itemvalue="JAR Application.ExtraCells-1.7.10-2.3.14b200.jar" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Gradle.Forge Src" />
         <item itemvalue="JAR Application.ExtraCells-1.7.10-2.3.14b200.jar" />
         <item itemvalue="JAR Application.appliedenergistics2-rv3-beta-6-client.jar" />
       </list>
@@ -682,11 +773,20 @@
     </task>
     <servers />
   </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1920" height="1080" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24760383" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.22097977" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -694,23 +794,23 @@
       <window_info id="Favorites" order="5" side_tool="true" />
       <window_info id="Capture Tool" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Run" order="1" sideWeight="0.49733758" weight="0.0" />
-      <window_info anchor="bottom" id="Debug" order="2" weight="0.4" />
+      <window_info anchor="bottom" id="Run" order="1" sideWeight="0.49733758" weight="0.5673267" />
+      <window_info anchor="bottom" id="Debug" order="2" weight="0.02970297" />
       <window_info anchor="bottom" id="Cvs" order="3" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="4" weight="0.4" />
       <window_info anchor="bottom" id="Find" order="5" sideWeight="0.4802982" weight="0.53762376" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="TODO" order="6" weight="0.32970297" />
       <window_info anchor="bottom" id="Version Control" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.49739584" weight="0.0" />
+      <window_info anchor="bottom" id="Messages" order="8" sideWeight="0.49739584" weight="0.32970297" />
       <window_info anchor="bottom" id="Build" order="9" sideWeight="0.49893504" visible="true" weight="0.0" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.51970184" side_tool="true" weight="0.46336633" />
-      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49840257" weight="0.32935324" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49840257" weight="0.32871288" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" visible="true" weight="0.0" />
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="right" id="Gradle" order="5" visible="true" weight="0.015974442" />
+      <window_info anchor="right" id="Gradle" order="5" weight="0.50745475" />
       <window_info anchor="right" id="Theme Preview" order="6" />
       <window_info anchor="right" id="Maven Projects" order="7" weight="0.32960597" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
@@ -735,184 +835,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/Server/ContainerServerPacketTracer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="120">
-          <caret line="29" column="22" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
-          <folding>
-            <element signature="e#1127#1128#0" expanded="true" />
-            <element signature="e#1156#1157#0" expanded="true" />
-            <element signature="e#1221#1222#0" expanded="true" />
-            <element signature="e#1249#1250#0" expanded="true" />
-            <element signature="e#1326#1327#0" expanded="true" />
-            <element signature="e#1353#1354#0" expanded="true" />
-            <element signature="e#1445#1446#0" expanded="true" />
-            <element signature="e#1491#1492#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/src.zip!/java/lang/ThreadLocal.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1755">
-          <caret line="147" column="11" selection-start-line="147" selection-start-column="11" selection-end-line="147" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Blocks/MEServer/BlockServerCore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="69" selection-start-line="69" selection-end-line="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Entities/AITile.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1425">
-          <caret line="129" column="20" selection-start-line="129" selection-start-column="20" selection-end-line="129" selection-end-column="20" />
-          <folding>
-            <element signature="e#4840#4841#0" expanded="true" />
-            <element signature="e#4874#4875#0" expanded="true" />
-            <element signature="e#4907#4908#0" expanded="true" />
-            <element signature="e#4952#4953#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IAEAppEngInventory.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Blocks/MEServer/BlockServerSecurity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="746">
-          <caret line="255" column="44" lean-forward="true" selection-start-line="255" selection-start-column="44" selection-end-line="255" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Entities/Server/TileServerHousing.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="12" column="13" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/ServerGUI/ServerPacketTracer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="32" column="27" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="34" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/Widgets/EnergyWidgetBase.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1755">
-          <caret line="134" column="26" selection-start-line="134" selection-start-column="26" selection-end-line="134" selection-end-column="26" />
-          <folding>
-            <element signature="e#3180#3181#0" expanded="true" />
-            <element signature="e#3231#3232#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/Widgets/WidgetEnergySlot.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1320">
-          <caret line="103" column="16" selection-start-line="103" selection-start-column="16" selection-end-line="103" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/NetworkHandler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="675">
-          <caret line="51" column="29" selection-start-line="51" selection-start-column="29" selection-end-line="51" selection-end-column="29" />
-          <folding>
-            <element signature="e#1946#1947#0" expanded="true" />
-            <element signature="e#2006#2007#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/API/Utils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1770">
-          <caret line="142" column="25" selection-start-line="142" selection-start-column="25" selection-end-line="142" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Entities/Server/TileServerCore.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="855">
-          <caret line="90" column="23" selection-start-line="90" selection-start-column="8" selection-end-line="90" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketGuiChange.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="14" column="3" selection-start-line="14" selection-start-column="3" selection-end-line="14" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/Overlook.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/appeng/api/config/SecurityPermissions.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="30" column="12" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/IFilterGUI.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="9" column="17" selection-start-line="9" selection-start-column="17" selection-end-line="9" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/AIBaseGui.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="29" column="22" selection-start-line="29" selection-start-column="22" selection-end-line="29" selection-end-column="22" />
-          <folding>
-            <element signature="e#1555#1556#0" expanded="true" />
-            <element signature="e#1589#1590#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketClientFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="360">
-          <caret line="33" column="37" selection-start-line="33" selection-start-column="37" selection-end-line="33" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeSrc-1.7.10-10.13.4.1614-1.7.10-sources.jar!/net/minecraft/client/Minecraft.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="75">
-          <caret line="177" column="13" selection-start-line="177" selection-start-column="13" selection-end-line="177" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeSrc-1.7.10-10.13.4.1614-1.7.10-sources.jar!/net/minecraft/inventory/Container.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="377">
-          <caret line="523" column="5" lean-forward="true" selection-start-line="522" selection-start-column="3" selection-end-line="523" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/ContainerWithPlayerInventory.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -966,20 +888,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/ContainerPartEnergyIOBus.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="60">
-          <caret line="13" column="13" selection-start-line="13" selection-start-column="13" selection-end-line="13" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IO/PartEnergyImport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="420">
-          <caret line="92" column="21" selection-start-line="92" selection-start-column="21" selection-end-line="92" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/appeng/api/networking/ticking/TickRateModulation.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="75">
@@ -994,109 +902,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IO/PartEnergyExport.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="175" column="9" selection-start-line="175" selection-start-column="9" selection-end-line="175" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/AIOPart.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="823">
-          <caret line="257" column="139" selection-start-line="257" selection-start-column="139" selection-end-line="257" selection-end-column="139" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketProgressBar.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="31" column="59" selection-start-line="31" selection-start-column="59" selection-end-line="31" selection-end-column="59" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyStorageBus/PartEnergyStorage.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="573" column="56" lean-forward="true" selection-start-line="573" selection-start-column="56" selection-end-line="573" selection-end-column="56" />
-          <folding>
-            <element signature="e#15957#15958#0" expanded="true" />
-            <element signature="e#15975#15976#0" expanded="true" />
-            <element signature="e#16068#16069#0" expanded="true" />
-            <element signature="e#16087#16088#0" expanded="true" />
-            <element signature="e#16160#16161#0" expanded="true" />
-            <element signature="e#16179#16180#0" expanded="true" />
-            <element signature="e#16223#16224#0" expanded="true" />
-            <element signature="e#16242#16243#0" expanded="true" />
-            <element signature="e#16288#16289#0" expanded="true" />
-            <element signature="e#16303#16304#0" expanded="true" />
-            <element signature="e#16340#16341#0" expanded="true" />
-            <element signature="e#16355#16356#0" expanded="true" />
-            <element signature="e#16393#16394#0" expanded="true" />
-            <element signature="e#16408#16409#0" expanded="true" />
-            <element signature="e#16446#16447#0" expanded="true" />
-            <element signature="e#16461#16462#0" expanded="true" />
-            <element signature="e#16500#16501#0" expanded="true" />
-            <element signature="e#16518#16519#0" expanded="true" />
-            <element signature="e#16563#16564#0" expanded="true" />
-            <element signature="e#16578#16579#0" expanded="true" />
-            <element signature="e#16705#16706#0" expanded="true" />
-            <element signature="e#16720#16721#0" expanded="true" />
-            <element signature="e#16765#16766#0" expanded="true" />
-            <element signature="e#16780#16781#0" expanded="true" />
-            <element signature="e#16829#16830#0" expanded="true" />
-            <element signature="e#16844#16845#0" expanded="true" />
-            <element signature="e#16899#16900#0" expanded="true" />
-            <element signature="e#16918#16919#0" expanded="true" />
-            <element signature="e#16973#16974#0" expanded="true" />
-            <element signature="e#16991#16992#0" expanded="true" />
-            <element signature="e#17100#17101#0" expanded="true" />
-            <element signature="e#17115#17116#0" expanded="true" />
-            <element signature="e#17210#17211#0" expanded="true" />
-            <element signature="e#17225#17226#0" expanded="true" />
-            <element signature="e#17304#17305#0" expanded="true" />
-            <element signature="e#17319#17320#0" expanded="true" />
-            <element signature="e#17380#17381#0" expanded="true" />
-            <element signature="e#17395#17396#0" expanded="true" />
-            <element signature="e#17459#17460#0" expanded="true" />
-            <element signature="e#17474#17475#0" expanded="true" />
-            <element signature="e#17542#17543#0" expanded="true" />
-            <element signature="e#17561#17562#0" expanded="true" />
-            <element signature="e#17610#17611#0" expanded="true" />
-            <element signature="e#17625#17626#0" expanded="true" />
-            <element signature="e#17665#17666#0" expanded="true" />
-            <element signature="e#17680#17681#0" expanded="true" />
-            <element signature="e#17783#17784#0" expanded="true" />
-            <element signature="e#17798#17799#0" expanded="true" />
-            <element signature="e#17892#17893#0" expanded="true" />
-            <element signature="e#17911#17912#0" expanded="true" />
-            <element signature="e#17959#17960#0" expanded="true" />
-            <element signature="e#17974#17975#0" expanded="true" />
-            <element signature="e#18073#18074#0" expanded="true" />
-            <element signature="e#18088#18089#0" expanded="true" />
-            <element signature="e#18179#18180#0" expanded="true" />
-            <element signature="e#18198#18199#0" expanded="true" />
-            <element signature="e#18288#18289#0" expanded="true" />
-            <element signature="e#18303#18304#0" expanded="true" />
-            <element signature="e#18371#18372#0" expanded="true" />
-            <element signature="e#18389#18390#0" expanded="true" />
-            <element signature="e#18430#18431#0" expanded="true" />
-            <element signature="e#18445#18446#0" expanded="true" />
-            <element signature="e#18545#18546#0" expanded="true" />
-            <element signature="e#18560#18561#0" expanded="true" />
-            <element signature="e#18605#18606#0" expanded="true" />
-            <element signature="e#18637#18638#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/src.zip!/java/lang/IllegalArgumentException.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="40" column="11" selection-start-line="40" selection-start-column="11" selection-end-line="40" selection-end-column="11" />
           <folding>
-            <element signature="e#592#593#0" expanded="true" />
-            <element signature="e#615#616#0" expanded="true" />
+            <element expanded="true" signature="e#592#593#0" />
+            <element expanded="true" signature="e#615#616#0" />
           </folding>
         </state>
       </provider>
@@ -1108,41 +920,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFilter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
-          <caret line="22" column="21" selection-start-line="22" selection-start-column="21" selection-end-line="22" selection-end-column="21" />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeSrc-1.7.10-10.13.4.1614-1.7.10-sources.jar!/net/minecraft/world/WorldServer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2190">
           <caret line="211" column="55" selection-start-line="211" selection-start-column="55" selection-end-line="211" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketTerminalChange.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFeedback.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="18" column="3" selection-start-line="18" selection-start-column="3" selection-end-line="18" selection-end-column="3" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketMEServer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="16" column="26" selection-start-line="16" selection-start-column="26" selection-end-line="16" selection-end-column="26" />
         </state>
       </provider>
     </entry>
@@ -1164,9 +945,23 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/ContainerEnergyInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1125">
+          <caret line="100" column="73" selection-start-line="99" selection-start-column="4" selection-end-line="100" selection-end-column="73" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Container/ContainerPartEnergyIOBus.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="765">
+          <caret line="61" column="39" selection-start-line="61" selection-start-column="39" selection-end-line="61" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/PartGui.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
+        <state relative-caret-position="120">
           <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1174,46 +969,289 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyInterface/PartEnergyInterface.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/AIOPart.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="316">
-          <caret line="800" column="45" selection-start-line="800" selection-start-column="45" selection-end-line="800" selection-end-column="45" />
+        <state relative-caret-position="3300">
+          <caret line="262" column="52" selection-start-line="262" selection-start-column="52" selection-end-line="262" selection-end-column="53" />
+          <folding>
+            <element signature="e#8976#8977#0" expanded="true" />
+            <element signature="e#9020#9021#0" expanded="true" />
+            <element signature="e#12001#12002#0" expanded="true" />
+            <element signature="e#12025#12026#0" expanded="true" />
+            <element signature="e#12662#12663#0" expanded="true" />
+            <element signature="e#12709#12710#0" expanded="true" />
+            <element signature="e#12830#12831#0" expanded="true" />
+            <element signature="e#12879#12880#0" expanded="true" />
+            <element signature="e#12928#12929#0" expanded="true" />
+            <element signature="e#12968#12969#0" expanded="true" />
+            <element signature="e#13368#13369#0" expanded="true" />
+            <element signature="e#13396#13397#0" expanded="true" />
+            <element signature="e#17246#17247#0" expanded="true" />
+            <element signature="e#17296#17297#0" expanded="true" />
+            <element signature="e#17414#17415#0" expanded="true" />
+            <element signature="e#17448#17449#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketCoordinateInit.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IO/PartEnergyExport.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="20" column="11" selection-start-line="20" selection-start-column="11" selection-end-line="20" selection-end-column="11" />
+        <state relative-caret-position="1785">
+          <caret line="175" column="7" selection-start-line="175" selection-start-column="7" selection-end-line="175" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IO/PartEnergyImport.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="92" column="24" selection-start-line="92" selection-start-column="24" selection-end-line="92" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.7.10-10.13.4.1614-1.7.10/forgeSrc-1.7.10-10.13.4.1614-1.7.10-sources.jar!/net/minecraft/entity/player/EntityPlayerMP.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="60">
+          <caret line="108" column="13" selection-start-line="108" selection-start-column="13" selection-end-line="108" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/Widgets/EnergyWidgetBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2295">
+          <caret line="179" column="16" selection-start-line="179" selection-start-column="16" selection-end-line="179" selection-end-column="16" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1418#1419#0" expanded="true" />
-            <element signature="e#1445#1446#0" expanded="true" />
+            <element signature="e#3180#3181#0" expanded="true" />
+            <element signature="e#3231#3232#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/src.zip!/java/lang/Throwable.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="321">
+          <caret line="113" column="13" selection-start-line="113" selection-start-column="13" selection-end-line="113" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/src.zip!/java/lang/Exception.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="315">
+          <caret line="44" column="35" selection-start-line="44" selection-start-column="35" selection-end-line="44" selection-end-column="35" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/src.zip!/java/lang/RuntimeException.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="285">
+          <caret line="42" column="43" selection-start-line="42" selection-start-column="43" selection-end-line="42" selection-end-column="43" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/AIPacket.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="30" column="22" selection-start-line="30" selection-start-column="22" selection-end-line="30" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/AppliedIntegrations.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2415">
+          <caret line="207" column="23" selection-start-line="207" selection-start-column="23" selection-end-line="207" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Inventory/HandlerEnergyStorageBusBase.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5175">
+          <caret line="388" column="25" selection-start-line="388" selection-start-column="25" selection-end-line="388" selection-end-column="25" />
+          <folding>
+            <element signature="e#9985#9986#0" expanded="true" />
+            <element signature="e#10035#10036#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/AIPart.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="6240">
+          <caret line="508" column="22" selection-start-line="508" selection-start-column="22" selection-end-line="508" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Utils/EffectiveSide.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="375">
+          <caret line="29" column="32" selection-start-line="29" selection-start-column="32" selection-end-line="29" selection-end-column="32" />
+          <folding>
+            <element signature="e#591#592#0" expanded="true" />
+            <element signature="e#638#639#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyStoragePart.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2195">
-          <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
+        <state relative-caret-position="3300">
+          <caret line="246" column="36" selection-start-line="246" selection-start-column="36" selection-end-line="246" selection-end-column="36" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyInterface.java">
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/IEnergyMachine.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="828">
-          <caret line="379" selection-start-line="379" selection-end-line="379" />
+        <state relative-caret-position="105">
+          <caret line="12" column="9" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyIO.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1353">
-          <caret line="255" column="5" selection-start-line="255" selection-start-column="5" selection-end-line="255" selection-end-column="5" />
+        <state relative-caret-position="2550">
+          <caret line="196" column="40" selection-start-line="195" selection-start-column="21" selection-end-line="197" selection-end-column="17" />
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/NetworkHandler.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="26" column="57" selection-start-line="26" selection-start-column="57" selection-end-line="26" selection-end-column="57" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/src.zip!/java/lang/Void.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="39" column="24" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_191.jdk/Contents/Home/src.zip!/java/util/function/Function.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="255">
+          <caret line="40" column="17" selection-start-line="40" selection-start-column="17" selection-end-line="40" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Utils/AILog.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="37" column="47" selection-start-line="37" selection-start-column="47" selection-end-line="37" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/GuiEnergyInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5040">
+          <caret line="379" selection-start-line="379" selection-end-line="379" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Gui/Widgets/WidgetEnergySlot.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1380">
+          <caret line="107" column="48" selection-start-line="107" selection-start-column="48" selection-end-line="107" selection-end-column="48" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyStorageBus/PartEnergyStorage.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="645">
+          <caret line="544" column="55" lean-forward="true" selection-start-line="544" selection-start-column="55" selection-end-line="544" selection-end-column="55" />
+          <folding>
+            <element signature="e#17313#17314#0" expanded="true" />
+            <element signature="e#17328#17329#0" expanded="true" />
+            <element signature="e#18019#18020#0" expanded="true" />
+            <element signature="e#18037#18038#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Parts/EnergyInterface/PartEnergyInterface.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="955">
+          <caret line="800" column="45" selection-start-line="800" selection-start-column="45" selection-end-line="800" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/Overlook.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="15" column="18" selection-start-line="15" selection-start-column="18" selection-end-line="15" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketCoordinateInit.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="16" column="132" selection-start-line="16" selection-start-column="132" selection-end-line="16" selection-end-column="132" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketBarChange.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="15" column="143" selection-start-line="15" selection-start-column="143" selection-end-line="15" selection-end-column="143" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketClientFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="18" column="107" selection-start-line="18" selection-start-column="107" selection-end-line="18" selection-end-column="107" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketGuiChange.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="14" column="50" selection-start-line="14" selection-start-column="50" selection-end-line="14" selection-end-column="50" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketMEServer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="15" column="100" selection-start-line="15" selection-start-column="100" selection-end-line="15" selection-end-column="100" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketProgressBar.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="17" column="152" selection-start-line="17" selection-start-column="152" selection-end-line="17" selection-end-column="152" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFeedback.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="270">
+          <caret line="18" column="83" selection-start-line="18" selection-start-column="83" selection-end-line="18" selection-end-column="83" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketServerFilter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="20" column="72" selection-start-line="20" selection-start-column="72" selection-end-line="20" selection-end-column="72" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/AppliedIntegrations/Network/Packets/PacketTerminalChange.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="15" column="75" selection-start-line="15" selection-start-column="75" selection-end-line="15" selection-end-column="75" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="gradleExecuteTaskHistory">
+    <option value="$PROJECT_DIR$" />
   </component>
   <component name="masterDetails">
     <states>
@@ -1246,7 +1284,7 @@
           <splitter-proportions>
             <option name="proportions">
               <list>
-                <option value="0.2" />
+                <option value="0.5" />
               </list>
             </option>
           </splitter-proportions>
@@ -1266,7 +1304,7 @@
       </state>
       <state key="ModuleStructureConfigurable.UI">
         <settings>
-          <last-edited>Forge_Src_api|Forge_Src</last-edited>
+          <last-edited>main|com.azazell.appliedintegrations.Forge_Src</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
@@ -1278,7 +1316,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
-          <last-edited>Gradle: mcp.mobius.waila:Waila:1.5.10_1.7.10</last-edited>
+          <last-edited>Gradle: :forgeSrc:1.7.10-10.13.4.1614-1.7.10</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>

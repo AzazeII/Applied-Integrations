@@ -372,6 +372,7 @@ public abstract class HandlerEnergyStorageBusBase
         this.filteredEnergies = EnergyList;
     }
 
+
     /**
      * Sets if the handler can void excess Energy if connected to void jar.
      *

@@ -9,6 +9,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
@@ -55,7 +56,11 @@ public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
             addSlotToContainer(new Slot(inventoryPlayer, i, 8 + i * 18, (207)-47));
         }
     }
-
+    @Override
+    public void onContainerClosed( @Nonnull final EntityPlayer player ) {
+        super.onContainerClosed(player);
+        this.part.removeListener(this);
+    }
     @Override
     public boolean canInteractWith(EntityPlayer p_75145_1_) {
         return true;

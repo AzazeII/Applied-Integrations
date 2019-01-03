@@ -13,6 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @Author Azazell
+ * @Usage This packet needed to send all data of ME Energy Terminal to gui.
  */
 public class PacketTerminalChange extends AIPacket<PacketTerminalChange> {
     public PacketTerminalChange(){}

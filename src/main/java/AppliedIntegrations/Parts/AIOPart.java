@@ -8,6 +8,7 @@ import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.GuiEnergyIO;
 
 import AppliedIntegrations.Gui.GuiEnergyStoragePart;
+import AppliedIntegrations.Gui.PartGui;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketServerFilter;
@@ -87,6 +88,11 @@ public abstract class AIOPart
      * How much AE power is required to keep the part active.
      */
     private static final double IDLE_POWER_DRAIN = 0.7;
+
+    /**
+     * the player, clicked on this machine
+     */
+    private EntityPlayer player;
 
     /**
      * Default redstone mode for the bus.
@@ -250,12 +256,11 @@ public abstract class AIOPart
     }
     private void notifyListenersOfFilterEnergyChange()
     {
-        for( ContainerPartEnergyIOBus listener : this.listeners )
-        {
-            int i=0;
-            for(LiquidAIEnergy energy : this.filteredEnergies) {
+        if(player != null) {
+            int i = 0;
+            for (LiquidAIEnergy energy : this.filteredEnergies) {
                 TileEntity host = this.getHostTile();
-                NetworkHandler.sendTo(new PacketServerFilter(energy,i,host.xCoord,host.yCoord,host.zCoord,this.getSide(),host.getWorldObj()),(EntityPlayerMP)listener.player);
+                NetworkHandler.sendTo(new PacketServerFilter(energy, i, host.xCoord, host.yCoord, host.zCoord, this.getSide(), host.getWorldObj()), (EntityPlayerMP) this.player);
                 i++;
             }
         }
@@ -440,15 +445,13 @@ public abstract class AIOPart
     @Override
     public boolean onActivate( final EntityPlayer player, final Vec3 position )
     {
-        boolean activated = super.onActivate( player, position );
+        super.onActivate( player, position );
         this.updateUpgradeState();
 
-        if(!this.getHostTile().getWorldObj().isRemote) {
-            player.openGui(AppliedIntegrations.instance, 5, player.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
-            this.updateRequested = true;
-            return true;
-        }
-        return activated;
+        player.openGui(AppliedIntegrations.instance, 5, player.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
+        this.updateRequested = true;
+        this.player = player;
+        return true;
     }
 
     @Override
@@ -467,9 +470,7 @@ public abstract class AIOPart
     {
         // Get the current ordinal, and increment it
         int nextOrdinal = this.redstoneMode.ordinal() + 1;
-
-
-
+ 
     }
 
     /**
@@ -599,6 +600,15 @@ public abstract class AIOPart
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall )
     {
+        if(updateRequested){
+            Gui g = Minecraft.getMinecraft().currentScreen;
+            if(g != null){
+                NetworkHandler.sendTo(new PacketCoordinateInit(getX(), getY(), getZ(), getHostTile().getWorldObj(), getSide()),
+                        (EntityPlayerMP) player);
+                updateRequested = false;
+            }
+        }
+
         if( this.canDoWork() )
         {
             // Calculate the amount to transfer per second
@@ -622,28 +632,11 @@ public abstract class AIOPart
                 return TickRateModulation.URGENT;
             }
         }
+
         this.notifyListenersOfFilterEnergyChange();
-
-        if(updateRequested){
-            Gui g = Minecraft.getMinecraft().currentScreen;
-            if(g instanceof GuiEnergyIO){
-                AILog.chatLog("Updating");
-                if(getInstanceListener() != null)
-                    NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
-                            (EntityPlayerMP)getInstanceListener().player);
-                updateRequested = false;
-            }
-        }
-
         return TickRateModulation.IDLE;
     }
 
-    private ContainerPartEnergyIOBus getInstanceListener() {
-        Container c = Minecraft.getMinecraft().thePlayer.openContainer;
-        if(c instanceof ContainerPartEnergyIOBus)
-            return (ContainerPartEnergyIOBus)c;
-        return null;
-    }
 
     @Override
     public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType )

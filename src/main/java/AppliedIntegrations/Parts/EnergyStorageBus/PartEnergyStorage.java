@@ -24,6 +24,7 @@ import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.InvOperation;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Render.TextureManager;
+import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 
@@ -68,6 +69,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 import javax.annotation.Nullable;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.RF;
+import static AppliedIntegrations.AppliedIntegrations.AI;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**
@@ -77,7 +79,7 @@ public class PartEnergyStorage
 		extends AIPart
 		implements IEnergyDuality,IGridTickable, ICellContainer, IEnergyMachine, IAEAppEngInventory, IPriorityHost, IInventoryHost {
 
-	public static final int FILTER_SIZE = 9;
+	public static final int FILTER_SIZE = 18;
 
 	/**
 	 * How much AE power is required to keep the part active.
@@ -102,7 +104,7 @@ public class PartEnergyStorage
 	/**
 	 * Filter list
 	 */
-	private final ArrayList<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>( this.FILTER_SIZE );
+	public final ArrayList<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>( this.FILTER_SIZE );
 
 	/**
 	 * Upgrade inventory
@@ -116,6 +118,7 @@ public class PartEnergyStorage
 	private TileEntity facingContainer;
 	private boolean updateRequested;
 	public Vector<ContainerEnergyStorage> listeners = new Vector<>();
+	private EntityPlayer player;
 
 	/**
 	 * Creates the bus
@@ -126,11 +129,9 @@ public class PartEnergyStorage
 		super( PartEnum.EnergyStorageBus, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT );
 
 		// Pre-fill the list with nulls
-		for( int index = 0; index < this.FILTER_SIZE; index++ )
-		{
-			this.filteredEnergies.add( null );
+		for( int index = 0; index < this.FILTER_SIZE; index++ ) {
+			this.filteredEnergies.add(null);
 		}
-		this.filteredEnergies.add(RF);
 	}
 
 	/**
@@ -353,6 +354,7 @@ public class PartEnergyStorage
 				player.openGui(AppliedIntegrations.instance, 3, this.getHostTile().getWorldObj(),
 						this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
 				this.updateRequested = true;
+				this.player = player;
 			}
 		}
 		return true;
@@ -392,43 +394,9 @@ public class PartEnergyStorage
 							StorageChannel.FLUIDS));
 			node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 	}
-	/**
-	 * /** Updates the grid and handler that a neighbor has changed.
-	 */
-	@Override
-	public void onNeighborChanged()
-	{
-		// Send grid update event on server side
-		if( EffectiveSide.isServerSide() && this.isActive() )
-		{
-			// Update the handler
-			if( this.handler.onNeighborChange() )
-			{
-				// Send the update event
-				this.postGridUpdateEvent();
-			}
-		}
-	}
 
-	/**
-	 * Notifies the grid that the storage bus contents have changed.
-	 */
-	public void postGridUpdateEvent()
-	{
-		// Does the storage bus have a grid node?
-		if( this.getActionableNode() != null )
-		{
-			// Get the grid.
-			IGrid grid = this.getActionableNode().getGrid();
 
-			// Does the grid node have a grid?
-			if( grid != null )
-			{
-				// Post an update to the grid
 
-			}
-		}
-	}
 
 	/**
 	 * /** Reads the part data from NBT
@@ -535,27 +503,21 @@ public class PartEnergyStorage
 	@Override
 	public void updateFilter( final LiquidAIEnergy Energy, final int index )
 	{
+
+		// Update filtered energies
+		AILog.chatLog("Updating server-side slot with index "+index);
 		this.filteredEnergies.set( index, Energy );
 
-		// Is this server side?
-		if( EffectiveSide.isServerSide() )
-		{
-			// Update the handler
-			this.handler.setPrioritizedEnergies( this.filteredEnergies);
+		// Update the handler
+		this.handler.setPrioritizedEnergies( this.filteredEnergies);
 
-			// Update the grid
-			this.postGridUpdateEvent();
-
-			// Mark for save
-			this.markForSave();
-		}
+		// Mark for save
+		this.markForSave();
 	}
 
 	@Override
-	public void setPriority( final int priority )
-	{
+	public void setPriority( final int priority ) {
 		this.priority = priority;
-		this.postGridUpdateEvent();
 	}
 
 	/**
@@ -564,23 +526,34 @@ public class PartEnergyStorage
 	@Override
 	public TickRateModulation tickingRequest( final IGridNode node, final int TicksSinceLastCall )
 	{
+		// Update all energies in GUI
+		for(int i = 0; i < this.FILTER_SIZE; i++){
+			// Request gui update for all energies, and for null
+			this.requestGuiUpdate(filteredEnergies.get(i), i);
+		}
 		// Update the handler.
 		this.handler.tickingRequest( node, TicksSinceLastCall );
+		// Simulate neighborChange
 		this.onNeighborChanged();
 
+		// If update requested
 		if(updateRequested) {
-			for (ContainerEnergyStorage storage : this.listeners) {
-				Gui g = Minecraft.getMinecraft().currentScreen;
-				if (g instanceof GuiEnergyStoragePart) {
-					NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
-							(EntityPlayerMP)storage.player);
-					updateRequested = false;
-				}
+			// Then update gui, using packet system
+			Gui g = Minecraft.getMinecraft().currentScreen;
+			if (g instanceof GuiEnergyStoragePart) {
+				// send packet
+				NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
+						(EntityPlayerMP)this.player);
+				updateRequested = false;
 			}
 		}
-
 		// Keep chugging along
 		return TickRateModulation.SAME;
+	}
+
+	private void requestGuiUpdate(LiquidAIEnergy energy, int index) {
+		if(player != null)
+			NetworkHandler.sendTo(new PacketServerFilter(energy, index, getX(), getY(), getZ(), getSide(), getHostTile().getWorldObj()), (EntityPlayerMP) this.player);
 	}
 
 	/**

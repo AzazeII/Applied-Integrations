@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 /**
  * @Author Azazell
+ * @Usage This packet is only needed for updating energy bar in Energy interface, when you need to update current energy value, you can send this packet
  */
 public class PacketProgressBar extends AIPacket<PacketProgressBar> {
 

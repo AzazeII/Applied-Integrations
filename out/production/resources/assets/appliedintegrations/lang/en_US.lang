@@ -1,7 +1,64 @@
-﻿itemGroup.appliedintegrations.name=Applied Integrations
+itemGroup.appliedintegrations=Applied Integrations
 
-item.appliedintegrations.aeparts.Energy.ImportBus.name=ME Energy import bus
-item.appliedintegrations.aeparts.Energy.ExportBus.name=ME Energy export bus
-item.appliedintegrations.aeparts.Energy.Interface.name=ME Energy interface
-item.appliedintegrations.aeparts.Energy.terminal.name=ME Energy terminal
-item.appliedintegrations.aeparts.Energy.StorageBus.name=ME Energy storage bus
+appliedintegrations.Energy.ImportBus.name=ME Energy Import Bus
+appliedintegrations.Energy.ExportBus.name=ME Energy Export Bus
+appliedintegrations.Energy.Interface.name=ME Energy Interface
+appliedintegrations.Energy.StorageBus.name=ME Energy Storage Bus
+appliedintegrations.Energy.terminal.name=ME Energy Terminal
+appliedintegrations.Energy.StorageMonitor.name=ME Energy Storage Monitor
+appliedintegrations.Energy.Machine.P2PRotary=P2P Tunnel Watts
+appliedintegrations.Energy.Machine.P2PJoules=P2P Tunnel Joules
+
+item.appliedintegrationsenergy.formation.core.name=ME Energy Formation Core
+item.appliedintegrationsenergy.annihilation.core.name=ME Energy Annihilation Core
+item.appliedintegrationscasing.energy.name=ME Energy Cell Casing
+item.appliedintegrationsstorage.energy.terminal.name=ME Wireless Energy Terminal
+item.appliedintegrationsitem.chaos.manipulator.name=ME Network Manipulation Tool
+
+
+tile.ME Server Security Terminal.name=ME Server Security Terminal
+tile.ME Logic Bus Rib.name=ME Logic Bus Rib
+tile.ME Logic Bus Core.name=ME Logic Bus Core
+tile.ME Logic Bus Housing.name=ME Logic Bus Housing
+tile.ME Logic Bus Port.name=ME Logic Bus Port
+
+tile.ME Server Core.name=ME Server Core
+tile.ME Server Housing.name=ME Server Housing
+tile.ME Server Rib.name=ME Server Rib
+tile.ME Server Port.name=ME Server Port
+
+tile.ME Energy Interface.name=ME Energy Interface
+ME Energy Interface=ME Energy Interface
+ME Energy Import Bus=ME Energy Import Bus
+ME Energy Export Bus=ME Energy Export Bus
+ME Energy Storage Bus=ME Energy Storage Bus
+ME Energy Terminal=ME Energy Terminal
+
+ME 1k Energy Cell.name=ME 1k Energy Cell
+ME 4k Energy Cell.name=ME 4k Energy Cell
+ME 16k Energy Cell.name=ME 16k Energy Cell
+ME 64k Energy Cell.name=ME 64k Energy Cell
+ME 256k Energy Cell.name=ME 256k Energy Cell
+ME 1024k Energy Cell.name=ME 1024k Energy Cell
+ME 4096k Energy Cell.name=ME 4096k Energy Cell
+ME 16384k Energy Cell.name=ME 16384k Energy Cell
+ME Creative Energy Cell.name=ME Creative Energy Cell
+
+Energy Stored=Energy Stored
+
+ME 1k Component.name=ME 1k Energy Cell Component
+ME 4k Component.name=ME 4k Energy Cell Component
+ME 16k Component.name=ME 16k Energy Cell Component
+ME 64k Component.name=ME 64k Energy Cell Component
+ME 256k Component.name=ME 256k Energy Cell Component
+ME 1024k Component.name=ME 1024k Energy Cell Component
+ME 4096k Component.name=ME 4096k Energy Cell Component
+ME 16384k Component.name=ME 16384k Energy Cell Component
+
+Used=Used
+of=Of
+
+Linked=Linked
+UnLinked=UnLinked
+
+ME Server Network Tracer=ME Server Network Tracer

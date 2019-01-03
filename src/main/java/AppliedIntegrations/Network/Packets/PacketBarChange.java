@@ -13,6 +13,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 /**
  * @Author Azazell
+ * @Usage This packet needed only for syncing energy interface with it's gui. Just send this packet, and it will update energy type of gui bar.
  */
 public class PacketBarChange extends AIPacket<PacketBarChange> {
     public NBTTagCompound data;
