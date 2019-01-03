@@ -256,15 +256,16 @@ public class GuiEnergyStoragePart
     {
         super.initGui();
 
+        int i = 0;
         // Create the widgets
         for( int row = 0; row < GuiEnergyStoragePart.WIDGET_COLUMNS; row++ )
         {
             for( int column = 0; column < GuiEnergyStoragePart.WIDGET_ROWS; column++ )
             {
                 this.EnergyWidgetList.add( new WidgetEnergySlot( this, this.player,
-                        ( row * this.WIDGET_COLUMNS ) + column,
-                        this.WIDGET_X_POS + ( AIWidget.WIDGET_SIZE * column )-6,
+                        i, this.WIDGET_X_POS + ( AIWidget.WIDGET_SIZE * column )-6,
                         this.WIDGET_Y_POS + ( AIWidget.WIDGET_SIZE * row ) -1,true));
+                i++;
             }
         }
 

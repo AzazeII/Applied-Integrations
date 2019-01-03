@@ -154,5 +154,3 @@ public class Utils {
         return (AIPart) (((IPartHost) entity).getPart(side));
     }
 }
-
-

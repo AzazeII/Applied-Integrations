@@ -26,7 +26,6 @@ public class WidgetEnergySlot
 {
 
     public int id;
-    private AppliedCoord partLocation;
     private EntityPlayer player;
     public boolean shouldRender;
 
@@ -101,10 +100,10 @@ public class WidgetEnergySlot
         }
 
     }
-    public void mouseClicked( final LiquidAIEnergy energy )
-    {
+
+    public void mouseClicked( final LiquidAIEnergy energy ) {
         if(this.d != null) {
-            this.setEnergy(energy, 1);
+            setEnergy(energy, 1);
             NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));
         }
     }

@@ -24,9 +24,6 @@ public class NetworkHandler {
         NetworkHandler.registerMessage(PacketBarChange.class,Side.CLIENT);
 
         NetworkHandler.registerMessage(PacketClientFilter.class,Side.SERVER);
-        NetworkHandler.registerMessage(PacketServerFilter.class,Side.SERVER);
-
-        NetworkHandler.registerMessage(PacketClientFilter.class,Side.CLIENT);
         NetworkHandler.registerMessage(PacketServerFilter.class,Side.CLIENT);
 
         NetworkHandler.registerMessage(PacketMEServer.class, Side.CLIENT);

@@ -124,8 +124,6 @@ public class GuiEnergyIO
 
             if( ( !hoverUnderlayRendered ) && ( slotWidget.shouldRender ) && ( slotWidget.isMouseOverWidget( mouseX, mouseY ) ) )
             {
-
-
                 slotWidget.drawMouseHoverUnderlay();
 
                 slotUnderMouse = slotWidget;
@@ -148,12 +146,13 @@ public class GuiEnergyIO
         this.buttonList.add( new GuiButtonAETab( 0, this.guiLeft +
                 GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
                 "gui.appliedenergistics2.Priority" ) );
+        // Calculate the index
+        int index = 0;
         for( int row = 0; row < this.FILTER_GRID_SIZE; row++ )
         {
             for( int column = 0; column < this.FILTER_GRID_SIZE; column++ )
             {
-                // Calculate the index
-                int index = ( row * this.FILTER_GRID_SIZE ) + column;
+
 
                 // Calculate the x position
                 int xPos = this.WIDGET_X_POSITION + ( column * AIWidget.WIDGET_SIZE );
@@ -163,6 +162,7 @@ public class GuiEnergyIO
 
                 this.energySlotList.add( new WidgetEnergySlot( this, this.player,
                         index, xPos, yPos, this.configMatrix[index]) );
+                index++;
             }
         }
 

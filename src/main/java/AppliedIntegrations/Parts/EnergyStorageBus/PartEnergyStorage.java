@@ -355,6 +355,8 @@ public class PartEnergyStorage
 						this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
 				this.updateRequested = true;
 				this.player = player;
+
+				this.tickingRequest(getGridNode(), 20);
 			}
 		}
 		return true;
@@ -513,6 +515,8 @@ public class PartEnergyStorage
 
 		// Mark for save
 		this.markForSave();
+
+		AILog.debugThread(true);
 	}
 
 	@Override
@@ -537,16 +541,17 @@ public class PartEnergyStorage
 		this.onNeighborChanged();
 
 		// If update requested
-		if(updateRequested) {
+		if (updateRequested) {
 			// Then update gui, using packet system
 			Gui g = Minecraft.getMinecraft().currentScreen;
 			if (g instanceof GuiEnergyStoragePart) {
 				// send packet
-				NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
-						(EntityPlayerMP)this.player);
+				NetworkHandler.sendTo(new PacketCoordinateInit(getX(), getY(), getZ(), getHostTile().getWorldObj(), getSide()),
+						(EntityPlayerMP) this.player);
 				updateRequested = false;
 			}
 		}
+
 		// Keep chugging along
 		return TickRateModulation.SAME;
 	}

@@ -4,10 +4,14 @@ import AppliedIntegrations.Network.Packets.PacketClientFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
+
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 
 public class AILog
@@ -35,15 +39,35 @@ public class AILog
         player.addChatComponentMessage(new ChatComponentText(message));
     }
 
+    public static void debugThread(boolean useChatLog){
+        if(useChatLog){
+            chatLog(Thread.currentThread().getName());
+            chatLog(getLogicalSide().name());
+        }else{
+            info(Thread.currentThread().getName());
+            info(getLogicalSide().name());
+        }
+    }
     public static void debugObject(Object obj, boolean useChatLog) {
         for(Field f : obj.getClass().getFields()){
             try {
-                if(useChatLog)
+                if(useChatLog) {
                     chatLog(f.get(obj).toString());
-                else
+                }else {
                     info(f.get(obj).toString());
+                }
             }catch (IllegalAccessException except){
 
+            }
+        }
+    }
+
+    public static void debugObjects(Object... objects) {
+        for(Object obj : objects){
+            try {
+                info(obj.toString());
+            }catch (NullPointerException nullPtr){
+                info("null");
             }
         }
     }

@@ -82,7 +82,7 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
     public abstract IMessage HandleMessage(MessageContext ctx);
 
     @Override
-    public final void fromBytes(ByteBuf buf) {
+    public void fromBytes(ByteBuf buf) {
         try {
             Class<?> clazz = getClass();
             Field[] clFields = getClassFields(clazz);
@@ -97,7 +97,7 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
     }
 
     @Override
-    public final void toBytes(ByteBuf buf) {
+    public void toBytes(ByteBuf buf) {
         try {
             Class<?> clazz = getClass();
             Field[] clFields = getClassFields(clazz);
