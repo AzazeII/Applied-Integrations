@@ -364,10 +364,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 		}
 	}
 
-	public void onFilterChangeConstructs() {
-		if (part != null)
-			AILog.info("Part's X,Y,Z" + this.part.getX() + " " + this.part.getY() + " " + this.part.getZ());
-	}
+	public void onFilterChangeConstructs() { }
 
 	public void onStorageReceive(int storage, PartEnergyInterface sender) {
 		if (this.LinkedContainer.onStorageReceive(sender)) this.storage = storage;

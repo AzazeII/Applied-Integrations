@@ -40,7 +40,7 @@ import net.minecraftforge.fluids.FluidRegistry;
 
 import javax.annotation.Nullable;
 
-@Mod (modid = "appliedintegrations", name="Applied Integrations", version = "2.9", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
+@Mod (modid = "appliedintegrations", name="Applied Integrations", version = "3.1", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
 /**
  * @Author Azazell
  */

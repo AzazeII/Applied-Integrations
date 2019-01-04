@@ -170,7 +170,6 @@ public class ServerPacketTracer extends AIBaseGui {
                 GuiServerButton button = (GuiServerButton)btn;
                 button.setAction(()->{
 
-                    AILog.chatLog("Actions called!");
                     button.isActive = !button.isActive;
 
                     if(selectedNetwork instanceof NetworkGui) {
@@ -292,12 +291,6 @@ public class ServerPacketTracer extends AIBaseGui {
             btn.visible = selectedNetwork != null;
 
             btn.drawButton(Minecraft.getMinecraft(),btn.xPosition,btn.yPosition);
-        }
-
-        try{
-            AILog.chatLog(this.mInstance.xCoord+"");
-        }catch (NullPointerException e){
-            AILog.chatLog(e.getMessage());
         }
     }
 

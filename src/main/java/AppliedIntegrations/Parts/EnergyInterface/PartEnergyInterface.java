@@ -734,7 +734,6 @@ public class PartEnergyInterface
 	private void initGuiCoordinates(){
 		for( ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
-				AILog.chatLog("updating");
 				NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
 						(EntityPlayerMP)listener.player);
 				updateRequested = false;
@@ -806,8 +805,6 @@ public class PartEnergyInterface
 				if (this.isActive()) {
 						DoInjectDualityWork(Actionable.MODULATE);
 						DoExtractDualityWork(Actionable.MODULATE);
-						if(FilteredEnergy!=null)
-						AILog.info(this.FilteredEnergy.getEnergyName());
 				}
 			}catch (NullNodeConnectionException e) {
 				AILog.error(e,"Node of PartEnergy Interface, when it's active could not be null");

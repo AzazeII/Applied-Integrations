@@ -49,7 +49,11 @@ public class PacketClientFilter implements IMessage, IMessageHandler<PacketClien
     // Decode serialized data
     @Override
     public void fromBytes(ByteBuf buf) {
-        energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
+        int eIndex = buf.readInt();
+        if(eIndex >= 0)
+            energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
+        else
+            energy = null;
         index = buf.readInt();
 
         serverPart = Utils.getPartByParams(buf.readInt(), buf.readInt(), buf.readInt(), ForgeDirection.getOrientation(buf.readInt()), DimensionManager.getWorld(buf.readInt()));
@@ -66,7 +70,10 @@ public class PacketClientFilter implements IMessage, IMessageHandler<PacketClien
     // Encode data from client to server
     @Override
     public void toBytes(ByteBuf buf) {
-        buf.writeInt(energy.getIndex());
+        if(energy != null)
+            buf.writeInt(energy.getIndex());
+        else
+            buf.writeInt(-1);
         buf.writeInt(index);
 
         buf.writeInt(clientPart.getX());

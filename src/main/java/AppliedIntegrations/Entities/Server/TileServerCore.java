@@ -86,7 +86,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     private boolean updateRequested;
 
     public void requestUpdate(){
-        AILog.chatLog("Updating");
 
         updateRequested = true;
     }

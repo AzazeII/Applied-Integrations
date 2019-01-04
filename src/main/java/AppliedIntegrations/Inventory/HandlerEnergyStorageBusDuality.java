@@ -138,7 +138,6 @@ public class HandlerEnergyStorageBusDuality
             // Is the part a ME interface?
             if( facingPart instanceof PartEnergyInterface )
             {
-                AILog.info("Interface Detected(part)");
                 // Create the interface handler if needed
                 if( this.interfaceHandler == null )
                 {
@@ -150,7 +149,6 @@ public class HandlerEnergyStorageBusDuality
                 newHandler = this.interfaceHandler;
             }
         }else if( tileEntity instanceof TileEnergyInterface ) {
-            AILog.info("Interface Detected(tile)");
             // Create the interface handler if needed
             if( this.interfaceHandler == null )
             {

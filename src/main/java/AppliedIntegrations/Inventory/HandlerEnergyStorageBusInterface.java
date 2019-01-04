@@ -193,13 +193,11 @@ class HandlerEnergyStorageBusInterface
             if( facingPart instanceof PartEnergyInterface)
             {
                 facingInterface = (ITileStorageMonitorable)facingPart;
-                AILog.info("Interface detected");
             }
         }
         // Is it an interface?
         else if( tileEntity instanceof TileEnergyInterface)
         {
-            AILog.info("Interface detected");
             facingInterface = (ITileStorageMonitorable)tileEntity;
         }
 

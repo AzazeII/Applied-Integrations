@@ -26,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**
@@ -171,35 +172,18 @@ public class GuiEnergyIO
     protected void mouseClicked( final int mouseX, final int mouseY, final int mouseButton )
     {
         // Call super
-        super.mouseClicked( mouseX, mouseY, mouseButton );
+        super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        // Loop over all widgets
-        for( WidgetEnergySlot currentWidget : this.energySlotList )
-        {
-            // Is the mouse over this widget?
-            if( currentWidget.isMouseOverWidget( mouseX, mouseY ) )
-            {
+        for (WidgetEnergySlot EnergySlot : this.energySlotList) {
+            if (EnergySlot.isMouseOverWidget(mouseX, mouseY)) {
                 // Get the Energy of the currently held item
-                LiquidAIEnergy itemEnergy = Utils.getEnergyFromItemStack(player.inventory.getItemStack());
+                LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
 
-                // Is there an Energy?
-                if( itemEnergy != null )
-                {
-                    // Are we already filtering for this Energy?
-                    if( this.filter.contains( itemEnergy ) )
-                    {
+                if (EnergySlot.getEnergy() == itemEnergy)
+                    return;
 
-                        // Ignore
-                        return;
-                    }
+                EnergySlot.mouseClicked(itemEnergy);
 
-                }else{
-                    currentWidget.mouseClicked(null);
-                }
-                // Inform the slot it was clicked
-                currentWidget.mouseClicked( itemEnergy );
-                //part.updateFilter(0,itemEnergy);
-                // Stop searching
                 break;
             }
         }

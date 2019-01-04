@@ -333,7 +333,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 
 						int Diff = InjectEnergy(node, new FluidStack(EU, ValuedReceive), false) - ValuedReceive;
 						if (Diff == 0) {
-							AILog.info("Extracting EU");
 							this.getEnergyStorage(EU, side).modifyEnergyStored(-ValuedReceive);
 							InjectEnergy(node, new FluidStack(EU, ValuedReceive + Diff), true);
 

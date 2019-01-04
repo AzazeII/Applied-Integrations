@@ -103,8 +103,12 @@ public class WidgetEnergySlot
 
     public void mouseClicked( final LiquidAIEnergy energy ) {
         if(this.d != null) {
-            setEnergy(energy, 1);
-            NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));
+            try {
+                setEnergy(energy, 1);
+                NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));
+            }catch (Throwable throwable){
+
+            }
         }
     }
 

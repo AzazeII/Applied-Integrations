@@ -507,7 +507,6 @@ public class PartEnergyStorage
 	{
 
 		// Update filtered energies
-		AILog.chatLog("Updating server-side slot with index "+index);
 		this.filteredEnergies.set( index, Energy );
 
 		// Update the handler
@@ -515,8 +514,6 @@ public class PartEnergyStorage
 
 		// Mark for save
 		this.markForSave();
-
-		AILog.debugThread(true);
 	}
 
 	@Override
