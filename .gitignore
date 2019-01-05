@@ -24,7 +24,7 @@
 hs_err_pid*
 
 # log directory
-logs\
+logs/
 
 # macOS section
 
