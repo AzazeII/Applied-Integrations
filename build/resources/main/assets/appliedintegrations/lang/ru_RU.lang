@@ -1,0 +1,66 @@
+itemGroup.appliedintegrations=Applied Integrations
+
+tile.ME Logic Bus Rib.name=МЭ Ребро Шины Логики
+tile.ME Logic Bus Core.name=МЭ Ядро Шины Логики
+tile.ME Logic Bus Housing.name=МЭ Обшивка Шины Логики
+tile.ME Logic Bus Port.name=МЭ Порт Шины Логики
+
+tile.ME Server Core.name=МЭ Ядро Сервера
+tile.ME Server Housing.name=МЭ Обшивка Сервера
+tile.ME Server Rib.name=МЭ Ребро Сервера
+tile.ME Server Port.name=МЭ Порт Сервера
+tile.ME Server Security Terminal.name=МЭ Терминал Безопасности Сервера
+
+
+
+tile.ME Energy Interface.name=МЭ Интерфейс Энергии
+ME Energy Interface=МЭ Интерфейс Энергии
+ME Energy Export Bus=МЭ Шина Экспорта Энергии
+ME Energy Import Bus=МЭ Шина Импорта Энергии
+ME Energy Storage Bus=МЭ Шина Хранения Энергии
+ME Energy Terminal=МЭ Терминал Энергии
+
+
+
+Energy Stored=Энергии Хранится
+
+appliedintegrations.Energy.ImportBus.name=МЭ Энерго-Шина Импорта
+appliedintegrations.Energy.ExportBus.name=МЭ Энерго-Шина Экспорта
+appliedintegrations.Energy.Interface.name=МЭ Энерго-Интерфейс
+appliedintegrations.Energy.StorageBus.name=МЭ Энерго-Шина Хранения
+appliedintegrations.Energy.terminal.name=МЭ Энергетический Терминал
+appliedintegrations.Energy.StorageMonitor.name=МЭ Монитор Хранения Энергии
+appliedintegrations.Energy.Machine.P2PRotary=Туннель Точка-Точка Ватты
+appliedintegrations.Energy.Machine.P2PJoules=Туннель Точка-Точка Джоули
+
+ME 1k Energy Cell.name=МЭ 1k Энерго-Ячейка
+ME 4k Energy Cell.name=МЭ 4k Энерго-Ячейка
+ME 16k Energy Cell.name=МЭ 16k Энерго-Ячейка
+ME 64k Energy Cell.name=МЭ 64k Энерго-Ячейка
+ME 256k Energy Cell.name=МЭ 256k Энерго-Ячейка
+ME 1024k Energy Cell.name=МЭ 1024k Энерго-Ячейка
+ME 4096k Energy Cell.name=МЭ 4096k Энерго-Ячейка
+ME 16384k Energy Cell.name=МЭ 16384k Энерго-Ячейка
+ME Creative Energy Cell.name=MЭ Креативная Энерго-Ячейка
+
+ME 1k Component.name=МЭ 1k Энергетический Компонент Хранения
+ME 4k Component.name=МЭ 4k Энергетический Компонент Хранения
+ME 16k Component.name=МЭ 16k Энергетический Компонент Хранения
+ME 64k Component.name=МЭ 64k Энергетический Компонент Хранения
+ME 256k Component.name=МЭ 256k Энергетический Компонент Хранения
+ME 1024k Component.name=МЭ 1024k Энергетический Компонент Хранения
+ME 4096k Component.name=МЭ 4096k Энергетический Компонент Хранения
+ME 16384k Component.name=МЭ 16384k Энергетический Компонент Хранения
+
+item.appliedintegrationsenergy.formation.core.name=МЭ Энерго-Ядро Формирования
+item.appliedintegrationsenergy.annihilation.core.name=МЭ Энерго-Ядро Уничтожения
+item.appliedintegrationscasing.energy.name=МЭ Корпус Энерго-Ячейки
+item.appliedintegrationsstorage.energy.terminal.name=МЭ Беспроводной Терминал Энергии
+item.appliedintegrationsitem.chaos.manipulator.name=Инструмент Манипуляции МЭ Сети
+
+Used=Использовано
+of=Из
+Linked=Привязан
+UnLinked=Не Привязан
+
+ME Server Network Tracer=МЭ Трассировщик Сети
