@@ -3,7 +3,6 @@ package AppliedIntegrations.API;
 import AppliedIntegrations.AppliedIntegrations;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.Fluid;
 
 import java.util.LinkedHashMap;
@@ -19,7 +18,7 @@ public class LiquidAIEnergy extends Fluid {
 
 
     public LiquidAIEnergy(Integer index,String tag, ResourceLocation image) {
-        super(tag);
+        super(tag, null, null);
         if (energies.containsKey(tag)) throw new IllegalArgumentException(tag + " already registered!");
         this.tag = tag;
         this.image = image;

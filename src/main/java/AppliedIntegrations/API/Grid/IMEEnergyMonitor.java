@@ -3,7 +3,7 @@ package AppliedIntegrations.API.Grid;
 import AppliedIntegrations.API.IEnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import appeng.api.config.Actionable;
-import appeng.api.networking.security.BaseActionSource;
+import appeng.me.helpers.BaseActionSource;
 
 import javax.annotation.Nonnull;
 import java.util.Collection;

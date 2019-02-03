@@ -12,7 +12,7 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;
 /**
@@ -37,9 +37,9 @@ public class AEPartGridBlock
     }
 
     @Override
-    public EnumSet<ForgeDirection> getConnectableSides()
+    public EnumSet<EnumFacing> getConnectableSides()
     {
-        return EnumSet.noneOf( ForgeDirection.class );
+        return EnumSet.noneOf( EnumFacing.class );
     }
 
     public IEnergyGrid getEnergyGrid()
@@ -108,7 +108,7 @@ public class AEPartGridBlock
     public AEColor getGridColor()
     {
         // Return transparent.
-        return AEColor.Transparent;
+        return AEColor.TRANSPARENT;
     }
 
     /**

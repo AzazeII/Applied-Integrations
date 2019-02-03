@@ -1,10 +1,6 @@
 package AppliedIntegrations.API.Multiblocks;
 
 import AppliedIntegrations.Blocks.BlocksEnum;
-import net.minecraftforge.common.util.ForgeDirection;
-
-import static net.minecraftforge.common.util.ForgeDirection.NORTH;
-import static net.minecraftforge.common.util.ForgeDirection.SOUTH;
 
 public class Patterns
 {

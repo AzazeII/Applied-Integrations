@@ -8,10 +8,8 @@ import appeng.api.networking.security.IActionHost;
 import appeng.api.parts.IPartHost;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
-import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Optional;
 import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -19,13 +17,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.EnumSet;
-
-import static net.minecraftforge.common.util.ForgeDirection.UNKNOWN;
 
 @Optional.InterfaceList(value = { // ()____()
         @Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent",modid = "IC2",striprefs = true),
@@ -86,7 +84,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     @Override
     public AEColor getGridColor() {
         // TODO Auto-generated method stub
-        return AEColor.Transparent;
+        return AEColor.TRANSPARENT;
     }
 
     @Override
@@ -100,14 +98,14 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     }
     @Override
-    public EnumSet<ForgeDirection> getConnectableSides() {
+    public EnumSet<EnumFacing> getConnectableSides() {
         // TODO Auto-generated method stub
-        return EnumSet.of(ForgeDirection.SOUTH,ForgeDirection.DOWN,ForgeDirection.EAST,ForgeDirection.UP,ForgeDirection.NORTH,ForgeDirection.WEST);
+        return EnumSet.of(EnumFacing.SOUTH,EnumFacing.DOWN,EnumFacing.EAST,EnumFacing.UP,EnumFacing.NORTH,EnumFacing.WEST);
     }
     public void createAELink() {
-        if(worldObj != null) {
-            if (!worldObj.isRemote) {
-                if (theGridNode == null) theGridNode = AEApi.instance().createGridNode(this);
+        if(world != null) {
+            if (!world.isRemote) {
+                if (theGridNode == null) theGridNode = AEApi.instance().grid().createGridNode(this);
                 theGridNode.updateState();
             }
         }
@@ -131,30 +129,31 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     }
 
     public boolean isClient() {
-        return getWorldObj().isRemote;
+        return world.isRemote;
     }
     @Override
     public ItemStack getMachineRepresentation() {
         DimensionalCoord location = this.getLocation();
         if (location == null)
             return null;
-        return new ItemStack(location.getWorld().getBlock(location.x, location.y, location.z), 1, location.getWorld().getBlockMetadata(location.x, location.y, location.z));
+        return new ItemStack(location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock(), 1,
+                location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock().getMetaFromState((location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)))));
 
     }
     public IGridNode getGridNode() {
-        return getGridNode(UNKNOWN);
+        return getGridNode(AEPartLocation.INTERNAL);
     }
     @Override
-    public IGridNode getGridNode(ForgeDirection dir) {
+    public IGridNode getGridNode(AEPartLocation dir) {
         // TODO Auto-generated method stub
         if(theGridNode==null) createAELink();
         return theGridNode;
     }
 
     @Override
-    public AECableType getCableConnectionType(ForgeDirection dir) {
+    public AECableType getCableConnectionType(AEPartLocation dir) {
         // TODO Auto-generated method stub
-        return AECableType.DENSE;
+        return AECableType.DENSE_SMART;
     }
 
     @Override
@@ -167,7 +166,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         if (FMLCommonHandler.instance().getEffectiveSide().isClient())
             return null;
         if (this.node == null) {
-            this.node = AEApi.instance().createGridNode(this.gridBlock);
+            this.node = AEApi.instance().grid().createGridNode(this.gridBlock);
         }
         return this.node;
 
@@ -175,13 +174,12 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     @Override
     public void updateEntity() {
         //create grid node on add to world
-        if (!loaded && hasWorldObj() && !worldObj.isRemote) {
+        if (!loaded && hasWorld() && !world.isRemote) {
             loaded = true;
             createAELink();
         }
     }
     public void notifyBlock(){
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
     }
 
     protected IGrid getNetwork(){

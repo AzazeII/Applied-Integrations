@@ -1,18 +1,15 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Network.AIPacket;
 import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Utils.AILog;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.inventory.Container;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
 /**
  * @Author Azazell
  * @Usage This packet is only needed for updating energy bar in Energy interface, when you need to update current energy value, you can send this packet
@@ -25,7 +22,7 @@ public class PacketProgressBar extends AIPacket<PacketProgressBar> {
         // AutoMate, added for minecraft base handling
     }
 
-    public PacketProgressBar(PartEnergyInterface sender,int x,int y,int z,ForgeDirection side, World w){
+    public PacketProgressBar(PartEnergyInterface sender, int x, int y, int z, EnumFacing side, World w){
         this.sender = sender;
 
         Gui g = Minecraft.getMinecraft().currentScreen;

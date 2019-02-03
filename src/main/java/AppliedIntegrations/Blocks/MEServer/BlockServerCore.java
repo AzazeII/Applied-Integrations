@@ -7,18 +7,19 @@ import AppliedIntegrations.Entities.Server.TileServerCore;
 import AppliedIntegrations.Entities.Server.TileServerRib;
 import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
 import AppliedIntegrations.Utils.AILog;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -29,16 +30,17 @@ public class BlockServerCore extends AIMultiBlock {
     private final Random rand = new Random();
 
     public BlockServerCore() {
-        this.setBlockName("ME Server Core");
+        this.setUnlocalizedName("ME Server Core");
+        this.setRegistryName("ServerCore");
     }
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block block, int par6)
+    public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity tie, ItemStack stack)
     {
         if (world.isRemote) return;
 
         ArrayList<ItemStack> drops = new ArrayList<>();
 
-        TileEntity teRaw = world.getTileEntity(x, y, z);
+        TileEntity teRaw = world.getTileEntity(pos);
 
         if (teRaw != null && teRaw instanceof TileServerCore)
         {
@@ -46,17 +48,15 @@ public class BlockServerCore extends AIMultiBlock {
 
             for (int i = 0; i < te.inv.getSizeInventory(); i++)
             {
-                ItemStack stack = te.inv.getStackInSlot(i);
+                ItemStack istack = te.inv.getStackInSlot(i);
 
-                if (stack != null) drops.add(stack.copy());
+                if (istack != null) drops.add(istack.copy());
             }
         }
 
         for (int i = 0;i < drops.size();i++)
         {
-            EntityItem item = new EntityItem(world, x + 0.5, y + 0.5, z + 0.5, drops.get(i));
-            item.setVelocity((rand.nextDouble() - 0.5) * 0.25, rand.nextDouble() * 0.5 * 0.25, (rand.nextDouble() - 0.5) * 0.25);
-            world.spawnEntityInWorld(item);
+            spawnAsEntity(world, pos, drops.get(i));
         }
     }
 
@@ -65,7 +65,6 @@ public class BlockServerCore extends AIMultiBlock {
         super.onBlockActivated(world,x,y,z,p,side,par7,par8,par9);
             if (!p.isSneaking()) {
                 if(!world.isRemote) {
-                    world.markBlockForUpdate(x,y,z);
                     p.openGui(AppliedIntegrations.instance, 6, world, x, y, z);
 
                     return true;

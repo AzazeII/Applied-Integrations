@@ -4,23 +4,25 @@ import AppliedIntegrations.Blocks.AIMultiBlock;
 import AppliedIntegrations.Entities.AIMultiBlockTile;
 import AppliedIntegrations.Entities.IAIMultiBlock;
 import appeng.api.networking.GridFlags;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.EnumSet;
 
 public class TileServerHousing extends AIMultiBlockTile {
 
     @Override
-    public EnumSet<ForgeDirection> getConnectableSides() {
+    public EnumSet<EnumFacing> getConnectableSides() {
         if(hasMaster()) {
-            EnumSet<ForgeDirection> set = EnumSet.noneOf(ForgeDirection.class);
+            EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
 
-            for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
-                if (worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerCore ||
-                        worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerRib ||
-                        worldObj.getTileEntity(xCoord + side.offsetX, yCoord + side.offsetY, zCoord + side.offsetZ) instanceof TileServerHousing) {
+            for (EnumFacing side : EnumFacing.values()) {
+                if (world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX(), getPos().getY() + side.getFrontOffsetY(), getPos().getZ() + side.getFrontOffsetZ())) instanceof TileServerCore ||
+                        world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX(), getPos().getY() + side.getFrontOffsetY(), getPos().getZ() + side.getFrontOffsetZ())) instanceof TileServerRib ||
+                        world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX(), getPos().getY() + side.getFrontOffsetY(), getPos().getZ() + side.getFrontOffsetZ())) instanceof TileServerHousing) {
                     set.add(side);
                 }
             }

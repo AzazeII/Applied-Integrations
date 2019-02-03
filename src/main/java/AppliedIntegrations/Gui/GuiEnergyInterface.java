@@ -20,6 +20,7 @@ import appeng.api.config.Settings;
 import appeng.client.gui.implementations.GuiPriority;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
@@ -78,7 +79,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 	@resetData
 	public int storage;
 
-	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part,World w, int x, int y, int z, ForgeDirection side, EntityPlayer player) {
+	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part, World w, int x, int y, int z, EnumFacing side, EntityPlayer player) {
 		super(CEI);
 		this.player = player;
 

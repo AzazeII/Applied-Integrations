@@ -185,7 +185,7 @@ public abstract class ContainerWithPlayerInventory
 
         // Check amount
         ItemStack matchStack = matchingSlot.getStack();
-        if( matchStack.stackSize < amount )
+        if( matchStack.getCount() < amount )
         {
             // Not enough to take
             return null;
@@ -195,7 +195,7 @@ public abstract class ContainerWithPlayerInventory
         ItemStack result = matchStack.splitStack( amount );
 
         // Anything left in the stack?
-        if( matchStack.stackSize == 0 )
+        if( matchStack.getCount() == 0 )
         {
             // Null the slot
             matchingSlot.putStack( null );
@@ -307,7 +307,7 @@ public abstract class ContainerWithPlayerInventory
             {
                 ItemStack slotStack = slot.getStack();
                 // Same items, and room?
-                if( ( slotStack.stackSize < slotStack.getMaxStackSize() ) && slotStack.isItemEqual( stack ) )
+                if( ( slotStack.getCount() < slotStack.getMaxStackSize() ) && slotStack.isItemEqual( stack ) )
                 {
                     // Found merge slot
                     return slot;

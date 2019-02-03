@@ -11,36 +11,33 @@ import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Render.TextureManager;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
-import cpw.mods.fml.client.event.ConfigChangedEvent;
-import cpw.mods.fml.common.*;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.IGuiHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import extracells.api.ECApi;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import AppliedIntegrations.Items.*;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.*;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 
-@Mod (modid = "appliedintegrations", name="Applied Integrations", version = "3.1", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "3.1", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
 /**
  * @Author Azazell
  */
@@ -79,7 +76,7 @@ public class AppliedIntegrations implements IGuiHandler {
     @SidedProxy(clientSide="AppliedIntegrations.Proxy.ClientProxy", serverSide="AppliedIntegrations.Proxy.CommonProxy")
 	public static CommonProxy proxy;
 
-	@EventHandler
+	@Mod.EventHandler
 	public void preLoad(FMLPreInitializationEvent event)
 	{
 		NetworkHandler.registerPackets();
@@ -118,7 +115,7 @@ public class AppliedIntegrations implements IGuiHandler {
 			ECApi.instance().addFluidToShowBlacklist(energy);
 		}
 	}
-	@EventHandler
+	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
 	{
 		// Register GuiHandler
@@ -140,7 +137,7 @@ public class AppliedIntegrations implements IGuiHandler {
 
 		AILog.info(this.modid + ":init Completed");
 	}
-	@EventHandler
+	@Mod.EventHandler
 	public void postLoad(FMLPostInitializationEvent event) {
 
 		if (!(Loader.isModLoaded("AppliedEnergestics"))){
@@ -158,15 +155,14 @@ public class AppliedIntegrations implements IGuiHandler {
 	}
 	public void registerItems() {
 		for (ItemEnum current : ItemEnum.values()) {
-			GameRegistry.registerItem(current.getItem(), current.getStatName());
+			ForgeRegistries.ITEMS.register(current.getItem());
 		}
 	}
 	public void registerBlocks(){
 		for(BlocksEnum b : BlocksEnum.values()) {
 			// blocks
-			GameRegistry.registerBlock(b.b, b.enumName);
+			ForgeRegistries.BLOCKS.register(b.b);
 			b.b.setCreativeTab(this.AI);
-			b.b.setBlockTextureName(this.modid+":"+b.enumName);
 		}
 	}
 	public void registerTiles(){

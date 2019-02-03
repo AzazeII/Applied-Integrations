@@ -33,7 +33,7 @@ public class AILog
     }
 
     public static void chatLog(final String message) {
-        Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText(message));
+        Minecraft.getMinecraft().player.addChatComponentMessage(new ChatComponentText(message));
     }
     public static void chatLog(final String message, EntityPlayer player){
         player.addChatComponentMessage(new ChatComponentText(message));

@@ -15,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+
 /**
  * @Author Azazell
  */
@@ -118,7 +120,7 @@ super(player);
                                      final int slotOffsetY )
     {
         //Get the networkTool or null if absent (e.g. disabled in AE's config-file)
-        ItemStack nwTool = AEApi.instance().definitions().items().networkTool().maybeStack( 1 ).orNull();
+        ItemStack nwTool = AEApi.instance().definitions().items().networkTool().maybeStack( 1 ).get();
 
         //First of all is there a networkTool?
         if( nwTool != null )
@@ -136,8 +138,8 @@ super(player);
                     IGuiItem guiItem = (IGuiItem)stack.getItem();
 
                     // Get the gui for the tool
-                    INetworkTool networkTool = (INetworkTool)guiItem.getGuiObject( stack, partLocation.getWorld(), partLocation.x, partLocation.y,
-                            partLocation.z );
+                    INetworkTool networkTool = (INetworkTool)guiItem.getGuiObject( stack, partLocation.getWorld(), new BlockPos(partLocation.x, partLocation.y,
+                            partLocation.z ));
 
                     Slot toolSlot = null;
 
@@ -235,19 +237,19 @@ super(player);
                 {
                     // Create an itemstack of size 1
                     ItemStack upgradeStack = slotStack.copy();
-                    upgradeStack.stackSize = 1;
+                    upgradeStack.setCount(1);
 
                     // Place the stack in the upgrade slot
                     upgradeSlot.putStack( upgradeStack );
 
                     // Decrement the slot stack
-                    slotStack.stackSize-- ;
+                    slotStack.setCount(slotStack.getCount()-1);
 
                     // Mark that we merged
                     didMerge = true;
 
                     // Is the slot stack at zero?
-                    if( slotStack.stackSize == 0 )
+                    if( slotStack.getCount() == 0 )
                     {
                         // Break the loop
                         break;
@@ -353,7 +355,7 @@ super(player);
             }
 
             // Did the merger drain the stack?
-            if( slotStack.stackSize == 0 )
+            if( slotStack.getCount() == 0 )
             {
                 // Set the slot to have no item
                 slot.putStack( null );

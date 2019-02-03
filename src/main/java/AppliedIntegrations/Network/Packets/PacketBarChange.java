@@ -3,13 +3,13 @@ package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Network.AIPacket;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * @Author Azazell
@@ -18,7 +18,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class PacketBarChange extends AIPacket<PacketBarChange> {
     public NBTTagCompound data;
     public PacketBarChange(){}
-    public PacketBarChange(LiquidAIEnergy energy, int x, int y, int z, ForgeDirection side, World w){
+    public PacketBarChange(LiquidAIEnergy energy, int x, int y, int z, EnumFacing side, World w){
         this.data = new NBTTagCompound();
         data.setInteger("bar",energy.getIndex());
 

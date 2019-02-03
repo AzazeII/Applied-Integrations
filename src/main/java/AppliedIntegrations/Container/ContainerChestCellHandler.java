@@ -2,26 +2,29 @@ package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
 import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Inventory.HandlerItemEnergyCell;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.EffectiveSide;
+import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.security.BaseActionSource;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.networking.security.PlayerSource;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ISaveProvider;
-import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.me.helpers.BaseActionSource;
+import appeng.me.helpers.PlayerSource;
 import appeng.tile.storage.TileChest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -84,7 +87,7 @@ public class ContainerChestCellHandler
         super( player );
 
         // Get the tile entity for the chest
-        this.hostChest = (TileChest)world.getTileEntity( x, y, z );
+        this.hostChest = (TileChest)world.getTileEntity( new BlockPos(x, y, z));
 
         // Is this server side?
         if( EffectiveSide.isServerSide() )
@@ -140,7 +143,7 @@ public class ContainerChestCellHandler
     @Override
     protected BaseActionSource getActionSource()
     {
-        return this.playerSource;
+        return null;
     }
 
     @Override
@@ -170,7 +173,7 @@ public class ContainerChestCellHandler
             IMEInventoryHandler<IAEFluidStack> handler = null;
 
             // Get the chest handler
-            List<IMEInventoryHandler> hostCellArray = this.hostChest.getCellArray( StorageChannel.FLUIDS );
+            List<IMEInventoryHandler> hostCellArray = this.hostChest.getCellArray(AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class));
             if( hostCellArray.size() > 0 )
             {
                 handler = hostCellArray.get( 0 );
@@ -306,9 +309,7 @@ public class ContainerChestCellHandler
         // Drop anything in the work slots.
         if( EffectiveSide.isServerSide() )
         {
-            for( int i = 0; i < 2; i++ )
-            {
-                this.player.dropPlayerItemWithRandomChoice( ( (Slot)this.inventorySlots.get( i ) ).getStack(), false );
+            for( int i = 0; i < 2; i++ ) {
             }
         }
 
@@ -324,7 +325,7 @@ public class ContainerChestCellHandler
     }
 
     @Override
-    public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change, BaseActionSource actionSource) {
+    public void postChange(IBaseMonitor<IAEFluidStack> iBaseMonitor, Iterable<IAEFluidStack> iterable, IActionSource iActionSource) {
 
     }
 

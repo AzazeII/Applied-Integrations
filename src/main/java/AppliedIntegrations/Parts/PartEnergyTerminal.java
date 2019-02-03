@@ -12,36 +12,36 @@ import AppliedIntegrations.Network.Packets.PacketTerminalChange;
 import AppliedIntegrations.Render.TextureManager;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.config.ViewItems;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
-import appeng.api.storage.StorageChannel;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.IConfigManager;
-import appeng.client.texture.CableBusTextures;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.Tessellator;
+import appeng.me.helpers.BaseActionSource;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumHand;
+
+import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -141,11 +141,6 @@ public class PartEnergyTerminal
 		return null;
 	}
 
-	@Override
-	public int cableConnectionRenderTo()
-	{
-		return 1;
-	}
 
 	@Override
 	public void getBoxes( final IPartCollisionHelper helper )
@@ -155,12 +150,6 @@ public class PartEnergyTerminal
 		helper.addBox( 4.0D, 4.0D, 13.0D, 12.0D, 12.0D, 14.0D );
 
 		helper.addBox( 5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 13.0D );
-	}
-
-	@Override
-	public IIcon getBreakingTexture()
-	{
-		return TextureManager.ENERGY_TERMINAL.getTextures()[3];
 	}
 
 	@Override
@@ -195,6 +184,10 @@ public class PartEnergyTerminal
 		}
 	}
 
+	@Override
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 0;
+	}
 
 
 	/**
@@ -219,6 +212,11 @@ public class PartEnergyTerminal
 	public int getLightLevel()
 	{
 		return( this.isActive() ? AIPart.ACTIVE_TERMINAL_LIGHT_LEVEL : 0 );
+	}
+
+	@Override
+	public void onEntityCollision(Entity entity) {
+
 	}
 
 	@Override
@@ -248,10 +246,11 @@ public class PartEnergyTerminal
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 position) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
 
 			if(isActive()) {
-				player.openGui(AppliedIntegrations.instance, 7, this.getHostTile().getWorldObj(), this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
+				player.openGui(AppliedIntegrations.instance, 7, this.getHostTile().getWorld(), this.getHostTile().getPos().getX()
+						, this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
 				this.ShouldUpdate = true;
 			}
 
@@ -284,83 +283,6 @@ public class PartEnergyTerminal
 		this.listeners.remove( containerEnergyTerminal );
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderInventory( final IPartRenderHelper helper, final RenderBlocks renderer )
-	{
-		Tessellator ts = Tessellator.instance;
-
-		IIcon side = TextureManager.ENERGY_TERMINAL.getTextures()[3];
-		helper.setTexture(side);
-		helper.setBounds(4, 4, 13, 12, 12, 14);
-		helper.renderInventoryBox(renderer);
-		helper.setTexture(side, side, side, TextureManager.BUS_BACK.getTexture(),
-				side, side);
-		helper.setBounds(2, 2, 14, 14, 14, 16);
-		helper.renderInventoryBox(renderer);
-
-		ts.setBrightness(13 << 20 | 13 << 4);
-
-		helper.setInvColor(0xFFFFFF);
-		helper.renderInventoryFace(TextureManager.BUS_BACK.getTexture(),
-				ForgeDirection.SOUTH, renderer);
-
-		helper.setBounds(3, 3, 15, 13, 13, 16);
-		helper.setInvColor(AEColor.Transparent.blackVariant);
-		helper.renderInventoryFace(TextureManager.ENERGY_TERMINAL.getTextures()[0],
-				ForgeDirection.SOUTH, renderer);
-		helper.setInvColor(AEColor.Transparent.mediumVariant);
-		helper.renderInventoryFace(TextureManager.ENERGY_TERMINAL.getTextures()[1],
-				ForgeDirection.SOUTH, renderer);
-		helper.setInvColor(AEColor.Transparent.whiteVariant);
-		helper.renderInventoryFace(TextureManager.ENERGY_TERMINAL.getTextures()[2],
-				ForgeDirection.SOUTH, renderer);
-
-		helper.setBounds(5, 5, 12, 11, 11, 13);
-		renderInventoryBusLights(helper, renderer);
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderStatic( final int x, final int y, final int z, final IPartRenderHelper helper, final RenderBlocks renderer )
-	{
-		Tessellator tessellator = Tessellator.instance;
-
-		IIcon side = TextureManager.ENERGY_TERMINAL.getTextures()[3];
-
-		// Main block
-		helper.setTexture( side, side, side, side, side, side );
-		helper.setBounds( 2.0F, 2.0F, 14.0F, 14.0F, 14.0F, 16.0F );
-		helper.renderBlock( x, y, z, renderer );
-
-		// Light up if active
-		if( this.isActive() )
-		{
-			Tessellator.instance.setBrightness( super.ACTIVE_FACE_BRIGHTNESS );
-		}
-
-		// Dark corners
-		tessellator.setColorOpaque_I( this.getHost().getColor().blackVariant );
-		helper.renderFace( x, y, z, PartEnergyStorageMonitor.darkCornerTexture.getIcon(), ForgeDirection.SOUTH, renderer );
-
-		// Light corners
-		tessellator.setColorOpaque_I( this.getHost().getColor().mediumVariant );
-		helper.renderFace( x, y, z, PartEnergyStorageMonitor.lightCornerTexture.getIcon(), ForgeDirection.SOUTH, renderer );
-
-		// Main face
-		tessellator.setColorOpaque_I( this.getHost().getColor().whiteVariant );
-		helper.renderFace( x, y, z, CableBusTextures.PartConversionMonitor_Bright.getIcon(), ForgeDirection.SOUTH, renderer );
-
-		tessellator.setColorOpaque_I( this.getHost().getColor().mediumVariant );
-		helper.renderFace( x, y, z, TextureManager.ENERGY_TERMINAL.getTexture(), ForgeDirection.SOUTH, renderer );
-		// Borders
-		helper.renderFace( x, y, z, TextureManager.ENERGY_TERMINAL.getTextures()[4], ForgeDirection.SOUTH, renderer );
-		// Cable lights
-		helper.setBounds( 5.0F, 5.0F, 13.0F, 11.0F, 11.0F, 14.0F );
-		this.renderStaticBusLights( x, y, z, helper, renderer );
-
-	}
-
 	/**
 	 * Called to save our state
 	 */
@@ -371,7 +293,7 @@ public class PartEnergyTerminal
 		super.writeToNBT( data, saveType );
 
 		// Only write NBT data if saving, or wrenched.
-		if( ( saveType != PartItemStack.World ) && ( saveType != PartItemStack.Wrench ) )
+		if( ( saveType != PartItemStack.WORLD ) && ( saveType != PartItemStack.WRENCH ) )
 		{
 			return;
 		}
@@ -395,7 +317,9 @@ public class PartEnergyTerminal
 	}
 
 	@Override
-	public void onStackChange(IItemList o, IAEStack fullStack, IAEStack diffStack, BaseActionSource src, StorageChannel chan) { }
+	public void onStackChange(IItemList<?> iItemList, IAEStack<?> iaeStack, IAEStack<?> iaeStack1, IActionSource iActionSource, IStorageChannel<?> iStorageChannel) {
+
+	}
 
 	@Override
 	public ItemStack getIcon() {
@@ -408,13 +332,20 @@ public class PartEnergyTerminal
 	}
 
 	@Override
-	public IMEMonitor<IAEItemStack> getItemInventory() {
-		return null;
-	}
-
-	@Override
-	public IMEMonitor<IAEFluidStack> getFluidInventory() {
-		return this.getEnergyProvidingInventory();
+	public  <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> chan) {
+		// Getting Node
+		if (getGridNode(AEPartLocation.INTERNAL) == null)
+			return null;
+		// Getting net of node
+		IGrid grid = getGridNode(AEPartLocation.INTERNAL).getGrid();
+		if (grid == null)
+			return null;
+		// Cache of net
+		IStorageGrid storage = grid.getCache(IStorageGrid.class);
+		if (storage == null)
+			return null;
+		// fluidInventory of cache
+		return storage.getInventory(chan);
 	}
 
 	@Override

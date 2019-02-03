@@ -1,13 +1,14 @@
 package AppliedIntegrations.API;
 
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Parts.AIPart;
 import appeng.api.AEApi;
 import appeng.api.parts.IPartHost;
 import appeng.api.storage.data.IAEFluidStack;
-import cofh.api.energy.IEnergyContainerItem;
-import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.relauncher.Side;
+
+import cofh.redstoneflux.api.IEnergyContainerItem;
+import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.item.IElectricItem;
@@ -17,9 +18,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.EU;
@@ -56,13 +60,13 @@ public class Utils {
         return null;
     }
 
-        public static IAEFluidStack ConvertToAEFluidStack(final LiquidAIEnergy Energy, final long fluidAmount )
-        {
-            IAEFluidStack Stack;
-            Stack = AEApi.instance().storage().createFluidStack( new FluidStack( Energy, 1 ) );
-            Stack.setStackSize( fluidAmount );
-            return Stack;
-        }
+    public static IAEEnergyStack ConvertToAEFluidStack(final LiquidAIEnergy Energy, final long fluidAmount )
+    {
+        IAEEnergyStack Stack;
+        Stack = AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class).createStack( new FluidStack( Energy, 1 ) );
+        Stack.setStackSize( fluidAmount );
+        return Stack;
+    }
 
 
     public static int getEnergyInContainer(ItemStack container) {
@@ -138,18 +142,18 @@ public class Utils {
     }
 
     public static AIPart getPartByParams(AppliedCoord coord){
-        return getPartByParams(coord.x,coord.y,coord.z,coord.side,coord.getWorld());
+        return getPartByParams(new BlockPos(coord.x,coord.y,coord.z),coord.side,coord.getWorld());
     }
-    public static AIPart getPartByParams(int x, int y, int z, ForgeDirection side, World worldObj) {
+    public static AIPart getPartByParams(BlockPos pos, EnumFacing side, World worldObj) {
 
         World world = worldObj;
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             if (world == null) {
-                world = Minecraft.getMinecraft().theWorld;
+                world = Minecraft.getMinecraft().world;
             }
         }
-        TileEntity entity = world.getTileEntity(x, y, z);
+        TileEntity entity = world.getTileEntity(pos);
 
         return (AIPart) (((IPartHost) entity).getPart(side));
     }

@@ -10,15 +10,16 @@ import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;
 import java.util.Vector;
 
 public class TileServerSecurity extends AIMultiBlockTile {
 
-    public ForgeDirection fw;
+    public EnumFacing fw;
     public Vector<ContainerServerPacketTracer> Listeners = new Vector<>();
 
 
@@ -28,8 +29,8 @@ public class TileServerSecurity extends AIMultiBlockTile {
         super.updateEntity();
 
         BlockServerSecurity block = null;
-        if(worldObj.getBlock(xCoord,yCoord,zCoord) instanceof BlockServerSecurity)
-          block = (BlockServerSecurity)worldObj.getBlock(xCoord,yCoord,zCoord);
+        if(world.getBlock(xCoord,yCoord,zCoord) instanceof BlockServerSecurity)
+          block = (BlockServerSecurity)world.getBlock(xCoord,yCoord,zCoord);
         if(theGridNode != null && block != null)
             block.isActive = theGridNode.isActive();
         if(!hasMaster()){
@@ -62,9 +63,9 @@ public class TileServerSecurity extends AIMultiBlockTile {
     }
     @Override
     public void createAELink() {
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             if (theGridNode == null)
-                theGridNode = AEApi.instance().createGridNode(this);
+                theGridNode = AEApi.instance().grid().createGridNode(this);
                 theGridNode.updateState();
         }
     }
@@ -73,10 +74,10 @@ public class TileServerSecurity extends AIMultiBlockTile {
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
     }
     @Override
-    public EnumSet<ForgeDirection> getConnectableSides() {
+    public EnumSet<EnumFacing> getConnectableSides() {
         // TODO Auto-generated method stub
-        EnumSet<ForgeDirection> set = EnumSet.noneOf(ForgeDirection.class);
-        for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS){
+        EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
+        for(EnumFacing side : EnumFacing.values()){
             if(side != fw){
                 set.add(side);
             }
@@ -86,7 +87,7 @@ public class TileServerSecurity extends AIMultiBlockTile {
 
     @Override
     public void invalidate() {
-        if (worldObj != null && !worldObj.isRemote) {
+        if (world != null && !world.isRemote) {
             destroyAELink();
         }
         if(hasMaster()){
@@ -97,13 +98,13 @@ public class TileServerSecurity extends AIMultiBlockTile {
 
     @Override
     public void onChunkUnload() {
-        if (worldObj != null && !worldObj.isRemote) {
+        if (world != null && !world.isRemote) {
             destroyAELink();
         }
 
     }
     public void notifyBlock(){
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+        world.markBlockForUpdate(xCoord,yCoord,zCoord);
     }
 
 

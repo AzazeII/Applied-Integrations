@@ -19,6 +19,7 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.*;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.storage.*;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.api.util.IReadOnlyCollection;
 import net.minecraft.block.Block;
@@ -30,7 +31,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.*;
@@ -64,7 +67,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     public LinkedHashMap<IGrid, Integer> ServerNetworkMap = new LinkedHashMap<>();
 
     // Networks in ports
-    public LinkedHashMap<ForgeDirection,IGrid> portNetworks = new LinkedHashMap<>();
+    public LinkedHashMap<EnumFacing,IGrid> portNetworks = new LinkedHashMap<>();
 
     /**
      * Metadata - data of data
@@ -132,7 +135,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
 
     @Override
     public void notifyBlock(){
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+
     }
     @Override
     public void tryConstruct(EntityPlayer p) {
@@ -142,17 +145,17 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
             int count = 0;
             List<IAIMultiBlock> toUpdate = new ArrayList<>();
             for (int i = 0; i < Patterns.ME_SERVER.length; i++) {
-                if (!this.worldObj.isRemote) {
+                if (!this.world.isRemote) {
                     int x, y, z;
                     Block block;
 
-                    x = this.xCoord + Patterns.ME_SERVER[blocksToPlace - 1].x;
-                    y = this.yCoord + Patterns.ME_SERVER[blocksToPlace - 1].y;
-                    z = this.zCoord + Patterns.ME_SERVER[blocksToPlace - 1].z;
+                    x = this.pos.getX() + Patterns.ME_SERVER[blocksToPlace - 1].x;
+                    y = this.pos.getY() + Patterns.ME_SERVER[blocksToPlace - 1].y;
+                    z = this.pos.getZ() + Patterns.ME_SERVER[blocksToPlace - 1].z;
                     block = Patterns.ME_SERVER[blocksToPlace - 1].b;
-                    if (worldObj.getBlock(x, y, z) == block) {
+                    if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == block) {
                         count++;
-                        toUpdate.add((IAIMultiBlock) worldObj.getTileEntity(x, y, z));
+                        toUpdate.add((IAIMultiBlock) world.getTileEntity(new BlockPos(x, y, z)));
                         blocksToPlace--;
                     }
                 }
@@ -167,16 +170,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
                     int x, y, z, meta;
                     Block block = Patterns.ME_SERVER_FILL[BlocksToPlace].b;
 
-                    x = this.xCoord + Patterns.ME_SERVER_FILL[BlocksToPlace].x;
-                    y = this.yCoord + Patterns.ME_SERVER_FILL[BlocksToPlace].y;
-                    z = this.zCoord + Patterns.ME_SERVER_FILL[BlocksToPlace].z;
+                    x = this.pos.getX() + Patterns.ME_SERVER_FILL[BlocksToPlace].x;
+                    y = this.pos.getY() + Patterns.ME_SERVER_FILL[BlocksToPlace].y;
+                    z = this.pos.getZ() + Patterns.ME_SERVER_FILL[BlocksToPlace].z;
                     meta = Patterns.ME_SERVER_FILL[BlocksToPlace].meta;
 
-                    worldObj.setBlock(x, y, z, Blocks.air);
-                    worldObj.setBlock(x, y, z, block, meta, meta);
-                    worldObj.markBlockForUpdate(x, y, z);
-                    toUpdate.add((TileServerRib) worldObj.getTileEntity(x, y, z));
-                    ((TileServerRib) worldObj.getTileEntity(x, y, z)).changeAlt(true);
+                    world.setBlockState(new BlockPos(x, y, z), Blocks.AIR);
+                    world.setBlockState(new BlockPos(x, y, z), block, meta, meta);
+                    toUpdate.add((TileServerRib) world.getTileEntity(x, y, z));
+                    ((TileServerRib) world.getTileEntity(new BlockPos(x, y, z))).changeAlt(true);
                     BlocksToPlace--;
                 }
                 for (int i = 0; i < toUpdate.size(); i++) {
@@ -190,8 +192,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
                     }
                     Slaves.add(toUpdate.get(i));
                 }
-                for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS){
-                    TileEntity tile = worldObj.getTileEntity(xCoord+side.offsetX*2,yCoord+side.offsetY*2,zCoord+side.offsetZ*2);
+                for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){
+                    TileEntity tile = world.getTileEntity(new BlockPos(getPos().getX()+side.xOffset*2,getPos().getY()+side.yOffset*2,getPos().getZ()+side.zOffset*2));
                     if(tile instanceof TileServerPort){
                         TileServerPort port = (TileServerPort)tile;
                         port.setDir(side);
@@ -354,7 +356,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     @Override
     public void invalidate() {
         super.invalidate();
-        if (worldObj != null && !worldObj.isRemote) {
+        if (world != null && !world.isRemote) {
             destroyAELink();
         }
         if(isFormed)
@@ -383,8 +385,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     public void updateGUI(TileServerSecurity sender) {
         if(isFormed) {
             if (ServerNetworkMap.containsValue(RESERVED_MASTER_ID)) {
-                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, ForgeDirection.UNKNOWN, RESERVED_MASTER_ID),xCoord,yCoord,zCoord,worldObj));
-                for (ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
+                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, AEPartLocation.INTERNAL, RESERVED_MASTER_ID),xCoord,yCoord,zCoord,worldObj));
+                for (AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS) {
                     IGrid grid = portNetworks.get(dir);
                     if(ServerNetworkMap.get(grid) != null) {
                         if (ServerNetworkMap.get(grid) != RESERVED_MASTER_ID) {
@@ -397,7 +399,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     }
 
 
-    public void onFeedback(boolean Connected, int serverID, ForgeDirection port, LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions) {
+    public void onFeedback(boolean Connected, int serverID, AEPartLocation port, LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions) {
         if(Connected){
 
         }else{

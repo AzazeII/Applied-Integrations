@@ -26,107 +26,15 @@ import java.util.List;
  * @Author Azazell
  */
 public class BlockEnergyInterface extends BlockContainer implements ITileEntityProvider {
-	private static IIcon BasicIcon;
-	private static IIcon altIcon;
-	private IIcon altArrowIconDown;
-	private IIcon altArrowIconUp;
-	private IIcon altArrowIconRight;
-	private IIcon altArrowIconLeft;
-
-	private TileEnergyInterface associatedInterface;
-
-	private ForgeDirection Forward = ForgeDirection.UNKNOWN;
 	private boolean isThirdClick = false;
 
 	public BlockEnergyInterface() {
-		super(Material.rock);
-		this.setBlockName("ME Energy Interface");
+		super(Material.ROCK);
+		this.setUnlocalizedName("ME Energy Interface");
+		this.setRegistryName("EInterface");
 		this.setCreativeTab(AppliedIntegrations.AI);
 		this.setHardness(5F);
 	}
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta)
-	{
-		int valuedMeta = meta-1;
-		int sideOposite = ForgeDirection.getOrientation(side).getOpposite().ordinal();
-		if(meta == 0){
-			return this.BasicIcon;
-		}else{
-			if(side == valuedMeta || sideOposite == valuedMeta){
-				return this.altIcon;
-			}else{
-				if (valuedMeta == 0){
-					return this.altArrowIconDown;
-				}else if(valuedMeta == 1){
-					return this.altArrowIconUp;
-				}else if(valuedMeta == 2){
-					if (side == 1){
-						return this.altArrowIconUp;
-					}else if(side == 0){
-						return this.altArrowIconUp;
-					}else if(side == 4){
-						return this.altArrowIconLeft;
-					}else if(side == 5){
-						return this.altArrowIconRight;
-					}
-				}else if(valuedMeta == 3){
-					if (side == 1){
-						return this.altArrowIconDown;
-					}else if(side == 0){
-						return this.altArrowIconDown;
-					}else if(side == 4){
-						return this.altArrowIconRight;
-					}else if(side == 5){
-						return this.altArrowIconLeft;
-					}
-				}else if(valuedMeta == 4){
-					if(side == 0){
-						return this.altArrowIconLeft;
-					}else if(side == 1){
-						return this.altArrowIconLeft;
-					}else if(side == 2){
-						return this.altArrowIconRight;
-					}else if(side == 3){
-						return this.altArrowIconLeft;
-					}
-				}else if(valuedMeta == 5){
-					if(side == 0){
-						return this.altArrowIconRight;
-					}else if(side == 1){
-						return this.altArrowIconRight;
-					}else if(side == 2){
-						return this.altArrowIconLeft;
-					}else if(side == 3){
-						return this.altArrowIconRight;
-					}
-				}
-
-			}
-		}
-		return null;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister IconRegistry) {
-		BasicIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":energy.Interface");
-		altIcon = IconRegistry.registerIcon(AppliedIntegrations.modid+":energy.Interface.Alt");
-		altArrowIconDown = IconRegistry.registerIcon(AppliedIntegrations.modid+":energy.Interface.Alt.Arrow.Down");
-		altArrowIconUp = IconRegistry.registerIcon(AppliedIntegrations.modid+":energy.Interface.Alt.Arrow.Up");
-		altArrowIconRight = IconRegistry.registerIcon(AppliedIntegrations.modid+":energy.Interface.Alt.Arrow.Right");
-		altArrowIconLeft = IconRegistry.registerIcon(AppliedIntegrations.modid+":energy.Interface.Alt.Arrow.Left");
-	}
-	/*
-	   @SideOnly(Side.CLIENT)
-    public void registerBlockIcons(IIconRegister p_149651_1_)
-    {
-        this.blockIcon = p_149651_1_.registerIcon("furnace_side");
-        this.field_149936_O = p_149651_1_.registerIcon(this.field_149932_b ? "furnace_front_on" : "furnace_front_off");
-        this.field_149935_N = p_149651_1_.registerIcon("furnace_top");
-    }
-	 */
-
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase living, ItemStack stack) {
 		if (stack.stackTagCompound != null) {

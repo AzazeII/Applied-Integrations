@@ -9,18 +9,18 @@ import AppliedIntegrations.Entities.TileEnum;
 import net.minecraft.block.Block;
 
 public enum BlocksEnum {
-    BEI(new BlockEnergyInterface(),"EInterface"),
+    BEI(new BlockEnergyInterface(),""),
 
-    BSCore(new BlockServerCore(), "ServerCore",TileEnum.TSCore),
-    BSRib(new BlockServerRib(),"ServerFrame",TileEnum.TSRib),
-    BSPort(new BlockServerPort(),"ServerPort",TileEnum.TSPort),
-    BSHousing(new BlockServerHousing(),"ServerHousing",TileEnum.TSHousing),
-    BSSecurity(new BlockServerSecurity(), "ServerSecurity",TileEnum.TSSecurity),
+    BSCore(new BlockServerCore(), "",TileEnum.TSCore),
+    BSRib(new BlockServerRib(),"",TileEnum.TSRib),
+    BSPort(new BlockServerPort(),"",TileEnum.TSPort),
+    BSHousing(new BlockServerHousing(),"",TileEnum.TSHousing),
+    BSSecurity(new BlockServerSecurity(), "",TileEnum.TSSecurity),
 
-    BLBRibs(new BlockLogicBusRibs(),"BlockLogicBusRibs",TileEnum.TLBRib),
-    BLBCore(new BlockLogicBusCore(),"BlockLogicBusCore",TileEnum.TLBCore),
-    BLBHousing(new BlockLogicBusHousing(),"BlockLogicBusHousing",TileEnum.TLBHousing),
-    BLBPort(new BlockLogicBusPort(),"BlockLogicBusPort",TileEnum.TLBPort);
+    BLBRibs(new BlockLogicBusRibs(),"",TileEnum.TLBRib),
+    BLBCore(new BlockLogicBusCore(),"",TileEnum.TLBCore),
+    BLBHousing(new BlockLogicBusHousing(),"",TileEnum.TLBHousing),
+    BLBPort(new BlockLogicBusPort(),"",TileEnum.TLBPort);
 
     public Block b;
     public String enumName;

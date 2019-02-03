@@ -5,20 +5,21 @@ import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Network.Packets.Overlook;
 import appeng.api.parts.IPartHost;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.Serializable;
@@ -51,7 +52,7 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
         // parts
         putInMap(AIPart.class,AIPacket::readPart,AIPacket::writePart);
         putInMap(World.class,AIPacket::readWorld,AIPacket::writeWorld);
-        putInMap(ForgeDirection.class, AIPacket::readDirection,AIPacket::writeDirection);
+        putInMap(EnumFacing.class, AIPacket::readDirection,AIPacket::writeDirection);
         putInMap(AppliedCoord.class,AIPacket::readLoc, AIPacket::writeLoc);
         // tile
         putInMap(TileEntity.class,AIPacket::readTile,AIPacket::writeTile);
@@ -60,18 +61,18 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
 
     private static void writeTile(TileEntity tile, ByteBuf byteBuf) {
 
-        writeWorld(tile.getWorldObj(),byteBuf);
+        writeWorld(tile.getWorld(),byteBuf);
 
-        byteBuf.writeInt(tile.xCoord);
-        byteBuf.writeInt(tile.yCoord);
-        byteBuf.writeInt(tile.zCoord);
+        byteBuf.writeInt(tile.getPos().getX());
+        byteBuf.writeInt(tile.getPos().getY());
+        byteBuf.writeInt(tile.getPos().getZ());
 
     }
 
     private static TileEntity readTile(ByteBuf byteBuf) {
 
         World w = readWorld(byteBuf);
-        return w.getTileEntity(byteBuf.readInt(),byteBuf.readInt(),byteBuf.readInt());
+        return w.getTileEntity(new BlockPos(byteBuf.readInt(),byteBuf.readInt(),byteBuf.readInt()));
     }
 
 
@@ -263,7 +264,7 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
         try {
             World world = readWorld(buf);
             TileEntity entity = world.getTileEntity(buf.readInt(), buf.readInt(), buf.readInt());
-            ForgeDirection side = ForgeDirection.getOrientation(buf.readInt());
+            EnumFacing side = EnumFacing.getOrientation(buf.readInt());
 
             return (AIPart) (((IPartHost) entity).getPart(side));
         }catch (Exception e){}
@@ -272,10 +273,10 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
     protected static void writePart(AIPart part, ByteBuf buf){
         try {
             TileEntity tile = part.getHostTile();
-            buf.writeInt(tile.getWorldObj().provider.dimensionId);
-            buf.writeInt(tile.xCoord);
-            buf.writeInt(tile.yCoord);
-            buf.writeInt(tile.zCoord);
+            buf.writeInt(tile.getWorld().provider.dimensionId);
+            buf.writeInt(tile.getPos().getX());
+            buf.writeInt(tile.getPos().getY());
+            buf.writeInt(tile.getPos().getZ());
 
             buf.writeInt(part.getSide().ordinal());
         }catch (Exception e){
@@ -286,7 +287,7 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             if (world == null) {
-                world = Minecraft.getMinecraft().theWorld;
+                world = Minecraft.getMinecraft().world;
             }
         }
 
@@ -295,7 +296,7 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
     private static void writeWorld(World w, ByteBuf buf){
 
         try{
-            buf.writeInt(w.provider.dimensionId);
+            buf.writeInt(w.provider.getDimension());
         }catch (NullPointerException e){
             buf.writeInt(DimensionManager.getNextFreeDimId());
         }
@@ -314,12 +315,12 @@ public abstract class AIPacket<REQ extends AIPacket> implements Serializable, IM
         return new AppliedCoord(readWorld(buf),buf.readInt(),buf.readInt(),buf.readInt(),readDirection(buf));
     }
 
-    private static void writeDirection(ForgeDirection forgeDirection, ByteBuf byteBuf) {
+    private static void writeDirection(EnumFacing forgeDirection, ByteBuf byteBuf) {
         byteBuf.writeByte((byte)forgeDirection.ordinal());
     }
 
-    private static ForgeDirection readDirection(ByteBuf buf){
-        return ForgeDirection.getOrientation(buf.readByte());
+    private static EnumFacing readDirection(ByteBuf buf){
+        return EnumFacing.getOrientation(buf.readByte());
     }
 
     public interface Writer<T extends Object> {

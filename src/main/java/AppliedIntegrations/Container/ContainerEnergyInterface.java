@@ -9,14 +9,13 @@ import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 
 import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import appeng.api.util.AEPartLocation;
 import appeng.container.slot.SlotRestrictedInput;
 import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerFurnace;
-import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -55,7 +54,7 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
     private GuiEnergyInterface linkedGUI;
 
     public final Map<LiquidAIEnergy, Integer> LinkedStorageMap = Maps.newHashMap();
-    public final Map<ForgeDirection,Map<LiquidAIEnergy, Integer>> LinkedTileStorageMap = Maps.newHashMap();
+    public final Map<AEPartLocation,Map<LiquidAIEnergy, Integer>> LinkedTileStorageMap = Maps.newHashMap();
     public ContainerEnergyInterface(final EntityPlayer player, final IEnergyInterface energyInterface) {
         super(energyInterface, player);
         this.EnergyInterface = energyInterface;
@@ -65,7 +64,7 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
         // check if interface part or tile?
         if (energyInterface instanceof PartEnergyInterface) {
             LinkedStorageMap.put(RF,LinkedRFStorage);
-            for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS){
+            for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){
                 LinkedTileStorageMap.put(side, LinkedStorageMap);
             }
 
@@ -84,12 +83,6 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
             // add slots
             this.addUpgradeSlots(tile.getUpgradeInventory(), this.NUMBER_OF_UPGRADE_SLOTS,
                     this.UPGRADE_X_POS + 1, this.UPGRADE_Y_POS);
-        }
-    }
-    private void addCraftingSlots(AIGridNodeInventory upgradeInventory) {
-        for(int i=0;i<8;i++){
-            this.addSlotToContainer(new SlotRestrictedInput(SlotRestrictedInput.PlacableItemType.ENCODED_PATTERN,upgradeInventory,i,8+(i*18),(4*18)+149,
-                    player.inventory));
         }
     }
     @Override
@@ -116,21 +109,6 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
                 && part.getLocation().z == this.part.getZ() && part.getSide() == this.part.getSide();
     }
 
-    @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
-        if(part!=null) {
-            for (int i = 0; i < this.crafters.size(); ++i) {
-                ICrafting icrafting = (ICrafting) this.crafters.get(i);
-                icrafting.sendProgressBarUpdate(this, 0, this.part.getEnergyStorage(RF).getEnergyStored());
-                icrafting.sendProgressBarUpdate(this, 1, this.part.getEnergyStorage(J).getEnergyStored());
-                icrafting.sendProgressBarUpdate(this, 2, this.part.getEnergyStorage(EU).getEnergyStored());
-            }
-           // this.LinkedRFStorage = this.part.getEnergyStorage(RF).getEnergyStored();
-          //  this.LinkedJoStorage = this.part.getEnergyStorage(J).getEnergyStored();
-           // this.LinkedEUStorage = this.part.getEnergyStorage(EU).getEnergyStored();
-        }
-    }
     @Override
     public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber )
     {

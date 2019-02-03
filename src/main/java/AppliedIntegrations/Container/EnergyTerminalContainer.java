@@ -1,9 +1,10 @@
 package AppliedIntegrations.Container;
 
-import appeng.api.networking.security.BaseActionSource;
+import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.me.helpers.BaseActionSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -11,8 +12,7 @@ import net.minecraft.inventory.Slot;
 /**
  * @Author Azazell
  */
-public class EnergyTerminalContainer extends Container implements
-IMEMonitorHandlerReceiver<IAEFluidStack>  {
+public class EnergyTerminalContainer extends Container implements IMEMonitorHandlerReceiver<IAEFluidStack>  {
 	private EntityPlayer player;
 	public EnergyTerminalContainer(EntityPlayer player) {
 		
@@ -37,10 +37,8 @@ IMEMonitorHandlerReceiver<IAEFluidStack>  {
 	}
 
 	@Override
-	public void postChange(IBaseMonitor<IAEFluidStack> monitor, Iterable<IAEFluidStack> change,
-			BaseActionSource actionSource) {
-		// TODO Auto-generated method stub
-		
+	public void postChange(IBaseMonitor<IAEFluidStack> iBaseMonitor, Iterable<IAEFluidStack> iterable, IActionSource iActionSource) {
+
 	}
 
 	@Override

@@ -11,7 +11,8 @@ import net.minecraft.world.World;
 
 public class BlockServerHousing extends AIMultiBlock {
     public BlockServerHousing(){
-        this.setBlockName("ME Server Housing");
+        this.setUnlocalizedName("ME Server Housing");
+        this.setRegistryName("ServerHousing");
     }
 
 }

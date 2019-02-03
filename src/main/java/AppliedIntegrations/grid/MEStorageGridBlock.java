@@ -5,6 +5,7 @@ import appeng.api.networking.*;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
@@ -37,7 +38,7 @@ public class MEStorageGridBlock implements IGridBlock {
 
     @Override
     public AEColor getGridColor() {
-        return  AEColor.Transparent;
+        return  AEColor.TRANSPARENT;
     }
 
     @Override
@@ -52,8 +53,8 @@ public class MEStorageGridBlock implements IGridBlock {
     }
 
     @Override
-    public EnumSet<ForgeDirection> getConnectableSides() {
-        return EnumSet.allOf(ForgeDirection.class);
+    public EnumSet<EnumFacing> getConnectableSides() {
+        return EnumSet.allOf(EnumFacing.class);
     }
 
     @Override

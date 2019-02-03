@@ -1,8 +1,0 @@
-group=oredictionary:dustRedstone -> redstone
-group= ae2:ItemPart.SemiDarkMonitor ae2:ItemPart.Monitor ae2:ItemPart.DarkMonitor -> monitor
-group= ae2:BlockInterface ae2:part.base.Energy.interface -> interface
-
-
-shapeless=
-	ai:interface
-	-> ai:AI.energy.Interface

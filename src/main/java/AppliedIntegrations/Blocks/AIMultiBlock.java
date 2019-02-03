@@ -6,6 +6,7 @@ import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockObserver;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,11 +19,12 @@ import java.util.List;
 public class AIMultiBlock extends BlockContainer implements ITileEntityProvider {
 
     protected AIMultiBlock() {
-        super(Material.iron);
+        super(Material.IRON);
         this.setHardness(5F);
 
     }
 
+    @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_)
     {
         if (Platform.isWrench(p,p.inventory.getCurrentItem(),x,y,z)) {

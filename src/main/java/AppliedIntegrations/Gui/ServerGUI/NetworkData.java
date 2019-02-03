@@ -1,18 +1,18 @@
 package AppliedIntegrations.Gui.ServerGUI;
 
-import net.minecraftforge.common.util.ForgeDirection;
+import appeng.api.util.AEPartLocation;
 
 import java.util.EnumSet;
 
 public class NetworkData {
 
     public boolean isServerNetwork;
-    public ForgeDirection dir;
+    public AEPartLocation dir;
     public int id;
 
     public EnumSet<NetworkPermissions> serverPermissions;
 
-    public NetworkData(boolean isServerNetwork, ForgeDirection networkDirection, int network){
+    public NetworkData(boolean isServerNetwork, AEPartLocation networkDirection, int network){
 
         this.id = network;
         this.isServerNetwork = isServerNetwork;

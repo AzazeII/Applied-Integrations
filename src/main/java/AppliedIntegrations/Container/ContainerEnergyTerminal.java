@@ -11,7 +11,8 @@ import AppliedIntegrations.Parts.PartEnergyTerminal;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.inventory.ContainerFurnace;
+import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -62,7 +63,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
         this.addSlotToContainer( new SlotRestrictive( privateInventory, INPUT_INV_INDEX,
                 INPUT_POSITION_X, INPUT_POSITION_Y ));
 
-        this.addSlotToContainer(new SlotFurnace( this.player, privateInventory, OUTPUT_INV_INDEX,
+        this.addSlotToContainer(new SlotFurnaceOutput( this.player, privateInventory, OUTPUT_INV_INDEX,
                 OUTPUT_POSITION_X, OUTPUT_POSITION_Y));
     }
 

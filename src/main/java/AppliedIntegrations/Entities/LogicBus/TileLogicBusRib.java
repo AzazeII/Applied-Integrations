@@ -28,6 +28,6 @@ public class TileLogicBusRib extends TileEntity implements IAIMultiBlock {
     }
     @Override
     public void notifyBlock(){
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+
     }
 }

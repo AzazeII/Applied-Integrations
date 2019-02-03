@@ -9,6 +9,8 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.EnumSet;

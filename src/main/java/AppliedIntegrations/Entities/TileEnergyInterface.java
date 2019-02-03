@@ -65,19 +65,19 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	private static float Entropy;
 	private Boolean energyStates[] = new Boolean[6];
 
-		private LinkedHashMap<ForgeDirection,EnergyStorage> RFStorage = new LinkedHashMap<ForgeDirection,EnergyStorage>();
-		private LinkedHashMap<ForgeDirection,EnergyStorage> EUStorage = new LinkedHashMap<ForgeDirection,EnergyStorage>();
-		private LinkedHashMap<ForgeDirection,EnergyStorage> JOStorage = new LinkedHashMap<ForgeDirection,EnergyStorage>();
+		private LinkedHashMap<AEPartLocation,EnergyStorage> RFStorage = new LinkedHashMap<AEPartLocation,EnergyStorage>();
+		private LinkedHashMap<AEPartLocation,EnergyStorage> EUStorage = new LinkedHashMap<AEPartLocation,EnergyStorage>();
+		private LinkedHashMap<AEPartLocation,EnergyStorage> JOStorage = new LinkedHashMap<AEPartLocation,EnergyStorage>();
 
 		private EnergyStorage Storage = new EnergyStorage(capacity, capacity/2);
 		public static int EuStorage;
 
 		public static int capacity = 100000;
-		Map<Boolean,ForgeDirection> IoModes;
+		Map<Boolean,AEPartLocation> IoModes;
 
 		private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
 
-		private ForgeDirection forward = ForgeDirection.UNKNOWN;
+		private AEPartLocation forward = AEPartLocation.UNKNOWN;
 
 		IEnergyReceiver[] adjacentHandlers = new IEnergyReceiver[6];
 		byte outputTracker;
@@ -100,7 +100,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	public TileEnergyInterface() {
 			this.energyStates[1] = true;
 			this.initPower = true;
-			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS){
+			for(AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS){
 				RFStorage.put(dir,new EnergyStorage(capacity,capacity/2));
 				EUStorage.put(dir,new EnergyStorage(capacity*4, capacity*2));
 				JOStorage.put(dir,new EnergyStorage(capacity*2,capacity));
@@ -157,20 +157,20 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		@Override
 		public void invalidate() {
 		  super.invalidate();
-		  if (worldObj != null && !worldObj.isRemote) {
+		  if (world != null && !world.isRemote) {
 			destroyAELink();
 		  }
-			if (worldObj != null && !worldObj.isRemote) {
+			if (world != null && !world.isRemote) {
 				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}
 		}
 
 				@Override
 				public void onChunkUnload() {
-		  if (worldObj != null && !worldObj.isRemote) {
+		  if (world != null && !world.isRemote) {
 			destroyAELink();
 		  }
-		  if (worldObj != null && !worldObj.isRemote) {
+		  if (world != null && !world.isRemote) {
 				MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 			}
 
@@ -178,19 +178,19 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	private void notifyListenersOfEnergyBarChange(LiquidAIEnergy Energy,int id,ForgeDirection side){
 		for(ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
-				 NetworkHandler.sendTo(new PacketProgressBar(null,xCoord,yCoord,zCoord,UNKNOWN,worldObj),(EntityPlayerMP)listener.player);
+				 NetworkHandler.sendTo(new PacketProgressBar(null,xCoord,yCoord,zCoord,UNKNOWN,world),(EntityPlayerMP)listener.player);
 			}
 		}
 	}
 		@Override
 		public void updateEntity() {
 			super.updateEntity();
-			if (!EUloaded && hasWorldObj() && !worldObj.isRemote &&!EUloaded) {
+			if (!EUloaded && hasworld() && !world.isRemote &&!EUloaded) {
 				EUloaded = true;
 				MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			}
-			worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-			for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+			world.markBlockForUpdate(xCoord,yCoord,zCoord);
+			for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 				notifyListenersOfEnergyBarChange(RF, 0, side);
 				notifyListenersOfEnergyBarChange(EU, 1, side);
 				notifyListenersOfEnergyBarChange(J, 2, side);
@@ -310,13 +310,13 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		public void DoInjectDualityWork(Actionable action) throws NullNodeConnectionException {
 
 
-			IGridNode node = this.getGridNode(ForgeDirection.UNKNOWN);
+			IGridNode node = this.getGridNode(AEPartLocation.INTERNAL);
 			if(node == null){
 				throw new NullNodeConnectionException();
 			}
 			// Is it modulate, or matrix?
 			if(action == Actionable.MODULATE) {
-				for (ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+				for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 					if (this.getEnergyStorage(RF, side).getEnergyStored() > 0 && this.getEnergyStorage(J, side).getEnergyStored() == 0) {
 
 						int ValuedReceive = Math.min(getEnergyStorage(RF, side).getEnergyStored(), capacity);
@@ -356,12 +356,12 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		@Override
 		public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
 
-			IGridNode node = this.getGridNode(ForgeDirection.UNKNOWN);
+			IGridNode node = this.getGridNode(AEPartLocation.INTERNAL);
 			if(node == null){
 				throw new NullNodeConnectionException();
 			}
 			if(action == Actionable.MODULATE){
-				for(ForgeDirection side : ForgeDirection.VALID_DIRECTIONS) {
+				for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 					if (this.getEnergyStorage(RF,side).getEnergyStored() > 0) {
 
 						int ValuedExtract = Math.min(1000,capacity);
@@ -396,7 +396,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	 * Rotary Craft:
 	 */
 	@Override
-	public boolean addPower(int i, int i1, long l, ForgeDirection forgeDirection) {
+	public boolean addPower(int i, int i1, long l, AEPartLocation forgeDirection) {
 		this.torque = i;
 		this.omega = i1;
 		this.WattPower = l;
@@ -427,7 +427,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		return messages;
 	}
 	@Override
-	public boolean canReadFrom(ForgeDirection forgeDirection) {
+	public boolean canReadFrom(AEPartLocation forgeDirection) {
 		return true;
 	}
 
@@ -485,12 +485,12 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	}
 
 	@Override
-	public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
+	public double injectEnergy(AEPartLocation directionFrom, double amount, double voltage) {
 		return this.EUStorage.get(directionFrom).receiveEnergy((int)amount,false);
 	}
 
 	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
+	public boolean acceptsEnergyFrom(TileEntity emitter, AEPartLocation direction) {
 		return true;
 	}
 	@Override

@@ -1,8 +1,8 @@
 package AppliedIntegrations.API;
 
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
-import net.minecraftforge.common.util.ForgeDirection;
+
+import cofh.redstoneflux.api.IEnergyReceiver;
+import cofh.redstoneflux.impl.EnergyStorage;
 
 public interface AdjacentEnergyReceiver extends IEnergyReceiver {
    EnergyStorage getEnergyStorage();

@@ -7,7 +7,8 @@ import net.minecraft.world.World;
 
 public class BlockLogicBusPort extends AIMultiBlock {
     public BlockLogicBusPort() {
-        this.setBlockName("ME Logic Bus Port");
+        this.setUnlocalizedName("ME Logic Bus Port");
+        this.setRegistryName("BlockLogicBusPort");
 
     }
 }

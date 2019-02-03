@@ -12,7 +12,7 @@ import appeng.api.networking.IGridNode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraft.util.EnumFacing;
 
 import java.util.EnumSet;
 import java.util.Iterator;
@@ -20,7 +20,7 @@ import java.util.Iterator;
 
 public class TileServerPort  extends AIMultiBlockTile {
 
-    private ForgeDirection side = ForgeDirection.UNKNOWN;
+    private EnumFacing side = null;
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
@@ -60,7 +60,7 @@ public class TileServerPort  extends AIMultiBlockTile {
     }
 
 
-    public void setDir(ForgeDirection side) {
+    public void setDir(EnumFacing side) {
         this.side = side;
     }
 }

@@ -26,7 +26,7 @@ public class SlotNetworkTool
     public SlotNetworkTool(final INetworkTool inventory, final int slotIndex, final int xDisplayPosition, final int yDisplayPosition )
     {
         // Pass to super
-        super( inventory, slotIndex, xDisplayPosition, yDisplayPosition );
+        super( null, slotIndex, xDisplayPosition, yDisplayPosition );
 
     }
 

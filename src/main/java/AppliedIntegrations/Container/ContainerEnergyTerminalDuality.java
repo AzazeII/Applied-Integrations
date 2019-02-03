@@ -20,6 +20,9 @@ import appeng.api.networking.security.PlayerSource;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.data.IAEFluidStack;
+import appeng.me.helpers.BaseActionSource;
+import appeng.me.helpers.MachineSource;
+import appeng.me.helpers.PlayerSource;
 import cofh.api.energy.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
@@ -28,6 +31,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnace;
+import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -232,7 +236,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         ItemStack slotStack = this.outputSlot.getStack();
 
         // Get the stack size
-        int slotStackSize = slotStack.stackSize;
+        int slotStackSize = slotStack.getCount();
 
         // Is the slot full?
         if( slotStack.getMaxStackSize() == slotStackSize )
@@ -241,7 +245,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         }
 
         // Will adding the stack cause the slot to be over full?
-        if( ( slotStackSize + stackToMerge.stackSize ) > slotStack.getMaxStackSize() )
+        if( ( slotStackSize + stackToMerge.getCount() ) > slotStack.getMaxStackSize() )
         {
             return false;
         }
@@ -250,8 +254,8 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         // Compare ignoring stack size
         ItemStack o = slotStack.copy();
         ItemStack n = stackToMerge.copy();
-        o.stackSize = 1;
-        n.stackSize = 1;
+        o.setCount(1);
+        n.setCount(1);
         return ItemStack.areItemStacksEqual( o, n );
     }
 
@@ -413,7 +417,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         this.addSlotToContainer( this.inputSlot );
 
         // Create the output slot
-        this.outputSlot = new SlotFurnace( this.player, inventory, ContainerEnergyTerminalDuality.OUTPUT_INV_INDEX,
+        this.outputSlot = new SlotFurnaceOutput( this.player, inventory, ContainerEnergyTerminalDuality.OUTPUT_INV_INDEX,
                 ContainerEnergyTerminalDuality.OUTPUT_POSITION_X, ContainerEnergyTerminalDuality.OUTPUT_POSITION_Y );
         this.addSlotToContainer( this.outputSlot );
 

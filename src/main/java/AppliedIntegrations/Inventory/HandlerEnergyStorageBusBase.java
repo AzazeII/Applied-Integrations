@@ -14,7 +14,9 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.StorageChannel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
+import appeng.me.helpers.MachineSource;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -157,14 +159,14 @@ public abstract class HandlerEnergyStorageBusBase
         }
 
         // Is the host in a loaded world?
-        if( hostTile.getWorldObj() == null )
+        if( hostTile.getWorld() == null )
         {
             // No world.
             return null;
         }
 
         // Get what direction of the storage bus.
-        ForgeDirection orientation = this.partStorageBus.getSide();
+        EnumFacing orientation = this.partStorageBus.getSide();
 
         // Return the tile entity the storage bus is facing.
         return hostTile.getWorldObj().getTileEntity( hostTile.xCoord + orientation.offsetX, hostTile.yCoord + orientation.offsetY,

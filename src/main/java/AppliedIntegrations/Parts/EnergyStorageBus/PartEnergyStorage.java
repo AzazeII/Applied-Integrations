@@ -45,26 +45,26 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.*;
+import appeng.api.util.AECableType;
+import appeng.core.sync.GuiBridge;
 import appeng.helpers.IPriorityHost;
-import cofh.api.energy.EnergyStorage;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import cofh.redstoneflux.impl.EnergyStorage;
+import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import javax.annotation.Nullable;
 
@@ -191,15 +191,6 @@ public class PartEnergyStorage
 	}
 
 	/**
-	 * How far out from the cable bus to draw the cable graphic.
-	 */
-	@Override
-	public int cableConnectionRenderTo()
-	{
-		return 3;
-	}
-
-	/**
 	 * Extracts power from the network proportional to the specified Energy
 	 * amount.
 	 *
@@ -224,23 +215,18 @@ public class PartEnergyStorage
 		// Extract
 		return( eGrid.extractAEPower( powerDrain, mode, PowerMultiplier.CONFIG ) >= powerDrain );
 	}
-	@Override
-	public IIcon getBreakingTexture()
-	{
-		return TextureManager.ENERGY_STORAGE_BUS.getTextures()[0];
-	}
 
 	/**
 	 * Gets the 'cell' handler for the storage bus.
 	 */
 	@Override
-	public List<IMEInventoryHandler> getCellArray( final StorageChannel channel )
+	public List<IMEInventoryHandler> getCellArray( final IStorageChannel channel )
 	{
 		// Create a new list
 		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
 
-		// Is this the fluid channel?
-		if( channel == StorageChannel.FLUIDS )
+		// Is this the energy channel?
+		if( channel == getChannel() )
 		{
 			// Add our handler
 			list.add( this.handler );
@@ -269,11 +255,16 @@ public class PartEnergyStorage
 		ItemStack slotStack = this.upgradeInventory.getStackInSlot( 0 );
 
 		// Is it not null?
-		if( ( slotStack != null ) && ( slotStack.stackSize > 0 ) )
+		if( ( slotStack != null ) && ( slotStack.getCount() > 0 ) )
 		{
 			// Add to the drops
 			drops.add( slotStack );
 		}
+	}
+
+	@Override
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 0;
 	}
 
 	/**
@@ -303,6 +294,11 @@ public class PartEnergyStorage
 	public int getLightLevel()
 	{
 		return 0;
+	}
+
+	@Override
+	public void onEntityCollision(Entity entity) {
+
 	}
 
 	/**
@@ -344,15 +340,15 @@ public class PartEnergyStorage
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 position) {
+	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
 		if (player.isSneaking()) {
 			return false;
 		}
 
 		if(getLogicalSide().isServer()) {
-			if (!this.getHostTile().getWorldObj().isRemote) {
-				player.openGui(AppliedIntegrations.instance, 3, this.getHostTile().getWorldObj(),
-						this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
+			if (!this.getHostTile().getWorld().isRemote) {
+				player.openGui(AppliedIntegrations.instance, 3, this.getHostTile().getWorld(),
+						this.getHostTile().getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
 				this.updateRequested = true;
 				this.player = player;
 
@@ -376,7 +372,7 @@ public class PartEnergyStorage
 		if (node != null) {
 			boolean isNowActive = node.isActive();
 			if (isNowActive != isActive()) {
-				onNeighborChanged();
+				onNeighborChanged(null, getHostTile().getPos(), null);
 				getHost().markForUpdate();
 			}
 		}
@@ -392,8 +388,8 @@ public class PartEnergyStorage
 			return;
 		}
 			node.getGrid().postEvent(
-					new MENetworkStorageEvent(storageGrid.getFluidInventory(),
-							StorageChannel.FLUIDS));
+					new MENetworkStorageEvent(storageGrid.getInventory(getChannel()),
+							getChannel()));
 			node.getGrid().postEvent(new MENetworkCellArrayUpdate());
 	}
 
@@ -442,61 +438,10 @@ public class PartEnergyStorage
 		bch.addBox( 5, 5, 12, 11, 11, 14 );
 	}
 
-
-
-	@Override
-	@SideOnly( Side.CLIENT )
-	public void renderInventory( final IPartRenderHelper rh, final RenderBlocks renderer )
-	{
-		IIcon side = TextureManager.ENERGY_STORAGE_BUS.getTextures()[2];
-		IIcon back = TextureManager.BUS_BACK.getTexture();
-		rh.setTexture( side,side, back, TextureManager.ENERGY_STORAGE_BUS.getTexture(),side, side );
-
-		rh.setBounds( 3, 3, 15, 13, 13, 16 );
-		rh.renderInventoryBox( renderer );
-
-		rh.setBounds( 2, 2, 14, 14, 14, 15 );
-		rh.renderInventoryBox( renderer );
-
-		rh.setBounds( 5, 5, 12, 11, 11, 14 );
-		rh.renderInventoryBox( renderer );
-	}
-
-	@Override
-	@SideOnly( Side.CLIENT )
-	public void renderStatic( final int x, final int y, final int z, final IPartRenderHelper rh, final RenderBlocks renderer )
-	{
-		IIcon side = TextureManager.ENERGY_STORAGE_BUS.getTextures()[2];
-		IIcon back = TextureManager.BUS_BACK.getTexture();
-		IIcon aeSide = TextureManager.BUS_AESIDEDBACK.getTexture();;
-		// Rendering main part
-		rh.setTexture( side, side, back, TextureManager.ENERGY_STORAGE_BUS.getTexture(), side, side );
-		rh.setBounds( 3, 3, 15, 13, 13, 16 );
-		rh.renderBlock( x, y, z, renderer );
-		rh.setBounds( 2, 2, 14, 14, 14, 15 );
-		rh.renderBlock( x, y, z, renderer );
-		rh.setBounds( 5, 5, 12, 11, 11, 13 );
-		rh.renderBlock( x, y, z, renderer );
-
-			rh.setBounds(5, 5, 13, 11, 11, 14);
-			rh.renderBlock(x, y, z, renderer);
-
-
-	}
-
 	@Override
 	public void saveChanges()
 	{
 		this.markForSave();
-	}
-
-	/**
-	 * Ensures the storage bus gets saved.
-	 */
-	@Override
-	public void saveChanges( final IMEInventory inventory )
-	{
-		this.saveChanges();
 	}
 
 	/**
@@ -521,6 +466,16 @@ public class PartEnergyStorage
 		this.priority = priority;
 	}
 
+	@Override
+	public ItemStack getItemStackRepresentation() {
+		return null;
+	}
+
+	@Override
+	public GuiBridge getGuiBridge() {
+		return null;
+	}
+
 	/**
 	 * Called periodically by AE2. Passes the tick to the handler.
 	 */
@@ -535,7 +490,7 @@ public class PartEnergyStorage
 		// Update the handler.
 		this.handler.tickingRequest( node, TicksSinceLastCall );
 		// Simulate neighborChange
-		this.onNeighborChanged();
+		this.onNeighborChanged(null, getHostTile().getPos(), null);
 
 		// If update requested
 		if (updateRequested) {
@@ -543,7 +498,7 @@ public class PartEnergyStorage
 			Gui g = Minecraft.getMinecraft().currentScreen;
 			if (g instanceof GuiEnergyStoragePart) {
 				// send packet
-				NetworkHandler.sendTo(new PacketCoordinateInit(getX(), getY(), getZ(), getHostTile().getWorldObj(), getSide()),
+				NetworkHandler.sendTo(new PacketCoordinateInit(getX(), getY(), getZ(), getHostTile().getWorld(), getSide().getFacing()),
 						(EntityPlayerMP) this.player);
 				updateRequested = false;
 			}
@@ -555,7 +510,7 @@ public class PartEnergyStorage
 
 	private void requestGuiUpdate(LiquidAIEnergy energy, int index) {
 		if(player != null)
-			NetworkHandler.sendTo(new PacketServerFilter(energy, index, getX(), getY(), getZ(), getSide(), getHostTile().getWorldObj()), (EntityPlayerMP) this.player);
+			NetworkHandler.sendTo(new PacketServerFilter(energy, index, getX(), getY(), getZ(), getSide().getFacing(), getHostTile().getWorld()), (EntityPlayerMP) this.player);
 	}
 
 	/**
@@ -568,7 +523,7 @@ public class PartEnergyStorage
 		super.writeToNBT( data, saveType );
 
 		// Only write NBT data if saving, or wrenched.
-		if( ( saveType != PartItemStack.World ) && ( saveType != PartItemStack.Wrench ) )
+		if( ( saveType != PartItemStack.WORLD ) && ( saveType != PartItemStack.WRENCH ) )
 		{
 			return;
 		}
@@ -587,7 +542,7 @@ public class PartEnergyStorage
 		}
 
 		// Only save the rest if filters are set, or world save
-		if( hasFilters || ( saveType == PartItemStack.World ) ) {
+		if( hasFilters || ( saveType == PartItemStack.WORLD ) ) {
 			// Write the priority
 			if (this.priority != 0) {
 				data.setInteger(this.NBT_KEY_PRIORITY, this.priority);
@@ -602,61 +557,6 @@ public class PartEnergyStorage
 
 	@Override
 	public void onInventoryChanged() {
-
-	}
-
-	@Override
-	public ArrayList<String> getMessages(World world, int i, int i1, int i2, int i3) {
-		return null;
-	}
-
-	@Override
-	public boolean addPower(int i, int i1, long l, ForgeDirection forgeDirection) {
-		return false;
-	}
-
-	@Override
-	public boolean canReadFrom(ForgeDirection forgeDirection) {
-		return false;
-	}
-
-	@Override
-	public boolean isReceiving() {
-		return false;
-	}
-
-	@Override
-	public int getMinTorque(int i) {
-		return 0;
-	}
-
-	@Override
-	public int getOmega() {
-		return 0;
-	}
-
-	@Override
-	public int getTorque() {
-		return 0;
-	}
-
-	@Override
-	public long getPower() {
-		return 0;
-	}
-
-	@Override
-	public String getName() {
-		return null;
-	}
-
-	@Override
-	public int getIORenderAlpha() {
-		return 0;
-	}
-
-	@Override
-	public void setIORenderAlpha(int i) {
 
 	}
 
@@ -691,27 +591,22 @@ public class PartEnergyStorage
 	}
 
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate) {
+	public int receiveEnergy(EnumFacing p0, int p1, boolean p2) {
 		return 0;
 	}
 
 	@Override
-	public int receiveEnergy(ForgeDirection p0, int p1, boolean p2) {
+	public int getEnergyStored(EnumFacing p0) {
 		return 0;
 	}
 
 	@Override
-	public int getEnergyStored(ForgeDirection p0) {
+	public int getMaxEnergyStored(EnumFacing p0) {
 		return 0;
 	}
 
 	@Override
-	public int getMaxEnergyStored(ForgeDirection p0) {
-		return 0;
-	}
-
-	@Override
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(EnumFacing from) {
 		return false;
 	}
 
@@ -726,65 +621,36 @@ public class PartEnergyStorage
 	}
 
 	@Override
-	public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
+	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		return 0;
 	}
 
 	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
-		return false;
-	}
-
-	@Override
-	public double getOfferedEnergy() {
+	public double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
 		return 0;
 	}
 
 	@Override
-	public void drawEnergy(double amount) {
-
-	}
-
-	@Override
-	public int getSourceTier() {
-		return 0;
-	}
-
-	@Override
-	public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction) {
-		return false;
-	}
-
-	@Override
-	public double transferEnergyToAcceptor(ForgeDirection side, double amount) {
-		return 0;
-	}
-
-	@Override
-	public boolean canReceiveEnergy(ForgeDirection side) {
+	public boolean canReceiveEnergy(EnumFacing side) {
 		return true;
 	}
 
-	@Override
-	public double getEnergy() {
-		return 0;
-	}
-
-	@Override
-	public void setEnergy(double energy) {
-
-	}
-
-	@Override
-	public double getMaxEnergy() {
-		return 0;
-	}
 
 	public void saveContainer(TileEntity tl) {
 		this.facingContainer = tl;
 	}
 	public TileEntity getFacingContainer(){
 		return this.facingContainer;
+	}
+
+	@Override
+	public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
+
+	}
+
+	@Override
+	public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
+		return false;
 	}
 }
 

@@ -46,7 +46,7 @@ public class ContainerPriority
     {
         if( this.host instanceof IInventory)
         {
-            return ( (IInventory)this.host ).isUseableByPlayer( player );
+            return ( (IInventory)this.host ).isUsableByPlayer( player );
         }
         else if( this.host instanceof AIPart)
         {

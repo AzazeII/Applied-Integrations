@@ -1,6 +1,7 @@
 package AppliedIntegrations.Parts.EnergyInterface;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.Gui.PartGui;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Parts.AIPart;
@@ -27,42 +28,45 @@ import appeng.api.config.PowerMultiplier;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.implementations.IPowerChannelState;
-import appeng.api.implementations.tiles.ITileStorageMonitorable;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
+
 import appeng.api.networking.events.MENetworkPowerStorage;
-import appeng.api.networking.security.BaseActionSource;
-import appeng.api.networking.security.MachineSource;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEFluidStack;
 
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
+import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
+import appeng.core.sync.GuiBridge;
 import appeng.helpers.IPriorityHost;
-import cofh.api.energy.EnergyStorage;
-import cofh.api.energy.IEnergyReceiver;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Optional;
-import cpw.mods.fml.relauncher.SideOnly;
 
+
+import appeng.me.helpers.BaseActionSource;
+import appeng.me.helpers.MachineSource;
+import cofh.redstoneflux.api.IEnergyReceiver;
+import cofh.redstoneflux.impl.EnergyStorage;
 import ic2.api.energy.event.EnergyTileLoadEvent;
+import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 
 import mekanism.api.energy.IStrictEnergyAcceptor;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
@@ -70,24 +74,31 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
+
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.*;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.*;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
-import static cpw.mods.fml.relauncher.Side.CLIENT;
+import static net.minecraftforge.fml.relauncher.Side.CLIENT;
+import net.minecraftforge.fml.common.Optional;
 
 /**
  * @Author Azazell
  */
-@Optional.InterfaceList(value = { //0_lol
+@net.minecraftforge.fml.common.Optional.InterfaceList(value = { //0_lol
 		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent",modid = "IC2",striprefs = true),
 		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink",modid = "IC2",striprefs = true),
 		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage",modid = "Mekanism",striprefs = true),
@@ -104,8 +115,7 @@ import static cpw.mods.fml.relauncher.Side.CLIENT;
 )
 public class PartEnergyInterface
 		extends AIPart
-		implements IEnergyDuality,IInventory,IEnergyInterface,IEnergyReceiver,
-		ITileStorageMonitorable, IInventoryHost,IEnergyMachine,IAEAppEngInventory, IPriorityHost,IGridTickable,IStorageMonitorable,ICraftingProvider,IPowerChannelState {
+		implements IEnergyDuality,IInventory,IEnergyInterface, IEnergyReceiver, IInventoryHost,IEnergyMachine,IAEAppEngInventory, IPriorityHost,IGridTickable,IStorageMonitorable,ICraftingProvider,IPowerChannelState {
 
 	private static boolean EUloaded = false;
 	public FlowMode flowMode = FlowMode.Gui;
@@ -143,7 +153,7 @@ public class PartEnergyInterface
 	public int hash;
 	private boolean updateRequested;
 
-	public boolean canConnectEnergy(ForgeDirection from) {
+	public boolean canConnectEnergy(AEPartLocation from) {
 		return from==this.getSide();
 	}
 
@@ -182,25 +192,20 @@ public class PartEnergyInterface
 	}
 
 	@Override
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 0;
+	}
+
+	@Override
 	public AIGridNodeInventory getUpgradeInventory() {
 		return upgradeInventory;
 	}
 
-	// 4/16 tiles of 1 block rendering cable
-	@Override
-	public int cableConnectionRenderTo() {
-		return 4;
-	}
 	// hit boxes
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
 		bch.addBox(2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D);
 		bch.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 14.0D);
-	}
-
-	@Override
-	public IIcon getBreakingTexture() {
-		return null;
 	}
 
 	@Override
@@ -213,59 +218,30 @@ public class PartEnergyInterface
 		return 0;
 	}
 
-	// render part in inventory
 	@Override
-	@SideOnly(CLIENT)
-	public void renderInventory(IPartRenderHelper rh, RenderBlocks renderer) {
-		IIcon icon = TextureManager.ENERGY_INTERFACE.getTextures()[2];
-
-		rh.setTexture(icon, icon, icon, TextureManager.ENERGY_INTERFACE.getTexture(), icon, icon);
-
-		rh.setBounds(2.0F, 2.0F, 14.0F, 14.0F, 14.0F, 16.0F);
-		rh.renderInventoryBox(renderer);
-
-		rh.setBounds(5.0F, 5.0F, 12.0F, 11.0F, 11.0F, 13.0F);
-		rh.renderInventoryBox(renderer);
-
-		rh.setBounds(5.0F, 5.0F, 13.0F, 11.0F, 11.0F, 14.0F);
-		rh.renderInventoryBox(renderer);
-	}
-	// render part in world
-	@Override
-	@SideOnly(CLIENT)
-	public void renderStatic(int x, int y, int z, IPartRenderHelper rh, RenderBlocks renderer) {
-		IIcon icon = TextureManager.ENERGY_INTERFACE.getTextures()[2];
-		IIcon aeIcon = TextureManager.BUS_AESIDEDBACK.getTexture(); // = TextureManager.SidedAETexture
-		// Rendering main part
-		rh.setTexture(icon, icon, TextureManager.BUS_BACK.getTexture(), TextureManager.ENERGY_INTERFACE.getTexture(), icon, icon);
-		rh.setBounds(2.0F, 2.0F, 14.0F, 14.0F, 14.0F, 16.0F);
-		rh.renderBlock(x, y, z, renderer);
-		rh.setBounds(5.0F, 5.0F, 12.0F, 11.0F, 11.0F, 13.0F);
-		rh.renderBlock(x, y, z, renderer);
-
-		rh.setBounds(5.0F, 5.0F, 13.0F, 11.0F, 11.0F, 14.0F);
-		rh.renderBlock(x, y, z, renderer);
+	public void onEntityCollision(Entity entity) {
 
 	}
+
 
 	public void setEnergyStored(int energy){
 
 		this.RFStorage.setEnergyStored(energy);
 	}
 	@Override
-	public boolean onActivate(EntityPlayer player, Vec3 position) {
-		if(!this.getHostTile().getWorldObj().isRemote){
+	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+		if(!this.getHostTile().getWorld().isRemote){
 			this.LinkedGui = (GuiEnergyInterface)this.getClientGuiElement(player);
-			player.openGui(AppliedIntegrations.instance, 1, this.getHostTile().getWorldObj(), this.getHostTile().xCoord, this.getHostTile().yCoord, this.getHostTile().zCoord);
+			player.openGui(AppliedIntegrations.instance, 1, this.getHostTile().getWorld(), this.getHostTile().
+					getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
 			updateRequested = true;
 		}
 		return true;
 	}
 
 	@Override
-	public void randomDisplayTick(World world, int x, int y, int z, Random r)
-	{
-		if(this.getHostTile().getWorldObj()!=null && !this.getHostTile().getWorldObj().isRemote && !EUloaded) {
+	public void randomDisplayTick(World world, BlockPos blockPos, Random random) {
+		if(this.getHostTile().getWorld()!=null && !this.getHostTile().getWorld().isRemote && !EUloaded) {
 			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 			EUloaded = true;
 		}
@@ -276,7 +252,7 @@ public class PartEnergyInterface
 	public Object getClientGuiElement(EntityPlayer player)
 	{
 		return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player),
-				this, player.worldObj, this.getX(),this.getY(),this.getZ(),this.getSide(), player );
+				this, player.world, this.getX(),this.getY(),this.getZ(),this.getSide().getFacing(), player );
 	}
 	@Override
 	public Object getServerGuiElement(EntityPlayer player)
@@ -319,14 +295,14 @@ public class PartEnergyInterface
 			AILog.info("StorageGrid cannot be initialized, WTF?");
 			return 0;
 		}
-		IAEFluidStack returnAmount;
+		IAEEnergyStack returnAmount;
 		if (doFill) { // Modulation
-			returnAmount = storage.getFluidInventory().injectItems(
-					AEApi.instance().storage().createFluidStack(resource),
+			returnAmount = storage.getInventory(this.getChannel()).injectItems(
+					this.getChannel().createStack(resource),
 					Actionable.MODULATE, new MachineSource(this));
 		} else {//Simulation
-			returnAmount = storage.getFluidInventory().injectItems(
-					AEApi.instance().storage().createFluidStack(resource),
+			returnAmount = storage.getInventory(this.getChannel()).injectItems(
+					getChannel().createStack(resource),
 					Actionable.SIMULATE, new MachineSource(this));
 
 		}
@@ -351,11 +327,11 @@ public class PartEnergyInterface
 		}
 		IAEFluidStack notRemoved;
 		if (doFill) {
-			notRemoved = (IAEFluidStack)storage.getFluidInventory().extractItems(AEApi.instance().storage().createFluidStack(resource), Actionable.MODULATE, new MachineSource(this));
+			notRemoved = (IAEFluidStack)storage.getInventory(getChannel()).extractItems(getChannel().createStack(resource), Actionable.MODULATE, new MachineSource(this));
 		}
 		else
 		{
-			notRemoved = (IAEFluidStack)storage.getFluidInventory().extractItems( AEApi.instance().storage().createFluidStack(resource), Actionable.SIMULATE, new MachineSource(this));
+			notRemoved = (IAEFluidStack)storage.getInventory(getChannel()).extractItems( getChannel().createStack(resource), Actionable.SIMULATE, new MachineSource(this));
 		}
 
 
@@ -371,6 +347,16 @@ public class PartEnergyInterface
 	@Override
 	public void setPriority(int newValue) {
 		this.priority = newValue;
+	}
+
+	@Override
+	public ItemStack getItemStackRepresentation() {
+		return null;
+	}
+
+	@Override
+	public GuiBridge getGuiBridge() {
+		return null;
 	}
 
 	/**
@@ -390,7 +376,7 @@ public class PartEnergyInterface
 		return null;
 	}
 
-	public int multiExtract(ForgeDirection from, int maxTransfer, LiquidAIEnergy mode){
+	public int multiExtract(EnumFacing from, int maxTransfer, LiquidAIEnergy mode){
 		TileEntity tile = this.getFacingTile();
 		if(tile instanceof IEnergyReceiver && mode == RF) {
 			IEnergyReceiver FacingRFStorage = (IEnergyReceiver) tile;
@@ -402,7 +388,7 @@ public class PartEnergyInterface
 			return this.getEnergyStorage(mode).extractEnergy(maxTransfer, false);
 		} else if(tile instanceof IStrictEnergyAcceptor && mode == EU) {
 			IStrictEnergyAcceptor FacingEUStorage = (IStrictEnergyAcceptor) tile;
-			FacingEUStorage.transferEnergyToAcceptor(from,maxTransfer);
+			FacingEUStorage.acceptEnergy(from,maxTransfer, false);
 			return this.getEnergyStorage(mode).extractEnergy(maxTransfer, false);
 		}
 		return 0;
@@ -411,7 +397,7 @@ public class PartEnergyInterface
 	 * Redstone Flux Api:
 	 */
 	@Override
-	public int receiveEnergy(ForgeDirection from, int maxReceive, boolean simulate) {
+	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 		boolean shouldUpdate = false;
 			if(this.FilteredEnergy == null || FilteredEnergy != RF || FilteredEnergy != J){
 				if(getFacingTile() instanceof IStrictEnergyAcceptor && FilteredEnergy != J){
@@ -425,104 +411,14 @@ public class PartEnergyInterface
 			return 0;
 	}
 	@Override
-	public int extractEnergy(ForgeDirection from, int maxExtract, boolean simulate)
-	{
-		if(FilteredEnergy == RF) {
-			return this.getEnergyStorage(RF).extractEnergy(maxExtract, simulate);
-		}
-		return 0;
-	}
-	@Override
-	public int getEnergyStored(ForgeDirection from)
+	public int getEnergyStored(EnumFacing from)
 	{
 		return getEnergyStorage(RF).getEnergyStored();
 	}
 	@Override
-	public int getMaxEnergyStored(ForgeDirection from)
+	public int getMaxEnergyStored(EnumFacing from)
 	{
 		return getEnergyStorage(RF).getMaxEnergyStored();
-	}
-	/**
-	 * Rotary Craft:
-	 */
-	@Override
-	public ArrayList<String> getMessages(World world, int i, int i1, int i2, int i3) {
-		final String out;
-		if( this.WattPower >= 1000000000 )
-		{
-			out = String.format( "Receiving %.3f GW @ %d rad/s.", this.WattPower / 1000000000.0D, this.omega );
-		}
-		else if( this.WattPower >= 1000000 )
-		{
-			out = String.format( "Receiving %.3f MW @ %d rad/s.", this.WattPower / 1000000.0D, this.omega );
-		}
-		else if( this.WattPower >= 1000 )
-		{
-			out = String.format( "Receiving %.3f kW @ %d rad/s.", this.WattPower / 1000.0D, this.omega );
-		}
-		else
-		{
-			out = String.format( "Receiving %d WA @ %d rad/s.", this.WattPower, this.omega );
-		}
-
-		final ArrayList<String> messages = new ArrayList<String>( 1 );
-		messages.add( out );
-		return messages;
-	}
-    @Override
-    public boolean addPower(int torque, int omega, long l, ForgeDirection forgeDirection) {
-		if(this.bar == null || this.bar == WA ){
-			this.WattPower = l;
-			this.torque = torque;
-			this.omega = omega;
-			this.currentPower += l;
-			return true;
-		}
-    	return false;
-    }
-	@Override
-	public boolean canReadFrom(ForgeDirection forgeDirection) {
-		return true;
-	}
-
-	@Override
-	public boolean isReceiving() {
-		return true;
-	}
-
-	@Override
-	public int getMinTorque(int i) {
-		return 1;
-	}
-
-	@Override
-	public int getOmega() {
-		return this.omega;
-	}
-
-	@Override
-	public int getTorque() {
-		return this.torque;
-	}
-
-	@Override
-	public long getPower() {
-		return this.currentPower;
-	}
-
-	@Override
-	public String getName() {
-		return "ME Energy Interface";
-	}
-
-	@Override
-	public int getIORenderAlpha() {
-		return this.alpha;
-	}
-
-	@Override
-	public void setIORenderAlpha(int i) {
-		this.alpha = i;
 	}
 
 	/**
@@ -620,33 +516,15 @@ public class PartEnergyInterface
 		return amt;
 	}
 	*/
-	/**
-	 * Mekanism:
-	 */
+
 	@Override
-	public double transferEnergyToAcceptor(ForgeDirection side, double amount) {
+	public double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
 		return 0;
 	}
 
-
 	@Override
-	public boolean canReceiveEnergy(ForgeDirection side) {
-		return side==getSide();
-	}
-
-	@Override
-	public double getEnergy() {
-		return this.getEnergyStorage(J).getEnergyStored();
-	}
-
-	@Override
-	public void setEnergy(double energy) {
-		this.getEnergyStorage(J).setEnergyStored((int)energy);
-	}
-
-	@Override
-	public double getMaxEnergy() {
-		return this.capacity*2.5;
+	public boolean canReceiveEnergy(EnumFacing side) {
+		return side==getSide().getFacing();
 	}
 	/**
 	 * Industrial Craft 2:
@@ -662,7 +540,7 @@ public class PartEnergyInterface
 	}
 
 	@Override
-	public double injectEnergy(ForgeDirection directionFrom, double amount, double voltage) {
+	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		if(this.bar == null || this.bar == EU) {
 			if(this.FilteredEnergy != EU) {
 				getEnergyStorage(EU).receiveEnergy((int) amount, false);
@@ -670,31 +548,6 @@ public class PartEnergyInterface
 			}
 		}
 		return getEnergyStorage(EU).getEnergyStored();
-	}
-
-	@Override
-	public boolean acceptsEnergyFrom(TileEntity emitter, ForgeDirection direction) {
-		return true;
-	}
-	@Override
-	public boolean emitsEnergyTo(TileEntity receiver, ForgeDirection direction) {
-		return false;
-	}
-
-	@Override
-	public double getOfferedEnergy() {
-		return 0;
-	}
-
-	@Override
-	public void drawEnergy(double amount) {
-	//	if(EUStorage.getEnergyStored()>amount);
-    //    EUStorage.modifyEnergyStored((int)-amount);
-	}
-
-	@Override
-	public int getSourceTier() {
-		return 4;
 	}
 
 	@Override
@@ -734,7 +587,7 @@ public class PartEnergyInterface
 	private void initGuiCoordinates(){
 		for( ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
-				NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorldObj(),getSide()),
+				NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorld(),getSide().getFacing()),
 						(EntityPlayerMP)listener.player);
 				updateRequested = false;
 			}
@@ -746,7 +599,7 @@ public class PartEnergyInterface
 		{
 			if(listener!=null) {
 				NetworkHandler.sendTo(new PacketServerFilter(this.FilteredEnergy,0,this.getX(),this.getY(),this.getZ()
-						,this.getSide(),this.getHostTile().getWorldObj()), (EntityPlayerMP)listener.player);
+						,this.getSide().getFacing(),this.getHostTile().getWorld()), (EntityPlayerMP)listener.player);
 			}
 		}
 	}
@@ -755,7 +608,7 @@ public class PartEnergyInterface
 		for(ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
 				if(this.getHostTile() != null) {
-					NetworkHandler.sendTo(new PacketProgressBar(this,getX(),getY(),getZ(),getSide(),this.getHostTile().getWorldObj()), (EntityPlayerMP) listener.player);
+					NetworkHandler.sendTo(new PacketProgressBar(this,getX(),getY(),getZ(),getSide().getFacing(),this.getHostTile().getWorld()), (EntityPlayerMP) listener.player);
 				}
 			}
 		}
@@ -763,7 +616,7 @@ public class PartEnergyInterface
 	private void notifyListenersOfBarFilterChange(LiquidAIEnergy bar){
 		for(ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
-				NetworkHandler.sendTo(new PacketBarChange(bar,getX(),getY(),getZ(),getSide(),this.getHostTile().getWorldObj()),(EntityPlayerMP)listener.player);
+				NetworkHandler.sendTo(new PacketBarChange(bar,getX(),getY(),getZ(),getSide().getFacing(),this.getHostTile().getWorld()),(EntityPlayerMP)listener.player);
 			}
 		}
 	}
@@ -840,7 +693,7 @@ public class PartEnergyInterface
 
     @Override
 	public NBTTagCompound getWailaTag(NBTTagCompound tag) {
-        tag.setInteger("amount",    this.getEnergyStored(ForgeDirection.UNKNOWN));
+        tag.setInteger("amount",    this.getEnergyStored(AEPartLocation.INTERNAL.getFacing()));
         return tag;
     }
 
@@ -947,23 +800,23 @@ public class PartEnergyInterface
 		if(filteredEnergy == RF){
 			if(this.getFacingTile() instanceof IEnergyReceiver){
 				IEnergyReceiver receiver = (IEnergyReceiver)this.getFacingTile();
-				receiver.receiveEnergy(this.getSide(),Amount,false);
+				receiver.receiveEnergy(this.getSide().getFacing(),Amount,false);
 			}
 		}else if(FilteredEnergy == EU){
 			if(this.getFacingTile() instanceof IEnergySink){
 				IEnergySink receiver = (IEnergySink)this.getFacingTile();
-				receiver.injectEnergy(this.getSide(),(double)Amount,4);
+				receiver.injectEnergy(this.getSide().getFacing(),(double)Amount,4);
 			}
 		}else if(FilteredEnergy == J){
 			if(this.getFacingTile() instanceof IStrictEnergyAcceptor){
 				IStrictEnergyAcceptor receiver = (IStrictEnergyAcceptor)this.getFacingTile();
-				receiver.transferEnergyToAcceptor(this.getSide(),Amount);
+				receiver.acceptEnergy(this.getSide().getFacing(),Amount, false);
 			}
 		}
     }
 
 
-	public int getMaxEnergyStored(ForgeDirection unknown,@Nullable LiquidAIEnergy linkedMetric) {
+	public int getMaxEnergyStored(EnumFacing unknown,@Nullable LiquidAIEnergy linkedMetric) {
     	if(linkedMetric == RF){
     		return this.capacity;
 		}
@@ -995,12 +848,6 @@ public class PartEnergyInterface
 		return this.redstoneControlled;
 	}
 
-
-	@Override
-	public IStorageMonitorable getMonitorable(ForgeDirection side, BaseActionSource src) {
-		return this;
-	}
-
 	@Override
 	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
 
@@ -1016,18 +863,14 @@ public class PartEnergyInterface
 		return false;
 	}
 
-	@Override
-	public IMEMonitor<IAEItemStack> getItemInventory() {
-		return null;
-	}
 
 	@Override
-	public IMEMonitor<IAEFluidStack> getFluidInventory() {
+	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> channel) {
 		// Getting Node
-		if (getGridNode(ForgeDirection.UNKNOWN) == null)
+		if (getGridNode(AEPartLocation.INTERNAL) == null)
 			return null;
 		// Getting net of node
-		IGrid grid = getGridNode(ForgeDirection.UNKNOWN).getGrid();
+		IGrid grid = getGridNode(AEPartLocation.INTERNAL).getGrid();
 		if (grid == null)
 			return null;
 		// Cache of net
@@ -1035,7 +878,7 @@ public class PartEnergyInterface
 		if (storage == null)
 			return null;
 		// fluidInventory of cache
-		return storage.getFluidInventory();
+		return storage.getInventory(channel);
 	}
 
 	private AIGridNodeInventory slotInventory = new AIGridNodeInventory("slotInventory",9,1,this);
@@ -1050,6 +893,11 @@ public class PartEnergyInterface
 	}
 
 	@Override
+	public boolean isEmpty() {
+		return false;
+	}
+
+	@Override
 	public ItemStack getStackInSlot(int id) {
 		return null;
 	}
@@ -1060,23 +908,13 @@ public class PartEnergyInterface
 	}
 
 	@Override
-	public ItemStack getStackInSlotOnClosing(int p_70304_1_) {
+	public ItemStack removeStackFromSlot(int index) {
 		return null;
 	}
 
 	@Override
 	public void setInventorySlotContents(int p_70299_1_, ItemStack p_70299_2_) {
 
-	}
-
-	@Override
-	public String getInventoryName() {
-		return null;
-	}
-
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
 	}
 
 	@Override
@@ -1090,17 +928,17 @@ public class PartEnergyInterface
 	}
 
 	@Override
-	public boolean isUseableByPlayer(EntityPlayer p_70300_1_) {
+	public boolean isUsableByPlayer(EntityPlayer player) {
 		return false;
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 
 	}
 
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 
 	}
 
@@ -1109,7 +947,27 @@ public class PartEnergyInterface
 		return false;
 	}
 
-	public LiquidAIEnergy getFilter(ForgeDirection unknown) {
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+
+	}
+
+	public LiquidAIEnergy getFilter(EnumFacing unknown) {
 		return this.FilteredEnergy;
 	}
 
@@ -1119,6 +977,31 @@ public class PartEnergyInterface
 
 	@Override
 	public LiquidAIEnergy getFilter(int index) {
+		return null;
+	}
+
+	@Override
+	public boolean canConnectEnergy(EnumFacing enumFacing) {
+		return false;
+	}
+
+	@Override
+	public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
+		return false;
+	}
+
+	@Override
+	public String getName() {
+		return null;
+	}
+
+	@Override
+	public boolean hasCustomName() {
+		return false;
+	}
+
+	@Override
+	public ITextComponent getDisplayName() {
 		return null;
 	}
 }

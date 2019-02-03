@@ -7,8 +7,11 @@ import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * @Author Azazell
@@ -24,7 +27,7 @@ public class PacketCoordinateInit extends AIPacket<PacketCoordinateInit> {
 
     }
 
-    public PacketCoordinateInit(int x, int y, int z, World w, ForgeDirection dir){
+    public PacketCoordinateInit(int x, int y, int z, World w, EnumFacing dir){
         Gui g = Minecraft.getMinecraft().currentScreen;
          if (g instanceof PartGui) {
                 PartGui partGui = (PartGui) g;

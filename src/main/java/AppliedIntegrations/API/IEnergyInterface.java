@@ -1,6 +1,5 @@
 package AppliedIntegrations.API;
 
-import net.minecraftforge.common.util.ForgeDirection;
 /**
  * @Author Azazell
  */

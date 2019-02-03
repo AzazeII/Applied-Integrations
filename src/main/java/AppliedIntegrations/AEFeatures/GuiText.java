@@ -1,6 +1,6 @@
 package AppliedIntegrations.AEFeatures;
 
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 
 public enum GuiText
 {
@@ -88,7 +88,7 @@ public enum GuiText
 
     public String getLocal()
     {
-        return StatCollector.translateToLocal( this.getUnlocalized() );
+        return I18n.translateToLocal( this.getUnlocalized() );
     }
 
     public String getUnlocalized()

@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -24,7 +25,7 @@ public class PacketServerFilter extends AIPacket<PacketServerFilter> {
 
     public PacketServerFilter(){}
 
-    public PacketServerFilter(LiquidAIEnergy energy, int index, int x, int y, int z, ForgeDirection s, World w){
+    public PacketServerFilter(LiquidAIEnergy energy, int index, int x, int y, int z, EnumFacing s, World w){
         Gui gui = Minecraft.getMinecraft().currentScreen;
         if (gui instanceof IFilterGUI) {
             if (gui instanceof PartGui) {

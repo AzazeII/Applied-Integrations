@@ -13,7 +13,6 @@ public class TileLogicBusHousing extends TileEntity implements IAIMultiBlock {
     }
     @Override
     public void notifyBlock(){
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
     }
     @Override
     public boolean hasMaster() {

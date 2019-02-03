@@ -12,14 +12,11 @@ import appeng.api.networking.IGridNode;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.StorageChannel;
 import net.minecraft.block.Block;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.EnumSet;
 import java.util.List;
 
-import static net.minecraftforge.common.util.ForgeDirection.*;
 
 public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock {
 
@@ -46,11 +43,11 @@ public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock {
     }
 
     public void changeAlt(Boolean alt){
-        Block rib = worldObj.getBlock(xCoord,yCoord,zCoord);
+        Block rib = world.getBlock(xCoord,yCoord,zCoord);
         if(rib != null && rib.getClass() == BlockServerRib.class) {
             ((BlockServerRib)rib).isAlt = alt;
-            worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-            worldObj.notifyBlockChange(xCoord,yCoord,zCoord,rib);
+            world.markBlockForUpdate(xCoord,yCoord,zCoord);
+            world.notifyBlockChange(xCoord,yCoord,zCoord,rib);
         }
     }
 

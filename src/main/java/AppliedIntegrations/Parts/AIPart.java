@@ -1,4 +1,6 @@
 package AppliedIntegrations.Parts;
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -27,17 +29,14 @@ import appeng.api.parts.BusSupport;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
-import appeng.api.parts.IPartRenderHelper;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
+import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import AppliedIntegrations.Render.TextureManager;
 import net.minecraft.entity.Entity;
@@ -46,12 +45,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import AppliedIntegrations.AIConfigOPT;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
 import static AppliedIntegrations.AppliedIntegrations.getNewID;
 
 /**
@@ -73,7 +77,7 @@ public abstract class AIPart
 	protected IPartHost host;
 
 	protected TileEntity hostTile;
-	private ForgeDirection cableSide;
+	private AEPartLocation cableSide;
 
 
 	private boolean isActive;
@@ -151,7 +155,7 @@ public abstract class AIPart
 		}
 
 		// Fire the neighbor changed event
-		this.onNeighborChanged();
+		this.onNeighborChanged(null, null, null);
 	}
 	protected abstract AIGridNodeInventory getUpgradeInventory();
 
@@ -208,15 +212,15 @@ public abstract class AIPart
 		}
 
 		// Get the world
-		World world = this.hostTile.getWorldObj();
+		World world = this.hostTile.getWorld();
 
 		// Get our location
-		int x = this.hostTile.xCoord;
-		int y = this.hostTile.yCoord;
-		int z = this.hostTile.zCoord;
+		int x = this.hostTile.getPos().getX();
+		int y = this.hostTile.getPos().getY();
+		int z = this.hostTile.getPos().getZ();
 
 		// Get the tile entity we are facing
-		return world.getTileEntity( x + this.cableSide.offsetX, y + this.cableSide.offsetY, z + this.cableSide.offsetZ );
+		return world.getTileEntity( new BlockPos(x + this.cableSide.xOffset, y + this.cableSide.yOffset, z + this.cableSide.zOffset ));
 	}
 
 
@@ -230,13 +234,13 @@ public abstract class AIPart
 			return;
 		}
 		this.gridBlock = new AEPartGridBlock(this);
-		this.node = AEApi.instance().createGridNode( this.gridBlock );
+		this.node = AEApi.instance().grid().createGridNode( this.gridBlock );
 
 		// Set the player id
 		this.node.setPlayerID( this.ownerID );
 
 		// Update state
-		if( ( this.hostTile != null ) && ( this.host != null ) && ( this.hostTile.getWorldObj() != null ) )
+		if( ( this.hostTile != null ) && ( this.host != null ) && ( this.hostTile.getWorld() != null ) )
 		{
 			try
 			{
@@ -253,9 +257,6 @@ public abstract class AIPart
 		this.updateStatus();
 		AILog.info("Machine:" + this.associatedItem.getDisplayName() + " Placed by Player with AE2 ID:" + this.getGridNode().getPlayerID());
 	}
-
-	@Override
-	public abstract int cableConnectionRenderTo();
 
 	@Override
 	public boolean canBePlacedOn( final BusSupport type )
@@ -279,12 +280,8 @@ public abstract class AIPart
 	@Override
 	public abstract void getBoxes( IPartCollisionHelper helper );
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public abstract IIcon getBreakingTexture();
-
-	@Override
-	public AECableType getCableConnectionType( final ForgeDirection dir )
+	public AECableType getCableConnectionType( final AEPartLocation dir )
 	{
 		return AECableType.SMART;
 	}
@@ -314,7 +311,7 @@ public abstract class AIPart
 	}
 
 	@Override
-	public IGridNode getGridNode( final ForgeDirection direction )
+	public IGridNode getGridNode( final AEPartLocation direction )
 	{
 		return getGridNode();
 	}
@@ -339,13 +336,13 @@ public abstract class AIPart
 		ItemStack itemStack = this.associatedItem.copy();
 
 		// Save NBT data if the part was wrenched
-		if( type == PartItemStack.Wrench )
+		if( type == PartItemStack.WRENCH )
 		{
 			// Create the item tag
 			NBTTagCompound itemNBT = new NBTTagCompound();
 
 			// Write the data
-			this.writeToNBT( itemNBT, PartItemStack.Wrench );
+			this.writeToNBT( itemNBT, PartItemStack.WRENCH );
 
 			// Set the tag
 			if( !itemNBT.hasNoTags() )
@@ -358,17 +355,20 @@ public abstract class AIPart
 	}
 
 
+	@Override
+	public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos blockPos1) {
 
+	}
 
 	public final DimensionalCoord getLocation()
 	{
-		return new DimensionalCoord( this.hostTile.getWorldObj(), this.hostTile.xCoord, this.hostTile.yCoord, this.hostTile.zCoord );
+		return new DimensionalCoord( this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ() );
 	}
 	public Object getClientGuiElement( final EntityPlayer player ) {return null; }
 	public Object getServerGuiElement( final EntityPlayer player ) { return null; }
 
 
-	public ForgeDirection getSide()
+	public AEPartLocation getSide()
 	{
 		return this.cableSide;
 	}
@@ -378,6 +378,7 @@ public abstract class AIPart
 	{
 		return this.associatedItem.getUnlocalizedName() + ".name";
 	}
+
 
 
 	@Override
@@ -530,9 +531,9 @@ public abstract class AIPart
 	public NBTTagCompound getWailaTag(NBTTagCompound tag) {
 		return tag;
 	}
+
 	@Override
-	public boolean onActivate( final EntityPlayer player, final Vec3 position )
-	{
+	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
 		// Is the player sneaking?
 		if( player.isSneaking() )
 		{
@@ -543,35 +544,26 @@ public abstract class AIPart
 		if( EffectiveSide.isServerSide() )
 		{
 			// Launch the gui
-			AppliedIntegrations.launchGui( this, player, this.hostTile.getWorldObj(), this.hostTile.xCoord, this.hostTile.yCoord, this.hostTile.zCoord );
+			AppliedIntegrations.launchGui( this, player, this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ() );
 		}
 		return true;
 	}
 
 	@Override
-	public void onEntityCollision( final Entity entity )
-	{
-	}
-
-	@Override
-	public void onNeighborChanged()
-	{
-	}
-
-	@Override
-	public final void onPlacement( final EntityPlayer player, final ItemStack held, final ForgeDirection side )
-	{
+	public void onPlacement(EntityPlayer player, EnumHand hand, ItemStack stack, AEPartLocation side) {
 		// Set the owner
 		this.ownerID = AEApi.instance().registries().players().getID( player.getGameProfile() );
 	}
 
 	@Override
-	public boolean onShiftActivate( final EntityPlayer player, final Vec3 position )
-	{
+	public boolean onShiftActivate(EntityPlayer entityPlayer, EnumHand enumHand, Vec3d vec3d) {
 		return false;
 	}
+
 	@Override
- public void randomDisplayTick(World world, int x, int y, int z, Random r) {}
+	public void randomDisplayTick(World world, BlockPos blockPos, Random random) {
+
+	}
 
 	@Override
 	public void readFromNBT( final NBTTagCompound data )
@@ -608,47 +600,6 @@ public abstract class AIPart
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void renderDynamic( final double x, final double y, final double z, final IPartRenderHelper helper, final RenderBlocks renderer )
-	{
-		// Ignored
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public abstract void renderInventory( IPartRenderHelper helper, RenderBlocks renderer );
-
-	@SideOnly(Side.CLIENT)
-	public void renderInventoryBusLights( final IPartRenderHelper helper, final RenderBlocks renderer )
-	{
-		// Set color to white
-		helper.setInvColor( 0xFFFFFF );
-
-		IIcon busColorTexture = TextureManager.BUS_COLOR.getTextures()[0];
-
-		IIcon sideTexture = TextureManager.BUS_COLOR.getTextures()[2];
-
-		helper.setTexture( busColorTexture, busColorTexture, sideTexture, sideTexture, busColorTexture, busColorTexture );
-
-		// Rend the box
-		helper.renderInventoryBox( renderer );
-
-		// Set the brightness
-		Tessellator.instance.setBrightness( 0xD000D0 );
-
-		helper.setInvColor( AEColor.Transparent.blackVariant );
-
-		IIcon lightTexture = TextureManager.BUS_COLOR.getTextures()[1];
-
-		// Render the lights
-		helper.renderInventoryFace( lightTexture, ForgeDirection.UP, renderer );
-		helper.renderInventoryFace( lightTexture, ForgeDirection.DOWN, renderer );
-		helper.renderInventoryFace( lightTexture, ForgeDirection.NORTH, renderer );
-		helper.renderInventoryFace( lightTexture, ForgeDirection.EAST, renderer );
-		helper.renderInventoryFace( lightTexture, ForgeDirection.SOUTH, renderer );
-		helper.renderInventoryFace( lightTexture, ForgeDirection.WEST, renderer );
-	}
 	@Override
 	public int isProvidingStrongPower()
 	{
@@ -660,48 +611,6 @@ public abstract class AIPart
 	{
 		return 0;
 	}
-	@SideOnly(Side.CLIENT)
-	@Override
-	public abstract void renderStatic( int x, int y, int z, IPartRenderHelper helper, RenderBlocks renderer );
-
-	@SideOnly(Side.CLIENT)
-	public void renderStaticBusLights( final int x, final int y, final int z, final IPartRenderHelper helper, final RenderBlocks renderer )
-	{
-		IIcon busColorTexture = TextureManager.BUS_COLOR.getTextures()[0];
-
-		IIcon sideTexture = TextureManager.BUS_COLOR.getTextures()[2];
-
-		helper.setTexture( busColorTexture, busColorTexture, sideTexture, sideTexture, busColorTexture, busColorTexture );
-
-		// Render the box
-		helper.renderBlock( x, y, z, renderer );
-
-		// Are we active?
-		if( this.isActive() )
-		{
-			// Set the brightness
-			Tessellator.instance.setBrightness( 0xD000D0 );
-
-			// Set the color to match the cable
-			Tessellator.instance.setColorOpaque_I( this.host.getColor().blackVariant );
-		}
-		else
-		{
-			// Set the color to black
-			Tessellator.instance.setColorOpaque_I( 0 );
-		}
-
-		IIcon lightTexture = TextureManager.BUS_COLOR.getTextures()[1];
-
-		// Render the lights
-		helper.renderFace( x, y, z, lightTexture, ForgeDirection.UP, renderer );
-		helper.renderFace( x, y, z, lightTexture, ForgeDirection.DOWN, renderer );
-		helper.renderFace( x, y, z, lightTexture, ForgeDirection.NORTH, renderer );
-		helper.renderFace( x, y, z, lightTexture, ForgeDirection.EAST, renderer );
-		helper.renderFace( x, y, z, lightTexture, ForgeDirection.SOUTH, renderer );
-		helper.renderFace( x, y, z, lightTexture, ForgeDirection.WEST, renderer );
-	}
-
 	@Override
 	public boolean requireDynamicRender()
 	{
@@ -714,7 +623,7 @@ public abstract class AIPart
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 
 		// Get this item
-		drops.add( this.getItemStack( PartItemStack.Break ) );
+		drops.add( this.getItemStack( PartItemStack.BREAK ) );
 
 		// Get the drops for this part
 		this.getDrops( drops, false );
@@ -727,7 +636,7 @@ public abstract class AIPart
 	}
 
 	@Override
-	public final void setPartHostInfo( final ForgeDirection side, final IPartHost host, final TileEntity tile )
+	public final void setPartHostInfo( final AEPartLocation side, final IPartHost host, final TileEntity tile )
 	{
 		this.cableSide = side;
 		this.host = host;
@@ -759,12 +668,12 @@ public abstract class AIPart
 	public void writeToNBT( final NBTTagCompound data )
 	{
 		// Assume world saving.
-		this.writeToNBT( data, PartItemStack.World );
+		this.writeToNBT( data, PartItemStack.WORLD );
 	}
 
 	public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType )
 	{
-		if( saveType == PartItemStack.World )
+		if( saveType == PartItemStack.WORLD )
 		{
 			// Set the owner ID
 			data.setInteger( AIPart.NBT_KEY_OWNER, this.ownerID );
@@ -782,7 +691,11 @@ public abstract class AIPart
 		stream.writeBoolean( this.isPowered() );
 	}
 
-    public IMEMonitor<IAEFluidStack> getEnergyProvidingInventory() {
+	public IEnergyTunnel getChannel(){
+		return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+	}
+
+    public IMEMonitor<IAEEnergyStack> getEnergyProvidingInventory() {
 		IGridNode n = getGridNode();
 		if (n == null)
 			return null;
@@ -792,7 +705,7 @@ public abstract class AIPart
 		IStorageGrid storage = g.getCache(IStorageGrid.class);
 		if (storage == null)
 			return null;
-		IMEMonitor<IAEFluidStack> energyStorage = storage.getFluidInventory();
+		IMEMonitor<IAEEnergyStack> energyStorage = storage.getInventory(this.getChannel());
 		if (energyStorage == null)
 			return null;
 		return energyStorage;

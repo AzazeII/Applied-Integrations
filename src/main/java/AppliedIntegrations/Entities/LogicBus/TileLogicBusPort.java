@@ -22,20 +22,20 @@ public class TileLogicBusPort extends AITile implements IAEMultiBlock, IAIMultiB
     @Override
     public void invalidate() {
         super.invalidate();
-        if (worldObj != null && !worldObj.isRemote) {
+        if (world != null && !world.isRemote) {
             destroyAELink();
         }
     }
     @Override
     public void onChunkUnload() {
-        if (worldObj != null && !worldObj.isRemote) {
+        if (world != null && !world.isRemote) {
             destroyAELink();
         }
 
     }
     @Override
     public void notifyBlock(){
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
+
     }
     @Override
     public void disconnect(boolean b) {

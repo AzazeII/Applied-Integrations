@@ -12,9 +12,7 @@ public class TileLogicBusCore extends TileEntity implements IAIMultiBlock {
 
     }
     @Override
-    public void notifyBlock(){
-        worldObj.markBlockForUpdate(xCoord,yCoord,zCoord);
-    }
+    public void notifyBlock(){ }
     @Override
     public boolean hasMaster() {
         return false;

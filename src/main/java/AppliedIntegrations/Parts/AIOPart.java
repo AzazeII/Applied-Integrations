@@ -26,6 +26,7 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
+import appeng.me.helpers.MachineSource;
 import cofh.api.energy.IEnergyReceiver;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -448,7 +449,7 @@ public abstract class AIOPart
         super.onActivate( player, position );
         this.updateUpgradeState();
 
-        player.openGui(AppliedIntegrations.instance, 5, player.worldObj, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
+        player.openGui(AppliedIntegrations.instance, 5, player.world, hostTile.xCoord, hostTile.yCoord, hostTile.zCoord);
         this.updateRequested = true;
         this.player = player;
         return true;

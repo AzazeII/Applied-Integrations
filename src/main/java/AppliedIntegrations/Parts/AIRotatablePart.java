@@ -6,11 +6,11 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.PartItemStack;
 import io.netty.buffer.ByteBuf;
 
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
 /**
@@ -36,28 +36,16 @@ public abstract class AIRotatablePart
     }
 
     /**
-     * Rotates the renderer.
-     *
-     * @param renderer
-     * @param reset
-     */
-    protected void rotateRenderer( final RenderBlocks renderer, final boolean reset )
-    {
-        int rot = ( reset ? 0 : this.renderRotation );
-        renderer.uvRotateBottom = renderer.uvRotateEast = renderer.uvRotateNorth = renderer.uvRotateSouth = renderer.uvRotateTop = renderer.uvRotateWest = rot;
-    }
-
-    /**
      * Called when the part is right-clicked
      */
     @Override
-    public boolean onActivate( final EntityPlayer player, final Vec3 position )
+    public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position )
     {
         // Get the host tile entity
         TileEntity hte = this.getHostTile();
 
         // Is the player not sneaking and using a wrench?
-        if( !player.isSneaking() && WrenchUtil.canWrench(player.getHeldItem(),player,(int)position.xCoord,(int)position.yCoord,(int)position.zCoord) )
+        if( !player.isSneaking() && WrenchUtil.canWrench(player.getHeldItem(hand),player,(int)position.x,(int)position.y,(int)position.z) )
         {
             if( EffectiveSide.isServerSide() )
             {
@@ -91,7 +79,7 @@ public abstract class AIRotatablePart
             return true;
         }
 
-        return super.onActivate( player, position );
+        return super.onActivate( player, hand, position );
     }
 
     /**
@@ -144,7 +132,7 @@ public abstract class AIRotatablePart
         super.writeToNBT( data, saveType );
 
         // Write the rotation
-        if( ( saveType == PartItemStack.World ) && ( this.renderRotation != 0 ) )
+        if( ( saveType == PartItemStack.WORLD ) && ( this.renderRotation != 0 ) )
         {
             data.setByte( this.NBT_KEY_ROT_DIR, this.renderRotation );
         }
