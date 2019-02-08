@@ -11,15 +11,15 @@ tile.ME Server Rib.name=МЭ Ребро Сервера
 tile.ME Server Port.name=МЭ Порт Сервера
 tile.ME Server Security Terminal.name=МЭ Терминал Безопасности Сервера
 
-
+# TODO Russian localization
 
 tile.ME Energy Interface.name=МЭ Интерфейс Энергии
-ME Energy Interface=МЭ Интерфейс Энергии
-ME Energy Export Bus=МЭ Шина Экспорта Энергии
-ME Energy Import Bus=МЭ Шина Импорта Энергии
-ME Energy Storage Bus=МЭ Шина Хранения Энергии
-ME Energy Terminal=МЭ Терминал Энергии
-
+appliedintegrationsenergy.item.part.interface.name=МЭ Интерфейс Энергии
+appliedintegrationsenergy.item.part.export.name=МЭ Шина Экспорта Энергии
+appliedintegrationsenergy.item.part.import.name=МЭ Шина Импорта Энергии
+appliedintegrationsenergy.item.part.storage.name=МЭ Шина Хранения Энергии
+appliedintegrationsenergy.item.part.terminal.name=МЭ Терминал Энергии
+appliedintegrationsenergy.item.part.monitor.name=МЭ Монитор Хранения Энергии
 
 
 Energy Stored=Энергии Хранится
@@ -33,14 +33,16 @@ appliedintegrations.Energy.StorageMonitor.name=МЭ Монитор Хранен�
 appliedintegrations.Energy.Machine.P2PRotary=Туннель Точка-Точка Ватты
 appliedintegrations.Energy.Machine.P2PJoules=Туннель Точка-Точка Джоули
 
-ME 1k Energy Cell.name=МЭ 1k Энерго-Ячейка
-ME 4k Energy Cell.name=МЭ 4k Энерго-Ячейка
-ME 16k Energy Cell.name=МЭ 16k Энерго-Ячейка
-ME 64k Energy Cell.name=МЭ 64k Энерго-Ячейка
-ME 256k Energy Cell.name=МЭ 256k Энерго-Ячейка
-ME 1024k Energy Cell.name=МЭ 1024k Энерго-Ячейка
-ME 4096k Energy Cell.name=МЭ 4096k Энерго-Ячейка
-ME 16384k Energy Cell.name=МЭ 16384k Энерго-Ячейка
+
+EnergyStorageCell_1k.name=МЭ 1k Энерго-Ячейка
+EnergyStorageCell_4k.name=МЭ 4k Энерго-Ячейка
+EnergyStorageCell_16k.name=МЭ 16k Энерго-Ячейка
+EnergyStorageCell_64k.name=МЭ 64k Энерго-Ячейка
+EnergyStorageCell_256k.name=МЭ 256k Энерго-Ячейка
+EnergyStorageCell_1024k.name=МЭ 1024k Энерго-Ячейка
+EnergyStorageCell_4096k.name=МЭ 4096k Энерго-Ячейка
+EnergyStorageCell_16384k.name=МЭ 16384k Энерго-Ячейка
+
 ME Creative Energy Cell.name=MЭ Креативная Энерго-Ячейка
 
 ME 1k Component.name=МЭ 1k Энергетический Компонент Хранения

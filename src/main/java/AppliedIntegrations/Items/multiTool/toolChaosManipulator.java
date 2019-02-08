@@ -1,11 +1,16 @@
 package AppliedIntegrations.Items.multiTool;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Blocks.BlocksEnum;
+import AppliedIntegrations.Items.ItemEnum;
 import appeng.api.implementations.items.IAEWrench;
 import appeng.items.tools.powered.powersink.AEBasePoweredItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.Optional;
 
 @Optional.InterfaceList(value = { // ()____()
@@ -23,6 +28,8 @@ public class toolChaosManipulator extends AEBasePoweredItem implements IAEWrench
 
         super(10000000D);
 
+        this.setRegistryName("ToolChaos.reg");
+
         this.setCreativeTab(AppliedIntegrations.AI);
 
         this.setMaxStackSize(1);
@@ -33,5 +40,9 @@ public class toolChaosManipulator extends AEBasePoweredItem implements IAEWrench
     @Override
     public boolean canWrench(ItemStack itemStack, EntityPlayer entityPlayer, BlockPos blockPos) {
         return true;
+    }
+
+    public void registerModel(){
+        Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this,0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
     }
 }

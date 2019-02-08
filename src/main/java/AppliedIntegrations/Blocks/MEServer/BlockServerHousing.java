@@ -10,9 +10,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 public class BlockServerHousing extends AIMultiBlock {
-    public BlockServerHousing(){
-        this.setUnlocalizedName("ME Server Housing");
-        this.setRegistryName("ServerHousing");
+    public BlockServerHousing(String reg, String unloc) {
+        super(reg, unloc);
     }
 
 }

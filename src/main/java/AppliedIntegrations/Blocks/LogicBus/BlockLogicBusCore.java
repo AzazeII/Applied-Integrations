@@ -5,8 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 
 public class BlockLogicBusCore extends AIMultiBlock {
-    public BlockLogicBusCore() {
-        this.setUnlocalizedName("ME Logic Bus Core");
-        this.setRegistryName("BlockLogicBusCore");
+    public BlockLogicBusCore(String reg, String unloc) {
+        super(reg, unloc);
     }
 }

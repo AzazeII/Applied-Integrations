@@ -1,11 +1,18 @@
 package AppliedIntegrations.Proxy;
 
+import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Entities.TileEnum;
+import AppliedIntegrations.Items.AIItemRegistrable;
+import AppliedIntegrations.Items.ItemEnum;
+import AppliedIntegrations.Parts.PartEnum;
 import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.*;
 
@@ -20,6 +27,20 @@ public class CommonProxy
         public BufferedReader getFile(String path) throws Exception {
             return new BufferedReader(new FileReader(new File(path)));
         }
+    }
+
+    public void SidedPreInit(){
+        ItemEnum.register();
+        BlocksEnum.register();
+        //PartEnum.registerAEModels();
+    }
+
+    public void SidedInit(){
+
+    }
+
+    public void SidedPostInit(){
+
     }
 
     private class InternalRecipeLoader implements IRecipeLoader {

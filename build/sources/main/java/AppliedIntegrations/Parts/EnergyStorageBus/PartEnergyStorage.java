@@ -62,6 +62,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
@@ -551,6 +552,11 @@ public class PartEnergyStorage
 		}
 
 
+	}
+
+	@Override
+	public ResourceLocation[] getModels() {
+		return new ResourceLocation[0];
 	}
 
 

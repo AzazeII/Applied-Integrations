@@ -2,6 +2,7 @@ package AppliedIntegrations.Items.StorageCells;
 import AppliedIntegrations.API.AIApi;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.Items.AIItemRegistrable;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
@@ -24,11 +25,15 @@ import java.util.Optional;
 /**
  * @Author Azazell
  */
-public class EnergyStorageCell extends Item implements IStorageCell<IAEEnergyStack> {
+public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell<IAEEnergyStack> {
 
-	private String size;
-	private int bytes;
-	private int types;
+	private int maxBytes;
+
+	public EnergyStorageCell(String registry, int maxBytes) {
+		super(registry);
+		this.maxBytes = maxBytes;
+		this.setMaxStackSize(1);
+	}
 
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
@@ -70,7 +75,7 @@ public class EnergyStorageCell extends Item implements IStorageCell<IAEEnergySta
 
 	@Override
 	public int getBytes(@Nonnull ItemStack itemStack) {
-		return bytes;
+		return maxBytes;
 	}
 
 	@Override
@@ -80,7 +85,7 @@ public class EnergyStorageCell extends Item implements IStorageCell<IAEEnergySta
 
 	@Override
 	public int getTotalTypes(@Nonnull ItemStack itemStack) {
-		return types;
+		return maxBytes;
 	}
 
 	@Override

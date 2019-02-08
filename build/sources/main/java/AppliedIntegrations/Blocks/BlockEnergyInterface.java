@@ -23,20 +23,25 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class BlockEnergyInterface extends BlockContainer implements ITileEntityProvider {
+public class BlockEnergyInterface extends BlockAIRegistrable implements ITileEntityProvider {
 	private boolean isThirdClick = false;
 
 	public BlockEnergyInterface() {
-		super(Material.ROCK);
-		this.setUnlocalizedName("ME Energy Interface");
-		this.setRegistryName("EInterface");
+		super("EInterface", "ME Energy Interface");
 		this.setCreativeTab(AppliedIntegrations.AI);
 		this.setHardness(5F);
 	}
 	@Override
-	public TileEntity createNewTileEntity(World world, int metadata) {
+	public TileEnergyInterface createNewTileEntity(World world, int metadata) {
 		return new TileEnergyInterface();
 	}
+
+	@Override
+	public boolean hasTileEntity(IBlockState blockState) {
+
+		return true;
+	}
+
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 				Block block = world.getBlockState(pos).getBlock();

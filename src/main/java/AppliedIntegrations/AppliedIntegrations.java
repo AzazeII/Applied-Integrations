@@ -1,5 +1,6 @@
 package AppliedIntegrations;
 import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.PlatformEvent;
 import AppliedIntegrations.Blocks.BlocksEnum;
@@ -8,6 +9,7 @@ import AppliedIntegrations.Gui.resetData;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.grid.EnergyTunnel;
 import appeng.api.AEApi;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -15,13 +17,16 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import AppliedIntegrations.Items.*;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
@@ -38,7 +43,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 import javax.annotation.Nullable;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "3.1", dependencies = "required-after:appliedenergistics2 ; required-after:CoFHAPI")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "7", dependencies = "required-after:appliedenergistics2;required-after:redstoneflux")
 /**
  * @Author Azazell
  */
@@ -67,32 +72,26 @@ public class AppliedIntegrations implements IGuiHandler {
 	    @Override
 		public ItemStack getTabIconItem()
 		{
-			return new ItemStack(Item.getItemFromBlock(EInterface), 1);
+			return new ItemStack(Item.getItemFromBlock(BlocksEnum.BEI.b), 1);
 		}
 	};
-	public static Block EInterface;
-
-
 
     @SidedProxy(clientSide="AppliedIntegrations.Proxy.ClientProxy", serverSide="AppliedIntegrations.Proxy.CommonProxy")
 	public static CommonProxy proxy;
 
 	@Mod.EventHandler
-	public void preLoad(FMLPreInitializationEvent event)
+	public void preInit(FMLPreInitializationEvent event)
 	{
 		NetworkHandler.registerPackets();
 
-		// instanciate interface
-		EInterface = BlocksEnum.BEI.b;
-		registerBlocks();
 		registerTiles();
 
 		// For all liquidEnergies register it
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 				FluidRegistry.registerFluid(energy);
 		}
-		// Register all items
-		registerItems();
+
+		proxy.SidedPreInit();
 
 		// Register HUD for advanced entropy manipulator
 		//MinecraftForge.EVENT_BUS.register(new GuiEntropyManipulator(Minecraft.getMinecraft()));
@@ -109,10 +108,9 @@ public class AppliedIntegrations implements IGuiHandler {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this,this);
 		// Register objects, that can be moved by spatial cards io
 		proxy.registerSpatialIOMovables();
-
+		proxy.SidedInit();
 		// Register Cache, and monitor
 		//AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );
-
 
 		FMLCommonHandler.instance().bus().register(instance);
 
@@ -120,25 +118,10 @@ public class AppliedIntegrations implements IGuiHandler {
 	}
 	@Mod.EventHandler
 	public void postLoad(FMLPostInitializationEvent event) {
+		// Register channel **MOST IMPORTANT PART ;) **
+		AEApi.instance().storage().registerStorageChannel(IEnergyTunnel.class, new EnergyTunnel());
 
-		if (!(Loader.isModLoaded("AppliedEnergestics"))){
-			AILog.info(this.modid + ":Applied energistics 2 not loaded, you cannot play with AppliedIntegrations(addon) without core mod ");
-		}
 		AILog.info(this.modid + ":Post load Completed");
-
-
-	}
-	public void registerItems() {
-		for (ItemEnum current : ItemEnum.values()) {
-			ForgeRegistries.ITEMS.register(current.getItem());
-		}
-	}
-	public void registerBlocks(){
-		for(BlocksEnum b : BlocksEnum.values()) {
-			// blocks
-			ForgeRegistries.BLOCKS.register(b.b);
-			b.b.setCreativeTab(this.AI);
-		}
 	}
 	public void registerTiles(){
 		for(TileEnum t : TileEnum.values()){

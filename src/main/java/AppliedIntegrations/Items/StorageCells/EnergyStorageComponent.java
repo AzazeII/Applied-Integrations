@@ -1,12 +1,13 @@
 package AppliedIntegrations.Items.StorageCells;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Items.AIItemRegistrable;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class EnergyStorageComponent
-        extends Item
+        extends AIItemRegistrable
 {
 
     private String[] TextureNames = {"storage.component.1k","storage.component.4k","storage.component.16k","storage.component.64k","storage.component.256k",
@@ -15,6 +16,7 @@ public class EnergyStorageComponent
 
     public EnergyStorageComponent()
     {
+        super("EnergyStorageComponent");
         // No damage
         this.setMaxDamage( 0 );
 

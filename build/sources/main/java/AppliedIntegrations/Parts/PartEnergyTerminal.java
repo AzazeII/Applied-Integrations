@@ -40,6 +40,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
@@ -309,6 +310,12 @@ public class PartEnergyTerminal
 			data.setInteger( NBT_KEY_VIEW_MODE, this.viewMode.ordinal() );
 		}
 	}
+
+	@Override
+	public ResourceLocation[] getModels() {
+		return new ResourceLocation[0];
+	}
+
 	// all next methods ignored
 	@Override
 	public void updateWatcher(IStackWatcher newWatcher) {

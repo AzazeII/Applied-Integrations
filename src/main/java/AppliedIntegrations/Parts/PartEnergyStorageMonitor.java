@@ -242,4 +242,9 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
     }
 
+    @Override
+    public ResourceLocation[] getModels() {
+        return new ResourceLocation[0];
+    }
+
 }

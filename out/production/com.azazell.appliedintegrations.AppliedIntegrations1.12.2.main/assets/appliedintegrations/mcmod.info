@@ -1,0 +1,15 @@
+[
+{
+  "modid": "Applied Integrations",
+  "name": "Applied Integrations",
+  "description": "Adds Integrations for AE2, one of biggest is Integrated Energy Storage Cells, Buses, And blocks",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Azazell"],
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["Applied Energistics 2"]
+}
+]

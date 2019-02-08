@@ -13,11 +13,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BlockServerPort extends AIMultiBlock {
-    public BlockServerPort() {
-        this.setUnlocalizedName("ME Server Port");
-        this.setRegistryName("ServerPort");
-
+    public BlockServerPort(String reg, String unloc) {
+        super(reg, unloc);
     }
+
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos)
     {

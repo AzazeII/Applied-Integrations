@@ -21,9 +21,8 @@ import java.util.List;
 
 public class BlockServerRib extends AIMultiBlock {
 
-    public BlockServerRib() {
-        this.setUnlocalizedName("ME Server Rib");
-        this.setRegistryName("ServerFrame");
+    public BlockServerRib(String reg, String unloc) {
+        super(reg, unloc);
     }
 
     @Override

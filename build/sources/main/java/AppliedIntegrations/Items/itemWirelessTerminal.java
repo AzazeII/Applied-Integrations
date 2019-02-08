@@ -13,7 +13,7 @@ import net.minecraft.util.text.translation.I18n;
 
 import java.util.List;
 
-public class itemWirelessTerminal extends Item implements INetworkEncodable,IAEItemPowerStorage, IEnergyContainerItem {
+public class itemWirelessTerminal extends AIItemRegistrable implements INetworkEncodable,IAEItemPowerStorage, IEnergyContainerItem {
     private static String EncryptionKey;
 
     private static int MaxStorage = 32000;
@@ -22,7 +22,7 @@ public class itemWirelessTerminal extends Item implements INetworkEncodable,IAEI
 
     public itemWirelessTerminal(){
 
-        this.setUnlocalizedName("WirelessEnergyTerminal");
+        super("WirelessEnergyTerminal");
 
         this.setMaxStackSize(1);
 

@@ -8,6 +8,7 @@ import AppliedIntegrations.Gui.GuiEnergyIO;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.models.AIPartModel;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -18,6 +19,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.me.helpers.MachineSource;
@@ -40,6 +42,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,6 +50,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -66,6 +70,17 @@ public class PartEnergyImport extends AIOPart
 	{
 		super( PartEnum.EnergyImportBus, SecurityPermissions.INJECT );
 	}
+
+	public static ResourceLocation[] MODELS = new ResourceLocation[]{
+			new ResourceLocation(AppliedIntegrations.modid, "part/import/base"),
+			new ResourceLocation(AppliedIntegrations.modid, "part/import/on"),
+			new ResourceLocation(AppliedIntegrations.modid, "part/import/off"),
+			new ResourceLocation(AppliedIntegrations.modid, "part/import/has_channel")
+	};
+
+	private static IPartModel ON_MODEL = new AIPartModel(MODELS[0], MODELS[1]);
+	private static IPartModel OFF_MODEL = new AIPartModel(MODELS[0], MODELS[2]);
+	private static IPartModel HAS_CHANNEL_ON_MODEL = new AIPartModel(MODELS[0], MODELS[3]);
 
 	@Override
 	public boolean energyTransferAllowed(LiquidAIEnergy energy) {
@@ -147,6 +162,12 @@ public class PartEnergyImport extends AIOPart
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void randomDisplayTick(World world, BlockPos pos, Random r) {}
+
+	@Override
+	public ResourceLocation[] getModels() {
+		return MODELS;
+	}
+
 	public int InjectEnergy(IGridNode node,FluidStack resource, boolean doFill) {
 		IGrid grid = node.getGrid(); // check grid node
 		if (grid == null) {
@@ -211,5 +232,16 @@ public class PartEnergyImport extends AIOPart
 	@Override
 	public void onInventoryChanged() {
 
+	}
+
+	@Nonnull
+	@Override
+	public IPartModel getStaticModels() {
+		if (this.isPowered())
+			if (this.isActive())
+				return HAS_CHANNEL_ON_MODEL;
+			else
+				return ON_MODEL;
+		return OFF_MODEL;
 	}
 }

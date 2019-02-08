@@ -9,7 +9,9 @@ import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIStrings;
 
+import appeng.api.AEApi;
 import appeng.api.config.Upgrades;
+import appeng.api.parts.IPartModel;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.Optional;
@@ -100,6 +102,21 @@ public enum PartEnum
         // Get the part
         return PartEnum.VALUES[clamped];
     }
+
+    public static void registerAEModels() {
+        AEApi.instance().registries().partModels().registerModels(PartEnergyImport.MODELS);
+        /*for(PartEnum partEnum : values()){
+            try {
+                AIPart part = partEnum.partClass.newInstance();
+                AEApi.instance().registries().partModels().registerModels(part.getModels());
+            }catch (IllegalAccessException e){
+
+            }catch (InstantiationException e){
+
+            }
+        }*/
+    }
+
     public AIPart createPartInstance(final ItemStack itemStack ) throws InstantiationException, IllegalAccessException
     {
         // Create a new instance of the part

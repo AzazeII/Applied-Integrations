@@ -6,41 +6,56 @@ import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.multiTool.toolChaosManipulator;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * @Author Azazell
  */
 public enum ItemEnum {
-    ENERGYANNIHILATIONCORE("energy.annihilation.core", new itemEnergyAnCore()),
-    ENERGYFORMATIONCORE("energy.formation.core",new itemEnergyFmCore()),
+    ENERGYANNIHILATIONCORE(new AIItemRegistrable("annihilation_core")),
+    ENERGYFORMATIONCORE(new AIItemRegistrable("formation_core")),
 
-    ITEMPARTIMPORT("energy.item.part.import", new ItemPartImport("energyImportPartItem")),
-    ITEMPARTEXPORT("energy.item.part.export", new ItemPartExport("energyExportPartItem")),
-    ITEMPARTSTORAGE("energy.item.part.storge", new ItemPartStorage("energyStoragePartItem")),
-    ITEMPARTINTERFACE("energy.item.part.interface", new ItemPartInterface("energyInterfacePartItem")),
-    ITEMPARTMONITOR("energy.item.part.monitor", new ItemPartMonitor("energyMonitorPartItem")),
-    ITEMPARTTERMINAL("energy.item.part.terminal", new ItemPartInterface("energyTerminalPartItem")),
+    ITEMPARTIMPORT(new ItemPartImport("energyImportPartItem")),
+    ITEMPARTEXPORT(new ItemPartExport("energyExportPartItem")),
+    ITEMPARTSTORAGE(new ItemPartStorage("energyStoragePartItem")),
+    ITEMPARTINTERFACE( new ItemPartInterface("energyInterfacePartItem")),
+    ITEMPARTMONITOR( new ItemPartMonitor("energyMonitorPartItem")),
+    ITEMPARTTERMINAL( new ItemPartInterface("energyTerminalPartItem")),
 
-    ITEMENERGYWIRELESSTERMINAL("storage.energy.terminal",new itemWirelessTerminal()),
-    CHAOSMANIPULATOR("item.chaos.manipulator", new toolChaosManipulator()),
-    ENEGYSTORAGE("storage.energy", new EnergyStorageCell()),
-    ENERGYSTORAGECASING("casing.energy", new EnergyStorageCasing()),
-    ENERGYSTORAGECOMPONENT("component.energy", new EnergyStorageComponent());
-    private final String internalName;
+    ITEMENERGYWIRELESSTERMINAL(new itemWirelessTerminal()),
+    CHAOSMANIPULATOR( new toolChaosManipulator()),
+    ENERGYSTORAGE_1k( new EnergyStorageCell("EnergyStorageCell_1k", 1024)),
+    ENERGYSTORAGE_4k( new EnergyStorageCell("EnergyStorageCell_4k", 4096)),
+    ENERGYSTORAGE_16k( new EnergyStorageCell("EnergyStorageCell_16k", 16384)),
+    ENERGYSTORAGE_64k( new EnergyStorageCell("EnergyStorageCell_64k", 65536)),
+    ENERGYSTORAGE_256k( new EnergyStorageCell("EnergyStorageCell_256k", 262144)),
+    ENERGYSTORAGE_1024k(new EnergyStorageCell("EnergyStorageCell_1024k", 1048576)),
+    ENERGYSTORAGE_4096k( new EnergyStorageCell("EnergyStorageCell_4096k", 4194304)),
+    ENERGYSTORAGE_16384k( new EnergyStorageCell("EnergyStorageCell_16384k", 16777216)),
+
+    ENERGYSTORAGECASING(new EnergyStorageCasing()),
+    ENERGYSTORAGECOMPONENT(new EnergyStorageComponent());
+
     private Item item;
 
-    ItemEnum(String _internalName, Item _item) {
-        this(_internalName, _item, AppliedIntegrations.AI);
+    ItemEnum( AIItemRegistrable _item) {
+        this(_item, AppliedIntegrations.AI);
     }
 
-    ItemEnum(String _internalName, Item _item, CreativeTabs creativeTab) {
-        this.internalName = _internalName;
+    ItemEnum(Item _item){
         this.item = _item;
-        this.item.setUnlocalizedName(AppliedIntegrations.modid + this.internalName);
+    }
+
+    ItemEnum(AIItemRegistrable _item, CreativeTabs creativeTab) {
+        this.item = _item;
         this.item.setCreativeTab(AppliedIntegrations.AI);
     }
 
@@ -52,19 +67,26 @@ public enum ItemEnum {
         return new ItemStack( this.item, size, damageValue );
     }
 
-    public String getInternalName() {
-        return this.internalName;
-    }
-
     public Item getItem() {
         return this.item;
     }
 
-    public ItemStack getSizedStack(int size) {
-        return new ItemStack(this.item, size);
+    public static void register() {
+        for(ItemEnum itemEnum : values()){
+            ForgeRegistries.ITEMS.register(itemEnum.item);
+        }
     }
 
-    public String getStatName() {
-        return I18n.translateToLocal(this.item.getUnlocalizedName());
-    }
+    @SideOnly(Side.CLIENT)
+    public static void registerModels() {
+        for(ItemEnum item : values()) {
+            if(item.item instanceof AIItemRegistrable) {
+                AIItemRegistrable registrableItem = (AIItemRegistrable)item.item;
+                registrableItem.registerModel();
+            }else if(item.item instanceof toolChaosManipulator){
+                toolChaosManipulator tCM = (toolChaosManipulator)item.item;
+                tCM.registerModel();
+            }
+        }
+     }
 }

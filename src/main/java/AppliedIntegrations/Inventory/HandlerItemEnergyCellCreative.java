@@ -5,6 +5,7 @@ import AppliedIntegrations.API.IEnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.Items.ItemEnum;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.ISaveProvider;
@@ -18,9 +19,9 @@ public class HandlerItemEnergyCellCreative
         extends HandlerItemEnergyCell
 {
 
-    public HandlerItemEnergyCellCreative(final ItemStack storageStack, final ISaveProvider saveProvider )
+    public HandlerItemEnergyCellCreative(final ItemStack storageStack, final ISaveProvider saveProvider, ItemEnum iNum )
     {
-        super( storageStack, saveProvider );
+        super( storageStack, saveProvider, iNum );
 
         this.totalBytes = 0;
         this.totalEnergyStorage = 0;

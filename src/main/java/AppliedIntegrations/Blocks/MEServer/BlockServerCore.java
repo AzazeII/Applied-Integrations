@@ -31,10 +31,10 @@ public class BlockServerCore extends AIMultiBlock {
 
     private final Random rand = new Random();
 
-    public BlockServerCore() {
-        this.setUnlocalizedName("ME Server Core");
-        this.setRegistryName("ServerCore");
+    public BlockServerCore(String reg, String unloc) {
+        super(reg, unloc);
     }
+
     @Override
     public void harvestBlock(World world, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity tie, ItemStack stack)
     {

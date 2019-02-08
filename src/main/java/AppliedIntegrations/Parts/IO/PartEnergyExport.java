@@ -4,22 +4,19 @@ import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
-import AppliedIntegrations.Gui.GuiEnergyIO;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.EffectiveSide;
-import appeng.api.AEApi;
-import appeng.api.config.AccessRestriction;
+import AppliedIntegrations.models.AIPartModel;
 import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.me.helpers.MachineSource;
 import cofh.redstoneflux.api.IEnergyReceiver;
@@ -27,18 +24,15 @@ import ic2.api.energy.tile.IEnergySink;
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.util.ArrayList;
-import java.util.Random;
+import javax.annotation.Nonnull;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.*;
 import static appeng.api.config.Actionable.MODULATE;
@@ -59,7 +53,6 @@ public class PartEnergyExport extends AIOPart {
 	private final static int MAXIMUM_TRANSFER_PER_SECOND = 64;
 
 	private final static int MINIMUM_TRANSFER_PER_SECOND = 1;
-
 
 	protected TileEntity facingEnergyStorage;
 
@@ -123,6 +116,12 @@ public class PartEnergyExport extends AIOPart {
 		}
 
 	}
+
+	@Override
+	public ResourceLocation[] getModels() {
+		return new ResourceLocation[0];
+	}
+
 	@Override
 	public Object getServerGuiElement( final EntityPlayer player ) {
 		return new ContainerPartEnergyIOBus(this,player);

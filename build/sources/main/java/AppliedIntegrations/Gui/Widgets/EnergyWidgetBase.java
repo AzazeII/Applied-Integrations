@@ -4,6 +4,7 @@ package AppliedIntegrations.Gui.Widgets;
 import AppliedIntegrations.API.EnergyStack;
 import AppliedIntegrations.API.IEnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Gui.IWidgetHost;
 import AppliedIntegrations.Gui.AIGuiHelper;
 

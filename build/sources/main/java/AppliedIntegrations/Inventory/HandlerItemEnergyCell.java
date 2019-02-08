@@ -102,7 +102,7 @@ public class HandlerItemEnergyCell
      */
     protected final ArrayList<LiquidAIEnergy> partitionEnergies = new ArrayList<LiquidAIEnergy>();
 
-    public HandlerItemEnergyCell(final ItemStack storageStack, final ISaveProvider saveProvider )
+    public HandlerItemEnergyCell(final ItemStack storageStack, final ISaveProvider saveProvider, ItemEnum iNum )
     {
         // Ensure we have a NBT tag
         if( !storageStack.hasTagCompound() )
@@ -114,10 +114,10 @@ public class HandlerItemEnergyCell
         this.cellData = storageStack.getTagCompound();
 
         // Get the total types we can store
-        this.totalTypes = ( (EnergyStorageCell)ItemEnum.ENEGYSTORAGE.getItem() ).getTotalTypes( storageStack );
+        this.totalTypes = ( (EnergyStorageCell)iNum.getItem() ).getTotalTypes( storageStack );
 
         // Get the total bytes we can hold
-        this.totalBytes = ( (EnergyStorageCell)ItemEnum.ENEGYSTORAGE.getItem() ).getBytes( storageStack );
+        this.totalBytes = ( (EnergyStorageCell)iNum.getItem() ).getBytes( storageStack );
 
         // Calculate how many Energy we can hold
         this.totalEnergyStorage = this.totalBytes * HandlerItemEnergyCell.ENERGY_PER_BYTE;

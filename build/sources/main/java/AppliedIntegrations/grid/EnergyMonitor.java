@@ -237,7 +237,7 @@ public class EnergyMonitor
             // Anything left in the previous mapping is no longer present in the network
             for( LiquidAIEnergy energy : previousEnergy )
             {
-                energyChanges.add( new EnergyStack( energy, -this.cache.remove( energy ).getStackSize(), false ) );
+                energyChanges.add( new EnergyStack( energy, -this.cache.remove( energy ).getStackSize() ) );
             }
 
             // Notify listeners

@@ -1,6 +1,7 @@
 package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.Entities.Server.TileServerSecurity;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -13,16 +14,12 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class BlockServerSecurity extends Block implements ITileEntityProvider {
+public class BlockServerSecurity extends BlockAIRegistrable implements ITileEntityProvider {
 
     public boolean isActive;
 
-    public BlockServerSecurity()
-    {
-        super(Material.IRON);
-        this.setHardness(5F);
-        this.setUnlocalizedName("ME Server Security Terminal");
-        this.setRegistryName("ServerSecurity");
+    public BlockServerSecurity(String reg, String unloc) {
+        super(reg, unloc);
     }
 
     @Override

@@ -20,10 +20,10 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
-public class AIMultiBlock extends BlockContainer implements ITileEntityProvider {
+public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEntityProvider {
 
-    protected AIMultiBlock() {
-        super(Material.IRON);
+    protected AIMultiBlock(String registry, String unlocalizedName) {
+        super(registry, unlocalizedName);
         this.setHardness(5F);
 
     }
@@ -42,6 +42,11 @@ public class AIMultiBlock extends BlockContainer implements ITileEntityProvider 
             }
         }
         return false;
+    }
+    @Override
+    public boolean hasTileEntity(IBlockState blockState) {
+
+        return true;
     }
     @Override
     public TileEntity createNewTileEntity(World w, int p_149915_2_) {

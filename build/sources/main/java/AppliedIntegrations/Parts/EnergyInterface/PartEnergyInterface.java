@@ -75,6 +75,7 @@ import net.minecraft.tileentity.TileEntity;
 
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
@@ -577,6 +578,11 @@ public class PartEnergyInterface
 			if (getEnergyStorage(energy) != null)
 				data.setInteger("#EnergyTag" + energy.getEnergyName(), this.getEnergyStorage(energy).getEnergyStored());
 		}
+	}
+
+	@Override
+	public ResourceLocation[] getModels() {
+		return new ResourceLocation[0];
 	}
 
 	/**

@@ -9,6 +9,8 @@ import appeng.api.config.Upgrades;
 import appeng.api.implementations.items.IItemGroup;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartItem;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -25,10 +27,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @Author Azazell
  */
-public abstract class ItemPartAIBase extends Item implements IPartItem {
+public abstract class ItemPartAIBase extends AIItemRegistrable implements IPartItem {
 
 	public ItemPartAIBase(String id) {
-		super();
+		super(id);
 	}
 
 	@Override
