@@ -1,5 +1,5 @@
 {
   "variants": {
-    "normal": { "model": "appliedintegrations:BServerPort" }
+    "normal": { "model": "appliedintegrations:serverport" }
   }
 }

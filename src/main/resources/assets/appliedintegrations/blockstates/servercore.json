@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "defaults": {
     "textures": {
-      "all": "appliedintegrations:blocks/server_port"
+      "all": "appliedintegrations:blocks/server_core"
     }
   },
   "variants": {

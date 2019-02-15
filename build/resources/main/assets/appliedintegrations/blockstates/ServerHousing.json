@@ -1,5 +1,5 @@
 {
   "variants": {
-    "normal": { "model": "appliedintegrations:BServerHousing" }
+    "normal": { "model": "appliedintegrations:serverhousing" }
   }
 }

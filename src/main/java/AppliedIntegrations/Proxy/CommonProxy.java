@@ -32,7 +32,8 @@ public class CommonProxy
     public void SidedPreInit(){
         ItemEnum.register();
         BlocksEnum.register();
-        //PartEnum.registerAEModels();
+            //PartEnum.registerAEModels();
+        TileEnum.register();
     }
 
     public void SidedInit(){

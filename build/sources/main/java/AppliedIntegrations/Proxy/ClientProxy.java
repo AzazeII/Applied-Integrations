@@ -37,9 +37,11 @@ public class ClientProxy
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void SidedInit(){
+    public void SidedInit() {
         ItemEnum.registerModels();
+
         BlocksEnum.registerModels();
+        BlocksEnum.registerItemModels();
     }
 
     @Override

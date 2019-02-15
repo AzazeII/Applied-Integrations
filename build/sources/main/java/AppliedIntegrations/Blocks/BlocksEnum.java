@@ -17,6 +17,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import java.util.Vector;
+
 public enum BlocksEnum {
     BEI(new BlockEnergyInterface()),
 
@@ -31,6 +33,7 @@ public enum BlocksEnum {
     BLBHousing(new BlockLogicBusHousing("BlockLogicBusHousing", "ME Logic Bus Housing"),TileEnum.TLBHousing),
     BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort);
 
+    private static Vector<ItemBlock> itemBlocks = new Vector<>();
     public BlockAIRegistrable b;
     public TileEnum tileEnum;
 
@@ -46,15 +49,25 @@ public enum BlocksEnum {
     public static void register() {
         for(BlocksEnum blocksEnum : values()){
             ForgeRegistries.BLOCKS.register(blocksEnum.b);
-            ForgeRegistries.ITEMS.register(new ItemBlock(blocksEnum.b).setRegistryName(blocksEnum.b.getRegistryName()));
+
+            ItemBlock block = new ItemBlock(blocksEnum.b);
+            block.setRegistryName(blocksEnum.b.getRegistryName());
+
+            ForgeRegistries.ITEMS.register(block);
+            itemBlocks.add(block);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public static void registerModels() {
-        for (BlocksEnum blocksEnum : values()) {
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(blocksEnum.b
-            ), 0, new ModelResourceLocation(blocksEnum.b.getRegistryName(), "inventory"));
+
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void registerItemModels() {
+        for(ItemBlock itemBlk : itemBlocks){
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk, 0, new ModelResourceLocation(itemBlk.getRegistryName(), "inventory"));
         }
     }
 }

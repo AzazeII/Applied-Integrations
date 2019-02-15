@@ -1,5 +1,5 @@
 {
   "variants": {
-    "normal": { "model": "appliedintegrations:BServerSecurity" }
+    "normal": { "model": "appliedintegrations:serversecurity" }
   }
 }
