@@ -9,6 +9,7 @@ import appeng.api.implementations.items.IStorageCell;
 import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import com.google.common.base.Preconditions;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.Item;
@@ -20,6 +21,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,7 +47,7 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 			return super.onItemRightClick(world, player, hand);
 		ICellInventoryHandler<IAEEnergyStack> handler = AEApi.instance().registries().cell().getCellInventory(held, null, this.getChannel());
 		if (handler == null)
-			throw new NullPointerException("Couldn't get ICellInventoryHandler for Essentia Cell");
+			throw new NullPointerException("Couldn't get ICellInventoryHandler for Energy Cell");
 		if (!handler.getAvailableItems(this.getChannel().createList()).isEmpty()) // Only try to separate cell if empty
 			return super.onItemRightClick(world, player, hand);
 
@@ -67,6 +70,12 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 			player.inventoryContainer.detectAndSendChanges();
 
 		return ActionResult.newResult(EnumActionResult.SUCCESS, ItemStack.EMPTY);
+	}
+
+	@Override
+	public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+		ICellInventoryHandler<IAEEnergyStack> cellInventory = AEApi.instance().registries().cell().getCellInventory(stack, null, this.getChannel());
+		AEApi.instance().client().addCellInformation(cellInventory, tooltip);
 	}
 
 	private Optional<ItemStack> getComponentOfCell(ItemStack stack) {

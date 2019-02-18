@@ -338,7 +338,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     }
     @Override
     public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
-        if (!theGridNode.isActive())
+        if (!gridNode.isActive())
             return new ArrayList<IMEInventoryHandler>();
         return channel == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class) ? this.items : this.fluids;
     }

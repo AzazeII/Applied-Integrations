@@ -49,7 +49,7 @@ public enum TileEnum
 
     public static void register() {
         for(TileEnum tileEnum : values()){
-            GameRegistry.registerTileEntity(tileEnum.getTileClass(), tileEnum.blocksEnum.b.getRegistryName());
+            GameRegistry.registerTileEntity(tileEnum.getTileClass(), tileEnum.getTileID());
         }
     }
 

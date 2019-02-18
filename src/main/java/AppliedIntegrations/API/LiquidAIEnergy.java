@@ -65,6 +65,6 @@ public class LiquidAIEnergy extends Fluid {
     public static final LiquidAIEnergy KU = new LiquidAIEnergy(5,"KU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/KU.png")); // Kinetic units IC2
     public static final LiquidAIEnergy FZ = new LiquidAIEnergy(6,"Charge",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/FZ.png")); // Factorization Charge
     public static final LiquidAIEnergy WA = new LiquidAIEnergy(7,"WA",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/WA.png")); // Watts(from RotaryCraft)
-    public static final LiquidAIEnergy AE = new LiquidAIEnergy(8,"AE",null); // AE fluix energy
+    public static final LiquidAIEnergy AE = new LiquidAIEnergy(8,"AE",null); // AE fluid energy
 
 }

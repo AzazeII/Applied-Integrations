@@ -2,21 +2,16 @@ package AppliedIntegrations.Inventory;
 
 import AppliedIntegrations.API.*;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 
 
-import appeng.me.helpers.BaseActionSource;
-import cofh.redstoneflux.api.IEnergyHandler;
 import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.tile.IEnergySink;
-import ic2.core.block.comp.Energy;
 import ic2.core.block.wiring.TileEntityElectricBlock;
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyStorage;
@@ -209,7 +204,7 @@ class HandlerEnergyStorageBusContainer
             }
             // Ensure the fluid is an Energy
             if (!this.isFluidEnergy(request)) {
-                // Not Energy gas fluid.
+                // Not Energy fluid.
                 return null;
             }
 

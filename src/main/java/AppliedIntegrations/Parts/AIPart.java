@@ -1,4 +1,5 @@
 package AppliedIntegrations.Parts;
+import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Utils.EffectiveSide;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.events.MENetworkChannelsChanged;
@@ -33,6 +35,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
+import appeng.me.helpers.MachineSource;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
@@ -50,6 +53,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import AppliedIntegrations.AIConfigOPT;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -61,28 +65,46 @@ import static AppliedIntegrations.AppliedIntegrations.getNewID;
 public abstract class AIPart
 		implements IPart, IGridHost, IActionHost, IPowerChannelState
 {
+	// NBT Tag
 	private final static String NBT_KEY_OWNER = "Owner";
 
+	// Constant value; Brightness of terminal face
 	protected final static int ACTIVE_FACE_BRIGHTNESS = 0xD000D0;
 
-
+	// Constant value; Brightness of active terminal
 	protected final static int ACTIVE_TERMINAL_LIGHT_LEVEL = 9;
 
+	// Interaction permissions of this part
 	private final SecurityPermissions[] interactionPermissions;
+
+	// Ignore
 	public final int uniquePacketID;
 
+	// Host of this gridblock
 	protected IPartHost host;
 
+	// Tile representation of part
 	protected TileEntity hostTile;
+
+	// Side where part connected
 	private AEPartLocation cableSide;
 
-
+	// Does this machine has channel, and can work?
 	private boolean isActive;
+
+	// Does this machine has power?
 	private boolean isPowered;
 
+	// Player id of owner
 	private int ownerID;
+
+	// Item, that creates this part
 	public final ItemStack associatedItem;
+
+	// Node representation of part
 	protected IGridNode node;
+
+	// Grid block where part placed
 	protected AEPartGridBlock gridBlock;
 
 	protected int capacity = AIConfigOPT.interfaceMaxStorage;
@@ -282,8 +304,6 @@ public abstract class AIPart
 	{
 		return AECableType.SMART;
 	}
-
-
 
 	@Override
 	public void getDrops( final List<ItemStack> drops, final boolean wrenched )
@@ -688,6 +708,7 @@ public abstract class AIPart
 		stream.writeBoolean( this.isPowered() );
 	}
 
+	//*---------*Storage features*---------*//
 	public IEnergyTunnel getChannel(){
 		return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
 	}
@@ -708,5 +729,64 @@ public abstract class AIPart
 		return energyStorage;
     }
 
-    public abstract ResourceLocation[] getModels();
+	/**
+	 * @param resource
+	 * 	Resource to be extracted
+	 * @param actionable
+	 * 	Simulate of Modulate?
+	 * @return
+	 * 	amount extracted
+	 */
+	public int ExtractEnergy(FluidStack resource, Actionable actionable) {
+		if(node == null)
+			return 0;
+		IGrid grid = node.getGrid();
+		if (grid == null) {
+			AILog.info("Grid cannot be initialized, WTF?");
+			return 0;
+		}
+
+		IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
+		if (storage == null) {
+			AILog.info("StorageGrid cannot be initialized, WTF?");
+			return 0;
+		}
+
+		IAEEnergyStack notRemoved = (IAEEnergyStack)storage.getInventory(getChannel()).extractItems(
+				getChannel().createStack(resource), actionable, new MachineSource(this));
+
+		if (notRemoved == null)
+			return resource.amount;
+		return (int)(resource.amount - notRemoved.getStackSize());
+	}
+
+	/**
+	 * @param resource
+	 * 	Resource to be injected
+	 * @param actionable
+	 * 	Simulate or modulate?
+	 * @return
+	 *  amount injected
+	 */
+	public int InjectEnergy(FluidStack resource, Actionable actionable) {
+		IGrid grid = node.getGrid(); // check grid node
+		if (grid == null) {
+			AILog.info("Grid cannot be initialized, WTF?");
+			return 0;
+		}
+
+		IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
+		if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
+			AILog.info("StorageGrid cannot be initialized, WTF?");
+			return 0;
+		}
+
+		IAEEnergyStack returnAmount = storage.getInventory(this.getChannel()).injectItems(
+				getChannel().createStack(resource), actionable, new MachineSource(this));
+
+		if (returnAmount == null)
+			return resource.amount;
+		return (int) (resource.amount - returnAmount.getStackSize());
+	}
+
 }

@@ -9,14 +9,9 @@ import net.minecraft.item.ItemStack;
 public class EnergyStorageComponent
         extends AIItemRegistrable
 {
-
-    private String[] TextureNames = {"storage.component.1k","storage.component.4k","storage.component.16k","storage.component.64k","storage.component.256k",
-            "storage.component.1024k","storage.component.4096k","storage.component.16384k"};
-
-
-    public EnergyStorageComponent()
+    public EnergyStorageComponent(String regName)
     {
-        super("EnergyStorageComponent");
+        super(regName);
         // No damage
         this.setMaxDamage( 0 );
 

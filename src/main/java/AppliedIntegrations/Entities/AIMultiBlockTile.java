@@ -3,16 +3,11 @@ package AppliedIntegrations.Entities;
 import AppliedIntegrations.Entities.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridMultiblock;
-import appeng.api.networking.IGridNode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Iterator;
 
 public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
 
@@ -40,9 +35,9 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     @Override
     public void createAELink() {
         if (!world.isRemote && hasMaster()) {
-            if (theGridNode == null)
-                theGridNode = AEApi.instance().grid().createGridNode(this);
-            theGridNode.updateState();
+            if (gridNode == null)
+                gridNode = AEApi.instance().grid().createGridNode(this);
+            gridNode.updateState();
         }
     }
 

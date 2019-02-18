@@ -9,8 +9,8 @@ item.energyMonitorPartItem.name=ME Energy Storage Monitor
 
 item.formation_core.name=ME Energy Formation Core
 item.annihilation_core.name=ME Energy Annihilation Core
-item.casing.energy.name=ME Energy Cell Casing
-item.storage.energy.terminal.name=ME Wireless Energy Terminal
+item.EnergyStorageCasing.name=ME Energy Cell Casing
+item.WirelessEnergyTerminal.name=ME Wireless Energy Terminal
 item.item.chaos.manipulator.name=ME Network Manipulation Tool
 
 tile.ME Server Security Terminal.name=ME Server Security Terminal
@@ -40,17 +40,18 @@ item.EnergyStorageCell_1024k.name=ME 1024k Energy Cell
 item.EnergyStorageCell_4096k.name=ME 4096k Energy Cell
 item.EnergyStorageCell_16384k.name=ME 16384k Energy Cell
 ME Creative Energy Cell.name=ME Creative Energy Cell
+item.advancedWrench.name=Advanced Network Tool
 
 Energy Stored=Energy Stored
 
-ME 1k Component.name=ME 1k Energy Cell Component
-ME 4k Component.name=ME 4k Energy Cell Component
-ME 16k Component.name=ME 16k Energy Cell Component
-ME 64k Component.name=ME 64k Energy Cell Component
-ME 256k Component.name=ME 256k Energy Cell Component
-ME 1024k Component.name=ME 1024k Energy Cell Component
-ME 4096k Component.name=ME 4096k Energy Cell Component
-ME 16384k Component.name=ME 16384k Energy Cell Component
+EnergyStorageCell_1k.name=ME 1k Energy Cell Component
+EnergyStorageCell_4k.name=ME 4k Energy Cell Component
+EnergyStorageCell_16k.name=ME 16k Energy Cell Component
+EnergyStorageCell_64k.name=ME 64k Energy Cell Component
+EnergyStorageCell_256k.name=ME 256k Energy Cell Component
+EnergyStorageCell_1024k.name=ME 1024k Energy Cell Component
+EnergyStorageCell_4096k.name=ME 4096k Energy Cell Component
+EnergyStorageCell_16384k.name=ME 16384k Energy Cell Component
 
 Used=Used
 of=Of

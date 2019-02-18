@@ -1,16 +1,13 @@
 package AppliedIntegrations.Entities.Server;
 
-import AppliedIntegrations.API.AppliedCoord;
 import AppliedIntegrations.Blocks.MEServer.BlockServerSecurity;
 import AppliedIntegrations.Container.Server.ContainerServerPacketTracer;
 import AppliedIntegrations.Entities.AIMultiBlockTile;
 import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
-import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 
@@ -31,14 +28,14 @@ public class TileServerSecurity extends AIMultiBlockTile {
         BlockServerSecurity block = null;
         if(world.getBlockState(pos).getBlock() instanceof BlockServerSecurity)
           block = (BlockServerSecurity)world.getBlockState(getPos());
-        if(theGridNode != null && block != null)
-            block.isActive = theGridNode.isActive();
+        if(gridNode != null && block != null)
+            block.isActive = gridNode.isActive();
         if(!hasMaster()){
-            if(theGridNode == null)
+            if(gridNode == null)
                 return;
-            if(theGridNode.getGrid() == null)
+            if(gridNode.getGrid() == null)
                 return;
-            IGrid grid = theGridNode.getGrid();
+            IGrid grid = gridNode.getGrid();
             for(IGridNode node : grid.getNodes()){
                 if(node.getMachine() instanceof TileServerCore ) {
                     TileServerCore master = ((TileServerCore)node.getMachine());
@@ -64,9 +61,9 @@ public class TileServerSecurity extends AIMultiBlockTile {
     @Override
     public void createAELink() {
         if (!world.isRemote) {
-            if (theGridNode == null)
-                theGridNode = AEApi.instance().grid().createGridNode(this);
-                theGridNode.updateState();
+            if (gridNode == null)
+                gridNode = AEApi.instance().grid().createGridNode(this);
+                gridNode.updateState();
         }
     }
     @Override

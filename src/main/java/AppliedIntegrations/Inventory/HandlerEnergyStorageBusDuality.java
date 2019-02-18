@@ -2,17 +2,14 @@ package AppliedIntegrations.Inventory;
 
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.Entities.TileEnergyInterface;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import appeng.me.helpers.BaseActionSource;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import net.minecraft.tileentity.TileEntity;
 /**

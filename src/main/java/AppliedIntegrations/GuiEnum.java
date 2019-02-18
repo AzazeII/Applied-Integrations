@@ -5,11 +5,11 @@ import AppliedIntegrations.Entities.AITile;
 import AppliedIntegrations.Entities.Server.TileServerCore;
 import AppliedIntegrations.Entities.Server.TileServerSecurity;
 import AppliedIntegrations.Entities.TileEnergyInterface;
-import AppliedIntegrations.Parts.IO.PartEnergyExport;
-import AppliedIntegrations.Parts.IO.PartEnergyImport;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
-import AppliedIntegrations.Parts.PartEnergyTerminal;
+import AppliedIntegrations.Parts.Energy.PartEnergyExport;
+import AppliedIntegrations.Parts.Energy.PartEnergyImport;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
+import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 

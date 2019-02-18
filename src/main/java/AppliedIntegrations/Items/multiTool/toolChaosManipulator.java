@@ -28,7 +28,8 @@ public class toolChaosManipulator extends AEBasePoweredItem implements IAEWrench
 
         super(10000000D);
 
-        this.setRegistryName("ToolChaos.reg");
+        this.setRegistryName("advancedWrench");
+        this.setUnlocalizedName("advancedWrench");
 
         this.setCreativeTab(AppliedIntegrations.AI);
 
