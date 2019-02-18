@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Network.AIPacket;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.EnumFacing;

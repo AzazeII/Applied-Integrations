@@ -1,13 +1,13 @@
 package AppliedIntegrations.Items.Parts;
 
 import AppliedIntegrations.Items.ItemPartAIBase;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.parts.IPart;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class ItemPartStorage extends ItemPartAIBase {
+public class ItemPartStorage extends ItemPartAIBase<PartEnergyStorage> {
 
     public ItemPartStorage(String id) {
         super(id);
@@ -15,7 +15,7 @@ public class ItemPartStorage extends ItemPartAIBase {
 
     @Nullable
     @Override
-    public IPart createPartFromItemStack(ItemStack itemStack) {
+    public PartEnergyStorage createPartFromItemStack(ItemStack itemStack) {
         return new PartEnergyStorage();
     }
 }

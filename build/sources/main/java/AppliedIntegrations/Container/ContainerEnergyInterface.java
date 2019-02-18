@@ -7,10 +7,8 @@ import AppliedIntegrations.Entities.TileEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import appeng.api.util.AEPartLocation;
-import appeng.container.slot.SlotRestrictedInput;
 import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerFurnace;

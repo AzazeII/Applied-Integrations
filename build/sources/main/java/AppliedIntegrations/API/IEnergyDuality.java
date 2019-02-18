@@ -1,6 +1,9 @@
 package AppliedIntegrations.API;
 
 
+import appeng.api.config.AccessRestriction;
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.energy.IEnergySource;
 import cofh.redstoneflux.api.IEnergyHandler;
@@ -8,6 +11,7 @@ import cofh.redstoneflux.api.IEnergyProvider;
 import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.api.energy.IStrictEnergyAcceptor;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Optional;
 
 @Optional.InterfaceList(value = { // ()____()
@@ -16,13 +20,70 @@ import net.minecraftforge.fml.common.Optional;
         @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource",modid = "IC2",striprefs = true),
         @Optional.Interface(iface = "ic2.api.energy.tile.IKineticSource",modid = "IC2",striprefs = true),
         @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource",modid = "IC2",striprefs = true),
-        @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor",modid = "Mekanism",striprefs = true),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.EnergyStorage",modid = "CoFHAPI",striprefs = true),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyReceiver",modid = "CoFHAPI",striprefs = true),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyProvider",modid = "CoFHAPI",striprefs = true),
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyHandler",modid = "CoFHAPI",striprefs = true)}
-
+        @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor",modid = "Mekanism",striprefs = true)}
 )
 public interface IEnergyDuality extends IEnergyReceiver, IEnergyProvider, IStrictEnergyAcceptor, IEnergySink, IEnergyHandler, IEnergySource, IAEPowerStorage {
 
+    @Override
+    default double injectAEPower(double amt, Actionable mode) {
+        return 0;
+    }
+
+    @Override
+    default double getAEMaxPower() {
+        return 0;
+    }
+
+    @Override
+    default double getAECurrentPower() {
+        return 0;
+    }
+
+    @Override
+    default boolean isAEPublicPowerStorage() {
+        return false;
+    }
+
+    @Override
+    default AccessRestriction getPowerFlow() {
+        return null;
+    }
+
+    @Override
+    default double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
+        return 0;
+    }
+
+    /**
+     * MekansimApi|Energy
+     */
+    @Override
+    default boolean canReceiveEnergy(EnumFacing side) {
+        return true;
+    }
+
+
+    /**
+     * IC2 API
+     */
+    @Override
+    default double injectEnergy(EnumFacing enumFacing, double v, double v1) {
+        return 0;
+    }
+
+    @Override
+    default double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
+        return 0;
+    }
+
+    @Override
+    default boolean canConnectEnergy(EnumFacing from) {
+        // TODO Auto-generated method stub
+        return true;
+    }
+
+    @Override
+    default int getSinkTier() {
+        return 4;
+    }
 }

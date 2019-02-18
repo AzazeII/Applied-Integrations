@@ -2,16 +2,12 @@ package AppliedIntegrations.Parts;
 
 
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.Parts.IO.PartEnergyExport;
-import AppliedIntegrations.Parts.IO.PartEnergyImport;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
+import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIStrings;
 
-import appeng.api.AEApi;
 import appeng.api.config.Upgrades;
-import appeng.api.parts.IPartModel;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.common.Optional;
@@ -32,20 +28,20 @@ import java.util.Map;
 })
 public enum PartEnum
 {
-    EnergyImportBus (AIStrings.Part_EnergyImportBus, PartEnergyImport.class, AppliedIntegrations.modid + ".group.energy.transport",
+    EnergyImportBus (AIStrings.Part_EnergyImportBus, PartEnergyImport.class, ItemEnum.ITEMPARTIMPORT, AppliedIntegrations.modid + ".group.energy.transport",
             generatePair( Upgrades.CAPACITY, 2 ), generatePair( Upgrades.REDSTONE, 1 ), generatePair( Upgrades.SPEED, 2 )),
 
-    EnergyStorageBus (AIStrings.Part_EnergyStorageBus, PartEnergyStorage.class, null, generatePair( Upgrades.INVERTER, 1 )),
+    EnergyStorageBus (AIStrings.Part_EnergyStorageBus, PartEnergyStorage.class, ItemEnum.ITEMPARTSTORAGE, null, generatePair( Upgrades.INVERTER, 1 )),
 
-    EnergyExportBus (AIStrings.Part_EnergyExportBus, PartEnergyExport.class, AppliedIntegrations.modid + ".group.energy.transport",
+    EnergyExportBus (AIStrings.Part_EnergyExportBus, PartEnergyExport.class, ItemEnum.ITEMPARTEXPORT,AppliedIntegrations.modid + ".group.energy.transport",
             generatePair( Upgrades.CAPACITY, 2 ), generatePair( Upgrades.REDSTONE, 1 ), generatePair( Upgrades.SPEED, 2 )),
 
-    EnergyTerminal (AIStrings.Part_EnergyTerminal, PartEnergyTerminal.class),
+    EnergyTerminal (AIStrings.Part_EnergyTerminal, PartEnergyTerminal.class, ItemEnum.ITEMPARTTERMINAL),
 
 
-    EnergyInterface (AIStrings.Part_EnergyInterface, PartEnergyInterface.class),
+    EnergyInterface (AIStrings.Part_EnergyInterface, PartEnergyInterface.class, ItemEnum.ITEMPARTINTERFACE),
 
-    EnergyStorageMonitor (AIStrings.Part_EnergyStorageMonitor, PartEnergyStorageMonitor.class);
+    EnergyStorageMonitor (AIStrings.Part_EnergyStorageMonitor, PartEnergyStorageMonitor.class, ItemEnum.ITEMPARTMONITOR);
     /**
      * Cached enum values
      */
@@ -55,15 +51,17 @@ public enum PartEnum
 
     private Class<? extends AIPart> partClass;
 
+    private ItemEnum parentItem;
+
     private String groupName;
 
     private Map<Upgrades, Integer> upgrades = new HashMap<Upgrades, Integer>();
-    PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass )
+    PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass, ItemEnum parent )
     {
-        this( unlocalizedName, partClass, null );
+        this( unlocalizedName, partClass, null, parent );
     }
 
-    PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass, final String groupName )
+    PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass, final String groupName, ItemEnum parent)
     {
         // Set the localization string
         this.unlocalizedName = unlocalizedName;
@@ -73,12 +71,15 @@ public enum PartEnum
 
         // Set the group name
         this.groupName = groupName;
+
+        // Set item form of part
+        this.parentItem = parent;
     }
 
-    PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass, final String groupName,
-                     final Pair<Upgrades, Integer> ... upgrades )
+    PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass, ItemEnum parent, final String groupName,
+                     final Pair<Upgrades, Integer> ... upgrades)
     {
-        this( unlocalizedName, partClass, groupName );
+        this( unlocalizedName, partClass, groupName, parent );
 
         for( Pair<Upgrades, Integer> pair : upgrades )
         {
@@ -101,20 +102,6 @@ public enum PartEnum
 
         // Get the part
         return PartEnum.VALUES[clamped];
-    }
-
-    public static void registerAEModels() {
-        AEApi.instance().registries().partModels().registerModels(PartEnergyImport.MODELS);
-        /*for(PartEnum partEnum : values()){
-            try {
-                AIPart part = partEnum.partClass.newInstance();
-                AEApi.instance().registries().partModels().registerModels(part.getModels());
-            }catch (IllegalAccessException e){
-
-            }catch (InstantiationException e){
-
-            }
-        }*/
     }
 
     public AIPart createPartInstance(final ItemStack itemStack ) throws InstantiationException, IllegalAccessException
@@ -147,7 +134,7 @@ public enum PartEnum
 
     public ItemStack getStack()
     {
-        return ItemEnum.ITEMPARTINTERFACE.getDamagedStack( this.ordinal() );
+        return parentItem.getDamagedStack( this.ordinal() );
     }
 
     /**

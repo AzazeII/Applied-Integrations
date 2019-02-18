@@ -11,6 +11,7 @@ import AppliedIntegrations.Entities.Server.TileServerHousing;
 import AppliedIntegrations.Entities.Server.TileServerPort;
 import AppliedIntegrations.Entities.Server.TileServerRib;
 import AppliedIntegrations.Entities.Server.TileServerSecurity;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 
 public enum TileEnum
@@ -37,11 +38,19 @@ public enum TileEnum
      * Tile entity class.
      */
     private Class clazz;
+    public BlocksEnum blocksEnum;
 
-    private TileEnum(final String ID, final Class clazz, BlocksEnum AssociatedBlock )
+    TileEnum(final String ID, final Class clazz, BlocksEnum AssociatedBlock )
     {
         this.ID = ID;
         this.clazz = clazz;
+        this.blocksEnum = AssociatedBlock;
+    }
+
+    public static void register() {
+        for(TileEnum tileEnum : values()){
+            GameRegistry.registerTileEntity(tileEnum.getTileClass(), tileEnum.getTileID());
+        }
     }
 
     /**

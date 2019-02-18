@@ -1,5 +1,16 @@
 {
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "all": "appliedintegrations:blocks/server_housing"
+    }
+  },
   "variants": {
-    "normal": { "model": "appliedintegrations:serverhousing" }
+    "normal": {
+      "model": "cube_all"
+    },
+    "inventory": {
+      "model": "cube_all"
+    }
   }
 }

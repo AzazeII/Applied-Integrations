@@ -1,26 +1,26 @@
 package AppliedIntegrations.Entities;
 
-import AppliedIntegrations.Entities.Server.TileServerPort;
-import AppliedIntegrations.Entities.Server.TileServerRib;
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
 import appeng.api.networking.*;
 import appeng.api.networking.security.IActionHost;
-import appeng.api.parts.IPartHost;
+import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
-import ic2.api.energy.tile.IEnergySink;
+import appeng.me.helpers.MachineSource;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
 
@@ -41,7 +41,7 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
 public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable {
 
-    public IGridNode theGridNode = null;
+    public IGridNode gridNode = null;
     public IGridConnection theConnection;
     private IGridBlock gridBlock;
     private IGridNode node = null;
@@ -106,13 +106,13 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public void createAELink() {
         if(world != null) {
             if (!world.isRemote) {
-                if (theGridNode == null) theGridNode = AEApi.instance().grid().createGridNode(this);
-                theGridNode.updateState();
+                if (gridNode == null) gridNode = AEApi.instance().grid().createGridNode(this);
+                gridNode.updateState();
             }
         }
     }
     public void destroyAELink() {
-        if (theGridNode != null) theGridNode.destroy();
+        if (gridNode != null) gridNode.destroy();
     }
     @Override
     public IGridHost getMachine() {
@@ -147,8 +147,8 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     @Override
     public IGridNode getGridNode(AEPartLocation dir) {
         // TODO Auto-generated method stub
-        if(theGridNode==null) createAELink();
-        return theGridNode;
+        if(gridNode ==null) createAELink();
+        return gridNode;
     }
 
     @Override
@@ -187,5 +187,69 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         if(getGridNode() != null)
             return getGridNode().getGrid();
         return null;
+    }
+
+    /**
+     * @param resource
+     * 	Resource to be extracted
+     * @param actionable
+     * 	Simulate of Modulate?
+     * @return
+     * 	amount extracted
+     */
+    public int ExtractEnergy(FluidStack resource, Actionable actionable) {
+        if(node == null)
+            return 0;
+        IGrid grid = node.getGrid();
+        if (grid == null) {
+            AILog.info("Grid cannot be initialized, WTF?");
+            return 0;
+        }
+
+        IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
+        if (storage == null) {
+            AILog.info("StorageGrid cannot be initialized, WTF?");
+            return 0;
+        }
+
+        IAEEnergyStack notRemoved = (IAEEnergyStack)storage.getInventory(getChannel()).extractItems(
+                getChannel().createStack(resource), actionable, new MachineSource(this));
+
+        if (notRemoved == null)
+            return resource.amount;
+        return (int)(resource.amount - notRemoved.getStackSize());
+    }
+
+    public IEnergyTunnel getChannel(){
+        return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+    }
+
+    /**
+     * @param resource
+     * 	Resource to be injected
+     * @param actionable
+     * 	Simulate or modulate?
+     * @return
+     *  amount injected
+     */
+    public int InjectEnergy(FluidStack resource, Actionable actionable) {
+        IGrid grid = node.getGrid(); // check grid node
+        if (grid == null) {
+            AILog.info("Grid cannot be initialized, WTF?");
+            return 0;
+        }
+
+        IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
+        if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
+            AILog.info("StorageGrid cannot be initialized, WTF?");
+            return 0;
+        }
+
+        IAEEnergyStack returnAmount = storage.getInventory(this.getChannel()).injectItems(
+                getChannel().createStack(resource), actionable, new MachineSource(this));
+
+        if (returnAmount == null)
+            return resource.amount;
+        return (int) (resource.amount - returnAmount.getStackSize());
     }
 }

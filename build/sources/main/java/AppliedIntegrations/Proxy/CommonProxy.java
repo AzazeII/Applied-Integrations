@@ -1,10 +1,12 @@
 package AppliedIntegrations.Proxy;
 
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Entities.TileEnum;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Parts.PartEnum;
+import AppliedIntegrations.grid.EnergyTunnel;
 import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;
@@ -32,7 +34,11 @@ public class CommonProxy
     public void SidedPreInit(){
         ItemEnum.register();
         BlocksEnum.register();
-        //PartEnum.registerAEModels();
+            //PartEnum.registerAEModels();
+        TileEnum.register();
+
+        // Register channel **MOST IMPORTANT PART ;) **
+        AEApi.instance().storage().registerStorageChannel(IEnergyTunnel.class, new EnergyTunnel());
     }
 
     public void SidedInit(){

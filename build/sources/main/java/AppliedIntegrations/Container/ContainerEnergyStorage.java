@@ -2,7 +2,7 @@ package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.*;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;

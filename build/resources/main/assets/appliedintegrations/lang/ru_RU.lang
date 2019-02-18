@@ -42,22 +42,23 @@ EnergyStorageCell_256k.name=МЭ 256k Энерго-Ячейка
 EnergyStorageCell_1024k.name=МЭ 1024k Энерго-Ячейка
 EnergyStorageCell_4096k.name=МЭ 4096k Энерго-Ячейка
 EnergyStorageCell_16384k.name=МЭ 16384k Энерго-Ячейка
+item.advancedWrench.name=Улучшенный Сетевой Инструмент
 
 ME Creative Energy Cell.name=MЭ Креативная Энерго-Ячейка
 
-ME 1k Component.name=МЭ 1k Энергетический Компонент Хранения
-ME 4k Component.name=МЭ 4k Энергетический Компонент Хранения
-ME 16k Component.name=МЭ 16k Энергетический Компонент Хранения
-ME 64k Component.name=МЭ 64k Энергетический Компонент Хранения
-ME 256k Component.name=МЭ 256k Энергетический Компонент Хранения
-ME 1024k Component.name=МЭ 1024k Энергетический Компонент Хранения
-ME 4096k Component.name=МЭ 4096k Энергетический Компонент Хранения
-ME 16384k Component.name=МЭ 16384k Энергетический Компонент Хранения
+EnergyStorageCell_1k.name=МЭ 1k Энергетический Компонент Хранения
+EnergyStorageCell_4k.name=МЭ 4k Энергетический Компонент Хранения
+EnergyStorageCell_16k.name=МЭ 16k Энергетический Компонент Хранения
+EnergyStorageCell_64k.name=МЭ 64k Энергетический Компонент Хранения
+EnergyStorageCell_256k.name=МЭ 256k Энергетический Компонент Хранения
+EnergyStorageCell_1024k.name=МЭ 1024k Энергетический Компонент Хранения
+EnergyStorageCell_4096k.name=МЭ 4096k Энергетический Компонент Хранения
+EnergyStorageCell_16384k.name=МЭ 16384k Энергетический Компонент Хранения
 
 item.appliedintegrationsenergy.formation.core.name=МЭ Энерго-Ядро Формирования
 item.appliedintegrationsenergy.annihilation.core.name=МЭ Энерго-Ядро Уничтожения
-item.appliedintegrationscasing.energy.name=МЭ Корпус Энерго-Ячейки
-item.appliedintegrationsstorage.energy.terminal.name=МЭ Беспроводной Терминал Энергии
+item.EnergyStorageCasing.name=МЭ Корпус Энерго-Ячейки
+item.WirelessEnergyTerminal.name=МЭ Беспроводной Терминал Энергии
 item.appliedintegrationsitem.chaos.manipulator.name=Инструмент Манипуляции МЭ Сети
 
 Used=Использовано

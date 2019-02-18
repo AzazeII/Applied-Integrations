@@ -3,9 +3,8 @@ package AppliedIntegrations.Inventory;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Entities.TileEnergyInterface;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.IncludeExclude;
@@ -17,12 +16,9 @@ import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.storage.*;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
-import appeng.me.helpers.BaseActionSource;
 import appeng.me.helpers.MachineSource;
 import appeng.me.helpers.PlayerSource;
-import appeng.util.Platform;
 import net.minecraft.tileentity.TileEntity;
 
 /**

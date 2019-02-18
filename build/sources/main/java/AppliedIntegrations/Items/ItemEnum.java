@@ -28,7 +28,7 @@ public enum ItemEnum {
     ITEMPARTSTORAGE(new ItemPartStorage("energyStoragePartItem")),
     ITEMPARTINTERFACE( new ItemPartInterface("energyInterfacePartItem")),
     ITEMPARTMONITOR( new ItemPartMonitor("energyMonitorPartItem")),
-    ITEMPARTTERMINAL( new ItemPartInterface("energyTerminalPartItem")),
+    ITEMPARTTERMINAL( new ItemPartTerminal("energyTerminalPartItem")),
 
     ITEMENERGYWIRELESSTERMINAL(new itemWirelessTerminal()),
     CHAOSMANIPULATOR( new toolChaosManipulator()),
@@ -42,7 +42,15 @@ public enum ItemEnum {
     ENERGYSTORAGE_16384k( new EnergyStorageCell("EnergyStorageCell_16384k", 16777216)),
 
     ENERGYSTORAGECASING(new EnergyStorageCasing()),
-    ENERGYSTORAGECOMPONENT(new EnergyStorageComponent());
+
+    ENERGYSTORAGECOMPONENT_1k(new EnergyStorageComponent("EnergyStorageComponent_1k")),
+    ENERGYSTORAGECOMPONENT_4k(new EnergyStorageComponent("EnergyStorageComponent_4k")),
+    ENERGYSTORAGECOMPONENT_16k(new EnergyStorageComponent("EnergyStorageComponent_16k")),
+    ENERGYSTORAGECOMPONENT_64k(new EnergyStorageComponent("EnergyStorageComponent_64k")),
+    ENERGYSTORAGECOMPONENT_256k(new EnergyStorageComponent("EnergyStorageComponent_256k")),
+    ENERGYSTORAGECOMPONENT_1024k(new EnergyStorageComponent("EnergyStorageComponent_1024k")),
+    ENERGYSTORAGECOMPONENT_4096k(new EnergyStorageComponent("EnergyStorageComponent_4096k")),
+    ENERGYSTORAGECOMPONENT_16384k(new EnergyStorageComponent("EnergyStorageComponent_16384k"));
 
     private Item item;
 
@@ -74,6 +82,11 @@ public enum ItemEnum {
     public static void register() {
         for(ItemEnum itemEnum : values()){
             ForgeRegistries.ITEMS.register(itemEnum.item);
+
+            if(itemEnum.item instanceof ItemPartAIBase){
+                ItemPartAIBase itemPart = (ItemPartAIBase)itemEnum.item;
+
+            }
         }
     }
 

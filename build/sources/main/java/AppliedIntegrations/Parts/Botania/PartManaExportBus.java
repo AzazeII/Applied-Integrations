@@ -1,6 +1,6 @@
 package AppliedIntegrations.Parts.Botania;
 
-import AppliedIntegrations.Parts.IO.PartEnergyExport;
+import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 
 public class PartManaExportBus extends PartEnergyExport {
 }

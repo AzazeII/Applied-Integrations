@@ -12,7 +12,7 @@ import AppliedIntegrations.Gui.Buttons.InterfaceEnergyButtons;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiChange;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.RedstoneMode;
 import appeng.client.gui.implementations.GuiPriority;
@@ -22,7 +22,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -44,9 +43,9 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 
 	private List<String> mMouseHover = Lists.newArrayList();
 	private String string[] = new String[6];
-	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/InterfaceTile.png");
-	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/InterfacePart.png");
-	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/RFBar.png");
+	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
+	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
+	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
 
 	public PartEnergyInterface part;
 	private TileEnergyInterface tile;
@@ -73,25 +72,14 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 	@resetData
 	public int storage;
 
-	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part, World w, int x, int y, int z, EnumFacing side, EntityPlayer player) {
+	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part, EntityPlayer player) {
 		super(CEI);
 		this.player = player;
-
-		if (side != null) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-			this.dir = side;
-			this.w = w;
-
-		}
 
 		this.Einterface = part;
 		this.part = (PartEnergyInterface) Einterface;
 
 		this.LinkedContainer = (ContainerEnergyInterface) CEI;
-
-
 	}
 
 	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface Einterface, EntityPlayer player) {
