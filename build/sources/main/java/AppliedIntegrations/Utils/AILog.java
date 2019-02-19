@@ -61,10 +61,13 @@ public class AILog
         }
     }
 
-    public static void debugObjects(Object... objects) {
+    public static void debugObjects(boolean useChatLog, Object... objects) {
         for(Object obj : objects){
             try {
-                info(obj.toString());
+                if(!useChatLog)
+                    info(obj.toString());
+                else
+                    chatLog(obj.toString());
             }catch (NullPointerException nullPtr){
                 info("null");
             }

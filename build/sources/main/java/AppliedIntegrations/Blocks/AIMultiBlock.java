@@ -1,14 +1,9 @@
 package AppliedIntegrations.Blocks;
 
-import AppliedIntegrations.Entities.AITile;
-import AppliedIntegrations.Entities.IAIMultiBlock;
+import AppliedIntegrations.TileEntity.IAIMultiBlock;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
-import net.minecraft.block.BlockObserver;
 import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

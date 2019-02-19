@@ -2,18 +2,9 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.Entities.IAIMultiBlock;
-import AppliedIntegrations.Entities.Server.TileServerCore;
-import AppliedIntegrations.Entities.Server.TileServerRib;
-import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
-import AppliedIntegrations.Utils.AILog;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
+import AppliedIntegrations.TileEntity.Server.TileServerCore;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -24,8 +15,6 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
-
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 public class BlockServerCore extends AIMultiBlock {
 

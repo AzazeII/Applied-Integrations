@@ -2,19 +2,14 @@ package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Blocks.BlocksEnum;
-import AppliedIntegrations.Entities.TileEnum;
-import AppliedIntegrations.Items.AIItemRegistrable;
+import AppliedIntegrations.TileEntity.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.grid.EnergyTunnel;
 import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.*;
 

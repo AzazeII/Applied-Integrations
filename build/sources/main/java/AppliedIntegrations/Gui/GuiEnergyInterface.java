@@ -6,7 +6,7 @@ import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
-import AppliedIntegrations.Entities.TileEnergyInterface;
+import AppliedIntegrations.TileEntity.TileEnergyInterface;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.Buttons.InterfaceEnergyButtons;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
@@ -280,7 +280,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 					}
 				}
 			} else if (tile != null) {
-				int height = this.getStorage(LinkedMetric, side) / (tile.getMaxEnergyStored(null) / 83);
+				int height = this.getStorage(LinkedMetric, side) / (tile.getStorage().getMaxEnergyStored() / 83);
 				int v = 6, u = v;
 				// Draw Bar
 				drawTexturedModalRect(pLeft, pTop + (83 - height), v, u, width, height);
@@ -291,7 +291,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 							"Energy Stored",
 							this.getStorage(LinkedMetric, side),
 							this.LinkedMetric.getEnergyName(),
-							this.tile.getMaxEnergyStored(null),
+							this.tile.getStorage().getMaxEnergyStored(),
 							this.LinkedMetric.getEnergyName());
 					drawMouseOver(str);
 				}

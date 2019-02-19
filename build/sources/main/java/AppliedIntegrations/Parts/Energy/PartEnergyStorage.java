@@ -600,26 +600,6 @@ public class PartEnergyStorage
 	}
 
 	@Override
-	public int receiveEnergy(EnumFacing p0, int p1, boolean p2) {
-		return 0;
-	}
-
-	@Override
-	public int getEnergyStored(EnumFacing p0) {
-		return 0;
-	}
-
-	@Override
-	public int getMaxEnergyStored(EnumFacing p0) {
-		return 0;
-	}
-
-	@Override
-	public boolean canConnectEnergy(EnumFacing from) {
-		return false;
-	}
-
-	@Override
 	public double getDemandedEnergy() {
 		return 0;
 	}
@@ -662,9 +642,5 @@ public class PartEnergyStorage
 		return false;
 	}
 
-	@Override
-	public int extractEnergy(EnumFacing enumFacing, int i, boolean b) {
-		return 0;
-	}
 }
 

@@ -1,50 +1,33 @@
 package AppliedIntegrations;
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.API.PlatformEvent;
 import AppliedIntegrations.Blocks.BlocksEnum;
-import AppliedIntegrations.Entities.TileEnum;
-import AppliedIntegrations.Gui.resetData;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.EnergyTunnel;
-import appeng.api.AEApi;
-import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import AppliedIntegrations.Items.*;
-import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.registry.ForgeRegistries;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "7", dependencies = "required-after:appliedenergistics2;required-after:redstoneflux")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8", dependencies = "required-after:appliedenergistics2;required-after:redstoneflux")
 /**
  * @Author Azazell
  */

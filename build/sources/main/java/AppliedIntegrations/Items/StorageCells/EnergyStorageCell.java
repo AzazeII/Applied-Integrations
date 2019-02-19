@@ -1,26 +1,26 @@
 package AppliedIntegrations.Items.StorageCells;
-import AppliedIntegrations.API.AIApi;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Items.AIItemRegistrable;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
+import appeng.api.IAppEngApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
+import appeng.api.storage.ICellInventory;
 import appeng.api.storage.ICellInventoryHandler;
+import appeng.api.storage.ICellRegistry;
 import appeng.api.storage.IStorageChannel;
-import com.google.common.base.Preconditions;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.item.Item;
+import appeng.api.util.IClientHelper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
+import java.util.List;
 
 /**
  * @Author Azazell
@@ -35,42 +35,11 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 		this.setMaxStackSize(1);
 	}
 
+	@SideOnly( Side.CLIENT )
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World world, EntityPlayer player, EnumHand hand) {
-		if (!player.isSneaking())
-			return super.onItemRightClick(world, player, hand);
-		ItemStack held = player.getHeldItem(hand);
-		if (held.isEmpty())
-			return super.onItemRightClick(world, player, hand);
-		ICellInventoryHandler<IAEEnergyStack> handler = AEApi.instance().registries().cell().getCellInventory(held, null, this.getChannel());
-		if (handler == null)
-			throw new NullPointerException("Couldn't get ICellInventoryHandler for Essentia Cell");
-		if (!handler.getAvailableItems(this.getChannel().createList()).isEmpty()) // Only try to separate cell if empty
-			return super.onItemRightClick(world, player, hand);
+	public void addInformation( final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips )
+	{
 
-		Optional<ItemStack> cellComponent = this.getComponentOfCell(held);
-		Optional<ItemStack> emptyCasing = AEApi.instance().definitions().materials().emptyStorageCell().maybeStack(1);
-		if (!cellComponent.isPresent() || !emptyCasing.isPresent())
-			return super.onItemRightClick(world, player, hand);
-
-		InventoryPlayer inv = player.inventory;
-
-		if (hand == EnumHand.MAIN_HAND) // Prevent accidental deletion when in off hand
-			inv.setInventorySlotContents(inv.currentItem, ItemStack.EMPTY);
-		if (!inv.addItemStackToInventory(cellComponent.get()))
-			player.dropItem(cellComponent.get(), false);
-
-		if (!inv.addItemStackToInventory(emptyCasing.get()))
-			player.dropItem(emptyCasing.get(), false);
-
-		if (player.inventoryContainer != null)
-			player.inventoryContainer.detectAndSendChanges();
-
-		return ActionResult.newResult(EnumActionResult.SUCCESS, ItemStack.EMPTY);
-	}
-
-	private Optional<ItemStack> getComponentOfCell(ItemStack stack) {
-		return null;
 	}
 
 	@Override
@@ -85,7 +54,7 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 
 	@Override
 	public int getTotalTypes(@Nonnull ItemStack itemStack) {
-		return maxBytes;
+		return 1;
 	}
 
 	@Override

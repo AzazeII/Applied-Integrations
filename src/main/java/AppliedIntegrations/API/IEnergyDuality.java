@@ -6,9 +6,6 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.energy.IAEPowerStorage;
 import appeng.api.networking.energy.IEnergySource;
-import cofh.redstoneflux.api.IEnergyHandler;
-import cofh.redstoneflux.api.IEnergyProvider;
-import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import net.minecraft.util.EnumFacing;
@@ -22,7 +19,7 @@ import net.minecraftforge.fml.common.Optional;
         @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource",modid = "IC2",striprefs = true),
         @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor",modid = "Mekanism",striprefs = true)}
 )
-public interface IEnergyDuality extends IEnergyReceiver, IEnergyProvider, IStrictEnergyAcceptor, IEnergySink, IEnergyHandler, IEnergySource, IAEPowerStorage {
+public interface IEnergyDuality extends IStrictEnergyAcceptor, IEnergySink, IEnergySource, IAEPowerStorage {
 
     @Override
     default double injectAEPower(double amt, Actionable mode) {
@@ -62,7 +59,6 @@ public interface IEnergyDuality extends IEnergyReceiver, IEnergyProvider, IStric
         return true;
     }
 
-
     /**
      * IC2 API
      */
@@ -74,12 +70,6 @@ public interface IEnergyDuality extends IEnergyReceiver, IEnergyProvider, IStric
     @Override
     default double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
         return 0;
-    }
-
-    @Override
-    default boolean canConnectEnergy(EnumFacing from) {
-        // TODO Auto-generated method stub
-        return true;
     }
 
     @Override

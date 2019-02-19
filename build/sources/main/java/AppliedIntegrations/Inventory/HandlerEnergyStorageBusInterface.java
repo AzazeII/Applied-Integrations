@@ -2,7 +2,7 @@ package AppliedIntegrations.Inventory;
 
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
-import AppliedIntegrations.Entities.TileEnergyInterface;
+import AppliedIntegrations.TileEntity.TileEnergyInterface;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.AEApi;

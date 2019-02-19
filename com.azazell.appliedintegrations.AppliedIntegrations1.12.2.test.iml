@@ -26,7 +26,18 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/EnderIO-1.12.2-5.0.40.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Mekanism-1.12.2-9.4.13.349-api.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="com.azazell.appliedintegrations.AppliedIntegrations1.12.2.api" />
+    <orderEntry type="module" module-name="com.azazell.appliedintegrations.AppliedIntegrations1.12.2.main" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/industrialcraft-2-2.8.110-ex112.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -41,12 +52,10 @@
         <SOURCES />
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="com.azazell.appliedintegrations.AppliedIntegrations1.12.2.main" />
-    <orderEntry type="module" module-name="com.azazell.appliedintegrations.AppliedIntegrations1.12.2.api" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Mekanism-1.12.2-9.4.13.349-api.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/EnderIO-1.12.2-5.0.40.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -55,7 +64,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/industrialcraft-2-2.8.110-ex112.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/embers_1.12.2_0.230.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

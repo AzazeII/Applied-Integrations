@@ -1,10 +1,10 @@
 package AppliedIntegrations;
 
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Entities.AITile;
-import AppliedIntegrations.Entities.Server.TileServerCore;
-import AppliedIntegrations.Entities.Server.TileServerSecurity;
-import AppliedIntegrations.Entities.TileEnergyInterface;
+import AppliedIntegrations.TileEntity.AITile;
+import AppliedIntegrations.TileEntity.Server.TileServerCore;
+import AppliedIntegrations.TileEntity.Server.TileServerSecurity;
+import AppliedIntegrations.TileEntity.TileEnergyInterface;
 import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 import AppliedIntegrations.Parts.Energy.PartEnergyImport;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;

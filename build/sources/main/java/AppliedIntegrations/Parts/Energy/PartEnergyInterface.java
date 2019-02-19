@@ -1,21 +1,18 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.Container.ContainerEnergyInterface;
+import AppliedIntegrations.API.EmberInterfaceStorageDuality;
+import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.PartGui;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Parts.*;
-import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketBarChange;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
 import AppliedIntegrations.Network.Packets.PacketServerFilter;
-
-import AppliedIntegrations.Container.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.GuiEnergyInterface;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.*;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.Network.NetworkHandler;
-
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -28,7 +25,6 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
-
 import appeng.api.networking.events.MENetworkPowerStorage;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
@@ -36,29 +32,20 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
-import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.IStorageMonitorable;
-
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
+import appeng.capabilities.Capabilities;
 import appeng.core.sync.GuiBridge;
 import appeng.helpers.IPriorityHost;
-
-
-import appeng.me.helpers.MachineSource;
-import cofh.redstoneflux.api.IEnergyReceiver;
-import cofh.redstoneflux.impl.EnergyStorage;
 import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
-
 import mekanism.api.energy.IStrictEnergyAcceptor;
-
 import net.minecraft.client.Minecraft;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -66,8 +53,6 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -75,12 +60,17 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
+import teamroots.embers.power.EmberCapabilityProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import static AppliedIntegrations.API.LiquidAIEnergy.*;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
@@ -88,8 +78,6 @@ import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
-
-import net.minecraftforge.fml.common.Optional;
 
 /**
  * @Author Azazell
@@ -106,47 +94,38 @@ import net.minecraftforge.fml.common.Optional;
 		@Optional.Interface(iface = "mcp.mobius.waila.api.*", modid = "Waila",striprefs = true),
 		@Optional.Interface(iface = " com.cout970.magneticraft.api.*",modid = "MagneticCraft"),
 		@Optional.Interface(iface = "com.cout970.magneticraft.api.heat.IHeatTile", modid = "Magneticraft",striprefs = true),
-		@Optional.Interface(iface = "com.cout970.magneticraft.api.heat.prefab.*",modid = "Magneticraft",striprefs = true)}
+		@Optional.Interface(iface = "com.cout970.magneticraft.api.heat.prefab.*",modid = "Magneticraft",striprefs = true),
+		@Optional.Interface(iface = "teamroots.embers.power.IEmberCapability", modid = "embers", striprefs = true),
+		@Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)}
 
 )
 public class PartEnergyInterface
 		extends AIPart
-		implements IEnergyDuality,IInventory,IEnergyInterface, IEnergyReceiver, IInventoryHost,IEnergyMachine,IAEAppEngInventory, IPriorityHost,IGridTickable,IStorageMonitorable,ICraftingProvider,IPowerChannelState {
+		implements IEnergyDuality,IInventory,
+		IEnergyInterface, IInventoryHost,
+		IEnergyMachine,IAEAppEngInventory, IPriorityHost,IGridTickable,
+		IStorageMonitorable,ICraftingProvider,IPowerChannelState {
 
 	private static boolean EUloaded = false;
-	public FlowMode flowMode = FlowMode.Gui;
 
 	// Watts
-	private int omega = 0;
-	private int torque = 0;
 	private long WattPower = 0;
-	private int alpha = 0;
-	private long currentPower = 0;
-
-	// Heat units
-	private int heatBuffer = 0;
-	private int transmitHeat = 0;
 
 	private int priority;
-	private int CurrentEnergyTransfer = 1000;
 
-	protected EnergyStorage RFStorage = new EnergyStorage(capacity,maxTransfer);
-	protected EnergyStorage EUStorage = new EnergyStorage(capacity*4,maxTransfer);
-	protected EnergyStorage JStorage = new EnergyStorage((int)(capacity*2.5),maxTransfer);
+	protected EmberInterfaceStorageDuality EmberStorage = new EmberInterfaceStorageDuality();
+	protected EnergyInterfaceStorage RFStorage = new EnergyInterfaceStorage(this, capacity,maxTransfer);
+	protected EnergyInterfaceStorage EUStorage = new EnergyInterfaceStorage(this,capacity*4,maxTransfer);
+	protected EnergyInterfaceStorage JStorage = new EnergyInterfaceStorage(this, (int)(capacity*2.5),maxTransfer);
 
 	// AE storage
 	private double fluixStorage;
 
-	public int oldHeat;
 
 	// Gui Units
 	private boolean redstoneControlled;
-	private boolean onModuleEnergyChange;
 	public LiquidAIEnergy bar;
-	private double temperature;
-	public boolean SyncMarked = false;
 	private String realContainer;
-	public int hash;
 	private boolean updateRequested;
 
 	public boolean canConnectEnergy(AEPartLocation from) {
@@ -157,14 +136,14 @@ public class PartEnergyInterface
 
 	public GuiEnergyInterface LinkedGui;
 
-    DualityMode DualityMode;
-
 	//Linked array of containers, that syncing this Machine with server
 	private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
 	public LiquidAIEnergy FilteredEnergy = null;
 
 	public PartEnergyInterface() {
 		super(PartEnum.EnergyInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
+		this.EmberStorage.setEmberCapacity(capacity*0.5);
+		this.EmberStorage.setEmber(0.0D);
 	}
 
     // Registring Inventory for slots of upgrades
@@ -230,24 +209,28 @@ public class PartEnergyInterface
 
 	}
 
-
-	public void setEnergyStored(int energy){
-
-		this.RFStorage.setEnergyStored(energy);
-	}
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
 		// Call only on server
 		if(getLogicalSide() == SERVER) {
-			// Link gui
-			this.LinkedGui = (GuiEnergyInterface) this.getClientGuiElement(player);
+			if(!player.isSneaking()) {
+				// Link gui
+				this.LinkedGui = (GuiEnergyInterface) this.getClientGuiElement(player);
 
-			// Open GUI
-			player.openGui(AppliedIntegrations.instance, 1, this.getHostTile().getWorld(), this.getHostTile().
-					getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
+				// TODO: 2019-02-19 FIX GUI open crash
+				// Open GUI
+				//player.openGui(AppliedIntegrations.instance, 1, this.getHostTile().getWorld(), this.getHostTile().
+				//		getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
 
-			// Request gui update
-			updateRequested = true;
+				// Request gui update
+				updateRequested = true;
+			}else{
+				AILog.chatLog("Stored: " + getEnergyStorage(RF).getEnergyStored() + " RF / " + getEnergyStorage(RF).getMaxEnergyStored() + " RF", player);
+				AILog.chatLog("Stored: " + getEnergyStorage(EU).getEnergyStored() + " EU / " + getEnergyStorage(EU).getMaxEnergyStored() + " EU", player);
+				AILog.chatLog("Stored: " + getEnergyStorage(J).getEnergyStored() + " J / " + getEnergyStorage(J).getMaxEnergyStored() + " J", player);
+				AILog.chatLog("Stored: " + getEnergyStorage(Ember).getEnergyStored() + " Ember / " + getEnergyStorage(Ember).getMaxEnergyStored() + " Ember", player);
+
+			}
 		}
 		return true;
 	}
@@ -306,7 +289,7 @@ public class PartEnergyInterface
 	/**
 	 * Cooperate:
 	 */
-	public EnergyStorage getEnergyStorage(LiquidAIEnergy energy) {
+	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy) {
 		if(energy == RF) {
 			return RFStorage;
 		}
@@ -314,59 +297,41 @@ public class PartEnergyInterface
 			return EUStorage;
 		if(energy == J)
 			return JStorage;
-		if (energy == WA){
+		if (energy == Ember)
+			return EmberStorage;
+		if (energy == WA)
 			return null;
-		}
 		return null;
 	}
 
-	public int multiExtract(EnumFacing from, int maxTransfer, LiquidAIEnergy mode){
-		// TODO: 2019-02-17 Integrations with Embers
-
-		TileEntity tile = this.getFacingTile();
-		if(tile instanceof IEnergyReceiver && mode == RF) {
-			IEnergyReceiver FacingRFStorage = (IEnergyReceiver) tile;
-			FacingRFStorage.receiveEnergy(from,maxTransfer,false);
-			return this.getEnergyStorage(mode).extractEnergy(maxTransfer, false);
-		}else if(Loader.isModLoaded("IC2") && tile instanceof IEnergySink && mode == J) {
-			IEnergySink FacingJStorage = (IEnergySink) tile;
-			FacingJStorage.injectEnergy(from,maxTransfer,4);
-			return this.getEnergyStorage(mode).extractEnergy(maxTransfer, false);
-		} else if(tile instanceof IStrictEnergyAcceptor && mode == EU) {
-			IStrictEnergyAcceptor FacingEUStorage = (IStrictEnergyAcceptor) tile;
-			FacingEUStorage.acceptEnergy(from,maxTransfer, false);
-			return this.getEnergyStorage(mode).extractEnergy(maxTransfer, false);
-		}
-		return 0;
-	}
 	/**
 	 * Redstone Flux Api:
 	 */
-	@Override
-	public int receiveEnergy(EnumFacing from, int maxReceive, boolean simulate) {
 
-		boolean shouldUpdate = false;
-			if(this.FilteredEnergy == null || FilteredEnergy != RF || FilteredEnergy != J){
-				if(getFacingTile() instanceof IStrictEnergyAcceptor && FilteredEnergy != J){
-					int r = this.getEnergyStorage(J).receiveEnergy(maxReceive,simulate);
-					return r;
-				}else if(getFacingTile() instanceof IEnergyReceiver && FilteredEnergy != RF){
-					int r = this.getEnergyStorage(RF).receiveEnergy(maxReceive,simulate);
-					return r;
-				}
-			}
-			return 0;
-	}
 	@Override
-	public int getEnergyStored(EnumFacing from)
+	public boolean hasCapability( @Nonnull Capability<?> capability )
 	{
-		return getEnergyStorage(RF).getEnergyStored();
+		if( capability == Capabilities.FORGE_ENERGY ) {
+			return true;
+		}else if(capability == EmberCapabilityProvider.emberCapability){
+			return true;
+		}
+		return super.hasCapability( capability );
 	}
+
+	@Nullable
 	@Override
-	public int getMaxEnergyStored(EnumFacing from)
+	public <T> T getCapability( @Nonnull Capability<T> capability )
 	{
-		return getEnergyStorage(RF).getMaxEnergyStored();
+		if( capability == Capabilities.FORGE_ENERGY ) {
+			return (T) this.getEnergyStorage(RF);
+		}else if(capability == EmberCapabilityProvider.emberCapability){
+			return (T) this.EmberStorage;
+		}
+		return super.getCapability( capability );
 	}
+
+
 
 	/**
 	 * AE2 power system
@@ -501,22 +466,6 @@ public class PartEnergyInterface
 	public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
 
 	}
-	@Override
-	public void readFromNBT( final NBTTagCompound data )
-	{
-		for(LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			if(getEnergyStorage(energy) != null)
-				this.getEnergyStorage(energy).setEnergyStored(data.getInteger("#EnergyTag" + energy.getEnergyName()));
-		}
-	}
-	@Override
-	public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType )
-	{
-		for(LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			if (getEnergyStorage(energy) != null)
-				data.setInteger("#EnergyTag" + energy.getEnergyName(), this.getEnergyStorage(energy).getEnergyStored());
-		}
-	}
 
 	/**
 	 *  marks GUI, as gui of THIS machine
@@ -592,48 +541,35 @@ public class PartEnergyInterface
 			if(Minecraft.getMinecraft().currentScreen instanceof PartGui)
 				this.initGuiCoordinates();
 		}
-			try {
-				if (this.isActive()) {
-						DoInjectDualityWork(Actionable.MODULATE);
-						DoExtractDualityWork(Actionable.MODULATE);
-				}
-			}catch (NullNodeConnectionException e) {
-				AILog.error(e,"Node of PartEnergy Interface, when it's active could not be null.. But it is");
+		/*try {
+			if (this.isActive()) {
+					DoInjectDualityWork(Actionable.MODULATE);
+					DoExtractDualityWork(Actionable.MODULATE);
 			}
-			//Syncing:
-			notifyListenersOfFilterEnergyChange();
-			// Energy Stored with GUi
-			int i = 0;
-			for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-				if (this.getEnergyStorage(energy) != null && this.getEnergyStorage(energy).getEnergyStored() > 0) {
-					this.bar = energy;
-					notifyListenersOfBarFilterChange(this.bar);
-					i += 1;
-				}
+		}catch (NullNodeConnectionException e) {
+			AILog.error(e,"Node of PartEnergy Interface, when it's active could not be null.. But it is");
+		}*/
+		//Syncing:
+		notifyListenersOfFilterEnergyChange();
+		// Energy Stored with GUi
+		int i = 0;
+		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
+			if (this.getEnergyStorage(energy) != null && this.getEnergyStorage(energy).getEnergyStored() > 0) {
+				this.bar = energy;
+				notifyListenersOfBarFilterChange(this.bar);
+				i += 1;
 			}
-			if (i == 0)
-				this.bar = null;
-			// Notify container and gui
-				if (bar != null)
-				// Bar Filter With Gui
-			this.notifyListenersOfEnergyBarChange(this.bar);
+		}
+		if (i == 0)
+			this.bar = null;
+		// Notify container and gui
+			if (bar != null)
+			// Bar Filter With Gui
+		this.notifyListenersOfEnergyBarChange(this.bar);
 
-			this.saveChanges();
+		this.saveChanges();
 		return IDLE;
 	}
-	public void setFlowMode(FlowMode mode){
-		this.flowMode = mode;
-	}
-    @Override
-    public List<String> getWailaBodey(NBTTagCompound tag, List<String> list) {
-    	return null;
-    }
-
-    @Override
-	public NBTTagCompound getWailaTag(NBTTagCompound tag) {
-        tag.setInteger("amount",    this.getEnergyStored(AEPartLocation.INTERNAL.getFacing()));
-        return tag;
-    }
 
     /**
      * Inject energy from facing tile, with mode #Link Action
@@ -683,8 +619,8 @@ public class PartEnergyInterface
 					this.getEnergyStorage(J).modifyEnergyStored(-InjectEnergy(new FluidStack(J, ValuedReceive + Diff), MODULATE));
 				}
 			}
-			// Rotary Craft
-			if (this.WattPower > 0 && this.FilteredEnergy != WA) {
+			// Rotary Craft Commented, until RC 1.12.2 will be released
+			/*if (this.WattPower > 0 && this.FilteredEnergy != WA) {
 				Long ValuedReceive = Math.min(WattPower, this.maxTransfer);
 				// Energy Inject not supports Long
 				if (this.WattPower < Integer.MAX_VALUE) {
@@ -712,7 +648,7 @@ public class PartEnergyInterface
 					}
 				}
 
-			}
+			}*/
 		}
 	}
 
@@ -736,9 +672,10 @@ public class PartEnergyInterface
 
 	private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount) {
 		if(filteredEnergy == RF){
-			if(this.getFacingTile() instanceof IEnergyReceiver){
-				IEnergyReceiver receiver = (IEnergyReceiver)this.getFacingTile();
-				receiver.receiveEnergy(this.getSide().getFacing(),Amount,false);
+			// TODO: 2019-02-19 TRANSLATE IT TO FE SYSTEM SOMEHOW !!?!?!
+			if(this.getFacingTile().hasCapability(Capabilities.FORGE_ENERGY, getSide().getOpposite().getFacing())){
+				IEnergyStorage capability = getFacingTile().getCapability(Capabilities.FORGE_ENERGY, getSide().getOpposite().getFacing());
+				capability.receiveEnergy(Amount,false);
 			}
 		}else if(FilteredEnergy == EU){
 			if(this.getFacingTile() instanceof IEnergySink){
@@ -801,6 +738,14 @@ public class PartEnergyInterface
 		return false;
 	}
 
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		this.getEnergyStorage(Ember).writeToNBT(tag);
+	}
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		this.getEnergyStorage(Ember).readFromNBT(tag);
+	}
 
 	@Override
 	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> channel) {
@@ -919,11 +864,6 @@ public class PartEnergyInterface
 	}
 
 	@Override
-	public boolean canConnectEnergy(EnumFacing enumFacing) {
-		return false;
-	}
-
-	@Override
 	public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
 		return false;
 	}
@@ -941,11 +881,6 @@ public class PartEnergyInterface
 	@Override
 	public ITextComponent getDisplayName() {
 		return null;
-	}
-
-	@Override
-	public int extractEnergy(EnumFacing enumFacing, int i, boolean b) {
-		return 0;
 	}
 }
 
