@@ -3,7 +3,7 @@ package AppliedIntegrations.Gui.ServerGUI;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.Server.ContainerServerPacketTracer;
-import AppliedIntegrations.TileEntity.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkGui;

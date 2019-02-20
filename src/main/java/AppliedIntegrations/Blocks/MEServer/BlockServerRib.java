@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.TileEntity.Server.TileServerRib;
+import AppliedIntegrations.tile.Server.TileServerRib;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;

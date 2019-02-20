@@ -6,7 +6,7 @@ import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
-import AppliedIntegrations.TileEntity.TileEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.Buttons.InterfaceEnergyButtons;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;

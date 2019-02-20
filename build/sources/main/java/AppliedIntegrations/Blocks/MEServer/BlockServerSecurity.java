@@ -2,7 +2,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.TileEntity.Server.TileServerSecurity;
+import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

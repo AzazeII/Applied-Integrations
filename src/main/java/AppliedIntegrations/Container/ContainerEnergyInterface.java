@@ -3,7 +3,7 @@ package AppliedIntegrations.Container;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.TileEntity.TileEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 

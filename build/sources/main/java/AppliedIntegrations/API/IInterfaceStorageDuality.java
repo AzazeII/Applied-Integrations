@@ -6,8 +6,6 @@ import net.minecraft.nbt.NBTTagCompound;
  *  Marking Interface
  */
 public interface IInterfaceStorageDuality {
-
-    // Energy part:
     int getEnergyStored();
     int getMaxEnergyStored();
 
@@ -18,6 +16,4 @@ public interface IInterfaceStorageDuality {
     void readFromNBT(NBTTagCompound tag);
 
     void writeToNBT(NBTTagCompound tag);
-
-    // Ember part:
 }

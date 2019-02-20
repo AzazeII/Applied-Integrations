@@ -1,7 +1,7 @@
 package AppliedIntegrations.Container;
 
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.TileEntity.AITile;
+import AppliedIntegrations.tile.AITile;
 
 import AppliedIntegrations.Utils.AIUtils;
 import appeng.helpers.IPriorityHost;

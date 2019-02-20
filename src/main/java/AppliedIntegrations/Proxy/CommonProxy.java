@@ -2,7 +2,7 @@ package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Blocks.BlocksEnum;
-import AppliedIntegrations.TileEntity.TileEnum;
+import AppliedIntegrations.tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.grid.EnergyTunnel;
 import appeng.api.AEApi;

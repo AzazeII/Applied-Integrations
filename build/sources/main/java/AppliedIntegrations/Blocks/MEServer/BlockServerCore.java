@@ -2,7 +2,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.TileEntity.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

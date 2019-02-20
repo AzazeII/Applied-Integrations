@@ -3,7 +3,7 @@ package AppliedIntegrations.Container.Server;
 
 
 import AppliedIntegrations.Container.AIContainer;
-import AppliedIntegrations.TileEntity.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.Parts.AIPart;
 import net.minecraft.entity.player.EntityPlayer;
 

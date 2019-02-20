@@ -65,6 +65,8 @@ import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Optional;
 import teamroots.embers.power.EmberCapabilityProvider;
+import teamroots.embers.power.IEmberCapability;
+import teamroots.embers.tileentity.TileEntityReceiver;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -89,14 +91,13 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
 		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor",modid = "Mekanism",striprefs = true),
 		@Optional.Interface(iface = "cofh.api.energy.EnergyStorage",modid = "CoFHAPI",striprefs = true),
 		@Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver",modid = "CoFHAPI",striprefs = true),
-		@Optional.Interface(iface = "Reika.RotaryCraft.API.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
-		@Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true),
 		@Optional.Interface(iface = "mcp.mobius.waila.api.*", modid = "Waila",striprefs = true),
 		@Optional.Interface(iface = " com.cout970.magneticraft.api.*",modid = "MagneticCraft"),
 		@Optional.Interface(iface = "com.cout970.magneticraft.api.heat.IHeatTile", modid = "Magneticraft",striprefs = true),
 		@Optional.Interface(iface = "com.cout970.magneticraft.api.heat.prefab.*",modid = "Magneticraft",striprefs = true),
 		@Optional.Interface(iface = "teamroots.embers.power.IEmberCapability", modid = "embers", striprefs = true),
-		@Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)}
+		@Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)
+}
 
 )
 public class PartEnergyInterface
@@ -117,18 +118,18 @@ public class PartEnergyInterface
 	protected EnergyInterfaceStorage RFStorage = new EnergyInterfaceStorage(this, capacity,maxTransfer);
 	protected EnergyInterfaceStorage EUStorage = new EnergyInterfaceStorage(this,capacity*4,maxTransfer);
 	protected EnergyInterfaceStorage JStorage = new EnergyInterfaceStorage(this, (int)(capacity*2.5),maxTransfer);
+    protected EnergyInterfaceStorage TESLAStorage = new EnergyInterfaceStorage(this, capacity, maxTransfer);
 
-	// AE storage
+    // AE storage
 	private double fluixStorage;
 
 
 	// Gui Units
 	private boolean redstoneControlled;
 	public LiquidAIEnergy bar;
-	private String realContainer;
 	private boolean updateRequested;
 
-	public boolean canConnectEnergy(AEPartLocation from) {
+    public boolean canConnectEnergy(AEPartLocation from) {
 		return from==this.getSide();
 	}
 
@@ -142,8 +143,9 @@ public class PartEnergyInterface
 
 	public PartEnergyInterface() {
 		super(PartEnum.EnergyInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
-		this.EmberStorage.setEmberCapacity(capacity*0.5);
-		this.EmberStorage.setEmber(0.0D);
+		EmberStorage.setEmberCapacity(capacity*0.5);
+		EmberStorage.setEmber(0.0D);
+
 	}
 
     // Registring Inventory for slots of upgrades
@@ -224,12 +226,14 @@ public class PartEnergyInterface
 
 				// Request gui update
 				updateRequested = true;
+				getEnergyStorage(Ember).modifyEnergyStored(1);
 			}else{
 				AILog.chatLog("Stored: " + getEnergyStorage(RF).getEnergyStored() + " RF / " + getEnergyStorage(RF).getMaxEnergyStored() + " RF", player);
 				AILog.chatLog("Stored: " + getEnergyStorage(EU).getEnergyStored() + " EU / " + getEnergyStorage(EU).getMaxEnergyStored() + " EU", player);
 				AILog.chatLog("Stored: " + getEnergyStorage(J).getEnergyStored() + " J / " + getEnergyStorage(J).getMaxEnergyStored() + " J", player);
 				AILog.chatLog("Stored: " + getEnergyStorage(Ember).getEnergyStored() + " Ember / " + getEnergyStorage(Ember).getMaxEnergyStored() + " Ember", player);
 
+				AILog.chatLog(hostTile.toString());
 			}
 		}
 		return true;
@@ -290,27 +294,23 @@ public class PartEnergyInterface
 	 * Cooperate:
 	 */
 	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy) {
-		if(energy == RF) {
+		if(energy == RF)
 			return RFStorage;
-		}
 		if(energy == EU)
 			return EUStorage;
 		if(energy == J)
 			return JStorage;
 		if (energy == Ember)
 			return EmberStorage;
-		if (energy == WA)
-			return null;
+		if (energy == TESLA)
+		    return TESLAStorage;
 		return null;
 	}
-
-	/**
-	 * Redstone Flux Api:
-	 */
 
 	@Override
 	public boolean hasCapability( @Nonnull Capability<?> capability )
 	{
+		// Register FE capability
 		if( capability == Capabilities.FORGE_ENERGY ) {
 			return true;
 		}else if(capability == EmberCapabilityProvider.emberCapability){
@@ -323,10 +323,11 @@ public class PartEnergyInterface
 	@Override
 	public <T> T getCapability( @Nonnull Capability<T> capability )
 	{
+		// Register FE capability
 		if( capability == Capabilities.FORGE_ENERGY ) {
 			return (T) this.getEnergyStorage(RF);
 		}else if(capability == EmberCapabilityProvider.emberCapability){
-			return (T) this.EmberStorage;
+			return (T) this.getEnergyStorage(Ember);
 		}
 		return super.getCapability( capability );
 	}
@@ -549,6 +550,21 @@ public class PartEnergyInterface
 		}catch (NullNodeConnectionException e) {
 			AILog.error(e,"Node of PartEnergy Interface, when it's active could not be null.. But it is");
 		}*/
+
+		/** Manually take ember energy, as receptor code is broken:
+         * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
+         * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
+         */
+
+		if(getFacingTile() instanceof TileEntityReceiver){
+		    TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
+            IEmberCapability emberStorage = emberReceptor.capability;
+
+            if(emberStorage.getEmber() > 0){
+                emberStorage.removeAmount(getEnergyStorage(Ember).receiveEnergy((int)emberStorage.getEmber(), true), true);
+            }
+        }
+
 		//Syncing:
 		notifyListenersOfFilterEnergyChange();
 		// Energy Stored with GUi
@@ -562,10 +578,10 @@ public class PartEnergyInterface
 		}
 		if (i == 0)
 			this.bar = null;
-		// Notify container and gui
-			if (bar != null)
+			// Notify container and gui
+		if (bar != null)
 			// Bar Filter With Gui
-		this.notifyListenersOfEnergyBarChange(this.bar);
+			this.notifyListenersOfEnergyBarChange(this.bar);
 
 		this.saveChanges();
 		return IDLE;
@@ -672,7 +688,6 @@ public class PartEnergyInterface
 
 	private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount) {
 		if(filteredEnergy == RF){
-			// TODO: 2019-02-19 TRANSLATE IT TO FE SYSTEM SOMEHOW !!?!?!
 			if(this.getFacingTile().hasCapability(Capabilities.FORGE_ENERGY, getSide().getOpposite().getFacing())){
 				IEnergyStorage capability = getFacingTile().getCapability(Capabilities.FORGE_ENERGY, getSide().getOpposite().getFacing());
 				capability.receiveEnergy(Amount,false);
@@ -767,8 +782,7 @@ public class PartEnergyInterface
 	private AIGridNodeInventory slotInventory = new AIGridNodeInventory("slotInventory",9,1,this);
 
 	/**
-	 *
-	 * @return
+	 * @return;
 	 */
 	@Override
 	public int getSizeInventory() {
@@ -854,9 +868,7 @@ public class PartEnergyInterface
 		return this.FilteredEnergy;
 	}
 
-	public void setRealContainer(String realContainer) {
-		this.realContainer=realContainer;
-	}
+	public void setRealContainer(String realContainer) { }
 
 	@Override
 	public LiquidAIEnergy getFilter(int index) {

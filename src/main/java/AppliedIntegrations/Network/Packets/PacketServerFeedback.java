@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.TileEntity.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
 import AppliedIntegrations.Network.AIPacket;
 import appeng.api.config.SecurityPermissions;

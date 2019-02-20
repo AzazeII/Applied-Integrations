@@ -2,7 +2,7 @@ package AppliedIntegrations.Blocks;
 
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.TileEntity.TileEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;

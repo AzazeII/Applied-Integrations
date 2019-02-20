@@ -6,7 +6,7 @@ import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusHousing;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusPort;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusRibs;
 import AppliedIntegrations.Blocks.MEServer.*;
-import AppliedIntegrations.TileEntity.TileEnum;
+import AppliedIntegrations.tile.TileEnum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
