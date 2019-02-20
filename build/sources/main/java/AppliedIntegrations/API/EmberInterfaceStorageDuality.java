@@ -11,21 +11,6 @@ import teamroots.embers.power.DefaultEmberCapability;
         @Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)})
 public class EmberInterfaceStorageDuality extends DefaultEmberCapability implements IInterfaceStorageDuality {
     @Override
-    public int getEnergyStored() {
-        return (int)getEmber();
-    }
-
-    @Override
-    public int getMaxEnergyStored() {
-        return (int)getEmberCapacity();
-    }
-
-    @Override
-    public int receiveEnergy(int amount, boolean b) {
-        return (int)addAmount(amount, b);
-    }
-
-    @Override
     public void modifyEnergyStored(int i) {
         if(i == 0)
             return;
@@ -33,5 +18,25 @@ public class EmberInterfaceStorageDuality extends DefaultEmberCapability impleme
             addAmount(i, true);
         else
             removeAmount(i, true);
+    }
+
+    @Override
+    public double getStored() {
+        return getEmber();
+    }
+
+    @Override
+    public double getMaxStored() {
+        return getEmberCapacity();
+    }
+
+    @Override
+    public double receive(double value, boolean simulate) {
+        return addAmount(value, !simulate);
+    }
+
+    @Override
+    public double extract(double value, boolean simulate) {
+        return removeAmount(value, !simulate);
     }
 }

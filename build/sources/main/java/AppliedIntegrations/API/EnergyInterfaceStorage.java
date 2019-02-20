@@ -80,4 +80,24 @@ public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceS
     public void writeToNBT(NBTTagCompound tag) {
         this.setEnergyStored(tag.getInteger("#ENERGY_TAG"));
     }
+
+    @Override
+    public double getStored() {
+        return getEnergyStored();
+    }
+
+    @Override
+    public double getMaxStored() {
+        return getMaxEnergyStored();
+    }
+
+    @Override
+    public double receive(double value, boolean simulate) {
+        return receiveEnergy((int)value, simulate);
+    }
+
+    @Override
+    public double extract(double value, boolean simulate) {
+        return extractEnergy((int)value, simulate);
+    }
 }

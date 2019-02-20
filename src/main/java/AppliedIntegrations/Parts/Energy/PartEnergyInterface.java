@@ -45,6 +45,7 @@ import ic2.api.energy.event.EnergyTileLoadEvent;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.api.energy.IStrictEnergyAcceptor;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,8 +65,10 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.Optional;
+import teamroots.embers.block.BlockEmberEmitter;
 import teamroots.embers.power.EmberCapabilityProvider;
 import teamroots.embers.power.IEmberCapability;
+import teamroots.embers.tileentity.TileEntityEmitter;
 import teamroots.embers.tileentity.TileEntityReceiver;
 
 import javax.annotation.Nonnull;
@@ -226,12 +229,12 @@ public class PartEnergyInterface
 
 				// Request gui update
 				updateRequested = true;
-				getEnergyStorage(Ember).modifyEnergyStored(1);
+				AILog.chatLog(getFacingTile().toString());
 			}else{
-				AILog.chatLog("Stored: " + getEnergyStorage(RF).getEnergyStored() + " RF / " + getEnergyStorage(RF).getMaxEnergyStored() + " RF", player);
-				AILog.chatLog("Stored: " + getEnergyStorage(EU).getEnergyStored() + " EU / " + getEnergyStorage(EU).getMaxEnergyStored() + " EU", player);
-				AILog.chatLog("Stored: " + getEnergyStorage(J).getEnergyStored() + " J / " + getEnergyStorage(J).getMaxEnergyStored() + " J", player);
-				AILog.chatLog("Stored: " + getEnergyStorage(Ember).getEnergyStored() + " Ember / " + getEnergyStorage(Ember).getMaxEnergyStored() + " Ember", player);
+				AILog.chatLog("Stored: " + getEnergyStorage(RF).getStored() + " RF / " + getEnergyStorage(RF).getMaxStored() + " RF", player);
+				AILog.chatLog("Stored: " + getEnergyStorage(EU).getStored() + " EU / " + getEnergyStorage(EU).getMaxStored() + " EU", player);
+				AILog.chatLog("Stored: " + getEnergyStorage(J).getStored() + " J / " + getEnergyStorage(J).getMaxStored() + " J", player);
+				AILog.chatLog("Stored: " + getEnergyStorage(Ember).getStored() + " Ember / " + getEnergyStorage(Ember).getMaxStored() + " Ember", player);
 			}
 		}
 		return true;
@@ -437,18 +440,18 @@ public class PartEnergyInterface
 	 */
 	@Override
 	public double getDemandedEnergy() {
-		return this.capacity*4-this.getEnergyStorage(EU).getEnergyStored();
+		return this.capacity*4-this.getEnergyStorage(EU).getStored();
 	}
 
 	@Override
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		if(this.bar == null || this.bar == EU) {
 			if(this.FilteredEnergy != EU) {
-				getEnergyStorage(EU).receiveEnergy((int) amount, false);
+				getEnergyStorage(EU).receive((int) amount, false);
 				return 0;
 			}
 		}
-		return getEnergyStorage(EU).getEnergyStored();
+		return getEnergyStorage(EU).getStored();
 	}
 
 	@Override
@@ -556,10 +559,27 @@ public class PartEnergyInterface
 
 		if(getFacingTile() instanceof TileEntityReceiver){
 		    TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
-            IEmberCapability emberStorage = emberReceptor.capability;
+            IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
 
-            if(emberStorage.getEmber() > 0){
-                emberStorage.removeAmount(getEnergyStorage(Ember).receiveEnergy((int)emberStorage.getEmber(), true), true);
+            // Check if facing is correct
+		    if(state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
+                IEmberCapability emberStorage = emberReceptor.capability;
+
+                if (emberStorage.getEmber() > 0) {
+                    emberStorage.removeAmount(getEnergyStorage(Ember).receive((int) emberStorage.getEmber(), false), true);
+                }
+            }
+        }else if(getFacingTile() instanceof TileEntityEmitter){
+		    TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
+		    IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
+
+		    // Check if facing is correct
+		    if(state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()){
+                IEmberCapability emberStorage = emberEmitter.capability;
+
+                if (((EmberInterfaceStorageDuality)getEnergyStorage(Ember)).getEmber() > 0) {
+                    getEnergyStorage(Ember).extract((int)emberStorage.addAmount(getEnergyStorage(Ember).getStored(), true), false);
+                }
             }
         }
 
@@ -568,7 +588,7 @@ public class PartEnergyInterface
 		// Energy Stored with GUi
 		int i = 0;
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			if (this.getEnergyStorage(energy) != null && this.getEnergyStorage(energy).getEnergyStored() > 0) {
+			if (this.getEnergyStorage(energy) != null && getEnergyStorage(energy).getStored() > 0) {
 				this.bar = energy;
 				notifyListenersOfBarFilterChange(this.bar);
 				i += 1;
@@ -601,9 +621,9 @@ public class PartEnergyInterface
 		// Is it modulate, or matrix?
 		if (action == Actionable.MODULATE) {
 			// RF Api
-			if (this.getEnergyStorage(RF).getEnergyStored() > 0 && this.getEnergyStorage(J).getEnergyStored() == 0 && this.FilteredEnergy != RF) {
-
-				int ValuedReceive = Math.min(this.getEnergyStorage(RF).getEnergyStored(), this.maxTransfer);
+			if (this.getEnergyStorage(RF).getStored() > 0 && this.getEnergyStorage(J).getStored() == 0 && this.FilteredEnergy != RF) {
+                // We can cast double to int, as RFAPI only operates int-energy
+				int ValuedReceive = (int)Math.min(this.getEnergyStorage(RF).getStored(), this.maxTransfer);
 				int Diff = InjectEnergy(new FluidStack(RF, ValuedReceive), SIMULATE) - ValuedReceive;
 				if (Diff == 0) {
 					int amountToReflect = InjectEnergy(new FluidStack(RF, ValuedReceive + Diff), MODULATE);
@@ -612,9 +632,9 @@ public class PartEnergyInterface
 				}
 			}
 			// IC2
-			if (this.getEnergyStorage(EU).getEnergyStored() > 0 && this.FilteredEnergy != EU) {
+			if (this.getEnergyStorage(EU).getStored() > 0 && this.FilteredEnergy != EU) {
 
-				int ValuedReceive = Math.min(this.getEnergyStorage(EU).getEnergyStored(), this.maxTransfer);
+				int ValuedReceive = (int)Math.min(this.getEnergyStorage(EU).getStored(), this.maxTransfer);
 				int Diff = InjectEnergy(new FluidStack(EU, ValuedReceive), SIMULATE) - ValuedReceive;
 				if (Diff == 0) {
 					// Insert only that amount, which network can inject
@@ -623,9 +643,9 @@ public class PartEnergyInterface
 				}
 			}
 			// Mekanism
-			if (this.getEnergyStorage(J).getEnergyStored() > 0 && this.FilteredEnergy != J) {
+			if (this.getEnergyStorage(J).getStored() > 0 && this.FilteredEnergy != J) {
 
-				int ValuedReceive = Math.min(this.getEnergyStorage(J).getEnergyStored(), this.maxTransfer);
+				int ValuedReceive = (int)Math.min(this.getEnergyStorage(J).getStored(), this.maxTransfer);
 				int Diff = InjectEnergy(new FluidStack(J, ValuedReceive), SIMULATE) - ValuedReceive;
 				if (Diff == 0) {
 					// Insert only that amount, which network can inject
@@ -674,7 +694,7 @@ public class PartEnergyInterface
 		}
 		if(action == Actionable.MODULATE){
 			if(FilteredEnergy != null) {
-				int valuedReceive = Math.min(this.getEnergyStorage(FilteredEnergy).getEnergyStored(), this.maxTransfer);
+				int valuedReceive = (int)Math.min(this.getEnergyStorage(FilteredEnergy).getStored(), this.maxTransfer);
 				int diff =  valuedReceive - this.ExtractEnergy(new FluidStack(FilteredEnergy,valuedReceive),SIMULATE) ;
 				if(diff == 0) {
 					this.getEnergyStorage(this.FilteredEnergy).modifyEnergyStored(this.ExtractEnergy(new FluidStack(FilteredEnergy, valuedReceive), MODULATE));

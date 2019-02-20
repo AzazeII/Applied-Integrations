@@ -31,7 +31,7 @@ public class PacketProgressBar extends AIPacket<PacketProgressBar> {
 
             // Check if we are updating correct GUI
             if(GEI.getX() == x && GEI.getY() == y && GEI.getZ() == z && GEI.getSide() == side && GEI.getWorld() == w) {
-                GEI.storage = sender.getEnergyStorage(sender.bar).getEnergyStored();
+                GEI.storage = (int) sender.getEnergyStorage(sender.bar).getStored();
             }
         }
     }
