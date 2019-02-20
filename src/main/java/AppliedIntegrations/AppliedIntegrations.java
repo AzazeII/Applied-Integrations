@@ -27,7 +27,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.1", dependencies = "required-after:appliedenergistics2;required-after:redstoneflux")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.1", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */

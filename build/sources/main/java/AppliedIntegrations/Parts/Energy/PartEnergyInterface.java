@@ -87,16 +87,12 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
 /**
  * @Author Azazell
  */
-@net.minecraftforge.fml.common.Optional.InterfaceList(value = { //0_lol
-		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent",modid = "IC2",striprefs = true),
-		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink",modid = "IC2",striprefs = true),
+@net.minecraftforge.fml.common.Optional.InterfaceList(value = {
+		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent",modid = "ic2",striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink",modid = "ic2",striprefs = true),
 		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage",modid = "Mekanism",striprefs = true),
 		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor",modid = "Mekanism",striprefs = true),
-		@Optional.Interface(iface = "cofh.api.energy.EnergyStorage",modid = "CoFHAPI",striprefs = true),
-		@Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver",modid = "CoFHAPI",striprefs = true),
 		@Optional.Interface(iface = "mcp.mobius.waila.api.*", modid = "Waila",striprefs = true),
-		@Optional.Interface(iface = " com.cout970.magneticraft.api.*",modid = "MagneticCraft"),
-		@Optional.Interface(iface = "com.cout970.magneticraft.api.heat.IHeatTile", modid = "Magneticraft",striprefs = true),
 		@Optional.Interface(iface = "com.cout970.magneticraft.api.heat.prefab.*",modid = "Magneticraft",striprefs = true),
 		@Optional.Interface(iface = "teamroots.embers.power.IEmberCapability", modid = "embers", striprefs = true),
 		@Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)
@@ -120,7 +116,7 @@ public class PartEnergyInterface
 	protected EmberInterfaceStorageDuality EmberStorage = new EmberInterfaceStorageDuality();
 	protected EnergyInterfaceStorage RFStorage = new EnergyInterfaceStorage(this, capacity,maxTransfer);
 	protected EnergyInterfaceStorage EUStorage = new EnergyInterfaceStorage(this,capacity*4,maxTransfer);
-	protected EnergyInterfaceStorage JStorage = new EnergyInterfaceStorage(this, (int)(capacity*2.5),maxTransfer);
+	protected JouleInterfaceStorage JStorage = new JouleInterfaceStorage(this, (int)(capacity*2.5));
     protected EnergyInterfaceStorage TESLAStorage = new EnergyInterfaceStorage(this, capacity, maxTransfer);
 
     // AE storage
@@ -316,6 +312,10 @@ public class PartEnergyInterface
 			return true;
 		}else if(capability == EmberCapabilityProvider.emberCapability){
 			return true;
+		}else if(capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
+				 capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
+				 capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY){
+			return true;
 		}
 		return super.hasCapability( capability );
 	}
@@ -324,11 +324,18 @@ public class PartEnergyInterface
 	@Override
 	public <T> T getCapability( @Nonnull Capability<T> capability )
 	{
-		// Register FE capability
+		// FE (RF) Capability
 		if( capability == Capabilities.FORGE_ENERGY ) {
 			return (T) this.getEnergyStorage(RF);
+		// Ember capability
 		}else if(capability == EmberCapabilityProvider.emberCapability){
 			return (T) this.getEnergyStorage(Ember);
+		// Joule capability
+		}else if(capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
+				capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
+				capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY){
+			return (T) this.getEnergyStorage(J);
+		// EU capability
 		}
 		return super.getCapability( capability );
 	}

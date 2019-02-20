@@ -50,9 +50,8 @@ import static appeng.api.config.Actionable.SIMULATE;
  * @Author Azazell
  */
 @Optional.InterfaceList(value = {
-		@Optional.Interface(iface = "ic2.api.energy.tile.*", modid = "IC2", striprefs = true),
-		@Optional.Interface(iface = "cofh.api.energy.EnergyStorage",modid = "CoFHAPI",striprefs = true),
-		@Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver",modid = "CoFHAPI",striprefs = true)
+		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "ic2", striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyEmitter", modid = "ic2", striprefs = true)
 })
 public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnergyDuality,
 		IEnergySink,INetworkToolAgent,IEnergyInterface,IStorageMonitorable,IInventoryHost {

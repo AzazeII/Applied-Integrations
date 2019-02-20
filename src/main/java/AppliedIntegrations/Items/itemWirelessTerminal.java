@@ -5,13 +5,17 @@ import appeng.api.config.Actionable;
 import appeng.api.features.INetworkEncodable;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import cofh.redstoneflux.api.IEnergyContainerItem;
-import cofh.redstoneflux.impl.EnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.energy.EnergyStorage;
+import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
+@Optional.InterfaceList(value = {
+        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux", striprefs = true)
+})
 
 public class itemWirelessTerminal extends AIItemRegistrable implements INetworkEncodable,IAEItemPowerStorage, IEnergyContainerItem {
     private static String EncryptionKey;
