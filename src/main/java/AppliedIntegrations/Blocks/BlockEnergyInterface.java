@@ -3,16 +3,20 @@ package AppliedIntegrations.Blocks;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.tile.TileEnergyInterface;
+import appeng.tile.misc.TileInterface;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -61,7 +65,7 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 			} else if (block != null && entity instanceof TileEntity && p != null) {
 				// if not sneaking open gui
 				if (!p.isSneaking()) {
-					//p.openGui(AppliedIntegrations.instance, 2, world, pos.getX(), pos.getY(), pos.getZ());
+					p.openGui(AppliedIntegrations.instance, 2, world, pos.getX(), pos.getY(), pos.getZ());
 					return true;
 				}
 			}

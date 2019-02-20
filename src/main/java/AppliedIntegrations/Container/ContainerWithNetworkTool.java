@@ -108,6 +108,7 @@ super(player);
             this.lastUpgradeSlot = upgradeSlot.slotNumber;
         }
     }
+
     protected boolean hasNetworkTool = false;
     public ContainerWithNetworkTool(AIOPart part, final EntityPlayer player)
     {

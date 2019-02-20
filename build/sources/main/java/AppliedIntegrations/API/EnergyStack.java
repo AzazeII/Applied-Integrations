@@ -10,8 +10,8 @@ import javax.annotation.Nullable;
  * @Author Azazell
  */
 public class EnergyStack implements IEnergyStack{
-	private String energy;
-	private long amount;
+	private LiquidAIEnergy energy;
+	public long amount;
 
 	public EnergyStack(LiquidAIEnergy energy, long amount) {
 		this(energy != null ? energy.getTag() : "", amount);
@@ -20,12 +20,12 @@ public class EnergyStack implements IEnergyStack{
 	public EnergyStack(String energy, long amount) {
 		if (energy == null || energy.isEmpty())
 			throw new IllegalArgumentException("Energy cannot be null");
-		this.energy = energy;
+		this.energy = LiquidAIEnergy.getEnergy(energy);
 		this.amount = amount;
 	}
 
 	private EnergyStack(EnergyStack old) {
-		this.energy = old.getEnergyTag();
+		this.energy = old.getEnergy();
 		this.amount = old.getAmount();
 	}
 
@@ -38,7 +38,9 @@ public class EnergyStack implements IEnergyStack{
 	}
 
 	public String getEnergyTag() {
-		return this.energy;
+		if(energy != null)
+			return this.energy.getTag();
+		return null;
 	}
 
 	public LiquidAIEnergy getEnergy() {
@@ -48,19 +50,21 @@ public class EnergyStack implements IEnergyStack{
 	@Nonnull
 	@Override
 	public String getEnergyName() {
+		if(energy != null)
+			return energy.getEnergyName();
 		return null;
 	}
 
 	@Nonnull
 	@Override
 	public String getEnergyName(@Nullable EntityPlayer player) {
-		return null;
+		return getEnergyName();
 	}
 
 	@Nonnull
 	@Override
 	public String getChatColor() {
-		return null;
+		return "red";
 	}
 
 	@Override
@@ -93,18 +97,21 @@ public class EnergyStack implements IEnergyStack{
 
 	@Override
 	public void setEnergy(@Nullable LiquidAIEnergy energy) {
-
+		if(energy != null)
+			this.energy = energy;
+		else
+			this.energy = null;
 	}
 
 	@Override
 	public void setStackSize(long size) {
-
+		amount = size;
 	}
 
 	@Nonnull
 	@Override
 	public NBTTagCompound writeToNBT(@Nonnull NBTTagCompound data) {
-		return null;
+		return write(data);
 	}
 
 	@Override
@@ -127,7 +134,7 @@ public class EnergyStack implements IEnergyStack{
 	}
 
 	public void read(NBTTagCompound tag) {
-		this.energy = tag.getString("Energy");
+		this.energy = LiquidAIEnergy.getEnergy(tag.getString("Energy"));
 		this.amount = tag.getLong("Amount");
 	}
 

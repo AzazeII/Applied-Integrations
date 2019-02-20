@@ -31,7 +31,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @Author Azazell
  */
-public class AppliedIntegrations implements IGuiHandler {
+public class AppliedIntegrations {
 
 	public static Configuration AIConfig;
 	public static int Difficulty;
@@ -82,7 +82,7 @@ public class AppliedIntegrations implements IGuiHandler {
 	public void init(FMLInitializationEvent event)
 	{
 		// Register GuiHandler
-		NetworkRegistry.INSTANCE.registerGuiHandler(this,this);
+		NetworkRegistry.INSTANCE.registerGuiHandler(this,new AIGuiHandler());
 		// Register objects, that can be moved by spatial cards io
 		proxy.registerSpatialIOMovables();
 		proxy.SidedInit();
@@ -109,26 +109,6 @@ public class AppliedIntegrations implements IGuiHandler {
 	@SideOnly(Side.CLIENT)
 	void registerPartModels(){
 		PartModelEnum.registerModels();
-	}
-
-	@Override
-	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		for(GuiEnum guiEnum : GuiEnum.values()){
-			if (guiEnum.ID == ID) {
-					return guiEnum.GetServerGuiElement(ID, player, world, x, y, z, guiEnum.isPart);
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-		for(GuiEnum guiEnum : GuiEnum.values()){
-			if (guiEnum.ID == ID) {
-				return guiEnum.GetClientGuiElement(ID, player, world, x, y, z, guiEnum.isPart);
-			}
-		}
-		return null;
 	}
 
 	public static Side getLogicalSide(){

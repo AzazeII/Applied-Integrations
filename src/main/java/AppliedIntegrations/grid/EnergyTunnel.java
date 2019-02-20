@@ -24,7 +24,7 @@ public class EnergyTunnel implements IEnergyTunnel {
         if (o instanceof LiquidAIEnergy) {
             return this.createStack(new EnergyStack((LiquidAIEnergy) o, Integer.MAX_VALUE));
         } else if (o instanceof EnergyStack) {
-            return AEEnergyStack.fromEnergyStack((EnergyStack) o);
+            return AEEnergyStack.fromStack((EnergyStack) o);
         } else if (o instanceof AEEnergyStack) {
             return ((AEEnergyStack) o).copy();
         }

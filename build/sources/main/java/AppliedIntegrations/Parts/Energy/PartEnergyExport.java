@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+import AppliedIntegrations.API.EnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
@@ -31,7 +32,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 
@@ -150,31 +150,31 @@ public class PartEnergyExport extends AIOPart {
 		int valuedTransfer = 5000;
 		if (tile instanceof IStrictEnergyAcceptor) {
 			IStrictEnergyAcceptor acceptor = (IStrictEnergyAcceptor) tile;
-			int diff = this.ExtractEnergy(new FluidStack(J, valuedTransfer), SIMULATE);
+			int diff = this.ExtractEnergy(new EnergyStack(J, valuedTransfer), SIMULATE);
 			boolean canReceive = acceptor.canReceiveEnergy(getSide().getFacing().getOpposite());
 
 			// Check if facing tile has enough storage, and network can handle this operation
 			if (canReceive && diff != valuedTransfer) {
-				this.ExtractEnergy(new FluidStack(J, (int)acceptor.acceptEnergy(getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
+				this.ExtractEnergy(new EnergyStack(J, (int)acceptor.acceptEnergy(getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
 
 			}
 		}else if (tile instanceof IEnergyReceiver && energyTransferAllowed(RF)) {
 			// minimum value that receiver can accept
 			IEnergyReceiver energyReceiver = (IEnergyReceiver) tile;
-			int diff = this.ExtractEnergy(new FluidStack(RF, valuedTransfer), SIMULATE);
+			int diff = this.ExtractEnergy(new EnergyStack(RF, valuedTransfer), SIMULATE);
 			int ContainerDiff = energyReceiver.receiveEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, true);
 			// Check if facing tile has enough storage, and network can handle this operation
 			if (ContainerDiff != 0 && diff != valuedTransfer) {
-				this.ExtractEnergy(new FluidStack(RF, energyReceiver.receiveEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
+				this.ExtractEnergy(new EnergyStack(RF, energyReceiver.receiveEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
 			}
 		} else if (tile instanceof IEnergySink && energyTransferAllowed(EU)) {
 
 			IEnergySink sink = (IEnergySink) tile;
-			int diff = this.ExtractEnergy(new FluidStack(EU, valuedTransfer), SIMULATE);
+			int diff = this.ExtractEnergy(new EnergyStack(EU, valuedTransfer), SIMULATE);
 			int ContainerDiff = (int) sink.getDemandedEnergy();
 			if (ContainerDiff != 0 && diff != valuedTransfer) {
 				sink.injectEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, 4.0D);
-				this.ExtractEnergy(new FluidStack(EU, valuedTransfer), MODULATE);
+				this.ExtractEnergy(new EnergyStack(EU, valuedTransfer), MODULATE);
 			}
 		}
 		return true;

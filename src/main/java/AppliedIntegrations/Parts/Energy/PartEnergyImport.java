@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+import AppliedIntegrations.API.EnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
@@ -21,7 +22,6 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.util.AECableType;
 import appeng.me.helpers.MachineSource;
 
@@ -47,7 +47,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -94,29 +93,29 @@ public class PartEnergyImport extends AIOPart
 		// basic rf handler
 		if (tile instanceof IStrictEnergyStorage) {
 			IStrictEnergyStorage energyHandler = (IStrictEnergyStorage) tile;
-			int diff = this.InjectEnergy( new FluidStack(J, valuedTransfer), SIMULATE) - valuedTransfer;
+			int diff = this.InjectEnergy( new EnergyStack(J, valuedTransfer), SIMULATE) - valuedTransfer;
 			// Try to extract energy
 			int ContainerStorage = (int)energyHandler.getEnergy();
 			// Check if facing tile has enough storage, and network can handle this operation
 			if (ContainerStorage >= valuedTransfer && diff == 0) {
-				this.InjectEnergy(new FluidStack(J, valuedTransfer), MODULATE);
+				this.InjectEnergy(new EnergyStack(J, valuedTransfer), MODULATE);
 				energyHandler.setEnergy(energyHandler.getEnergy() - valuedTransfer);
 			}
 		}else if (tile instanceof IEnergySource && energyTransferAllowed(EU)) {
 			// check if network have enough storage space
-			int diff = this.InjectEnergy(new FluidStack(EU, valuedTransfer), SIMULATE) - valuedTransfer;
+			int diff = this.InjectEnergy(new EnergyStack(EU, valuedTransfer), SIMULATE) - valuedTransfer;
 			if(tile instanceof TileEntityElectricBlock){
 				TileEntityElectricBlock source = (TileEntityElectricBlock) tile;
 
 				int storage = (int)source.energy.getEnergy();
 				if (storage >= valuedTransfer) {
-					this.InjectEnergy(new FluidStack(EU, valuedTransfer), MODULATE);
+					this.InjectEnergy(new EnergyStack(EU, valuedTransfer), MODULATE);
 					source.addEnergy(valuedTransfer);
 				}
 			}
 
 		} else  if (energyTransferAllowed(RF)) {
-			int diff = this.InjectEnergy(new FluidStack(RF, valuedTransfer), SIMULATE) - valuedTransfer;
+			int diff = this.InjectEnergy(new EnergyStack(RF, valuedTransfer), SIMULATE) - valuedTransfer;
 
 			// EIO
 			if (diff == 0) {
@@ -124,13 +123,13 @@ public class PartEnergyImport extends AIOPart
 					AbstractPoweredMachineEntity abstractEntity = (AbstractPoweredMachineEntity) tile;
 					if(abstractEntity.getEnergyStored() > valuedTransfer) {
 						abstractEntity.setEnergyStored(abstractEntity.getEnergyStored() - valuedTransfer);
-						InjectEnergy(new FluidStack(RF, valuedTransfer), MODULATE);
+						InjectEnergy(new EnergyStack(RF, valuedTransfer), MODULATE);
 					}
 				} else if (tile instanceof TileCapBank) {
 					TileCapBank handler = (TileCapBank) tile;
 					if(handler.getEnergyStored() > valuedTransfer) {
 						handler.addEnergy(-valuedTransfer);
-						InjectEnergy(new FluidStack(RF, valuedTransfer), MODULATE);
+						InjectEnergy(new EnergyStack(RF, valuedTransfer), MODULATE);
 					}
 				}
 				// main case
@@ -140,7 +139,7 @@ public class PartEnergyImport extends AIOPart
 					// Check if facing tile has enough storage, and network can handle this operation
 
 					if (diff == 0) {
-						this.InjectEnergy(new FluidStack(RF, energyHandler.extractEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
+						this.InjectEnergy(new EnergyStack(RF, energyHandler.extractEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
 					}
 				}
 			}

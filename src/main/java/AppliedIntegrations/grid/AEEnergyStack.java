@@ -40,7 +40,7 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
         this.hash = stack.hash;
     }
 
-    public static AEEnergyStack fromEnergyStack(EnergyStack stack) {
+    public static AEEnergyStack fromStack(EnergyStack stack) {
         if (stack == null)
             return null;
         return new AEEnergyStack(stack.getEnergy(), stack.getAmount());
@@ -50,7 +50,7 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
         EnergyStack stack = EnergyStack.readFromNBT(t);
         if (stack == null)
             return null;
-        AEEnergyStack ae = AEEnergyStack.fromEnergyStack(stack);
+        AEEnergyStack ae = AEEnergyStack.fromStack(stack);
         ae.setStackSize(t.getLong("EnergyAmount"));
         ae.setCountRequestable(t.getLong("Req"));
         ae.setCraftable(t.getBoolean("Craft"));

@@ -16,7 +16,6 @@ public class LiquidAIEnergy extends Fluid {
     int index;
     ResourceLocation image;
 
-
     public LiquidAIEnergy(Integer index,String tag, ResourceLocation image) {
         super(tag, null, null);
         if (energies.containsKey(tag)) throw new IllegalArgumentException(tag + " already registered!");

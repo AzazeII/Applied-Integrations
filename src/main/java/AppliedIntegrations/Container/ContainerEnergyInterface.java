@@ -3,6 +3,8 @@ package AppliedIntegrations.Container;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
@@ -14,6 +16,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -41,7 +46,6 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
 
     public boolean firstUpdate = true;
 
-    private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
     public final IEnergyInterface EnergyInterface;
     public PartEnergyInterface part;
     private TileEnergyInterface tile;
@@ -72,14 +76,19 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
             part.addListener(this);
 
             this.part = (PartEnergyInterface)EnergyInterface;// add slots
-            this.addUpgradeSlots(part.getUpgradeInventory(), this.NUMBER_OF_UPGRADE_SLOTS,
-                    this.UPGRADE_X_POS, this.UPGRADE_Y_POS);
+
+            AIGridNodeInventory inventory = (AIGridNodeInventory)part.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+            AILog.chatLog(inventory.toString());
+            /*this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
+                    this.UPGRADE_X_POS, this.UPGRADE_Y_POS);*/
         } else if (energyInterface instanceof TileEnergyInterface) {
             TileEnergyInterface tile = (TileEnergyInterface) this.EnergyInterface;
             this.tile = (TileEnergyInterface)this.EnergyInterface;
             tile.addListener(this);
+
+            AIGridNodeInventory inventory = (AIGridNodeInventory)tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null /* Internal facing ;) */);
             // add slots
-            this.addUpgradeSlots(tile.getUpgradeInventory(), this.NUMBER_OF_UPGRADE_SLOTS,
+            this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
                     this.UPGRADE_X_POS + 1, this.UPGRADE_Y_POS);
         }
     }

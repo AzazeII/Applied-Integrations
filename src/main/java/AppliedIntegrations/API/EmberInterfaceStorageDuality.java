@@ -14,10 +14,7 @@ public class EmberInterfaceStorageDuality extends DefaultEmberCapability impleme
     public void modifyEnergyStored(int i) {
         if(i == 0)
             return;
-        if(i > 0)
-            addAmount(i, true);
-        else
-            removeAmount(i, true);
+        addAmount(i, true);
     }
 
     @Override

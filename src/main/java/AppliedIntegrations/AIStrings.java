@@ -5,9 +5,6 @@ import net.minecraft.util.text.translation.I18n;
 /**
  * @Author Azazell
  */
-
-// Web hook test 2
-
 public enum AIStrings {
 	//Parts
 	Part_EnergyImportBus ("Energy.ImportBus", true),

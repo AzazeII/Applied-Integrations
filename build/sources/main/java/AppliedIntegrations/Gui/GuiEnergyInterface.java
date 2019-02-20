@@ -161,7 +161,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-
+		//fontRenderer.drawString(player.getDisplayName().getUnformattedText(), 8, ySize - 94, 0x404040);
 		//binding correct Gui
 		if (LinkedMetric == RF || LinkedMetric == J || LinkedMetric == EU)
 			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/" + LinkedMetric.getTag() + "Bar.png");
@@ -245,11 +245,10 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 
 		this.EnergySlotList.add(this.energySlot);
 
-
-		priority = new GuiButtonAETab(0, this.guiLeft +
-				GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop - 3, AEStateIconsEnum.WRENCH,
-				"gui.appliedenergistics2.Priority");
-		this.buttonList.add(priority);
+		//priority = new GuiButtonAETab(0, this.guiLeft +
+		//		GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop - 3, AEStateIconsEnum.WRENCH,
+		//		"gui.appliedenergistics2.Priority");
+		//this.buttonList.add(priority);
 
 	}
 

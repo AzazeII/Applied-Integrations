@@ -5,7 +5,13 @@ import mekanism.api.energy.IStrictEnergyOutputter;
 import mekanism.api.energy.IStrictEnergyStorage;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.Optional;
 
+@Optional.InterfaceList(value = {
+        @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "mekanism", striprefs = true),
+        @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyOutputter", modid = "mekanism", striprefs = true),
+        @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "mekanism", striprefs = true)
+})
 public class JouleInterfaceStorage implements IInterfaceStorageDuality, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
 
     private IEnergyInterface energyInterface;

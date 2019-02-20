@@ -20,9 +20,7 @@ import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
-import ic2.api.energy.event.EnergyTileLoadEvent;
-import ic2.api.energy.event.EnergyTileUnloadEvent;
-import ic2.api.energy.tile.IEnergyEmitter;
+
 import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -49,12 +47,8 @@ import static appeng.api.config.Actionable.SIMULATE;
 /**
  * @Author Azazell
  */
-@Optional.InterfaceList(value = {
-		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "ic2", striprefs = true),
-		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergyEmitter", modid = "ic2", striprefs = true)
-})
-public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnergyDuality,
-		IEnergySink,INetworkToolAgent,IEnergyInterface,IStorageMonitorable,IInventoryHost {
+public class TileEnergyInterface extends AITile implements IEnergyMachine,
+		INetworkToolAgent,IEnergyInterface,IStorageMonitorable,IInventoryHost {
 
 	private static final boolean DualityMode = true;
 	private Boolean energyStates[] = new Boolean[6];
@@ -128,7 +122,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		destroyAELink();
 	  }
 		if (world != null && !world.isRemote) {
-			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+			//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
 	}
 
@@ -138,7 +132,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 			destroyAELink();
 		}
 		if (world != null && !world.isRemote) {
-			MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
+			//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
 
 	}
@@ -155,7 +149,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 		super.update();
 		if (!EUloaded && hasWorld() && !world.isRemote &&!EUloaded) {
 			EUloaded = true;
-			MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
+			//MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
 
 		for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
@@ -300,7 +294,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	/**
 	 * IC2:
 	 */
-	@Override
+	//@Override
 	public double getDemandedEnergy() {
 		return capacity-EuStorage;
 	}
@@ -361,11 +355,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 	}
 
 	@Override
-	public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
-		return false;
-	}
-
-	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
 		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
 	}
@@ -386,5 +375,9 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,IEnerg
 			AILog.chatLog("Stored: " + getEnergyStorage(EU, side).getEnergyStored() + " EU / " + getEnergyStorage(EU, side).getMaxEnergyStored() + " EU", player);
 			AILog.chatLog("Stored: " + getEnergyStorage(J, side).getEnergyStored() + " J / " + getEnergyStorage(J, side).getMaxEnergyStored() + " J", player);
 		}
+	}
+
+	public boolean isOmniDirectional() {
+		return false;
 	}
 }

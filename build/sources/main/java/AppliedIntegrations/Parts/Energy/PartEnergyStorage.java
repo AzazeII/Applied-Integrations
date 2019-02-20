@@ -88,7 +88,7 @@ public class PartEnergyStorage
 	public boolean canTransfer = false;
 	private int capacity=   1000000;
 	private int maxTransfer = capacity;
-	protected EnergyStorage storage = new EnergyStorage(capacity, maxTransfer);
+
 	/**
 	 * NBT Keys
 	 */
@@ -612,16 +612,6 @@ public class PartEnergyStorage
 	@Override
 	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
 		return 0;
-	}
-
-	@Override
-	public double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
-		return 0;
-	}
-
-	@Override
-	public boolean canReceiveEnergy(EnumFacing side) {
-		return true;
 	}
 
 

@@ -1,4 +1,5 @@
 package AppliedIntegrations.Items.StorageCells;
+import AppliedIntegrations.API.IEnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Items.AIItemRegistrable;
@@ -11,13 +12,19 @@ import appeng.api.storage.ICellInventory;
 import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.ICellRegistry;
 import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.data.IItemList;
 import appeng.api.util.IClientHelper;
+import appeng.items.contents.CellConfig;
+import appeng.items.contents.CellUpgrades;
+import appeng.util.helpers.ItemHandlerUtil;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.IItemHandler;
+import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -39,7 +46,25 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 	@Override
 	public void addInformation( final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips )
 	{
+		ICellInventoryHandler<IAEEnergyStack> inventoryHandler = AEApi.instance().registries().cell().getCellInventory( stack, null, this.getChannel());
+		AEApi.instance().client().addCellInformation( inventoryHandler, lines );
 
+		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))) {
+			// Get the list of stored energies
+			IItemList<IAEEnergyStack> cellEnergies = inventoryHandler.getAvailableItems(getChannel().createList());
+			for( IAEEnergyStack currentStack : cellEnergies )
+			{
+				if( currentStack != null )
+				{
+					// Add to the list
+					String energyInfo = TextFormatting.RED.toString() + currentStack.getStack().getEnergyName() + " x " + currentStack.getStackSize();
+					lines.add( energyInfo.toUpperCase() );
+				}
+			}
+		} else {
+			// Let the user know they can hold shift
+			lines.add(TextFormatting.WHITE.toString() + "Hold" + TextFormatting.DARK_RED.toString() + " Shift " + TextFormatting.WHITE.toString() + "for");
+		}
 	}
 
 	@Override
@@ -90,12 +115,12 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 
 	@Override
 	public IItemHandler getUpgradesInventory(ItemStack itemStack) {
-		return null;
+		return new CellUpgrades(itemStack, 2);
 	}
 
 	@Override
 	public IItemHandler getConfigInventory(ItemStack itemStack) {
-		return null;
+		return new CellConfig( itemStack );
 	}
 
 	@Override

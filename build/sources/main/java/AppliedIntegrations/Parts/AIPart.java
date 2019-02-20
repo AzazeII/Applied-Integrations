@@ -1,4 +1,5 @@
 package AppliedIntegrations.Parts;
+import AppliedIntegrations.API.EnergyStack;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
@@ -6,6 +7,7 @@ import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AIUtils;
+import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.AEPartGridBlock;
 import AppliedIntegrations.AppliedIntegrations;
 import appeng.api.*;
@@ -738,7 +740,7 @@ public abstract class AIPart
 	 * @return
 	 * 	amount extracted
 	 */
-	public int ExtractEnergy(FluidStack resource, Actionable actionable) {
+	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
 		if(node == null)
 			return 0;
 		IGrid grid = node.getGrid();
@@ -754,10 +756,10 @@ public abstract class AIPart
 		}
 
 		IAEEnergyStack notRemoved = (IAEEnergyStack)storage.getInventory(getChannel()).extractItems(
-				getChannel().createStack(resource), actionable, new MachineSource(this));
+				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
 		if (notRemoved == null)
-			return resource.amount;
+			return (int)resource.amount;
 		return (int)(resource.amount - notRemoved.getStackSize());
 	}
 
@@ -769,7 +771,7 @@ public abstract class AIPart
 	 * @return
 	 *  amount injected
 	 */
-	public int InjectEnergy(FluidStack resource, Actionable actionable) {
+	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
 		IGrid grid = node.getGrid(); // check grid node
 		if (grid == null) {
 			AILog.info("Grid cannot be initialized, WTF?");
@@ -783,10 +785,10 @@ public abstract class AIPart
 		}
 
 		IAEEnergyStack returnAmount = storage.getInventory(this.getChannel()).injectItems(
-				getChannel().createStack(resource), actionable, new MachineSource(this));
+				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
 		if (returnAmount == null)
-			return resource.amount;
+			return (int) resource.amount;
 		return (int) (resource.amount - returnAmount.getStackSize());
 	}
 
