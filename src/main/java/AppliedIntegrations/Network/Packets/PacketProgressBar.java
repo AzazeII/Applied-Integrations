@@ -3,6 +3,7 @@ package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Network.AIPacket;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.EnumFacing;
@@ -31,7 +32,7 @@ public class PacketProgressBar extends AIPacket<PacketProgressBar> {
 
             // Check if we are updating correct GUI
             if(GEI.getX() == x && GEI.getY() == y && GEI.getZ() == z && GEI.getSide() == side && GEI.getWorld() == w) {
-                GEI.storage = (int) sender.getEnergyStorage(sender.bar).getStored();
+                GEI.storage = (int) sender.getEnergyStorage(sender.bar, AEPartLocation.INTERNAL).getStored();
             }
         }
     }

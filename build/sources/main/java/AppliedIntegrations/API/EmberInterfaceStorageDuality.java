@@ -9,7 +9,7 @@ import teamroots.embers.power.DefaultEmberCapability;
 @net.minecraftforge.fml.common.Optional.InterfaceList(value = {
         @Optional.Interface(iface = "teamroots.embers.power.IEmberCapability", modid = "embers", striprefs = true),
         @Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)})
-public class EmberInterfaceStorageDuality extends DefaultEmberCapability implements IInterfaceStorageDuality {
+public class EmberInterfaceStorageDuality extends DefaultEmberCapability implements IInterfaceStorageDuality, InbtStorage {
     @Override
     public void modifyEnergyStored(int i) {
         if(i == 0)

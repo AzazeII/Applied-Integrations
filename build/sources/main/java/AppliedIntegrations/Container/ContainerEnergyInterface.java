@@ -78,7 +78,6 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
             this.part = (PartEnergyInterface)EnergyInterface;// add slots
 
             AIGridNodeInventory inventory = (AIGridNodeInventory)part.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
-            AILog.chatLog(inventory.toString());
             /*this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
                     this.UPGRADE_X_POS, this.UPGRADE_Y_POS);*/
         } else if (energyInterface instanceof TileEnergyInterface) {
@@ -88,8 +87,8 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
 
             AIGridNodeInventory inventory = (AIGridNodeInventory)tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null /* Internal facing ;) */);
             // add slots
-            this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
-                    this.UPGRADE_X_POS + 1, this.UPGRADE_Y_POS);
+            //this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
+            //        this.UPGRADE_X_POS + 1, this.UPGRADE_Y_POS);
         }
     }
     @Override

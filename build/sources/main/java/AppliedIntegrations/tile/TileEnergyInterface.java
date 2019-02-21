@@ -1,8 +1,10 @@
 package AppliedIntegrations.tile;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.EnergyRepo;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
+import AppliedIntegrations.Helpers.InterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
 import AppliedIntegrations.Parts.IEnergyMachine;
@@ -55,17 +57,18 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> RFStorage = new LinkedHashMap<>();
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> EUStorage = new LinkedHashMap<>();
-	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> JOStorage = new LinkedHashMap<>();
+	private LinkedHashMap<AEPartLocation, JouleInterfaceStorage> JOStorage = new LinkedHashMap<>();
+	private LinkedHashMap<AEPartLocation, EmberInterfaceStorageDuality> EmberStorage = new LinkedHashMap<>();
 
 	private EnergyInterfaceStorage Storage = new EnergyInterfaceStorage(this, capacity, capacity/2);
+
+	private InterfaceDuality duality = new InterfaceDuality(this);
 
 	public static int EuStorage;
 
 	public static int capacity = 100000;
 
 	private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
-
-	private AEPartLocation forward = AEPartLocation.INTERNAL;
 
 	byte outputTracker;
 	public boolean EnergyStates[] = new boolean[6];
@@ -78,8 +81,9 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		this.energyStates[1] = true;
 		for(AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS){
 			RFStorage.put(dir,new EnergyInterfaceStorage(this, capacity,capacity/2));
-			EUStorage.put(dir,new EnergyInterfaceStorage(this, capacity*4, capacity*2));
-			JOStorage.put(dir,new EnergyInterfaceStorage(this, capacity*2,capacity));
+			EUStorage.put(dir,new EnergyInterfaceStorage(this, (int)(capacity*0.25), capacity*2));
+			JOStorage.put(dir,new JouleInterfaceStorage(this, capacity*2));
+			EmberStorage.put(dir, new EmberInterfaceStorageDuality());
 		}
 	}
 
@@ -158,7 +162,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 			notifyListenersOfEnergyBarChange(J, 2, side);
 		}
 
-		/*try {
+		try {
 			if (this.DualityMode) {
 				DoInjectDualityWork(Actionable.MODULATE);
 			} else {
@@ -166,7 +170,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 			}
 		}catch (NullNodeConnectionException error){
 
-		}*/
+		}
 	}
 
 	@Override
@@ -207,88 +211,11 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	@Override
 	public void DoInjectDualityWork(Actionable action) throws NullNodeConnectionException {
-
-
-		IGridNode node = this.getGridNode(AEPartLocation.INTERNAL);
-		if(node == null){
-			throw new NullNodeConnectionException();
-		}
-		// Is it modulate, or matrix?
-		if(action == Actionable.MODULATE) {
-			for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-				if (this.getEnergyStorage(RF, side).getEnergyStored() > 0 && this.getEnergyStorage(J, side).getEnergyStored() == 0) {
-
-					int ValuedReceive = Math.min(getEnergyStorage(RF, side).getEnergyStored(), capacity);
-
-					int Diff = InjectEnergy(new FluidStack(RF, ValuedReceive), SIMULATE) - ValuedReceive;
-					if (Diff == 0) {
-						this.getEnergyStorage(RF, side).modifyEnergyStored(-ValuedReceive);
-						InjectEnergy(new FluidStack(RF, ValuedReceive + Diff), MODULATE);
-					}
-				}
-				if (this.getEnergyStorage(EU, side).getEnergyStored() > 0) {
-
-					int ValuedReceive = Math.min(getEnergyStorage(EU, side).getEnergyStored(), capacity);
-
-					int Diff = InjectEnergy(new FluidStack(EU, ValuedReceive), SIMULATE) - ValuedReceive;
-					if (Diff == 0) {
-						this.getEnergyStorage(EU, side).modifyEnergyStored(-ValuedReceive);
-						InjectEnergy(new FluidStack(EU, ValuedReceive + Diff), MODULATE);
-
-					}
-				}
-				if (this.getEnergyStorage(J, side).getEnergyStored() > 0) {
-					int ValuedReceive = Math.min(getEnergyStorage(J, side).getEnergyStored(), capacity);
-
-					int Diff = InjectEnergy(new FluidStack(J, ValuedReceive), SIMULATE) - ValuedReceive;
-					if (Diff == 0) {
-						this.getEnergyStorage(J, side).modifyEnergyStored(-ValuedReceive);
-						InjectEnergy(new FluidStack(J, ValuedReceive + Diff), MODULATE);
-
-					}
-				}
-			}
-		}
-
-
+		duality.DoInjectDualityWork(action);
 	}
 	@Override
 	public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
-
-		IGridNode node = this.getGridNode(AEPartLocation.INTERNAL);
-		if(node == null){
-			throw new NullNodeConnectionException();
-		}
-		if(action == Actionable.MODULATE){
-			for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-				if (this.getEnergyStorage(RF,side).getEnergyStored() > 0) {
-
-					int ValuedExtract = Math.min(1000,capacity);
-
-					int Diff = ExtractEnergy(new FluidStack(RF, ValuedExtract), SIMULATE) + ValuedExtract;
-					this.getEnergyStorage(RF,side).modifyEnergyStored(ValuedExtract);
-					ExtractEnergy(new FluidStack(RF, ValuedExtract - Diff), MODULATE);
-				}
-				if (this.getEnergyStorage(EU,side).getEnergyStored() > 0) {
-
-					int ValuedExtract = Math.min(1000,capacity);
-
-					int Diff = ExtractEnergy(new FluidStack(EU, ValuedExtract), SIMULATE) + ValuedExtract;
-					this.getEnergyStorage(EU,side).modifyEnergyStored(ValuedExtract);
-					ExtractEnergy(new FluidStack(EU, ValuedExtract - Diff), MODULATE);
-				}
-				if (this.getEnergyStorage(J,side).getEnergyStored() > 0) {
-
-					int ValuedExtract = Math.min(1000,capacity);
-
-					int Diff = ExtractEnergy(new FluidStack(J, ValuedExtract), SIMULATE) + ValuedExtract;
-					this.getEnergyStorage(J,side).modifyEnergyStored(ValuedExtract);
-					ExtractEnergy(new FluidStack(J, ValuedExtract - Diff), MODULATE);
-				}
-			}
-
-		}
-
+		duality.DoExtractDualityWork(action);
 	}
 
 	/**
@@ -299,20 +226,31 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		return capacity-EuStorage;
 	}
 
+	@Override
+	public double getMaxTransfer(AEPartLocation side) {
+		return capacity/2;
+	}
+
+	@Override
+	public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
+		return null;
+	}
+
 	/**
 	 * RedstoneFluxAPI:
 	 */
 
-	private EnergyInterfaceStorage getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
 		if(energy == RF){
 			return this.RFStorage.get(side);
 		}else if(energy == EU){
 			return this.EUStorage.get(side);
 		}else if(energy == J){
 			return this.JOStorage.get(side);
-		}else{
-			return null;
+		}else if(energy == Ember){
+			return this.EmberStorage.get(side);
 		}
+		return null;
 	}
 
 	public void addListener( final ContainerEnergyInterface container )
@@ -356,28 +294,18 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY || capability == CapabilityEnergy.ENERGY || super.hasCapability(capability, facing);
+		return duality.hasCapability(capability);
 	}
 
 	@Nullable
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-		if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-			return capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY ? (T)slotInventory : super.getCapability(capability, facing);
-		else
-			return capability == CapabilityEnergy.ENERGY ? (T)getEnergyStorage(RF, AEPartLocation.fromFacing(facing)) : super.getCapability(capability, facing);
+		return duality.getCapability(capability, AEPartLocation.fromFacing(facing));
 	}
 
-	public void onActivate(EntityPlayer player) {
-		for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			AILog.chatLog("Side: " + side.name());
-			AILog.chatLog("Stored: " + getEnergyStorage(RF, side).getEnergyStored() + " RF / " + getEnergyStorage(RF, side).getMaxEnergyStored() + " RF", player);
-			AILog.chatLog("Stored: " + getEnergyStorage(EU, side).getEnergyStored() + " EU / " + getEnergyStorage(EU, side).getMaxEnergyStored() + " EU", player);
-			AILog.chatLog("Stored: " + getEnergyStorage(J, side).getEnergyStored() + " J / " + getEnergyStorage(J, side).getMaxEnergyStored() + " J", player);
-		}
-	}
-
-	public boolean isOmniDirectional() {
-		return false;
+	public void onActivate(EntityPlayer player, AEPartLocation side) {
+		AILog.chatLog("Stored: " + getEnergyStorage(RF, side).getStored() + " RF / " + getEnergyStorage(RF, side).getMaxStored() + " RF", player);
+		AILog.chatLog("Stored: " + getEnergyStorage(EU, side).getStored() + " EU / " + getEnergyStorage(EU, side).getMaxStored() + " EU", player);
+		AILog.chatLog("Stored: " + getEnergyStorage(J, side).getStored() + " J / " + getEnergyStorage(J, side).getMaxStored() + " J", player);
 	}
 }

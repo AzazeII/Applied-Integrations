@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile;
 
+import AppliedIntegrations.API.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Utils.AILog;
@@ -196,7 +197,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
      * @return
      * 	amount extracted
      */
-    public int ExtractEnergy(FluidStack resource, Actionable actionable) {
+    public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
         if(node == null)
             return 0;
         IGrid grid = node.getGrid();
@@ -215,7 +216,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
                 getChannel().createStack(resource), actionable, new MachineSource(this));
 
         if (notRemoved == null)
-            return resource.amount;
+            return (int)resource.amount;
         return (int)(resource.amount - notRemoved.getStackSize());
     }
 
@@ -231,7 +232,9 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
      * @return
      *  amount injected
      */
-    public int InjectEnergy(FluidStack resource, Actionable actionable) {
+    public int InjectEnergy(EnergyStack resource, Actionable actionable) {
+        if(node == null)
+            return 0;
         IGrid grid = node.getGrid(); // check grid node
         if (grid == null) {
             AILog.info("Grid cannot be initialized, WTF?");
@@ -248,7 +251,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
                 getChannel().createStack(resource), actionable, new MachineSource(this));
 
         if (returnAmount == null)
-            return resource.amount;
+            return (int)resource.amount;
         return (int) (resource.amount - returnAmount.getStackSize());
     }
 }

@@ -161,7 +161,6 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		fontRenderer.drawString(player.getDisplayName().getUnformattedText(), 8, ySize - 94, 0x404040);
 		//binding correct Gui
 		if (LinkedMetric == RF || LinkedMetric == J || LinkedMetric == EU)
 			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/" + LinkedMetric.getTag() + "Bar.png");

@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "IRI",
+    "FEA",
+    "IRI"
+  ],
+  "key": {
+    "I": {
+      "item": "minecraft:iron_ingot"
+    },
+    "R": {
+      "item": "tutorial:redstone"
+    },
+    "F": {
+      "item": "appliedintegrations:formation_core"
+    },
+    "E": {
+      "item": "appliedenergistics2:energy_cell"
+    },
+    "A": {
+      "item": "appliedintegrations:annihilation_core"
+    }
+  },
+  "result": {
+    "item": "appliedintegrations:einterface"
+  }
+}

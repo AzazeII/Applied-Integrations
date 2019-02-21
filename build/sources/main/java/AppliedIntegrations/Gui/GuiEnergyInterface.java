@@ -132,10 +132,10 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
 		// Call super
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		if (this.priority.isMouseOverButton(mouseX, mouseY)) {
+		/*if (this.priority.isMouseOverButton(mouseX, mouseY)) {
 			NetworkHandler.sendToServer(new PacketGuiChange(new GuiPriority(this.player.inventory, this.part),
 					getX(),getY(),getZ(),player));
-		}
+		}*/
 		if (this.energySlot.isMouseOverWidget(mouseX, mouseY)) {
 			if (player.inventory.getItemStack() == null) {
 				energySlot.mouseClicked(null);
@@ -161,7 +161,6 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-		//fontRenderer.drawString(player.getDisplayName().getUnformattedText(), 8, ySize - 94, 0x404040);
 		//binding correct Gui
 		if (LinkedMetric == RF || LinkedMetric == J || LinkedMetric == EU)
 			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/" + LinkedMetric.getTag() + "Bar.png");

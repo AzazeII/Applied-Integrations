@@ -1,0 +1,17 @@
+{
+  "result": {
+    "item": "appliedintegrations:energystoragepartitem"
+  },
+  "type": "appliedenergistics2:part_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:sticky_piston"
+    },
+    {
+      "item": "appliedintegrations:einterface"
+    },
+    {
+      "item": "minecraft:piston"
+    }
+  ]
+}

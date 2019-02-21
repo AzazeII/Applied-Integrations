@@ -3,6 +3,7 @@ package AppliedIntegrations.Blocks;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.tile.TileEnergyInterface;
+import appeng.api.util.AEPartLocation;
 import appeng.tile.misc.TileInterface;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
@@ -49,7 +50,7 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 
 		if(p.isSneaking()) {
 			if (entity instanceof TileEnergyInterface) {
-				((TileEnergyInterface) entity).onActivate(p);
+				((TileEnergyInterface) entity).onActivate(p, AEPartLocation.fromFacing(facing));
 			}
 		}
 

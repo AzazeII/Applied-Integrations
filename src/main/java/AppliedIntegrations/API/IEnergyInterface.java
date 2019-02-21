@@ -1,9 +1,13 @@
 package AppliedIntegrations.API;
 
+import appeng.api.networking.IGridNode;
+
 /**
  * @Author Azazell
  */
-public interface IEnergyInterface extends IInterfaceDuality{
+public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator{
+    IGridNode getGridNode();
+
     // Work mode
     enum DualityMode{
         Inject,

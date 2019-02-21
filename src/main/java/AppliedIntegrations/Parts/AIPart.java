@@ -772,6 +772,8 @@ public abstract class AIPart
 	 *  amount injected
 	 */
 	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
+		if(node == null)
+			return 0;
 		IGrid grid = node.getGrid(); // check grid node
 		if (grid == null) {
 			AILog.info("Grid cannot be initialized, WTF?");
