@@ -1,7 +1,7 @@
 package AppliedIntegrations.API.Grid;
 
-import AppliedIntegrations.API.IEnergyStack;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.IEnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
 import appeng.me.helpers.BaseActionSource;
 

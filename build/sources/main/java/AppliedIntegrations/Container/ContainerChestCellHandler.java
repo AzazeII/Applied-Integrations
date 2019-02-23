@@ -1,7 +1,7 @@
 package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Parts.AIPart;
@@ -18,12 +18,10 @@ import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.ISaveProvider;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.me.helpers.BaseActionSource;
 import appeng.me.helpers.PlayerSource;
 import appeng.tile.storage.TileChest;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

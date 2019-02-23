@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.Widgets;
 
-import AppliedIntegrations.API.IEnergyStack;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.IEnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Utils.AIUtils;

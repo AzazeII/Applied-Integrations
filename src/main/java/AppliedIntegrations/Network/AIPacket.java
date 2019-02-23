@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network;
 
 import AppliedIntegrations.API.AppliedCoord;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Network.Packets.Overlook;
 import appeng.api.parts.IPartHost;

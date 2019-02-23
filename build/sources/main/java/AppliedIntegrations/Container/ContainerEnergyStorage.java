@@ -1,6 +1,6 @@
 package AppliedIntegrations.Container;
 
-import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;

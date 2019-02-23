@@ -21,6 +21,8 @@ appliedintegrationsenergy.item.part.storage.name=МЭ Шина Хранения 
 appliedintegrationsenergy.item.part.terminal.name=МЭ Терминал Энергии
 appliedintegrationsenergy.item.part.monitor.name=МЭ Монитор Хранения Энергии
 
+item.energyAnnihilationPartItem.name=МЭ Плоскость Аннигиляции
+item.energyFormationPartItem.name=МЭ Плоскость Формирования
 
 Energy Stored=Энергии Хранится
 

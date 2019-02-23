@@ -1,7 +1,7 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerEnergyTerminal;
@@ -42,7 +42,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;

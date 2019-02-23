@@ -1,4 +1,4 @@
-package AppliedIntegrations.API;
+package AppliedIntegrations.API.Storage;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
 /**
  * @Author Azazell
  */
-public class EnergyStack implements IEnergyStack{
+public class EnergyStack implements IEnergyStack {
 	private LiquidAIEnergy energy;
 	public long amount;
 

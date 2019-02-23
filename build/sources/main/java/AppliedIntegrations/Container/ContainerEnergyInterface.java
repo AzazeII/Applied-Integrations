@@ -1,13 +1,11 @@
 package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.IEnergyInterface;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
-import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import appeng.api.util.AEPartLocation;
@@ -16,16 +14,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ContainerFurnace;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.*;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 
 public class ContainerEnergyInterface extends ContainerWithNetworkTool {
     /**

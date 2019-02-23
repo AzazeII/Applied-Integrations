@@ -1,6 +1,6 @@
 package AppliedIntegrations.API.Grid;
 
-import AppliedIntegrations.API.IEnergyStack;
+import AppliedIntegrations.API.Storage.IEnergyStack;
 
 import javax.annotation.Nonnull;
 /**

@@ -1,13 +1,11 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.IFilterGUI;
-import AppliedIntegrations.Gui.IPartGui;
 import AppliedIntegrations.Gui.PartGui;
 import AppliedIntegrations.Network.AIPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;

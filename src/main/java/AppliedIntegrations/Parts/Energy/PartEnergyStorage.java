@@ -7,8 +7,7 @@ import java.util.Vector;
 
 import AppliedIntegrations.API.IEnergyDuality;
 import AppliedIntegrations.API.IInventoryHost;
-import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketServerFilter;
@@ -19,8 +18,6 @@ import AppliedIntegrations.Container.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.GuiEnergyStoragePart;
 import AppliedIntegrations.Inventory.HandlerEnergyStorageBusBase;
 import AppliedIntegrations.Inventory.HandlerEnergyStorageBusDuality;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 
 import appeng.api.AEApi;
@@ -46,7 +43,6 @@ import appeng.api.storage.*;
 import appeng.api.util.AECableType;
 import appeng.core.sync.GuiBridge;
 import appeng.helpers.IPriorityHost;
-import cofh.redstoneflux.impl.EnergyStorage;
 import ic2.api.energy.tile.IEnergyEmitter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -59,15 +55,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.RF;
-import static AppliedIntegrations.AppliedIntegrations.AI;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**

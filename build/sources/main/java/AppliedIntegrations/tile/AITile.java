@@ -1,6 +1,6 @@
 package AppliedIntegrations.tile;
 
-import AppliedIntegrations.API.EnergyStack;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Utils.AILog;
@@ -20,7 +20,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
 

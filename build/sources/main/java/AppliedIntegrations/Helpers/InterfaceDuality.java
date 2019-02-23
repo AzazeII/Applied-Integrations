@@ -1,21 +1,20 @@
 package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.capabilities.Capabilities;
-import ic2.api.energy.tile.IEnergySink;
-import mekanism.api.energy.IStrictEnergyAcceptor;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.items.CapabilityItemHandler;
 import teamroots.embers.power.EmberCapabilityProvider;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.*;
-import static AppliedIntegrations.API.LiquidAIEnergy.Ember;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
 import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
 import static appeng.api.util.AEPartLocation.INTERNAL;

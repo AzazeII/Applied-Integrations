@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.IEnergySelectorContainer;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

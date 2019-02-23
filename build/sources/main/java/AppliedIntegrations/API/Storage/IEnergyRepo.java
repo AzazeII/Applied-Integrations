@@ -1,9 +1,6 @@
 package AppliedIntegrations.API.Storage;
 
 
-import AppliedIntegrations.API.IEnergyStack;
-import AppliedIntegrations.API.LiquidAIEnergy;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package AppliedIntegrations.API;
+package AppliedIntegrations.API.Storage;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;

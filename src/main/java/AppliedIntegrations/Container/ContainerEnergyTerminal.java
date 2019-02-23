@@ -1,7 +1,7 @@
 package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.IEnergySelectorContainer;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;

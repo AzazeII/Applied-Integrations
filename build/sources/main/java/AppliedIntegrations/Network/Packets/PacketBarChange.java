@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Network.AIPacket;
 import net.minecraft.client.Minecraft;

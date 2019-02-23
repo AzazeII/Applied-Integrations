@@ -1,14 +1,12 @@
 package AppliedIntegrations.Gui.Widgets;
 
-import AppliedIntegrations.API.AppliedCoord;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.GuiTextureManager;
 import AppliedIntegrations.Gui.IWidgetHost;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketClientFilter;
 import AppliedIntegrations.Parts.IEnergyMachine;
-import AppliedIntegrations.Utils.AILog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;

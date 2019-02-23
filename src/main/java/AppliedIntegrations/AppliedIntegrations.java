@@ -1,5 +1,6 @@
 package AppliedIntegrations;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -22,12 +23,11 @@ import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.1", dependencies = "required-after:appliedenergistics2")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.3", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */
@@ -86,6 +86,10 @@ public class AppliedIntegrations {
 		// Register objects, that can be moved by spatial cards io
 		proxy.registerSpatialIOMovables();
 		proxy.SidedInit();
+
+		if(Loader.isModLoaded("botania"))
+			BotaniaLoader.initRecipes();
+
 		// Register Cache, and monitor
 		//AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );
 
@@ -138,7 +142,7 @@ public class AppliedIntegrations {
 		meta.version = "Alpha 7";
 		meta.logoFile = "logo.png";
 		meta.authorList.add("Azazell");
-		meta.description = "Addon for Applied Energistics 2 for storing energy, and few more things";
+		meta.description = "Addon for Applied Energistics 2 for storing energy, mana. And some network things";
 		meta.url = "https://github.com/AzazeII/Applied-Integrations/";
 	}
 }

@@ -1,7 +1,6 @@
 package AppliedIntegrations.API.Grid;
 
-import AppliedIntegrations.API.LiquidAIEnergy;
-import appeng.api.networking.energy.IEnergyWatcher;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
 public interface IAIEnergyWatcherHost
 {

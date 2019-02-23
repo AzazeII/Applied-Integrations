@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile;
 
 import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Storage.EnergyRepo;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.InterfaceDuality;
@@ -14,7 +14,6 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageChannel;
@@ -23,27 +22,20 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 
-import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.*;
-import static appeng.api.config.Actionable.MODULATE;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static appeng.api.config.Actionable.SIMULATE;
 
 /**

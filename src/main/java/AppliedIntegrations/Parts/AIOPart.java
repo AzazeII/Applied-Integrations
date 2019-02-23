@@ -1,18 +1,15 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.IInventoryHost;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.GuiEnergyIO;
 
-import AppliedIntegrations.Gui.GuiEnergyStoragePart;
-import AppliedIntegrations.Gui.PartGui;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketServerFilter;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.EffectiveSide;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -65,13 +62,13 @@ public abstract class AIOPart
      */
     private final static int ADDITIONAL_TRANSFER_PER_SECOND = 8;
 
-    private final static int MINIMUM_TICKS_PER_OPERATION = 10;
+    private final static int MINIMUM_TICKS_PER_OPERATION = 2;
 
     private final static int MAXIMUM_TICKS_PER_OPERATION = 40;
 
     private final static int MAXIMUM_TRANSFER_PER_SECOND = 64;
 
-    private final static int MINIMUM_TRANSFER_PER_SECOND = 1;
+    private final static int MINIMUM_TRANSFER_PER_SECOND = 16;
 
     protected int maxTransfer;
     /**
@@ -381,8 +378,6 @@ public abstract class AIOPart
 
     public abstract boolean energyTransferAllowed( LiquidAIEnergy energy );
 
-    public abstract boolean doWork( int transferAmount );
-
     @Override
     public final Object getClientGuiElement( final EntityPlayer player )
     {
@@ -459,28 +454,6 @@ public abstract class AIOPart
 
     }
 
-    /**
-     * Called when a player has clicked the redstone button in the gui.
-     *
-     * @param player
-     */
-    public void onClientRequestChangeRedstoneMode( final EntityPlayer player )
-    {
-        // Get the current ordinal, and increment it
-        int nextOrdinal = this.redstoneMode.ordinal() + 1;
- 
-    }
-
-    /**
-     * Called when a client gui is requesting a full update.
-     *
-     * @param player
-     */
-    public void onClientRequestFilterList( final EntityPlayer player )
-    {
-
-    }
-
     @Override
     public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos blockPos1) {
         // Ignored client side
@@ -509,9 +482,6 @@ public abstract class AIOPart
             {
                 // Set the previous redstone state
                 this.lastRedstone = this.isReceivingRedstonePower();
-
-                // Do work
-                this.doWork( this.getTransferAmountPerSecond() );
             }
         }
     }
@@ -594,6 +564,8 @@ public abstract class AIOPart
 
     }
 
+    public abstract TickRateModulation doWork(int toTransfer, IGridNode node);
+
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall )
     {
@@ -624,10 +596,7 @@ public abstract class AIOPart
                 transferAmount = MAXIMUM_TRANSFER_PER_SECOND;
             }
 
-            if( this.doWork( transferAmount ) )
-            {
-                return TickRateModulation.URGENT;
-            }
+            return doWork(transferAmount, node);
         }
 
         this.notifyListenersOfFilterEnergyChange();

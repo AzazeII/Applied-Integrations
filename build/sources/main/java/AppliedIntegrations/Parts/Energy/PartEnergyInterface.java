@@ -1,6 +1,7 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
@@ -66,7 +67,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.*;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 import static appeng.api.util.AEPartLocation.INTERNAL;

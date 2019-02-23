@@ -159,7 +159,6 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AppliedIntegrations1.12.2.iml" filepath="$PROJECT_DIR$/AppliedIntegrations1.12.2.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.appliedintegrations.AppliedIntegrations1.12.2.iml" filepath="$PROJECT_DIR$/com.azazell.appliedintegrations.AppliedIntegrations1.12.2.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.appliedintegrations.AppliedIntegrations1.12.2.api.iml" filepath="$PROJECT_DIR$/com.azazell.appliedintegrations.AppliedIntegrations1.12.2.api.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.appliedintegrations.AppliedIntegrations1.12.2.main.iml" filepath="$PROJECT_DIR$/com.azazell.appliedintegrations.AppliedIntegrations1.12.2.main.iml" />

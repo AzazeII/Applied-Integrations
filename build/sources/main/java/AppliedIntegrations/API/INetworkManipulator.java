@@ -1,6 +1,6 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import appeng.api.config.Actionable;
 
 public interface INetworkManipulator {

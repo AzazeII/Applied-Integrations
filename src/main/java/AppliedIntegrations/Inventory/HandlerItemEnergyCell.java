@@ -1,8 +1,8 @@
 package AppliedIntegrations.Inventory;
 
-import AppliedIntegrations.API.EnergyStack;
-import AppliedIntegrations.API.IEnergyStack;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.IEnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Gui.SortMode;

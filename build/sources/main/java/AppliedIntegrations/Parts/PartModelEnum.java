@@ -4,6 +4,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import appeng.api.AEApi;
 import appeng.api.parts.IPartModel;
 import appeng.api.parts.IPartModels;
+import appeng.parts.automation.PlaneConnections;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.util.ResourceLocation;
 
@@ -34,7 +35,17 @@ public enum PartModelEnum implements IPartModel {
     STORAGE_INTERFACE_BASE("interface_base"),
     STORAGE_INTERFACE_OFF(STORAGE_INTERFACE_BASE, "interface_off"),
     STORAGE_INTERFACE_ON(STORAGE_INTERFACE_BASE, "interface_on"),
-    STORAGE_INTERFACE_HAS_CHANNEL(STORAGE_INTERFACE_BASE, "interface_has_channel");
+    STORAGE_INTERFACE_HAS_CHANNEL(STORAGE_INTERFACE_BASE, "interface_has_channel"),
+
+    ANNIHILATION_BASE("annihilation_base"),
+    ANNIHILATION_HAS_CHANNEL(ANNIHILATION_BASE, "annihilation_has_channel"),
+    ANNIHILATION_ON(ANNIHILATION_BASE, "annihilation_on"),
+    ANNIHILATION_OFF(ANNIHILATION_BASE, "annihilation_off"),
+
+    FORMATION_BASE("formation_base"),
+    FORMATION_HAS_CHANNEL(FORMATION_BASE, "formation_has_channel"),
+    FORMATION_ON(FORMATION_BASE, "formation_on"),
+    FORMATION_OFF(FORMATION_BASE, "formation_off");
 
     List<ResourceLocation> locations;
 

@@ -1,6 +1,6 @@
 package AppliedIntegrations.API.Grid;
 
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
 import java.util.Collection;
 

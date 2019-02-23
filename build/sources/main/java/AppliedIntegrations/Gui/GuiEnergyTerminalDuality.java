@@ -4,9 +4,9 @@ package AppliedIntegrations.Gui;
 /**
  * @Author Azazell
  */
-import AppliedIntegrations.API.EnergyStack;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.IEnergySelectorContainer;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
@@ -24,7 +24,7 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.RF;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
 
 @SideOnly(Side.CLIENT)
 public class GuiEnergyTerminalDuality

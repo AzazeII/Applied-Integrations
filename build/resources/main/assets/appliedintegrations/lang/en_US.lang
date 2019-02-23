@@ -7,6 +7,9 @@ item.energyStoragePartItem.name=ME Energy Storage Bus
 item.energyTerminalPartItem.name=ME Energy Terminal
 item.energyMonitorPartItem.name=ME Energy Storage Monitor
 
+item.energyAnnihilationPartItem.name=ME Energy Annihilation Plane
+item.energyFormationPartItem.name=ME Energy Formation Plane
+
 item.formation_core.name=ME Energy Formation Core
 item.annihilation_core.name=ME Energy Annihilation Core
 item.EnergyStorageCasing.name=ME Energy Cell Casing
@@ -39,6 +42,16 @@ item.EnergyStorageCell_256k.name=ME 256k Energy Cell
 item.EnergyStorageCell_1024k.name=ME 1024k Energy Cell
 item.EnergyStorageCell_4096k.name=ME 4096k Energy Cell
 item.EnergyStorageCell_16384k.name=ME 16384k Energy Cell
+
+item.ManaStorageCell_1k.name=ME 1k Mana Cell
+item.ManaStorageCell_4k.name=ME 4k Mana Cell
+item.ManaStorageCell_16k.name=ME 16k Mana Cell
+item.ManaStorageCell_64k.name=ME 64k Mana Cell
+item.ManaStorageCell_256k.name=ME 256k Mana Cell
+item.ManaStorageCell_1024k.name=ME 1024k Mana Cell
+item.ManaStorageCell_4096k.name=ME 4096k Mana Cell
+item.ManaStorageCell_16384k.name=ME 16384k Mana Cell
+
 ME Creative Energy Cell.name=ME Creative Energy Cell
 item.advancedWrench.name=Advanced Network Tool
 

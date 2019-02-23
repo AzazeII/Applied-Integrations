@@ -1,6 +1,6 @@
 package AppliedIntegrations.Container;
 
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.AIOPart;

@@ -1,7 +1,7 @@
 package AppliedIntegrations.Inventory;
 
 import AppliedIntegrations.API.AIApi;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;

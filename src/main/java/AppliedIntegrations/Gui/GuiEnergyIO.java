@@ -1,6 +1,6 @@
 package AppliedIntegrations.Gui;
 
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;

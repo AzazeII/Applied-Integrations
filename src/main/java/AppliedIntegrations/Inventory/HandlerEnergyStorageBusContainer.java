@@ -1,7 +1,10 @@
 package AppliedIntegrations.Inventory;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.API.Storage.IEnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
@@ -23,9 +26,9 @@ import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.EU;
-import static AppliedIntegrations.API.LiquidAIEnergy.J;
-import static AppliedIntegrations.API.LiquidAIEnergy.RF;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.EU;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.J;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
 
 /**
  * @Author Azazell
@@ -44,7 +47,7 @@ class HandlerEnergyStorageBusContainer
     }
 
 
-    private void addListToDictionary( final List<IEnergyStack> EnergyList, final Hashtable<LiquidAIEnergy, Long> dictionary )
+    private void addListToDictionary(final List<IEnergyStack> EnergyList, final Hashtable<LiquidAIEnergy, Long> dictionary )
     {
         // Add each Energy
         if( EnergyList != null )

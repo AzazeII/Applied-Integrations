@@ -18,7 +18,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Tesla-1.12.2-1.0.63.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/EnderIO-1.12.2-5.0.40.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/embers_1.12.2_0.230.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -36,7 +45,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/EnderIO-1.12.2-5.0.40.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Tesla-1.12.2-1.0.63.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -61,15 +70,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="com.azazell.appliedintegrations.AppliedIntegrations1.12.2.api" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/embers_1.12.2_0.230.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
     <orderEntry type="module-library">
       <library>
         <CLASSES>

@@ -16,6 +16,9 @@ public enum AIStrings {
 	Part_P2PRotary("Energy.Machine.P2PRotary",true),
 	Part_P2PJoules("Energy.Machine.P2PJoules",true ),
 	Part_P2PHeat("Energy.Machine.P2PHeat",true),
+	Part_EnergyAnnihilation("Energy.AnnihilationBus", true),
+	Part_EnergyFormation("Energy.FormationBus", true),
+
 
 	Tooltip_ItemStackDetails ("tooltip.itemstack.details", false),
 	Tooltip_CellBytes ("tooltip.energy.cell.bytes", false),
@@ -39,10 +42,10 @@ public enum AIStrings {
 	Item_StorageComponent_1024k ("item.storage.component.1024k", true),
 	Item_StorageComponent_4096k ("item.storage.component.4096k", true),
 
-	Gui_SelectedAmount("gui.selected.amount",true),
-	Gui_SelectedEnergy("gui.selected.energy",true);
+	Gui_SelectedEnergy("gui.selected.energy",true),
+	Gui_SelectedAmount("gui.selected.amount",true);
 
-	private String unlocalized;
+    private String unlocalized;
 	private boolean isDotName;
 	private AIStrings(final String unloc, final boolean isDotName )
 	{

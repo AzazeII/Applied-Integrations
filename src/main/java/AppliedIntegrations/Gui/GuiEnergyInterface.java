@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.IEnergyInterface;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
@@ -10,12 +10,9 @@ import AppliedIntegrations.tile.TileEnergyInterface;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.Buttons.InterfaceEnergyButtons;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketGuiChange;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.RedstoneMode;
-import appeng.client.gui.implementations.GuiPriority;
 import com.google.common.collect.Lists;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,7 +26,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.*;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static appeng.api.config.RedstoneMode.*;
 import static net.minecraft.util.EnumFacing.*;
 

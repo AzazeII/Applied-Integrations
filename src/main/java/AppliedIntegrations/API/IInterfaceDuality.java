@@ -1,10 +1,9 @@
 package AppliedIntegrations.API;
 
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
-import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.util.AEPartLocation;
-import net.minecraftforge.common.capabilities.Capability;
 
 public interface IInterfaceDuality {
 

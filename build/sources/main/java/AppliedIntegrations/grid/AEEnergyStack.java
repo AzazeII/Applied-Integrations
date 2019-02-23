@@ -1,7 +1,7 @@
 package AppliedIntegrations.grid;
 
-import AppliedIntegrations.API.EnergyStack;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import appeng.api.AEApi;

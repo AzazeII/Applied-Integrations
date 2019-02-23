@@ -4,8 +4,8 @@ import AppliedIntegrations.API.Grid.IAIEnergyWatcher;
 import AppliedIntegrations.API.Grid.IAIEnergyWatcherHost;
 import AppliedIntegrations.API.Grid.IMEEnergyMonitor;
 import AppliedIntegrations.API.Grid.IMEEnergyMonitorReceiver;
-import AppliedIntegrations.API.IEnergyStack;
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.IEnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import appeng.api.networking.IGridNode;
 
 import javax.annotation.Nonnull;

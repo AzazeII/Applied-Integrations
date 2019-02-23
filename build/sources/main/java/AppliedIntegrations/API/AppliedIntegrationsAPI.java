@@ -1,5 +1,7 @@
 package AppliedIntegrations.API;
 
+import AppliedIntegrations.API.Storage.IEnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import appeng.api.definitions.IBlockDefinition;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

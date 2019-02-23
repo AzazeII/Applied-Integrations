@@ -41,7 +41,11 @@ public enum PartEnum
 
     EnergyInterface (AIStrings.Part_EnergyInterface, PartEnergyInterface.class, ItemEnum.ITEMPARTINTERFACE),
 
-    EnergyStorageMonitor (AIStrings.Part_EnergyStorageMonitor, PartEnergyStorageMonitor.class, ItemEnum.ITEMPARTMONITOR);
+    EnergyStorageMonitor (AIStrings.Part_EnergyStorageMonitor, PartEnergyStorageMonitor.class, ItemEnum.ITEMPARTMONITOR),
+
+    EnergyFormation(AIStrings.Part_EnergyFormation, PartEnergyFormation.class, ItemEnum.ITEMPARTFORMATION),
+
+    EnergyAnnihilation (AIStrings.Part_EnergyAnnihilation, PartEnergyAnnihilation.class, ItemEnum.ITEMPARTANNIHILATION);
     /**
      * Cached enum values
      */

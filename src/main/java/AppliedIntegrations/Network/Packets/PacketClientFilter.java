@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Parts.IEnergyMachine;

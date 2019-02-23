@@ -2,10 +2,10 @@ package AppliedIntegrations.API;
 
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import appeng.api.AEApi;
 import appeng.api.parts.IPartHost;
-import appeng.api.storage.data.IAEFluidStack;
 
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import cofh.redstoneflux.api.IEnergyReceiver;
@@ -26,9 +26,9 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
-import static AppliedIntegrations.API.LiquidAIEnergy.EU;
-import static AppliedIntegrations.API.LiquidAIEnergy.J;
-import static AppliedIntegrations.API.LiquidAIEnergy.RF;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.EU;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.J;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
 
 /**
  * @Author Azazell
