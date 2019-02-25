@@ -148,6 +148,12 @@ public class PartEnergyInterface
 		TESLAStorage = new EnergyInterfaceStorage(this, capacity, maxTransfer);
 	}
 
+	// Make part available as "extendant(class to extend)S"
+	// ** IMPORTANT FOR MANA INTERFACE **
+	public PartEnergyInterface(PartEnum corespondingEnumPart, SecurityPermissions... permissions){
+		super(corespondingEnumPart, permissions);
+	}
+
 	public PartEnergyInterface() {
 		super(PartEnum.EnergyInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
 		if(Loader.isModLoaded("mekanism"))
@@ -234,11 +240,6 @@ public class PartEnergyInterface
 						getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
 				// Request gui update
 				updateRequested = true;
-			}else{
-				AILog.chatLog("Stored: " + getEnergyStorage(RF, INTERNAL).getStored() + " RF / " + getEnergyStorage(RF, INTERNAL).getMaxStored() + " RF", player);
-				AILog.chatLog("Stored: " + getEnergyStorage(EU, INTERNAL).getStored() + " EU / " + getEnergyStorage(EU, INTERNAL).getMaxStored() + " EU", player);
-				AILog.chatLog("Stored: " + getEnergyStorage(J, INTERNAL).getStored() + " J / " + getEnergyStorage(J, INTERNAL).getMaxStored() + " J", player);
-				AILog.chatLog("Stored: " + getEnergyStorage(Ember, INTERNAL).getStored() + " Ember / " + getEnergyStorage(Ember, INTERNAL).getMaxStored() + " Ember", player);
 			}
 		}
 		return true;
@@ -249,14 +250,16 @@ public class PartEnergyInterface
 	public void removeFromWorld()
 	{
 		super.removeFromWorld();
-		this.invalidateSinkSource();
+		if(Loader.isModLoaded("ic2"))
+			this.invalidateSinkSource();
 	}
 
 	@Override
 	public void addToWorld()
 	{
 		super.addToWorld();
-		this.updateSinkSource();
+		if(Loader.isModLoaded("ic2"))
+			this.updateSinkSource();
 	}
 
 	private void updateSinkSource()
@@ -452,32 +455,33 @@ public class PartEnergyInterface
          * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
          * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
          */
+		if(Loader.isModLoaded("ember")) {
+			if (getFacingTile() instanceof TileEntityReceiver) {
+				TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
+				IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
 
-		if(getFacingTile() instanceof TileEntityReceiver){
-		    TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
-            IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
+				// Check if facing is correct
+				if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
+					IEmberCapability emberStorage = emberReceptor.capability;
 
-            // Check if facing is correct
-		    if(state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
-                IEmberCapability emberStorage = emberReceptor.capability;
+					if (emberStorage.getEmber() > 0) {
+						emberStorage.removeAmount(getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
+					}
+				}
+			} else if (getFacingTile() instanceof TileEntityEmitter) {
+				TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
+				IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
 
-                if (emberStorage.getEmber() > 0) {
-                    emberStorage.removeAmount(getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
-                }
-            }
-        }else if(getFacingTile() instanceof TileEntityEmitter){
-		    TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
-		    IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
+				// Check if facing is correct
+				if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
+					IEmberCapability emberStorage = emberEmitter.capability;
 
-		    // Check if facing is correct
-		    if(state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()){
-                IEmberCapability emberStorage = emberEmitter.capability;
-
-                if (((EmberInterfaceStorageDuality)getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
-                    getEnergyStorage(Ember, INTERNAL).extract((int)emberStorage.addAmount(getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
-                }
-            }
-        }
+					if (((EmberInterfaceStorageDuality) getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
+						getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount(getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
+					}
+				}
+			}
+		}
 
 		//Syncing:
 		notifyListenersOfFilterEnergyChange();
@@ -518,13 +522,17 @@ public class PartEnergyInterface
      */
     @Override
     public void DoInjectDualityWork(Actionable action) throws NullNodeConnectionException {
-		duality.DoInjectDualityWork(action);
+		getDuality().DoInjectDualityWork(action);
 	}
 
 	@Override
     public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
-    	duality.DoExtractDualityWork(action);
+    	getDuality().DoExtractDualityWork(action);
     }
+
+	public IInterfaceDuality getDuality() {
+		return this.duality;
+	}
 
 
 	public int getMaxEnergyStored(EnumFacing unknown,@Nullable LiquidAIEnergy linkedMetric) {
@@ -576,11 +584,13 @@ public class PartEnergyInterface
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-		((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).writeToNBT(tag);
+		if(Loader.isModLoaded("embers"))
+			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).writeToNBT(tag);
 	}
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-		((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).readFromNBT(tag);
+		if(Loader.isModLoaded("embers"))
+			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).readFromNBT(tag);
 	}
 
 	@Override

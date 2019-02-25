@@ -2,12 +2,14 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
-import AppliedIntegrations.Items.Parts.*;
+import AppliedIntegrations.Items.Part.Energy.*;
+import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.StorageCells.ManaStorageCell;
 import AppliedIntegrations.Items.multiTool.toolChaosManipulator;
+import AppliedIntegrations.Parts.Energy.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -22,14 +24,16 @@ public enum ItemEnum {
     ENERGYANNIHILATIONCORE(new AIItemRegistrable("annihilation_core")),
     ENERGYFORMATIONCORE(new AIItemRegistrable("formation_core")),
 
-    ITEMPARTIMPORT(new ItemPartImport("energyImportPartItem")),
-    ITEMPARTEXPORT(new ItemPartExport("energyExportPartItem")),
-    ITEMPARTSTORAGE(new ItemPartStorage("energyStoragePartItem")),
-    ITEMPARTINTERFACE( new ItemPartInterface("energyInterfacePartItem")),
-    ITEMPARTMONITOR( new ItemPartMonitor("energyMonitorPartItem")),
-    ITEMPARTTERMINAL( new ItemPartTerminal("energyTerminalPartItem")),
-    ITEMPARTANNIHILATION( new ItemPartAnnihilationPlate( "energyAnnihilationPartItem")),
-    ITEMPARTFORMATION(new ItemPartFormationPlate("energyFormationPartItem")),
+    ITEMPARTIMPORT(new ItemPartEnergyImport("energyImportPartItem")),
+    ITEMPARTEXPORT(new ItemPartEnergyExport("energyExportPartItem")),
+    ITEMPARTSTORAGE(new ItemPartEnergyStorage("energyStoragePartItem")),
+    ITEMPARTINTERFACE( new ItemPartEnergyInterface("energyInterfacePartItem")),
+    ITEMPARTMONITOR( new ItemPartEnergyStorageMonitor("energyMonitorPartItem")),
+    ITEMPARTTERMINAL( new ItemPartEnergyTerminal("energyTerminalPartItem")),
+    ITEMPARTANNIHILATION( new ItemPartEnergyAnnihilation( "energyAnnihilationPartItem")),
+    ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem")),
+
+    ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem")),
 
     ITEMENERGYWIRELESSTERMINAL(new itemWirelessTerminal()),
     CHAOSMANIPULATOR( new toolChaosManipulator()),
@@ -91,7 +95,7 @@ public enum ItemEnum {
 
     public static void register() {
         for(ItemEnum itemEnum : values()){
-            // Register only that items, that not require botania as dependency
+            // Register only that items, which not **require botania as dependency**
             if(!(itemEnum.item instanceof IBotaniaIntegrated)) {
                 ForgeRegistries.ITEMS.register(itemEnum.item);
             }
@@ -100,7 +104,7 @@ public enum ItemEnum {
 
     public static void registerBotaniaItems(){
         for(ItemEnum itemEnum : values()){
-            // Register only that items, that require botania as dependency
+            // Register only that items, which **require botania as dependency**
             if(itemEnum.item instanceof IBotaniaIntegrated) {
                 ForgeRegistries.ITEMS.register(itemEnum.item);
             }

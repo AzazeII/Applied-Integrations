@@ -8,9 +8,11 @@ import AppliedIntegrations.Items.AIItemRegistrable;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
+import appeng.api.storage.ICellInventory;
 import appeng.api.storage.ICellInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IItemList;
+import appeng.core.localization.GuiText;
 import appeng.items.contents.CellConfig;
 import appeng.items.contents.CellUpgrades;
 import net.minecraft.client.util.ITooltipFlag;
@@ -39,7 +41,31 @@ public class ManaStorageCell extends AIItemRegistrable implements IStorageCell<I
     public void addInformation( final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips )
     {
         ICellInventoryHandler<IAEManaStack> inventoryHandler = AEApi.instance().registries().cell().getCellInventory( stack, null, this.getChannel());
-        AEApi.instance().client().addCellInformation( inventoryHandler, lines );
+        if(inventoryHandler != null) {
+            final ICellInventory<?> cellInventory = inventoryHandler.getCellInv();
+
+            if (cellInventory != null) {
+                // Show only bytes, since mana is only material which can be stored, and there is only 1 type available
+                lines.add(cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalBytes() + ' ' + GuiText.BytesUsed.getLocal());
+            }
+        }
+        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))) {
+            // Get the list of stored energies
+            IItemList<IAEManaStack> cellEnergies = inventoryHandler.getAvailableItems(getChannel().createList());
+            for( IAEManaStack currentStack : cellEnergies )
+            {
+                if( currentStack != null )
+                {
+                    // Add to the list
+                    String energyInfo = TextFormatting.AQUA.toString() + "Mana x " + currentStack.getStackSize();
+                    lines.add( energyInfo );
+                }
+            }
+        } else {
+            // Let the user know they can hold shift
+            lines.add(TextFormatting.WHITE.toString() + "Hold" + TextFormatting.DARK_AQUA.toString() + " Shift " + TextFormatting.WHITE.toString() + "for");
+        }
+
     }
 
     @Override

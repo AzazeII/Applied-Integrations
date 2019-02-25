@@ -43,7 +43,8 @@ public enum AIStrings {
 	Item_StorageComponent_4096k ("item.storage.component.4096k", true),
 
 	Gui_SelectedEnergy("gui.selected.energy",true),
-	Gui_SelectedAmount("gui.selected.amount",true);
+	Gui_SelectedAmount("gui.selected.amount",true),
+	Part_ManaInterface("Mana.Interface", true );
 
     private String unlocalized;
 	private boolean isDotName;

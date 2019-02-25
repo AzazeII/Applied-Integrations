@@ -2,6 +2,7 @@ package AppliedIntegrations.Parts;
 
 
 import AppliedIntegrations.Items.ItemEnum;
+import AppliedIntegrations.Parts.Botania.PartManaInterface;
 import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIStrings;
@@ -45,7 +46,8 @@ public enum PartEnum
 
     EnergyFormation(AIStrings.Part_EnergyFormation, PartEnergyFormation.class, ItemEnum.ITEMPARTFORMATION),
 
-    EnergyAnnihilation (AIStrings.Part_EnergyAnnihilation, PartEnergyAnnihilation.class, ItemEnum.ITEMPARTANNIHILATION);
+    EnergyAnnihilation (AIStrings.Part_EnergyAnnihilation, PartEnergyAnnihilation.class, ItemEnum.ITEMPARTANNIHILATION),
+    ManaInterface(AIStrings.Part_ManaInterface, PartManaInterface.class, ItemEnum.ITEMMANAPARTINTERFACE );
     /**
      * Cached enum values
      */
@@ -138,7 +140,7 @@ public enum PartEnum
 
     public ItemStack getStack()
     {
-        return parentItem.getDamagedStack( this.ordinal() );
+        return parentItem.getDamagedStack(ordinal());
     }
 
     /**

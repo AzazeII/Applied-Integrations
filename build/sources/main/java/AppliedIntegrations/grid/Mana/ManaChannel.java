@@ -2,6 +2,9 @@ package AppliedIntegrations.grid.Mana;
 
 import AppliedIntegrations.API.Botania.IAEManaStack;
 import AppliedIntegrations.API.Botania.IManaChannel;
+import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.grid.AEEnergyStack;
 import appeng.api.storage.data.IItemList;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,7 +24,12 @@ public class ManaChannel implements IManaChannel {
     @Nullable
     @Override
     public IAEManaStack createStack(@Nonnull Object o) {
-        return new AEManaStack((int)o);
+        if (o instanceof Integer) {
+            return this.createStack(o);
+        } else if (o instanceof AEManaStack) {
+            return ((AEManaStack) o).copy();
+        }
+        return null;
     }
 
     @Nullable

@@ -14,32 +14,36 @@ public class BotaniaLoader {
     }
 
     public static void init(){
+        // Register new mana layer, as !@#!@!#! BOTANIA HAS NO !@#!#@! CAPABILITY FOR MANA !!!!
+        // Joking, botania is great mod `)
+        AEApi.instance().partHelper().registerNewLayer(ManaLayer.class.getName(), ManaLayer.class.getName());
+
         ItemEnum.registerManaItemsModels();
     }
 
     public static void initRecipes() {
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_1k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_1k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_1k.getItem(), 1, 0), 100000);
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_4k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_4k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_4k.getItem(), 1, 0), 100000);
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_16k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_16k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_16k.getItem(), 1, 0), 200000);
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_64k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_64k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_64k.getItem(), 1, 0), 200000);
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_256k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_256k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_256k.getItem(), 1, 0), 200000);
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_1024k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_1024k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_1024k.getItem(), 1, 0), 200000);
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_4096k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_4096k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_4096k.getItem(), 1, 0), 300000);
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_16384k.getItem(), 1, 0),
-                new ItemStack(ItemEnum.ENERGYSTORAGE_16384k.getItem(), 1, 0), 10000);
+                new ItemStack(ItemEnum.ENERGYSTORAGE_16384k.getItem(), 1, 0), 300000);
     }
 }

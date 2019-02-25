@@ -157,11 +157,6 @@ public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
     }
 
     @Override
-    public int hashCode() {
-        return this.hashCode();
-    }
-
-    @Override
     public boolean equals(Object obj) {
         return obj instanceof IAEManaStack;
     }

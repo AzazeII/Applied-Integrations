@@ -4,19 +4,22 @@ import AppliedIntegrations.Parts.AIPart;
 import appeng.api.AEApi;
 import appeng.api.parts.IPartItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * @Author Azazell
  */
 public abstract class ItemPartAIBase<EnergyPart extends AIPart> extends AIItemRegistrable implements IPartItem<EnergyPart> {
 
-	public ItemPartAIBase(String id) {
-		super(id);
+	public ItemPartAIBase(String registry) {
+		super(registry);
 	}
 
 	@Override

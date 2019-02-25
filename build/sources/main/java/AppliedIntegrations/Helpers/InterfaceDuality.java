@@ -10,8 +10,12 @@ import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.capabilities.Capabilities;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.CapabilityItemHandler;
 import teamroots.embers.power.EmberCapabilityProvider;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
@@ -25,8 +29,16 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 public class InterfaceDuality implements IInterfaceDuality{
 
     private IEnergyInterface owner;
+    private List<LiquidAIEnergy> initializedStorages = new LinkedList<>();
+
     public InterfaceDuality(IEnergyInterface owner){
         this.owner = owner;
+        if(Loader.isModLoaded("ic2"))
+            initializedStorages.add(EU);
+        if(Loader.isModLoaded("mekanism"))
+            initializedStorages.add(J);
+        if(Loader.isModLoaded("embers"))
+            initializedStorages.add(Ember);
     }
 
     @Override
@@ -66,7 +78,7 @@ public class InterfaceDuality implements IInterfaceDuality{
                     }
                 }
                 // IC2
-                if (this.getEnergyStorage(EU, side).getStored() > 0 && this.getFilteredEnergy(side) != EU) {
+                if (isStorageInitialized(EU) && this.getEnergyStorage(EU, side).getStored() > 0 && this.getFilteredEnergy(side) != EU) {
 
                     int ValuedReceive = (int) Math.min(this.getEnergyStorage(EU, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(EU, ValuedReceive), SIMULATE) - ValuedReceive;
@@ -78,7 +90,7 @@ public class InterfaceDuality implements IInterfaceDuality{
                     }
                 }
                 // Mekanism
-                if (this.getEnergyStorage(J, side).getStored() > 0 && this.getFilteredEnergy(side) != J) {
+                if (isStorageInitialized(J) && this.getEnergyStorage(J, side).getStored() > 0 && this.getFilteredEnergy(side) != J) {
 
                     int ValuedReceive = (int) Math.min(this.getEnergyStorage(J, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(J, ValuedReceive), SIMULATE) - ValuedReceive;
@@ -91,7 +103,7 @@ public class InterfaceDuality implements IInterfaceDuality{
                 }
 
                 // Embers
-                if (this.getEnergyStorage(Ember, side).getStored() > 0 && this.getFilteredEnergy(side) != Ember) {
+                if (isStorageInitialized(Ember) && this.getEnergyStorage(Ember, side).getStored() > 0 && this.getFilteredEnergy(side) != Ember) {
 
                     int ValuedReceive = (int) Math.min(this.getEnergyStorage(Ember, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(Ember, ValuedReceive), SIMULATE) - ValuedReceive;
@@ -138,6 +150,15 @@ public class InterfaceDuality implements IInterfaceDuality{
                 break;
             }
         }
+    }
+
+    /**
+     * check if energy storage initialized (mod with capability for this storage loaded)
+     *
+     * @return
+     */
+    private boolean isStorageInitialized(LiquidAIEnergy energy) {
+        return initializedStorages.contains(energy);
     }
 
     @Override
