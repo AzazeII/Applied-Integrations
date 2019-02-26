@@ -11,6 +11,7 @@ import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.io.*;
@@ -41,7 +42,7 @@ public class CommonProxy
             BotaniaLoader.preInit();
     }
 
-    public void SidedInit(){
+    public void SidedInit(FMLInitializationEvent init){
 
     }
 

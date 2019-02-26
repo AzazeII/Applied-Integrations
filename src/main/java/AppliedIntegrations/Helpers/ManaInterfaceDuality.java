@@ -20,7 +20,7 @@ public class ManaInterfaceDuality implements IInterfaceDuality {
 
     @Override
     public double getMaxTransfer(AEPartLocation side) {
-        return 10; // Only 10 max transfer, as mana is rich material
+        return 100; // Only 100 max transfer, as mana is rich material
     }
 
     @Override

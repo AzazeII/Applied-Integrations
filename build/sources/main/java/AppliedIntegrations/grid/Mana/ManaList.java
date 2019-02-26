@@ -1,7 +1,7 @@
 package AppliedIntegrations.grid.Mana;
 
 import AppliedIntegrations.API.Botania.IAEManaStack;
-import AppliedIntegrations.grid.EnergyIterator;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IItemList;
 
@@ -15,14 +15,14 @@ public class ManaList implements IItemList<IAEManaStack> {
         if (option == null)
             return;
 
-        IAEManaStack st = this.getEnergyRecord(option);
+        IAEManaStack st = this.getManaRecord(option);
         if (st != null) {
             st.incStackSize(option.getStackSize());
             return;
         }
 
         IAEManaStack opt = option.copy();
-        this.putEnergyRecord(opt);
+        this.putManaRecord(opt);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ManaList implements IItemList<IAEManaStack> {
         if (option == null)
             return;
 
-        IAEManaStack st = this.getEnergyRecord(option);
+        IAEManaStack st = this.getManaRecord(option);
         if (st != null) {
             st.setCraftable(true);
             return;
@@ -39,7 +39,7 @@ public class ManaList implements IItemList<IAEManaStack> {
         IAEManaStack opt = option.copy();
         opt.setStackSize(0);
         opt.setCraftable(true);
-        this.putEnergyRecord(opt);
+        this.putManaRecord(opt);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class ManaList implements IItemList<IAEManaStack> {
         if (option == null)
             return;
 
-        IAEManaStack st = this.getEnergyRecord(option);
+        IAEManaStack st = this.getManaRecord(option);
         if (st != null) {
             st.setCountRequestable(st.getCountRequestable() + option.getCountRequestable());
             return;
@@ -57,7 +57,7 @@ public class ManaList implements IItemList<IAEManaStack> {
         opt.setStackSize(0);
         opt.setCraftable(false);
         opt.setCountRequestable(option.getCountRequestable());
-        this.putEnergyRecord(opt);
+        this.putManaRecord(opt);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ManaList implements IItemList<IAEManaStack> {
 
     @Override
     public Iterator<IAEManaStack> iterator() {
-        return new EnergyIterator<>(this.records.values().iterator());
+        return new ManaIterator<IAEManaStack>(this.records.values().iterator());
     }
 
     @Override
@@ -88,19 +88,19 @@ public class ManaList implements IItemList<IAEManaStack> {
         if (option == null)
             return;
 
-        IAEManaStack stack = this.getEnergyRecord(option);
+        IAEManaStack stack = this.getManaRecord(option);
         if (stack != null) {
             stack.add(option);
             return;
         }
 
         IAEManaStack opt = option.copy();
-        this.putEnergyRecord(opt);
+        this.putManaRecord(opt);
     }
 
     @Override
     public IAEManaStack findPrecise(IAEManaStack stack) {
-        return stack == null ? null : this.getEnergyRecord(stack);
+        return stack == null ? null : this.getManaRecord(stack);
     }
 
     @Override
@@ -113,11 +113,11 @@ public class ManaList implements IItemList<IAEManaStack> {
         return !this.iterator().hasNext();
     }
 
-    private IAEManaStack getEnergyRecord(IAEManaStack stack) {
+    private IAEManaStack getManaRecord(IAEManaStack stack) {
         return this.records.get(stack);
     }
 
-    private IAEManaStack putEnergyRecord(IAEManaStack stack) {
+    private IAEManaStack putManaRecord(IAEManaStack stack) {
         return this.records.put(stack, stack);
     }
 }

@@ -8,12 +8,14 @@ import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemModelMesher;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -36,14 +38,16 @@ public class ClientProxy
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void SidedInit() {
+    public void SidedInit(FMLInitializationEvent init) {
         ItemEnum.registerModels();
 
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
 
-        if(Loader.isModLoaded("botania"))
+        if(Loader.isModLoaded("botania")) {
             BotaniaLoader.init();
+        }
+
     }
 
     @Override

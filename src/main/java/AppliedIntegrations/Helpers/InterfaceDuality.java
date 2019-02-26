@@ -67,7 +67,12 @@ public class InterfaceDuality implements IInterfaceDuality{
             // Is it modulate, or matrix?
             if (action == Actionable.MODULATE) {
                 // RF Api
-                if (this.getEnergyStorage(RF, side).getStored() > 0 && this.getEnergyStorage(J, side).getStored() == 0 && this.getFilteredEnergy(side) != RF) {
+                if (this.getEnergyStorage(RF, side).getStored() > 0 && this.getFilteredEnergy(side) != RF) {
+                    if(isStorageInitialized(J)){
+                        if( this.getEnergyStorage(J, side).getStored() == 0 ){
+                            return;
+                        }
+                    }
                     // We can cast double to int, as RFAPI only operates int-energy
                     int ValuedReceive = (int) Math.min(this.getEnergyStorage(RF, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(RF, ValuedReceive), SIMULATE) - ValuedReceive;

@@ -20,7 +20,7 @@ public class ManaInterfaceDuality implements IInterfaceDuality {
 
     @Override
     public double getMaxTransfer(AEPartLocation side) {
-        return 10; // Only 10 max transfer, as mana is rich material
+        return 100; // Only 100 max transfer, as mana is rich material
     }
 
     @Override
@@ -38,7 +38,7 @@ public class ManaInterfaceDuality implements IInterfaceDuality {
         int ValuedReceive = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
 
         AILog.info("ValuedReceive: " + ValuedReceive);
-        AILog.info("Diff: " + owner.InjectMana(ValuedReceive, Actionable.SIMULATE));
+        AILog.info("Diff: " + (owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null)));
         if(owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null) == 0){
             int injectedAmount = owner.InjectMana(ValuedReceive, MODULATE);
 

@@ -9,7 +9,6 @@ import javax.annotation.Nullable;
 
 public class ItemPartManaInterface extends ItemPartAIBase<PartManaInterface> implements IBotaniaIntegrated {
     public ItemPartManaInterface(String id) {
-        // Instance: null, as only method used instance is overridden
         super(id);
     }
 

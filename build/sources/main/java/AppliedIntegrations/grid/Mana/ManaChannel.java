@@ -25,7 +25,7 @@ public class ManaChannel implements IManaChannel {
     @Override
     public IAEManaStack createStack(@Nonnull Object o) {
         if (o instanceof Integer) {
-            return this.createStack(o);
+            return new AEManaStack(((Integer) o).intValue());
         } else if (o instanceof AEManaStack) {
             return ((AEManaStack) o).copy();
         }

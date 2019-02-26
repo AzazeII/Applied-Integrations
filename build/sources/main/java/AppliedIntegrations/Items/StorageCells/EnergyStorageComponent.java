@@ -18,7 +18,6 @@ public class EnergyStorageComponent
         // Has subtypes
         this.setHasSubtypes( true );
 
-        // Goes in ThE's creative tab.
         this.setCreativeTab(AppliedIntegrations.AI);
     }
 

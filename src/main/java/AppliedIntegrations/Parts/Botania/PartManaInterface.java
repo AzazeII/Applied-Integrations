@@ -4,14 +4,11 @@ import AppliedIntegrations.API.Botania.IAEManaStack;
 import AppliedIntegrations.API.Botania.IManaChannel;
 import AppliedIntegrations.API.Botania.IManaInterface;
 import AppliedIntegrations.API.IInterfaceDuality;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.Helpers.ManaInterfaceDuality;
-import AppliedIntegrations.Integration.Botania.ManaLayer;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Parts.PartEnum;
+import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.Mana.AEManaStack;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -21,6 +18,7 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.parts.IPartModel;
 import appeng.me.helpers.MachineSource;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
@@ -29,12 +27,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.Mod;
 import vazkii.botania.api.mana.IManaReceiver;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 import vazkii.botania.api.mana.spark.ISparkEntity;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 import static AppliedIntegrations.Utils.EffectiveSide.isServerSide;
@@ -58,12 +55,24 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
 
     @Override
     public void recieveMana(int mana) {
-        // Simulate receive
-        if(currentMana + mana <= capacity){
-            // Modulate receive
-            currentMana += mana;
-        }
+        currentMana += mana;
+        if(currentMana > capacity)
+            currentMana = capacity;
+        if(currentMana < 0)
+            currentMana = 0;
     }
+
+    @Nonnull
+    @Override
+    public IPartModel getStaticModels() {
+        if (this.isPowered())
+            if (this.isActive())
+                return PartModelEnum.STORAGE_INTERFACE_MANA_HAS_CHANNEL;
+            else
+                return PartModelEnum.STORAGE_INTERFACE_MANA_ON;
+        return PartModelEnum.STORAGE_INTERFACE_MANA_OFF;
+    }
+
     @Override
     public IInterfaceDuality getDuality(){
         return new ManaInterfaceDuality(this);
@@ -201,6 +210,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
         IAEManaStack returnAmount = storage.getInventory(this.getManaChannel()).injectItems(
                 new AEManaStack(resource), actionable, new MachineSource(this));
 
+        AILog.info(storage.getInventory(getManaChannel()).toString());
         if (returnAmount == null)
             return (int) resource;
         return (int) (resource - returnAmount.getStackSize());
@@ -220,37 +230,6 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
         } else if (currentMana < 0) {
             currentMana = 0;
         }
-    }
-
-    /**
-     * @param resource
-     * 	Resource to be extracted
-     * @param actionable
-     * 	Simulate of Modulate?
-     * @return
-     * 	amount extracted
-     */
-    public int ExtractEnergy(int resource, Actionable actionable) {
-        if(node == null)
-            return 0;
-        IGrid grid = node.getGrid();
-        if (grid == null) {
-            AILog.info("Grid cannot be initialized, WTF?");
-            return 0;
-        }
-
-        IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
-        if (storage == null) {
-            AILog.info("StorageGrid cannot be initialized, WTF?");
-            return 0;
-        }
-
-        IAEManaStack notRemoved = storage.getInventory(getManaChannel()).extractItems(
-                new AEManaStack(resource), actionable, new MachineSource(this));
-
-        if (notRemoved == null)
-            return (int)resource;
-        return (int)(resource - notRemoved.getStackSize());
     }
 
     private IManaChannel getManaChannel() {

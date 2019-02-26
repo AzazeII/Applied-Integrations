@@ -1,9 +1,11 @@
 package AppliedIntegrations.Integration.Botania;
 
 import AppliedIntegrations.API.Botania.IManaChannel;
+import AppliedIntegrations.Items.Botania.MaterialEncorium;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.grid.Mana.ManaChannel;
 import appeng.api.AEApi;
+import appeng.items.materials.MaterialType;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.BotaniaAPI;
 
@@ -11,6 +13,11 @@ public class BotaniaLoader {
     public static void preInit(){
         AEApi.instance().storage().registerStorageChannel(IManaChannel.class, new ManaChannel());
         ItemEnum.registerBotaniaItems();
+
+        BotaniaEntryHelper helper = new BotaniaEntryHelper();
+        helper.createPages();
+
+
     }
 
     public static void init(){
@@ -45,5 +52,31 @@ public class BotaniaLoader {
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_16384k.getItem(), 1, 0),
                 new ItemStack(ItemEnum.ENERGYSTORAGE_16384k.getItem(), 1, 0), 300000);
+
+        ItemStack fluixStack = AEApi.instance().definitions().materials().fluixCrystal().maybeStack(1).get();
+        ItemStack fluixPureStack = AEApi.instance().definitions().materials().purifiedFluixCrystal().maybeStack(1).get();
+        BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixStack);
+        BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixPureStack);
+
+
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(1), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(2), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(1), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(3), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(2), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(4), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(3), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(5), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(4), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(6), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(5), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(7), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(6), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(8), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(7), 1, 0), 1000);
+        BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(9), 1,0),
+                new ItemStack(ItemEnum.encoriumVariants.get(8), 1, 0), 1000);
+
     }
 }

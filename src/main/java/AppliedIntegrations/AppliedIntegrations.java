@@ -85,7 +85,7 @@ public class AppliedIntegrations {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this,new AIGuiHandler());
 		// Register objects, that can be moved by spatial cards io
 		proxy.registerSpatialIOMovables();
-		proxy.SidedInit();
+		proxy.SidedInit(event);
 
 		if(Loader.isModLoaded("botania"))
 			BotaniaLoader.initRecipes();

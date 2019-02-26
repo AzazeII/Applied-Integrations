@@ -1,0 +1,6 @@
+{
+  "parent": "appliedintegrations:item/energyinterfacepartitem",
+  "textures": {
+    "front": "appliedintegrations:blocks/parts/mana.interface.front"
+  }
+}

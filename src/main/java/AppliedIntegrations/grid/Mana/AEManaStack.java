@@ -11,18 +11,30 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
-    private int stackSize;
+    private long stackSize;
+    private long countRequestable;
+    private boolean isCraftable;
+    private int hash;
 
     public AEManaStack(int amount) {
         this.setStackSize(amount);
+        this.setCraftable(false);
+        this.setCountRequestable(0);
+        this.hash = 0;
     }
 
-    public AEManaStack(IAEManaStack stack) {
+    private AEManaStack(AEManaStack stack) {
         this.setStackSize(stack.getStackSize());
+        this.setCraftable(false);
+        this.setCountRequestable(0);
+        this.hash = stack.hash;
     }
 
     public static IAEManaStack fromNBT(NBTTagCompound t) {
-        return new AEManaStack(t.getInteger("#Amount"));
+        AEManaStack ae = new AEManaStack(t.getInteger("ManaAmount"));
+        ae.setCountRequestable(t.getLong("Req"));
+
+        return ae;
     }
 
     public static IAEManaStack fromPacket(ByteBuf buf) {
@@ -35,33 +47,35 @@ public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
     }
 
     @Override
-    public AEManaStack setStackSize(long l) {
-        this.stackSize = (int)l;
+    public IAEManaStack setStackSize(long l) {
+        this.stackSize = l;
         return this;
     }
 
     @Override
     public long getCountRequestable() {
-        return 0;
+        return this.countRequestable;
     }
 
     @Override
-    public AEManaStack setCountRequestable(long l) {
+    public IAEManaStack setCountRequestable(long l) {
+        this.countRequestable = l;
         return this;
     }
 
     @Override
     public boolean isCraftable() {
-        return false;
+        return this.isCraftable;
     }
 
     @Override
-    public AEManaStack setCraftable(boolean b) {
+    public IAEManaStack setCraftable(boolean b) {
+        this.isCraftable = b;
         return this;
     }
 
     @Override
-    public AEManaStack reset() {
+    public IAEManaStack reset() {
         this.setStackSize(0);
         this.setCountRequestable(0);
         this.setCraftable(false);
@@ -70,7 +84,7 @@ public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
 
     @Override
     public boolean isMeaningful() {
-        return (this.getStackSize() != 0);
+        return (this.getStackSize() != 0) || this.countRequestable > 0 || this.isCraftable;
     }
 
     @Override
@@ -103,7 +117,9 @@ public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
 
     @Override
     public void writeToNBT(NBTTagCompound t) {
-        t.setLong("#Amount", this.getStackSize());
+        t.setByte("Count", (byte) 0);
+        t.setInteger("ManaAmount", (int)this.getStackSize());
+        t.setLong("Req", this.getCountRequestable());
     }
 
     @Override
@@ -147,17 +163,26 @@ public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
 
     @Override
     public boolean fuzzyComparison(IAEManaStack other, FuzzyMode mode) {
+        // Always equal by type
         return true;
     }
 
     @Override
     public int compareTo(IAEManaStack o) {
-        int diff = this.hashCode() - o.hashCode();
-        return Integer.compare(diff, 0);
+        // Always equal by type
+        return 0;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.hash;
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof IAEManaStack;
+        if (obj instanceof AEManaStack) {
+            return true;
+        }
+        return false;
     }
 }

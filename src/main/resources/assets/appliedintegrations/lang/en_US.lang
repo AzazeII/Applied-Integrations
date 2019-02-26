@@ -7,6 +7,8 @@ item.energyStoragePartItem.name=ME Energy Storage Bus
 item.energyTerminalPartItem.name=ME Energy Terminal
 item.energyMonitorPartItem.name=ME Energy Storage Monitor
 
+item.manaInterfacePartItem.name=ME Mana Interface
+
 item.energyAnnihilationPartItem.name=ME Energy Annihilation Plane
 item.energyFormationPartItem.name=ME Energy Formation Plane
 
@@ -65,6 +67,18 @@ EnergyStorageCell_256k.name=ME 256k Energy Cell Component
 EnergyStorageCell_1024k.name=ME 1024k Energy Cell Component
 EnergyStorageCell_4096k.name=ME 4096k Energy Cell Component
 EnergyStorageCell_16384k.name=ME 16384k Energy Cell Component
+
+item.encorium0.name=Linkorium Crystal
+item.encorium1.name=Linkorium Crystal
+item.encorium2.name=Linkorium Crystal
+item.encorium3.name=Linkorium Crystal
+item.encorium4.name=Linkorium Crystal
+item.encorium5.name=Linkorium Crystal
+item.encorium6.name=Linkorium Crystal
+item.encorium7.name=Linkorium Crystal
+item.encorium8.name=Linkorium Crystal
+item.encorium9.name=Linkorium Crystal
+
 
 Used=Used
 of=Of

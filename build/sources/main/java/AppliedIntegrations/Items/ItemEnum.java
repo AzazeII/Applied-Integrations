@@ -2,6 +2,10 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
+import AppliedIntegrations.Items.Botania.MaterialEncorium;
+import AppliedIntegrations.Items.Botania.MEGreaterManaRing;
+import AppliedIntegrations.Items.Botania.MEManaMirror;
+import AppliedIntegrations.Items.Botania.MEManaRing;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
@@ -9,13 +13,17 @@ import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.StorageCells.ManaStorageCell;
 import AppliedIntegrations.Items.multiTool.toolChaosManipulator;
-import AppliedIntegrations.Parts.Energy.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.LinkedList;
+import java.util.Vector;
 
 /**
  * @Author Azazell
@@ -34,6 +42,10 @@ public enum ItemEnum {
     ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem")),
 
     ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem")),
+
+    ITEMMANAWIRELESSMIRROR(new MEManaMirror("me_mana_mirror")),
+    ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring")),
+    ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring")),
 
     ITEMENERGYWIRELESSTERMINAL(new itemWirelessTerminal()),
     CHAOSMANIPULATOR( new toolChaosManipulator()),
@@ -55,6 +67,9 @@ public enum ItemEnum {
     MANASTORAGE_4096k( new ManaStorageCell("ManaStorageCell_4096k", 4194304)),
     MANASTORAGE_16384k( new ManaStorageCell("ManaStorageCell_16384k", 16777216)),
 
+    MANAANNIHILATIONCORE(new AIItemRegistrable("mana_annihilation_core")),
+    MANAFORMATIONCORE(new AIItemRegistrable("mana_formation_core")),
+
     ENERGYSTORAGECASING(new EnergyStorageCasing()),
 
     ENERGYSTORAGECOMPONENT_1k(new EnergyStorageComponent("EnergyStorageComponent_1k")),
@@ -65,6 +80,7 @@ public enum ItemEnum {
     ENERGYSTORAGECOMPONENT_1024k(new EnergyStorageComponent("EnergyStorageComponent_1024k")),
     ENERGYSTORAGECOMPONENT_4096k(new EnergyStorageComponent("EnergyStorageComponent_4096k")),
     ENERGYSTORAGECOMPONENT_16384k(new EnergyStorageComponent("EnergyStorageComponent_16384k"));
+    public static LinkedList<MaterialEncorium> encoriumVariants = new LinkedList<>();
 
     private Item item;
 
@@ -109,6 +125,16 @@ public enum ItemEnum {
                 ForgeRegistries.ITEMS.register(itemEnum.item);
             }
         }
+
+        for(int i = 0; i < 10; i++){
+            MaterialEncorium mat = new MaterialEncorium("encorium"+i, (i+1)*10+"%");
+
+            if(i != 0)
+                mat.setCreativeTab(null);
+
+            ForgeRegistries.ITEMS.register(mat);
+            encoriumVariants.add(mat);
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -128,12 +154,16 @@ public enum ItemEnum {
     @SideOnly(Side.CLIENT)
     public static void registerManaItemsModels() {
         for(ItemEnum item : values()) {
-            if(item.item instanceof IBotaniaIntegrated) {
+            if(item.item instanceof IBotaniaIntegrated ) {
                 if (item.item instanceof AIItemRegistrable) {
                     AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
                     registrableItem.registerModel();
                 }
             }
+        }
+
+        for(MaterialEncorium mat : encoriumVariants){
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(mat, 0, new ModelResourceLocation(mat.getRegistryName(), "inventory"));
         }
     }
 

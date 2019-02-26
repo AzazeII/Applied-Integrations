@@ -15,6 +15,7 @@ public class AIItemRegistrable extends Item {
         this.setRegistryName(registry);
         this.setUnlocalizedName(registry);
         this.setCreativeTab(AppliedIntegrations.AI);
+
         this.reg = registry;
     }
 
