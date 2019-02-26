@@ -1,6 +1,7 @@
 {
   "textures": {
-    "sides": "botania:blocks/livingwood0",
+    "sidesLivingWood": "botania:blocks/livingwood0",
+    "sides": "appliedenergistics2:parts/export_bus_sides",
     "sidesStatus": "appliedenergistics2:parts/monitor_sides_status",
     "back": "appliedenergistics2:parts/monitor_back",
     "front": "appliedintegrations:blocks/parts/mana.interface.front",
@@ -20,22 +21,22 @@
       ],
       "faces": {
         "down": {
-          "texture": "#sides"
+          "texture": "#sidesLivingWood"
         },
         "up": {
-          "texture": "#sides"
+          "texture": "#sidesLivingWood"
         },
         "south": {
           "texture": "#back"
         },
         "east": {
-          "texture": "#sides"
+          "texture": "#sidesLivingWood"
         },
         "north": {
           "texture": "#front"
         },
         "west": {
-          "texture": "#sides"
+          "texture": "#sidesLivingWood"
         }
       }
     },

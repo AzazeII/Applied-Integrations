@@ -1,18 +1,49 @@
 {
   "textures": {
-    "sidesLivingWood": "botania:blocks/livingwood0",
-    "sides": "appliedenergistics2:parts/export_bus_sides",
+    "sides": "appliedenergistics2:parts/storage_bus_sides",
     "sidesStatus": "appliedenergistics2:parts/monitor_sides_status",
-    "back": "appliedenergistics2:parts/monitor_back",
-    "front": "appliedintegrations:blocks/parts/mana.interface.front",
-    "particle": "appliedenergistics2:parts/monitor_back"
+    "back": "appliedenergistics2:parts/storage_bus_back",
+    "front": "appliedintegrations:blocks/parts/mana.storage.bus.face",
+    "particle": "appliedenergistics2:parts/storage_bus_back"
   },
   "elements": [
     {
       "from": [
-        2,
-        2,
+        3,
+        3,
         0
+      ],
+      "to": [
+        13,
+        13,
+        1
+      ],
+      "faces": {
+        "down": {
+          "texture": "#sides"
+        },
+        "up": {
+          "texture": "#sides"
+        },
+        "south": {
+          "texture": "#back"
+        },
+        "east": {
+          "texture": "#sides"
+        },
+        "north": {
+          "texture": "#front"
+        },
+        "west": {
+          "texture": "#sides"
+        }
+      }
+    },
+    {
+      "from": [
+        2,
+        2,
+        1
       ],
       "to": [
         14,
@@ -21,22 +52,22 @@
       ],
       "faces": {
         "down": {
-          "texture": "#sidesLivingWood"
+          "texture": "#sides"
         },
         "up": {
-          "texture": "#sidesLivingWood"
+          "texture": "#sides"
         },
         "south": {
           "texture": "#back"
         },
         "east": {
-          "texture": "#sidesLivingWood"
+          "texture": "#sides"
         },
         "north": {
           "texture": "#front"
         },
         "west": {
-          "texture": "#sidesLivingWood"
+          "texture": "#sides"
         }
       }
     },
@@ -64,9 +95,6 @@
         "east": {
           "texture": "#sides"
         },
-        "north": {
-          "texture": "#front"
-        },
         "west": {
           "texture": "#sides"
         }
@@ -85,21 +113,18 @@
       ],
       "faces": {
         "down": {
-          "texture": "#sidesStatus"
+          "texture": "#sides"
         },
         "up": {
-          "texture": "#sidesStatus"
-        },
-        "south": {
-          "texture": "#back"
+          "texture": "#sides"
         },
         "east": {
-          "texture": "#sidesStatus"
+          "texture": "#sides"
         },
         "west": {
-          "texture": "#sidesStatus"
+          "texture": "#sides"
         }
       }
     }
   ]
-}`
+}

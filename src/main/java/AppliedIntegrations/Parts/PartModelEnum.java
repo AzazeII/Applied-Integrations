@@ -32,6 +32,12 @@ public enum PartModelEnum implements IPartModel {
     STORAGE_BUS_ON(STORAGE_BUS_BASE, "storage_on"),
     STORAGE_BUS_HAS_CHANNEL(STORAGE_BUS_BASE, "storage_has_channel"),
 
+    MANA_STORAGE_BUS_BASE("mana_storage_base"),
+    MANA_STORAGE_BUS_OFF(MANA_STORAGE_BUS_BASE, "mana_storage_off"),
+    MANA_STORAGE_BUS_ON(MANA_STORAGE_BUS_BASE, "mana_storage_on"),
+    MANA_STORAGE_BUS_HAS_CHANNEL(MANA_STORAGE_BUS_BASE, "mana_storage_has_channel"),
+
+
     STORAGE_INTERFACE_BASE("interface_base"),
 
     STORAGE_INTERFACE_OFF(STORAGE_INTERFACE_BASE, "interface_off"),

@@ -3,6 +3,7 @@ package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Parts.Botania.PartManaInterface;
+import AppliedIntegrations.Parts.Botania.PartManaStorageBus;
 import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIStrings;
@@ -47,6 +48,9 @@ public enum PartEnum
     EnergyFormation(AIStrings.Part_EnergyFormation, PartEnergyFormation.class, ItemEnum.ITEMPARTFORMATION),
 
     EnergyAnnihilation (AIStrings.Part_EnergyAnnihilation, PartEnergyAnnihilation.class, ItemEnum.ITEMPARTANNIHILATION),
+
+    ManaStorage(AIStrings.Part_ManaStorage, PartManaStorageBus.class, ItemEnum.ITEMMANAPARTSTORAGEBUS ),
+
     ManaInterface(AIStrings.Part_ManaInterface, PartManaInterface.class, ItemEnum.ITEMMANAPARTINTERFACE );
     /**
      * Cached enum values

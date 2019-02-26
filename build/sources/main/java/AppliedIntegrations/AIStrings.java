@@ -19,6 +19,8 @@ public enum AIStrings {
 	Part_EnergyAnnihilation("Energy.AnnihilationBus", true),
 	Part_EnergyFormation("Energy.FormationBus", true),
 
+	Part_ManaInterface("Mana.Interface", true ),
+	Part_ManaStorage("Mana.Storage", true ),
 
 	Tooltip_ItemStackDetails ("tooltip.itemstack.details", false),
 	Tooltip_CellBytes ("tooltip.energy.cell.bytes", false),
@@ -43,8 +45,7 @@ public enum AIStrings {
 	Item_StorageComponent_4096k ("item.storage.component.4096k", true),
 
 	Gui_SelectedEnergy("gui.selected.energy",true),
-	Gui_SelectedAmount("gui.selected.amount",true),
-	Part_ManaInterface("Mana.Interface", true );
+	Gui_SelectedAmount("gui.selected.amount",true);
 
     private String unlocalized;
 	private boolean isDotName;

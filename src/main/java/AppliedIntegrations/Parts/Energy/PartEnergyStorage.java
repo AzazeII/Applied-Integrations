@@ -116,7 +116,7 @@ public class PartEnergyStorage
 	public PartEnergyStorage()
 	{
 		// Call super
-		super( PartEnum.EnergyStorageBus, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT );
+		this( PartEnum.EnergyStorageBus, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT );
 
 		// Pre-fill the list with nulls
 		for( int index = 0; index < this.FILTER_SIZE; index++ ) {
@@ -124,7 +124,11 @@ public class PartEnergyStorage
 		}
 	}
 
-	/**
+    protected PartEnergyStorage(PartEnum manaStorage, SecurityPermissions inject, SecurityPermissions extract) {
+		super(manaStorage, inject, extract);
+	}
+
+    /**
 	 * Updates the handler on the inverted state.
 	 */
 	private void updateInverterState()

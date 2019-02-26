@@ -8,6 +8,7 @@ import AppliedIntegrations.Items.Botania.MEManaMirror;
 import AppliedIntegrations.Items.Botania.MEManaRing;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
+import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
@@ -42,6 +43,7 @@ public enum ItemEnum {
     ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem")),
 
     ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem")),
+    ITEMMANAPARTSTORAGEBUS(new ItemPartManaStorageBus("manaStoragePartItem")),
 
     ITEMMANAWIRELESSMIRROR(new MEManaMirror("me_mana_mirror")),
     ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring")),
