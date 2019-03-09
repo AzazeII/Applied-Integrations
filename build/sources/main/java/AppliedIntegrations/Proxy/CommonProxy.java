@@ -3,6 +3,7 @@ package AppliedIntegrations.Proxy;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
+import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.grid.EnergyTunnel;

@@ -44,6 +44,8 @@ public class ClientProxy
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
 
+        AppliedIntegrations.registerPartModels();
+
         if(Loader.isModLoaded("botania")) {
             BotaniaLoader.init();
         }

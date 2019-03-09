@@ -1,19 +1,26 @@
 package AppliedIntegrations.Items.Botania;
 
-import AppliedIntegrations.Items.AIItemRegistrable;
+import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.ItemEnum;
 import baubles.api.BaubleType;
 import baubles.api.IBauble;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.Optional;
 import vazkii.botania.api.item.ICosmeticAttachable;
-import vazkii.botania.api.item.IPhantomInkable;
 import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 
-public class MEManaRing extends MEManaMirror implements IManaItem, IManaTooltipDisplay, IBauble, ICosmeticAttachable {
+@Optional.InterfaceList(value = {
+        @Optional.Interface(iface = "vazkii.botania.api.mana.IManaItem", modid = "botania", striprefs = true),
+        @Optional.Interface(iface = "vazkii.botania.api.mana.IManaTooltipDisplay", modid = "botania", striprefs = true),
+        @Optional.Interface(iface = "vazkii.botania.api.item.ICosmeticAttachable", modid = "botania", striprefs = true),
+        @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true),
+        @Optional.Interface(iface = "baubles.api.BaubleType", modid = "baubles", striprefs = true)
+})
+public class MEManaRing extends MEManaMirror implements IBotaniaIntegrated, IManaItem, IManaTooltipDisplay, IBauble, ICosmeticAttachable {
 
     public MEManaRing(String registry) {
         super(registry);

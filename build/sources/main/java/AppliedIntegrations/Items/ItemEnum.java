@@ -9,6 +9,7 @@ import AppliedIntegrations.Items.Botania.MEManaRing;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
@@ -19,6 +20,7 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -41,6 +43,8 @@ public enum ItemEnum {
     ITEMPARTTERMINAL( new ItemPartEnergyTerminal("energyTerminalPartItem")),
     ITEMPARTANNIHILATION( new ItemPartEnergyAnnihilation( "energyAnnihilationPartItem")),
     ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem")),
+
+    ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem")),
 
     ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem")),
     ITEMMANAPARTSTORAGEBUS(new ItemPartManaStorageBus("manaStoragePartItem")),
@@ -120,6 +124,7 @@ public enum ItemEnum {
         }
     }
 
+    @Optional.Method(modid = "botania")
     public static void registerBotaniaItems(){
         for(ItemEnum itemEnum : values()){
             // Register only that items, which **require botania as dependency**
@@ -153,6 +158,7 @@ public enum ItemEnum {
             }
         }
      }
+    @Optional.Method(modid = "botania")
     @SideOnly(Side.CLIENT)
     public static void registerManaItemsModels() {
         for(ItemEnum item : values()) {

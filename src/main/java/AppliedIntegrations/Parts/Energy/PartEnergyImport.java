@@ -1,11 +1,14 @@
 package AppliedIntegrations.Parts.Energy;
 
+import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -32,6 +35,7 @@ import java.util.Random;
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
+import static appeng.api.networking.ticking.TickRateModulation.FASTER;
 
 /**
  * @Author Azazell
@@ -88,60 +92,43 @@ public class PartEnergyImport extends AIOPart
 
 		TileEntity tile = getFacingTile();
 
-		// basic rf handler
-		if (tile instanceof IStrictEnergyStorage) {
-			IStrictEnergyStorage energyHandler = (IStrictEnergyStorage) tile;
-			int diff = this.InjectEnergy( new EnergyStack(J, valuedTransfer), SIMULATE) - valuedTransfer;
-			// Try to extract energy
-			int ContainerStorage = (int)energyHandler.getEnergy();
-			// Check if facing tile has enough storage, and network can handle this operation
-			if (ContainerStorage >= valuedTransfer && diff == 0) {
-				this.InjectEnergy(new EnergyStack(J, valuedTransfer), MODULATE);
-				energyHandler.setEnergy(energyHandler.getEnergy() - valuedTransfer);
-				return TickRateModulation.FASTER;
+		AILog.info("Reached doWork body");
+		// Iterate over allowed energy type
+		for(EnumCapabilityType energyType : EnumCapabilityType.values){
+			AILog.info("Iterating over enumcapability types");
+			// Get energy from type
+			LiquidAIEnergy energy = energyType.energy;
+
+			if(tile == null && getSide() == null)
+				return TickRateModulation.SLOWER;
+			CapabilityHelper helper = new CapabilityHelper(tile, getSide());
+			// Split value to integer
+			int stored = helper.getStored(energy);
+			AILog.info("Stored: "+stored);
+			// Check if there is energy exists and energy not filtered
+			if(stored > 0 && this.getFilteredEnergy() != energy){
+				AILog.info("Injecting energy");
+				// Find amount of energy that can be injected
+				int InjectedAmount = InjectEnergy(new EnergyStack(energy, valuedTransfer), SIMULATE);
+
+				// Inject energy in ME Network
+				InjectEnergy(new EnergyStack(energy, InjectedAmount), MODULATE);
+				// Remove injected amount from interface storage
+				helper.extractEnergy(InjectedAmount, false, energy);
+				return FASTER;
 			}
-		}else if (tile instanceof IEnergySource && energyTransferAllowed(EU)) {
-			// check if network have enough storage space
-			int diff = this.InjectEnergy(new EnergyStack(EU, valuedTransfer), SIMULATE) - valuedTransfer;
-			if(tile instanceof TileEntityElectricBlock){
-				TileEntityElectricBlock source = (TileEntityElectricBlock) tile;
 
-				int storage = (int)source.energy.getEnergy();
-				if (storage >= valuedTransfer) {
-					this.InjectEnergy(new EnergyStack(EU, valuedTransfer), MODULATE);
-					source.addEnergy(valuedTransfer);
-					return TickRateModulation.FASTER;
-				}
-			}
-
-		} else  if (energyTransferAllowed(RF)) {
-			int diff = this.InjectEnergy(new EnergyStack(RF, valuedTransfer), SIMULATE) - valuedTransfer;
-
-			// EIO
-			if (diff == 0) {
-				if (tile instanceof ILegacyPoweredTile) {
-					ILegacyPoweredTile abstractEntity = (ILegacyPoweredTile) tile;
-					if(abstractEntity.getEnergyStored() > valuedTransfer) {
-						abstractEntity.setEnergyStored(abstractEntity.getEnergyStored() - valuedTransfer);
-						InjectEnergy(new EnergyStack(RF, valuedTransfer), MODULATE);
-						return TickRateModulation.FASTER;
-					}
-				}
-				// main case
-				if (tile instanceof IEnergyProvider) {
-					IEnergyProvider energyHandler = (IEnergyProvider) tile;
-					int ContainerDiff = energyHandler.extractEnergy(this.getSide().getFacing(), valuedTransfer, true);
-					// Check if facing tile has enough storage, and network can handle this operation
-
-					if (diff == 0) {
-						this.InjectEnergy(new EnergyStack(RF, energyHandler.extractEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
-						return TickRateModulation.FASTER;
-					}
-				}
-			}
-			// Enderio capacitor uses custom methods to handle energy extraction
 		}
+
 		return TickRateModulation.SLOWER;
+	}
+
+	private int getMaxTransfer() {
+		return 500;
+	}
+
+	private LiquidAIEnergy getFilteredEnergy() {
+		return null;
 	}
 
 	@Override

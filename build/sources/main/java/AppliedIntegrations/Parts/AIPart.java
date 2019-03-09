@@ -267,7 +267,6 @@ public abstract class AIPart
 
 		// Update the part
 		this.updateStatus();
-		AILog.info("Machine:" + this.associatedItem.getDisplayName() + " Placed by Player with AE2 ID:" + this.getGridNode().getPlayerID());
 	}
 
 	@Override
@@ -783,5 +782,4 @@ public abstract class AIPart
 			return (int) resource.amount;
 		return (int) (resource.amount - returnAmount.getStackSize());
 	}
-
 }

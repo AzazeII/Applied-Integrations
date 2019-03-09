@@ -5,6 +5,7 @@ import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.Proxy.ClientProxy;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
 import net.minecraft.creativetab.CreativeTabs;
@@ -27,7 +28,7 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.3", dependencies = "required-after:appliedenergistics2")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.4", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */
@@ -60,15 +61,12 @@ public class AppliedIntegrations {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		NetworkHandler.registerPackets();
-
 		// For all liquidEnergies register it
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 				FluidRegistry.registerFluid(energy);
 		}
 
 		proxy.SidedPreInit();
-		registerPartModels();
 
 		// Register HUD for advanced entropy manipulator
 		//MinecraftForge.EVENT_BUS.register(new GuiEntropyManipulator(Minecraft.getMinecraft()));
@@ -111,7 +109,7 @@ public class AppliedIntegrations {
 	}
 
 	@SideOnly(Side.CLIENT)
-	void registerPartModels(){
+	public static void registerPartModels(){
 		PartModelEnum.registerModels();
 	}
 

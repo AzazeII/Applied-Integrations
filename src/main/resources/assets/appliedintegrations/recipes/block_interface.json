@@ -10,7 +10,7 @@
       "item": "minecraft:iron_ingot"
     },
     "R": {
-      "item": "tutorial:redstone"
+      "item": "minecraft:redstone"
     },
     "F": {
       "item": "appliedintegrations:formation_core"

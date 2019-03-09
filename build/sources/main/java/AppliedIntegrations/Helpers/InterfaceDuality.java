@@ -2,7 +2,9 @@ package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.API.*;
 import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
@@ -28,16 +30,20 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
  */
 public class InterfaceDuality implements IInterfaceDuality{
 
+    public boolean debug;
     private IEnergyInterface owner;
     private List<LiquidAIEnergy> initializedStorages = new LinkedList<>();
 
     public InterfaceDuality(IEnergyInterface owner){
         this.owner = owner;
-        if(Loader.isModLoaded("ic2"))
+
+        // RF always Initialized, as FE
+        initializedStorages.add(RF);
+        if(IntegrationsHelper.instance.isLoaded(EU))
             initializedStorages.add(EU);
-        if(Loader.isModLoaded("mekanism"))
+        if(IntegrationsHelper.instance.isLoaded(J))
             initializedStorages.add(J);
-        if(Loader.isModLoaded("embers"))
+        if(IntegrationsHelper.instance.isLoaded(Ember))
             initializedStorages.add(Ember);
     }
 
@@ -63,18 +69,143 @@ public class InterfaceDuality implements IInterfaceDuality{
             throw new NullNodeConnectionException();
         }
 
+        // Iterate over all sides(only for interface block)
         for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-            // Is it modulate, or matrix?
+            // Is it modulate, or simulate?
             if (action == Actionable.MODULATE) {
-                // RF Api
-                if (this.getEnergyStorage(RF, side).getStored() > 0 && this.getFilteredEnergy(side) != RF) {
-                    if(isStorageInitialized(J)){
-                        if( this.getEnergyStorage(J, side).getStored() == 0 ){
-                            return;
+                // Iterate over allowed energy type
+                for(EnumCapabilityType energyType : EnumCapabilityType.values){
+                    // Get energy from type
+                    LiquidAIEnergy energy = energyType.energy;
+                    // Check if storage available;
+                    if(isStorageInitialized(energy)){
+                        // Split value to integer
+                        Number num = (Number)getEnergyStorage(energy, side).getStored();
+                        Integer stored = num.intValue();
+                        // Check if there is energy exists and energy not filtered
+                        if(stored > 0 && this.getFilteredEnergy(side) != energy){
+                            // Find minimum value between energy stored and max transfer
+                            int ValuedReceive = (int) Math.min(stored, this.getMaxTransfer(side));
+                            // Find amount of energy that can be injected
+                            int InjectedAmount = owner.InjectEnergy(new EnergyStack(energy, ValuedReceive), SIMULATE);
+
+                            // Inject energy in ME Network
+                            owner.InjectEnergy(new EnergyStack(energy, InjectedAmount), MODULATE);
+                            // Remove injected amount from interface storage
+                            owner.getEnergyStorage(energy, side).modifyEnergyStored(-InjectedAmount);
                         }
                     }
+
+                }
+            }
+            if(!(owner instanceof TileEnergyInterface)){
+                // Break if owner is partEnergyInterface (iterate only one time)
+                debug = false;
+                break;
+            }
+        }
+    }
+
+    /**
+     * check if energy storage initialized (mod with capability for this storage loaded)
+     *
+     * @return
+     */
+    private boolean isStorageInitialized(LiquidAIEnergy energy) {
+        return initializedStorages.contains(energy);
+    }
+
+    @Override
+    public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+        IGridNode node = owner.getGridNode();
+        if (node == null) {
+            throw new NullNodeConnectionException();
+        }
+        for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
+            if (action == Actionable.MODULATE) {
+                if (getFilteredEnergy(side) != null) {
+                    Class<?> T = getEnergyStorage(getFilteredEnergy(side), INTERNAL).getTypeClass();
+                    IInterfaceStorageDuality interfaceStorageDuality = getEnergyStorage(getFilteredEnergy(side), INTERNAL);
+
+                    if (T != Long.class) {
+                        int valuedReceive = (int)
+                                Math.min((int)interfaceStorageDuality.getStored(), this.getMaxTransfer(side));
+                        int diff = valuedReceive - owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), valuedReceive), SIMULATE);
+                        if (diff == 0) {
+                            this.getEnergyStorage(this.getFilteredEnergy(side), INTERNAL).modifyEnergyStored(owner.ExtractEnergy(new
+                                    EnergyStack(getFilteredEnergy(side), valuedReceive), MODULATE));
+                            //transferEnergy(this.FilteredEnergy, valuedReceive);
+                        }
+                    }else{
+                        // TODO: 2019-02-27 Add tesla extraction
+                    }
+                }
+            }
+            if(!(owner instanceof TileEnergyInterface)){
+                // Break if owner is partEnergyInterface (iterate only one time)
+                break;
+            }
+        }
+    }
+
+    private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount) {
+        /*if(filteredEnergy == RF){
+            if(owner.getFacingTile().hasCapability(Capabilities.FORGE_ENERGY, owner.getSide().getOpposite().getFacing())){
+                IEnergyStorage capability = getFacingTile().getCapability(Capabilities.FORGE_ENERGY, getSide().getOpposite().getFacing());
+                capability.receiveEnergy(Amount,false);
+            }
+        }else if(filteredEnergy == EU){
+            if(this.getFacingTile() instanceof IEnergySink){
+                IEnergySink receiver = (IEnergySink)this.getFacingTile();
+                receiver.injectEnergy(this.getSide().getFacing(),(double)Amount,4);
+            }
+        }else if(filteredEnergy == J){
+            if(this.getFacingTile() instanceof IStrictEnergyAcceptor){
+                IStrictEnergyAcceptor receiver = (IStrictEnergyAcceptor)this.getFacingTile();
+                receiver.acceptEnergy(this.getSide().getFacing(),Amount, false);
+            }
+        }*/
+    }
+
+    public <T> T getCapability(Capability<T> capability, AEPartLocation side) {
+        // FE (RF) Capability
+        if( capability == Capabilities.FORGE_ENERGY ) {
+            return (T) this.getEnergyStorage(RF, side);
+            // Ember capability
+        }else if(IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
+            return (T) this.getEnergyStorage(Ember, side);
+            // Joule capability
+        }else if(IntegrationsHelper.instance.isLoaded(J) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
+                capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
+                capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY){
+            return (T) this.getEnergyStorage(J, side);
+            // EU capability
+        }else if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
+            //return (T) upgradeInventory;
+        }
+        return null;
+    }
+
+    public boolean hasCapability(Capability<?> capability) {
+        // Register FE capability
+        if (capability == Capabilities.FORGE_ENERGY) {
+            return true;
+        } else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
+            return true;
+        } else if (IntegrationsHelper.instance.isLoaded(J) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
+                capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
+                capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
+            return true;
+        } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            //return true;
+        }
+        return false;
+    }
+
+    // RF Api
+                /*if ((int)this.getEnergyStorage(RF, side).getStored() > 0 && this.getFilteredEnergy(side) != RF) {
                     // We can cast double to int, as RFAPI only operates int-energy
-                    int ValuedReceive = (int) Math.min(this.getEnergyStorage(RF, side).getStored(), this.getMaxTransfer(side));
+                    int ValuedReceive = (int) Math.min((int)this.getEnergyStorage(RF, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(RF, ValuedReceive), SIMULATE) - ValuedReceive;
                     if (Diff == 0) {
                         int amountToReflect = owner.InjectEnergy(new EnergyStack(RF, ValuedReceive + Diff), MODULATE);
@@ -83,9 +214,9 @@ public class InterfaceDuality implements IInterfaceDuality{
                     }
                 }
                 // IC2
-                if (isStorageInitialized(EU) && this.getEnergyStorage(EU, side).getStored() > 0 && this.getFilteredEnergy(side) != EU) {
+                if (isStorageInitialized(EU) && (double)this.getEnergyStorage(EU, side).getStored() > 0 && this.getFilteredEnergy(side) != EU) {
 
-                    int ValuedReceive = (int) Math.min(this.getEnergyStorage(EU, side).getStored(), this.getMaxTransfer(side));
+                    int ValuedReceive = (int) Math.min((double)this.getEnergyStorage(EU, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(EU, ValuedReceive), SIMULATE) - ValuedReceive;
                     if (Diff == 0) {
                         // Insert only that amount, which network can inject
@@ -95,9 +226,9 @@ public class InterfaceDuality implements IInterfaceDuality{
                     }
                 }
                 // Mekanism
-                if (isStorageInitialized(J) && this.getEnergyStorage(J, side).getStored() > 0 && this.getFilteredEnergy(side) != J) {
+                if (isStorageInitialized(J) && (double)this.getEnergyStorage(J, side).getStored() > 0 && this.getFilteredEnergy(side) != J) {
 
-                    int ValuedReceive = (int) Math.min(this.getEnergyStorage(J, side).getStored(), this.getMaxTransfer(side));
+                    int ValuedReceive = (int) Math.min((double)this.getEnergyStorage(J, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(J, ValuedReceive), SIMULATE) - ValuedReceive;
                     if (Diff == 0) {
                         // Insert only that amount, which network can inject
@@ -108,9 +239,9 @@ public class InterfaceDuality implements IInterfaceDuality{
                 }
 
                 // Embers
-                if (isStorageInitialized(Ember) && this.getEnergyStorage(Ember, side).getStored() > 0 && this.getFilteredEnergy(side) != Ember) {
+                if (isStorageInitialized(Ember) && (double)this.getEnergyStorage(Ember, side).getStored() > 0 && this.getFilteredEnergy(side) != Ember) {
 
-                    int ValuedReceive = (int) Math.min(this.getEnergyStorage(Ember, side).getStored(), this.getMaxTransfer(side));
+                    int ValuedReceive = (int) Math.min((double)this.getEnergyStorage(Ember, side).getStored(), this.getMaxTransfer(side));
                     int Diff = owner.InjectEnergy(new EnergyStack(Ember, ValuedReceive), SIMULATE) - ValuedReceive;
                     if (Diff == 0) {
                         // Insert only that amount, which network can inject
@@ -149,99 +280,4 @@ public class InterfaceDuality implements IInterfaceDuality{
 				}
 
 			}*/
-            }
-            if(!(owner instanceof TileEnergyInterface)){
-                // Break if owner is partEnergyInterface (iterate only one time)
-                break;
-            }
-        }
-    }
-
-    /**
-     * check if energy storage initialized (mod with capability for this storage loaded)
-     *
-     * @return
-     */
-    private boolean isStorageInitialized(LiquidAIEnergy energy) {
-        return initializedStorages.contains(energy);
-    }
-
-    @Override
-    public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
-        IGridNode node = owner.getGridNode();
-        if (node == null) {
-            throw new NullNodeConnectionException();
-        }
-        for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-            if (action == Actionable.MODULATE) {
-                if (getFilteredEnergy(side) != null) {
-                    int valuedReceive = (int) Math.min(this.getEnergyStorage(getFilteredEnergy(side), INTERNAL).getStored(), this.getMaxTransfer(side));
-                    int diff = valuedReceive - owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), valuedReceive), SIMULATE);
-                    if (diff == 0) {
-                        this.getEnergyStorage(this.getFilteredEnergy(side), INTERNAL).modifyEnergyStored(owner.ExtractEnergy(new
-                                EnergyStack(getFilteredEnergy(side), valuedReceive), MODULATE));
-                        //transferEnergy(this.FilteredEnergy, valuedReceive);
-                    }
-                }
-            }
-            if(!(owner instanceof TileEnergyInterface)){
-                // Break if owner is partEnergyInterface (iterate only one time)
-                break;
-            }
-        }
-    }
-
-    private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount) {
-        /*if(filteredEnergy == RF){
-            if(owner.getFacingTile().hasCapability(Capabilities.FORGE_ENERGY, owner.getSide().getOpposite().getFacing())){
-                IEnergyStorage capability = getFacingTile().getCapability(Capabilities.FORGE_ENERGY, getSide().getOpposite().getFacing());
-                capability.receiveEnergy(Amount,false);
-            }
-        }else if(filteredEnergy == EU){
-            if(this.getFacingTile() instanceof IEnergySink){
-                IEnergySink receiver = (IEnergySink)this.getFacingTile();
-                receiver.injectEnergy(this.getSide().getFacing(),(double)Amount,4);
-            }
-        }else if(filteredEnergy == J){
-            if(this.getFacingTile() instanceof IStrictEnergyAcceptor){
-                IStrictEnergyAcceptor receiver = (IStrictEnergyAcceptor)this.getFacingTile();
-                receiver.acceptEnergy(this.getSide().getFacing(),Amount, false);
-            }
-        }*/
-    }
-
-    public <T> T getCapability(Capability<T> capability, AEPartLocation side) {
-        // FE (RF) Capability
-        if( capability == Capabilities.FORGE_ENERGY ) {
-            return (T) this.getEnergyStorage(RF, side);
-            // Ember capability
-        }else if(capability == EmberCapabilityProvider.emberCapability){
-            return (T) this.getEnergyStorage(Ember, side);
-            // Joule capability
-        }else if(capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
-                capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
-                capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY){
-            return (T) this.getEnergyStorage(J, side);
-            // EU capability
-        }else if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-            //return (T) upgradeInventory;
-        }
-        return null;
-    }
-
-    public boolean hasCapability(Capability<?> capability) {
-        // Register FE capability
-        if (capability == Capabilities.FORGE_ENERGY) {
-            return true;
-        } else if (capability == EmberCapabilityProvider.emberCapability) {
-            return true;
-        } else if (capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
-                capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
-                capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
-            return true;
-        } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            //return true;
-        }
-        return false;
-    }
 }

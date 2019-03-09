@@ -9,7 +9,7 @@ import teamroots.embers.power.DefaultEmberCapability;
 @net.minecraftforge.fml.common.Optional.InterfaceList(value = {
         @Optional.Interface(iface = "teamroots.embers.power.IEmberCapability", modid = "embers", striprefs = true),
         @Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)})
-public class EmberInterfaceStorageDuality extends DefaultEmberCapability implements IInterfaceStorageDuality, InbtStorage {
+public class EmberInterfaceStorageDuality extends DefaultEmberCapability implements IInterfaceStorageDuality<Double>, InbtStorage {
     @Override
     public void modifyEnergyStored(int i) {
         if(i == 0)
@@ -18,22 +18,27 @@ public class EmberInterfaceStorageDuality extends DefaultEmberCapability impleme
     }
 
     @Override
-    public double getStored() {
+    public Class<Double> getTypeClass() {
+        return Double.class;
+    }
+
+    @Override
+    public Double getStored() {
         return getEmber();
     }
 
     @Override
-    public double getMaxStored() {
+    public Double getMaxStored() {
         return getEmberCapacity();
     }
 
     @Override
-    public double receive(double value, boolean simulate) {
+    public Double receive(Double value, boolean simulate) {
         return addAmount(value, !simulate);
     }
 
     @Override
-    public double extract(double value, boolean simulate) {
+    public Double extract(Double value, boolean simulate) {
         return removeAmount(value, !simulate);
     }
 }

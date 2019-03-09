@@ -22,6 +22,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.botania.api.mana.IManaItem;
@@ -29,6 +30,10 @@ import vazkii.botania.api.mana.IManaTooltipDisplay;
 
 import java.util.List;
 
+@Optional.InterfaceList(value = {
+        @Optional.Interface(iface = "vazkii.botania.api.mana.IManaItem", modid = "botania", striprefs = true),
+        @Optional.Interface(iface = "vazkii.botania.api.mana.IManaTooltipDisplay", modid = "botania", striprefs = true),
+})
 public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHandler, IAEItemPowerStorage, INetworkEncodable, IBotaniaIntegrated,  IManaItem, IManaTooltipDisplay{
 
     private double storage;

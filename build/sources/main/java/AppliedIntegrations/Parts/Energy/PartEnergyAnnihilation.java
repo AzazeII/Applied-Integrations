@@ -5,8 +5,11 @@ import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPartModel;
+import appeng.parts.automation.PlaneModels;
 
 public class PartEnergyAnnihilation extends AIPlatePart {
+    private static final PlaneModels MODELS = new PlaneModels( "part/annihilation_plane_", "part/annihilation_plane_on_" );
+
     public PartEnergyAnnihilation() {
         super(PartEnum.EnergyAnnihilation, SecurityPermissions.INJECT);
     }

@@ -60,7 +60,7 @@ public class ContainerEnergyStorage
 
 		// Set the part
 		this.storageBus = part;
-		part.listeners.add(this);
+		//part.listeners.add(this);
 
 		for( int i = 0; i < PartEnergyStorage.FILTER_SIZE; ++i )
 		{
@@ -68,8 +68,8 @@ public class ContainerEnergyStorage
 		}
 
 		// Add the upgrade slot
-		this.addUpgradeSlots( part.getUpgradeInventory(), 1, this.UPGRADE_SLOT_X,
-				this.UPGRADE_SLOT_Y );
+		/*this.addUpgradeSlots( part.getUpgradeInventory(), 1, this.UPGRADE_SLOT_X,
+				this.UPGRADE_SLOT_Y );*/
 
 		// Bind to the player's inventory
 		this.bindPlayerInventory( player.inventory, this.PLAYER_INV_POSITION_Y+67,
@@ -85,12 +85,12 @@ public class ContainerEnergyStorage
 		boolean updateFilters = false;
 		for( int filterIndex = 0; filterIndex < PartEnergyStorage.FILTER_SIZE; ++filterIndex )
 		{
-			if( this.filteredEnergies.get( filterIndex ) != this.storageBus.getFilteredEnergy( filterIndex ) )
+			/*if( this.filteredEnergies.get( filterIndex ) != this.storageBus.getFilteredEnergy( filterIndex ) )
 			{
 				// Found mismatch
 				this.filteredEnergies.set( filterIndex, this.storageBus.getFilteredEnergy( filterIndex ) );
 				updateFilters = true;
-			}
+			}*/
 		}
 		if( updateFilters )
 		{
@@ -106,7 +106,7 @@ public class ContainerEnergyStorage
 	public void onContainerClosed(EntityPlayer p)
 	{
 		super.onContainerClosed(p);
-		this.storageBus.listeners.remove(this);
+		//this.storageBus.listeners.remove(this);
 	}
 
 	@Override
@@ -134,10 +134,10 @@ public class ContainerEnergyStorage
 		// Do we have a valid slot with an item?
 		if( ( slot != null ) && ( slot.getHasStack() ) )
 		{
-			if( ( this.storageBus != null ) && ( this.storageBus.addFilteredEnergyFromItemstack( player, slot.getStack() ) ) )
+			/*if( ( this.storageBus != null ) && ( this.storageBus.addFilteredEnergyFromItemstack( player, slot.getStack() ) ) )
 			{
 				return null;
-			}
+			}*/
 
 			// Pass to super
 			return super.transferStackInSlot( player, slotNumber );

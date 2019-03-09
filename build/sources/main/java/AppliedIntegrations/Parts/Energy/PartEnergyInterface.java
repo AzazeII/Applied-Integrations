@@ -1,11 +1,13 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.PartGui;
+import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Helpers.InterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketBarChange;
@@ -105,7 +107,7 @@ public class PartEnergyInterface
 	protected EnergyInterfaceStorage RFStorage = new EnergyInterfaceStorage(this, capacity,maxTransfer);
 	protected InterfaceSinkSource EUStorage;
 
-    protected EnergyInterfaceStorage TESLAStorage;
+    protected TeslaInterfaceStorageDuality TESLAStorage;
 	protected JouleInterfaceStorage JStorage;
 
 	// Interface duality, or interface host
@@ -145,7 +147,7 @@ public class PartEnergyInterface
 
 	@Optional.Method(modid = "tesla")
 	private void initTESLAStorage(){
-		TESLAStorage = new EnergyInterfaceStorage(this, capacity, maxTransfer);
+		TESLAStorage = new TeslaInterfaceStorageDuality(this, (long)capacity, (long)maxTransfer);
 	}
 
 	// Make part available as "extendant(class to extend)S"
@@ -156,11 +158,11 @@ public class PartEnergyInterface
 
 	public PartEnergyInterface() {
 		super(PartEnum.EnergyInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
-		if(Loader.isModLoaded("mekanism"))
+		if(IntegrationsHelper.instance.isLoaded(J))
 			initJStorage();
-		if(Loader.isModLoaded("embers"))
+		if(IntegrationsHelper.instance.isLoaded(Ember))
 			initEmberStorage();
-		if(Loader.isModLoaded("tesla"))
+		if(IntegrationsHelper.instance.isLoaded(TESLA))
 			initTESLAStorage();
 	}
 
@@ -240,6 +242,11 @@ public class PartEnergyInterface
 						getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
 				// Request gui update
 				updateRequested = true;
+
+			}else{
+				duality.debug = true;
+
+				AILog.chatLog("Stored: " + getEnergyStorage(RF, INTERNAL).getStored());
 			}
 		}
 		return true;
@@ -250,7 +257,7 @@ public class PartEnergyInterface
 	public void removeFromWorld()
 	{
 		super.removeFromWorld();
-		if(Loader.isModLoaded("ic2"))
+		if(IntegrationsHelper.instance.isLoaded(EU))
 			this.invalidateSinkSource();
 	}
 
@@ -258,7 +265,7 @@ public class PartEnergyInterface
 	public void addToWorld()
 	{
 		super.addToWorld();
-		if(Loader.isModLoaded("ic2"))
+		if(IntegrationsHelper.instance.isLoaded(EU))
 			this.updateSinkSource();
 	}
 
@@ -455,7 +462,7 @@ public class PartEnergyInterface
          * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
          * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
          */
-		if(Loader.isModLoaded("ember")) {
+		if(IntegrationsHelper.instance.isLoaded(Ember)) {
 			if (getFacingTile() instanceof TileEntityReceiver) {
 				TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
 				IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
@@ -465,7 +472,7 @@ public class PartEnergyInterface
 					IEmberCapability emberStorage = emberReceptor.capability;
 
 					if (emberStorage.getEmber() > 0) {
-						emberStorage.removeAmount(getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
+						emberStorage.removeAmount((Double)getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
 					}
 				}
 			} else if (getFacingTile() instanceof TileEntityEmitter) {
@@ -477,7 +484,7 @@ public class PartEnergyInterface
 					IEmberCapability emberStorage = emberEmitter.capability;
 
 					if (((EmberInterfaceStorageDuality) getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
-						getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount(getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
+						getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount((Double)getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
 					}
 				}
 			}
@@ -488,10 +495,13 @@ public class PartEnergyInterface
 		// Energy Stored with GUi
 		int i = 0;
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			if (this.getEnergyStorage(energy, INTERNAL) != null && getEnergyStorage(energy, INTERNAL).getStored() > 0) {
-				this.bar = energy;
-				notifyListenersOfBarFilterChange(this.bar);
-				i += 1;
+			if(getEnergyStorage(energy, INTERNAL) != null) {
+				Class type = getEnergyStorage(energy, INTERNAL).getTypeClass();
+				if (this.getEnergyStorage(energy, INTERNAL) != null && ((Number) getEnergyStorage(energy, INTERNAL).getStored()).doubleValue() > 0) {
+					this.bar = energy;
+					notifyListenersOfBarFilterChange(this.bar);
+					i += 1;
+				}
 			}
 		}
 		if (i == 0)
@@ -584,12 +594,12 @@ public class PartEnergyInterface
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-		if(Loader.isModLoaded("embers"))
+		if(IntegrationsHelper.instance.isLoaded(Ember))
 			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).writeToNBT(tag);
 	}
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-		if(Loader.isModLoaded("embers"))
+		if(IntegrationsHelper.instance.isLoaded(Ember))
 			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).readFromNBT(tag);
 	}
 
@@ -722,7 +732,7 @@ public class PartEnergyInterface
 	@Optional.Method(modid = "ic2")
 	@Override
 	public double getDemandedEnergy() {
-		return getEnergyStorage(EU, INTERNAL).getMaxStored() - getEnergyStorage(EU, INTERNAL).getStored();
+		return (Double)getEnergyStorage(EU, INTERNAL).getMaxStored() - (Double)getEnergyStorage(EU, INTERNAL).getStored();
 	}
 
 	@Optional.Method(modid = "ic2")
@@ -734,7 +744,7 @@ public class PartEnergyInterface
 	@Optional.Method(modid = "ic2")
 	@Override
 	public double injectEnergy(EnumFacing enumFacing, double v, double v1) {
-		return getEnergyStorage(EU, INTERNAL).receive(v, false);
+		return (Double)getEnergyStorage(EU, INTERNAL).receive(v, false);
 	}
 
 	@Optional.Method(modid = "ic2")

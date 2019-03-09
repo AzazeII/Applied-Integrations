@@ -3,13 +3,16 @@ package AppliedIntegrations.API;
 /**
  *  Marking Interface
  */
-public interface IInterfaceStorageDuality {
+public interface IInterfaceStorageDuality<TYPE> {
 
     void modifyEnergyStored(int i);
 
-    double getStored();
-    double getMaxStored();
+    Class<TYPE> getTypeClass();
 
-    double receive(double value, boolean simulate);
-    double extract(double value, boolean simulate);
+    // Number, becasue it can be easily overriden to any class extends Number
+    TYPE getStored();
+    TYPE getMaxStored();
+
+    TYPE receive(TYPE value, boolean simulate);
+    TYPE extract(TYPE value, boolean simulate);
 }

@@ -1,114 +1,63 @@
 package AppliedIntegrations.Parts.Energy;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 
-import AppliedIntegrations.API.IEnergyDuality;
-import AppliedIntegrations.API.IInventoryHost;
+import AppliedIntegrations.API.IEnergyInterface;
+import AppliedIntegrations.API.Storage.EnumCapabilityType;
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Network.Packets.PacketServerFilter;
+import AppliedIntegrations.Helpers.IntegrationsHelper;
+import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusContainer;
+import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusInterface;
 import AppliedIntegrations.Parts.*;
-import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.ContainerEnergyStorage;
-import AppliedIntegrations.Gui.GuiEnergyStoragePart;
-import AppliedIntegrations.Inventory.HandlerEnergyStorageBusBase;
-import AppliedIntegrations.Inventory.HandlerEnergyStorageBusDuality;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 
-import appeng.api.AEApi;
-import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.config.PowerMultiplier;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
-import appeng.api.networking.events.MENetworkStorageEvent;
-import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.networking.security.IActionSource;
+import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
-import appeng.api.parts.PartItemStack;
 import appeng.api.storage.*;
 import appeng.api.util.AECableType;
-import appeng.core.sync.GuiBridge;
-import appeng.helpers.IPriorityHost;
-import ic2.api.energy.tile.IEnergyEmitter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import ic2.api.energy.tile.IEnergySink;
+import mekanism.common.capabilities.Capabilities;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
+import net.minecraftforge.fml.common.Loader;
+import teamroots.embers.power.EmberCapabilityProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.J;
 
 /**
  * @Author Azazell
  */
 public class PartEnergyStorage
 		extends AIPart
-		implements IEnergyDuality,IGridTickable, ICellContainer, IEnergyMachine, IAEAppEngInventory, IPriorityHost, IInventoryHost {
+		implements ICellContainer, IMEMonitorHandlerReceiver<IAEEnergyStack>, IGridTickable  {
 
 	public static final int FILTER_SIZE = 18;
-
-	/**
-	 * How much AE power is required to keep the part active.
-	 */
-	private static final double IDLE_POWER_DRAIN = 1.0D;
-
-
-	public boolean canTransfer = false;
-	private int capacity=   1000000;
-	private int maxTransfer = capacity;
-
-	/**
-	 * NBT Keys
-	 */
-	private static final String NBT_KEY_PRIORITY = "Priority", NBT_KEY_FILTER = "FilterEnergies#", NBT_KEY_UPGRADES = "UpgradeInventory";
-
-	/**
-	 * "Cell" handler for the storage bus.
-	 */
-	private final HandlerEnergyStorageBusBase handler = new HandlerEnergyStorageBusDuality( this );
-
-	/**
-	 * Filter list
-	 */
-	public final ArrayList<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>( this.FILTER_SIZE );
-
-	/**
-	 * Upgrade inventory
-	 */
-	private final AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("StorageBusUpgradeInv",5,1,this );
-
-	/**
-	 * Storage bus priority
-	 */
-	private int priority = 0;
-	private TileEntity facingContainer;
-	private boolean updateRequested;
-	public Vector<ContainerEnergyStorage> listeners = new Vector<>();
-	private EntityPlayer player;
+	private final Vector<LiquidAIEnergy> filteredEnergies = new Vector<>();
+	private IMEInventoryHandler<IAEEnergyStack> handler;
+	private boolean lastActive = false;
 
 	/**
 	 * Creates the bus
@@ -128,131 +77,29 @@ public class PartEnergyStorage
 		super(manaStorage, inject, extract);
 	}
 
-    /**
-	 * Updates the handler on the inverted state.
-	 */
-	private void updateInverterState()
-	{
-		boolean inverted = AEApi.instance().definitions().materials().cardInverter().isSameAs( this.upgradeInventory.getStackInSlot( 0 ) );
-		this.handler.setInverted( inverted );
-	}
-
-	/**
-	 * Adds a new filter from the specified itemstack.
-	 *
-	 * @param player
-	 * @param itemStack
-	 * @return
-	 */
-	public boolean addFilteredEnergyFromItemstack( final EntityPlayer player, final ItemStack itemStack )
-	{
-		// Get the Energy of the item
-		LiquidAIEnergy itemEnergy = Utils.getEnergyFromItemStack(itemStack);
-
-		// Is there an Energy?
-		if( itemEnergy != null )
-		{
-			// Are we already filtering this Energy?
-			if( this.filteredEnergies.contains( itemEnergy ) )
-			{
-				return true;
-			}
-
-			// Add to the first open slot
-			for( int index = 0; index < this.FILTER_SIZE; index++ )
-			{
-				// Is this space empty?
-				if( this.filteredEnergies.get( index ) == null )
-				{
-					// Set the filter
-					this.updateFilter( itemEnergy,index);
-
-					return true;
-				}
+	@Override
+	public void onNeighborChanged(IBlockAccess access, BlockPos pos, BlockPos neighbor) {
+		if (pos == null || neighbor == null)
+			return;
+		if (pos.offset(this.getSide().getFacing()).equals(neighbor) && this.getGridNode() != null) {
+			IGrid grid = this.getGridNode().getGrid();
+			if (grid != null) {
+				grid.postEvent(new MENetworkCellArrayUpdate());
 			}
 		}
 
-		return false;
-	}
-
-	/**
-	 * Ignored
-	 */
-	@Override
-	public void blinkCell( final int slot )
-	{
-		// Ignored
-	}
-
-	/**
-	 * Extracts power from the network proportional to the specified Energy
-	 * amount.
-	 *
-	 * @param EnergyAmount
-	 * @param mode
-	 * @return
-	 */
-	public boolean extractPowerForEnergyTransfer( final int EnergyAmount, final Actionable mode )
-	{
-		// Get the energy grid
-		IEnergyGrid eGrid = this.getGridBlock().getEnergyGrid();
-
-		// Ensure we have a grid
-		if( eGrid == null )
-		{
-			return false;
-		}
-
-		// Calculate amount of power to take
-		double powerDrain =  0.3 * EnergyAmount;
-
-		// Extract
-		return( eGrid.extractAEPower( powerDrain, mode, PowerMultiplier.CONFIG ) >= powerDrain );
-	}
-
-	/**
-	 * Gets the 'cell' handler for the storage bus.
-	 */
-	@Override
-	public List<IMEInventoryHandler> getCellArray( final IStorageChannel channel )
-	{
-		// Create a new list
-		List<IMEInventoryHandler> list = new ArrayList<IMEInventoryHandler>();
-
-		// Is this the energy channel?
-		if( channel == getChannel() )
-		{
-			// Add our handler
-			list.add( this.handler );
-		}
-
-		// Return the list
-		return list;
-
-	}
-
-	/**
-	 * Returns the client portion of the gui.
-	 */
-	@Override
-	public Object getClientGuiElement( final EntityPlayer player ) {
-		return new GuiEnergyStoragePart( (ContainerEnergyStorage)getServerGuiElement(player),this, player);
-	}
-
-	/**
-	 * What do we drop when removed from the world.
-	 */
-	@Override
-	public void getDrops( final List<ItemStack> drops, final boolean wrenched )
-	{
-		// Get the upgrade card
-		ItemStack slotStack = this.upgradeInventory.getStackInSlot( 0 );
-
-		// Is it not null?
-		if( ( slotStack != null ) && ( slotStack.getCount() > 0 ) )
-		{
-			// Add to the drops
-			drops.add( slotStack );
+		if (getFacingContainer() != null) {
+			if (getFacingContainer() instanceof IEnergyInterface) {
+				handler = new HandlerEnergyStorageBusInterface();
+			} else if (getFacingContainer().hasCapability(CapabilityEnergy.ENERGY, getSide().getFacing())) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.FE);
+			} else if (IntegrationsHelper.instance.isLoaded(Ember) && getFacingContainer().hasCapability(EmberCapabilityProvider.emberCapability, getSide().getFacing())) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.Ember);
+			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.J) && getFacingContainer().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.Joules);
+			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.EU) && getFacingContainer() instanceof IEnergySink) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.EU);
+			}
 		}
 	}
 
@@ -261,61 +108,7 @@ public class PartEnergyStorage
 		return 2;
 	}
 
-	/**
-	 * Returns the Energy in the filter slot.
-	 *
-	 * @return
-	 */
-	@Nullable
-	public LiquidAIEnergy getFilteredEnergy(final int slotIndex )
-	{
-		return this.filteredEnergies.get( slotIndex );
-	}
 
-	/**
-	 * Determines how much power the part takes for just existing.
-	 */
-	@Override
-	public double getIdlePowerUsage()
-	{
-		return this.IDLE_POWER_DRAIN;
-	}
-
-	/**
-	 * Does not produce light.
-	 */
-	@Override
-	public int getLightLevel()
-	{
-		return 0;
-	}
-
-	@Override
-	public void onEntityCollision(Entity entity) {
-
-	}
-
-	/**
-	 * Gets the priority for this storage bus.
-	 */
-	@Override
-	public int getPriority()
-	{
-		return this.priority;
-	}
-
-	/**
-	 * Gets the server part of the gui.
-	 */
-	@Override
-	public Object getServerGuiElement( final EntityPlayer player )
-	{
-		return new ContainerEnergyStorage( this, player );
-	}
-
-	/**
-	 * Sets how often we would like ticks.
-	 */
 	@Override
 	public TickingRequest getTickingRequest( final IGridNode node )
 	{
@@ -323,106 +116,15 @@ public class PartEnergyStorage
 		return new TickingRequest( 20, 20, false, false );
 	}
 
-	/**
-	 * Gets the inventory that holds our upgrades.
-	 *
-	 * @return
-	 */
-	public AIGridNodeInventory getUpgradeInventory()
-	{
-		return this.upgradeInventory;
+	@Nonnull
+	@Override
+	public TickRateModulation tickingRequest(@Nonnull IGridNode iGridNode, int i) {
+		return TickRateModulation.SAME;
 	}
 
 	@Override
-	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
-		if (player.isSneaking()) {
-			return false;
-		}
-
-		if(getLogicalSide().isServer()) {
-			if (!this.getHostTile().getWorld().isRemote) {
-				player.openGui(AppliedIntegrations.instance, 3, this.getHostTile().getWorld(),
-						this.getHostTile().getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
-				this.updateRequested = true;
-				this.player = player;
-
-				this.tickingRequest(getGridNode(), 20);
-			}
-		}
-		return true;
-	}
-	/**
-	 * Called when the upgrade inventory changes.
-	 */
-	@Override
-	public void onChangeInventory( final IInventory inv, final int arg1, final InvOperation arg2, final ItemStack arg3, final ItemStack arg4 )
-	{
-		this.updateInverterState();
-	}
-
-	@MENetworkEventSubscribe
-	public void updateChannels(MENetworkChannelsChanged channel) {
-		IGridNode node = getGridNode();
-		if (node != null) {
-			boolean isNowActive = node.isActive();
-			if (isNowActive != isActive()) {
-				onNeighborChanged(null, getHostTile().getPos(), null);
-				getHost().markForUpdate();
-			}
-		}
-		if (node == null) {
-			return;
-		}
-		IGrid grid = node.getGrid();
-		if (grid == null) {
-			return;
-		}
-		IStorageGrid storageGrid = grid.getCache(IStorageGrid.class);
-		if (storageGrid == null) {
-			return;
-		}
-			node.getGrid().postEvent(
-					new MENetworkStorageEvent(storageGrid.getInventory(getChannel()),
-							getChannel()));
-			node.getGrid().postEvent(new MENetworkCellArrayUpdate());
-	}
-
-
-
-
-	/**
-	 * /** Reads the part data from NBT
-	 */
-	@Override
-	public void readFromNBT( final NBTTagCompound data )
-	{
-		// Call super
-		super.readFromNBT( data );
-
-		// Read the priority
-		if( data.hasKey( this.NBT_KEY_PRIORITY ) )
-		{
-			this.priority = data.getInteger( this.NBT_KEY_PRIORITY );
-		}
-
-		// Read the filter list
-		for( int index = 0; index < this.FILTER_SIZE; index++ )
-		{
-			if( data.hasKey( this.NBT_KEY_FILTER + index ) )
-			{
-				this.filteredEnergies.set( index, LiquidAIEnergy.energies.get( data.getString( this.NBT_KEY_FILTER + index ) ) );
-			}
-			else
-			{
-				this.filteredEnergies.set( index, null );
-			}
-		}
-
-
-
-
-		// Update the handler filter list
-		this.handler.setPrioritizedEnergies( this.filteredEnergies);
+	protected AIGridNodeInventory getUpgradeInventory() {
+		return null;
 	}
 
 	@Override
@@ -430,6 +132,21 @@ public class PartEnergyStorage
 		bch.addBox( 3, 3, 15, 13, 13, 16 );
 		bch.addBox( 2, 2, 14, 14, 14, 15 );
 		bch.addBox( 5, 5, 12, 11, 11, 14 );
+	}
+
+	@Override
+	public double getIdlePowerUsage() {
+		return 0;
+	}
+
+	@Override
+	public int getLightLevel() {
+		return 0;
+	}
+
+	@Override
+	public void onEntityCollision(Entity entity) {
+
 	}
 
 	@Nonnull
@@ -444,178 +161,39 @@ public class PartEnergyStorage
 	}
 
 	@Override
-	public void saveChanges()
-	{
-		this.markForSave();
-	}
-
-	/**
-	 * Sets one of the filters.
-	 */
-	@Override
-	public void updateFilter( final LiquidAIEnergy Energy, final int index )
-	{
-
-		// Update filtered energies
-		this.filteredEnergies.set( index, Energy );
-
-		// Update the handler
-		this.handler.setPrioritizedEnergies( this.filteredEnergies);
-
-		// Mark for save
-		this.markForSave();
-	}
-
-	@Override
-	public void setPriority( final int priority ) {
-		this.priority = priority;
-	}
-
-	@Override
-	public ItemStack getItemStackRepresentation() {
-		return null;
-	}
-
-	@Override
-	public GuiBridge getGuiBridge() {
-		return null;
-	}
-
-	/**
-	 * Called periodically by AE2. Passes the tick to the handler.
-	 */
-	@Override
-	public TickRateModulation tickingRequest( final IGridNode node, final int TicksSinceLastCall )
-	{
-		// TODO: 2019-02-17 Integrations with Embers
-		// Update all energies in GUI
-		for(int i = 0; i < this.FILTER_SIZE; i++){
-			// Request gui update for all energies, and for null
-			this.requestGuiUpdate(filteredEnergies.get(i), i);
-		}
-		// Update the handler.
-		this.handler.tickingRequest( node, TicksSinceLastCall );
-		// Simulate neighborChange
-		this.onNeighborChanged(null, getHostTile().getPos(), null);
-
-		// If update requested
-		if (updateRequested) {
-			// Then update gui, using packet system
-			Gui g = Minecraft.getMinecraft().currentScreen;
-			if (g instanceof GuiEnergyStoragePart) {
-				// send packet
-				NetworkHandler.sendTo(new PacketCoordinateInit(getX(), getY(), getZ(), getHostTile().getWorld(), getSide().getFacing()),
-						(EntityPlayerMP) this.player);
-				updateRequested = false;
-			}
-		}
-
-		// Keep chugging along
-		return TickRateModulation.SAME;
-	}
-
-	private void requestGuiUpdate(LiquidAIEnergy energy, int index) {
-		if(player != null)
-			NetworkHandler.sendTo(new PacketServerFilter(energy, index, getX(), getY(), getZ(), getSide().getFacing(), getHostTile().getWorld()), (EntityPlayerMP) this.player);
-	}
-
-	/**
-	 * Writes the storage busses state to NBT.
-	 */
-	@Override
-	public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType )
-	{
-		// Call super
-		super.writeToNBT( data, saveType );
-
-		// Only write NBT data if saving, or wrenched.
-		if( ( saveType != PartItemStack.WORLD ) && ( saveType != PartItemStack.WRENCH ) )
-		{
-			return;
-		}
-
-		// Write the filters
-		boolean hasFilters = false;
-		for( int index = 0; index < this.FILTER_SIZE; index++ )
-		{
-			LiquidAIEnergy Energy = this.filteredEnergies.get( index );
-
-			if( Energy != null )
-			{
-				data.setString( this.NBT_KEY_FILTER + index, Energy.getTag() );
-				hasFilters = true;
-			}
-		}
-
-		// Only save the rest if filters are set, or world save
-		if( hasFilters || ( saveType == PartItemStack.WORLD ) ) {
-			// Write the priority
-			if (this.priority != 0) {
-				data.setInteger(this.NBT_KEY_PRIORITY, this.priority);
-			}
-
-
-		}
-
+	public void blinkCell(int i) {
 
 	}
 
 	@Override
-	public void onInventoryChanged() {
+	public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> channel) {
+		if (channel != this.getChannel() || this.handler == null)
+			return new LinkedList<>();
+		LinkedList<IMEInventoryHandler> list = new LinkedList<>();
 
+		list.add(this.handler);
+
+		return list;
 	}
 
 	@Override
-	public double injectAEPower(double amt, Actionable mode) {
+	public int getPriority() {
 		return 0;
 	}
 
 	@Override
-	public double getAEMaxPower() {
-		return 0;
-	}
-
-	@Override
-	public double getAECurrentPower() {
-		return 0;
-	}
-
-	@Override
-	public boolean isAEPublicPowerStorage() {
+	public boolean isValid(Object o) {
 		return false;
 	}
 
 	@Override
-	public AccessRestriction getPowerFlow() {
-		return null;
+	public void postChange(IBaseMonitor<IAEEnergyStack> iBaseMonitor, Iterable<IAEEnergyStack> iterable, IActionSource iActionSource) {
+
 	}
 
 	@Override
-	public double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
-		return 0;
-	}
+	public void onListUpdate() {
 
-	@Override
-	public double getDemandedEnergy() {
-		return 0;
-	}
-
-	@Override
-	public int getSinkTier() {
-		return 0;
-	}
-
-	@Override
-	public double injectEnergy(EnumFacing directionFrom, double amount, double voltage) {
-		return 0;
-	}
-
-
-	public void saveContainer(TileEntity tl) {
-		this.facingContainer = tl;
-	}
-	public TileEntity getFacingContainer(){
-		return this.facingContainer;
 	}
 
 	@Override
@@ -623,10 +201,51 @@ public class PartEnergyStorage
 
 	}
 
-	@Override
-	public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
+	public TileEntity getFacingContainer() {
+		TileEntity candidate = getFacingTile();
+
+		if(candidate == null)
+			return null;
+		for(Capability capability : getAllowedCappabilities()){
+			if(candidate.hasCapability(capability, getSide().getFacing()))
+				return candidate;
+		}
+
+		return null;
+	}
+
+	private List<Capability> getAllowedCappabilities() {
+		ArrayList<Capability> capabilities = new ArrayList<>();
+		capabilities.add(CapabilityEnergy.ENERGY);
+
+		// (If loaded -> add to allowed) blocks:
+		if(IntegrationsHelper.instance.isLoaded(Ember))
+			capabilities.add(EmberCapabilityProvider.emberCapability);
+		if(IntegrationsHelper.instance.isLoaded(J)) {
+			capabilities.add(Capabilities.ENERGY_STORAGE_CAPABILITY);
+			capabilities.add(Capabilities.ENERGY_OUTPUTTER_CAPABILITY);
+			capabilities.add(Capabilities.ENERGY_ACCEPTOR_CAPABILITY);
+		}
+
+		return capabilities;
+	}
+
+	public boolean extractPowerForEnergyTransfer(int drained, Actionable simulate) {
 		return false;
 	}
 
+	public void saveContainer(TileEntity tileEntity) {
+
+	}
+
+	@MENetworkEventSubscribe
+	public void updateChannels(final MENetworkChannelsChanged changedChannels) {
+		final boolean currentActive = this.getGridNode().isActive();
+		if (this.lastActive != currentActive) {
+			this.lastActive = currentActive;
+			getGridNode().getGrid().postEvent(new MENetworkCellArrayUpdate());
+			this.host.markForUpdate();
+		}
+	}
 }
 

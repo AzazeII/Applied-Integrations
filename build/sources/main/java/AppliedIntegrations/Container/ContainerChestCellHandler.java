@@ -7,7 +7,6 @@ import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Inventory.HandlerItemEnergyCell;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.EffectiveSide;
 import appeng.api.AEApi;
@@ -118,8 +117,8 @@ public class ContainerChestCellHandler
      *
      * @return
      */
-    private HandlerItemEnergyCell getCellHandler()
-    {
+    //private HandlerItemEnergyCell getCellHandler()
+    //{
         // Ensure we have a host
  /*       if( this.hostChest == null )
         {
@@ -136,8 +135,8 @@ public class ContainerChestCellHandler
         }
 
         // Get the handler
-        return new HandlerItemEnergyCell( EnergyCell, this.chestSaveProvider );*/return null;
-    }
+        return new HandlerItemEnergyCell( EnergyCell, this.chestSaveProvider );return null;
+    */
 
     @Override
     protected BaseActionSource getActionSource()
@@ -233,7 +232,7 @@ public class ContainerChestCellHandler
     public void onClientRequestFullUpdate()
     {
         // Get the handler
-        HandlerItemEnergyCell cellHandler = this.getCellHandler();
+       // HandlerItemEnergyCell cellHandler = this.getCellHandler();
 
         // Did we get the handler?
       /*  if( cellHandler != null )

@@ -37,12 +37,8 @@ public class ManaInterfaceDuality implements IInterfaceDuality {
     public void DoInjectDualityWork(Actionable mode) throws NullNodeConnectionException {
         int ValuedReceive = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
 
-        AILog.info("ValuedReceive: " + ValuedReceive);
-        AILog.info("Diff: " + (owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null)));
         if(owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null) == 0){
             int injectedAmount = owner.InjectMana(ValuedReceive, MODULATE);
-
-            AILog.info("Injected Mana: " + injectedAmount);
             // Remove only amount injected
             owner.modifyManaStorage(-injectedAmount);
         }

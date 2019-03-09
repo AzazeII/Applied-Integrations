@@ -6,7 +6,7 @@ import net.minecraftforge.energy.EnergyStorage;
 /**
  * Implementation of IEnergyStorage, for better supporting FE Energy System with energy interface
  */
-public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceStorageDuality, InbtStorage {
+public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceStorageDuality<Integer>, InbtStorage {
 
     private IEnergyInterface energyInterface;
     public EnergyInterfaceStorage(IEnergyInterface iEnergyInterface, int capacity, int maxTransfer) {
@@ -70,6 +70,12 @@ public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceS
             this.energy = 0;
         }
     }
+
+    @Override
+    public Class<Integer> getTypeClass() {
+        return Integer.class;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound tag) {
         tag.setInteger("#ENERGY_TAG", getEnergyStored());
@@ -80,22 +86,22 @@ public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceS
     }
 
     @Override
-    public double getStored() {
+    public Integer getStored() {
         return getEnergyStored();
     }
 
     @Override
-    public double getMaxStored() {
+    public Integer getMaxStored() {
         return getMaxEnergyStored();
     }
 
     @Override
-    public double receive(double value, boolean simulate) {
+    public Integer receive(Integer value, boolean simulate) {
         return receiveEnergy((int)value, simulate);
     }
 
     @Override
-    public double extract(double value, boolean simulate) {
+    public Integer extract(Integer value, boolean simulate) {
         return extractEnergy((int)value, simulate);
     }
 }

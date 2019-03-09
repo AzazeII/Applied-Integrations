@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.Gui.PartGui;
-import AppliedIntegrations.Network.AIPacket;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.EnumFacing;
@@ -15,30 +15,24 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * @Usage Send this packet, whenever you want to mark gui as "Gui of THIS machine", ex:
  * you want to send data to PartEnergyStorage gui, then you need to mark gui as gui of that part, to mark gui just send this packet.
  */
-public class PacketCoordinateInit extends AIPacket<PacketCoordinateInit> {
+public class PacketCoordinateInit extends AIPacket {
 
-    public PacketCoordinateInit(){}
 
     public PacketCoordinateInit(int x, int y, int z, World w){
-
+        super(x,y,z,null,w);
     }
 
     public PacketCoordinateInit(int x, int y, int z, World w, EnumFacing dir){
-        Gui g = Minecraft.getMinecraft().currentScreen;
-         if (g instanceof PartGui) {
-                PartGui partGui = (PartGui) g;
-
-                partGui.setX(x);
-                partGui.setY(y);
-                partGui.setZ(z);
-
-                partGui.setWorld(w);
-                partGui.setSide(dir);
-         }
+        super(x,y,z,dir,w);
     }
 
     @Override
-    public IMessage HandleMessage(MessageContext ctx) {
-        return null;
+    public void fromBytes(ByteBuf buf) {
+
+    }
+
+    @Override
+    public void toBytes(ByteBuf buf) {
+
     }
 }

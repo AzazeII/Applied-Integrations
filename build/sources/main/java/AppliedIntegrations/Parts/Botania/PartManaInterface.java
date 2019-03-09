@@ -27,6 +27,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.Optional;
 import vazkii.botania.api.mana.IManaReceiver;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 import vazkii.botania.api.mana.spark.ISparkEntity;
@@ -37,6 +38,12 @@ import java.util.List;
 import static AppliedIntegrations.Utils.EffectiveSide.isServerSide;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
+@Optional.InterfaceList(value = {
+        @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkAttachable", modid = "botania", striprefs = true),
+        @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkEntity", modid = "botania", striprefs = true),
+        @Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),
+
+})
 public class PartManaInterface extends PartEnergyInterface implements IManaReceiver, ISparkAttachable, IManaInterface {
 
     private int currentMana = 0;
@@ -166,13 +173,13 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
             return 0;
         IGrid grid = node.getGrid();
         if (grid == null) {
-            AILog.info("Grid cannot be initialized, WTF?");
+            AILog.info("Grid cannot be initialized");
             return 0;
         }
 
         IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
         if (storage == null) {
-            AILog.info("StorageGrid cannot be initialized, WTF?");
+            AILog.info("StorageGrid cannot be initialized");
             return 0;
         }
 
@@ -197,20 +204,19 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
             return 0;
         IGrid grid = node.getGrid(); // check grid node
         if (grid == null) {
-            AILog.info("Grid cannot be initialized, WTF?");
+            AILog.info("Grid cannot be initialized");
             return 0;
         }
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
         if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
-            AILog.info("StorageGrid cannot be initialized, WTF?");
+            AILog.info("StorageGrid cannot be initialized");
             return 0;
         }
 
         IAEManaStack returnAmount = storage.getInventory(this.getManaChannel()).injectItems(
                 new AEManaStack(resource), actionable, new MachineSource(this));
 
-        AILog.info(storage.getInventory(getManaChannel()).toString());
         if (returnAmount == null)
             return (int) resource;
         return (int) (resource - returnAmount.getStackSize());

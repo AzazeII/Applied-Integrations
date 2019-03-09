@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * @Author Azazell
  * @Usage This packet needed to write feedback from gui to part, send it when your filter in gui is updated
  */
-public class PacketClientFilter implements IMessage, IMessageHandler<PacketClientFilter, IMessage> {
+public class PacketClientFilter extends AIPacket{
 
     public LiquidAIEnergy energy;
     public int index;
@@ -25,10 +25,8 @@ public class PacketClientFilter implements IMessage, IMessageHandler<PacketClien
     public AIPart serverPart;
     public AIPart clientPart;
 
-    public PacketClientFilter(){}
-
     public PacketClientFilter(int x, int y, int z, EnumFacing side, World w, LiquidAIEnergy energy, int index) {
-
+        super(x, y, z, side, w);
         this.energy = energy;
         this.index = index;
 
@@ -73,11 +71,5 @@ public class PacketClientFilter implements IMessage, IMessageHandler<PacketClien
 
         buf.writeInt(clientPart.getHostTile().getWorld().provider.getDimension());
 
-    }
-
-    // Ignored
-    @Override
-    public IMessage onMessage(PacketClientFilter message, MessageContext ctx) {
-        return null;
     }
 }

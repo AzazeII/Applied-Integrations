@@ -9,10 +9,15 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceStorageDuality{
+public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceStorageDuality<Double>{
 
     public InterfaceSinkSource(World world, BlockPos pos, double capacity, int sinkTier, int sourceTier) {
         super(world, pos, capacity, sinkTier, sourceTier);
+    }
+
+    @Override
+    public Class<Double> getTypeClass() {
+        return Double.class;
     }
 
     @Override
@@ -34,22 +39,22 @@ public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceSt
     }
 
     @Override
-    public double getStored() {
+    public Double getStored() {
         return getEnergyStored();
     }
 
     @Override
-    public double getMaxStored() {
+    public Double getMaxStored() {
         return getCapacity();
     }
 
     @Override
-    public double receive(double value, boolean simulate) {
+    public Double receive(Double value, boolean simulate) {
         return injectEnergy(null, value, 4);
     }
 
     @Override
-    public double extract(double value, boolean simulate) {
+    public Double extract(Double value, boolean simulate) {
         double storedBefore = getEnergyStored();
         drawEnergy(value);
         double storedAfter = getEnergyStored();

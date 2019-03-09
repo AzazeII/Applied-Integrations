@@ -201,13 +201,13 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
             return 0;
         IGrid grid = node.getGrid();
         if (grid == null) {
-            AILog.info("Grid cannot be initialized, WTF?");
+            AILog.info("Grid cannot be initialized");
             return 0;
         }
 
         IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
         if (storage == null) {
-            AILog.info("StorageGrid cannot be initialized, WTF?");
+            AILog.info("StorageGrid cannot be initialized");
             return 0;
         }
 
@@ -236,13 +236,13 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
             return 0;
         IGrid grid = node.getGrid(); // check grid node
         if (grid == null) {
-            AILog.info("Grid cannot be initialized, WTF?");
+            AILog.info("Grid cannot be initialized");
             return 0;
         }
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
         if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
-            AILog.info("StorageGrid cannot be initialized, WTF?");
+            AILog.info("StorageGrid cannot be initialized");
             return 0;
         }
 

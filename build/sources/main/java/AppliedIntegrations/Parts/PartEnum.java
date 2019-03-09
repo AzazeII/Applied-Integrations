@@ -8,6 +8,7 @@ import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIStrings;
 
+import AppliedIntegrations.Parts.P2P.PartEmberP2PTunnel;
 import appeng.api.config.Upgrades;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -51,7 +52,9 @@ public enum PartEnum
 
     ManaStorage(AIStrings.Part_ManaStorage, PartManaStorageBus.class, ItemEnum.ITEMMANAPARTSTORAGEBUS ),
 
-    ManaInterface(AIStrings.Part_ManaInterface, PartManaInterface.class, ItemEnum.ITEMMANAPARTINTERFACE );
+    ManaInterface(AIStrings.Part_ManaInterface, PartManaInterface.class, ItemEnum.ITEMMANAPARTINTERFACE ),
+
+    P2PEmber(AIStrings.Part_P2PEmber, PartEmberP2PTunnel.class, ItemEnum.ITEMP2PEMBER );
     /**
      * Cached enum values
      */

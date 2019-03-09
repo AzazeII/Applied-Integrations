@@ -12,7 +12,7 @@ import net.minecraftforge.fml.common.Optional;
         @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyOutputter", modid = "mekanism", striprefs = true),
         @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "mekanism", striprefs = true)
 })
-public class JouleInterfaceStorage implements IInterfaceStorageDuality, InbtStorage, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
+public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, InbtStorage, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
 
     private IEnergyInterface energyInterface;
     private double storage;
@@ -30,6 +30,11 @@ public class JouleInterfaceStorage implements IInterfaceStorageDuality, InbtStor
     }
 
     @Override
+    public Class<Double> getTypeClass() {
+        return Double.class;
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound tag) {
         tag.setDouble("#Joules", storage);
     }
@@ -40,17 +45,17 @@ public class JouleInterfaceStorage implements IInterfaceStorageDuality, InbtStor
     }
 
     @Override
-    public double getStored() {
+    public Double getStored() {
         return storage;
     }
 
     @Override
-    public double getMaxStored() {
+    public Double getMaxStored() {
         return capacity;
     }
 
     @Override
-    public double receive(double value, boolean simulate) {
+    public Double receive(Double value, boolean simulate) {
         double energyReceived = Math.min(capacity - storage, value);
         if (!simulate)
             storage += energyReceived;
@@ -58,7 +63,7 @@ public class JouleInterfaceStorage implements IInterfaceStorageDuality, InbtStor
     }
 
     @Override
-    public double extract(double value, boolean simulate) {
+    public Double extract(Double value, boolean simulate) {
         double energyExtracted = Math.min(storage, value);
         if (!simulate)
             storage -= energyExtracted;
