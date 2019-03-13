@@ -91,7 +91,7 @@ public abstract class EnergyWidgetBase
     protected void onStackChanged()
     {
         // Is there an Energy?
-        if( this.EnergyStack.hasEnergy() )
+        if( EnergyStack.hasEnergy() )
         {
             // Get the Energy name
             this.EnergyName = this.EnergyStack.getEnergyName( this.player );

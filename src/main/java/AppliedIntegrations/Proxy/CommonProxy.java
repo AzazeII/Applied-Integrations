@@ -3,6 +3,7 @@ package AppliedIntegrations.Proxy;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
+import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
@@ -36,11 +37,15 @@ public class CommonProxy
             //PartEnum.registerAEModels();
         TileEnum.register();
 
-        // Register channel **MOST IMPORTANT PART ;) **
+        NetworkHandler.registerServerPackets();
+
+        // Register channel
         AEApi.instance().storage().registerStorageChannel(IEnergyTunnel.class, new EnergyTunnel());
 
         if(Loader.isModLoaded("botania"))
             BotaniaLoader.preInit();
+        if(Loader.isModLoaded("embers"))
+            EmberLoader.preInit();
     }
 
     public void SidedInit(FMLInitializationEvent init){

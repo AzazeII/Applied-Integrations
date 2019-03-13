@@ -1,65 +1,148 @@
 package AppliedIntegrations.API;
 
+import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
+import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 
+import appeng.api.parts.IPartItem;
+import appeng.items.parts.ItemPart;
 import cofh.redstoneflux.api.IEnergyContainerItem;
-import cofh.redstoneflux.api.IEnergyReceiver;
 import ic2.api.energy.tile.IEnergySink;
 import ic2.api.energy.tile.IEnergySource;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
 import mekanism.api.energy.IStrictEnergyAcceptor;
+import mekanism.common.capabilities.Capabilities;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import teamroots.embers.api.item.IEmberChargedTool;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.EU;
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.J;
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
+import java.util.List;
+import java.util.Vector;
+
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 
 /**
  * @Author Azazell
  */
+
+@Optional.InterfaceList(value = {
+        @Optional.Interface(iface = "teamroots.embers.api.item.IEmberChargedTool", modid = "embers", striprefs = true),
+        @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2", striprefs = true),
+        @Optional.Interface(iface = "mekanism.api.energy.IEnergizedItem", modid = "mekanism", striprefs = true),
+        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux", striprefs = true)
+})
 public class Utils {
     public static LiquidAIEnergy getEnergyFromItemStack(ItemStack itemStack) {
         if (itemStack == null)
             return null;
-        Item energyItem = itemStack.getItem();
-        if (energyItem instanceof IEnergizedItem) {
-            return J;
-        }else if (energyItem instanceof IEnergyContainerItem || energyItem instanceof IEnergyReceiver) {
+
+        Item item = itemStack.getItem();
+
+        if(item instanceof IPartItem){
+            IPart part = ((IPartItem)item).createPartFromItemStack(itemStack);
+            return getEnergyFromPart(part);
+        }else if(item instanceof ItemBlock){
+            Block blk = ((ItemBlock) item).getBlock();
+            if(blk instanceof BlockContainer){
+                BlockContainer blockContainer = (BlockContainer)blk;
+                if(blockContainer.hasTileEntity()){
+                    return getEnergyFromContainer(blockContainer.createTileEntity(null, blockContainer.getDefaultState()));
+                }
+            }
+        }
+        return getEnergyFromItem(item);
+    }
+
+    public static LiquidAIEnergy getEnergyFromItem(Item item){
+        // Check for rfAPI loaded, and item can handle RF
+        if(IntegrationsHelper.instance.isLoaded(RF) && item instanceof IEnergyContainerItem){
             return RF;
-        } else if (energyItem instanceof IElectricItem || energyItem instanceof IEnergySink || energyItem instanceof IEnergySource) {
+        // Check for EU Api loaded, and item can handle EU
+        }else if(IntegrationsHelper.instance.isLoaded(EU) && item instanceof IElectricItem){
             return EU;
+        // Check for joule API loaded, and item can handle J
+        }else if(IntegrationsHelper.instance.isLoaded(J) && item instanceof IEnergizedItem){
+            return J;
+        // Check for Ember API loaded, and item can handle Ember
+        }else if(IntegrationsHelper.instance.isLoaded(Ember) && item instanceof IEmberChargedTool){
+            return Ember;
         }
         return null;
     }
 
-    public static LiquidAIEnergy getEnergyFromContainer(TileEntity tile) {
-        if (tile == null)
-            return null;
-        if (tile instanceof IStrictEnergyAcceptor) {
-            return J;
-        } else if (tile instanceof IEnergyReceiver) {
-            return RF;
-        } else if (tile instanceof IEnergySink)
-            return EU;
+    /**
+     * @param part part to check
+     * @return first energy handled by IPart
+     */
+    public static LiquidAIEnergy getEnergyFromPart(IPart part){
+        // Iterate over all energies, to get handled one
+        for(LiquidAIEnergy energy : LiquidAIEnergy.energies.values()){
+            // Get capability enum type from energy
+            if(EnumCapabilityType.fromEnergy(energy) != null){
+                // Record type
+                EnumCapabilityType type = EnumCapabilityType.fromEnergy(energy);
+                // Iterate over
+                for(Capability capability : type.getCapabilityWithModCheck()){
+                    // Check if part has capability
+                    if(part.hasCapability(capability))
+                        // return
+                        return type.energy;
+                }
+            }
+        }
+
         return null;
     }
 
+    /**
+     * @param tile tile to check
+     * @return first energy handled by TileEntity
+     */
+    public static LiquidAIEnergy getEnergyFromContainer(TileEntity tile) {
+        // Iterate over all energies, to get handled one
+        for(LiquidAIEnergy energy : LiquidAIEnergy.energies.values()){
+            // Get capability enum type from energy
+            if(EnumCapabilityType.fromEnergy(energy) != null){
+                // Record type
+                EnumCapabilityType type = EnumCapabilityType.fromEnergy(energy);
+                // Iterate over
+                for(Capability capability : type.getCapabilityWithModCheck()){
+                    // Check if part has capability
+                    if(tile.hasCapability(capability, null))
+                        // return
+                        return type.energy;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Deprecated
     public static IAEEnergyStack ConvertToAEFluidStack(final LiquidAIEnergy Energy, final long fluidAmount )
     {
         IAEEnergyStack Stack;
@@ -68,75 +151,76 @@ public class Utils {
         return Stack;
     }
 
-
-    public static int getEnergyInContainer(ItemStack container) {
-        Item energyItem = container.getItem();
-        if(container==null)
+    public static int getEnergyInContainer(ItemStack itemStack) {
+        Item item = itemStack.getItem();
+        if(itemStack==null)
             return 0;
-        if(energyItem instanceof IEnergyContainerItem){
-            return (int)((IEnergyContainerItem) energyItem).getEnergyStored(container);
-        }else if(energyItem instanceof IElectricItem){
+        if(Loader.isModLoaded("redstoneflux") && item instanceof IEnergyContainerItem){
+            return itemStack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
+        }else if(Loader.isModLoaded("ic2") && itemStack.getItem() instanceof IElectricItem){
             return 0;
-        }else if(energyItem instanceof IEnergizedItem){
-            return (int)((IEnergizedItem) energyItem).getEnergy(container);
+        }else if(Loader.isModLoaded("MekanismAPI|energy") && itemStack.hasCapability(Capabilities.ENERGY_STORAGE_CAPABILITY, null)){
+            return (int)((IEnergizedItem) itemStack.getItem()).getEnergy(itemStack);
         }
             return 0;
     }
 
-    public static ImmutablePair<Integer,ItemStack> extractFromContainer(ItemStack container, int amount) {
-        Item energyItem = container.getItem();
-        if(container==null)
+    public static ImmutablePair<Integer,ItemStack> extractFromContainer(ItemStack itemStack, int amount) {
+        Item energyItem = itemStack.getItem();
+        if(itemStack==null)
             return null;
-        if(energyItem instanceof IEnergyContainerItem){
-            return new ImmutablePair<Integer, ItemStack>(((IEnergyContainerItem) energyItem).extractEnergy(container,amount,false),container.copy());
-        }else if(energyItem instanceof IElectricItem){
+        if(Loader.isModLoaded("redstoneflux") && itemStack.getItem() instanceof IEnergyContainerItem){
+            return new ImmutablePair<Integer, ItemStack>(
+                    itemStack.getCapability(CapabilityEnergy.ENERGY, null).extractEnergy(amount,false),itemStack.copy());
+        }else if(Loader.isModLoaded("ic2") && energyItem instanceof IElectricItem){
             return null;
-        }else if(energyItem instanceof IEnergizedItem){
-            ((IEnergizedItem) energyItem).setEnergy(container,((IEnergizedItem)energyItem).getEnergy(container)-amount);
-            return new ImmutablePair<Integer, ItemStack>(amount,container.copy());
+        }else if(Loader.isModLoaded("MekanismAPI|energy") && itemStack.hasCapability(Capabilities.ENERGY_STORAGE_CAPABILITY, null)){
+            ((IEnergizedItem) energyItem).setEnergy(itemStack,((IEnergizedItem)energyItem).getEnergy(itemStack)-amount);
+            return new ImmutablePair<Integer, ItemStack>(amount,itemStack.copy());
         }
         return null;
     }
 
-    public static int getContainerCapacity(ItemStack container) {
-        Item energyItem = container.getItem();
-        if(container==null)
+    public static int getContainerCapacity(ItemStack itemStack) {
+        Item energyItem = itemStack.getItem();
+        if(itemStack==null)
             return 0;
-        if(energyItem instanceof IEnergyContainerItem){
-            return  (int)((IEnergyContainerItem) energyItem).getEnergyStored(container);
-        }else if(energyItem instanceof IElectricItem){
+        if(Loader.isModLoaded("redstoneflux") && itemStack.getItem() instanceof IEnergyContainerItem){
+            return itemStack.getCapability(CapabilityEnergy.ENERGY, null).getEnergyStored();
+        }else if(Loader.isModLoaded("ic2") && energyItem instanceof IElectricItem){
             return  0;
-        }else if(energyItem instanceof IEnergizedItem){
-            return (int)((IEnergizedItem) energyItem).getEnergy(container);
+        }else if(Loader.isModLoaded("MekanismAPI|energy") && itemStack.hasCapability(Capabilities.ENERGY_STORAGE_CAPABILITY, null)){
+            return (int)((IEnergizedItem) energyItem).getEnergy(itemStack);
         }
         return 0;
     }
 
-    public static ImmutablePair<Integer, ItemStack> injectInContainer(ItemStack container, int amount) {
-        Item energyItem = container.getItem();
-        if(container==null)
+    public static ImmutablePair<Integer, ItemStack> injectInContainer(ItemStack itemStack, int amount) {
+        Item energyItem = itemStack.getItem();
+        if(itemStack==null)
             return null;
-        if(energyItem instanceof IEnergyContainerItem){
-            return new ImmutablePair<Integer, ItemStack>(((IEnergyContainerItem) energyItem).receiveEnergy(container,amount,false),container.copy());
-        }else if(energyItem instanceof IElectricItem){
+        if(Loader.isModLoaded("redstoneflux") && itemStack.getItem() instanceof IEnergyContainerItem){
+            return new ImmutablePair<Integer, ItemStack>((itemStack.getCapability(CapabilityEnergy.ENERGY, null)
+                    .receiveEnergy(amount, false)),itemStack.copy());
+        }else if(Loader.isModLoaded("ic2") && energyItem instanceof IElectricItem){
             return null;
-        }else if(energyItem instanceof IEnergizedItem){
-            ((IEnergizedItem) energyItem).setEnergy(container,((IEnergizedItem)energyItem).getEnergy(container)+amount);
-            return new ImmutablePair<Integer, ItemStack>(amount,container.copy());
+        }else if(Loader.isModLoaded("MekanismAPI|energy") && itemStack.hasCapability(Capabilities.ENERGY_STORAGE_CAPABILITY, null)){
+            ((IEnergizedItem) energyItem).setEnergy(itemStack,((IEnergizedItem)energyItem).getEnergy(itemStack)+amount);
+            return new ImmutablePair<Integer, ItemStack>(amount,itemStack.copy());
         }
         return null;
     }
 
-    public static int getContainerMaxCapacity(ItemStack container) {
-        Item energyItem = container.getItem();
-        if(container==null)
+    public static int getContainerMaxCapacity(ItemStack itemStack) {
+        Item energyItem = itemStack.getItem();
+        if(itemStack==null)
             return 0;
-        if(energyItem instanceof IEnergyContainerItem){
-            return  (int)((IEnergyContainerItem) energyItem).getMaxEnergyStored(container);
-        }else if(energyItem instanceof IElectricItem){
+        if(Loader.isModLoaded("redstoneflux") && itemStack.getItem() instanceof IEnergyContainerItem){
+            return itemStack.getCapability(CapabilityEnergy.ENERGY, null).getMaxEnergyStored();
+        }else if(Loader.isModLoaded("ic2") && energyItem instanceof IElectricItem){
             return  0;
-        }else if(energyItem instanceof IEnergizedItem){
-            return (int)((IEnergizedItem) energyItem).getMaxEnergy(container);
+        }else if(Loader.isModLoaded("MekanismAPI|energy") && itemStack.hasCapability(Capabilities.ENERGY_STORAGE_CAPABILITY, null)){
+            return (int)((IEnergizedItem) energyItem).getMaxEnergy(itemStack);
         }
         return 0;
     }

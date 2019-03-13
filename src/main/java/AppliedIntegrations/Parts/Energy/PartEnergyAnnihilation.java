@@ -1,13 +1,13 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.Parts.AIPlatePart;
+import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPartModel;
 import appeng.parts.automation.PlaneModels;
 
-public class PartEnergyAnnihilation extends AIPlatePart {
+public class PartEnergyAnnihilation extends AIPlanePart {
     private static final PlaneModels MODELS = new PlaneModels( "part/annihilation_plane_", "part/annihilation_plane_on_" );
 
     public PartEnergyAnnihilation() {

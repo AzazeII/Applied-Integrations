@@ -185,7 +185,7 @@ public class GuiEnergyIO
     }
 
     @Override
-    public void updateEnergies(@Nonnull LiquidAIEnergy energy, int index) {
+    public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
         this.energySlotList.get( index ).setEnergy( energy, 1 );
     }
     public void onReceiveFilterSize( final byte filterSize )

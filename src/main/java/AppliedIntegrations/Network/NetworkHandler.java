@@ -19,14 +19,19 @@ public class NetworkHandler {
 
     private static final SimpleNetworkWrapper Handler = NetworkRegistry.INSTANCE.newSimpleChannel(AppliedIntegrations.modid);
 
-    public static final void registerPackets() {
+    public static final void registerClientPackets() {
         Handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
         Handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
 
-        Handler.registerMessage(HandlerClientFilter.class, PacketClientFilter.class, packetId++, Side.SERVER);
         Handler.registerMessage(HandlerServerFilter.class, PacketServerFilter.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerMEServer.class, PacketMEServer.class, packetId++, Side.CLIENT);
+
+        Handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
+    }
+
+    public static final void registerServerPackets(){
+        Handler.registerMessage(HandlerClientFilter.class, PacketClientFilter.class, packetId++, Side.SERVER);
     }
 
     // send packet info to player

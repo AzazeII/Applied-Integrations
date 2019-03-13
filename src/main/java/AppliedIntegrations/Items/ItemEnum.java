@@ -1,15 +1,15 @@
 package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
-import AppliedIntegrations.Items.Botania.MaterialEncorium;
-import AppliedIntegrations.Items.Botania.MEGreaterManaRing;
-import AppliedIntegrations.Items.Botania.MEManaMirror;
-import AppliedIntegrations.Items.Botania.MEManaRing;
+import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
+import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PStarlight;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
@@ -44,6 +44,7 @@ public enum ItemEnum {
     ITEMPARTANNIHILATION( new ItemPartEnergyAnnihilation( "energyAnnihilationPartItem")),
     ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem")),
 
+    ITEMP2PStarlight(new ItemPartP2PStarlight("starlightP2PPartItem")),
     ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem")),
 
     ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem")),
@@ -53,7 +54,7 @@ public enum ItemEnum {
     ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring")),
     ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring")),
 
-    ITEMENERGYWIRELESSTERMINAL(new itemWirelessTerminal()),
+    ITEMENERGYWIRELESSTERMINAL(new itemWirelessTerminal("wireless_energy_terminal")),
     CHAOSMANIPULATOR( new toolChaosManipulator()),
     ENERGYSTORAGE_1k( new EnergyStorageCell("EnergyStorageCell_1k", 1024)),
     ENERGYSTORAGE_4k( new EnergyStorageCell("EnergyStorageCell_4k", 4096)),
@@ -73,8 +74,8 @@ public enum ItemEnum {
     MANASTORAGE_4096k( new ManaStorageCell("ManaStorageCell_4096k", 4194304)),
     MANASTORAGE_16384k( new ManaStorageCell("ManaStorageCell_16384k", 16777216)),
 
-    MANAANNIHILATIONCORE(new AIItemRegistrable("mana_annihilation_core")),
-    MANAFORMATIONCORE(new AIItemRegistrable("mana_formation_core")),
+    MANAANNIHILATIONCORE(new ManaAnnihilationCore("mana_annihilation_core")),
+    MANAFORMATIONCORE(new ManaFormationCore("mana_formation_core")),
 
     ENERGYSTORAGECASING(new EnergyStorageCasing()),
 
@@ -118,7 +119,7 @@ public enum ItemEnum {
     public static void register() {
         for(ItemEnum itemEnum : values()){
             // Register only that items, which not **require botania as dependency**
-            if(!(itemEnum.item instanceof IBotaniaIntegrated)) {
+            if(!IntegrationsHelper.instance.isObjectIntegrated(itemEnum.item)) {
                 ForgeRegistries.ITEMS.register(itemEnum.item);
             }
         }
@@ -127,6 +128,8 @@ public enum ItemEnum {
     @Optional.Method(modid = "botania")
     public static void registerBotaniaItems(){
         for(ItemEnum itemEnum : values()){
+            if(itemEnum.item instanceof MaterialEncorium)
+                return;
             // Register only that items, which **require botania as dependency**
             if(itemEnum.item instanceof IBotaniaIntegrated) {
                 ForgeRegistries.ITEMS.register(itemEnum.item);
@@ -141,6 +144,16 @@ public enum ItemEnum {
 
             ForgeRegistries.ITEMS.register(mat);
             encoriumVariants.add(mat);
+        }
+    }
+
+    @Optional.Method(modid = "embers")
+    public static void registerEmbersItems() {
+        for(ItemEnum itemEnum : values()){
+            // Register only that items, which not **require botania as dependency**
+            if(itemEnum.item instanceof IEmberIntegrated) {
+                ForgeRegistries.ITEMS.register(itemEnum.item);
+            }
         }
     }
 
@@ -175,4 +188,16 @@ public enum ItemEnum {
         }
     }
 
+    @Optional.Method(modid = "embers")
+    @SideOnly(Side.CLIENT)
+    public static void registerEmbersItemsModels() {
+        for(ItemEnum item : values()) {
+            if(item.item instanceof IEmberIntegrated ) {
+                if (item.item instanceof AIItemRegistrable) {
+                    AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
+                    registrableItem.registerModel();
+                }
+            }
+        }
+    }
 }

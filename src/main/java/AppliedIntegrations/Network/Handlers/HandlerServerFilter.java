@@ -23,11 +23,11 @@ public class HandlerServerFilter implements IMessageHandler<PacketServerFilter, 
 
                 // Check if we are updating correct GUI
                 if (IPG.getX() == message.x &&
-                        IPG.getY() == message.y &&
-                        IPG.getSide() == message.side &&
-                        IPG.getWorld() == message.w &&
-                        IPG.getZ() == message.z) {
-                    ((IFilterGUI) gui).updateEnergies(message.energy, message.index);
+                    IPG.getY() == message.y &&
+                    IPG.getSide() == message.side &&
+                    IPG.getWorld() == message.w &&
+                    IPG.getZ() == message.z) {
+                    ((IFilterGUI) gui).updateEnergy(message.energy, message.index);
                 }
             }
         }

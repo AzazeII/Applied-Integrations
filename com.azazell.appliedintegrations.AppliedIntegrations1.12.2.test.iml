@@ -18,16 +18,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Tesla-1.12.2-1.0.63.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/astralsorcery-1.12.2-1.10.11.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -45,7 +36,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/astralsorcery-1.12.2-1.10.11.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Baubles-1.12-1.5.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -54,7 +45,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Baubles-1.12-1.5.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/appliedenergistics2-rv6-stable-6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -91,7 +82,25 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/appliedenergistics2-rv6-stable-6.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Tesla-1.12.2-1.0.63.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/EmbersRekindled-1.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

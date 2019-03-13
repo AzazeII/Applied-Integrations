@@ -24,9 +24,8 @@ public class itemWirelessTerminal extends AIItemRegistrable implements INetworkE
     private double currentStorage=0;
     private EnergyStorage storage = new EnergyStorage(32000,1000);
 
-    public itemWirelessTerminal(){
-
-        super("WirelessEnergyTerminal");
+    public itemWirelessTerminal(String name){
+        super(name);
 
         this.setMaxStackSize(1);
 

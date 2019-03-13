@@ -18,6 +18,7 @@ public enum AIStrings {
 	Part_P2PHeat("Energy.Machine.P2PHeat",true),
 
 	Part_P2PEmber("P2P.Ember", true),
+	Part_P2PStarlight("P2P.Starlight", true),
 
 	Part_EnergyAnnihilation("Energy.AnnihilationBus", true),
 	Part_EnergyFormation("Energy.FormationBus", true),

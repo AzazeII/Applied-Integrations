@@ -2,15 +2,8 @@ package AppliedIntegrations.Parts.P2P;
 
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.parts.IPartCollisionHelper;
-import appeng.api.util.AECableType;
-import appeng.capabilities.Capabilities;
-import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import teamroots.embers.power.EmberCapabilityProvider;
 import teamroots.embers.power.IEmberCapability;
@@ -27,8 +20,8 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
     private IEmberCapability inputHandler = new EmberInputCapability();
     private IEmberCapability NULLHandler = new EmberNullCapability();
 
-    public PartEmberP2PTunnel(PartEnum associatedPart, SecurityPermissions... interactionPermissions) {
-        super(PartEnum.P2PEmber, interactionPermissions);
+    public PartEmberP2PTunnel() {
+        super(PartEnum.P2PEmber);
     }
 
     @Override
@@ -133,6 +126,11 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
         public void readFromNBT(NBTTagCompound nbtTagCompound) {
 
         }
+
+        @Override
+        public void onContentsChanged() {
+
+        }
     }
 
     private class EmberOutputCapability implements IEmberCapability {
@@ -176,6 +174,11 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
         public void readFromNBT(NBTTagCompound nbtTagCompound) {
 
         }
+
+        @Override
+        public void onContentsChanged() {
+
+        }
     }
 
 
@@ -217,6 +220,11 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
 
         @Override
         public void readFromNBT(NBTTagCompound nbtTagCompound) {
+
+        }
+
+        @Override
+        public void onContentsChanged() {
 
         }
     }

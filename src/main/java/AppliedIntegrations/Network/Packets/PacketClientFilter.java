@@ -4,6 +4,7 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Parts.IEnergyMachine;
+import AppliedIntegrations.Utils.AILog;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -22,8 +23,11 @@ public class PacketClientFilter extends AIPacket{
     public LiquidAIEnergy energy;
     public int index;
 
-    public AIPart serverPart;
     public AIPart clientPart;
+
+    public PacketClientFilter(){
+
+    }
 
     public PacketClientFilter(int x, int y, int z, EnumFacing side, World w, LiquidAIEnergy energy, int index) {
         super(x, y, z, side, w);
@@ -36,40 +40,16 @@ public class PacketClientFilter extends AIPacket{
     // Decode serialized data
     @Override
     public void fromBytes(ByteBuf buf) {
-        int eIndex = buf.readInt();
-        if(eIndex >= 0)
-            energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
-        else
-            energy = null;
+        clientPart = getPart(buf);
+        energy = getEnergy(buf);
         index = buf.readInt();
-
-        serverPart = Utils.getPartByParams(new BlockPos(buf.readInt(), buf.readInt(), buf.readInt()), EnumFacing.getFront(buf.readInt()), DimensionManager.getWorld(buf.readInt()));
-
-        try{
-            if(serverPart != null) {
-                ((IEnergyMachine)serverPart).updateFilter(energy, index);
-            }
-        }catch(NullPointerException nullptr){
-
-        }
     }
 
     // Encode data from client to server
     @Override
     public void toBytes(ByteBuf buf) {
-        if(energy != null)
-            buf.writeInt(energy.getIndex());
-        else
-            buf.writeInt(-1);
+        setPart(buf, clientPart);
+        setEnergy(energy, buf);
         buf.writeInt(index);
-
-        buf.writeInt(clientPart.getX());
-        buf.writeInt(clientPart.getY());
-        buf.writeInt(clientPart.getZ());
-
-        buf.writeInt(clientPart.getSide().ordinal());
-
-        buf.writeInt(clientPart.getHostTile().getWorld().provider.getDimension());
-
     }
 }

@@ -2,6 +2,8 @@ package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -19,17 +21,27 @@ public class PacketProgressBar extends AIPacket {
 
     public PartEnergyInterface sender;
 
-    public PacketProgressBar(PartEnergyInterface sender, int x, int y, int z, EnumFacing side, World w){
+    public PacketProgressBar(){
+
+    }
+
+    public PacketProgressBar(PartEnergyInterface sender){
+        super(sender.getX(), sender.getY(), sender.getZ(), sender.getSide().getFacing(), sender.getHostTile().getWorld());
         this.sender = sender;
+    }
+
+    public PacketProgressBar(TileEnergyInterface sender) {
+        super(sender.x(), sender.y(), sender.z(), null, sender.getWorld());
+
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
+        sender = (PartEnergyInterface)getPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-
+        setPart(buf, sender);
     }
 }

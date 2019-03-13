@@ -379,13 +379,6 @@ public abstract class AIOPart
     public abstract boolean energyTransferAllowed( LiquidAIEnergy energy );
 
     @Override
-    public final Object getClientGuiElement( final EntityPlayer player )
-    {
-
-        return new GuiEnergyIO((Container)this.getServerGuiElement(player),player);
-    }
-
-    @Override
     public void getDrops( List<ItemStack> drops, boolean wrenched) {
         for (ItemStack stack : upgradeInventory.slots) {
             if (stack == null)
@@ -416,12 +409,6 @@ public abstract class AIOPart
     public RedstoneMode getRedstoneMode()
     {
         return this.redstoneMode;
-    }
-
-    @Override
-    public Object getServerGuiElement( final EntityPlayer player )
-    {
-        return new ContainerPartEnergyIOBus( this, player );
     }
 
     @Override
@@ -572,7 +559,7 @@ public abstract class AIOPart
         if(updateRequested){
             Gui g = Minecraft.getMinecraft().currentScreen;
             if(g != null){
-                NetworkHandler.sendTo(new PacketCoordinateInit(getX(), getY(), getZ(), getHostTile().getWorld(), getSide().getFacing()),
+                NetworkHandler.sendTo(new PacketCoordinateInit(this),
                         (EntityPlayerMP) player);
                 updateRequested = false;
             }

@@ -2,6 +2,7 @@ package AppliedIntegrations.API.Storage;
 
 import AppliedIntegrations.AppliedIntegrations;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
@@ -57,8 +58,8 @@ public class LiquidAIEnergy extends Fluid {
         linkedIndexMap.put(0,null);
     }
 
-    public static final LiquidAIEnergy RF = new LiquidAIEnergy(1,"RF",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/RF.png")); // Redstone flux
-    public static final LiquidAIEnergy J = new LiquidAIEnergy(2,"J",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/J.png")); // Mekansim joules
+    public static final LiquidAIEnergy RF = new LiquidAIEnergy(1,"RF",new ResourceLocation(AppliedIntegrations.modid,"textures/gui/energy.rf.bar.png")); // Redstone flux
+    public static final LiquidAIEnergy J = new LiquidAIEnergy(2,"J",new ResourceLocation(AppliedIntegrations.modid,"textures/gui/energy.joule.bar.png")); // Mekansim joules
     public static final LiquidAIEnergy EU = new LiquidAIEnergy(3,"EU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/EU.png")); // Energy units IC2
     public static final LiquidAIEnergy HU = new LiquidAIEnergy(4,"HU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/HU.png")); // Heat units IC2
     public static final LiquidAIEnergy KU = new LiquidAIEnergy(5,"KU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/KU.png")); // Kinetic units IC2
@@ -67,4 +68,12 @@ public class LiquidAIEnergy extends Fluid {
     public static final LiquidAIEnergy AE = new LiquidAIEnergy(8,"AE",null); // AE fluid energy
     public static final LiquidAIEnergy Ember = new LiquidAIEnergy(9, "Ember", null);
     public static final LiquidAIEnergy TESLA = new LiquidAIEnergy(10, "TESLA", null);
+
+    public void writeToNBT(NBTTagCompound tag) {
+        tag.setInteger("#AIEnergy", this.getIndex());
+    }
+
+    public static LiquidAIEnergy readFromNBT(NBTTagCompound tag){
+        return linkedIndexMap.get(tag.getInteger("#AIEnergy"));
+    }
 }

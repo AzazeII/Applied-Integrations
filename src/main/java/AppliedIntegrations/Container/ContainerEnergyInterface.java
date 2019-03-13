@@ -71,7 +71,7 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
 
             this.part = (PartEnergyInterface)EnergyInterface;// add slots
 
-            AIGridNodeInventory inventory = (AIGridNodeInventory)part.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY);
+            AIGridNodeInventory inventory = part.getUpgradeInventory();
             /*this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
                     this.UPGRADE_X_POS, this.UPGRADE_Y_POS);*/
         } else if (energyInterface instanceof TileEnergyInterface) {
@@ -85,6 +85,7 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
             //        this.UPGRADE_X_POS + 1, this.UPGRADE_Y_POS);
         }
     }
+
     @Override
     public boolean canInteractWith(EntityPlayer player) {
         return true;

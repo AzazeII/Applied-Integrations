@@ -7,15 +7,26 @@ item.energyStoragePartItem.name=ME Energy Storage Bus
 item.energyTerminalPartItem.name=ME Energy Terminal
 item.energyMonitorPartItem.name=ME Energy Storage Monitor
 
+item.manaStoragePartItem.name=ME Mana Storage Bus
+
+item.emberP2PPartItem.name=P2P Tunnel - Ember
+
 item.manaInterfacePartItem.name=ME Mana Interface
 
 item.energyAnnihilationPartItem.name=ME Energy Annihilation Plane
 item.energyFormationPartItem.name=ME Energy Formation Plane
 
+item.mana_formation_core.name=ME Mana Formation Core
+item.mana_annihilation_core.name=ME Mana Annihilation Core
+
+item.me_mana_mirror.name=ME Mana Mirror
+item.me_greater_mana_ring.name=ME Greater Mana Ring
+item.me__mana_ring.name=ME Mana Ring
+
 item.formation_core.name=ME Energy Formation Core
 item.annihilation_core.name=ME Energy Annihilation Core
 item.EnergyStorageCasing.name=ME Energy Cell Casing
-item.WirelessEnergyTerminal.name=ME Wireless Energy Terminal
+item.wireless_energy_terminal.name=ME Wireless Energy Terminal
 item.item.chaos.manipulator.name=ME Network Manipulation Tool
 
 tile.ME Server Security Terminal.name=ME Server Security Terminal
@@ -45,6 +56,15 @@ item.EnergyStorageCell_1024k.name=ME 1024k Energy Cell
 item.EnergyStorageCell_4096k.name=ME 4096k Energy Cell
 item.EnergyStorageCell_16384k.name=ME 16384k Energy Cell
 
+item.EnergyStorageComponent_1k.name=1k ME Energy Storage Component
+item.EnergyStorageComponent_4k.name=4k ME Energy Storage Component
+item.EnergyStorageComponent_16k.name=16k ME Energy Storage Component
+item.EnergyStorageComponent_64k.name=64k ME Energy Storage Component
+item.EnergyStorageComponent_256k.name=256k ME Energy Storage Component
+item.EnergyStorageComponent_1024k.name=1024k ME Energy Storage Component
+item.EnergyStorageComponent_4096k.name=4096k ME Energy Storage Component
+item.EnergyStorageComponent_16384k.name=16384k ME Energy Storage Component
+
 item.ManaStorageCell_1k.name=ME 1k Mana Cell
 item.ManaStorageCell_4k.name=ME 4k Mana Cell
 item.ManaStorageCell_16k.name=ME 16k Mana Cell
@@ -58,15 +78,6 @@ ME Creative Energy Cell.name=ME Creative Energy Cell
 item.advancedWrench.name=Advanced Network Tool
 
 Energy Stored=Energy Stored
-
-EnergyStorageCell_1k.name=ME 1k Energy Cell Component
-EnergyStorageCell_4k.name=ME 4k Energy Cell Component
-EnergyStorageCell_16k.name=ME 16k Energy Cell Component
-EnergyStorageCell_64k.name=ME 64k Energy Cell Component
-EnergyStorageCell_256k.name=ME 256k Energy Cell Component
-EnergyStorageCell_1024k.name=ME 1024k Energy Cell Component
-EnergyStorageCell_4096k.name=ME 4096k Energy Cell Component
-EnergyStorageCell_16384k.name=ME 16384k Energy Cell Component
 
 item.encorium0.name=Linkorium Crystal
 item.encorium1.name=Linkorium Crystal

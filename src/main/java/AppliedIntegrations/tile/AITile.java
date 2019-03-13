@@ -110,9 +110,11 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
             }
         }
     }
+
     public void destroyAELink() {
         if (gridNode != null) gridNode.destroy();
     }
+
     @Override
     public IGridHost getMachine() {
         // TODO Auto-generated method stub

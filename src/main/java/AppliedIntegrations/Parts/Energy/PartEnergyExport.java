@@ -116,11 +116,6 @@ public class PartEnergyExport extends AIOPart {
 	}
 
 	@Override
-	public Object getServerGuiElement( final EntityPlayer player ) {
-		return new ContainerPartEnergyIOBus(this,player);
-	}
-
-	@Override
 	public void onInventoryChanged() {
 
 	}

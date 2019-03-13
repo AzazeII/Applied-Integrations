@@ -269,7 +269,7 @@ public class GuiEnergyStoragePart
 
 
     @Override
-    public void updateEnergies( final LiquidAIEnergy energy, int index )
+    public void updateEnergy(final LiquidAIEnergy energy, int index )
     {
         this.EnergyWidgetList.get(index).setEnergy(energy,0);
     }

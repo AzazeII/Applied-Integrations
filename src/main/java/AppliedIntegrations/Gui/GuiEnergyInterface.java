@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.energy.CapabilityEnergy;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -77,6 +78,8 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 		this.part = (PartEnergyInterface) Einterface;
 
 		this.LinkedContainer = (ContainerEnergyInterface) CEI;
+
+		this.guiLeft = this.guiLeft - 51;
 	}
 
 	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface Einterface, EntityPlayer player) {
@@ -88,6 +91,8 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 		if (this.Einterface instanceof TileEnergyInterface) {
 			this.tile = (TileEnergyInterface) Einterface;
 		}
+
+		this.guiLeft = this.guiLeft - 51;
 	}
 
 	@Override
@@ -123,6 +128,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 			}
 		}
 
+		this.renderHoveredToolTip(MouseX, MouseY);
 	}
 
 	@Override
@@ -134,13 +140,13 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 					getX(),getY(),getZ(),player));
 		}*/
 		if (this.energySlot.isMouseOverWidget(mouseX, mouseY)) {
+			// avoid null pointer exception
 			if (player.inventory.getItemStack() == null) {
 				energySlot.mouseClicked(null);
 				return;
 			}
 			LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
-			if (EnergyItem == null)
-				return;
+
 			try {
 				energySlot.mouseClicked(EnergyItem);
 
@@ -160,19 +166,19 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 
 		//binding correct Gui
 		if (LinkedMetric == RF || LinkedMetric == J || LinkedMetric == EU)
-			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/" + LinkedMetric.getTag() + "Bar.png");
+			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + LinkedMetric.getTag() + ".bar.png");
 		Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
 		// Drawing Name
 		this.fontRenderer.drawString(I18n.translateToLocal("ME Energy Interface"), 9, 3, 4210752);
 		// Drawing Tooltips
 		if (this.Einterface instanceof TileEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
-			drawPower(10, 11, mouseX - 10, mouseY - 10, 11, SOUTH);
-			drawPower(36, 11, mouseX - 10, mouseY - 10, 11, NORTH);
-			drawPower(65, 11, mouseX - 10, mouseY - 10, 11, WEST);
-			drawPower(100, 11, mouseX - 10, mouseY - 10, 11, EAST);
-			drawPower(129, 11, mouseX - 10, mouseY - 10, 11, UP);
-			drawPower(155, 11, mouseX - 10, mouseY - 10, 11, DOWN);
+			drawPower(3, 11, mouseX - 10, mouseY - 10, 16, SOUTH);
+			drawPower(31, 11, mouseX - 10, mouseY - 10, 16, NORTH);
+			drawPower(60, 11, mouseX - 10, mouseY - 10, 16, WEST);
+			drawPower(95, 11, mouseX - 10, mouseY - 10, 16, EAST);
+			drawPower(124, 11, mouseX - 10, mouseY - 10, 16, UP);
+			drawPower(150, 11, mouseX - 10, mouseY - 10, 16, DOWN);
 
 		} else if (this.Einterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
@@ -188,7 +194,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 				}
 			}
 			if (this.LinkedMetric != WA) {
-				drawPower(83, 13, mouseX - 10, mouseY - 10, 10, null);
+				drawPower(80, 13, mouseX - 10, mouseY - 10, 16, null);
 			} else {
 				//int springValue = 0;
 				//drawSpring(83,UNKNOWN,springValue);
@@ -229,7 +235,7 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 	}
 
 	@Override
-	public void updateEnergies(@Nonnull LiquidAIEnergy energy, int index) {
+	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
 		this.LinkedFilter = energy;
 	}
 

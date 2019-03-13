@@ -7,6 +7,7 @@ import AppliedIntegrations.Gui.IWidgetHost;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketClientFilter;
 import AppliedIntegrations.Parts.IEnergyMachine;
+import AppliedIntegrations.Utils.AILog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -102,6 +103,11 @@ public class WidgetEnergySlot
     public void mouseClicked( final LiquidAIEnergy energy ) {
         if(this.d != null) {
             try {
+                if(energy != null)
+                    AILog.chatLog("Mouse clicked with energy: " + energy.getEnergyName());
+                else
+                    AILog.chatLog("Mouse clicked with energy: null");
+
                 setEnergy(energy, 1);
                 NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));
             }catch (Throwable throwable){

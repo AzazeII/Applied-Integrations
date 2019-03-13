@@ -18,6 +18,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class PacketBarChange extends AIPacket {
     public LiquidAIEnergy energy;
 
+    public PacketBarChange(){
+
+    }
+
     public PacketBarChange(LiquidAIEnergy energy, int x, int y, int z, EnumFacing side, World w){
         super(x, y, z, side, w);
         this.energy = energy;
@@ -25,11 +29,11 @@ public class PacketBarChange extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
+        this.energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-
+        buf.writeInt(this.energy.getIndex());
     }
 }

@@ -20,6 +20,10 @@ public class PacketServerFilter extends AIPacket {
     public LiquidAIEnergy energy;
     public int index;
 
+    public PacketServerFilter(){
+
+    }
+
     public PacketServerFilter(LiquidAIEnergy energy, int index, int x, int y, int z, EnumFacing s, World w){
         super(x,y,z,s,w);
         this.energy = energy;
@@ -28,11 +32,14 @@ public class PacketServerFilter extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
+       this.energy = getEnergy(buf);
+       this.index = buf.readInt();
     }
+
 
     @Override
     public void toBytes(ByteBuf buf) {
-
+        setEnergy(energy, buf);
+        buf.writeInt(index);
     }
 }
