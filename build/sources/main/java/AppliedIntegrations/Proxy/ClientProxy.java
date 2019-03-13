@@ -3,8 +3,10 @@ package AppliedIntegrations.Proxy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
+import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import AppliedIntegrations.Items.ItemEnum;
+import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import net.minecraft.client.Minecraft;
@@ -38,17 +40,23 @@ public class ClientProxy
 
     @SideOnly(Side.CLIENT)
     @Override
+    public void SidedPreInit(){
+        super.SidedPreInit();
+        NetworkHandler.registerClientPackets();
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
     public void SidedInit(FMLInitializationEvent init) {
         ItemEnum.registerModels();
 
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
 
-        AppliedIntegrations.registerPartModels();
-
-        if(Loader.isModLoaded("botania")) {
+        if(Loader.isModLoaded("botania"))
             BotaniaLoader.init();
-        }
+        if(Loader.isModLoaded("embers"))
+            EmberLoader.init();
 
     }
 

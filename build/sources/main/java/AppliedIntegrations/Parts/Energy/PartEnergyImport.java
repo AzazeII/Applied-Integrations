@@ -81,11 +81,6 @@ public class PartEnergyImport extends AIOPart
 	}
 
 	@Override
-	public Object getServerGuiElement( final EntityPlayer player ) {
-		return new ContainerPartEnergyIOBus(this,player);
-	}
-
-	@Override
 	public TickRateModulation doWork(int valuedTransfer, IGridNode node) {
 		// Get the world
 		World world = this.hostTile.getWorld();

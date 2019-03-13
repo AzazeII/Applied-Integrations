@@ -2,12 +2,14 @@ package AppliedIntegrations.API;
 
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import appeng.api.networking.IGridNode;
+import appeng.api.util.AEPartLocation;
 
 /**
  * @Author Azazell
  */
 public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator{
     IGridNode getGridNode();
+    LiquidAIEnergy getCurrentBar(AEPartLocation side);
 
     // Work mode
     enum DualityMode{

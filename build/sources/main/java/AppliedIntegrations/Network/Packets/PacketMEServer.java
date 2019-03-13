@@ -21,6 +21,10 @@ public class PacketMEServer extends AIPacket {
 
     public NetworkData networkData;
 
+    public PacketMEServer(){
+
+    }
+
     public PacketMEServer(NetworkData networkData, int x, int y, int z, World world) {
         super(x,y,z,null,world);
         this.networkData = networkData;

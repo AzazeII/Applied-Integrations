@@ -27,7 +27,7 @@ public class TileServerSecurity extends AIMultiBlockTile {
 
         BlockServerSecurity block = null;
         if(world.getBlockState(pos).getBlock() instanceof BlockServerSecurity)
-          block = (BlockServerSecurity)world.getBlockState(getPos());
+            block = (BlockServerSecurity)world.getBlockState(getPos()).getBlock();
         if(gridNode != null && block != null)
             block.isActive = gridNode.isActive();
         if(!hasMaster()){
@@ -51,12 +51,12 @@ public class TileServerSecurity extends AIMultiBlockTile {
     }
     @Override
     public Object getServerGuiElement( final EntityPlayer player ) {
-            return new ContainerServerPacketTracer(getMaster(),player);
+        return new ContainerServerPacketTracer(getMaster(),player);
     }
     @Override
     public Object getClientGuiElement( final EntityPlayer player )
     {
-            return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),getMaster(),player);
+        return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),getMaster(),player);
     }
     @Override
     public void createAELink() {

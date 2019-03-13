@@ -133,6 +133,11 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
         public void readFromNBT(NBTTagCompound nbtTagCompound) {
 
         }
+
+        @Override
+        public void onContentsChanged() {
+
+        }
     }
 
     private class EmberOutputCapability implements IEmberCapability {
@@ -176,6 +181,11 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
         public void readFromNBT(NBTTagCompound nbtTagCompound) {
 
         }
+
+        @Override
+        public void onContentsChanged() {
+
+        }
     }
 
 
@@ -217,6 +227,11 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
 
         @Override
         public void readFromNBT(NBTTagCompound nbtTagCompound) {
+
+        }
+
+        @Override
+        public void onContentsChanged() {
 
         }
     }

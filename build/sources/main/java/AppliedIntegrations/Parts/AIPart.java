@@ -1,32 +1,28 @@
 package AppliedIntegrations.Parts;
+import AppliedIntegrations.AIConfigOPT;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
-import AppliedIntegrations.Utils.EffectiveSide;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.Utils.AIUtils;
+import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.AEPartGridBlock;
-import AppliedIntegrations.AppliedIntegrations;
-import appeng.api.*;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
+import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.events.MENetworkChannelsChanged;
-import appeng.api.networking.security.ISecurityGrid;
 import appeng.api.implementations.IPowerChannelState;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
+import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPowerStatusChange;
 import appeng.api.networking.security.IActionHost;
+import appeng.api.networking.security.ISecurityGrid;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.*;
 import appeng.api.storage.IMEMonitor;
@@ -45,12 +41,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-
-import AppliedIntegrations.AIConfigOPT;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import static AppliedIntegrations.AppliedIntegrations.getNewID;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * @Author Azazell
@@ -69,9 +66,6 @@ public abstract class AIPart
 
 	// Interaction permissions of this part
 	private final SecurityPermissions[] interactionPermissions;
-
-	// Ignore
-	public final int uniquePacketID;
 
 	// Host of this gridblock
 	protected IPartHost host;
@@ -123,7 +117,6 @@ public abstract class AIPart
 		// Set the associated item
 		this.associatedItem = associatedPart.getStack();
 
-		this.uniquePacketID = getNewID();
 		// Set clearance
 		if( ( interactionPermissions != null ) && ( interactionPermissions.length > 0 ) )
 		{
@@ -373,22 +366,16 @@ public abstract class AIPart
 	{
 		return new DimensionalCoord( this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ() );
 	}
-	public Object getClientGuiElement( final EntityPlayer player ) {return null; }
-	public Object getServerGuiElement( final EntityPlayer player ) { return null; }
-
 
 	public AEPartLocation getSide()
 	{
 		return this.cableSide;
 	}
 
-
 	public String getUnlocalizedName()
 	{
 		return this.associatedItem.getUnlocalizedName() + ".name";
 	}
-
-
 
 	@Override
 	public boolean isActive()
@@ -730,26 +717,12 @@ public abstract class AIPart
 	 * 	amount extracted
 	 */
 	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
-		if(node == null)
-			return 0;
-		IGrid grid = node.getGrid();
-		if (grid == null) {
-			AILog.info("Grid cannot be initialized, WTF?");
-			return 0;
-		}
-
-		IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
-		if (storage == null) {
-			AILog.info("StorageGrid cannot be initialized, WTF?");
-			return 0;
-		}
-
-		IAEEnergyStack notRemoved = (IAEEnergyStack)storage.getInventory(getChannel()).extractItems(
+		IAEEnergyStack extracted = getEnergyProvidingInventory().extractItems(
 				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
-		if (notRemoved == null)
+		if (extracted == null)
 			return (int)resource.amount;
-		return (int)(resource.amount - notRemoved.getStackSize());
+		return (int)(resource.amount - extracted.getStackSize());
 	}
 
 	/**
@@ -761,21 +734,7 @@ public abstract class AIPart
 	 *  amount injected
 	 */
 	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
-		if(node == null)
-			return 0;
-		IGrid grid = node.getGrid(); // check grid node
-		if (grid == null) {
-			AILog.info("Grid cannot be initialized, WTF?");
-			return 0;
-		}
-
-		IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
-		if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
-			AILog.info("StorageGrid cannot be initialized, WTF?");
-			return 0;
-		}
-
-		IAEEnergyStack returnAmount = storage.getInventory(this.getChannel()).injectItems(
+		IAEEnergyStack returnAmount = getEnergyProvidingInventory().injectItems(
 				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
 		if (returnAmount == null)

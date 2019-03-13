@@ -1,11 +1,9 @@
 package AppliedIntegrations.Integration.Botania;
 
 import AppliedIntegrations.API.Botania.IManaChannel;
-import AppliedIntegrations.Items.Botania.MaterialEncorium;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.grid.Mana.ManaChannel;
 import appeng.api.AEApi;
-import appeng.items.materials.MaterialType;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.BotaniaAPI;
 
@@ -26,6 +24,10 @@ public class BotaniaLoader {
         AEApi.instance().partHelper().registerNewLayer(ManaLayer.class.getName(), ManaLayer.class.getName());
 
         ItemEnum.registerManaItemsModels();
+    }
+
+    public static void postInit() {
+
     }
 
     public static void initRecipes() {

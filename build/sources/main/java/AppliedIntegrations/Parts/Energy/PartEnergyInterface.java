@@ -5,6 +5,7 @@ import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.PartGui;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
@@ -59,8 +60,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import teamroots.embers.block.BlockEmberEmitter;
-import teamroots.embers.power.IEmberCapability;
+import teamroots.embers.api.power.IEmberCapability;
 import teamroots.embers.tileentity.TileEntityEmitter;
 import teamroots.embers.tileentity.TileEntityReceiver;
 
@@ -73,6 +75,7 @@ import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 import static appeng.api.util.AEPartLocation.INTERNAL;
+import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
@@ -231,22 +234,15 @@ public class PartEnergyInterface
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
-		// Call only on server
+		// Activation logic is server sided
 		if(getLogicalSide() == SERVER) {
 			if(!player.isSneaking()) {
-				// Link gui
-				this.LinkedGui = (GuiEnergyInterface) this.getClientGuiElement(player);
 
 				// Open GUI
-				player.openGui(AppliedIntegrations.instance, 1, this.getHostTile().getWorld(), this.getHostTile().
-						getPos().getX(), this.getHostTile().getPos().getY(), this.getHostTile().getPos().getZ());
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getSide(), getHostTile().getPos());
 				// Request gui update
 				updateRequested = true;
 
-			}else{
-				duality.debug = true;
-
-				AILog.chatLog("Stored: " + getEnergyStorage(RF, INTERNAL).getStored());
 			}
 		}
 		return true;
@@ -288,17 +284,6 @@ public class PartEnergyInterface
 			((InterfaceSinkSource)getEnergyStorage(EU, INTERNAL)).invalidate();
 		}
 	}
-
-	@Override
-	public Object getClientGuiElement(EntityPlayer player)
-	{
-		return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player), this, player);
-	}
-	@Override
-	public Object getServerGuiElement(EntityPlayer player) {
-		return new ContainerEnergyInterface(player, this);
-	}
-
 
 	@Override
 	public void onInventoryChanged() {
@@ -381,12 +366,14 @@ public class PartEnergyInterface
 	private void initGuiCoordinates(){
 		for( ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
-				NetworkHandler.sendTo(new PacketCoordinateInit(getX(),getY(),getZ(),getHostTile().getWorld(),getSide().getFacing()),
+				NetworkHandler.sendTo(new PacketCoordinateInit(this),
 						(EntityPlayerMP)listener.player);
 				updateRequested = false;
 			}
 		}
 	}
+
+	@SideOnly(CLIENT)
 	private void notifyListenersOfFilterEnergyChange()
 	{
 		for( ContainerEnergyInterface listener : this.LinkedListeners)
@@ -397,17 +384,19 @@ public class PartEnergyInterface
 			}
 		}
 	}
+
 	// Synchronize data with all listeners
 	private void notifyListenersOfEnergyBarChange(LiquidAIEnergy Energy){
 		for(ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
 				if(this.getHostTile() != null) {
-					NetworkHandler.sendTo(new PacketProgressBar(this,getX(),getY(),getZ(),getSide().getFacing(),this.getHostTile().getWorld()), (EntityPlayerMP) listener.player);
+					NetworkHandler.sendTo(new PacketProgressBar(this), (EntityPlayerMP) listener.player);
 				}
 			}
 		}
 	}
-	private void notifyListenersOfBarFilterChange(LiquidAIEnergy bar){
+
+ 	private void notifyListenersOfBarFilterChange(LiquidAIEnergy bar){
 		for(ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
 				NetworkHandler.sendTo(new PacketBarChange(bar,getX(),getY(),getZ(),getSide().getFacing(),this.getHostTile().getWorld()),(EntityPlayerMP)listener.player);
@@ -429,6 +418,7 @@ public class PartEnergyInterface
 	{
 		// Set the filter
 		this.FilteredEnergy = energy;
+		notifyListenersOfFilterEnergyChange();
 	}
 	/**
 	 * Ticking Request:
@@ -442,76 +432,79 @@ public class PartEnergyInterface
 	@Override
 	public TickRateModulation tickingRequest( final IGridNode node, final int TicksSinceLastCall )
 	{
+		if(!getHostTile().getWorld().isRemote) {
+			if (updateRequested) {
+				// Check if we have gui to update
+				if (Minecraft.getMinecraft().currentScreen instanceof PartGui)
+					this.initGuiCoordinates();
+			}
 
-		if(updateRequested){
-			// Check if we have gui to update
-			if(Minecraft.getMinecraft().currentScreen instanceof PartGui)
-				this.initGuiCoordinates();
-		}
-
-		try {
-			if (this.isActive()) {
+			try {
+				if (this.isActive()) {
 					DoInjectDualityWork(Actionable.MODULATE);
 					DoExtractDualityWork(Actionable.MODULATE);
+				}
+			} catch (NullNodeConnectionException e) {
+				AILog.error(e, "Node of PartEnergy Interface, when it's active could not be null.. But it is");
 			}
-		}catch (NullNodeConnectionException e) {
-			AILog.error(e,"Node of PartEnergy Interface, when it's active could not be null.. But it is");
-		}
 
-		/** Manually take ember energy, as receptor code is broken:
-         * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
-         * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
-         */
-		if(IntegrationsHelper.instance.isLoaded(Ember)) {
-			if (getFacingTile() instanceof TileEntityReceiver) {
-				TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
-				IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
+			/** Manually take ember energy, as receptor code is not dedicated for ae parts:
+			 * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
+			 * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
+			 */
+			if (bar == null) {
+				if (IntegrationsHelper.instance.isLoaded(Ember)) {
+					if (getFacingTile() instanceof TileEntityReceiver) {
+						TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
+						IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
 
-				// Check if facing is correct
-				if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
-					IEmberCapability emberStorage = emberReceptor.capability;
+						// Check if facing is correct
+						if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
+							IEmberCapability emberStorage = emberReceptor.capability;
 
-					if (emberStorage.getEmber() > 0) {
-						emberStorage.removeAmount((Double)getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
+							if (emberStorage.getEmber() > 0) {
+								emberStorage.removeAmount((Double) getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
+							}
+						}
+					} else if (getFacingTile() instanceof TileEntityEmitter) {
+						TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
+						IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
+
+						// Check if facing is correct
+						if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
+							IEmberCapability emberStorage = emberEmitter.capability;
+
+							if (((EmberInterfaceStorageDuality) getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
+								getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount((Double) getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
+							}
+						}
 					}
 				}
-			} else if (getFacingTile() instanceof TileEntityEmitter) {
-				TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
-				IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
+			}
 
-				// Check if facing is correct
-				if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
-					IEmberCapability emberStorage = emberEmitter.capability;
-
-					if (((EmberInterfaceStorageDuality) getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
-						getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount((Double)getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
+			//Syncing:
+			notifyListenersOfFilterEnergyChange();
+			// Energy Stored with GUi
+			int i = 0;
+			for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
+				if (getEnergyStorage(energy, INTERNAL) != null) {
+					Class type = getEnergyStorage(energy, INTERNAL).getTypeClass();
+					if (this.getEnergyStorage(energy, INTERNAL) != null && ((Number) getEnergyStorage(energy, INTERNAL).getStored()).doubleValue() > 0) {
+						this.bar = energy;
+						notifyListenersOfBarFilterChange(this.bar);
+						i += 1;
 					}
 				}
 			}
-		}
-
-		//Syncing:
-		notifyListenersOfFilterEnergyChange();
-		// Energy Stored with GUi
-		int i = 0;
-		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			if(getEnergyStorage(energy, INTERNAL) != null) {
-				Class type = getEnergyStorage(energy, INTERNAL).getTypeClass();
-				if (this.getEnergyStorage(energy, INTERNAL) != null && ((Number) getEnergyStorage(energy, INTERNAL).getStored()).doubleValue() > 0) {
-					this.bar = energy;
-					notifyListenersOfBarFilterChange(this.bar);
-					i += 1;
-				}
-			}
-		}
-		if (i == 0)
-			this.bar = null;
+			if (i == 0)
+				this.bar = null;
 			// Notify container and gui
-		if (bar != null)
-			// Bar Filter With Gui
-			this.notifyListenersOfEnergyBarChange(this.bar);
+			if (bar != null)
+				// Bar Filter With Gui
+				this.notifyListenersOfEnergyBarChange(this.bar);
 
-		this.saveChanges();
+			this.saveChanges();
+		}
 		return IDLE;
 	}
 
@@ -596,11 +589,27 @@ public class PartEnergyInterface
 	public void readFromNBT(NBTTagCompound tag) {
 		if(IntegrationsHelper.instance.isLoaded(Ember))
 			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).writeToNBT(tag);
+
+		if(IntegrationsHelper.instance.isLoaded(EU))
+			EUStorage.readFromNBT(tag);
+
+		if(IntegrationsHelper.instance.isLoaded(J))
+			JStorage.readFromNBT(tag);
+
+		RFStorage.readFromNBT(tag);
 	}
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		if(IntegrationsHelper.instance.isLoaded(Ember))
 			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).readFromNBT(tag);
+
+		if(IntegrationsHelper.instance.isLoaded(EU))
+			EUStorage.writeToNBT(tag);
+
+		if(IntegrationsHelper.instance.isLoaded(J))
+			JStorage.writeToNBT(tag);
+
+		RFStorage.writeToNBT(tag);
 	}
 
 	@Override
@@ -708,6 +717,11 @@ public class PartEnergyInterface
 	}
 
 	public void setRealContainer(String realContainer) { }
+
+	@Override
+	public LiquidAIEnergy getCurrentBar(AEPartLocation side) {
+		return bar;
+	}
 
 	@Override
 	public LiquidAIEnergy getFilter(int index) {

@@ -74,12 +74,12 @@ public class EnergyStack implements IEnergyStack {
 
 	@Override
 	public boolean hasEnergy() {
-		return amount > 0;
+		return amount > 0 && energy != null;
 	}
 
 	@Override
 	public boolean isEmpty() {
-		return amount > 0;
+		return amount == 0 || energy == null;
 	}
 
 	@Override
@@ -89,11 +89,20 @@ public class EnergyStack implements IEnergyStack {
 
 	@Override
 	public void setAll(@Nullable LiquidAIEnergy energy, long size) {
-
+		this.energy = energy;
+		this.amount = size;
 	}
 
 	@Override
-	public void setAll(@Nullable IEnergyStack stack) { }
+	public void setAll(@Nullable IEnergyStack stack) {
+		if(stack == null) {
+			energy = null;
+			amount = 0;
+			return;
+		}
+		this.energy = stack.getEnergy();
+		this.amount = stack.getStackSize();
+	}
 
 	@Override
 	public void setEnergy(@Nullable LiquidAIEnergy energy) {
@@ -116,7 +125,8 @@ public class EnergyStack implements IEnergyStack {
 
 	@Override
 	public void writeToStream(@Nonnull ByteBuf stream) {
-
+		stream.writeLong(amount);
+		stream.writeInt(energy.getIndex());
 	}
 
 	public void setAmount(long amount) {

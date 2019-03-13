@@ -1,11 +1,10 @@
 package AppliedIntegrations;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Blocks.BlocksEnum;
-import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Parts.PartModelEnum;
-import AppliedIntegrations.Proxy.ClientProxy;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,9 +25,8 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.4", dependencies = "required-after:appliedenergistics2")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */
@@ -66,6 +64,10 @@ public class AppliedIntegrations {
 				FluidRegistry.registerFluid(energy);
 		}
 
+		// Register models not in proxy, due to issue with item registration
+		if(getLogicalSide() == Side.CLIENT)
+			PartModelEnum.registerModels();
+
 		proxy.SidedPreInit();
 
 		// Register HUD for advanced entropy manipulator
@@ -74,7 +76,7 @@ public class AppliedIntegrations {
 
 		AIConfig = new Configuration(event.getSuggestedConfigurationFile());
 		AIConfigOPT.syncMe();
-		AILog.info(this.modid + ":Pre load Completed");
+		AILog.info("Pre load Completed");
 	}
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
@@ -93,25 +95,16 @@ public class AppliedIntegrations {
 
 		FMLCommonHandler.instance().bus().register(instance);
 
-		AILog.info(this.modid + ":init Completed");
+		AILog.info( "init Completed");
 	}
 	@Mod.EventHandler
 	public void postLoad(FMLPostInitializationEvent event) {
-		AILog.info(this.modid + ":Post load Completed");
+		AILog.info("Post load Completed");
 	}
 
 	public static AppliedIntegrations getInstance() {
 		return instance;
 		    }
-	public static final int getNewID(){
-		AI_ID++;
-		return AI_ID;
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void registerPartModels(){
-		PartModelEnum.registerModels();
-	}
 
 	public static Side getLogicalSide(){
 		Thread thr = Thread.currentThread();

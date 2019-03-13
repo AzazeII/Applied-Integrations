@@ -17,6 +17,10 @@ public class PacketGuiChange extends AIPacket {
 
     public EntityPlayer p;
 
+    public PacketGuiChange(){
+
+    }
+
     public PacketGuiChange(Gui g, int x, int y, int z, EntityPlayer p){
         super(x,y,z,null,null);
         this.p = p;

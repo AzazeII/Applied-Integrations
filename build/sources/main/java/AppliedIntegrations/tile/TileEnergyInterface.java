@@ -4,6 +4,7 @@ import AppliedIntegrations.API.*;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
+import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Helpers.InterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
@@ -72,10 +73,14 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	public TileEnergyInterface() {
 		this.energyStates[1] = true;
 		for(AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS){
-			RFStorage.put(dir,new EnergyInterfaceStorage(this, capacity,capacity/2));
-			EUStorage.put(dir,new EnergyInterfaceStorage(this, (int)(capacity*0.25), capacity*2));
-			JOStorage.put(dir,new JouleInterfaceStorage(this, capacity*2));
-			EmberStorage.put(dir, new EmberInterfaceStorageDuality());
+			if(IntegrationsHelper.instance.isLoaded(RF))
+				RFStorage.put(dir,new EnergyInterfaceStorage(this, capacity,capacity/2));
+			if(IntegrationsHelper.instance.isLoaded(EU))
+				EUStorage.put(dir,new EnergyInterfaceStorage(this, (int)(capacity*0.25), capacity*2));
+			if(IntegrationsHelper.instance.isLoaded(J))
+				JOStorage.put(dir,new JouleInterfaceStorage(this, capacity*2));
+			if(IntegrationsHelper.instance.isLoaded(Ember))
+				EmberStorage.put(dir, new EmberInterfaceStorageDuality());
 		}
 	}
 
@@ -136,7 +141,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	private void notifyListenersOfEnergyBarChange(LiquidAIEnergy Energy, int id, AEPartLocation side){
 		for(ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
-				 NetworkHandler.sendTo(new PacketProgressBar(null, pos.getX(), pos.getY(), pos.getZ(),side.getFacing(),world),(EntityPlayerMP)listener.player);
+				 NetworkHandler.sendTo(new PacketProgressBar(this), (EntityPlayerMP)listener.player);
 			}
 		}
 	}
@@ -250,6 +255,11 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		if(!this.LinkedListeners.contains(container)){
 			this.LinkedListeners.add(container);
 		}
+	}
+
+	@Override
+	public LiquidAIEnergy getCurrentBar(AEPartLocation side) {
+		return null;
 	}
 
 	@Override

@@ -13,11 +13,11 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 
-public class AIPlatePart extends AIPart implements IGridTickable {
+public class AIPlanePart extends AIPart implements IGridTickable {
 
     public Entity workingEntity;
 
-    public AIPlatePart(PartEnum associatedPart, SecurityPermissions... interactionPermissions) {
+    public AIPlanePart(PartEnum associatedPart, SecurityPermissions... interactionPermissions) {
         super(associatedPart, interactionPermissions);
     }
 

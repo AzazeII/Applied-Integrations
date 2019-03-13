@@ -164,14 +164,6 @@ public class PartEnergyTerminal
 	}
 
 	@Override
-	public Object getClientGuiElement( final EntityPlayer player )
-	{
-		return new GuiEnergyTerminalDuality((ContainerEnergyTerminal)this.getServerGuiElement(player),this,player);
-	}
-
-
-
-	@Override
 	public void getDrops( final List<ItemStack> drops, final boolean wrenched )
 	{
 		// Inventory is saved when wrenched.
@@ -228,12 +220,6 @@ public class PartEnergyTerminal
 	@Override
 	public void onEntityCollision(Entity entity) {
 
-	}
-
-	@Override
-	public Object getServerGuiElement( final EntityPlayer player )
-	{
-		return new ContainerEnergyTerminal( player, this );
 	}
 
 	/**

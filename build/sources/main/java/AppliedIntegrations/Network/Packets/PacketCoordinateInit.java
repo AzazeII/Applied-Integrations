@@ -1,13 +1,20 @@
 package AppliedIntegrations.Network.Packets;
 
+import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Gui.PartGui;
+import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.Utils.AILog;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**
  * @Author Azazell
@@ -17,22 +24,33 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketCoordinateInit extends AIPacket {
 
+    public final boolean isOwnerPart;
+
+    public AIPart part;
+
+    public PacketCoordinateInit(){
+        isOwnerPart = false;
+    }
 
     public PacketCoordinateInit(int x, int y, int z, World w){
         super(x,y,z,null,w);
+        isOwnerPart = false;
     }
 
-    public PacketCoordinateInit(int x, int y, int z, World w, EnumFacing dir){
-        super(x,y,z,dir,w);
+    public PacketCoordinateInit(AIPart part){
+        super(part.getX(), part.getY(), part.getZ(), part.getSide().getFacing(), part.getHostTile().getWorld());
+        isOwnerPart = true;
+
+        this.part = part;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
+        part = getPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-
+        setPart(buf, part);
     }
 }

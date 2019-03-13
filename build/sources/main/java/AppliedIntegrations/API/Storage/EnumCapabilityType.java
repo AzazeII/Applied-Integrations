@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.Optional;
 import teamroots.embers.power.EmberCapabilityProvider;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Vector;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
@@ -54,6 +55,16 @@ public class EnumCapabilityType {
             if(type.energy == energy)
                 return type;
         }
+        return null;
+    }
+
+    /**
+     * Class def not found safe getter
+     * @return null or capabilities of this type
+     */
+    public Vector<Capability> getCapabilityWithModCheck(){
+        if(IntegrationsHelper.instance.isLoaded(this.energy))
+            return this.capabilities;
         return null;
     }
 }

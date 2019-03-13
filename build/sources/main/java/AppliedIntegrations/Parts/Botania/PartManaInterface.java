@@ -103,19 +103,8 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
     }
 
     @Override
-    public Object getClientGuiElement(EntityPlayer player)
-    {
-        return null;
-    }
-    @Override
-    public Object getServerGuiElement(EntityPlayer player) {
-        return null;
-    }
-
-    @Override
     public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
         if(isServerSide()) {
-            AILog.chatLog("Mana: " + currentMana + "");
 
         }
         return true;

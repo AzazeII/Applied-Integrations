@@ -11,6 +11,7 @@ import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.capabilities.Capabilities;
+import appeng.me.helpers.IGridProxyable;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -121,6 +122,7 @@ public class InterfaceDuality implements IInterfaceDuality{
         if (node == null) {
             throw new NullNodeConnectionException();
         }
+
         for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
             if (action == Actionable.MODULATE) {
                 if (getFilteredEnergy(side) != null) {
@@ -128,14 +130,20 @@ public class InterfaceDuality implements IInterfaceDuality{
                     IInterfaceStorageDuality interfaceStorageDuality = getEnergyStorage(getFilteredEnergy(side), INTERNAL);
 
                     if (T != Long.class) {
-                        int valuedReceive = (int)
-                                Math.min((int)interfaceStorageDuality.getStored(), this.getMaxTransfer(side));
-                        int diff = valuedReceive - owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), valuedReceive), SIMULATE);
-                        if (diff == 0) {
-                            this.getEnergyStorage(this.getFilteredEnergy(side), INTERNAL).modifyEnergyStored(owner.ExtractEnergy(new
-                                    EnergyStack(getFilteredEnergy(side), valuedReceive), MODULATE));
-                            //transferEnergy(this.FilteredEnergy, valuedReceive);
+                        // Get int value from stored amount
+                        int stored = ((Number)interfaceStorageDuality.getStored()).intValue();
+                        // Extract energy from drive array
+                        int extracted = owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), (int)getMaxTransfer(side)), SIMULATE);
+
+                        // Check if storage can store new energy
+                        if( extracted + stored <= ((Number)interfaceStorageDuality.getMaxStored()).intValue()){
+                            // Drain energy from network
+                            AILog.info("Drained: " + owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE));
+
+                            // Give energy to tile's storage
+                            interfaceStorageDuality.modifyEnergyStored(extracted);
                         }
+
                     }else{
                         // TODO: 2019-02-27 Add tesla extraction
                     }
@@ -168,8 +176,8 @@ public class InterfaceDuality implements IInterfaceDuality{
     }
 
     public <T> T getCapability(Capability<T> capability, AEPartLocation side) {
-        // FE (RF) Capability
         if( capability == Capabilities.FORGE_ENERGY ) {
+            // FE (RF) Capability
             return (T) this.getEnergyStorage(RF, side);
             // Ember capability
         }else if(IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
@@ -180,8 +188,6 @@ public class InterfaceDuality implements IInterfaceDuality{
                 capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY){
             return (T) this.getEnergyStorage(J, side);
             // EU capability
-        }else if(capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY){
-            //return (T) upgradeInventory;
         }
         return null;
     }
@@ -192,12 +198,11 @@ public class InterfaceDuality implements IInterfaceDuality{
             return true;
         } else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
             return true;
-        } else if (IntegrationsHelper.instance.isLoaded(J) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
+        } else if (IntegrationsHelper.instance.isLoaded(J)){
+            if(capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
                 capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY ||
-                capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
-            return true;
-        } else if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            //return true;
+                capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY)
+                 return true;
         }
         return false;
     }

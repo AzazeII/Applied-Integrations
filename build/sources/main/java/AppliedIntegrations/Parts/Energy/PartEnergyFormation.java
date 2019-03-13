@@ -1,12 +1,12 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.Parts.AIPlatePart;
+import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPartModel;
 
-public class PartEnergyFormation extends AIPlatePart {
+public class PartEnergyFormation extends AIPlanePart {
     public PartEnergyFormation() {
         super(PartEnum.EnergyFormation, SecurityPermissions.EXTRACT);
     }
