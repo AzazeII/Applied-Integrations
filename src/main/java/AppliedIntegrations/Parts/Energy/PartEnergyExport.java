@@ -106,7 +106,7 @@ public class PartEnergyExport extends AIOPart {
 			{
 				if( energy != null )
 				{
-					// Only save the void state if filters are set.
+					// Only save the void stateProp if filters are set.
 					doSave = true;
 					break;
 				}

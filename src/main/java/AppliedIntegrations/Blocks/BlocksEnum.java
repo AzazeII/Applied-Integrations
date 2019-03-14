@@ -2,18 +2,20 @@ package AppliedIntegrations.Blocks;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusCore;
-import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusHousing;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusPort;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusRibs;
 import AppliedIntegrations.Blocks.MEServer.*;
 import AppliedIntegrations.tile.TileEnum;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.LinkedHashMap;
 import java.util.Vector;
 
 public enum BlocksEnum {
@@ -27,10 +29,9 @@ public enum BlocksEnum {
 
     BLBRibs(new BlockLogicBusRibs("BlockLogicBusRibs", "ME Logic Bus Rib"),TileEnum.TLBRib),
     BLBCore(new BlockLogicBusCore("BlockLogicBusCore", "ME Logic Bus Core"),TileEnum.TLBCore),
-    BLBHousing(new BlockLogicBusHousing("BlockLogicBusHousing", "ME Logic Bus Housing"),TileEnum.TLBHousing),
     BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort);
 
-    private static Vector<ItemBlock> itemBlocks = new Vector<>();
+    private static LinkedHashMap<Block, ItemBlock> itemBlocks = new LinkedHashMap<>();
     public BlockAIRegistrable b;
     public TileEnum tileEnum;
 
@@ -51,20 +52,33 @@ public enum BlocksEnum {
             block.setRegistryName(blocksEnum.b.getRegistryName());
 
             ForgeRegistries.ITEMS.register(block);
-            itemBlocks.add(block);
+            itemBlocks.put(blocksEnum.b, block);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    public static void registerModels() {
-
-
-    }
+    public static void registerModels() {}
 
     @SideOnly(Side.CLIENT)
     public static void registerItemModels() {
-        for(ItemBlock itemBlk : itemBlocks){
-            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk, 0, new ModelResourceLocation(itemBlk.getRegistryName(), "inventory"));
+        for(ItemBlock itemBlk : itemBlocks.values()){
+            if(itemBlk != itemBlocks.get(BLBRibs.b) && itemBlk != itemBlocks.get(BLBPort.b))
+                Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk,
+                        0, new ModelResourceLocation(itemBlk.getRegistryName(), "inventory"));
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void registerSpecialModels() {
+        ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation("appliedintegrations:" +
+                "logic_bus/logic_port", "inventory");
+        ModelLoader.setCustomModelResourceLocation(itemBlocks.get(BLBPort.b),
+                1, itemModelResourceLocation);
+
+        itemModelResourceLocation = new ModelResourceLocation("appliedintegrations:" +
+                "logic_bus/logic_ribs", "inventory");
+        ModelLoader.setCustomModelResourceLocation(itemBlocks.get(BLBRibs.b),
+                1, itemModelResourceLocation);
+
     }
 }

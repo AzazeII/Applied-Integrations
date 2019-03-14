@@ -139,7 +139,7 @@ public class AEPartGridBlock
     }
 
     /**
-     * Gets the an itemstack based on the parts state.
+     * Gets the an itemstack based on the parts stateProp.
      */
     @Override
     public ItemStack getMachineRepresentation()

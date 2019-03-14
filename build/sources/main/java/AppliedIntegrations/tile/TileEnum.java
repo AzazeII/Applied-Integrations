@@ -2,7 +2,6 @@ package AppliedIntegrations.tile;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlocksEnum;
-import AppliedIntegrations.tile.LogicBus.TileLogicBusHousing;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusPort;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusRib;
@@ -16,7 +15,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public enum TileEnum
 {
-    TLBHousing("TileLogicBusHousing", TileLogicBusHousing.class, BlocksEnum.BLBHousing),
     TLBPort("TileLogicBusCore", TileLogicBusPort.class, BlocksEnum.BLBPort),
     TLBRib("TileLogicBusRib", TileLogicBusRib.class ,BlocksEnum.BLBRibs),
     TLBCore("TileLogicBusCore", TileLogicBusCore.class, BlocksEnum.BLBCore),

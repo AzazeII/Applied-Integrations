@@ -2,6 +2,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -36,7 +37,7 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
                     TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(pos);
 
                     if(tile.hasMaster())
-                        tile.getMaster().requestUpdate();
+                        ((TileServerCore)tile.getMaster()).requestUpdate();
                 }
                 return true;
             }

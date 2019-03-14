@@ -9,9 +9,9 @@ public interface IAIMultiBlock {
 
     boolean hasMaster();
 
-    TileServerCore getMaster();
+    IMaster getMaster();
 
-    void setMaster(TileServerCore tileServerCore);
+    void setMaster(IMaster tileServerCore);
 
 
     void notifyBlock();

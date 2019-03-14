@@ -1,6 +1,7 @@
 package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerRib;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
@@ -26,7 +27,7 @@ public class BlockServerRib extends AIMultiBlock {
             TileServerRib rib = (TileServerRib) world.getTileEntity(pos);
             if (rib.hasMaster() && !world.isRemote) {
                 try {
-                    rib.getMaster().getWorld().getBlockState(rib.getMaster().getPos()).getBlock().onBlockActivated(world, pos,
+                    ((TileServerCore)rib.getMaster()).getWorld().getBlockState(((TileServerCore)rib.getMaster()).getPos()).getBlock().onBlockActivated(world, pos,
                             state, p, EnumHand.MAIN_HAND, facing, hitX, hitY, hitZ);
                 }catch(Exception e){
                 }finally {

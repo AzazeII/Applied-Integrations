@@ -51,12 +51,12 @@ public class TileServerSecurity extends AIMultiBlockTile {
     }
     @Override
     public Object getServerGuiElement( final EntityPlayer player ) {
-        return new ContainerServerPacketTracer(getMaster(),player);
+        return new ContainerServerPacketTracer((TileServerCore)getMaster(),player);
     }
     @Override
     public Object getClientGuiElement( final EntityPlayer player )
     {
-        return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),getMaster(),player);
+        return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),(TileServerCore)getMaster(),player);
     }
     @Override
     public void createAELink() {
@@ -88,7 +88,7 @@ public class TileServerSecurity extends AIMultiBlockTile {
             destroyAELink();
         }
         if(hasMaster()){
-            getMaster().Slaves.remove(this);
+            ((TileServerCore)getMaster()).Slaves.remove(this);
             master.MainNetwork = null;
         }
     }

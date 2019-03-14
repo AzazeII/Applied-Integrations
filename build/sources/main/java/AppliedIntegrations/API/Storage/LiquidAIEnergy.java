@@ -2,6 +2,7 @@ package AppliedIntegrations.API.Storage;
 
 import AppliedIntegrations.AppliedIntegrations;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
@@ -67,4 +68,12 @@ public class LiquidAIEnergy extends Fluid {
     public static final LiquidAIEnergy AE = new LiquidAIEnergy(8,"AE",null); // AE fluid energy
     public static final LiquidAIEnergy Ember = new LiquidAIEnergy(9, "Ember", null);
     public static final LiquidAIEnergy TESLA = new LiquidAIEnergy(10, "TESLA", null);
+
+    public void writeToNBT(NBTTagCompound tag) {
+        tag.setInteger("#AIEnergy", this.getIndex());
+    }
+
+    public static LiquidAIEnergy readFromNBT(NBTTagCompound tag){
+        return linkedIndexMap.get(tag.getInteger("#AIEnergy"));
+    }
 }

@@ -3,6 +3,8 @@ package AppliedIntegrations.API;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 
 /**
  * @Author Azazell
@@ -10,6 +12,8 @@ import appeng.api.util.AEPartLocation;
 public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator{
     IGridNode getGridNode();
     LiquidAIEnergy getCurrentBar(AEPartLocation side);
+
+    TileEntity getFacingTile(EnumFacing side);
 
     // Work mode
     enum DualityMode{

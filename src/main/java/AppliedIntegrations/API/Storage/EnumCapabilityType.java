@@ -59,6 +59,16 @@ public class EnumCapabilityType {
     }
 
     /**
+     * Class def not found safe input capability getter
+     * @return
+     */
+    public Capability getInputCapability(){
+        if(IntegrationsHelper.instance.isLoaded(this.energy))
+            return capabilities.firstElement();
+        return null;
+    }
+
+    /**
      * Class def not found safe getter
      * @return null or capabilities of this type
      */

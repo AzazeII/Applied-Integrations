@@ -745,7 +745,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
 
 
     /**
-     * Called when a client requests the state of the container.
+     * Called when a client requests the stateProp of the container.
      * Updates our cached list of energies
      */
     public abstract void onClientRequestFullUpdate();

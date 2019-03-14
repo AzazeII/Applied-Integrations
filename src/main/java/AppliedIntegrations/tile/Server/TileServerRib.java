@@ -20,11 +20,11 @@ public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, IT
     public void update() {
         super.update();
         if(hasMaster()){
-            if(getMaster().MainNetwork == null) {
+            if(((TileServerCore)getMaster()).MainNetwork == null) {
                 IGrid grid = getNetwork();
                 for (IGridNode node : grid.getNodes()) {
                     if (!(node.getMachine() instanceof AIMultiBlockTile)) {
-                        getMaster().MainNetwork = grid;
+                        ((TileServerCore)getMaster()).MainNetwork = grid;
                     }
                 }
             }

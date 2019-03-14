@@ -59,47 +59,39 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     @Override
     public double getIdlePowerUsage() {
-        // TODO Auto-generated method stub
         return 1;
     }
 
     @Override
     public EnumSet<GridFlags> getFlags() {
-        // TODO Auto-generated method stub
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
     }
 
     @Override
     public boolean isWorldAccessible() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public DimensionalCoord getLocation() {
-        // TODO Auto-generated method stub
         return new DimensionalCoord(this);
     }
 
     @Override
     public AEColor getGridColor() {
-        // TODO Auto-generated method stub
         return AEColor.TRANSPARENT;
     }
 
     @Override
     public void onGridNotification(GridNotification notification) {
-        // TODO Auto-generated method stub
 
     }
     @Override
     public void setNetworkStatus(IGrid grid, int channelsInUse) {
-        // TODO Auto-generated method stub
 
     }
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
-        // TODO Auto-generated method stub
         return EnumSet.of(EnumFacing.SOUTH,EnumFacing.DOWN,EnumFacing.EAST,EnumFacing.UP,EnumFacing.NORTH,EnumFacing.WEST);
     }
     public void createAELink() {
@@ -117,13 +109,11 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     @Override
     public IGridHost getMachine() {
-        // TODO Auto-generated method stub
         return this;
     }
 
     @Override
     public void gridChanged() {
-        // TODO Auto-generated method stub
 
     }
     public boolean isServer() {
@@ -147,20 +137,17 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     }
     @Override
     public IGridNode getGridNode(AEPartLocation dir) {
-        // TODO Auto-generated method stub
         if(gridNode ==null) createAELink();
         return gridNode;
     }
 
     @Override
     public AECableType getCableConnectionType(AEPartLocation dir) {
-        // TODO Auto-generated method stub
         return AECableType.DENSE_SMART;
     }
 
     @Override
     public void securityBreak() {
-        // TODO Auto-generated method stub
 
     }
     @Override

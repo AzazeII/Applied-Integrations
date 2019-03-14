@@ -53,6 +53,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
@@ -588,7 +589,7 @@ public class PartEnergyInterface
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		if(IntegrationsHelper.instance.isLoaded(Ember))
-			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).writeToNBT(tag);
+			EmberStorage.readFromNBT(tag);
 
 		if(IntegrationsHelper.instance.isLoaded(EU))
 			EUStorage.readFromNBT(tag);
@@ -596,12 +597,17 @@ public class PartEnergyInterface
 		if(IntegrationsHelper.instance.isLoaded(J))
 			JStorage.readFromNBT(tag);
 
+		if(IntegrationsHelper.instance.isLoaded(TESLA))
+			TESLAStorage.deserializeNBT(tag.getCompoundTag("#TeslaTag"));
+
 		RFStorage.readFromNBT(tag);
+
+		FilteredEnergy = LiquidAIEnergy.readFromNBT(tag);
 	}
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		if(IntegrationsHelper.instance.isLoaded(Ember))
-			((EmberInterfaceStorageDuality)this.getEnergyStorage(Ember, INTERNAL)).readFromNBT(tag);
+			EmberStorage.writeToNBT(tag);
 
 		if(IntegrationsHelper.instance.isLoaded(EU))
 			EUStorage.writeToNBT(tag);
@@ -609,7 +615,12 @@ public class PartEnergyInterface
 		if(IntegrationsHelper.instance.isLoaded(J))
 			JStorage.writeToNBT(tag);
 
+		if(IntegrationsHelper.instance.isLoaded(TESLA))
+			tag.setTag("#TeslaTag", TESLAStorage.serializeNBT());
+
 		RFStorage.writeToNBT(tag);
+
+		FilteredEnergy.writeToNBT(tag);
 	}
 
 	@Override
@@ -721,6 +732,11 @@ public class PartEnergyInterface
 	@Override
 	public LiquidAIEnergy getCurrentBar(AEPartLocation side) {
 		return bar;
+	}
+
+	@Override
+	public TileEntity getFacingTile(EnumFacing side) {
+		return getFacingTile();
 	}
 
 	@Override

@@ -50,7 +50,7 @@ public class EnergyMonitor
     private Collection<IEnergyStack> cacheView;
 
     /**
-     * Used to validate the state of the fluid listener, can not be null
+     * Used to validate the stateProp of the fluid listener, can not be null
      */
     private WeakReference<Object> token;
 
@@ -81,7 +81,7 @@ public class EnergyMonitor
      * @param energyGrid
      * Energy grid to extract power from
      * @param validationToken
-     * Used to validate the state of the fluid listener, can not be null
+     * Used to validate the stateProp of the fluid listener, can not be null
      */
     public EnergyMonitor( final IMEMonitor<IAEEnergyStack> fluidMonitor, final IEnergyGrid energyGrid, final Object validationToken )
     {
@@ -553,7 +553,7 @@ public class EnergyMonitor
      * @param energyGrid
      * Energy grid to extract power from
      * @param validationToken
-     * Used to validate the state of the fluid listener, can not be null
+     * Used to validate the stateProp of the fluid listener, can not be null
      */
     public void wrap(final IMEMonitor<IAEEnergyStack> fluidMonitor, final IEnergyGrid energyGrid, final Object validationToken )
     {

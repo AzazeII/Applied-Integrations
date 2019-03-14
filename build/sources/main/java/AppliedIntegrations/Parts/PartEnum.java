@@ -9,6 +9,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIStrings;
 
 import AppliedIntegrations.Parts.P2P.PartEmberP2PTunnel;
+import AppliedIntegrations.Parts.P2P.PartStarlightP2PTunnel;
 import appeng.api.config.Upgrades;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,8 @@ public enum PartEnum
 
     ManaInterface(AIStrings.Part_ManaInterface, PartManaInterface.class, ItemEnum.ITEMMANAPARTINTERFACE ),
 
-    P2PEmber(AIStrings.Part_P2PEmber, PartEmberP2PTunnel.class, ItemEnum.ITEMP2PEMBER );
+    P2PEmber(AIStrings.Part_P2PEmber, PartEmberP2PTunnel.class, ItemEnum.ITEMP2PEMBER ),
+    P2PStarlight(AIStrings.Part_P2PStarlight, PartStarlightP2PTunnel.class, ItemEnum.ITEMP2PStarlight );
     /**
      * Cached enum values
      */

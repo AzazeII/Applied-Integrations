@@ -69,13 +69,13 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     }
 
     @Override
-    public TileServerCore getMaster() {
+    public IMaster getMaster() {
         return master;
     }
 
     @Override
-    public void setMaster(TileServerCore tileServerCore) {
-        master = tileServerCore;
+    public void setMaster(IMaster tileServerCore) {
+        master = (TileServerCore)tileServerCore;
     }
 
     @Override

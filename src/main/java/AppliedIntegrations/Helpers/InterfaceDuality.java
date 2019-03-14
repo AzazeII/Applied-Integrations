@@ -1,6 +1,7 @@
 package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
@@ -12,7 +13,10 @@ import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.capabilities.Capabilities;
 import appeng.me.helpers.IGridProxyable;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.items.CapabilityItemHandler;
 import teamroots.embers.power.EmberCapabilityProvider;
@@ -130,15 +134,20 @@ public class InterfaceDuality implements IInterfaceDuality{
                     IInterfaceStorageDuality interfaceStorageDuality = getEnergyStorage(getFilteredEnergy(side), INTERNAL);
 
                     if (T != Long.class) {
+
                         // Get int value from stored amount
                         int stored = ((Number)interfaceStorageDuality.getStored()).intValue();
+                        // Get int value from capacity
+                        int capacity = ((Number)interfaceStorageDuality.getMaxStored()).intValue();
+                        // minimum value between max transfer and empty space in storage
+                        int valuedExtract = Math.min(capacity - stored, (int)getMaxTransfer(side));
                         // Extract energy from drive array
-                        int extracted = owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), (int)getMaxTransfer(side)), SIMULATE);
+                        int extracted = owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), valuedExtract), SIMULATE);
 
                         // Check if storage can store new energy
-                        if( extracted + stored <= ((Number)interfaceStorageDuality.getMaxStored()).intValue()){
+                        if( extracted + stored <= capacity){
                             // Drain energy from network
-                            AILog.info("Drained: " + owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE));
+                            owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE);
 
                             // Give energy to tile's storage
                             interfaceStorageDuality.modifyEnergyStored(extracted);
@@ -149,6 +158,13 @@ public class InterfaceDuality implements IInterfaceDuality{
                     }
                 }
             }
+
+            // Get int value from stored amount
+            int stored = ((Number)getEnergyStorage(getFilteredEnergy(side), side).getStored()).intValue();
+            // Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
+            // Otherwise it will be really OP
+            transferEnergy(getFilteredEnergy(side), Math.min(stored, Math.min((int)getMaxTransfer(side), 50000)), side.getFacing());
+
             if(!(owner instanceof TileEnergyInterface)){
                 // Break if owner is partEnergyInterface (iterate only one time)
                 break;
@@ -156,23 +172,21 @@ public class InterfaceDuality implements IInterfaceDuality{
         }
     }
 
-    private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount) {
-        /*if(filteredEnergy == RF){
-            if(owner.getFacingTile().hasCapability(Capabilities.FORGE_ENERGY, owner.getSide().getOpposite().getFacing())){
-                IEnergyStorage capability = getFacingTile().getCapability(Capabilities.FORGE_ENERGY, getSide().getOpposite().getFacing());
-                capability.receiveEnergy(Amount,false);
+    private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount, EnumFacing side) {
+        TileEntity tile = owner.getFacingTile(side);
+
+        if(tile == null)
+            return;
+
+        if(filteredEnergy == null)
+            return;
+
+        for(EnumCapabilityType type : EnumCapabilityType.values){
+            if(tile.hasCapability(type.getInputCapability(), side)){
+                CapabilityHelper capabilityHelper = new CapabilityHelper(tile, AEPartLocation.fromFacing(side));
+                getEnergyStorage(filteredEnergy, AEPartLocation.fromFacing(side)).modifyEnergyStored(-capabilityHelper.receiveEnergy(Amount, false, filteredEnergy));
             }
-        }else if(filteredEnergy == EU){
-            if(this.getFacingTile() instanceof IEnergySink){
-                IEnergySink receiver = (IEnergySink)this.getFacingTile();
-                receiver.injectEnergy(this.getSide().getFacing(),(double)Amount,4);
-            }
-        }else if(filteredEnergy == J){
-            if(this.getFacingTile() instanceof IStrictEnergyAcceptor){
-                IStrictEnergyAcceptor receiver = (IStrictEnergyAcceptor)this.getFacingTile();
-                receiver.acceptEnergy(this.getSide().getFacing(),Amount, false);
-            }
-        }*/
+        }
     }
 
     public <T> T getCapability(Capability<T> capability, AEPartLocation side) {

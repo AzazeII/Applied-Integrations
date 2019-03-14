@@ -120,11 +120,13 @@ public class CapabilityHelper {
         return 0;
     }
 
+
     public int receiveEnergy(Number val, boolean simulate, LiquidAIEnergy energy){
         for(Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
             if (capabilities.contains(capability)){
                 if(capability == CapabilityEnergy.ENERGY){
-                    IEnergyStorage energyStorageCapability = (IEnergyStorage)capabilityHandler.getCapability(capability, side.getFacing());;
+                    IEnergyStorage energyStorageCapability = (IEnergyStorage)capabilityHandler.getCapability(capability, side.getFacing());
+
                     return energyStorageCapability.receiveEnergy(val.intValue(), simulate);
 
                 }else if(IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){

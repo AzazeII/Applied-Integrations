@@ -257,7 +257,7 @@ public class PartEnergyTerminal
 
 
 	/**
-	 * Called to read our saved state
+	 * Called to read our saved stateProp
 	 */
 	@Override
 	public void readFromNBT( final NBTTagCompound data )
@@ -281,7 +281,7 @@ public class PartEnergyTerminal
 	}
 
 	/**
-	 * Called to save our state
+	 * Called to save our stateProp
 	 */
 	@Override
 	public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType )

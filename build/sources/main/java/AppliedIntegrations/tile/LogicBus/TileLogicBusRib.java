@@ -1,6 +1,7 @@
 package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.tile.IAIMultiBlock;
+import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -18,12 +19,12 @@ public class TileLogicBusRib extends TileEntity implements IAIMultiBlock {
     }
 
     @Override
-    public TileServerCore getMaster() {
+    public IMaster getMaster() {
         return null;
     }
 
     @Override
-    public void setMaster(TileServerCore tileServerCore) {
+    public void setMaster(IMaster tileServerCore) {
 
     }
     @Override

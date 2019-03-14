@@ -9,6 +9,7 @@ import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PStarlight;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
@@ -43,6 +44,7 @@ public enum ItemEnum {
     ITEMPARTANNIHILATION( new ItemPartEnergyAnnihilation( "energyAnnihilationPartItem")),
     ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem")),
 
+    ITEMP2PStarlight(new ItemPartP2PStarlight("starlightP2PPartItem")),
     ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem")),
 
     ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem")),

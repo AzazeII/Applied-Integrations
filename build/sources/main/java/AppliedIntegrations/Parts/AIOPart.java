@@ -464,10 +464,10 @@ public abstract class AIOPart
         // Is the bus pulse controlled?
         if( this.redstoneMode == RedstoneMode.SIGNAL_PULSE )
         {
-            // Did the state of the redstone change?
+            // Did the stateProp of the redstone change?
             if( this.isReceivingRedstonePower() != this.lastRedstone )
             {
-                // Set the previous redstone state
+                // Set the previous redstone stateProp
                 this.lastRedstone = this.isReceivingRedstonePower();
             }
         }

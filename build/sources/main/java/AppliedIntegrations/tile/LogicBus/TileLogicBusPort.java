@@ -2,6 +2,7 @@ package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
+import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.networking.*;
 import appeng.me.cluster.IAECluster;
@@ -63,12 +64,12 @@ public class TileLogicBusPort extends AITile implements IAEMultiBlock, IAIMultiB
     }
 
     @Override
-    public TileServerCore getMaster() {
+    public IMaster getMaster() {
         return null;
     }
 
     @Override
-    public void setMaster(TileServerCore tileServerCore) {
+    public void setMaster(IMaster tileServerCore) {
 
     }
 }

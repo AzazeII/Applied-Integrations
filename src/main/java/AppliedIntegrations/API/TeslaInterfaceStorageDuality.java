@@ -1,6 +1,7 @@
 package AppliedIntegrations.API;
 
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
+import net.minecraft.nbt.NBTTagCompound;
 
 public class TeslaInterfaceStorageDuality extends BaseTeslaContainer implements IInterfaceStorageDuality<Long> {
 
@@ -41,5 +42,4 @@ public class TeslaInterfaceStorageDuality extends BaseTeslaContainer implements 
     public Long extract(Long value, boolean simulate) {
         return super.takePower(value, simulate);
     }
-
 }

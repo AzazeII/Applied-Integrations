@@ -38,7 +38,7 @@ public final class AIUtils
             return false;
         }
 
-        // NBT state must match
+        // NBT stateProp must match
         if( stack1.hasTagCompound() != stack2.hasTagCompound() )
         {
             return false;

@@ -145,13 +145,13 @@ public abstract class AIPart
 		// Do we have a node?
 		if( this.node != null )
 		{
-			// Get the active state
+			// Get the active stateProp
 			boolean currentlyActive = this.node.isActive();
 
-			// Has that state changed?
+			// Has that stateProp changed?
 			if( currentlyActive != this.isActive )
 			{
-				// Set our active state
+				// Set our active stateProp
 				this.isActive = currentlyActive;
 
 				// Mark the host for an update
@@ -244,7 +244,7 @@ public abstract class AIPart
 		// Set the player id
 		this.node.setPlayerID( this.ownerID );
 
-		// Update state
+		// Update stateProp
 		if( ( this.hostTile != null ) && ( this.host != null ) && ( this.hostTile.getWorld() != null ) )
 		{
 			try
@@ -490,7 +490,7 @@ public abstract class AIPart
 	{
 		if( this.host != null )
 		{
-			// Get redstone state
+			// Get redstone stateProp
 			return this.host.hasRedstone( this.cableSide );
 		}
 		return false;
@@ -717,12 +717,13 @@ public abstract class AIPart
 	 * 	amount extracted
 	 */
 	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
+		// Extract energy from MEInventory
 		IAEEnergyStack extracted = getEnergyProvidingInventory().extractItems(
 				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
 		if (extracted == null)
-			return (int)resource.amount;
-		return (int)(resource.amount - extracted.getStackSize());
+			return 0;
+		return (int)(extracted.getStackSize());
 	}
 
 	/**
@@ -731,14 +732,18 @@ public abstract class AIPart
 	 * @param actionable
 	 * 	Simulate or modulate?
 	 * @return
-	 *  amount injected
+	 *  amount not added
 	 */
 	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
-		IAEEnergyStack returnAmount = getEnergyProvidingInventory().injectItems(
+		// Insert energy to MEInventory
+		IAEEnergyStack notInjected = getEnergyProvidingInventory().injectItems(
 				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
-		if (returnAmount == null)
+		// Check for null result
+		if (notInjected == null)
+			// Return original amount
 			return (int) resource.amount;
-		return (int) (resource.amount - returnAmount.getStackSize());
+		// Return original amount - not injected
+		return (int) (resource.amount - notInjected.getStackSize());
 	}
 }

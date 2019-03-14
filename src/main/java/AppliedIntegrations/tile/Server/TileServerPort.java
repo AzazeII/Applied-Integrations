@@ -31,17 +31,17 @@ public class TileServerPort  extends AIMultiBlockTile {
                 return;
             IGrid Network = gridNode.getGrid();
 
-            TileServerCore core = getMaster();
+            TileServerCore core = (TileServerCore)getMaster();
 
             if(Network.getNodes().size() > 1 && !core.portNetworks.containsValue(Network)) {
-                if(Network != getMaster().MainNetwork) {
+                if(Network != core.MainNetwork) {
                     core.portNetworks.put(side, Network);
-                    core.ServerNetworkMap.put(Network, getMaster().getNextNetID());
+                    core.ServerNetworkMap.put(Network, core.getNextNetID());
                 }
             }else{
                 core.portNetworks.remove(side);
                 if(core.ServerNetworkMap.get(Network) != null)
-                    getMaster().ServerNetworkMap.remove(getMaster().ServerNetworkMap.get(Network));
+                    core.ServerNetworkMap.remove(core.ServerNetworkMap.get(Network));
             }
         }
     }

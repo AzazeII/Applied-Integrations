@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.P2P;
 
+import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import net.minecraft.entity.Entity;
@@ -14,7 +15,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 // TODO: 2019-02-17 Integration with Embers
-public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> {
+public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implements IEmberIntegrated {
 
     private IEmberCapability outputHandler = new EmberOutputCapability();
     private IEmberCapability inputHandler = new EmberInputCapability();

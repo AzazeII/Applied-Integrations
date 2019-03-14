@@ -1,11 +1,12 @@
 package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.tile.IAIMultiBlock;
+import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileLogicBusCore extends TileEntity implements IAIMultiBlock {
+public class TileLogicBusCore extends TileEntity implements IMaster, IAIMultiBlock {
     private boolean hasMaster;
     @Override
     public void tryConstruct(EntityPlayer p) {
@@ -15,16 +16,16 @@ public class TileLogicBusCore extends TileEntity implements IAIMultiBlock {
     public void notifyBlock(){ }
     @Override
     public boolean hasMaster() {
-        return false;
+        return true;
     }
 
     @Override
-    public TileServerCore getMaster() {
-        return null;
+    public IMaster getMaster() {
+        return this;
     }
 
     @Override
-    public void setMaster(TileServerCore tileServerCore) {
+    public void setMaster(IMaster tileServerCore) {
 
     }
 }

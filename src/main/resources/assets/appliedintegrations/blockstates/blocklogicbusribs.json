@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "valid=false": {
+      "model": "appliedintegrations:logic_bus/logic_ribs"
+    }, "valid=true": {
+      "model": "appliedintegrations:logic_bus/formed"
+    }
+  }
+}

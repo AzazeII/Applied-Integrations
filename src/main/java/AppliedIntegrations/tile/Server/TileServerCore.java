@@ -13,6 +13,7 @@ import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.tile.IMaster;
 import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.GridFlags;
@@ -41,7 +42,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import javax.annotation.Nullable;
 import java.util.*;
 
-public class TileServerCore extends AITile implements IAIMultiBlock, ICellContainer, INetworkToolAgent, IInventoryHost, ITickable {
+public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, ICellContainer, INetworkToolAgent, IInventoryHost, ITickable {
 
     public static final int BLOCKS_IN_STRUCTURE = Patterns.ME_SERVER.length+1;
 
@@ -246,12 +247,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, ICellContai
     }
 
     @Override
-    public TileServerCore getMaster() {
+    public IMaster getMaster() {
         return this;
     }
 
     @Override
-    public void setMaster(TileServerCore tileServerCore) { }
+    public void setMaster(IMaster tileServerCore) { }
 
     @Override
     public Object getServerGuiElement( final EntityPlayer player ) {
