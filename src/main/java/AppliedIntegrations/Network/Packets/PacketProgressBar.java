@@ -1,16 +1,12 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Network.AIPacket;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.inventory.Container;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 /**

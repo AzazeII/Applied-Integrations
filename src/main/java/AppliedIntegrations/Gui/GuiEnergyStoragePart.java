@@ -1,32 +1,24 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
-import static AppliedIntegrations.AppliedIntegrations.AI;
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 @SideOnly(Side.CLIENT)
 public class GuiEnergyStoragePart

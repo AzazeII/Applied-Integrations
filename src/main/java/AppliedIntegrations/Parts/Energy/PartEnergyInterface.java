@@ -1,4 +1,4 @@
-package AppliedIntegrations.Parts.EnergyInterface;
+package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.*;
 import AppliedIntegrations.Gui.PartGui;

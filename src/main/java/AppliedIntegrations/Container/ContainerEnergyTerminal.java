@@ -7,7 +7,7 @@ import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
-import AppliedIntegrations.Parts.PartEnergyTerminal;
+import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import net.minecraft.entity.player.EntityPlayer;

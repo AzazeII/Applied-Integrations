@@ -1,6 +1,6 @@
 package AppliedIntegrations.Parts.Botania;
 
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 
 public class PartManaInterface extends PartEnergyInterface {
 }

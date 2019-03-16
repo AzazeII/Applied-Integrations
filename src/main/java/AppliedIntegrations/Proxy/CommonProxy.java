@@ -1,14 +1,18 @@
 package AppliedIntegrations.Proxy;
 
+import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlockEnergyInterface;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Entities.TileEnum;
+import AppliedIntegrations.AIConfigOPT;
 
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
+import AppliedIntegrations.Layers.LayerRotaryCraft;
+import AppliedIntegrations.Network.NetworkHandler;
 import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeHandler;
@@ -21,8 +25,13 @@ import appeng.items.materials.ItemMultiMaterial;
 import appeng.items.materials.MaterialType;
 import appeng.items.parts.ItemMultiPart;
 import appeng.items.parts.PartType;
+import cpw.mods.fml.common.Loader;
+import cpw.mods.fml.common.Optional;
+import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import cpw.mods.fml.common.registry.GameRegistry;
+import extracells.api.ECApi;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -32,6 +41,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.item.crafting.ShapelessRecipes;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fluids.FluidRegistry;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -207,4 +218,33 @@ public class CommonProxy
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
         return ctx.getServerHandler().playerEntity;
     }
+
+    public void preInit(FMLPreInitializationEvent event){
+        NetworkHandler.registerServersPackets();
+
+        //AIConfigOPT.syncMe();
+        //AppliedIntegrations.AIConfig = new Configuration(event.getSuggestedConfigurationFile());
+    }
+
+    @Optional.Method(modid = "extracells")
+    public void addLiquidToBlackList(){
+        for(LiquidAIEnergy energy : LiquidAIEnergy.energies.values()){
+            ECApi.instance().addFluidToStorageBlacklist(energy);
+            ECApi.instance().addFluidToShowBlacklist(energy);
+        }
+    }
+
+    public void init(){
+        // Register recipes
+        if(Loader.isModLoaded("extracells"))
+            // Register Blacklisted Fluids to EC list
+            this.addLiquidToBlackList();
+        AEApi.instance().partHelper().registerNewLayer(LayerRotaryCraft.class.getName(), LayerRotaryCraft.class.getName());
+
+    }
+
+    public void postInit(){
+
+    }
+
 }

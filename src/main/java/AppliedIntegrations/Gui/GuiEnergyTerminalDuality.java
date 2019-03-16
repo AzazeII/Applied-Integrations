@@ -12,7 +12,7 @@ import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 
-import AppliedIntegrations.Parts.PartEnergyTerminal;
+import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IItemList;
 import cpw.mods.fml.relauncher.Side;
@@ -20,8 +20,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;

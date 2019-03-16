@@ -3,7 +3,7 @@ package AppliedIntegrations.Container;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.Container.slot.SlotNetworkTool;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.AEApi;

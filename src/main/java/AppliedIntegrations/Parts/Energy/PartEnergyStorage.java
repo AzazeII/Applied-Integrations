@@ -1,4 +1,4 @@
-package AppliedIntegrations.Parts.EnergyStorageBus;
+package AppliedIntegrations.Parts.Energy;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -82,42 +82,28 @@ public class AppliedIntegrations implements IGuiHandler {
 	@EventHandler
 	public void preLoad(FMLPreInitializationEvent event)
 	{
-		NetworkHandler.registerPackets();
-		// instancinate map
-		TextureMap map = new TextureMap(1,this.modid);
-		// register textures of parts
-		for( TextureManager texture : TextureManager.ALLVALUES )
-		{
-			texture.registerTexture( map );
-		}
-
-		// instanciate interface
-		EInterface = BlocksEnum.BEI.b;
+		proxy.preInit(event);
+		
 		registerBlocks();
 		registerTiles();
 
 		// For all liquidEnergies register it
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-				FluidRegistry.registerFluid(energy);
+			FluidRegistry.registerFluid(energy);
 		}
 		// Register all items
 		registerItems();
+
+		// instanciate interface
+		EInterface = BlocksEnum.BEI.b;
 
 		// Register HUD for advanced entropy manipulator
 		//MinecraftForge.EVENT_BUS.register(new GuiEntropyManipulator(Minecraft.getMinecraft()));
 		//this.registerRecipes();
 
-		AIConfig = new Configuration(event.getSuggestedConfigurationFile());
-		AIConfigOPT.syncMe();
 		AILog.info(this.modid + ":Pre load Completed");
 	}
-	@Optional.Method(modid = "extracells")
-	public void addLiquidToBlackList(){
-		for(LiquidAIEnergy energy : LiquidAIEnergy.energies.values()){
-			ECApi.instance().addFluidToStorageBlacklist(energy);
-			ECApi.instance().addFluidToShowBlacklist(energy);
-		}
-	}
+
 	@EventHandler
 	public void init(FMLInitializationEvent event)
 	{
@@ -125,15 +111,9 @@ public class AppliedIntegrations implements IGuiHandler {
 		NetworkRegistry.INSTANCE.registerGuiHandler(this,this);
 		// Register objects, that can be moved by spatial cards io
 		proxy.registerSpatialIOMovables();
-		// Register recipes
-		if(Loader.isModLoaded("extracells"))
-		// Register Blacklisted Fluids to EC list
-			this.addLiquidToBlackList();
 		// Register Cache, and monitor
 		//AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );
 
-
-		AEApi.instance().partHelper().registerNewLayer(LayerRotaryCraft.class.getName(), LayerRotaryCraft.class.getName());
 		proxy.addRecipes();
 
 		FMLCommonHandler.instance().bus().register(instance);
@@ -142,13 +122,7 @@ public class AppliedIntegrations implements IGuiHandler {
 	}
 	@EventHandler
 	public void postLoad(FMLPostInitializationEvent event) {
-
-		if (!(Loader.isModLoaded("AppliedEnergestics"))){
-			AILog.info(this.modid + ":Applied energistics 2 not loaded, you cannot play with AppliedIntegrations(addon) without core mod ");
-		}
 		AILog.info(this.modid + ":Post load Completed");
-
-
 	}
 	@SubscribeEvent
 	public void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event){
@@ -156,28 +130,7 @@ public class AppliedIntegrations implements IGuiHandler {
 			AIConfigOPT.syncMe();
 		}
 	}
-	public void registerItems() {
-		for (ItemEnum current : ItemEnum.values()) {
-			GameRegistry.registerItem(current.getItem(), current.getStatName());
-		}
-	}
-	public void registerBlocks(){
-		for(BlocksEnum b : BlocksEnum.values()) {
-			// blocks
-			GameRegistry.registerBlock(b.b, b.enumName);
-			b.b.setCreativeTab(this.AI);
-			b.b.setBlockTextureName(this.modid+":"+b.enumName);
-		}
-	}
-	public void registerTiles(){
-		for(TileEnum t : TileEnum.values()){
-			try {
-				GameRegistry.registerTileEntity(t.getTileClass(), t.getTileID());
-			}catch (Exception e){
 
-			}
-		}
-	}
 	public static AppliedIntegrations getInstance() {
 		return instance;
 		    }
@@ -217,10 +170,32 @@ public class AppliedIntegrations implements IGuiHandler {
 
 	public static void launchGui(AIPart AIPart, EntityPlayer player, World worldObj, int xCoord, int yCoord,
 								 int zCoord) {
-		// TODO Auto-generated method stub
-		
+
 	}
 	public boolean isEnergyWhiteListed(Fluid energy) {
 		return energy.getClass() == LiquidAIEnergy.class;
+	}
+
+	public void registerItems() {
+		for (ItemEnum current : ItemEnum.values()) {
+			GameRegistry.registerItem(current.getItem(), current.getStatName());
+		}
+	}
+	public void registerBlocks(){
+		for(BlocksEnum b : BlocksEnum.values()) {
+			// blocks
+			GameRegistry.registerBlock(b.b, b.enumName);
+			b.b.setCreativeTab(AppliedIntegrations.AI);
+			b.b.setBlockTextureName(AppliedIntegrations.modid+":"+b.enumName);
+		}
+	}
+	public void registerTiles(){
+		for(TileEnum t : TileEnum.values()){
+			try {
+				GameRegistry.registerTileEntity(t.getTileClass(), t.getTileID());
+			}catch (Exception e){
+
+			}
+		}
 	}
 }

@@ -2,7 +2,7 @@ package AppliedIntegrations.Inventory;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.AIApi;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;

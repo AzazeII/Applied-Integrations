@@ -1,4 +1,4 @@
-package AppliedIntegrations.Parts;
+package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
 import AppliedIntegrations.API.LiquidAIEnergy;
@@ -9,6 +9,9 @@ import AppliedIntegrations.Gui.GuiEnergyTerminalDuality;
 import AppliedIntegrations.Gui.SortMode;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketTerminalChange;
+import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.Parts.AIRotatablePart;
+import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Render.TextureManager;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.config.ViewItems;

@@ -1,4 +1,4 @@
-package AppliedIntegrations.Parts.IO;
+package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;

@@ -3,26 +3,14 @@ package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.Network.AIPacket;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
 import AppliedIntegrations.Parts.IEnergyMachine;
-import AppliedIntegrations.Utils.AILog;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.util.ForgeDirection;
-
-import java.io.Serializable;
-import java.util.function.Function;
-
-import static AppliedIntegrations.AppliedIntegrations.AI;
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**
  * @Author Azazell

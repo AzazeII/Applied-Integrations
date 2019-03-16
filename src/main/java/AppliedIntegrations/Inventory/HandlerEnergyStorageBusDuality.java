@@ -1,9 +1,8 @@
 package AppliedIntegrations.Inventory;
 
 import AppliedIntegrations.Entities.TileEnergyInterface;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.BaseActionSource;

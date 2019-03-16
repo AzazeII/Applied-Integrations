@@ -1,7 +1,9 @@
-package AppliedIntegrations.Parts;
+package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.Parts.AIRotatablePart;
+import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Render.TextureManager;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.WrenchUtil;

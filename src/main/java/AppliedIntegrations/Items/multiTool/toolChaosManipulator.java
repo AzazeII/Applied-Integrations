@@ -51,8 +51,6 @@ public class toolChaosManipulator extends AEBasePoweredItem implements IAEWrench
         this.setMaxStackSize(1);
 
         this.setTextureName(AppliedIntegrations.modid+":ChaosManipulator");
-
-        new OverlayEntropyManipulator(); // Iniciate event bus register
     }
 
 

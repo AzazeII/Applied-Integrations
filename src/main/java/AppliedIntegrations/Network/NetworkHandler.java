@@ -19,17 +19,17 @@ public class NetworkHandler {
     /**
      * Call this during pre-init or loading and register all of your packets (messages) here
      */
-    public static final void registerPackets() {
+    public static final void registerServersPackets() {
+        NetworkHandler.registerMessage(PacketClientFilter.class,Side.SERVER);
+    }
+
+    public static final void registerClientPacket(){
+        NetworkHandler.registerMessage(PacketServerFilter.class,Side.CLIENT);
+        NetworkHandler.registerMessage(PacketMEServer.class, Side.CLIENT);
         NetworkHandler.registerMessage(PacketProgressBar.class, Side.CLIENT);
         NetworkHandler.registerMessage(PacketBarChange.class,Side.CLIENT);
-
-        NetworkHandler.registerMessage(PacketClientFilter.class,Side.SERVER);
-        NetworkHandler.registerMessage(PacketServerFilter.class,Side.CLIENT);
-
-        NetworkHandler.registerMessage(PacketMEServer.class, Side.CLIENT);
-
-
     }
+
     /**
      * Registers a message and message handler
      */

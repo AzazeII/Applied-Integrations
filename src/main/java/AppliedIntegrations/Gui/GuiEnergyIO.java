@@ -1,16 +1,14 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.LiquidAIEnergy;
-import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
-import AppliedIntegrations.Parts.IO.PartEnergyExport;
-import AppliedIntegrations.Parts.IO.PartEnergyImport;
+import AppliedIntegrations.Parts.Energy.PartEnergyExport;
+import AppliedIntegrations.Parts.Energy.PartEnergyImport;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Utils.AILog;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
@@ -18,8 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
-import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
@@ -27,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**
  * @Author Azazell

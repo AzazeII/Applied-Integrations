@@ -5,7 +5,6 @@ import AppliedIntegrations.API.LiquidAIEnergy;
 import static AppliedIntegrations.API.LiquidAIEnergy.*;
 
 import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.AIConfigOPT;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
@@ -13,17 +12,14 @@ import AppliedIntegrations.Gui.Buttons.*;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiChange;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.RedstoneMode;
-import appeng.api.config.Settings;
 import appeng.client.gui.implementations.GuiPriority;
 import com.google.common.collect.Lists;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
-import net.minecraft.util.WeightedRandom;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 

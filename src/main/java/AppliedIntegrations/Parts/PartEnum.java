@@ -2,10 +2,7 @@ package AppliedIntegrations.Parts;
 
 
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.Parts.IO.PartEnergyExport;
-import AppliedIntegrations.Parts.IO.PartEnergyImport;
-import AppliedIntegrations.Parts.EnergyInterface.PartEnergyInterface;
-import AppliedIntegrations.Parts.EnergyStorageBus.PartEnergyStorage;
+import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIStrings;
 
