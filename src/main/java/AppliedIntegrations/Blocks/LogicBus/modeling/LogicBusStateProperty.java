@@ -1,4 +1,4 @@
-package AppliedIntegrations.Blocks.LogicBus;
+package AppliedIntegrations.Blocks.LogicBus.modeling;
 
 import net.minecraftforge.common.property.IUnlistedProperty;
 

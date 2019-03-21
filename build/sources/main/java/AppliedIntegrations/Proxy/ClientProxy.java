@@ -53,8 +53,6 @@ public class ClientProxy
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
 
-        BlocksEnum.registerSpecialModels();
-
         if(Loader.isModLoaded("botania"))
             BotaniaLoader.init();
         if(Loader.isModLoaded("embers"))

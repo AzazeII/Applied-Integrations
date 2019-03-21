@@ -3,7 +3,10 @@
     "valid=false": {
       "model": "appliedintegrations:logic_bus/logic_ribs"
     }, "valid=true": {
-      "model": "appliedintegrations:logic_bus/formed"
+      "model": "appliedintegrations:logic_bus/formed_ribs"
+    }, "inventory": {
+      "model": "appliedintegrations:logic_bus/logic_ribs",
+      "transform": "forge:default-block"
     }
   }
 }

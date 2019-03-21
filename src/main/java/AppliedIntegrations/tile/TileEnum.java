@@ -10,62 +10,33 @@ import AppliedIntegrations.tile.Server.TileServerHousing;
 import AppliedIntegrations.tile.Server.TileServerPort;
 import AppliedIntegrations.tile.Server.TileServerRib;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 
 public enum TileEnum
 {
-    TLBPort("TileLogicBusCore", TileLogicBusPort.class, BlocksEnum.BLBPort),
-    TLBRib("TileLogicBusRib", TileLogicBusRib.class ,BlocksEnum.BLBRibs),
-    TLBCore("TileLogicBusCore", TileLogicBusCore.class, BlocksEnum.BLBCore),
+    TLBPort( TileLogicBusPort.class),
+    TLBRib( TileLogicBusRib.class),
+    TLBCore( TileLogicBusCore.class),
 
-    TSCore("TileServerCore", TileServerCore.class, BlocksEnum.BSCore),
-    TSPort("TileServerPort", TileServerPort.class, BlocksEnum.BSPort),
-    TSRib("TileServerRib", TileServerRib.class,BlocksEnum.BLBRibs),
-    TSHousing("TileServerHousing", TileServerHousing.class,BlocksEnum.BSHousing),
-    TSSecurity("TileServerSecurity", TileServerSecurity.class,BlocksEnum.BSSecurity),
+    TSCore( TileServerCore.class),
+    TSPort( TileServerPort.class),
+    TSRib(TileServerRib.class),
+    TSHousing(TileServerHousing.class),
+    TSSecurity(TileServerSecurity.class),
 
-    EnergyInterface ("TileEnergyInterface", TileEnergyInterface.class, BlocksEnum.BEI);
+    EnergyInterface ( TileEnergyInterface.class);
 
-    /**
-     * Unique ID of the tile entity
-     */
-    private String ID;
+    // Tile entities's class
+    public Class clazz;
 
-    /**
-     * Tile entity class.
-     */
-    private Class clazz;
-    public BlocksEnum blocksEnum;
-
-    TileEnum(final String ID, final Class clazz, BlocksEnum AssociatedBlock )
+    TileEnum(final Class clazz )
     {
-        this.ID = ID;
         this.clazz = clazz;
-        this.blocksEnum = AssociatedBlock;
     }
 
-    public static void register() {
-        for(TileEnum tileEnum : values()){
-            GameRegistry.registerTileEntity(tileEnum.getTileClass(), tileEnum.getTileID());
-        }
-    }
-
-    /**
-     * Gets the tile entity's class.
-     */
-    public Class getTileClass()
-    {
-        return this.clazz;
-    }
-
-    /**
-     * Gets the tile entity's ID.
-     *
-     * @return
-     */
-    public String getTileID()
-    {
-        return AppliedIntegrations.modid + "." + this.ID;
+    public void register(ResourceLocation reg) {
+        GameRegistry.registerTileEntity(clazz, reg);
     }
 }

@@ -28,8 +28,8 @@ import java.util.List;
 public class BlockEnergyInterface extends BlockAIRegistrable {
 	private boolean isThirdClick = false;
 
-	public BlockEnergyInterface() {
-		super("EInterface", "ME Energy Interface");
+	public BlockEnergyInterface(String reg, String unloc) {
+		super(reg, unloc);
 		this.setCreativeTab(AppliedIntegrations.AI);
 		this.setHardness(5F);
 	}

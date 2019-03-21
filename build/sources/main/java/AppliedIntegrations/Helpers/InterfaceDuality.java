@@ -153,17 +153,14 @@ public class InterfaceDuality implements IInterfaceDuality{
                             interfaceStorageDuality.modifyEnergyStored(extracted);
                         }
 
+                        // Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
+                        // Otherwise it will be really OP
+                        transferEnergy(getFilteredEnergy(side), Math.min(stored, Math.min((int)getMaxTransfer(side), 50000)), side.getFacing());
                     }else{
                         // TODO: 2019-02-27 Add tesla extraction
                     }
                 }
             }
-
-            // Get int value from stored amount
-            int stored = ((Number)getEnergyStorage(getFilteredEnergy(side), side).getStored()).intValue();
-            // Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
-            // Otherwise it will be really OP
-            transferEnergy(getFilteredEnergy(side), Math.min(stored, Math.min((int)getMaxTransfer(side), 50000)), side.getFacing());
 
             if(!(owner instanceof TileEnergyInterface)){
                 // Break if owner is partEnergyInterface (iterate only one time)

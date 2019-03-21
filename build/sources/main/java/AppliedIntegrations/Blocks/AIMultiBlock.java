@@ -25,15 +25,17 @@ public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEn
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (Platform.isWrench(p,p.inventory.getCurrentItem(), pos)) {
-            if(!p.isSneaking()){
-                ((IAIMultiBlock)world.getTileEntity(pos)).tryConstruct(p);
-                return true;
-            }else{
-                final List<ItemStack> list = Lists.newArrayList( Platform.getBlockDrops(world, pos) );
-                Platform.spawnDrops( world, pos,list);
-                world.setBlockToAir( pos );
-                return true;
+        if(!world.isRemote) {
+            if (Platform.isWrench(p, p.inventory.getCurrentItem(), pos)) {
+                if (!p.isSneaking()) {
+                    ((IAIMultiBlock) world.getTileEntity(pos)).tryConstruct(p);
+                    return true;
+                } else {
+                    final List<ItemStack> list = Lists.newArrayList(Platform.getBlockDrops(world, pos));
+                    Platform.spawnDrops(world, pos, list);
+                    world.setBlockToAir(pos);
+                    return true;
+                }
             }
         }
         return false;
@@ -48,7 +50,7 @@ public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEn
         for(BlocksEnum b : BlocksEnum.values()){
             if(b.b == this){
                 try {
-                    return (TileEntity) b.tileEnum.getTileClass().newInstance();
+                    return (TileEntity) b.tileEnum.clazz.newInstance();
                 }catch(Exception e){
 
                 }

@@ -19,7 +19,7 @@ import java.util.LinkedHashMap;
 import java.util.Vector;
 
 public enum BlocksEnum {
-    BEI(new BlockEnergyInterface()),
+    BEI(new BlockEnergyInterface("EInterface", "ME Energy Interface"), TileEnum.EnergyInterface),
 
     BSCore(new BlockServerCore("ServerCore", "ME Server Core"),TileEnum.TSCore),
     BSRib(new BlockServerRib("ServerFrame", "ME Server Rib"),TileEnum.TSRib),
@@ -53,6 +53,9 @@ public enum BlocksEnum {
 
             ForgeRegistries.ITEMS.register(block);
             itemBlocks.put(blocksEnum.b, block);
+
+
+            blocksEnum.tileEnum.register(blocksEnum.b.getRegistryName());
         }
     }
 
@@ -62,23 +65,8 @@ public enum BlocksEnum {
     @SideOnly(Side.CLIENT)
     public static void registerItemModels() {
         for(ItemBlock itemBlk : itemBlocks.values()){
-            if(itemBlk != itemBlocks.get(BLBRibs.b) && itemBlk != itemBlocks.get(BLBPort.b))
-                Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk,
+            Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk,
                         0, new ModelResourceLocation(itemBlk.getRegistryName(), "inventory"));
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void registerSpecialModels() {
-        ModelResourceLocation itemModelResourceLocation = new ModelResourceLocation("appliedintegrations:" +
-                "logic_bus/logic_port", "inventory");
-        ModelLoader.setCustomModelResourceLocation(itemBlocks.get(BLBPort.b),
-                1, itemModelResourceLocation);
-
-        itemModelResourceLocation = new ModelResourceLocation("appliedintegrations:" +
-                "logic_bus/logic_ribs", "inventory");
-        ModelLoader.setCustomModelResourceLocation(itemBlocks.get(BLBRibs.b),
-                1, itemModelResourceLocation);
-
     }
 }

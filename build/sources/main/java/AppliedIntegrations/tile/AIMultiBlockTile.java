@@ -29,7 +29,7 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     public EnumSet<EnumFacing> getConnectableSides() {
         if(hasMaster())
             return EnumSet.allOf(EnumFacing.class);
-        return null;
+        return EnumSet.noneOf(EnumFacing.class);
     }
 
     @Override

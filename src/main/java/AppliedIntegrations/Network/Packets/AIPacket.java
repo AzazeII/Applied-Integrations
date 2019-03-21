@@ -8,6 +8,7 @@ import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -79,6 +80,7 @@ public abstract class AIPacket implements IMessage {
     }
 
     protected void setPart(ByteBuf buf, AIPart part){
+        // When i wrote "writePos", and saw this line, i punched my head with finger :)
         buf.writeLong(new BlockPos(x,y,z).toLong());
 
         setWorld(buf, w);
@@ -94,5 +96,26 @@ public abstract class AIPacket implements IMessage {
             buf.writeInt(energy.getIndex());
         else
             buf.writeInt(-1);
+    }
+
+    protected void writePos(BlockPos pos, ByteBuf buf){
+        // read comments at line 83
+        buf.writeInt(pos.getX());
+        buf.writeInt(pos.getY());
+        buf.writeInt(pos.getZ());
+    }
+
+    protected BlockPos readPos(ByteBuf buf){
+        return new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+    }
+
+    protected void writeTile(TileEntity tile, ByteBuf buf){
+        writePos(tile.getPos(), buf);
+        setWorld(buf, tile.getWorld());
+    }
+
+    protected TileEntity readTile(ByteBuf buf){
+        BlockPos pos = readPos(buf);
+        return getWorld(buf).getTileEntity(pos);
     }
 }

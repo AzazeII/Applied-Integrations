@@ -35,7 +35,6 @@ public class CommonProxy
         ItemEnum.register();
         BlocksEnum.register();
             //PartEnum.registerAEModels();
-        TileEnum.register();
 
         NetworkHandler.registerServerPackets();
 
@@ -73,7 +72,7 @@ public class CommonProxy
         IMovableRegistry movableRegistry = AEApi.instance().registries().movable();
         for( TileEnum tile : TileEnum.values() )
         {
-            movableRegistry.whiteListTileEntity( tile.getTileClass() );
+            movableRegistry.whiteListTileEntity( tile.clazz );
         }
     }
     public EntityPlayer getPlayerEntity(MessageContext ctx) {

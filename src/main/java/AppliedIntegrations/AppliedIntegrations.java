@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.", dependencies = "required-after:appliedenergistics2")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.6.1", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */

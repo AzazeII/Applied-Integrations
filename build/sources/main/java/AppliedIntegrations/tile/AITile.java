@@ -3,6 +3,7 @@ package AppliedIntegrations.tile;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -13,8 +14,12 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEColor;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
+import appeng.me.helpers.AENetworkProxy;
+import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -38,7 +43,7 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler",modid = "CoFHAPI",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
-public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable {
+public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable, IGridProxyable {
 
     public IGridNode gridNode = null;
     public IGridConnection theConnection;
@@ -47,6 +52,16 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     protected boolean loaded = false;
     private boolean cached = false;
+    private AENetworkProxy proxy;
+
+    public AITile(){
+        for (BlocksEnum blocksEnum : BlocksEnum.values()) {
+            if(blocksEnum.tileEnum.clazz == this.getClass()) {
+                this.proxy = new AENetworkProxy(this, "AITile",
+                        new ItemStack(blocksEnum.b), true);
+            }
+        }
+    }
 
     public Object getServerGuiElement( final EntityPlayer player )
     {
@@ -59,47 +74,45 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     @Override
     public double getIdlePowerUsage() {
-        // TODO Auto-generated method stub
         return 1;
     }
 
     @Override
     public EnumSet<GridFlags> getFlags() {
-        // TODO Auto-generated method stub
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
     }
 
     @Override
     public boolean isWorldAccessible() {
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public DimensionalCoord getLocation() {
-        // TODO Auto-generated method stub
         return new DimensionalCoord(this);
     }
 
     @Override
     public AEColor getGridColor() {
-        // TODO Auto-generated method stub
         return AEColor.TRANSPARENT;
     }
 
     @Override
     public void onGridNotification(GridNotification notification) {
-        // TODO Auto-generated method stub
 
     }
     @Override
     public void setNetworkStatus(IGrid grid, int channelsInUse) {
-        // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public AENetworkProxy getProxy() {
+        return proxy;
+    }
+
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
-        // TODO Auto-generated method stub
         return EnumSet.of(EnumFacing.SOUTH,EnumFacing.DOWN,EnumFacing.EAST,EnumFacing.UP,EnumFacing.NORTH,EnumFacing.WEST);
     }
     public void createAELink() {
@@ -117,13 +130,11 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     @Override
     public IGridHost getMachine() {
-        // TODO Auto-generated method stub
         return this;
     }
 
     @Override
     public void gridChanged() {
-        // TODO Auto-generated method stub
 
     }
     public boolean isServer() {
@@ -147,20 +158,17 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     }
     @Override
     public IGridNode getGridNode(AEPartLocation dir) {
-        // TODO Auto-generated method stub
         if(gridNode ==null) createAELink();
         return gridNode;
     }
 
     @Override
     public AECableType getCableConnectionType(AEPartLocation dir) {
-        // TODO Auto-generated method stub
         return AECableType.DENSE_SMART;
     }
 
     @Override
     public void securityBreak() {
-        // TODO Auto-generated method stub
 
     }
     @Override

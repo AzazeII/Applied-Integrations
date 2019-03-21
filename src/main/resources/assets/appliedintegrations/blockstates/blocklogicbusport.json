@@ -3,7 +3,10 @@
     "valid=false": {
       "model": "appliedintegrations:logic_bus/logic_port"
     }, "valid=true": {
-      "model": "appliedintegrations:logic_bus/formed"
+      "model": "appliedintegrations:logic_bus/formed_port"
+    }, "inventory": {
+      "model": "appliedintegrations:logic_bus/logic_port",
+      "transform": "forge:default-block"
     }
   }
 }

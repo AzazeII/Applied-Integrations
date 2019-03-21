@@ -24,4 +24,5 @@ hs_err_pid*
 .DS_Store
 *.iws
 *.iws
+compile.sh
 AppliedIntegrations1.12.2.iws

@@ -32,6 +32,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
@@ -129,7 +130,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             @Override
             public void run() {
                 if(worldObj != null) {
-                    tryConstruct(null);
+                    tryToFindCore(null);
                 }
             }
         };
@@ -403,5 +404,20 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     @Override
     public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
         return false;
+    }
+
+    @Override
+    public IMaster readMaster(NBTTagCompound compound) {
+        return null;
+    }
+
+    @Override
+    public void writeMaster(NBTTagCompound compound) {
+
+    }
+
+    @Override
+    public Iterator<IGridNode> getMultiblockNodes() {
+        return null;
     }
 }

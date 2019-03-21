@@ -620,7 +620,8 @@ public class PartEnergyInterface
 
 		RFStorage.writeToNBT(tag);
 
-		FilteredEnergy.writeToNBT(tag);
+		if(FilteredEnergy != null)
+			FilteredEnergy.writeToNBT(tag);
 	}
 
 	@Override
