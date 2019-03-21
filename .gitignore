@@ -4,6 +4,9 @@
 # Log file
 *.log
 
+# Iws
+AppliedIntegrations1.12.2.iws
+
 # BlueJ files
 *.ctxt
 
