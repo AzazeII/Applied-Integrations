@@ -1,7 +1,9 @@
 package AppliedIntegrations.tile;
 
-import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Blocks.BlocksEnum;
+import AppliedIntegrations.tile.Additions.*;
+import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
+import AppliedIntegrations.tile.Additions.storage.TileSingularity;
+import AppliedIntegrations.tile.Additions.storage.TileWhiteHole;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusPort;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusRib;
@@ -26,8 +28,14 @@ public enum TileEnum
     TSHousing(TileServerHousing.class),
     TSSecurity(TileServerSecurity.class),
 
-    EnergyInterface ( TileEnergyInterface.class);
+    EnergyInterface ( TileEnergyInterface.class),
 
+    METurret( TileMETurretFoundation.class ),
+    METurretTower(TileMETurretTower.class),
+
+    BlackHole( TileSingularity.class ),
+    MEPylon( TileMEPylon.class ),
+    WhiteHole( TileWhiteHole.class );
     // Tile entities's class
     public Class clazz;
 

@@ -18,7 +18,16 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/astralsorcery-1.12.2-1.10.11.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/EmbersRekindled-1.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -36,7 +45,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/appliedenergistics2-rv6-stable-6.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/astralsorcery-1.12.2-1.10.11.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -45,7 +54,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/EnderIO-1.12.2-5.0.40.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/appliedenergistics2-rv6-stable-6.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -82,16 +91,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/EmbersRekindled-1.12.jar!/" />
+          <root url="jar://$MODULE_DIR$/libs/EnderIO-1.12.2-5.0.40.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

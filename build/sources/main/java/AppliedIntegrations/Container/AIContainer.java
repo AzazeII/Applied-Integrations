@@ -44,6 +44,10 @@ public abstract class AIContainer extends Container
         }
     }
 
+    @Override
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return true;
+    }
     /**
      * Adds a slot to the container and the slot map.
      */

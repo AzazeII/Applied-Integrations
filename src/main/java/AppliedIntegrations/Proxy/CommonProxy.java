@@ -2,6 +2,7 @@ package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.Blocks.BlocksEnum;
+import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -45,6 +46,8 @@ public class CommonProxy
             BotaniaLoader.preInit();
         if(Loader.isModLoaded("embers"))
             EmberLoader.preInit();
+        if(Loader.isModLoaded("astralsorcery"))
+            AstralLoader.preInit();
     }
 
     public void SidedInit(FMLInitializationEvent init){

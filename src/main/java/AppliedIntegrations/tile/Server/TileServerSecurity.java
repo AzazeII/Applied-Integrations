@@ -93,13 +93,6 @@ public class TileServerSecurity extends AIMultiBlockTile {
         }
     }
 
-    @Override
-    public void onChunkUnload() {
-        if (world != null && !world.isRemote) {
-            destroyAELink();
-        }
-
-    }
     public void notifyBlock(){
 
     }

@@ -17,9 +17,7 @@ import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -45,13 +43,10 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
 public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable, IGridProxyable {
 
-    public IGridNode gridNode = null;
-    public IGridConnection theConnection;
-    private IGridBlock gridBlock;
-    private IGridNode node = null;
+    protected IGridNode gridNode = null;
+    protected IGridNode node = null;
 
     protected boolean loaded = false;
-    private boolean cached = false;
     private AENetworkProxy proxy;
 
     public AITile(){
@@ -153,6 +148,22 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
                 location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock().getMetaFromState((location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)))));
 
     }
+
+    @Override
+    public void invalidate() {
+        super.invalidate();
+        if (world != null && !world.isRemote) {
+            destroyAELink();
+        }
+    }
+
+    @Override
+    public void onChunkUnload() {
+        if (world != null && !world.isRemote) {
+            destroyAELink();
+        }
+    }
+
     public IGridNode getGridNode() {
         return getGridNode(AEPartLocation.INTERNAL);
     }
@@ -176,7 +187,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         if (FMLCommonHandler.instance().getEffectiveSide().isClient())
             return null;
         if (this.node == null) {
-            this.node = AEApi.instance().grid().createGridNode(this.gridBlock);
+            this.node = AEApi.instance().grid().createGridNode(this);
         }
         return this.node;
 
@@ -221,15 +232,15 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
             return 0;
         }
 
-        IAEEnergyStack notRemoved = (IAEEnergyStack)storage.getInventory(getChannel()).extractItems(
-                getChannel().createStack(resource), actionable, new MachineSource(this));
+        IAEEnergyStack notRemoved = (IAEEnergyStack)storage.getInventory(getEnergyChannel()).extractItems(
+                getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
 
         if (notRemoved == null)
             return (int)resource.amount;
         return (int)(resource.amount - notRemoved.getStackSize());
     }
 
-    public IEnergyTunnel getChannel(){
+    public IEnergyTunnel getEnergyChannel(){
         return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
     }
 
@@ -256,8 +267,8 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
             return 0;
         }
 
-        IAEEnergyStack returnAmount = storage.getInventory(this.getChannel()).injectItems(
-                getChannel().createStack(resource), actionable, new MachineSource(this));
+        IAEEnergyStack returnAmount = storage.getInventory(this.getEnergyChannel()).injectItems(
+                getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
 
         if (returnAmount == null)
             return (int)resource.amount;

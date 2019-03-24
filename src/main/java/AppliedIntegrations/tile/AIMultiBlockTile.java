@@ -49,20 +49,10 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     @Override
     public void invalidate() {
         super.invalidate();
-        if (world != null && !world.isRemote) {
-            destroyAELink();
-        }
         if (hasMaster())
             master.DestroyMultiBlock();
     }
 
-    @Override
-    public void onChunkUnload() {
-        if (world != null && !world.isRemote) {
-            destroyAELink();
-        }
-
-    }
     @Override
     public boolean hasMaster() {
         return master!=null;

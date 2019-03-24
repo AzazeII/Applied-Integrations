@@ -1,6 +1,7 @@
 package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.Blocks.LogicBus.modeling.ModeledLogicBus;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.tile.AITile;
@@ -52,18 +53,15 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
                     return tryToFindCore(p);
                 }
             }else{
-                if(p.isSneaking()) {
-                    AILog.chatLog("HasMaster? " + hasMaster());
+                // Check if player not sneaking, and tile has core
+                if(!p.isSneaking() && hasMaster()) {
+                    // Open gui of logic bus
+                    AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiLogicBus, p, AEPartLocation.INTERNAL, getLogicMaster().getPos());
                     return true;
                 }
             }
         }
         return false;
-    }
-
-    @Override
-    public EnumSet<EnumFacing> getConnectableSides() {
-        return EnumSet.allOf(EnumFacing.class);
     }
 
     @Nonnull
@@ -131,8 +129,6 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 
     @Override
     public void notifyBlock(){
-        AILog.chatLog("I'm corner: " + isCorner);
-        AILog.chatLog("I has master: " + hasMaster());
         world.setBlockState(pos, world.getBlockState(pos).withProperty(ModeledLogicBus.valid, hasMaster() && !isCorner()));
     }
 
@@ -146,6 +142,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
        //setMaster(getMaster().readMaster(compound));
     }
 
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound)
     {
         super.writeToNBT(compound);
@@ -153,5 +150,23 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
         //getMaster().writeMaster(compound);
 
         return compound;
+    }
+
+    public EnumSet<EnumFacing> getSidesWithSlaves() {
+        // List of sides
+        List<EnumFacing> sides = new ArrayList<>();
+        // Iterate over all sides
+        for(EnumFacing side : EnumFacing.values()){
+            // Check if tile in this side is instance of logic bus port or core
+            if(world.getTileEntity(pos.offset(side)) instanceof TileLogicBusSlave){
+                sides.add(side);
+            }
+        }
+
+        // Temp set
+        EnumSet<EnumFacing> temp = EnumSet.noneOf(EnumFacing.class);
+        // Add sides
+        temp.addAll(sides);
+        return temp;
     }
 }

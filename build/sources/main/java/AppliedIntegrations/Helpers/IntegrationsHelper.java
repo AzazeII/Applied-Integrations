@@ -1,6 +1,7 @@
 package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
 import AppliedIntegrations.Items.AIItemRegistrable;
@@ -31,6 +32,6 @@ public class IntegrationsHelper {
     }
 
     public boolean isObjectIntegrated(Object obj) {
-        return obj instanceof IBotaniaIntegrated || obj instanceof IEmberIntegrated;
+        return obj instanceof IBotaniaIntegrated || obj instanceof IEmberIntegrated || obj instanceof IAstralIntegrated;
     }
 }

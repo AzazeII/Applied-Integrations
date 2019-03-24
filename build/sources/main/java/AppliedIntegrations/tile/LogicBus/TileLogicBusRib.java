@@ -1,11 +1,22 @@
 package AppliedIntegrations.tile.LogicBus;
 
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Server.TileServerCore;
+import appeng.api.AEApi;
+import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridMultiblock;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
+import appeng.me.helpers.MachineSource;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -69,5 +80,31 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
             }
         }
         return false;
+    }
+
+    private IItemStorageChannel getItemChannel(){
+        return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
+    }
+
+    /**
+     * @return Interface (not block) for interacting with ME Network's inventory, used by logic bus core to
+     * inject autocrafting items to outer grid
+     */
+    public IMEInventory<IAEItemStack> getOuterGridInventory() {
+        if(getGridNode() == null)
+            return null;
+        IGrid grid = getGridNode().getGrid(); // check grid node
+        if (grid == null) {
+            AILog.info("Grid cannot be initialized");
+            return null;
+        }
+
+        IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
+        if (storage == null && this.getGridNode().getGrid().getCache(IStorageGrid.class) == null) {
+            AILog.info("StorageGrid cannot be initialized");
+            return null;
+        }
+
+        return storage.getInventory(getItemChannel());
     }
 }

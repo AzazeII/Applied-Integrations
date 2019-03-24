@@ -1,6 +1,7 @@
 package AppliedIntegrations.Blocks;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Blocks.Additions.*;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusCore;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusPort;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusRibs;
@@ -10,13 +11,11 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemBlock;
-import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedHashMap;
-import java.util.Vector;
 
 public enum BlocksEnum {
     BEI(new BlockEnergyInterface("EInterface", "ME Energy Interface"), TileEnum.EnergyInterface),
@@ -29,11 +28,17 @@ public enum BlocksEnum {
 
     BLBRibs(new BlockLogicBusRibs("BlockLogicBusRibs", "ME Logic Bus Rib"),TileEnum.TLBRib),
     BLBCore(new BlockLogicBusCore("BlockLogicBusCore", "ME Logic Bus Core"),TileEnum.TLBCore),
-    BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort);
+    BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort),
 
+    BTurret(new BlockMETurret("BlockMETurret", "ME Turret"), TileEnum.METurret),
+    BTurretTower(new BlockMETurretTower("BlockMETurretTower", "ME Turret Tower"), TileEnum.METurretTower),
+    BlackHole(new BlockSingularity("BlockSingularity", "Black Hole"), TileEnum.BlackHole),
+    WhiteHole(new BlockWhiteHole("BlockWhiteHole", "White Hole"), TileEnum.WhiteHole),
+    BlockMEPylon(new BlockMEPylon("BlockMEPylon", "ME Pylon"), TileEnum.MEPylon);
     private static LinkedHashMap<Block, ItemBlock> itemBlocks = new LinkedHashMap<>();
     public BlockAIRegistrable b;
     public TileEnum tileEnum;
+    public ItemBlock itemBlock;
 
     BlocksEnum(BlockAIRegistrable block){
         this.b = block;
@@ -46,6 +51,16 @@ public enum BlocksEnum {
 
     public static void register() {
         for(BlocksEnum blocksEnum : values()){
+            // Check if we iterating over turret
+            if(blocksEnum == BTurret || blocksEnum == BlackHole || blocksEnum == BTurretTower
+                || blocksEnum == BlockMEPylon || blocksEnum == WhiteHole)
+                // Check if turret enabled, in opposite option:---------
+                if(!(BlockMETurret.METurret_Enabled))               /*\|/*/
+                    // Do not load it <---------------------------------
+                    continue;
+            // Make turret tower not visible in creative tabs
+            if(blocksEnum == BTurretTower)
+                blocksEnum.b.setCreativeTab(null);
             ForgeRegistries.BLOCKS.register(blocksEnum.b);
 
             ItemBlock block = new ItemBlock(blocksEnum.b);
@@ -54,6 +69,7 @@ public enum BlocksEnum {
             ForgeRegistries.ITEMS.register(block);
             itemBlocks.put(blocksEnum.b, block);
 
+            blocksEnum.itemBlock = block;
 
             blocksEnum.tileEnum.register(blocksEnum.b.getRegistryName());
         }
@@ -68,5 +84,10 @@ public enum BlocksEnum {
             Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk,
                         0, new ModelResourceLocation(itemBlk.getRegistryName(), "inventory"));
         }
+    }
+
+    // Do not call until Common.preInit:37
+    public ItemBlock getItemBlock() {
+        return this.itemBlock;
     }
 }

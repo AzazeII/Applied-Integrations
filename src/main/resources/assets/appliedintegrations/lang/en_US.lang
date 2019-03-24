@@ -21,7 +21,7 @@ item.mana_annihilation_core.name=ME Mana Annihilation Core
 
 item.me_mana_mirror.name=ME Mana Mirror
 item.me_greater_mana_ring.name=ME Greater Mana Ring
-item.me__mana_ring.name=ME Mana Ring
+item.me_mana_ring.name=ME Mana Ring
 
 item.formation_core.name=ME Energy Formation Core
 item.annihilation_core.name=ME Energy Annihilation Core
@@ -41,6 +41,14 @@ tile.ME Server Rib.name=ME Server Rib
 tile.ME Server Port.name=ME Server Port
 
 tile.ME Energy Interface.name=ME Energy Interface
+tile.ME Turret.name=ME Defence Tower
+tile.Black Hole.name=Black Hole
+tile.ME Turret Tower.name=ME Turret Tower
+
+tile.ME Pylon.name=ME Pylon
+tile.White Hole.name=White Hole
+tile.ME Pylon Crystal.name=ME Pylon Crystal
+
 ME Energy Interface=ME Energy Interface
 ME Energy Import Bus=ME Energy Import Bus
 ME Energy Export Bus=ME Energy Export Bus

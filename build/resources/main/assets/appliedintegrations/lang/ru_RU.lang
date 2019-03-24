@@ -14,6 +14,14 @@ tile.ME Server Security Terminal.name=МЭ Терминал Безопаснос
 # TODO Russian localization
 
 tile.ME Energy Interface.name=МЭ Интерфейс Энергии
+tile.ME Turret.name=МЭ Турель
+tile.ME Turret Tower.name=Башня МЭ Турели
+tile.Black Hole.name=Чёрная Дыра
+
+tile.ME Pylon.name=МЭ Пилон
+tile.White Hole.name=Белая Дыра
+tile.ME Pylon Crystal.name=МЭ Кристалл Пилона
+
 appliedintegrationsenergy.item.part.interface.name=МЭ Интерфейс Энергии
 appliedintegrationsenergy.item.part.export.name=МЭ Шина Экспорта Энергии
 appliedintegrationsenergy.item.part.import.name=МЭ Шина Импорта Энергии
@@ -36,7 +44,6 @@ appliedintegrations.Energy.Machine.P2PRotary=Туннель Точка-Точк�
 appliedintegrations.Energy.Machine.P2PJoules=Туннель Точка-Точка Джоули
 
 item.manaInterfacePartItem.name=МЭ Интерфейс
-
 
 EnergyStorageCell_1k.name=МЭ 1k Энерго-Ячейка
 EnergyStorageCell_4k.name=МЭ 4k Энерго-Ячейка

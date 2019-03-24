@@ -26,6 +26,7 @@ public abstract class BlockAIRegistrable extends BlockContainer {
         super(Material.IRON, null);
         this.setUnlocalizedName(unlocalizedName);
         this.setRegistryName(registryName);
+        this.setHardness(5F);
     }
 
     @Override

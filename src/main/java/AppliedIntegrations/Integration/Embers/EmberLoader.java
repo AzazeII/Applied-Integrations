@@ -8,6 +8,6 @@ public class EmberLoader {
     }
 
     public static void init() {
-        ItemEnum.registerEmbersItemsModels();
+        ItemEnum.registerEmbersItemModels();
     }
 }

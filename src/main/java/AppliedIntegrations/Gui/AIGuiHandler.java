@@ -2,10 +2,7 @@ package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.ContainerEnergyInterface;
-import AppliedIntegrations.Container.ContainerEnergyStorage;
-import AppliedIntegrations.Container.ContainerEnergyTerminal;
-import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
+import AppliedIntegrations.Container.*;
 import AppliedIntegrations.Container.Server.ContainerMEServer;
 import AppliedIntegrations.Gui.GuiEnergyIO;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
@@ -16,6 +13,7 @@ import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.AITile;
+import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
 import AppliedIntegrations.tile.TileEnergyInterface;
@@ -40,7 +38,8 @@ public class AIGuiHandler implements IGuiHandler {
         GuiExportPart,
         GuiServerStorage,
         GuiTerminalPart,
-        GuiTerminalSecurity;
+        GuiTerminalSecurity,
+        GuiLogicBus;
     }
 
     public static void open(GuiEnum gui, EntityPlayer player, AEPartLocation side, BlockPos pos){
@@ -79,7 +78,7 @@ public class AIGuiHandler implements IGuiHandler {
      *  returns 10111 or 23
      */
     public static int concat(GuiEnum gui, AEPartLocation side){
-        return (gui.ordinal() << 4) | side.ordinal();
+        return (gui.ordinal() << 3) | side.ordinal();
     }
 
     /**
@@ -93,7 +92,7 @@ public class AIGuiHandler implements IGuiHandler {
      *  return GuiEnum.values()[1];
      */
     public static GuiEnum getGui(int value){
-        return GuiEnum.values()[value >> 4];
+        return GuiEnum.values()[value >> 3];
     }
 
     /**
@@ -126,6 +125,13 @@ public class AIGuiHandler implements IGuiHandler {
             PartEnergyInterface part = (PartEnergyInterface)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
 
             return new ContainerEnergyInterface(player, part);
+        }else if(gui == GuiEnum.GuiLogicBus){
+            // Find tile candidate for core
+            TileEntity maybeCore = world.getTileEntity(new BlockPos(x,y,z));
+            // Check if it is logic bus core
+            if(maybeCore instanceof TileLogicBusCore){
+                return new ContainerLogicBus(player, (TileLogicBusCore)maybeCore);
+            }
         }
 
         return null;
@@ -142,6 +148,14 @@ public class AIGuiHandler implements IGuiHandler {
             PartEnergyInterface part = (PartEnergyInterface)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
 
             return new GuiEnergyInterface((ContainerEnergyInterface)getServerGuiElement(ID, player, world, x, y, z), part, player);
+        }else if(gui == GuiEnum.GuiLogicBus){
+            // Find tile candidate for core
+            TileEntity maybeCore = world.getTileEntity(new BlockPos(x,y,z));
+            // Check if it is logic bus core
+            if(maybeCore instanceof TileLogicBusCore){
+                return new GuiLogicBus(player, (TileLogicBusCore)maybeCore, (ContainerLogicBus)
+                        getServerGuiElement(ID, player, world, x,y,z));
+            }
         }
 
         return null;

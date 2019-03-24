@@ -1,4 +1,7 @@
 package AppliedIntegrations;
+import AppliedIntegrations.API.AIApi;
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.API.Storage.IEnergyTunnel;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
@@ -7,6 +10,11 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
+import appeng.api.AEApi;
+import appeng.api.storage.channels.IFluidStorageChannel;
+import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEFluidStack;
+import appeng.api.storage.data.IAEItemStack;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
@@ -26,7 +34,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.6.1", dependencies = "required-after:appliedenergistics2")
+@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.7", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */
@@ -89,6 +97,15 @@ public class AppliedIntegrations {
 
 		if(Loader.isModLoaded("botania"))
 			BotaniaLoader.initRecipes();
+
+		AIApi.instance().addStorageChannelToPylon(IAEItemStack.class,
+					AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+
+		AIApi.instance().addStorageChannelToPylon(IAEFluidStack.class,
+				AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class));
+
+		AIApi.instance().addStorageChannelToPylon(IAEEnergyStack.class,
+				AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class));
 
 		// Register Cache, and monitor
 		//AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );

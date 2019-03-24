@@ -2,6 +2,7 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
+import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
 import AppliedIntegrations.Items.Botania.*;
@@ -118,8 +119,18 @@ public enum ItemEnum {
 
     public static void register() {
         for(ItemEnum itemEnum : values()){
-            // Register only that items, which not **require botania as dependency**
+            // Register only that items, which not **require botania or ember or AS as dependency**
             if(!IntegrationsHelper.instance.isObjectIntegrated(itemEnum.item)) {
+                ForgeRegistries.ITEMS.register(itemEnum.item);
+            }
+        }
+    }
+
+    @Optional.Method(modid = "astralsorcery")
+    public static void registerAstralItems() {
+        for(ItemEnum itemEnum : values()){
+            // Register only that items, which **require AS as dependency**
+            if(itemEnum.item instanceof IAstralIntegrated) {
                 ForgeRegistries.ITEMS.register(itemEnum.item);
             }
         }
@@ -150,7 +161,7 @@ public enum ItemEnum {
     @Optional.Method(modid = "embers")
     public static void registerEmbersItems() {
         for(ItemEnum itemEnum : values()){
-            // Register only that items, which not **require botania as dependency**
+            // Register only that items, which **require embers as dependency**
             if(itemEnum.item instanceof IEmberIntegrated) {
                 ForgeRegistries.ITEMS.register(itemEnum.item);
             }
@@ -188,9 +199,21 @@ public enum ItemEnum {
         }
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void registerAstralItemModels() {
+        for(ItemEnum item : values()) {
+            if(item.item instanceof IAstralIntegrated) {
+                if (item.item instanceof AIItemRegistrable) {
+                    AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
+                    registrableItem.registerModel();
+                }
+            }
+        }
+    }
+
     @Optional.Method(modid = "embers")
     @SideOnly(Side.CLIENT)
-    public static void registerEmbersItemsModels() {
+    public static void registerEmbersItemModels() {
         for(ItemEnum item : values()) {
             if(item.item instanceof IEmberIntegrated ) {
                 if (item.item instanceof AIItemRegistrable) {

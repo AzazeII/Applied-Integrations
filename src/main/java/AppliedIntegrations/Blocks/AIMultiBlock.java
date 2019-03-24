@@ -20,7 +20,6 @@ public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEn
     protected AIMultiBlock(String registry, String unlocalizedName) {
         super(registry, unlocalizedName);
         this.setHardness(5F);
-
     }
 
     @Override

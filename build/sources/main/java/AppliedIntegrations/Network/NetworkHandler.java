@@ -28,6 +28,8 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerMEServer.class, PacketMEServer.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
+
+        Handler.registerMessage(HandlerSingularityChange.class, PacketSingularityChange.class, packetId++, Side.CLIENT);
     }
 
     public static final void registerServerPackets(){

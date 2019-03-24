@@ -1,0 +1,2 @@
+# All this package is focused on adding some new __Additions__. These additions might be completely optional, up to default false value
+# At field "Should i load this feature?"

@@ -2,21 +2,30 @@ package AppliedIntegrations.Blocks.LogicBus.modeling;
 
 import net.minecraft.util.EnumFacing;
 
+import java.util.EnumSet;
 import java.util.Set;
 
 public class LogicBusState {
 
-    // Is rib of multiblock?
-    private final boolean rib;
+    // Is isCorner of multiblock?
+    private final boolean isCorner;
+    private final boolean hasMaster;
+    private final EnumSet<EnumFacing> sidesWithSlaves;
 
-    public LogicBusState( boolean rib)
+    public LogicBusState(EnumSet<EnumFacing> facings, boolean corner, boolean hasMaster)
     {
-        this.rib = rib;
+        this.sidesWithSlaves = facings;
+        this.isCorner = corner;
+        this.hasMaster = hasMaster;
     }
 
-    public boolean isRib()
+    public boolean isCorner()
     {
-        return this.rib;
+        return this.isCorner;
     }
+    public boolean hasMaster() { return this.hasMaster; }
 
+    public Set<EnumFacing> getSidesWithSlave() {
+        return sidesWithSlaves;
+    }
 }

@@ -16,6 +16,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
+import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.*;
 import appeng.helpers.DualityInterface;
@@ -23,12 +24,16 @@ import appeng.helpers.IInterfaceHost;
 import appeng.me.GridNode;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
+import appeng.me.helpers.MachineSource;
+import appeng.util.item.AEItemStack;
 import com.google.common.collect.ImmutableSet;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -49,6 +54,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
     private TileLogicBusPort mainNetworkPort;
     private Vector<TileLogicBusPort> subNetworkPorts = new Vector<>();
     private Vector<TileLogicBusSlave> slaves = new Vector<>();
+
     private LogicBusDuality duality = new LogicBusDuality(this.getProxy(), this);
 
     @Override
@@ -67,6 +73,28 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
         if(isFormed && !world.isRemote) {
             destroyMultiBlock();
         }
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        if(slaves.size() > 0){
+            IMEInventory<IAEItemStack> inventory = getOuterGridInventory();
+
+            if(inventory != null )
+                inventory.injectItems(AEItemStack.fromItemStack(new ItemStack(Items.REDSTONE)), Actionable.MODULATE,
+                                                            new MachineSource(this));
+        }
+    }
+
+    // Return IMEInventory of network which belongs to ribs of multiblock
+    private IMEInventory<IAEItemStack> getOuterGridInventory() {
+        for(TileLogicBusSlave slave : slaves){
+            if(slave instanceof TileLogicBusRib)
+                return ((TileLogicBusRib)slave).getOuterGridInventory();
+        }
+        return null;
     }
 
     @Override

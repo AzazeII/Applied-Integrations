@@ -119,10 +119,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	@Override
 	public void invalidate() {
-	  super.invalidate();
-	  if (world != null && !world.isRemote) {
-		destroyAELink();
-	  }
+	    super.invalidate();
 		if (world != null && !world.isRemote) {
 			//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}
@@ -130,9 +127,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	@Override
 	public void onChunkUnload() {
-		if (world != null && !world.isRemote) {
-			destroyAELink();
-		}
+		super.onChunkUnload();
 		if (world != null && !world.isRemote) {
 			//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
 		}

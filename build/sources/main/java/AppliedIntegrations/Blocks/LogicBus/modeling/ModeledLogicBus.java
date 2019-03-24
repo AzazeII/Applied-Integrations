@@ -65,7 +65,7 @@ public abstract class ModeledLogicBus extends AIMultiBlock {
         TileLogicBusSlave slave = (TileLogicBusSlave)world.getTileEntity( pos );
         if( slave != null )
         {
-            LogicBusState formed = new LogicBusState( slave.isCorner() );
+            LogicBusState formed = new LogicBusState( slave.getSidesWithSlaves(), slave.isCorner(), slave.hasMaster() );
             extState = extState.withProperty( stateProp, formed );
         }
 
