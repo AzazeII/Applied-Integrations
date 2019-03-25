@@ -1,8 +1,12 @@
 package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
-import AppliedIntegrations.tile.Additions.storage.TileSingularity;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyDirection;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -13,7 +17,13 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class BlockMEPylon extends BlockAIRegistrable {
+    // Facing in world
+    public static final PropertyDirection FACING = BlockHorizontal.FACING;
+
     public BlockMEPylon(String registryName, String unlocalizedName) {
         super(registryName, unlocalizedName);
     }
@@ -30,6 +40,35 @@ public class BlockMEPylon extends BlockAIRegistrable {
     }
 
     @Override
+    protected BlockStateContainer createBlockState() {
+        // Add block state
+        return new BlockStateContainer(this, new IProperty[] { FACING});
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+
+        // Get facing from meta
+        EnumFacing enumfacing = EnumFacing.getFront(meta);
+
+        // Check if axis present X, or Z axis
+        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
+        {
+            // else set facing to north
+            enumfacing = EnumFacing.NORTH;
+        }
+
+        return this.getDefaultState().withProperty(FACING, enumfacing);
+    }
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        // Set index as meta
+        int meta = ((EnumFacing)state.getValue(FACING)).getIndex();
+
+        return meta;
+    }
+
+    @Override
     public boolean isFullCube(IBlockState iBlockState) {
         return false;
     }
@@ -37,10 +76,12 @@ public class BlockMEPylon extends BlockAIRegistrable {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
-        // Pass activated to tile entity ( nothing new :) )
-        if (tile instanceof TileMEPylon) {
-            // Pass activate to tile
-            return ((TileMEPylon) tile).activate(p, hand);
+        if (!p.isSneaking()) {
+            // Pass activated to tile entity ( nothing new :) )
+            if (tile instanceof TileMEPylon) {
+                // Pass activate to tile
+                return ((TileMEPylon) tile).activate(hand);
+            }
         }
         return false;
     }

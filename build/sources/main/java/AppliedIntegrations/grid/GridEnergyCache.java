@@ -1,6 +1,6 @@
 package AppliedIntegrations.grid;
 
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
@@ -10,12 +10,9 @@ import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IEnergyWatcherHost;
 import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.events.MENetworkPostCacheConstruction;
-import appeng.api.networking.security.IActionSource;
-import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.channels.IItemStorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
 
@@ -125,7 +122,7 @@ public class GridEnergyCache
         IStorageGrid storage = (IStorageGrid)this.internalGrid.getCache( IStorageGrid.class );
 
         // Wrap
-        this.wrap( storage.getInventory(AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class)), (IEnergyGrid)this.internalGrid.getCache( IEnergyGrid.class ), this.internalGrid );
+        this.wrap( storage.getInventory(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class)), (IEnergyGrid)this.internalGrid.getCache( IEnergyGrid.class ), this.internalGrid );
 
 
     }

@@ -4,6 +4,7 @@ import net.minecraftforge.fml.common.Optional;
 import teamroots.embers.power.DefaultEmberCapability;
 
 /**
+ * @Author Azazell
  * Marking class
  */
 @net.minecraftforge.fml.common.Optional.InterfaceList(value = {

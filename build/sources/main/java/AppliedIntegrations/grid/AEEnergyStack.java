@@ -3,7 +3,7 @@ package AppliedIntegrations.grid;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.IStorageChannel;
@@ -185,7 +185,7 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 
     @Override
     public IStorageChannel<IAEEnergyStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+        return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
     }
 
     @Override

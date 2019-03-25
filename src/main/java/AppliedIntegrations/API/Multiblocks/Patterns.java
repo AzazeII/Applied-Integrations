@@ -4,6 +4,9 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import net.minecraft.village.Village;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 
+/**
+ * @Author Azazell
+ */
 public class Patterns
 {
     public enum BlockType{

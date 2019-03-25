@@ -1,27 +1,14 @@
 package AppliedIntegrations.Inventory.Handlers;
 
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
-import AppliedIntegrations.Inventory.MEInventoryHandler;
-import AppliedIntegrations.tile.TileEnergyInterface;
-import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
-import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.config.IncludeExclude;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.events.MENetworkCellArrayUpdate;
-import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
-import appeng.api.parts.IPart;
-import appeng.api.parts.IPartHost;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IItemList;
-import appeng.me.helpers.MachineSource;
-import appeng.me.helpers.PlayerSource;
-import net.minecraft.tileentity.TileEntity;
 
 /**
  * @Author Azazell
@@ -92,6 +79,6 @@ public class HandlerEnergyStorageBusInterface
 
     @Override
     public IStorageChannel<IAEEnergyStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+        return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
     }
 }

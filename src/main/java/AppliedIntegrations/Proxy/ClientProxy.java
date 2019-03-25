@@ -8,8 +8,8 @@ import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
 import AppliedIntegrations.tile.Additions.TileMETurretTower;
-import AppliedIntegrations.tile.Additions.storage.TileSingularity;
-import AppliedIntegrations.tile.Additions.storage.TileWhiteHole;
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
+import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.Additions.render.TileMEPylonRenderer;
 import AppliedIntegrations.tile.Additions.render.TileMETurretRenderer;
 import AppliedIntegrations.tile.Additions.render.TileSingularityRenderer;
@@ -47,7 +47,7 @@ public class ClientProxy
         NetworkHandler.registerClientPackets();
 
         // Register custom renderers
-        ClientRegistry.bindTileEntitySpecialRenderer(TileSingularity.class, new TileSingularityRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretTower.class, new TileMETurretRenderer());

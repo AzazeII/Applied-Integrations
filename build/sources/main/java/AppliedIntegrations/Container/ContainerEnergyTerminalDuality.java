@@ -319,7 +319,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         int amount = (int)containerEnergy.getStackSize();
 
         // Do a network injection
-        long rejectedAmount = this.energyMonitor.injectItems(AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class).createStack(new FluidStack(containerEnergy.getEnergy(),amount)), mode, actionSource).getStackSize();
+        long rejectedAmount = this.energyMonitor.injectItems(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class).createStack(new FluidStack(containerEnergy.getEnergy(),amount)), mode, actionSource).getStackSize();
 
         // Was any rejected?
         if( rejectedAmount > 0 )
@@ -373,7 +373,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         }
 
         // Do an extraction from the network
-        long extractedAmount = this.energyMonitor.extractItems(AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class).createStack(new FluidStack(withEnergy,containerCapacity)), mode, actionSource ).getStackSize();
+        long extractedAmount = this.energyMonitor.extractItems(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class).createStack(new FluidStack(withEnergy,containerCapacity)), mode, actionSource ).getStackSize();
 
         // Was anything extracted?
         if( extractedAmount <= 0 )

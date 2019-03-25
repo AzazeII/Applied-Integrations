@@ -14,6 +14,14 @@ tile.ME Server Security Terminal.name=МЭ Терминал Безопаснос
 # TODO Russian localization
 
 tile.ME Energy Interface.name=МЭ Интерфейс Энергии
+tile.ME Turret.name=МЭ Турель
+tile.ME Turret Tower.name=Башня МЭ Турели
+tile.Black Hole.name=Чёрная Дыра
+
+tile.ME Pylon.name=МЭ Пилон
+tile.White Hole.name=Белая Дыра
+tile.ME Pylon Crystal.name=МЭ Кристалл Пилона
+
 appliedintegrationsenergy.item.part.interface.name=МЭ Интерфейс Энергии
 appliedintegrationsenergy.item.part.export.name=МЭ Шина Экспорта Энергии
 appliedintegrationsenergy.item.part.import.name=МЭ Шина Импорта Энергии
@@ -35,6 +43,7 @@ appliedintegrations.Energy.StorageMonitor.name=МЭ Монитор Хранен�
 appliedintegrations.Energy.Machine.P2PRotary=Туннель Точка-Точка Ватты
 appliedintegrations.Energy.Machine.P2PJoules=Туннель Точка-Точка Джоули
 
+item.manaInterfacePartItem.name=МЭ Интерфейс
 
 EnergyStorageCell_1k.name=МЭ 1k Энерго-Ячейка
 EnergyStorageCell_4k.name=МЭ 4k Энерго-Ячейка
@@ -48,20 +57,32 @@ item.advancedWrench.name=Улучшенный Сетевой Инструмен�
 
 ME Creative Energy Cell.name=MЭ Креативная Энерго-Ячейка
 
-EnergyStorageCell_1k.name=МЭ 1k Энергетический Компонент Хранения
-EnergyStorageCell_4k.name=МЭ 4k Энергетический Компонент Хранения
-EnergyStorageCell_16k.name=МЭ 16k Энергетический Компонент Хранения
-EnergyStorageCell_64k.name=МЭ 64k Энергетический Компонент Хранения
-EnergyStorageCell_256k.name=МЭ 256k Энергетический Компонент Хранения
-EnergyStorageCell_1024k.name=МЭ 1024k Энергетический Компонент Хранения
-EnergyStorageCell_4096k.name=МЭ 4096k Энергетический Компонент Хранения
-EnergyStorageCell_16384k.name=МЭ 16384k Энергетический Компонент Хранения
+item.EnergyStorageComponent_1k.name=МЭ 1k Энергетический Компонент Хранения
+item.EnergyStorageComponent_4k.name=МЭ 4k Энергетический Компонент Хранения
+item.EnergyStorageComponent_16k.name=МЭ 16k Энергетический Компонент Хранения
+item.EnergyStorageComponent_64k.name=МЭ 64k Энергетический Компонент Хранения
+item.EnergyStorageComponent_256k.name=МЭ 256k Энергетический Компонент Хранения
+item.EnergyStorageComponent_1024k.name=МЭ 1024k Энергетический Компонент Хранения
+item.EnergyStorageComponent_4096k.name=МЭ 4096k Энергетический Компонент Хранения
+item.EnergyStorageComponent_16384k.name=МЭ 16384k Энергетический Компонент Хранения
 
 item.appliedintegrationsenergy.formation.core.name=МЭ Энерго-Ядро Формирования
 item.appliedintegrationsenergy.annihilation.core.name=МЭ Энерго-Ядро Уничтожения
 item.EnergyStorageCasing.name=МЭ Корпус Энерго-Ячейки
-item.WirelessEnergyTerminal.name=МЭ Беспроводной Терминал Энергии
+item.wireless_energy_terminal.name=МЭ Беспроводной Терминал Энергии
 item.appliedintegrationsitem.chaos.manipulator.name=Инструмент Манипуляции МЭ Сети
+
+item.encorium0.name=Линкорьевый Кристалл
+item.encorium1.name=Линкорьевый Кристалл
+item.encorium2.name=Линкорьевый Кристалл
+item.encorium3.name=Линкорьевый Кристалл
+item.encorium4.name=Линкорьевый Кристалл
+item.encorium5.name=Линкорьевый Кристалл
+item.encorium6.name=Линкорьевый Кристалл
+item.encorium7.name=Линкорьевый Кристалл
+item.encorium8.name=Линкорьевый Кристалл
+item.encorium9.name=Линкорьевый Кристалл
+
 
 Used=Использовано
 of=Из

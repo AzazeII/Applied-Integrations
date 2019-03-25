@@ -1,7 +1,7 @@
 package AppliedIntegrations.API;
 
 /**
- *  Marking Interface
+ * @Author Azazell
  */
 public interface IInterfaceStorageDuality<TYPE> {
 

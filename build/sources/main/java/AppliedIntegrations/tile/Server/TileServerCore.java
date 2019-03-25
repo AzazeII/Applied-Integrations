@@ -190,10 +190,10 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                     toUpdate.get(i).setMaster(this);
                     if (toUpdate.get(i) instanceof TileServerPort) {
                         TileServerPort port = (TileServerPort) toUpdate.get(i);
-                        port.createAELink();
+                        port.createAENode();
                     } else if (toUpdate.get(i) instanceof TileServerRib) {
                         TileServerRib rib = (TileServerRib) toUpdate.get(i);
-                        rib.createAELink();
+                        rib.createAENode();
                     }
                     Slaves.add(toUpdate.get(i));
                 }
@@ -227,7 +227,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                 TileServerPort port = (TileServerPort)tile;
             }
             tile.setMaster(null);
-            ((AIMultiBlockTile)tile).destroyAELink();
+            ((AIMultiBlockTile)tile).destroyAENode();
         }
         for(EnumFacing dir : EnumFacing.values()){
             portNetworks.remove(dir);
@@ -349,7 +349,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     public void invalidate() {
         super.invalidate();
         if (world != null && !world.isRemote) {
-            destroyAELink();
+            destroyAENode();
         }
         if(isFormed)
             this.DestroyMultiBlock();

@@ -12,6 +12,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class BlockMETurretTower extends BlockAIRegistrable {
     public BlockMETurretTower(String registryName, String unloc) {
         super(registryName, unloc);

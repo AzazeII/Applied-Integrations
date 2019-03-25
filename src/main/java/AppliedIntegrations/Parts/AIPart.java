@@ -2,7 +2,7 @@ package AppliedIntegrations.Parts;
 import AppliedIntegrations.AIConfigOPT;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
@@ -688,8 +688,8 @@ public abstract class AIPart
 	}
 
 	//*---------*Storage features*---------*//
-	public IEnergyTunnel getChannel(){
-		return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+	public IEnergyStorageChannel getChannel(){
+		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 
     public IMEMonitor<IAEEnergyStack> getEnergyProvidingInventory() {

@@ -1,7 +1,7 @@
 package AppliedIntegrations.Parts.Botania;
 
 import AppliedIntegrations.API.Botania.IAEManaStack;
-import AppliedIntegrations.API.Botania.IManaChannel;
+import AppliedIntegrations.API.Botania.IManaStorageChannel;
 import AppliedIntegrations.API.Botania.IManaInterface;
 import AppliedIntegrations.API.IInterfaceDuality;
 import AppliedIntegrations.Helpers.ManaInterfaceDuality;
@@ -227,7 +227,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
         }
     }
 
-    private IManaChannel getManaChannel() {
-        return AEApi.instance().storage().getStorageChannel(IManaChannel.class);
+    private IManaStorageChannel getManaChannel() {
+        return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
     }
 }

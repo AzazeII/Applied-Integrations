@@ -1,15 +1,15 @@
 package AppliedIntegrations.Integration.Botania;
 
-import AppliedIntegrations.API.Botania.IManaChannel;
+import AppliedIntegrations.API.Botania.IManaStorageChannel;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.grid.Mana.ManaChannel;
+import AppliedIntegrations.grid.Mana.ManaStorageChannel;
 import appeng.api.AEApi;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.BotaniaAPI;
 
 public class BotaniaLoader {
     public static void preInit(){
-        AEApi.instance().storage().registerStorageChannel(IManaChannel.class, new ManaChannel());
+        AEApi.instance().storage().registerStorageChannel(IManaStorageChannel.class, new ManaStorageChannel());
         ItemEnum.registerBotaniaItems();
 
         BotaniaEntryHelper helper = new BotaniaEntryHelper();

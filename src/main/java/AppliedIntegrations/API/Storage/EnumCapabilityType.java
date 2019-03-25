@@ -20,6 +20,9 @@ import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
         @Optional.Interface(iface = "teamroots.embers.power.EmberCapabilityProvider", modid = "embers", striprefs = true),
         @Optional.Interface(iface = "net.darkhax.tesla.capability.TeslaCapabilities", modid = "tesla", striprefs = true)
 })
+/**
+ * @Author Azazell
+ */
 public class EnumCapabilityType {
     public static EnumCapabilityType FE;
     public static EnumCapabilityType Joules;

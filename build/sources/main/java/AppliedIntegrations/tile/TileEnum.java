@@ -2,8 +2,8 @@ package AppliedIntegrations.tile;
 
 import AppliedIntegrations.tile.Additions.*;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
-import AppliedIntegrations.tile.Additions.storage.TileSingularity;
-import AppliedIntegrations.tile.Additions.storage.TileWhiteHole;
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
+import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusPort;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusRib;
@@ -33,7 +33,7 @@ public enum TileEnum
     METurret( TileMETurretFoundation.class ),
     METurretTower(TileMETurretTower.class),
 
-    BlackHole( TileSingularity.class ),
+    BlackHole( TileBlackHole.class ),
     MEPylon( TileMEPylon.class ),
     WhiteHole( TileWhiteHole.class );
     // Tile entities's class

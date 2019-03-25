@@ -59,7 +59,7 @@ public class TileServerSecurity extends AIMultiBlockTile {
         return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),(TileServerCore)getMaster(),player);
     }
     @Override
-    public void createAELink() {
+    public void createAENode() {
         if (!world.isRemote) {
             if (gridNode == null)
                 gridNode = AEApi.instance().grid().createGridNode(this);
@@ -85,7 +85,7 @@ public class TileServerSecurity extends AIMultiBlockTile {
     @Override
     public void invalidate() {
         if (world != null && !world.isRemote) {
-            destroyAELink();
+            destroyAENode();
         }
         if(hasMaster()){
             ((TileServerCore)getMaster()).Slaves.remove(this);

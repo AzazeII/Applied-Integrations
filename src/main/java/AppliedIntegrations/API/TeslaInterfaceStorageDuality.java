@@ -3,6 +3,9 @@ package AppliedIntegrations.API;
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * @Author Azazell
+ */
 public class TeslaInterfaceStorageDuality extends BaseTeslaContainer implements IInterfaceStorageDuality<Long> {
 
     public TeslaInterfaceStorageDuality(IEnergyInterface owner, Long capacity, Long maxTransfer){

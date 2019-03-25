@@ -4,6 +4,9 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
 import java.util.Collection;
 
+/**
+ * @Author Azazell
+ */
 public interface IAIEnergyWatcher extends Collection<LiquidAIEnergy>
 {
         /**

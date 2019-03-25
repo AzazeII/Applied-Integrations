@@ -1,6 +1,6 @@
 package AppliedIntegrations.Blocks.Additions;
 
-import AppliedIntegrations.tile.Additions.storage.TileWhiteHole;
+import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -11,6 +11,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class BlockWhiteHole extends BlockSingularity {
     public BlockWhiteHole(String blockWhiteHole, String white_hole) {
         super(blockWhiteHole, white_hole);

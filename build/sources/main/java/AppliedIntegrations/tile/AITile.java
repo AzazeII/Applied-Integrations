@@ -2,7 +2,7 @@ package AppliedIntegrations.tile;
 
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
@@ -23,7 +23,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
 
 import java.util.EnumSet;
@@ -110,16 +109,16 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public EnumSet<EnumFacing> getConnectableSides() {
         return EnumSet.of(EnumFacing.SOUTH,EnumFacing.DOWN,EnumFacing.EAST,EnumFacing.UP,EnumFacing.NORTH,EnumFacing.WEST);
     }
-    public void createAELink() {
+    public void createAENode() {
         if(world != null) {
             if (!world.isRemote) {
-                if (gridNode == null) gridNode = AEApi.instance().grid().createGridNode(this);
+                gridNode = AEApi.instance().grid().createGridNode(this);
                 gridNode.updateState();
             }
         }
     }
 
-    public void destroyAELink() {
+    public void destroyAENode() {
         if (gridNode != null) gridNode.destroy();
     }
 
@@ -153,14 +152,14 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public void invalidate() {
         super.invalidate();
         if (world != null && !world.isRemote) {
-            destroyAELink();
+            destroyAENode();
         }
     }
 
     @Override
     public void onChunkUnload() {
         if (world != null && !world.isRemote) {
-            destroyAELink();
+            destroyAENode();
         }
     }
 
@@ -169,7 +168,8 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     }
     @Override
     public IGridNode getGridNode(AEPartLocation dir) {
-        if(gridNode ==null) createAELink();
+        if(gridNode == null)
+            createAENode();
         return gridNode;
     }
 
@@ -182,31 +182,27 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public void securityBreak() {
 
     }
+
     @Override
     public IGridNode getActionableNode() {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
-            return null;
-        if (this.node == null) {
-            this.node = AEApi.instance().grid().createGridNode(this);
-        }
-        return this.node;
-
+        if (this.gridNode == null)
+            createAENode();
+        return gridNode;
     }
+
     @Override
     public void update() {
         //create grid node on add to world
         if (!loaded && hasWorld() && !world.isRemote) {
             loaded = true;
-            createAELink();
+            createAENode();
         }
     }
     public void notifyBlock(){
     }
 
     protected IGrid getNetwork(){
-        if(getGridNode() != null)
-            return getGridNode().getGrid();
-        return null;
+        return getGridNode().getGrid();
     }
 
     /**
@@ -240,8 +236,8 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return (int)(resource.amount - notRemoved.getStackSize());
     }
 
-    public IEnergyTunnel getEnergyChannel(){
-        return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+    public IEnergyStorageChannel getEnergyChannel(){
+        return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
     }
 
     /**

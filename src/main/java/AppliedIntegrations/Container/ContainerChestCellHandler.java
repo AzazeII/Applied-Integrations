@@ -3,7 +3,7 @@ package AppliedIntegrations.Container;
 import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
@@ -171,7 +171,7 @@ public class ContainerChestCellHandler
             IMEInventoryHandler<IAEEnergyStack> handler = null;
 
             // Get the chest handler
-            List<IMEInventoryHandler> hostCellArray = this.hostChest.getCellArray(AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class));
+            List<IMEInventoryHandler> hostCellArray = this.hostChest.getCellArray(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class));
             if( hostCellArray.size() > 0 )
             {
                 handler = hostCellArray.get( 0 );

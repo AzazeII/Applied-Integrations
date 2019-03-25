@@ -25,6 +25,9 @@ import java.util.Vector;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 
+/**
+ * @Author Azazell
+ */
 public class CapabilityHelper {
 
     private final AEPartLocation side;

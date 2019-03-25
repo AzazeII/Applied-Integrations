@@ -6,6 +6,9 @@ import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.Set;
 
+/**
+ * @Author Azazell
+ */
 public interface IEnergyRepo
 {
 

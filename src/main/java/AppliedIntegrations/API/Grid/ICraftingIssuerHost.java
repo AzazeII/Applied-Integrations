@@ -3,6 +3,7 @@ package AppliedIntegrations.API.Grid;
 import appeng.api.storage.ITerminalHost;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+
 /**
  * @Author Azazell
  */

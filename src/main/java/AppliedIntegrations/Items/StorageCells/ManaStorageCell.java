@@ -1,8 +1,7 @@
 package AppliedIntegrations.Items.StorageCells;
 
 import AppliedIntegrations.API.Botania.IAEManaStack;
-import AppliedIntegrations.API.Botania.IManaChannel;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.API.Botania.IManaStorageChannel;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import appeng.api.AEApi;
@@ -106,7 +105,7 @@ public class ManaStorageCell extends AIItemRegistrable implements IStorageCell<I
     @Nonnull
     @Override
     public IStorageChannel<IAEManaStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IManaChannel.class);
+        return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
     }
 
     @Override

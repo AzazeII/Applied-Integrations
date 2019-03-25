@@ -1,7 +1,7 @@
 package AppliedIntegrations;
 import AppliedIntegrations.API.AIApi;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
@@ -97,15 +97,6 @@ public class AppliedIntegrations {
 
 		if(Loader.isModLoaded("botania"))
 			BotaniaLoader.initRecipes();
-
-		AIApi.instance().addStorageChannelToPylon(IAEItemStack.class,
-					AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-
-		AIApi.instance().addStorageChannelToPylon(IAEFluidStack.class,
-				AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class));
-
-		AIApi.instance().addStorageChannelToPylon(IAEEnergyStack.class,
-				AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class));
 
 		// Register Cache, and monitor
 		//AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );

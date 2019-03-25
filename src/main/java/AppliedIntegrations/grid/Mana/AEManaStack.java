@@ -1,7 +1,7 @@
 package AppliedIntegrations.grid.Mana;
 
 import AppliedIntegrations.API.Botania.IAEManaStack;
-import AppliedIntegrations.API.Botania.IManaChannel;
+import AppliedIntegrations.API.Botania.IManaStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.IStorageChannel;
@@ -153,7 +153,7 @@ public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
 
     @Override
     public IStorageChannel<IAEManaStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IManaChannel.class);
+        return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
     }
 
     @Override

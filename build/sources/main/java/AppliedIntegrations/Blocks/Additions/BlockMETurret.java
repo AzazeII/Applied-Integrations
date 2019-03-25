@@ -8,6 +8,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class BlockMETurret extends BlockAIRegistrable {
 
     // Does this block enabled in config?

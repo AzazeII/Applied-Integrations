@@ -9,6 +9,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * @Author Azazell
+ */
 public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceStorageDuality<Double>{
 
     public InterfaceSinkSource(World world, BlockPos pos, double capacity, int sinkTier, int sourceTier) {

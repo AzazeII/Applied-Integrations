@@ -1,14 +1,14 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.tile.Additions.storage.TileSingularity;
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import io.netty.buffer.ByteBuf;
 
 public class PacketSingularityChange extends AIPacket {
 
-    public TileSingularity singularity;
+    public TileBlackHole singularity;
     public int mass;
 
-    public PacketSingularityChange(int mass, TileSingularity singularity) {
+    public PacketSingularityChange(int mass, TileBlackHole singularity) {
         this.mass = mass;
         this.singularity = singularity;
     }
@@ -21,7 +21,7 @@ public class PacketSingularityChange extends AIPacket {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        singularity = (TileSingularity)readTile(buf);
+        singularity = (TileBlackHole)readTile(buf);
         mass = buf.readInt();
     }
 }

@@ -2,6 +2,9 @@ package AppliedIntegrations.API.Grid;
 
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
+/**
+ * @Author Azazell
+ */
 public interface IAIEnergyWatcherHost
 {
 

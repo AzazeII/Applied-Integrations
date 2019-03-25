@@ -2,23 +2,18 @@ package AppliedIntegrations.API;
 
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 
 import appeng.api.parts.IPartItem;
-import appeng.items.parts.ItemPart;
 import cofh.redstoneflux.api.IEnergyContainerItem;
-import ic2.api.energy.tile.IEnergySink;
-import ic2.api.energy.tile.IEnergySource;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
-import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
@@ -39,9 +34,6 @@ import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import teamroots.embers.api.item.IEmberChargedTool;
-
-import java.util.List;
-import java.util.Vector;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 
@@ -146,7 +138,7 @@ public class Utils {
     public static IAEEnergyStack ConvertToAEFluidStack(final LiquidAIEnergy Energy, final long fluidAmount )
     {
         IAEEnergyStack Stack;
-        Stack = AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class).createStack( new FluidStack( Energy, 1 ) );
+        Stack = AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class).createStack( new FluidStack( Energy, 1 ) );
         Stack.setStackSize( fluidAmount );
         return Stack;
     }

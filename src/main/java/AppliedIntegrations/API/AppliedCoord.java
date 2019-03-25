@@ -7,8 +7,10 @@ import net.minecraft.world.World;
 import java.util.Iterator;
 
 /**
- * Represent coordinates of any AE2 part
+ * @Author Azazell
+ * Represents coordinates of any AE2 part
  */
+@Deprecated
 public class AppliedCoord extends DimensionalCoord{
 
     public EnumFacing side;

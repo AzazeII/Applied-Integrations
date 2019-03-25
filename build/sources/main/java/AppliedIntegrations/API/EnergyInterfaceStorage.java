@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.EnergyStorage;
 
 /**
+ * @Author Azazell
  * Implementation of IEnergyStorage, for better supporting FE Energy System with energy interface
  */
 public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceStorageDuality<Integer>, InbtStorage {

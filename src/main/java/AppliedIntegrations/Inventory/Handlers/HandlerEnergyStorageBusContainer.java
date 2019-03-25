@@ -4,7 +4,6 @@ import AppliedIntegrations.API.Storage.*;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.grid.AEEnergyStack;
-import AppliedIntegrations.grid.EnergyList;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -142,6 +141,6 @@ public class HandlerEnergyStorageBusContainer
      */
     @Override
     public IStorageChannel<IAEEnergyStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+        return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
     }
 }

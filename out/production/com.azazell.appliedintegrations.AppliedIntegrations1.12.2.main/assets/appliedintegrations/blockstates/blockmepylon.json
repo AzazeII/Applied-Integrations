@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "normal": {
+      "model": "appliedintegrations:me_pylon"
+    },
+    "inventory": {
+      "model": "appliedintegrations:me_pylon"
+    }
+  }
+}

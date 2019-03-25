@@ -12,6 +12,9 @@ import net.minecraftforge.fml.common.Optional;
         @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyOutputter", modid = "mekanism", striprefs = true),
         @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "mekanism", striprefs = true)
 })
+/**
+ * @Author Azazell
+ */
 public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, InbtStorage, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
 
     private IEnergyInterface energyInterface;

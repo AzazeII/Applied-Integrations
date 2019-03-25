@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.tile.Additions.storage.TileSingularity;
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +16,9 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class BlockSingularity extends BlockAIRegistrable {
     public BlockSingularity(String registryName, String unlocalizedName) {
         super(registryName, unlocalizedName);
@@ -25,7 +28,7 @@ public class BlockSingularity extends BlockAIRegistrable {
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileSingularity();
+        return new TileBlackHole();
     }
 
     @Override
@@ -63,9 +66,9 @@ public class BlockSingularity extends BlockAIRegistrable {
         TileEntity tile = world.getTileEntity(pos);
         if (!p.isSneaking()) {
             // Pass activated to tile entity ( nothing new :) )
-            if (tile instanceof TileSingularity) {
+            if (tile instanceof TileBlackHole) {
                 // Pass activate to tile
-                return ((TileSingularity) tile).activate(world, pos, state, p, hand);
+                return ((TileBlackHole) tile).activate(world, pos, state, p, hand);
             }
         }
         return false;

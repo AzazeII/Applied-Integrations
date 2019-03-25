@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "normal": {
+      "model": "appliedintegrations:black_hole"
+    },
+    "inventory": {
+      "model": "appliedenergistics2:item/material_singularity"
+    }
+  }
+}

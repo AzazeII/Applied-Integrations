@@ -1,6 +1,6 @@
 package AppliedIntegrations.tile.Additions.render;
 
-import AppliedIntegrations.tile.Additions.storage.TileWhiteHole;
+import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import org.lwjgl.util.glu.Sphere;

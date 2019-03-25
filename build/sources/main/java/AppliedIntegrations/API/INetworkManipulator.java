@@ -3,6 +3,9 @@ package AppliedIntegrations.API;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import appeng.api.config.Actionable;
 
+/**
+ * @Author Azazell
+ */
 public interface INetworkManipulator {
     /**
      * @param resource

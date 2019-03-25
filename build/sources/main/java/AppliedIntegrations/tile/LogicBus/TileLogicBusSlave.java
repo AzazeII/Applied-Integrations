@@ -2,21 +2,15 @@ package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.Blocks.LogicBus.modeling.ModeledLogicBus;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
-import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.networking.IGridMultiblock;
 import appeng.api.networking.IGridNode;
-import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
-import appeng.me.GridNode;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
-import net.minecraft.block.BlockFurnace;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -90,7 +84,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
     }
 
     @Override
-    public void createAELink() {
+    public void createAENode() {
         if (!world.isRemote && hasMaster()) {
             if (gridNode == null)
                 gridNode = AEApi.instance().grid().createGridNode(this);
@@ -123,7 +117,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
         //create grid node on add to world
         if (!loaded && hasWorld() && !world.isRemote && hasMaster()) {
             loaded = true;
-            createAELink();
+            createAENode();
         }
     }
 

@@ -2,6 +2,9 @@ package AppliedIntegrations.API.Multiblocks;
 
 import net.minecraft.block.Block;
 
+/**
+ * @Author Azazell
+ */
 public class BlockData {
     public byte x, y, z;
     public Block b;

@@ -5,6 +5,9 @@ import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.util.AEPartLocation;
 
+/**
+ * @Author Azazell
+ */
 public interface IInterfaceDuality {
 
     double getMaxTransfer(AEPartLocation side);

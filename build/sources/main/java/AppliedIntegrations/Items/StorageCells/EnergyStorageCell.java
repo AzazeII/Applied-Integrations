@@ -1,6 +1,6 @@
 package AppliedIntegrations.Items.StorageCells;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyTunnel;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
@@ -98,7 +98,7 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 	@Nonnull
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
-		return AEApi.instance().storage().getStorageChannel(IEnergyTunnel.class);
+		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 
 	@Override

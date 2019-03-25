@@ -1,13 +1,13 @@
 package AppliedIntegrations.tile.Additions.render;
 
-import AppliedIntegrations.tile.Additions.storage.TileSingularity;
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import org.lwjgl.util.glu.Sphere;
 
 import java.awt.*;
 
-public class TileSingularityRenderer extends TileEntitySpecialRenderer<TileSingularity> {
+public class TileSingularityRenderer extends TileEntitySpecialRenderer<TileBlackHole> {
 
     private Color getColor(){
         // Color of singularity, moved here because of IntelIJIdea feature with color picker
@@ -15,10 +15,12 @@ public class TileSingularityRenderer extends TileEntitySpecialRenderer<TileSingu
     }
 
     @Override
-    public void render(TileSingularity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+    public void render(TileBlackHole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         // Now the fun begins :upside_down:
         // Get radius from tile
         double radius = te.getBlackHoleRadius();
+        // Add cosine of world time (always <= 1) to radius
+        radius += Math.cos(te.getWorld().getWorldTime()) * 0.01;
 
         // Save matrix to stack
         GlStateManager.pushMatrix();
@@ -47,8 +49,10 @@ public class TileSingularityRenderer extends TileEntitySpecialRenderer<TileSingu
         GlStateManager.enableTexture2D();
         // Repick color
         GlStateManager.color(1,1,1);
-
         // End drawing
         GlStateManager.popMatrix();
+
+
+        // My first renderer done! :)
     }
 }

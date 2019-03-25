@@ -19,6 +19,9 @@ import net.minecraftforge.fml.common.Optional;
         @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource",modid = "ic2",striprefs = true),
         @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor",modid = "mekanism",striprefs = true)}
 )
+/**
+ * @Author Azazell
+ */
 public interface IEnergyDuality extends IEnergySink, IEnergySource, IAEPowerStorage {
 
     @Override

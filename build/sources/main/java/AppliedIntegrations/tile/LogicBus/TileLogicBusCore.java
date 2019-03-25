@@ -2,12 +2,10 @@ package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.API.Multiblocks.BlockData;
 import AppliedIntegrations.API.Multiblocks.Patterns;
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
-import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.Upgrades;
 import appeng.api.networking.GridFlags;
@@ -21,13 +19,9 @@ import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.*;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
-import appeng.me.GridNode;
-import appeng.me.helpers.AENetworkProxy;
-import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;
 import appeng.util.item.AEItemStack;
 import com.google.common.collect.ImmutableSet;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -45,7 +39,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.*;
 
 public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, IInterfaceHost, IGridMultiblock {
@@ -230,7 +223,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
                         // Notify block state
                         slave.notifyBlock();
                         // Update node
-                        slave.createAELink();
+                        slave.createAENode();
                         // Add to slave list
                         slaves.add(slave);
                         // Mark to update
@@ -261,7 +254,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
             // Notify block
             slave.notifyBlock();
             // destroy node ( very cruel moment in code )
-            slave.destroyAELink();
+            slave.destroyAENode();
             // Notify grid node
             slave.getGridNode().updateState();
             // Remove from slave list

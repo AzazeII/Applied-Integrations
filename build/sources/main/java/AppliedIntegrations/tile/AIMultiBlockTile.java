@@ -33,7 +33,7 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     }
 
     @Override
-    public void createAELink() {
+    public void createAENode() {
         if (!world.isRemote && hasMaster()) {
             if (gridNode == null)
                 gridNode = AEApi.instance().grid().createGridNode(this);
