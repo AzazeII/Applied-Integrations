@@ -70,16 +70,29 @@ public class TileMEPylon extends AITile implements ICellContainer {
         // Check if node was active
         if(!syncActive && getGridNode().isActive()){
             // Node wasn't active, but now it is active
-            // Fire new event !
+            // Fire new cell array update event!
             postCellEvent();
             // Update sync
             syncActive = true;
         }else if(syncActive && !getGridNode().isActive()){
             // Node was active, but now it not
-            // Fire new event!
+            // Fire new cell array update event!
             postCellEvent();
             // Update sync
             syncActive = false;
+        }
+    }
+
+    @Override
+    public void createAENode() {
+        if(world != null) {
+            if (!world.isRemote) {
+                gridNode = AEApi.instance().grid().createGridNode(this);
+                gridNode.updateState();
+
+                // Fire new cell array update event!
+                postCellEvent();
+            }
         }
     }
 
