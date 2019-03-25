@@ -6,6 +6,7 @@ import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.tile.Additions.TileMETurretFoundation;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
@@ -49,7 +50,7 @@ public class ClientProxy
         ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretTower.class, new TileMETurretRenderer());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
         // State mapper for tile port
         /*StateMapperBase stateMapperPort = new StateMapperBase() {
             @Override

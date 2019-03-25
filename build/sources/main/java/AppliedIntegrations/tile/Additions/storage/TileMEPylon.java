@@ -67,6 +67,9 @@ public class TileMEPylon extends AITile implements ICellContainer {
     public void update() {
         super.update();
 
+        if(getGridNode() == null)
+            return;
+
         // Check if node was active
         if(!syncActive && getGridNode().isActive()){
             // Node wasn't active, but now it is active
