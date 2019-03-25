@@ -1,6 +1,5 @@
 package AppliedIntegrations.tile.Additions.render;
 
-import AppliedIntegrations.tile.Additions.TileMETurretTower;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 
 public class TileMETurretRenderer extends TileEntitySpecialRenderer<TileMETurretTower> {

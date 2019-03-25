@@ -31,7 +31,6 @@ public enum BlocksEnum {
     BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort),
 
     BTurret(new BlockMETurret("BlockMETurret", "ME Turret"), TileEnum.METurret),
-    BTurretTower(new BlockMETurretTower("BlockMETurretTower", "ME Turret Tower"), TileEnum.METurretTower),
     BlackHole(new BlockSingularity("BlockSingularity", "Black Hole"), TileEnum.BlackHole),
     WhiteHole(new BlockWhiteHole("BlockWhiteHole", "White Hole"), TileEnum.WhiteHole),
     BlockMEPylon(new BlockMEPylon("BlockMEPylon", "ME Pylon"), TileEnum.MEPylon);
@@ -52,15 +51,12 @@ public enum BlocksEnum {
     public static void register() {
         for(BlocksEnum blocksEnum : values()){
             // Check if we iterating over turret
-            if(blocksEnum == BTurret || blocksEnum == BlackHole || blocksEnum == BTurretTower
+            if(blocksEnum == BTurret || blocksEnum == BlackHole
                 || blocksEnum == BlockMEPylon || blocksEnum == WhiteHole)
                 // Check if turret enabled, in opposite option:---------
                 if(!(BlockMETurret.METurret_Enabled))               /*\|/*/
                     // Do not load it <---------------------------------
                     continue;
-            // Make turret tower not visible in creative tabs
-            if(blocksEnum == BTurretTower)
-                blocksEnum.b.setCreativeTab(null);
             ForgeRegistries.BLOCKS.register(blocksEnum.b);
 
             ItemBlock block = new ItemBlock(blocksEnum.b);

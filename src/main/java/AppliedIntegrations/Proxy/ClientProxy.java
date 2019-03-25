@@ -7,7 +7,6 @@ import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
-import AppliedIntegrations.tile.Additions.TileMETurretTower;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.Additions.render.TileMEPylonRenderer;

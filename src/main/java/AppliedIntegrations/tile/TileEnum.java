@@ -31,7 +31,6 @@ public enum TileEnum
     EnergyInterface ( TileEnergyInterface.class),
 
     METurret( TileMETurretFoundation.class ),
-    METurretTower(TileMETurretTower.class),
 
     BlackHole( TileBlackHole.class ),
     MEPylon( TileMEPylon.class ),
