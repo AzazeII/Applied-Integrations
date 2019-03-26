@@ -1,6 +1,6 @@
 package AppliedIntegrations.tile.Additions.storage.helpers.impl;
 
-import AppliedIntegrations.tile.Additions.storage.helpers.WhiteHoleSingularityInventoryHandler;
+import AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
@@ -19,8 +19,6 @@ public class WhiteHoleFluidHandler extends WhiteHoleSingularityInventoryHandler<
         if(singularity != null){
             // Modulate extraction
             if(actionable == MODULATE){
-                // Remove mass for each item in stack
-                singularity.addMass(iaeItemStack.getStackSize() * 10);
                 // Remove data from storage list
                 singularity.addStack(iaeItemStack);
                 // Return null, as all items was extracted

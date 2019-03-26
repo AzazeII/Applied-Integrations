@@ -1,12 +1,17 @@
 package AppliedIntegrations.Blocks;
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Blocks.Additions.*;
+import AppliedIntegrations.Blocks.Additions.BlockMEPylon;
+import AppliedIntegrations.Blocks.Additions.BlockMETurret;
+import AppliedIntegrations.Blocks.Additions.BlockSingularity;
+import AppliedIntegrations.Blocks.Additions.BlockWhiteHole;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusCore;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusPort;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusRibs;
 import AppliedIntegrations.Blocks.MEServer.*;
 import AppliedIntegrations.tile.TileEnum;
+import AppliedIntegrations.AIConfig;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -18,48 +23,47 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import java.util.LinkedHashMap;
 
 public enum BlocksEnum {
-    BEI(new BlockEnergyInterface("EInterface", "ME Energy Interface"), TileEnum.EnergyInterface),
+    BEI(new BlockEnergyInterface("EInterface", "ME Energy Interface"), TileEnum.EnergyInterface, AIConfig.enableEnergyFeatures),
 
-    BSCore(new BlockServerCore("ServerCore", "ME Server Core"),TileEnum.TSCore),
-    BSRib(new BlockServerRib("ServerFrame", "ME Server Rib"),TileEnum.TSRib),
-    BSPort(new BlockServerPort("ServerPort", "ME Server Port"),TileEnum.TSPort),
-    BSHousing(new BlockServerHousing("ServerHousing", "ME Server Housing"),TileEnum.TSHousing),
-    BSSecurity(new BlockServerSecurity("ServerSecurity", "ME Server Security Terminal"),TileEnum.TSSecurity),
+    BSCore(new BlockServerCore("ServerCore", "ME Server Core"),TileEnum.TSCore, AIConfig.enableMEServer),
+    BSRib(new BlockServerRib("ServerFrame", "ME Server Rib"),TileEnum.TSRib, AIConfig.enableMEServer),
+    BSPort(new BlockServerPort("ServerPort", "ME Server Port"),TileEnum.TSPort, AIConfig.enableMEServer),
+    BSHousing(new BlockServerHousing("ServerHousing", "ME Server Housing"),TileEnum.TSHousing, AIConfig.enableMEServer),
+    BSSecurity(new BlockServerSecurity("ServerSecurity", "ME Server Security Terminal"),TileEnum.TSSecurity, AIConfig.enableMEServer),
 
-    BLBRibs(new BlockLogicBusRibs("BlockLogicBusRibs", "ME Logic Bus Rib"),TileEnum.TLBRib),
-    BLBCore(new BlockLogicBusCore("BlockLogicBusCore", "ME Logic Bus Core"),TileEnum.TLBCore),
-    BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort),
+    BLBRibs(new BlockLogicBusRibs("BlockLogicBusRibs", "ME Logic Bus Rib"),TileEnum.TLBRib, AIConfig.enableLogicBus),
+    BLBCore(new BlockLogicBusCore("BlockLogicBusCore", "ME Logic Bus Core"),TileEnum.TLBCore, AIConfig.enableLogicBus),
+    BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort, AIConfig.enableLogicBus),
 
-    BTurret(new BlockMETurret("BlockMETurret", "ME Turret"), TileEnum.METurret),
-    BlackHole(new BlockSingularity("BlockSingularity", "Black Hole"), TileEnum.BlackHole),
-    WhiteHole(new BlockWhiteHole("BlockWhiteHole", "White Hole"), TileEnum.WhiteHole),
-    BlockMEPylon(new BlockMEPylon("BlockMEPylon", "ME Pylon"), TileEnum.MEPylon);
+    BTurret(new BlockMETurret("BlockMETurret", "ME Turret"), TileEnum.METurret, AIConfig.enableBlackHoleStorage),
+    BlackHole(new BlockSingularity("BlockSingularity", "Black Hole"), TileEnum.BlackHole, AIConfig.enableBlackHoleStorage),
+    WhiteHole(new BlockWhiteHole("BlockWhiteHole", "White Hole"), TileEnum.WhiteHole, AIConfig.enableBlackHoleStorage),
+    BlockMEPylon(new BlockMEPylon("BlockMEPylon", "ME Pylon"), TileEnum.MEPylon, AIConfig.enableBlackHoleStorage);
     private static LinkedHashMap<Block, ItemBlock> itemBlocks = new LinkedHashMap<>();
     public BlockAIRegistrable b;
     public TileEnum tileEnum;
     public ItemBlock itemBlock;
+    public boolean enabled;
 
     BlocksEnum(BlockAIRegistrable block){
         this.b = block;
         this.b.setCreativeTab(AppliedIntegrations.AI);
     }
-    BlocksEnum(BlockAIRegistrable b, TileEnum t){
+    BlocksEnum(BlockAIRegistrable b, TileEnum t, boolean enabled){
         this(b);
-        tileEnum = t;
+        this.tileEnum = t;
+        this.enabled = enabled;
     }
 
     public static void register() {
         for(BlocksEnum blocksEnum : values()){
-            // Check if we iterating over turret
-            if(blocksEnum == BTurret || blocksEnum == BlackHole
-                || blocksEnum == BlockMEPylon || blocksEnum == WhiteHole)
-                // Check if turret enabled, in opposite option:---------
-                if(!(BlockMETurret.METurret_Enabled))               /*\|/*/
-                    // Do not load it <---------------------------------
-                    continue;
+            // Check if feature enabled
+            if(!blocksEnum.enabled)
+                continue;
             ForgeRegistries.BLOCKS.register(blocksEnum.b);
 
             ItemBlock block = new ItemBlock(blocksEnum.b);
+
             block.setRegistryName(blocksEnum.b.getRegistryName());
 
             ForgeRegistries.ITEMS.register(block);

@@ -64,6 +64,9 @@ dependencies {
     deobfCompile "cofh:RedstoneFlux:1.12-2.0.0.1:universal"
 }
 
+// You just found easter egg :)
+// TileBlackHole.sizeFactor.put(314159265358, 21);
+
 processResources {
     // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version

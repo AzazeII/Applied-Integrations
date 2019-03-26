@@ -9,6 +9,7 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import teamroots.embers.power.EmberCapabilityProvider;
 
+import javax.annotation.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
@@ -46,7 +47,7 @@ public class EnumCapabilityType {
             Tesla = new EnumCapabilityType(LiquidAIEnergy.TESLA, TeslaCapabilities.CAPABILITY_CONSUMER, TeslaCapabilities.CAPABILITY_HOLDER, TeslaCapabilities.CAPABILITY_PRODUCER);
     }
 
-    EnumCapabilityType(LiquidAIEnergy energy, Capability... capability){
+    EnumCapabilityType(LiquidAIEnergy energy, @Nullable Capability... capability){
         this.energy = energy;
         for(Capability capability1 : capability)
             this.capabilities.add(capability1);
@@ -78,6 +79,12 @@ public class EnumCapabilityType {
     public Vector<Capability> getCapabilityWithModCheck(){
         if(IntegrationsHelper.instance.isLoaded(this.energy))
             return this.capabilities;
+        return null;
+    }
+
+    public Capability getOutputCapabilities() {
+        if(IntegrationsHelper.instance.isLoaded(this.energy))
+            return capabilities.lastElement();
         return null;
     }
 }

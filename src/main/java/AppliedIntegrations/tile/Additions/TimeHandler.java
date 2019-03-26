@@ -1,6 +1,10 @@
 package AppliedIntegrations.tile.Additions;
 
+import AppliedIntegrations.tile.TileEnum;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+
+import java.util.function.Consumer;
 
 public class TimeHandler {
 

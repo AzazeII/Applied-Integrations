@@ -1,5 +1,6 @@
 package AppliedIntegrations;
 import AppliedIntegrations.API.AIApi;
+import AppliedIntegrations.API.Botania.IManaStorageChannel;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
@@ -10,6 +11,8 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.grid.EnergyStorageChannel;
+import AppliedIntegrations.tile.Additions.storage.helpers.impl.*;
 import appeng.api.AEApi;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
@@ -34,20 +37,15 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = "appliedintegrations", name="Applied Integrations", version = "8.0.7", dependencies = "required-after:appliedenergistics2")
+@Mod(modid = AppliedIntegrations.modid, name="Applied Integrations", version = "8.0.7", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */
 public class AppliedIntegrations {
-
-	public static Configuration AIConfig;
-	public static int Difficulty;
-	public static final EnumRarity LEGENDARY = EnumHelper.addRarity("Legendary", TextFormatting.GOLD, "Legendary");
-
 	public static final String modid = "appliedintegrations";
+
 	@Mod.Instance(modid)
 	public static AppliedIntegrations instance;
-	private static int AI_ID = 1;
 
 	public AppliedIntegrations() {
 	instance = this;
@@ -67,9 +65,14 @@ public class AppliedIntegrations {
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event)
 	{
-		// For all liquidEnergies register it
-		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
+		// Init config
+		AIConfig.preInit();
+
+		if(AIConfig.enableEnergyFeatures) {
+			// For all liquidEnergies register it
+			for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 				FluidRegistry.registerFluid(energy);
+			}
 		}
 
 		// Register models not in proxy, due to issue with item registration
@@ -82,10 +85,9 @@ public class AppliedIntegrations {
 		//MinecraftForge.EVENT_BUS.register(new GuiEntropyManipulator(Minecraft.getMinecraft()));
 		//this.registerRecipes();
 
-		AIConfig = new Configuration(event.getSuggestedConfigurationFile());
-		AIConfigOPT.syncMe();
 		AILog.info("Pre load Completed");
 	}
+
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event)
 	{
@@ -95,7 +97,7 @@ public class AppliedIntegrations {
 		proxy.registerSpatialIOMovables();
 		proxy.SidedInit(event);
 
-		if(Loader.isModLoaded("botania"))
+		if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
 			BotaniaLoader.initRecipes();
 
 		// Register Cache, and monitor
@@ -105,6 +107,7 @@ public class AppliedIntegrations {
 
 		AILog.info( "init Completed");
 	}
+
 	@Mod.EventHandler
 	public void postLoad(FMLPostInitializationEvent event) {
 		AILog.info("Post load Completed");
@@ -127,9 +130,6 @@ public class AppliedIntegrations {
 	public static void launchGui(AIPart AIPart, EntityPlayer player, World worldObj, int xCoord, int yCoord,
 								 int zCoord) {
 		// TODO Auto-generated method stub
-	}
-	public boolean isEnergyWhiteListed(Fluid energy) {
-		return energy.getClass() == LiquidAIEnergy.class;
 	}
 
 	@Mod.EventHandler

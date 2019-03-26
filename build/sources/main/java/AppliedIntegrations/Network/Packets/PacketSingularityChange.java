@@ -6,9 +6,11 @@ import io.netty.buffer.ByteBuf;
 public class PacketSingularityChange extends AIPacket {
 
     public TileBlackHole singularity;
-    public int mass;
+    public long mass;
 
-    public PacketSingularityChange(int mass, TileBlackHole singularity) {
+    public PacketSingularityChange(){}
+
+    public PacketSingularityChange(long mass, TileBlackHole singularity) {
         this.mass = mass;
         this.singularity = singularity;
     }
@@ -16,12 +18,12 @@ public class PacketSingularityChange extends AIPacket {
     @Override
     public void fromBytes(ByteBuf buf) {
         writeTile(singularity, buf);
-        buf.writeInt(mass);
+        buf.writeLong(mass);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         singularity = (TileBlackHole)readTile(buf);
-        mass = buf.readInt();
+        mass = buf.readLong();
     }
 }

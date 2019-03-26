@@ -1,5 +1,4 @@
 package AppliedIntegrations.Parts;
-import AppliedIntegrations.AIConfigOPT;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
@@ -93,9 +92,6 @@ public abstract class AIPart
 
 	// Grid block where part placed
 	protected AEPartGridBlock gridBlock;
-
-	protected int capacity = AIConfigOPT.interfaceMaxStorage;
-	protected int maxTransfer = 500000;
 
 	public int getX(){
 		if(this.getHost()!=null)

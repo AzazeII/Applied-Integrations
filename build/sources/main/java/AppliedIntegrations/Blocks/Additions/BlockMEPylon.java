@@ -4,10 +4,12 @@ import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
 import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,6 +18,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+
+import static net.minecraft.util.EnumFacing.*;
 
 /**
  * @Author Azazell
@@ -62,10 +66,23 @@ public class BlockMEPylon extends BlockAIRegistrable {
     }
     @Override
     public int getMetaFromState(IBlockState state) {
+
         // Set index as meta
-        int meta = ((EnumFacing)state.getValue(FACING)).getIndex();
+        int meta = (state.getValue(FACING)).getIndex();
 
         return meta;
+
+    }
+
+    @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
+    {
+        // Pre check for up or down facing
+        if(facing == UP || facing == DOWN)
+            // Return state with south as facing
+            return getDefaultState().withProperty(FACING, SOUTH);
+        // Return state with facing
+        return getDefaultState().withProperty(FACING, facing);
     }
 
     @Override
@@ -80,7 +97,7 @@ public class BlockMEPylon extends BlockAIRegistrable {
             // Pass activated to tile entity ( nothing new :) )
             if (tile instanceof TileMEPylon) {
                 // Pass activate to tile
-                return ((TileMEPylon) tile).activate(hand);
+                return ((TileMEPylon) tile).activate(hand, p);
             }
         }
         return false;

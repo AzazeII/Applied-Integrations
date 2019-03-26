@@ -7,9 +7,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class HandlerSingularityChange implements IMessageHandler<PacketSingularityChange, PacketSingularityChange> {
     @Override
     public PacketSingularityChange onMessage(PacketSingularityChange message, MessageContext ctx) {
-
-        message.singularity.receiveClientData(message.mass);
-
+        message.singularity.setMassFromServer(message.mass);
         return null;
     }
 }

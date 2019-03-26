@@ -64,12 +64,10 @@ public class BlockSingularity extends BlockAIRegistrable {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
-        if (!p.isSneaking()) {
-            // Pass activated to tile entity ( nothing new :) )
-            if (tile instanceof TileBlackHole) {
-                // Pass activate to tile
-                return ((TileBlackHole) tile).activate(world, pos, state, p, hand);
-            }
+        // Pass activated to tile entity ( nothing new :) )
+        if (tile instanceof TileBlackHole) {
+            // Pass activate to tile
+            return ((TileBlackHole) tile).activate(world, pos, state, p, hand);
         }
         return false;
     }

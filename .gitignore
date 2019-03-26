@@ -29,3 +29,4 @@ hs_err_pid*
 *.iws
 compile.sh
 AppliedIntegrations1.12.2.iws
+*.iws

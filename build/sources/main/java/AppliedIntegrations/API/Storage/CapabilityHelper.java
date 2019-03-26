@@ -61,22 +61,28 @@ public class CapabilityHelper {
      * Allowed types: integer, double, long
      */
     public int getStored(LiquidAIEnergy energy){
-        for(Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
-            AILog.info("Iterating over capabilities, current: " + capability.getName());
-            if (capabilities.contains(capability)){
-                if(capability == CapabilityEnergy.ENERGY){
-                    AILog.info(capabilityHandler.toString() + " has " + capability.getName());
-                    IEnergyStorage energyStorageCapability = (IEnergyStorage)capabilityHandler.getCapability(capability, side.getFacing());
+        // Check not null
+        if(energy == null)
+            return 0;
+
+        // Check has type
+        if(EnumCapabilityType.fromEnergy(energy) == null)
+            return 0;
+
+        for (Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
+            if (capabilities.contains(capability)) {
+                if (capability == CapabilityEnergy.ENERGY) {
+                    IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
                     return energyStorageCapability.getEnergyStored();
-                }else if(IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
-                    IEmberCapability emberCapability = (IEmberCapability)capabilityHandler.getCapability(capability, side.getFacing());
-                    return (int)emberCapability.getEmber();
-                }else if(IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY){
-                    IStrictEnergyStorage storage = (IStrictEnergyStorage)capabilityHandler.getCapability(capability, side.getFacing());
-                    return (int)storage.getEnergy();
-                }else if(IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_HOLDER){
-                    ITeslaHolder teslaHolderCapability = (ITeslaHolder)capabilityHandler.getCapability(capability, side.getFacing());
-                    return (int)teslaHolderCapability.getStoredPower();
+                } else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
+                    IEmberCapability emberCapability = (IEmberCapability) capabilityHandler.getCapability(capability, side.getFacing());
+                    return (int) emberCapability.getEmber();
+                } else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
+                    IStrictEnergyStorage storage = (IStrictEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
+                    return (int) storage.getEnergy();
+                } else if (IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+                    ITeslaHolder teslaHolderCapability = (ITeslaHolder) capabilityHandler.getCapability(capability, side.getFacing());
+                    return (int) teslaHolderCapability.getStoredPower();
                 }
             }
         }
@@ -123,7 +129,6 @@ public class CapabilityHelper {
         return 0;
     }
 
-
     public int receiveEnergy(Number val, boolean simulate, LiquidAIEnergy energy){
         for(Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
             if (capabilities.contains(capability)){
@@ -157,22 +162,48 @@ public class CapabilityHelper {
     }
 
     public int extractEnergy(Number val, boolean simulate, LiquidAIEnergy energy){
+        // Check not null
+        if(energy == null)
+            return 0;
+
+        // Check has type
+        if(EnumCapabilityType.fromEnergy(energy) == null)
+            return 0;
+
+        // Iterate over all capabilities from this energy
         for(Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
+            // Check if tile has this capability
             if (capabilities.contains(capability)){
+                // Check if capability belong to RF system
                 if(capability == CapabilityEnergy.ENERGY){
+                    // Get storage
                     IEnergyStorage energyStorageCapability = (IEnergyStorage)capabilityHandler.getCapability(capability, side.getFacing());;
+
+                    // Extract energy
                     return energyStorageCapability.extractEnergy(val.intValue(), simulate);
 
+                // Check if capability belong to Ember system
                 }else if(IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
+                    // Get storage
                     IEmberCapability emberCapability = (IEmberCapability)capabilityHandler.getCapability(capability, side.getFacing());;
+
+                    // Extract Energy
                     return (int)emberCapability.removeAmount(val.doubleValue(), simulate);
 
+                // Check if capability belong to Joule system
                 }else if(IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY){
+                    // Get storage
                     IStrictEnergyOutputter storage = (IStrictEnergyOutputter)capabilityHandler.getCapability(capability, side.getFacing());;
-                    return (int)storage.pullEnergy(side.getFacing(), val.doubleValue(), !simulate);
 
+                    // Extract energy
+                    return (int)storage.pullEnergy(side.getFacing(), val.doubleValue(), simulate);
+
+                // Check if capability belong to TESLA system
                 }else if(IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_PRODUCER){
+                    // Get storage
                     ITeslaProducer teslaHolderCapability = (ITeslaProducer)capabilityHandler.getCapability(capability, side.getFacing());;
+
+                    // Extract energy
                     return (int)teslaHolderCapability.takePower(val.longValue(), simulate);
                 }
             }
@@ -184,5 +215,19 @@ public class CapabilityHelper {
         }
 
         return 0;
+    }
+
+    public long extractAllStored(int max){
+        // All energy extracted
+        int extracted = 0;
+
+        // Iterate over all energies
+        for(LiquidAIEnergy energy : energies.values()){
+            // Extract it
+            extracted += extractEnergy(Math.min(getStored(energy), max), false, energy);
+        }
+
+        AILog.chatLog("Extracted: " + extracted);
+        return extracted;
     }
 }

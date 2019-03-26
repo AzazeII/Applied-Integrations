@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.tile.Additions.*;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
@@ -18,32 +19,35 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public enum TileEnum
 {
-    TLBPort( TileLogicBusPort.class),
-    TLBRib( TileLogicBusRib.class),
-    TLBCore( TileLogicBusCore.class),
+    TLBPort( TileLogicBusPort.class, AIConfig.enableLogicBus),
+    TLBRib( TileLogicBusRib.class, AIConfig.enableLogicBus),
+    TLBCore( TileLogicBusCore.class, AIConfig.enableLogicBus),
 
-    TSCore( TileServerCore.class),
-    TSPort( TileServerPort.class),
-    TSRib(TileServerRib.class),
-    TSHousing(TileServerHousing.class),
-    TSSecurity(TileServerSecurity.class),
+    TSCore( TileServerCore.class, AIConfig.enableMEServer),
+    TSPort( TileServerPort.class, AIConfig.enableMEServer),
+    TSRib(TileServerRib.class, AIConfig.enableMEServer),
+    TSHousing(TileServerHousing.class, AIConfig.enableMEServer),
+    TSSecurity(TileServerSecurity.class, AIConfig.enableMEServer),
 
-    EnergyInterface ( TileEnergyInterface.class),
+    EnergyInterface ( TileEnergyInterface.class, AIConfig.enableEnergyFeatures),
 
-    METurret( TileMETurretFoundation.class ),
+    METurret( TileMETurretFoundation.class, AIConfig.enableBlackHoleStorage ),
 
-    BlackHole( TileBlackHole.class ),
-    MEPylon( TileMEPylon.class ),
-    WhiteHole( TileWhiteHole.class );
+    BlackHole( TileBlackHole.class, AIConfig.enableBlackHoleStorage ),
+    MEPylon( TileMEPylon.class, AIConfig.enableBlackHoleStorage ),
+    WhiteHole( TileWhiteHole.class, AIConfig.enableBlackHoleStorage );
+    public final boolean enabled;
     // Tile entities's class
     public Class clazz;
 
-    TileEnum(final Class clazz )
+    TileEnum(final Class clazz, boolean enabled)
     {
         this.clazz = clazz;
+        this.enabled = enabled;
     }
 
     public void register(ResourceLocation reg) {
-        GameRegistry.registerTileEntity(clazz, reg);
+        if(enabled)
+            GameRegistry.registerTileEntity(clazz, reg);
     }
 }

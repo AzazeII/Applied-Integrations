@@ -1,9 +1,7 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
@@ -18,6 +16,7 @@ import AppliedIntegrations.Network.Packets.PacketServerFilter;
 import AppliedIntegrations.Parts.*;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.AIConfig;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -59,11 +58,10 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import teamroots.embers.block.BlockEmberEmitter;
 import teamroots.embers.api.power.IEmberCapability;
+import teamroots.embers.block.BlockEmberEmitter;
 import teamroots.embers.tileentity.TileEntityEmitter;
 import teamroots.embers.tileentity.TileEntityReceiver;
 
@@ -106,6 +104,9 @@ public class PartEnergyInterface
 	private long WattPower = 0;
 
 	private int priority;
+
+	private int capacity = AIConfig.interfaceMaxStorage;
+	private int maxTransfer = 500000;
 
 	protected EmberInterfaceStorageDuality EmberStorage;
 	protected EnergyInterfaceStorage RFStorage = new EnergyInterfaceStorage(this, capacity,maxTransfer);

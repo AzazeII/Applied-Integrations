@@ -1,5 +1,6 @@
 package AppliedIntegrations.Proxy;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
@@ -14,6 +15,7 @@ import AppliedIntegrations.tile.Additions.render.TileMEPylonRenderer;
 import AppliedIntegrations.tile.Additions.render.TileMETurretRenderer;
 import AppliedIntegrations.tile.Additions.render.TileSingularityRenderer;
 import AppliedIntegrations.tile.Additions.render.TileWhiteHoleRenderer;
+import AppliedIntegrations.tile.entities.EntityEnum;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,11 +48,14 @@ public class ClientProxy
         super.SidedPreInit();
         NetworkHandler.registerClientPackets();
 
-        // Register custom renderers
-        ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
-        ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
+        if(AIConfig.enableBlackHoleStorage) {
+            // Register custom renderers
+            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
+        }
+
         // State mapper for tile port
         /*StateMapperBase stateMapperPort = new StateMapperBase() {
             @Override
@@ -91,12 +96,13 @@ public class ClientProxy
 
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
+        //EntityEnum.registerRenderer();
 
-        if(Loader.isModLoaded("botania"))
+        if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
             BotaniaLoader.init();
-        if(Loader.isModLoaded("embers"))
+        if(Loader.isModLoaded("embers") && AIConfig.enablEmberFeatures)
             EmberLoader.init();
-        if(Loader.isModLoaded("astralsorcery"))
+        if(Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures)
             AstralLoader.init();
 
     }

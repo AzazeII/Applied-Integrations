@@ -1,7 +1,6 @@
 package AppliedIntegrations.tile.Additions.storage.helpers.impl;
 
-import AppliedIntegrations.API.ISingularity;
-import AppliedIntegrations.tile.Additions.storage.helpers.BlackHoleSingularityInventoryHandler;
+import AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
@@ -13,18 +12,12 @@ import static appeng.api.config.Actionable.MODULATE;
 
 public class BlackHoleFluidHandler extends BlackHoleSingularityInventoryHandler<IAEFluidStack> {
 
-    public BlackHoleFluidHandler(ISingularity singularity){
-        super(singularity);
-    }
-
     @Override
     public IAEFluidStack injectItems(IAEFluidStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
         // Check if there is singularity
         if(singularity != null){
             // Modulate extraction
             if(actionable == MODULATE){
-                // Add mass for each item in stack
-                singularity.addMass(iaeItemStack.getStackSize() * 10);
                 // Add data to storage list
                 singularity.addStack(iaeItemStack);
             }
