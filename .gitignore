@@ -4,9 +4,6 @@
 # Log file
 *.log
 
-# Iws
-AppliedIntegrations1.12.2.iws
-
 # BlueJ files
 *.ctxt
 
@@ -25,8 +22,7 @@ AppliedIntegrations1.12.2.iws
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 .DS_Store
-*.iws
-*.iws
+
 compile.sh
+
 AppliedIntegrations1.12.2.iws
-*.iws
