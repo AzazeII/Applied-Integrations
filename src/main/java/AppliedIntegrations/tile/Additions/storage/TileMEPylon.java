@@ -1,18 +1,18 @@
 package AppliedIntegrations.tile.Additions.storage;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.AIApi;
 import AppliedIntegrations.API.Botania.IManaStorageChannel;
 import AppliedIntegrations.API.ISingularity;
 import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
-import AppliedIntegrations.Blocks.Additions.BlockMEPylon;
-import AppliedIntegrations.Integration.Botania.BotaniaLoader;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.EnergyStorageChannel;
-import AppliedIntegrations.tile.AITile;
-import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
-import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
 import AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler;
+import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketSingularitySync;
+import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.tile.AITile;
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.storage.helpers.impl.*;
 import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
@@ -25,14 +25,20 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.util.AEPartLocation;
-import appeng.util.Platform;
+import net.minecraft.block.BlockAir;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static AppliedIntegrations.Blocks.Additions.BlockMEPylon.FACING;
 import static java.util.Collections.singletonList;
@@ -55,16 +61,12 @@ public class TileMEPylon extends AITile implements ICellContainer {
 
     // Adds new handler for black hole storage
     public static void addBlackHoleHandler(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, IStorageChannel chan) {
-        // Log
-        AILog.info("Adding new black hole storage handler for ME Pylon: " + handlerClassA.toString());
         // Add handler class
         passiveBlackHoleHandlers.put(chan,  handlerClassA);
     }
 
     // Adds new handler for white hole storage
     public static void addWhiteHoleHandler(Class<? extends WhiteHoleSingularityInventoryHandler<?>> handlerClassB, IStorageChannel chan) {
-        // Log
-        AILog.info("Adding new white hole storage handler for ME Pylon: " + handlerClassB.toString());
         // Add handler class
         passiveWhiteHoleHandlers.put(chan, handlerClassB);
     }
@@ -84,7 +86,7 @@ public class TileMEPylon extends AITile implements ICellContainer {
         AIApi.instance().addHandlersForMEPylon(BlackHoleEnergyHandler.class, WhiteHoleEnergyHandler.class, AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class));
 
         // Check if botania loaded
-        if(Loader.isModLoaded("botania")) {
+        if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
             AIApi.instance().addHandlersForMEPylon(BlackHoleManaHandler.class, WhiteHoleManaHandler.class, AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class));
         }
 
@@ -139,31 +141,80 @@ public class TileMEPylon extends AITile implements ICellContainer {
         super.update();
 
         // Call only on server
-        if(!world.isRemote){
+        if(!world.isRemote) {
             // Check if handlers not exist yet
-            if(!activeHandlersLoaded) {
+            if (!activeHandlersLoaded) {
                 // Init handlers
                 initHandlers();
             }
-        }
 
-        if(getGridNode() == null)
+            // Check if has no handled black hole
+            if (!hasSingularity()) {
+                // Check if active
+                if (getGridNode().isActive()) {
+                    tryToGetSingularity();
+                }
+            }
+
+            // Check if node was active
+            if (!syncActive && getGridNode().isActive()) {
+                // Node wasn't active, but now it is active
+                // Fire new cell array update event!
+                postCellEvent();
+                // Update sync
+                syncActive = true;
+            } else if (syncActive && !getGridNode().isActive()) {
+                // Node was active, but now it not
+                // Fire new cell array update event!
+                postCellEvent();
+                // Update sync
+                syncActive = false;
+            }
+        }
+    }
+
+    private void tryToGetSingularity() {
+
+        // Check if tile already has singularity
+        if(hasSingularity())
             return;
 
-        // Check if node was active
-        if(!syncActive && getGridNode().isActive()){
-            // Node wasn't active, but now it is active
-            // Fire new cell array update event!
-            postCellEvent();
-            // Update sync
-            syncActive = true;
-        }else if(syncActive && !getGridNode().isActive()){
-            // Node was active, but now it not
-            // Fire new cell array update event!
-            postCellEvent();
-            // Update sync
-            syncActive = false;
+        // Check if tile can indirectly see singularity
+        for(int i = 1; i < 85; i++){
+            // get block with offset
+            IBlockState state = world.getBlockState(pos.offset(getFw(), i));
+
+            // Check if block is singularity
+            if(state.getBlock() instanceof BlockBlackHole) {
+                // Set operated tile
+                setSingularity((ISingularity)world.getTileEntity(pos.offset(getFw(), i)));
+
+                // Skip other positions
+                break;
+            }else if(!(state.getBlock() instanceof BlockAir)){
+                // ignore
+                break;
+            }
         }
+    }
+
+    public void setSingularity(ISingularity tileEntity) {
+        // Check not null
+        if(tileEntity == null)
+            return;
+
+        // Set singularity
+        operatedTile = tileEntity;
+
+        // Notify client
+        NetworkHandler.sendToAllInRange(new PacketSingularitySync(this.operatedTile, this.getPos()),
+                new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+
+        // Notify singularity
+        operatedTile.addListener(this);
+
+        // Post cell array update
+        postCellEvent();
     }
 
     @Override
@@ -208,7 +259,11 @@ public class TileMEPylon extends AITile implements ICellContainer {
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
         // Return opposite of facing side
-        return EnumSet.of(world.getBlockState(pos).getValue(FACING).rotateY().getOpposite());
+        return EnumSet.of(getFw().getOpposite());
+    }
+
+    private EnumFacing getFw() {
+        return world.getBlockState(pos).getValue(FACING).rotateY();
     }
 
     @Override
@@ -229,7 +284,14 @@ public class TileMEPylon extends AITile implements ICellContainer {
     public boolean activate(EnumHand hand, EntityPlayer p) {
         if(hand == EnumHand.MAIN_HAND) {
             if (!world.isRemote) {
-                //AILog.chatLog("Has grid: " + (getGridNode().getGrid() != null) + " Active: " + getGridNode().isActive() + " Has singularity: " + hasSingularity());
+                if(p.isSneaking()) {
+                    AILog.chatLog("[Server] Has singularity: " + hasSingularity());
+                }else{
+                    tryToGetSingularity();
+                }
+            }else{
+                if(p.isSneaking())
+                    AILog.chatLog("[Client] Has singularity: " + hasSingularity());
             }
         }
         return true;

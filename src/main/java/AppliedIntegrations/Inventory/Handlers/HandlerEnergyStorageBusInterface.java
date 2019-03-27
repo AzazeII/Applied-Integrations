@@ -1,5 +1,6 @@
 package AppliedIntegrations.Inventory.Handlers;
 
+import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import appeng.api.AEApi;
@@ -7,6 +8,7 @@ import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IItemList;
 
@@ -14,26 +16,17 @@ import appeng.api.storage.data.IItemList;
  * @Author Azazell
  */
 public class HandlerEnergyStorageBusInterface
-        implements IMEMonitorHandlerReceiver<IAEEnergyStack>, IMEInventoryHandler<IAEEnergyStack>
-{
-    @Override
-    public boolean isValid(Object o) {
-        return false;
-    }
+        implements IMEInventoryHandler<IAEEnergyStack> {
 
-    @Override
-    public void postChange(IBaseMonitor<IAEEnergyStack> iBaseMonitor, Iterable<IAEEnergyStack> iterable, IActionSource iActionSource) {
+    private final IEnergyInterface iEnergyInterface;
 
-    }
-
-    @Override
-    public void onListUpdate() {
-
+    public HandlerEnergyStorageBusInterface(IEnergyInterface iEnergyInterface){
+        this.iEnergyInterface = iEnergyInterface;
     }
 
     @Override
     public AccessRestriction getAccess() {
-        return null;
+        return AccessRestriction.READ_WRITE;
     }
 
     @Override
@@ -43,11 +36,12 @@ public class HandlerEnergyStorageBusInterface
 
     @Override
     public boolean canAccept(IAEEnergyStack iaeEnergyStack) {
-        return false;
+        return true;
     }
 
     @Override
     public int getPriority() {
+        // TODO: 2019-03-27 priority
         return 0;
     }
 
@@ -58,23 +52,22 @@ public class HandlerEnergyStorageBusInterface
 
     @Override
     public boolean validForPass(int i) {
-        return false;
+        return true;
     }
 
     @Override
     public IAEEnergyStack injectItems(IAEEnergyStack iaeEnergyStack, Actionable actionable, IActionSource iActionSource) {
-        return null;
+        return iEnergyInterface.getOuterGridInventory().injectItems(iaeEnergyStack, actionable, iActionSource);
     }
 
     @Override
     public IAEEnergyStack extractItems(IAEEnergyStack iaeEnergyStack, Actionable actionable, IActionSource iActionSource) {
-        return null;
+        return iEnergyInterface.getOuterGridInventory().extractItems(iaeEnergyStack, actionable, iActionSource);
     }
 
     @Override
     public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> iItemList) {
-
-        return null;
+        return iEnergyInterface.getOuterGridInventory().getAvailableItems(iItemList);
     }
 
     @Override

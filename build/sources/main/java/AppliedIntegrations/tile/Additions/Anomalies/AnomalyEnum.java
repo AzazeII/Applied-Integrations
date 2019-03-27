@@ -3,11 +3,14 @@ package AppliedIntegrations.tile.Additions.Anomalies;
 import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
+import AppliedIntegrations.Blocks.Additions.BlockWhiteHole;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
+import appeng.api.config.Actionable;
 import appeng.api.util.AEPartLocation;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -16,7 +19,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.List;
-import java.util.TreeSet;
 import java.util.function.Consumer;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
@@ -26,7 +28,7 @@ public enum AnomalyEnum {
     // Consumes all energy from machines in range
     EMP((t) -> {
         // Get positions in range
-        List<BlockPos> positions = t.getBlocksInRadius(Math.pow(t.getMaxDestructionRange(), 2));
+        List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 1.5);
 
 
         // Iterate over all positions
@@ -69,7 +71,7 @@ public enum AnomalyEnum {
 
                     // TODO: 2019-03-26 Add not only RF
                     // Extract all energy types from this tile
-                    t.addStack(AEEnergyStack.fromStack(new EnergyStack(RF, helper.extractAllStored(22000))));
+                    t.addStack(AEEnergyStack.fromStack(new EnergyStack(RF, helper.extractAllStored(22000))), Actionable.MODULATE);
                 }
             }
         }
@@ -78,27 +80,31 @@ public enum AnomalyEnum {
     // Entangles two holes together
     EntangleHoles((t) -> {
         // Get positions
-        List<BlockPos> positions = t.getBlocksInRadius(Math.pow(t.getMaxDestructionRange(), 2));
+        List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 1.5);
+
+        // Check not entangled yet
+        if(t.isEntangled())
+            return;
 
         // Iterate over all positions
         for(BlockPos pos : positions){
-            // Get tile entity
-            TileEntity tile = t.getWorld().getTileEntity(pos);
+            // Get block
+            Block block = t.getWorld().getBlockState(pos).getBlock();
 
-            // Check not null
-            if(tile == null)
-                // Skip
-                continue;
-
-            // Check if tile is white hole
-            if(tile instanceof TileWhiteHole){
+            // Check if block is white hole
+            if(block instanceof BlockWhiteHole){
+                AILog.chatLog("Found white hole");
                 // Get white hole
-                TileWhiteHole whiteHole = (TileWhiteHole) tile;
+                TileWhiteHole whiteHole = (TileWhiteHole) t.getWorld().getTileEntity(pos);
+
+                // Check not null
+                if(whiteHole == null)
+                    continue;
 
                 // Check if white and black hole not entangled yet
-                if(whiteHole.isEntangled() || t.isEntangled())
+                if(whiteHole.isEntangled())
                     // break
-                    break;
+                    continue;
 
                 // Entangle
                 whiteHole.setEntangledHole(t);
@@ -110,7 +116,7 @@ public enum AnomalyEnum {
     // Shifts block's entropy
     EntropyShift((t) -> {
         // Get list of blocks in square on range
-        List<BlockPos> positions = t.getBlocksInRadius(Math.pow(t.getMaxDestructionRange(), 2));
+        List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 1.5);
 
         // Iterate over all positions
         positions.forEach((pos) -> {

@@ -3,6 +3,7 @@ package AppliedIntegrations.Parts.Energy;
 import java.util.*;
 
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
@@ -29,6 +30,7 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
 import appeng.api.storage.*;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.block.Block;
@@ -46,57 +48,84 @@ import javax.annotation.Nullable;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.J;
+import static java.util.Collections.singletonList;
 
 /**
  * @Author Azazell
  */
 public class PartEnergyStorage
 		extends AIPart
-		implements ICellContainer, IMEMonitorHandlerReceiver<IAEEnergyStack>, IGridTickable  {
+		implements ICellContainer, IGridTickable  {
 
+	// Size of filter
 	public static final int FILTER_SIZE = 18;
+
+	// List of all energies filtered
 	private final Vector<LiquidAIEnergy> filteredEnergies = new Vector<>();
+
+	// Handler for tile/interface
 	private IMEInventoryHandler<IAEEnergyStack> handler;
+
+	// Was active?
 	private boolean lastActive = false;
 
-	/**
-	 * Creates the bus
-	 */
 	public PartEnergyStorage()
 	{
 		// Call super
 		this( PartEnum.EnergyStorageBus, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT );
 
-		// Pre-fill the list with nulls
+		// Iterate until filter size
 		for( int index = 0; index < this.FILTER_SIZE; index++ ) {
+			// Fill vector
 			this.filteredEnergies.add(null);
 		}
 	}
 
+	// Called to allow mana storage bus extend from this bus
     protected PartEnergyStorage(PartEnum manaStorage, SecurityPermissions inject, SecurityPermissions extract) {
 		super(manaStorage, inject, extract);
 	}
 
-	@Override
-	public void onNeighborChanged(IBlockAccess access, BlockPos pos, BlockPos neighbor) {
-		if (pos == null || neighbor == null)
-			return;
-		if (pos.offset(this.getSide().getFacing()).equals(neighbor) && this.getGridNode() != null) {
-			IGrid grid = this.getGridNode().getGrid();
-			if (grid != null) {
+	public void postCellEvent(){
+		// Get node
+		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+		// Check notNull
+		if (node != null) {
+			// Get grid
+			IGrid grid = node.getGrid();
+			// Check not null
+			if(grid != null) {
+				// Post update
 				grid.postEvent(new MENetworkCellArrayUpdate());
 			}
 		}
+	}
 
+	@Override
+	public void onNeighborChanged(IBlockAccess access, BlockPos pos, BlockPos neighbor) {
+		// Check not null
+		if (pos == null || neighbor == null)
+			return;
+		// Check if changed neighbor was next to storage bus's side
+		if (pos.offset(this.getSide().getFacing()).equals(neighbor)) {
+			// Notify cell array
+			postCellEvent();
+		}
+
+		// Check not null
 		if (getFacingContainer() != null) {
 			if (getFacingContainer() instanceof IEnergyInterface) {
-				handler = new HandlerEnergyStorageBusInterface();
+				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)getFacingContainer());
+
 			} else if (getFacingContainer().hasCapability(CapabilityEnergy.ENERGY, getSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.FE);
+
 			} else if (IntegrationsHelper.instance.isLoaded(Ember) && getFacingContainer().hasCapability(EmberCapabilityProvider.emberCapability, getSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.Ember);
+
 			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.J) && getFacingContainer().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.Joules);
+
 			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.EU) && getFacingContainer() instanceof IEnergySink) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.EU);
 			}
@@ -107,7 +136,6 @@ public class PartEnergyStorage
 	public float getCableConnectionLength(AECableType aeCableType) {
 		return 2;
 	}
-
 
 	@Override
 	public TickingRequest getTickingRequest( final IGridNode node )
@@ -167,13 +195,12 @@ public class PartEnergyStorage
 
 	@Override
 	public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> channel) {
+		// Check if channel present working channel, and handler not null
 		if (channel != this.getChannel() || this.handler == null)
 			return new LinkedList<>();
-		LinkedList<IMEInventoryHandler> list = new LinkedList<>();
 
-		list.add(this.handler);
-
-		return list;
+		// Return only one handler for tile
+		return singletonList(handler);
 	}
 
 	@Override
@@ -182,32 +209,28 @@ public class PartEnergyStorage
 	}
 
 	@Override
-	public boolean isValid(Object o) {
-		return false;
-	}
-
-	@Override
-	public void postChange(IBaseMonitor<IAEEnergyStack> iBaseMonitor, Iterable<IAEEnergyStack> iterable, IActionSource iActionSource) {
-
-	}
-
-	@Override
-	public void onListUpdate() {
-
-	}
-
-	@Override
 	public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
-
+		// Check if inventory not null
+		if (iCellInventory != null)
+			// Persist inventory
+			iCellInventory.persist();
+		// Mark dirty
+		getHostTile().getWorld().markChunkDirty(getHostTile().getPos(), getHostTile());
 	}
 
 	public TileEntity getFacingContainer() {
+		// Create candidate
 		TileEntity candidate = getFacingTile();
 
+		// Check not null
 		if(candidate == null)
 			return null;
-		for(Capability capability : getAllowedCappabilities()){
+
+		// Iterate over capabilities
+		for(Capability capability : getAllowedCappabilities()) {
+			// Check if candidate has capability
 			if(candidate.hasCapability(capability, getSide().getFacing()))
+				// Return candidate
 				return candidate;
 		}
 
@@ -215,11 +238,14 @@ public class PartEnergyStorage
 	}
 
 	private List<Capability> getAllowedCappabilities() {
+		// Create capability list
 		ArrayList<Capability> capabilities = new ArrayList<>();
+
+		// Add FE by default
 		capabilities.add(CapabilityEnergy.ENERGY);
 
 		// (If loaded -> add to allowed) blocks:
-		if(IntegrationsHelper.instance.isLoaded(Ember))
+		if(IntegrationsHelper.instance.isLoaded(Ember) && AIConfig.enablEmberFeatures)
 			capabilities.add(EmberCapabilityProvider.emberCapability);
 		if(IntegrationsHelper.instance.isLoaded(J)) {
 			capabilities.add(Capabilities.ENERGY_STORAGE_CAPABILITY);
@@ -234,17 +260,15 @@ public class PartEnergyStorage
 		return false;
 	}
 
-	public void saveContainer(TileEntity tileEntity) {
-
-	}
 
 	@MENetworkEventSubscribe
 	public void updateChannels(final MENetworkChannelsChanged changedChannels) {
 		final boolean currentActive = this.getGridNode().isActive();
 		if (this.lastActive != currentActive) {
 			this.lastActive = currentActive;
-			getGridNode().getGrid().postEvent(new MENetworkCellArrayUpdate());
 			this.host.markForUpdate();
+
+			postCellEvent();
 		}
 	}
 }

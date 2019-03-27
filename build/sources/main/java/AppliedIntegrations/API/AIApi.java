@@ -17,7 +17,6 @@ public abstract class AIApi {
 		@Override
 		public void addHandlersForMEPylon(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, Class<? extends WhiteHoleSingularityInventoryHandler<?>> handlerClassB,
 										  IStorageChannel chan) {
-			AILog.info("Generating ME pylon handler pair from " + handlerClassA.toString() + " and " + handlerClassB.toString() + " for channel: " + chan.toString());
 			TileMEPylon.addBlackHoleHandler(handlerClassA, chan);
 			TileMEPylon.addWhiteHoleHandler(handlerClassB, chan);
 		}

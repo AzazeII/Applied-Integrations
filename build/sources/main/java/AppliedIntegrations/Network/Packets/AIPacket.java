@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -65,7 +66,7 @@ public abstract class AIPacket implements IMessage {
         return null;
     }
 
-    private World getWorld(ByteBuf buf) {
+    public World getWorld(ByteBuf buf) {
         World world = DimensionManager.getWorld( buf.readInt() );
 
         if( FMLCommonHandler.instance().getSide() == Side.CLIENT )
@@ -80,7 +81,6 @@ public abstract class AIPacket implements IMessage {
     }
 
     protected void setPart(ByteBuf buf, AIPart part){
-        // When i wrote "writePos", and saw this line, i punched my head with finger :)
         buf.writeLong(new BlockPos(x,y,z).toLong());
 
         setWorld(buf, w);
@@ -99,14 +99,11 @@ public abstract class AIPacket implements IMessage {
     }
 
     protected void writePos(BlockPos pos, ByteBuf buf){
-        // read comments at line 83
-        buf.writeInt(pos.getX());
-        buf.writeInt(pos.getY());
-        buf.writeInt(pos.getZ());
+        buf.writeLong(pos.toLong());
     }
 
     protected BlockPos readPos(ByteBuf buf){
-        return new BlockPos(buf.readInt(), buf.readInt(), buf.readInt());
+        return BlockPos.fromLong(buf.readLong());
     }
 
     protected void writeTile(TileEntity tile, ByteBuf buf){
@@ -117,5 +114,13 @@ public abstract class AIPacket implements IMessage {
     protected TileEntity readTile(ByteBuf buf){
         BlockPos pos = readPos(buf);
         return getWorld(buf).getTileEntity(pos);
+    }
+
+    protected void writeVec(Vec3d vecA, ByteBuf buf) {
+        writePos(new BlockPos(vecA), buf);
+    }
+
+    protected Vec3d readVec(ByteBuf buf) {
+        return new Vec3d(readPos(buf));
     }
 }

@@ -1,16 +1,25 @@
 package AppliedIntegrations.tile.Additions.singularities;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.ISingularity;
-import AppliedIntegrations.Blocks.Additions.BlockMEPylon;
+import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketMassChange;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnergyList;
+import AppliedIntegrations.grid.Mana.AEManaStack;
+import AppliedIntegrations.grid.Mana.ManaList;
 import AppliedIntegrations.tile.Additions.Anomalies.AnomalyEnum;
 import AppliedIntegrations.tile.Additions.TimeHandler;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
+import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.channels.IFluidStorageChannel;
+import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import appeng.block.networking.BlockCableBus;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.FluidList;
 import appeng.util.item.AEItemStack;
@@ -29,8 +38,9 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.*;
@@ -45,11 +55,11 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
     private TimeHandler anomalyTriggerHandler = new TimeHandler();
 
-    private TimeHandler entropyChangeHandler = new TimeHandler();
-
     private Random randomAnomaly = new Random();
 
     private float lastGrowth = 1;
+
+    private List<TileMEPylon> listeners = new ArrayList<>();
 
     // Count of mass added per any operation
     public int MASS_ADDED = 10;
@@ -63,8 +73,8 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
     // List of all ae energies stored in this singularity
     public EnergyList storedEnergies = new EnergyList();
 
-    // List of all me pylons, which operates this tile
-    private List<TileMEPylon> listeners = new ArrayList<>();
+    // List of all ae mana stored in this singularity
+    public ManaList storedMana = new ManaList();
 
     // List of size factor
     public static LinkedHashMap<Long, Float> sizeFactor = new LinkedHashMap<>();
@@ -102,6 +112,17 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
     }
 
     @Override
+    public void invalidate(){
+        super.invalidate();
+
+        // Iterate over listeners
+        for(TileMEPylon pylon : listeners){
+            // Invalidate singularity
+            pylon.setSingularity(null);
+        }
+    }
+
+    @Override
     public void update() {
         if(!world.isRemote)
             // Modulate gravity
@@ -128,17 +149,6 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
         //anomaly.action.accept(this);
     }
 
-    @Override
-    public void invalidate() {
-        super.invalidate();
-        if (world != null && !world.isRemote) {
-            // Iterate over listeners
-            for(TileMEPylon pylon : listeners){
-                // Set singularity to null
-                pylon.operatedTile = null;
-            }
-        }
-    }
      /* Factor of size (how many items stored in):
         1. 1к - 81280 - *1.2
         2. 4k - 325 120 - *1.3
@@ -217,7 +227,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
             // Remove from world
             world.removeEntity(entity);
             // Increment hole's mass
-            mass += MASS_ADDED;
+            addMass(MASS_ADDED);
             // Mark for update
             markDirty();
             // return true, as entity was destroyed
@@ -329,14 +339,14 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
                         continue;
 
                     // Check if block is ME pylon
-                    if (b instanceof BlockMEPylon) {
+                    /*if (b instanceof BlockMEPylon) {
                         // Provided this, as singularity to pylon
                         TileMEPylon pylon = (TileMEPylon)world.getTileEntity(blockPos);
 
                         // Check if pylon not already operating black/white hole
                         if(pylon != null && !pylon.hasSingularity()) {
                             // Set tile to this
-                            pylon.operatedTile = this;
+                            pylon.singularity = this;
 
                             // Update cell array
                             pylon.postCellEvent();
@@ -346,19 +356,14 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
                         }
 
                         continue;
-                    }
-
-                    // Also ignore Cable bus block
-                    if (b instanceof BlockCableBus)
-                        continue;
-
+                    }*/
 
                     // Check if point A crosses radius
                     if(crossesRadius(blockPos, pos, getBlackHoleRadius())){
                         // Delete this object forever
                         world.setBlockToAir(blockPos);
                         // Add mass
-                        addStack(AEItemStack.fromItemStack(new ItemStack(world.getBlockState(pos).getBlock())));
+                        addStack(AEItemStack.fromItemStack(new ItemStack(world.getBlockState(pos).getBlock())), Actionable.MODULATE);
                     }
 
                     // Check if range to this block is lest or equal to break range
@@ -436,15 +441,8 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
     public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
         if(hand == EnumHand.MAIN_HAND) {
             if (!world.isRemote) {
-                if(p.isSneaking()) {
-                    AILog.chatLog("Mass: " + this.mass);
-                    AILog.chatLog("Destruction range: " + this.getMaxDestructionRange());
-
-                    AILog.chatLog("Growth factor: " + getGrowthFactor());
-
-                }else {
-                    AnomalyEnum.EntropyShift.action.accept(this);
-                    AnomalyEnum.EMP.action.accept(this);
+                if(!p.isSneaking()) {
+                    AnomalyEnum.EntangleHoles.action.accept(this);
                 }
             }
         }
@@ -453,31 +451,50 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
     @Override
     public void addMass(long l) {
+        // Notify client
+        NetworkHandler.sendToAllInRange(new PacketMassChange(this, this.getPos()),
+                new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+
         // Add mass
         mass+=l;
     }
 
     @Override
-    public void addStack(IAEStack<?> stack) {
+    public IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable) {
         // 1) Check for stack
         // 2) Add stack to proper list
         if(stack == null)
-            return;
+            return null;
 
         if(stack instanceof AEItemStack){
             storedItems.add((AEItemStack)stack);
-        }else if(stack instanceof AEFluidStack){
-            storedFluids.add((AEFluidStack)stack);
+        }else if(stack instanceof AEFluidStack) {
+            storedFluids.add((AEFluidStack) stack);
+        }else if(stack instanceof AEManaStack){
+            storedMana.add((AEManaStack) stack);
         }else if(stack instanceof AEEnergyStack){
             storedEnergies.add((AEEnergyStack)stack);
         }
 
         // Add mass
         addMass(stack.getStackSize() * MASS_ADDED);
+
+        // Ignored
+        return null;
     }
 
     @Override
-    public IItemList<?> getList(Class<?> stackClassOperated) {
+    public IItemList<?> getList(IStorageChannel chan) {
+        // Check channel
+        if(chan == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class))
+            return storedItems;
+        if(chan == AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class))
+            return storedFluids;
+        if(AIConfig.enableEnergyFeatures && chan == AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class))
+            return storedEnergies;
+        if(AIConfig.enableManaFeatures && chan == AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class) && Loader.isModLoaded("botania"))
+            return storedMana;
+
         return null;
     }
 
@@ -499,6 +516,12 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
     @Override
     public void setEntangledHole(ISingularity t) {
+        AILog.chatLog("Setting entangled singularity to " + t.toString());
         entangledHole = (TileWhiteHole) t;
+    }
+
+    @Override
+    public void addListener(TileMEPylon pylon) {
+        listeners.add(pylon);
     }
 }

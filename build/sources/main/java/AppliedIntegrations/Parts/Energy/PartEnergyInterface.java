@@ -454,30 +454,32 @@ public class PartEnergyInterface
 			 * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
 			 * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
 			 */
-			if (bar == null) {
-				if (IntegrationsHelper.instance.isLoaded(Ember)) {
-					if (getFacingTile() instanceof TileEntityReceiver) {
-						TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
-						IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
+			if(AIConfig.enablEmberFeatures) {
+				if (bar == null) {
+					if (IntegrationsHelper.instance.isLoaded(Ember)) {
+						if (getFacingTile() instanceof TileEntityReceiver) {
+							TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
+							IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
 
-						// Check if facing is correct
-						if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
-							IEmberCapability emberStorage = emberReceptor.capability;
+							// Check if facing is correct
+							if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
+								IEmberCapability emberStorage = emberReceptor.capability;
 
-							if (emberStorage.getEmber() > 0) {
-								emberStorage.removeAmount((Double) getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
+								if (emberStorage.getEmber() > 0) {
+									emberStorage.removeAmount((Double) getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
+								}
 							}
-						}
-					} else if (getFacingTile() instanceof TileEntityEmitter) {
-						TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
-						IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
+						} else if (getFacingTile() instanceof TileEntityEmitter) {
+							TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
+							IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
 
-						// Check if facing is correct
-						if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
-							IEmberCapability emberStorage = emberEmitter.capability;
+							// Check if facing is correct
+							if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
+								IEmberCapability emberStorage = emberEmitter.capability;
 
-							if (((EmberInterfaceStorageDuality) getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
-								getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount((Double) getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
+								if (((EmberInterfaceStorageDuality) getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
+									getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount((Double) getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
+								}
 							}
 						}
 					}

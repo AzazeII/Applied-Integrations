@@ -29,9 +29,11 @@ public class NetworkHandler {
 
         Handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
 
-        Handler.registerMessage(HandlerSingularityChange.class, PacketSingularityChange.class, packetId++, Side.CLIENT);
-
         Handler.registerMessage(HandlerVectorSync.class, PacketVectorSync.class, packetId++, Side.CLIENT);
+
+        Handler.registerMessage(HandlerMassChange.class, PacketMassChange.class, packetId++, Side.CLIENT);
+
+        Handler.registerMessage(HandlerSingularitySync.class, PacketSingularitySync.class, packetId++, Side.CLIENT);
     }
 
     public static final void registerServerPackets(){
@@ -45,6 +47,10 @@ public class NetworkHandler {
 
     public static final void sendToDimension(IMessage message, int dimensionId) {
         NetworkHandler.Handler.sendToDimension(message, dimensionId);
+    }
+
+    public static final void sendToAllInRange(IMessage message, NetworkRegistry.TargetPoint range) {
+        NetworkHandler.Handler.sendToAllAround(message, range);
     }
 
     public static final void sendToServer(IMessage message) {

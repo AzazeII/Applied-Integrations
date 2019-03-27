@@ -35,7 +35,6 @@ public class EmberInterfaceStorageDuality extends DefaultEmberCapability impleme
 
     @Override
     public Double receive(Double value, boolean simulate) {
-
         return addAmount(value, !simulate);
     }
 

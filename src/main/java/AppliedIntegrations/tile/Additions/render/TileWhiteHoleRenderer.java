@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Additions.render;
 
+import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -18,6 +19,8 @@ public class TileWhiteHoleRenderer extends TileEntitySpecialRenderer<TileWhiteHo
         // Now the fun begins :upside_down:
         // Get radius from tile
         double radius = te.getHoleRadius();
+        // Add cosine of world time (always <= 1) to radius
+        radius += Math.cos(te.getWorld().getWorldTime()) * 0.01;
 
         // Save matrix to stack
         GlStateManager.pushMatrix();
@@ -46,7 +49,6 @@ public class TileWhiteHoleRenderer extends TileEntitySpecialRenderer<TileWhiteHo
         GlStateManager.enableTexture2D();
         // Repick color
         GlStateManager.color(1,1,1);
-
         // End drawing
         GlStateManager.popMatrix();
     }

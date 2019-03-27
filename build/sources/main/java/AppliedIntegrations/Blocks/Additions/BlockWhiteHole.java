@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 /**
  * @Author Azazell
  */
-public class BlockWhiteHole extends BlockSingularity {
+public class BlockWhiteHole extends BlockBlackHole {
     public BlockWhiteHole(String blockWhiteHole, String white_hole) {
         super(blockWhiteHole, white_hole);
     }

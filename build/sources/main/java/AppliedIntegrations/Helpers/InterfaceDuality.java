@@ -1,5 +1,6 @@
 package AppliedIntegrations.Helpers;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.*;
 import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
@@ -191,7 +192,7 @@ public class InterfaceDuality implements IInterfaceDuality{
             // FE (RF) Capability
             return (T) this.getEnergyStorage(RF, side);
             // Ember capability
-        }else if(IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
+        }else if(AIConfig.enablEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
             return (T) this.getEnergyStorage(Ember, side);
             // Joule capability
         }else if(IntegrationsHelper.instance.isLoaded(J) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
@@ -207,7 +208,7 @@ public class InterfaceDuality implements IInterfaceDuality{
         // Register FE capability
         if (capability == Capabilities.FORGE_ENERGY) {
             return true;
-        } else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
+        } else if (AIConfig.enablEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
             return true;
         } else if (IntegrationsHelper.instance.isLoaded(J)){
             if(capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||

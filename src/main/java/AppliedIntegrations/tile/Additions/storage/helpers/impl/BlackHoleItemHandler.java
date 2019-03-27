@@ -1,7 +1,6 @@
 package AppliedIntegrations.tile.Additions.storage.helpers.impl;
 
 import AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler;
-import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
@@ -20,7 +19,7 @@ public class BlackHoleItemHandler extends BlackHoleSingularityInventoryHandler<I
             // Modulate extraction
             if(actionable == MODULATE){
                 // Add data to storage list
-                singularity.addStack(iaeItemStack);
+                singularity.addStack(iaeItemStack, actionable);
             }
             // Return null, as all items was extracted
             return null;

@@ -2,6 +2,7 @@ package AppliedIntegrations.tile.Additions;
 
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketSingularitySync;
 import AppliedIntegrations.Network.Packets.PacketVectorSync;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.entities.EntityBlackHole;
@@ -28,6 +29,7 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -62,17 +64,16 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
     }
 
     public boolean activate(EnumHand hand, EntityPlayer p) {
+        // Only call when player clicking with right hand
         if(hand == EnumHand.MAIN_HAND) {
             // Call only on server
             if(!world.isRemote) {
                 // Update only on server
                 this.renderingDirection = p.getPosition();
 
-                // Trace shot between this.pos and position, set by player
-                RayTraceResult trace = world.rayTraceBlocks(new Vec3d(pos), new Vec3d(renderingDirection), true);
-
-                // Set block
-                world.setBlockState(trace.getBlockPos(), BlocksEnum.BlackHole.b.getDefaultState());
+                // Notify client
+                NetworkHandler.sendToAllInRange(new PacketVectorSync(this.renderingDirection, this.getPos()),
+                        new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
 
                 // True result
                 return true;

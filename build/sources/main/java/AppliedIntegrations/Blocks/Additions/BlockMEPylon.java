@@ -93,12 +93,10 @@ public class BlockMEPylon extends BlockAIRegistrable {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
-        if (!p.isSneaking()) {
-            // Pass activated to tile entity ( nothing new :) )
-            if (tile instanceof TileMEPylon) {
-                // Pass activate to tile
-                return ((TileMEPylon) tile).activate(hand, p);
-            }
+        // Pass activated to tile entity ( nothing new :) )
+        if (tile instanceof TileMEPylon) {
+            // Pass activate to tile
+            return ((TileMEPylon) tile).activate(hand, p);
         }
         return false;
     }

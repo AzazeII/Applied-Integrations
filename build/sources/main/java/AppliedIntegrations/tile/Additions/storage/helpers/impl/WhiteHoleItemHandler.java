@@ -17,13 +17,8 @@ public class WhiteHoleItemHandler extends WhiteHoleSingularityInventoryHandler<I
     public IAEItemStack extractItems(IAEItemStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
         // Check if there is singularity
         if(singularity != null){
-            // Modulate extraction
-            if(actionable == MODULATE){
-                // Remove data from storage list
-                singularity.addStack(iaeItemStack);
-                // Return null, as all items was extracted
-                return iaeItemStack;
-            }
+            // Remove data from storage list, and return extracted amount
+            return (IAEItemStack)singularity.addStack(iaeItemStack, actionable);
         }
         return null;
     }
@@ -33,7 +28,7 @@ public class WhiteHoleItemHandler extends WhiteHoleSingularityInventoryHandler<I
         // Check if there is singularity
         if(singularity != null){
             // Iterate over all items in stack
-            for(IAEStack<?> stack : singularity.getList(IAEItemStack.class)){
+            for(IAEStack<?> stack : singularity.getList(getChannel())){
                 // Add stack to already existed
                 iItemList.add((IAEItemStack)stack);
             }

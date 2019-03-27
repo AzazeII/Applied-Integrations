@@ -4,28 +4,29 @@ import AppliedIntegrations.tile.Additions.TileMETurretFoundation;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 public class PacketVectorSync extends AIPacket {
 
     public BlockPos vecA;
-    public TileMETurretFoundation vecB;
+    public BlockPos tile;
 
     public PacketVectorSync(){}
 
-    public PacketVectorSync(BlockPos playerPos, TileMETurretFoundation tile) {
-        vecA = playerPos;
-        vecB = tile;
+    public PacketVectorSync(BlockPos playerPos, BlockPos tile) {
+        this.vecA = playerPos;
+        this.tile = tile;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        writePos(vecA, buf);
-        writeTile(vecB, buf);
+        vecA = readPos(buf);
+        tile = readPos(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        vecA = readPos(buf);
-        vecB = (TileMETurretFoundation)readTile(buf);
+        writePos(vecA, buf);
+        writePos(tile, buf);
     }
 }

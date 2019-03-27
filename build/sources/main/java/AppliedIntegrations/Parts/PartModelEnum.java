@@ -51,14 +51,14 @@ public enum PartModelEnum implements IPartModel {
     STORAGE_INTERFACE_MANA_HAS_CHANNEL(STORAGE_INTERFACE_MANA_BASE, "mana_interface_has_channel"),
 
     ANNIHILATION_BASE("annihilation_base"),
-    ANNIHILATION_HAS_CHANNEL(ANNIHILATION_BASE, "plane_has_channel"),
-    ANNIHILATION_ON(ANNIHILATION_BASE, "plane_on"),
-    ANNIHILATION_OFF(ANNIHILATION_BASE, "plane_off"),
+    ANNIHILATION_OFF(ANNIHILATION_BASE,"annihilation_off"),
+    ANNIHILATION_HAS_CHANNEL(ANNIHILATION_BASE, "annihilation_has_channel"),
+    ANNIHILATION_ON(ANNIHILATION_BASE, "annihilation_on"),
 
     FORMATION_BASE("formation_base"),
-    FORMATION_HAS_CHANNEL(FORMATION_BASE, "plane_has_channel"),
-    FORMATION_ON(FORMATION_BASE, "plane_on"),
-    FORMATION_OFF(FORMATION_BASE, "plane_off");
+    FORMATION_OFF(FORMATION_BASE,"formation_off"),
+    FORMATION_HAS_CHANNEL(FORMATION_BASE, "formation_has_channel"),
+    FORMATION_ON(FORMATION_BASE, "formation_on");
 
     List<ResourceLocation> locations;
 

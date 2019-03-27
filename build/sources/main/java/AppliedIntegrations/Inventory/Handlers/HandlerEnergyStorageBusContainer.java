@@ -43,18 +43,34 @@ public class HandlerEnergyStorageBusContainer
      */
     @Override
     public IAEEnergyStack injectItems(IAEEnergyStack input, Actionable type, IActionSource src) {
+        // Check not null
         if(input == null)
-            return null;
+            return input;
+
+        // Check meaningful
         if(!input.isMeaningful())
-            return null;
+            return input;
+
         AILog.info("Inject request; StackSize: " + input.getStack().amount + " EnergyName: " + input.getStack().getEnergyName());
+        AILog.info("Type: " + type.name());
+
+        // Create helper
         CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
 
-        int number = helper.receiveEnergy(input.getStackSize(), type == Actionable.SIMULATE, this.type.energy);
-        int notAdded = (int)input.getStackSize() - number;
+        // Get number injected
+        int added = helper.receiveEnergy(input.getStackSize(), type == Actionable.SIMULATE, this.type.energy);
 
+        AILog.info("Added: " + added);
+
+        // Calculate not added
+        int notAdded = (int)input.getStackSize() - added;
+
+        // Check greater than 0
         if(notAdded > 0)
+            // Return value not added
             return input.copy().setStackSize(notAdded);
+
+        // Don't return value at all
         return null;
     }
 
@@ -68,17 +84,24 @@ public class HandlerEnergyStorageBusContainer
      */
     @Override
     public IAEEnergyStack extractItems(IAEEnergyStack request, Actionable mode, IActionSource src) {
+        // Check not null
         if(request == null)
             return null;
+
+        // Check meaningful
         if(!request.isMeaningful())
             return null;
 
+        // Create capability helper
         CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
 
-        int added = helper.extractEnergy(request.getStackSize(), mode == Actionable.SIMULATE, this.type.energy);
+        // Get extracted value
+        int extracted = helper.extractEnergy(request.getStackSize(), mode == Actionable.SIMULATE, this.type.energy);
 
-        if(added > 0)
-            return request.copy().setStackSize(added);
+        // Check greater than 0
+        if(extracted > 0)
+            // Return extracted amount
+            return request.copy().setStackSize(extracted);
         return null;
     }
 
@@ -91,25 +114,28 @@ public class HandlerEnergyStorageBusContainer
      */
     @Override
     public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> out) {
+        // Create capability helper
         CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
 
+        // Get stored energy
         int stored = helper.getStored(type.energy);
 
-        // Ignore tesla
-        // TODO: 2019-02-27 Add full tesla, ember, mekanism, eu capability
-        int amount = stored;
-        out.add(AEEnergyStack.fromStack(new EnergyStack(type.energy, amount)));
+        // Add stored energy to output
+        out.add(AEEnergyStack.fromStack(new EnergyStack(type.energy, stored)));
 
+        // Return given list
         return out;
     }
 
     @Override
     public AccessRestriction getAccess() {
+        // TODO: 2019-03-27 Sync with gui
         return AccessRestriction.READ_WRITE;
     }
 
     @Override
     public boolean isPrioritized(IAEEnergyStack input) {
+        // TODO: check line 147
         return false;
     }
 
@@ -117,7 +143,7 @@ public class HandlerEnergyStorageBusContainer
     public boolean canAccept(IAEEnergyStack input) {
         if (this.storage == null)
             return false;
-        return false;
+        return true;
     }
 
     @Override
@@ -136,9 +162,6 @@ public class HandlerEnergyStorageBusContainer
         return true;
     }
 
-    /**
-     * @return the type of channel your handler should be part of
-     */
     @Override
     public IStorageChannel<IAEEnergyStack> getChannel() {
         return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);

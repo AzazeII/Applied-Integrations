@@ -19,7 +19,7 @@ public class BlackHoleEnergyHandler extends BlackHoleSingularityInventoryHandler
             // Modulate extraction
             if(actionable == MODULATE){
                 // Add data to storage list
-                singularity.addStack(iaeItemStack);
+                singularity.addStack(iaeItemStack, actionable);
             }
             // Return null, as all items was injected
             return null;

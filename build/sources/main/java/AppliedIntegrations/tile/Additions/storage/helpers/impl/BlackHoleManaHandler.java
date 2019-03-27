@@ -2,7 +2,6 @@ package AppliedIntegrations.tile.Additions.storage.helpers.impl;
 
 import AppliedIntegrations.API.Botania.IAEManaStack;
 import AppliedIntegrations.API.Botania.IManaStorageChannel;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -20,7 +19,7 @@ public class BlackHoleManaHandler extends BlackHoleSingularityInventoryHandler<I
             // Modulate extraction
             if(actionable == MODULATE){
                 // Add data to storage list
-                singularity.addStack(iaeItemStack);
+                singularity.addStack(iaeItemStack, actionable);
             }
             // Return null, as all items was extracted
             return null;

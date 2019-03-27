@@ -3,7 +3,7 @@ package AppliedIntegrations.Blocks;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.Additions.BlockMEPylon;
 import AppliedIntegrations.Blocks.Additions.BlockMETurret;
-import AppliedIntegrations.Blocks.Additions.BlockSingularity;
+import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
 import AppliedIntegrations.Blocks.Additions.BlockWhiteHole;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusCore;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusPort;
@@ -36,7 +36,7 @@ public enum BlocksEnum {
     BLBPort(new BlockLogicBusPort("BlockLogicBusPort", "ME Logic Bus Port"),TileEnum.TLBPort, AIConfig.enableLogicBus),
 
     BTurret(new BlockMETurret("BlockMETurret", "ME Turret"), TileEnum.METurret, AIConfig.enableBlackHoleStorage),
-    BlackHole(new BlockSingularity("BlockSingularity", "Black Hole"), TileEnum.BlackHole, AIConfig.enableBlackHoleStorage),
+    BlackHole(new BlockBlackHole("BlockSingularity", "Black Hole"), TileEnum.BlackHole, AIConfig.enableBlackHoleStorage),
     WhiteHole(new BlockWhiteHole("BlockWhiteHole", "White Hole"), TileEnum.WhiteHole, AIConfig.enableBlackHoleStorage),
     BlockMEPylon(new BlockMEPylon("BlockMEPylon", "ME Pylon"), TileEnum.MEPylon, AIConfig.enableBlackHoleStorage);
     private static LinkedHashMap<Block, ItemBlock> itemBlocks = new LinkedHashMap<>();

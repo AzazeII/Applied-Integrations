@@ -1,7 +1,8 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
-import appeng.api.storage.data.IAEItemStack;
+import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
+import appeng.api.config.Actionable;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -16,9 +17,9 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 public interface ISingularity {
     void addMass(long l);
 
-    void addStack(IAEStack<?> stack);
+    IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable);
 
-    IItemList<?> getList(Class<?> stackClassOperated);
+    IItemList<?> getList(IStorageChannel iStorageChannel);
 
     @SideOnly(CLIENT)
     void setMassFromServer(long mass);
@@ -28,4 +29,6 @@ public interface ISingularity {
     boolean isEntangled();
 
     void setEntangledHole(ISingularity t);
+
+    void addListener(TileMEPylon pylon);
 }
