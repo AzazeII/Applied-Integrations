@@ -1,0 +1,6 @@
+{
+  "parent": "appliedenergistics2:item/part/annihilation_plane",
+  "textures": {
+    "plane": "appliedintegrations:blocks/parts/energy.formation.face"
+  }
+}

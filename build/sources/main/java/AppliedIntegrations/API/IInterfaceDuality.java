@@ -1,5 +1,6 @@
 package AppliedIntegrations.API;
 
+import AppliedIntegrations.API.Capabilities.IInterfaceStorageDuality;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;

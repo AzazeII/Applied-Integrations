@@ -10,6 +10,7 @@ import AppliedIntegrations.grid.Mana.ManaList;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
@@ -126,7 +127,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 
             // Update cell array
             for(TileMEPylon pylon : listeners)
-                pylon.postCellEvent();
+                pylon.postCellEvent(new MENetworkCellArrayUpdate());
 
             // Return stack
             return Return;
@@ -180,7 +181,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 
         // Update cell array
         for(TileMEPylon pylon : listeners)
-            pylon.postCellEvent();
+            pylon.postCellEvent(new MENetworkCellArrayUpdate());
     }
 
     @Override

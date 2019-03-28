@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "normal": {
+      "model": "appliedintegrations:white_hole"
+    },
+    "inventory": {
+      "model": "appliedintegrations:item/white_hole"
+    }
+  }
+}

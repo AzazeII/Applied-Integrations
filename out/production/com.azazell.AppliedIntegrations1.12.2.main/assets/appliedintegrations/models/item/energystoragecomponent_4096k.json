@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "appliedintegrations:items/storage.component.4096k"
+  }
+}

@@ -18,6 +18,7 @@ import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.events.MENetworkEvent;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellInventory;
 import appeng.api.storage.IMEInventoryHandler;
@@ -54,6 +55,7 @@ public class TileMEPylon extends AITile implements ICellContainer {
     private LinkedHashMap<IStorageChannel, WhiteHoleSingularityInventoryHandler<?>> activeWhiteHoleHandlers = new LinkedHashMap<>();
 
     private boolean activeHandlersLoaded = false;
+    private int IdleDrain = 0;
 
     public ISingularity operatedTile;
 
@@ -121,21 +123,6 @@ public class TileMEPylon extends AITile implements ICellContainer {
         return operatedTile != null;
     }
 
-    public void postCellEvent(){
-        // Get node
-        IGridNode node = getGridNode(AEPartLocation.INTERNAL);
-        // Check notNull
-        if (node != null) {
-            // Get grid
-            IGrid grid = node.getGrid();
-            // Check not null
-            if(grid != null) {
-                // Post update
-                grid.postEvent(new MENetworkCellArrayUpdate());
-            }
-        }
-    }
-
     @Override
     public void update() {
         super.update();
@@ -160,13 +147,13 @@ public class TileMEPylon extends AITile implements ICellContainer {
             if (!syncActive && getGridNode().isActive()) {
                 // Node wasn't active, but now it is active
                 // Fire new cell array update event!
-                postCellEvent();
+                postCellEvent(new MENetworkCellArrayUpdate());
                 // Update sync
                 syncActive = true;
             } else if (syncActive && !getGridNode().isActive()) {
                 // Node was active, but now it not
                 // Fire new cell array update event!
-                postCellEvent();
+                postCellEvent(new MENetworkCellArrayUpdate());
                 // Update sync
                 syncActive = false;
             }
@@ -214,7 +201,7 @@ public class TileMEPylon extends AITile implements ICellContainer {
         operatedTile.addListener(this);
 
         // Post cell array update
-        postCellEvent();
+        postCellEvent(new MENetworkCellArrayUpdate());
     }
 
     @Override
@@ -225,7 +212,7 @@ public class TileMEPylon extends AITile implements ICellContainer {
                 gridNode.updateState();
 
                 // Fire new cell array update event!
-                postCellEvent();
+                postCellEvent(new MENetworkCellArrayUpdate());
             }
         }
     }

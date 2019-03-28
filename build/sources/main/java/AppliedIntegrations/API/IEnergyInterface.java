@@ -20,7 +20,6 @@ import net.minecraft.util.EnumFacing;
  */
 public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator{
     IGridNode getGridNode();
-    LiquidAIEnergy getCurrentBar(AEPartLocation side);
 
     TileEntity getFacingTile(EnumFacing side);
 

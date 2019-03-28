@@ -2,9 +2,8 @@ package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.API.Botania.IManaInterface;
 import AppliedIntegrations.API.IInterfaceDuality;
-import AppliedIntegrations.API.IInterfaceStorageDuality;
+import AppliedIntegrations.API.Capabilities.IInterfaceStorageDuality;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.util.AEPartLocation;

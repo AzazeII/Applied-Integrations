@@ -1,0 +1,7 @@
+{
+  "parent": "appliedintegrations:item/energyinterfacepartitem",
+  "textures": {
+    "sides": "botania:blocks/livingwood0",
+    "front": "appliedintegrations:blocks/parts/mana.interface.front"
+  }
+}

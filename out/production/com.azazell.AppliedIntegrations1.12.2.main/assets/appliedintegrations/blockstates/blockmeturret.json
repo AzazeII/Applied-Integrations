@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "normal": {
+      "model": "appliedintegrations:me_turret"
+    },
+    "inventory": {
+      "model": "appliedintegrations:me_turret"
+    }
+  }
+}

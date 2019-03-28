@@ -8,6 +8,7 @@ import AppliedIntegrations.Utils.AILog;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.*;
+import appeng.api.networking.events.MENetworkEvent;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.util.AECableType;
@@ -270,4 +271,23 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
             return (int)resource.amount;
         return (int) (resource.amount - returnAmount.getStackSize());
     }
+
+    /**
+     * @param event Posts this event to grid
+     */
+    public void postCellEvent(MENetworkEvent event){
+        // Get node
+        IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+        // Check notNull
+        if (node != null) {
+            // Get grid
+            IGrid grid = node.getGrid();
+            // Check not null
+            if(grid != null) {
+                // Post update
+                grid.postEvent(event);
+            }
+        }
+    }
+
 }

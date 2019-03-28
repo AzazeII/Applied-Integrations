@@ -51,19 +51,19 @@ public class GuiEnergyTerminalDuality
         this.ySize = 204;
 
         // Create the widgets
-        this.ArrayOfWidgets = new WidgetEnergySelector[GuiConstant_ECT.WIDGETS_PER_PAGE];
+        this.ArrayOfWidgets = new WidgetEnergySelector[GlobalWidgetConstants.WIDGETS_PER_PAGE];
 
         // Rows
-        for( int y = 0; y < GuiConstant_ECT.WIDGET_ROWS_PER_PAGE; y++ )
+        for(int y = 0; y < GlobalWidgetConstants.WIDGET_ROWS_PER_PAGE; y++ )
         {
             // Columns
-            for( int x = 0; x < GuiConstant_ECT.WIDGETS_PER_ROW; x++ )
+            for(int x = 0; x < GlobalWidgetConstants.WIDGETS_PER_ROW; x++ )
             {
                 WidgetEnergySelector widget = new WidgetEnergySelector( this, null,
                         7 + ( x * 18 ),
                         17 + ( y * 18 ),
                         player );
-                this.ArrayOfWidgets[( y * GuiConstant_ECT.WIDGETS_PER_ROW ) + x] = widget;
+                this.ArrayOfWidgets[( y * GlobalWidgetConstants.WIDGETS_PER_ROW ) + x] = widget;
             }
         }
     }

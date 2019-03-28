@@ -15,11 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OverlayEntropyManipulator {
-        private int displayTickCount;
-        private long lastTick;
         private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/OverlayMTool.png");
-        int zLevel = 0;
-        // List of all states listed at right corner of player's screen
+        // List of all states listed at left corner of player's screen
         private List<Object> ListOfStates = new ArrayList<Object>();
         public OverlayEntropyManipulator() {
             MinecraftForge.EVENT_BUS.register(this);
@@ -45,6 +42,7 @@ public class OverlayEntropyManipulator {
 
 
         }
+
         //@SubscribeEvent
         public void onMouseEvent(MouseEvent event) {
             EntityPlayerSP player = Minecraft.getMinecraft().player;

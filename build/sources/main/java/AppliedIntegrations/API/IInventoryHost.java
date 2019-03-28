@@ -4,5 +4,5 @@ package AppliedIntegrations.API;
  */
 public interface IInventoryHost {
 
-	public void onInventoryChanged();
+	void onInventoryChanged();
 }

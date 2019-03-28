@@ -16,8 +16,8 @@ public class AIConfig {
     private static final String CATEGORY_FEATURES = "Features";
 
     public static boolean enableEnergyFeatures = true; // #1
-    public static boolean enableManaFeatures = true; // #2
-    public static boolean enablEmberFeatures = true; // #3
+    public static boolean enableManaFeatures = false; // #2
+    public static boolean enablEmberFeatures = false; // #3
     public static boolean enableStarlightFeatures = true; // #4
 
     private static final String CATEGORY_TILES = "Tile entities";
@@ -29,6 +29,14 @@ public class AIConfig {
     private static final String CATEGORY_PROPERTIES = "Properties";
     public static int interfaceMaxStorage = 1000000; // #8
 
+    public static boolean blackHoleBlockDestruction = true;
+    public static boolean blackHoleEntityPhysics = false;
+    public static boolean blackHoleEntangling = true;
+
+    public static boolean EMPAnomaly = true;
+    public static boolean EntropyShift = true;
+
+    public static boolean blackHoleDestroyUnbreakableBlocks = false; // TODO: 2019-03-28 Add these properties to config
 
     // Called only on server
     public static void preInit(){
@@ -111,6 +119,36 @@ public class AIConfig {
         propertyInterfaceStorage.setComment("Default: 1 000 000 RF; Max capacity of ME Energy interface in RF units (all other units is depend on RF capacity).");
 
 
+        // Create block destruction property
+        Property propertyHoleBlockDestruction = config.get(CATEGORY_PROPERTIES, "BlackHoleBlockDestruction", true);
+        // Add comment
+        propertyHoleBlockDestruction.setComment("Default: True; If enabled, then black hole will destroy blocks in range");
+
+        // Create entity physics property
+        Property propertyEntityPhysics = config.get(CATEGORY_PROPERTIES, "BlackHoleEntityPhysics", false);
+        // Add comment
+        propertyEntityPhysics.setComment("Default: False; If enabled, then black hole will pull entities in range");
+
+        // Create entangling property
+        Property propertyBlackHoleEntangling = config.get(CATEGORY_PROPERTIES, "BlackHoleEntangling", true);
+        // Add comment
+        propertyBlackHoleEntangling.setComment("Default: True; If enabled, then black hole may entangle with white hole");
+
+        // Create emp property
+        Property propertyEMPAnomaly = config.get(CATEGORY_PROPERTIES, "EMPAnomaly", true);
+        // Add comment
+        propertyEMPAnomaly.setComment("Default: True; If enabled black/white hole will sometime extract/inject energy to/from own buffer to all machines in range");
+
+        // Create entropy property
+        Property propertyEntropyShift = config.get(CATEGORY_PROPERTIES, "EntropyShift", true);
+        // Add comment
+        propertyEntropyShift.setComment("Default: True; If enabled black/white hole will sometime increase/decrease entropy of 50% of blocks in range");
+
+        // Create unbreakable blocks' destroy property
+        Property propertyBlackHoleDestroyUnbreakableBlocks = config.get(CATEGORY_PROPERTIES, "BlackHoleDestroyUnbreakableBlocks", false);
+        // Add comment
+        propertyBlackHoleDestroyUnbreakableBlocks.setComment("Default: False; If enabled black hole will destroy and eat unbreakable blocks in range");
+
         // Create order list #1
         List<String> featuresOrder = new ArrayList<>();
 
@@ -132,6 +170,13 @@ public class AIConfig {
 
         propertiesOrder.add(propertyInterfaceStorage.getName());
 
+        propertiesOrder.add(propertyHoleBlockDestruction.getName());
+        propertiesOrder.add(propertyEntityPhysics.getName());
+        propertiesOrder.add(propertyBlackHoleEntangling.getName());
+        propertiesOrder.add(propertyEMPAnomaly.getName());
+        propertiesOrder.add(propertyEntropyShift.getName());
+        propertiesOrder.add(propertyBlackHoleDestroyUnbreakableBlocks.getName());
+
         // Set actual values
         enableEnergyFeatures = propertyEnergyFeatures.getBoolean();
         enableManaFeatures = propertyManaFeatures.getBoolean();
@@ -143,6 +188,13 @@ public class AIConfig {
         enableLogicBus = propertyLogicBus.getBoolean();
 
         interfaceMaxStorage = propertyInterfaceStorage.getInt();
+
+        blackHoleBlockDestruction = propertyHoleBlockDestruction.getBoolean();
+        blackHoleEntityPhysics = propertyEntityPhysics.getBoolean();
+        blackHoleEntangling = propertyBlackHoleEntangling.getBoolean();
+        EMPAnomaly = propertyEMPAnomaly.getBoolean();
+        EntropyShift = propertyEntropyShift.getBoolean();
+        blackHoleDestroyUnbreakableBlocks = propertyBlackHoleDestroyUnbreakableBlocks.getBoolean();
 
         // Set order
         config.setCategoryPropertyOrder(CATEGORY_FEATURES, featuresOrder);

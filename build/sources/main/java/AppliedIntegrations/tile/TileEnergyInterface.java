@@ -1,6 +1,10 @@
 package AppliedIntegrations.tile;
 
 import AppliedIntegrations.API.*;
+import AppliedIntegrations.API.Capabilities.EmberInterfaceStorageDuality;
+import AppliedIntegrations.API.Capabilities.EnergyInterfaceStorage;
+import AppliedIntegrations.API.Capabilities.IInterfaceStorageDuality;
+import AppliedIntegrations.API.Capabilities.JouleInterfaceStorage;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyInterface;
@@ -251,11 +255,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		if(!this.LinkedListeners.contains(container)){
 			this.LinkedListeners.add(container);
 		}
-	}
-
-	@Override
-	public LiquidAIEnergy getCurrentBar(AEPartLocation side) {
-		return null;
 	}
 
 	@Override

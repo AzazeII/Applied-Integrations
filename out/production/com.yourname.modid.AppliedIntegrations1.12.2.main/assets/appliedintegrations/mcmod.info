@@ -1,0 +1,15 @@
+[
+{
+  "modid": "appliedintegrations",
+  "name": "Applied Integrations",
+  "description": "Adds Many Integrations For AE2",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Azazell"],
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": ["Applied Energistics 2"]
+}
+]
