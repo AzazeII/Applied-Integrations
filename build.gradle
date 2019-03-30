@@ -33,6 +33,19 @@ minecraft {
     // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
+repositories {
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
+
+    // Include forge :) Or it will be not minecraft, but "forge not included"
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+}
+
 dependencies {
     // you may put jars on which you depend on in ./libs
     // or you may define them like so..
@@ -54,7 +67,10 @@ dependencies {
     // for more info...
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
-
+    compile "mezz.jei:jei_1.12.2:4.13.0.219"
+    compile "appeng:appliedenergistics2:rv6-stable-6"
+    compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
+    compile 'baubles:Baubles:1.12:1.5.2'
 }
 
 processResources {

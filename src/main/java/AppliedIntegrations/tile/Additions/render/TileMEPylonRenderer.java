@@ -1,5 +1,7 @@
 package AppliedIntegrations.tile.Additions.render;
 
+import AppliedIntegrations.AIConfig;
+import AppliedIntegrations.tile.Additions.TimeHandler;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
 import net.minecraft.client.renderer.GlStateManager;
@@ -7,7 +9,6 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import org.lwjgl.util.glu.Cylinder;
 
 import static AppliedIntegrations.Blocks.Additions.BlockMEPylon.FACING;
@@ -19,6 +20,17 @@ import static org.lwjgl.opengl.GL11.*;
 public class TileMEPylonRenderer extends TileEntitySpecialRenderer<TileMEPylon> {
 
     private Cylinder c = new Cylinder();
+
+    private TimeHandler beamDispersionCooldown = new TimeHandler();
+
+    // Should beam be updated?
+    private boolean isRadiusChanged = false;
+
+    // Current radius of beam
+    private float workingRadius = 0;
+
+    // Last radius measured
+    private float lastRadius = 0;
 
     @Override
     public void render(TileMEPylon te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
@@ -64,19 +76,53 @@ public class TileMEPylonRenderer extends TileEntitySpecialRenderer<TileMEPylon> 
                 glRotatef(90, 0, 1, 0);
             }
 
-            // Draw cylinder
-            if (facing.getAxis() == X)
-                c.draw(0.3F, 0.3F, Math.abs(vec.getX()), 16, 16);
-            if (facing.getAxis() == Z)
-                c.draw(0.3F, 0.3F, Math.abs(vec.getZ()), 16, 16);
+            // Get current radius, based on beam state divided by max radius. So it will never be greater than 1/2
+            float radius = (te.getBeamState() / (float) Math.min((AIConfig.pylonDrain * AIConfig.maxPylonDistance), Float.MAX_VALUE))/2;
 
-            // Rotate stack back
-            if (facing == NORTH) {
-                glRotatef(-180, 0, 1, 0);
-            } else if (facing == WEST) {
-                glRotatef(-270, 0, 1, 0);
-            } else if (facing == EAST) {
-                glRotatef(-90, 0, 1, 0);
+            // Check if radius changed
+            if(radius != lastRadius) {
+                // Update last radius
+                lastRadius = radius;
+
+                // Make renderer know
+                isRadiusChanged = true;
+            }
+
+            // Update data, if radius > 0, and it not updated yet
+            if(radius > 0 && isRadiusChanged) {
+                // Trigger current radius
+                workingRadius = radius;
+
+                // Trigger update
+                isRadiusChanged = false;
+            }
+
+            // Check if beam is decreasing
+            if(!te.drainsEnergy()) {
+                if(workingRadius >= 0)
+                    // Slightly decrease radius
+                    workingRadius -= 0.002;
+            }else {
+                // Update working radius, if energy is draining
+                workingRadius = radius;
+            }
+
+            // Check if working radius is bigger than zero, to optimise render
+            if(workingRadius >= 0) {
+                // Draw cylinder
+                if (facing.getAxis() == X)
+                    c.draw(workingRadius, workingRadius, Math.abs(vec.getX()), 16, 16);
+                if (facing.getAxis() == Z)
+                    c.draw(workingRadius, workingRadius, Math.abs(vec.getZ()), 16, 16);
+
+                // Rotate stack back
+                if (facing == NORTH) {
+                    glRotatef(-180, 0, 1, 0);
+                } else if (facing == WEST) {
+                    glRotatef(-270, 0, 1, 0);
+                } else if (facing == EAST) {
+                    glRotatef(-90, 0, 1, 0);
+                }
             }
 
             // Rotate pylon rendering

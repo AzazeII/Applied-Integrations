@@ -49,8 +49,14 @@ public class EnumCapabilityType {
 
     EnumCapabilityType(LiquidAIEnergy energy, @Nullable Capability... capability){
         this.energy = energy;
-        for(Capability capability1 : capability)
-            this.capabilities.add(capability1);
+
+        // Check not null
+        if(capability != null)
+            // Iterate over capabilities
+            for(Capability capability1 : capability)
+                // Add capability
+                this.capabilities.add(capability1);
+
         values.add(this);
     }
 

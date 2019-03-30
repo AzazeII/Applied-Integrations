@@ -9,6 +9,7 @@ import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Gui.GuiEnergyStoragePart;
 import AppliedIntegrations.Gui.GuiEnergyTerminalDuality;
 import AppliedIntegrations.Network.Packets.AIPacket;
+import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.Utils.AILog;
@@ -34,12 +35,11 @@ public class AIGuiHandler implements IGuiHandler {
         GuiInterfacePart,
         GuiInterfaceTile,
         GuiStoragePart,
-        GuiImportPart,
-        GuiExportPart,
         GuiServerStorage,
         GuiTerminalPart,
         GuiTerminalSecurity,
-        GuiLogicBus;
+        GuiLogicBus,
+        GuiIOPart;
     }
 
     public static void open(GuiEnum gui, EntityPlayer player, AEPartLocation side, BlockPos pos){
@@ -132,6 +132,14 @@ public class AIGuiHandler implements IGuiHandler {
             if(maybeCore instanceof TileLogicBusCore){
                 return new ContainerLogicBus(player, (TileLogicBusCore)maybeCore);
             }
+        }else if(gui == GuiEnum.GuiIOPart){
+            AIOPart part = (AIOPart)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+
+            return new ContainerPartEnergyIOBus(part, player);
+        }else if(gui == GuiEnum.GuiStoragePart){
+            PartEnergyStorage part = (PartEnergyStorage)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+
+            return new ContainerEnergyStorage(part, player);
         }
 
         return null;
@@ -156,6 +164,14 @@ public class AIGuiHandler implements IGuiHandler {
                 return new GuiLogicBus(player, (TileLogicBusCore)maybeCore, (ContainerLogicBus)
                         getServerGuiElement(ID, player, world, x,y,z));
             }
+        }else if(gui == GuiEnum.GuiIOPart){
+            return new GuiEnergyIO((ContainerPartEnergyIOBus)getServerGuiElement(ID, player,world, x, y, z),
+                    player);
+        }else if(gui == GuiEnum.GuiStoragePart){
+            PartEnergyStorage part = (PartEnergyStorage)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+
+            return new GuiEnergyStoragePart((ContainerEnergyStorage)getServerGuiElement(ID, player, world, x, y, z),
+                    part, player);
         }
 
         return null;

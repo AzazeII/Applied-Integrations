@@ -1,19 +1,19 @@
 package AppliedIntegrations.Parts.Energy;
 
-import java.util.*;
-
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusContainer;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusInterface;
-import AppliedIntegrations.Parts.*;
+import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.Parts.PartEnum;
+import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-
+import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
@@ -21,34 +21,44 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
-import appeng.api.networking.security.IActionSource;
-import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
-import appeng.api.storage.*;
+import appeng.api.storage.ICellContainer;
+import appeng.api.storage.ICellInventory;
+import appeng.api.storage.IMEInventoryHandler;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
+import appeng.tile.networking.TileCableBus;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.common.capabilities.Capabilities;
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.fml.common.Loader;
 import teamroots.embers.power.EmberCapabilityProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.J;
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiStoragePart;
 import static java.util.Collections.singletonList;
+import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
@@ -113,21 +123,30 @@ public class PartEnergyStorage
 		}
 
 		// Check not null
-		if (getFacingContainer() != null) {
-			if (getFacingContainer() instanceof IEnergyInterface) {
-				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)getFacingContainer());
+		if (getFacingTile() != null) {
+			// Check for energy interface
+			if (getFacingTile() instanceof IEnergyInterface) {
+				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)getFacingTile());
 
-			} else if (getFacingContainer().hasCapability(CapabilityEnergy.ENERGY, getSide().getFacing())) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.FE);
+			// Check for part tile
+			} else if(getFacingTile() instanceof TileCableBus){
+				// Get interface candidate
+				TileCableBus maybeInterface = (TileCableBus)getFacingTile();
 
-			} else if (IntegrationsHelper.instance.isLoaded(Ember) && getFacingContainer().hasCapability(EmberCapabilityProvider.emberCapability, getSide().getFacing())) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.Ember);
+				// Check if candidate instanceof IEnergyInterface
+				if(maybeInterface.getPart(getSide().getOpposite()) instanceof IEnergyInterface){
+					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)((TileCableBus) getFacingTile()).getPart(getSide().getOpposite()));
+				}
 
-			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.J) && getFacingContainer().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.Joules);
-
-			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.EU) && getFacingContainer() instanceof IEnergySink) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingContainer(), EnumCapabilityType.EU);
+			// Check for all energy types:
+			} else if (getFacingTile().hasCapability(CapabilityEnergy.ENERGY, getSide().getFacing())) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.FE);
+			} else if (IntegrationsHelper.instance.isLoaded(Ember) && getFacingTile().hasCapability(EmberCapabilityProvider.emberCapability, getSide().getFacing())) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Ember);
+			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.J) && getFacingTile().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Joules);
+			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.EU) && getFacingTile() instanceof IEnergySink) {
+				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.EU);
 			}
 		}
 	}
@@ -177,6 +196,22 @@ public class PartEnergyStorage
 
 	}
 
+	@Override
+	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+		// Activation logic is server sided
+		if (getLogicalSide() == SERVER) {
+			if (!player.isSneaking()) {
+				// Open gui
+				AIGuiHandler.open(GuiStoragePart, player, getSide(), getHostTile().getPos());
+
+				// Render click
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
@@ -216,25 +251,6 @@ public class PartEnergyStorage
 			iCellInventory.persist();
 		// Mark dirty
 		getHostTile().getWorld().markChunkDirty(getHostTile().getPos(), getHostTile());
-	}
-
-	public TileEntity getFacingContainer() {
-		// Create candidate
-		TileEntity candidate = getFacingTile();
-
-		// Check not null
-		if(candidate == null)
-			return null;
-
-		// Iterate over capabilities
-		for(Capability capability : getAllowedCappabilities()) {
-			// Check if candidate has capability
-			if(candidate.hasCapability(capability, getSide().getFacing()))
-				// Return candidate
-				return candidate;
-		}
-
-		return null;
 	}
 
 	private List<Capability> getAllowedCappabilities() {

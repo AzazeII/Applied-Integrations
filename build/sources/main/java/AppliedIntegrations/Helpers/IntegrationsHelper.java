@@ -23,7 +23,7 @@ public class IntegrationsHelper {
         if (energy == EU)
             return Loader.isModLoaded("ic2");
         if (energy == J){
-            return Loader.isModLoaded("MekanismAPI|energy");}
+            return Loader.isModLoaded("mekanism");}
         if (energy == Ember)
             return Loader.isModLoaded("embers");
         if (energy == TESLA)

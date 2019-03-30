@@ -18,9 +18,7 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Consumer;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
@@ -82,7 +80,7 @@ public enum AnomalyEnum {
     // Entangles two holes together
     EntangleHoles((t) -> {
         // Get positions
-        List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 2);
+        List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 1.5);
 
         // Check not entangled yet
         if(t.isEntangled())
@@ -115,34 +113,13 @@ public enum AnomalyEnum {
         }
     }),
 
-    // Emits strong plasma balls around
-    RelativisticJets((t)->{}),
-
     // Shifts block's entropy
     EntropyShift((t) -> {
         // Get list of blocks in square on range
-        List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 2);
-
-        // First find random positions.size()/2 positions from list
-        Random rand = new Random();
-
-        // Random list of block positions
-        List<BlockPos> list = new ArrayList<>();
-
-        // Iterate until i >= positions.size/2
-        for (int i = 0; i < positions.size()/2; i++) {
-            // Get random value from 0 to positions.size()
-            int randInt = rand.nextInt(positions.size());
-
-            // add random element in temporary list
-            list.add(positions.get(randInt));
-
-            // Remove selected element from original list
-            positions.remove(randInt);
-        }
+        List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 1.5);
 
         // Iterate over all positions
-        list.forEach((pos) -> {
+        positions.forEach((pos) -> {
             // Get block
             IBlockState b = t.getWorld().getBlockState(pos);
 
@@ -169,4 +146,5 @@ public enum AnomalyEnum {
     AnomalyEnum(Consumer<TileBlackHole> action){
         this.action = action;
     }
+
 }

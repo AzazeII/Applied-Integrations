@@ -100,14 +100,18 @@ public class GuiEnergyIO
         // Call super
         super.drawGuiContainerForegroundLayer( mouseX, mouseY );
 
+        // Should overlay be rendered
         boolean hoverUnderlayRendered = false;
 
+        // Current widget under mouse
         WidgetEnergySlot slotUnderMouse = null;
-        for( int i = 0; i < 9; i++ )
-        {
-            WidgetEnergySlot slotWidget = this.energySlotList.get( i );
 
+        // Iterate over widgets
+        for( WidgetEnergySlot slotWidget : energySlotList )
+        {
+            // Check if widget has synced direction
             if(slotWidget.d == null){
+                // Else update it, if gui already has update direction
                 if(getSide() != null) {
                     slotWidget.x = getX();
                     slotWidget.y = getY();
@@ -118,15 +122,20 @@ public class GuiEnergyIO
                 }
             }
 
+            // Check if overlay not rendering, slot widget should render and mouse is under widget
             if( ( !hoverUnderlayRendered ) && ( slotWidget.shouldRender ) && ( slotWidget.isMouseOverWidget( mouseX, mouseY ) ) )
             {
+                // Draw widget's underlay
                 slotWidget.drawMouseHoverUnderlay();
 
+                // Update slot under mouse
                 slotUnderMouse = slotWidget;
 
+                // trigger boolean
                 hoverUnderlayRendered = true;
             }
 
+            // Draw widget
             slotWidget.drawWidget();
         }
         // Should we get the tooltip from the slot?
@@ -163,6 +172,14 @@ public class GuiEnergyIO
         }
 
     }
+
+    @Override
+    public void drawScreen(int MouseX, int MouseY, float pOpacity) {
+        super.drawScreen(MouseX, MouseY, pOpacity);
+
+        renderHoveredToolTip(MouseX, MouseY);
+    }
+
     @Override
     protected void mouseClicked( final int mouseX, final int mouseY, final int mouseButton )
     {

@@ -18,6 +18,8 @@ public class HandlerSingularitySync implements IMessageHandler<PacketSingularity
         Minecraft.getMinecraft().addScheduledTask(() -> {
             TileMEPylon te = (TileMEPylon)Minecraft.getMinecraft().world.getTileEntity(message.pos);
             te.operatedTile = message.operatedTile;
+            te.beamDrain = message.beamState;
+            te.shouldDrain = message.shouldDrain;
         });
 
         return null;

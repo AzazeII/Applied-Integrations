@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Capabilities.*;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -728,7 +727,16 @@ public class PartEnergyInterface
 
 	}
 
+	public LiquidAIEnergy getFilter(EnumFacing unknown) {
+		return this.FilteredEnergy;
+	}
+
 	public void setRealContainer(String realContainer) { }
+
+	@Override
+	public LiquidAIEnergy getCurrentBar(AEPartLocation side) {
+		return bar;
+	}
 
 	@Override
 	public TileEntity getFacingTile(EnumFacing side) {

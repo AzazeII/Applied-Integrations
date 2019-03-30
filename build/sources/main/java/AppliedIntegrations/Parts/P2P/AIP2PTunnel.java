@@ -2,9 +2,12 @@ package AppliedIntegrations.Parts.P2P;
 
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.PartEnum;
+import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.config.TunnelType;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.util.AECableType;
+import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.tileentity.TileEntity;
 import teamroots.embers.power.IEmberCapability;
 
@@ -23,8 +26,10 @@ public abstract class AIP2PTunnel<T> extends AIPart {
     }
 
     @Override
-    public void getBoxes(IPartCollisionHelper helper) {
-
+    public void getBoxes(IPartCollisionHelper bch) {
+        bch.addBox( 5, 5, 12, 11, 11, 13 );
+        bch.addBox( 3, 3, 13, 13, 13, 14 );
+        bch.addBox( 2, 2, 14, 14, 14, 16 );
     }
 
     @Override

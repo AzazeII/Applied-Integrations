@@ -19,7 +19,6 @@ import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.me.helpers.BaseActionSource;
 import appeng.me.helpers.MachineSource;
 import appeng.me.helpers.PlayerSource;
-import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -299,7 +298,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
     private ImmutablePair<Integer, ItemStack> drainContainer(final ItemStack container, final BaseActionSource actionSource,
                                                              final Actionable mode )
     {
-        // Ensure there is a container
+        /*// Ensure there is a container
         if( container == null )
         {
             return null;
@@ -340,7 +339,8 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         }
 
         // Attempt to drain the container
-        return Utils.extractFromContainer( container, amount );
+        return Utils.extractFromContainer( container, amount );*/
+        return null;
     }
 
     /**
@@ -356,7 +356,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
     private ImmutablePair<Integer, ItemStack> fillContainer(final LiquidAIEnergy withEnergy, final ItemStack container,
                                                             final BaseActionSource actionSource, final Actionable mode )
     {
-        // Ensure there is an Energy
+        /*// Ensure there is an Energy
         if( withEnergy == null )
         {
             return null;
@@ -393,7 +393,8 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         }
 
         // Create a new container filled to the proposed amount
-        return Utils.injectInContainer(container,proposedFillAmount);
+        return Utils.injectInContainer(container,proposedFillAmount);*/
+        return null;
     }
 
     /**
@@ -554,7 +555,7 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
 
 
         // Valid container?
-        if( stack.getItem() instanceof IEnergyContainerItem || stack.getItem() instanceof IElectricItem || stack.getItem() instanceof IEnergizedItem)
+        /*if( stack.getItem() instanceof IEnergyContainerItem || stack.getItem() instanceof IElectricItem || stack.getItem() instanceof IEnergizedItem)
         {
             // Invalid container
             return stack;
@@ -592,7 +593,8 @@ public abstract class ContainerEnergyTerminalDuality extends ContainerWithPlayer
         }
 
         // No result
-        return stack;
+        return stack;*/
+        return  null;
     }
 
     /**

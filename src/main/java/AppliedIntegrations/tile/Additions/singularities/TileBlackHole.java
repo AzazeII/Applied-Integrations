@@ -476,6 +476,16 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
             storedEnergies.add((AEEnergyStack)stack);
         }
 
+        // Iterate over all listeners
+        for(TileMEPylon pylon : listeners) {
+            // Make tile consume energy
+            pylon.shouldDrain = true;
+
+            // Update time handler
+            pylon.drainHandler.updateData(pylon.getWorld());
+        }
+
+
         // Add mass
         addMass(stack.getStackSize() * MASS_ADDED);
 

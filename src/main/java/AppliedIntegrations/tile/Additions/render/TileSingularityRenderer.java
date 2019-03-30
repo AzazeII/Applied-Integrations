@@ -9,6 +9,8 @@ import java.awt.*;
 
 public class TileSingularityRenderer extends TileEntitySpecialRenderer<TileBlackHole> {
 
+    private Sphere sphere = new Sphere();
+
     private Color getColor(){
         // Color of singularity, moved here because of IntelIJIdea feature with color picker
         return new Color(0,0,0);
@@ -38,7 +40,7 @@ public class TileSingularityRenderer extends TileEntitySpecialRenderer<TileBlack
         GlStateManager.scale(radius, radius, radius);
 
         // Draw sphere
-        new Sphere().draw((float) 0.53, 16, 16);
+        sphere.draw((float) 0.53, 16, 16);
 
         // Re-enable all states of Opengl:
         // Cull

@@ -1,12 +1,12 @@
 package AppliedIntegrations.Parts.Energy;
 
+import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
-import AppliedIntegrations.Utils.EffectiveSide;
+import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -14,22 +14,10 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
 import appeng.api.parts.PartItemStack;
 import appeng.api.util.AECableType;
-import cofh.redstoneflux.api.IEnergyReceiver;
-import ic2.api.energy.tile.IEnergySink;
-import mekanism.api.energy.IStrictEnergyAcceptor;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
-import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
-import static appeng.api.config.Actionable.MODULATE;
-import static appeng.api.config.Actionable.SIMULATE;
 
 /**
  * @Author Azazell
@@ -42,11 +30,9 @@ public class PartEnergyExport extends AIOPart {
 
 	private final static int MAXIMUM_TICKS_PER_OPERATION = 40;
 
-	private final static int MAXIMUM_TRANSFER_PER_SECOND = 64;
+	private final static int MAXIMUM_TRANSFER_PER_SECOND = 6400;
 
 	private final static int MINIMUM_TRANSFER_PER_SECOND = 1;
-
-	protected TileEntity facingEnergyStorage;
 
 	public PartEnergyExport() {
 		super(PartEnum.EnergyExportBus, SecurityPermissions.EXTRACT);
@@ -121,71 +107,36 @@ public class PartEnergyExport extends AIOPart {
 	}
 
 	@Override
-	public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos blockPos1) {
-		// Ignored client side
-		if( EffectiveSide.isClientSide() )
-		{
-			return;
-		}
-
-		// Set that we are not facing a container
-		this.facingEnergyStorage = null;
-
-		// Get the tile we are facing
-		TileEntity tileEntity = this.getFacingTile();
-
-		// Are we facing a container?
-		if( tileEntity instanceof IEnergyReceiver || tileEntity instanceof IEnergySink)
-		{
-			this.facingEnergyStorage = tileEntity;
-		}
-	}
-
-	@Override
 	public TickRateModulation doWork(int valuedTransfer, IGridNode node) {
-		// TODO: 2019-02-17 Integrations with Embers
-		// Get the world
-		World world = this.hostTile.getWorld();
+		// Create helper
+		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getSide().getOpposite());
 
-		// Get our location
-		int x = this.hostTile.getPos().getX();
-		int y = this.hostTile.getPos().getY();
-		int z = this.hostTile.getPos().getZ();
+		// Iterate over all energies
+		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()){
 
-		// Get the tile entity part is facing
-		TileEntity tile = world.getTileEntity(new BlockPos(x + this.getSide().xOffset, y + this.getSide().yOffset, z + this.getSide().zOffset));
+			// Check if we are filtering this energy
+			if(filteredEnergies.contains(energy)) {
 
-		if (tile instanceof IStrictEnergyAcceptor) {
-			IStrictEnergyAcceptor acceptor = (IStrictEnergyAcceptor) tile;
-			int diff = this.ExtractEnergy(new EnergyStack(J, valuedTransfer), SIMULATE);
-			boolean canReceive = acceptor.canReceiveEnergy(getSide().getFacing().getOpposite());
+				// Check if tile can operate given energy
+				if(helper.operatesEnergy(energy)) {
 
-			// Check if facing tile has enough storage, and network can handle this operation
-			if (canReceive && diff != valuedTransfer) {
-				this.ExtractEnergy(new EnergyStack(J, (int) acceptor.acceptEnergy(getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
-				return TickRateModulation.FASTER;
-			}
-		} else if (tile instanceof IEnergyReceiver && energyTransferAllowed(RF)) {
-			// minimum value that receiver can accept
-			IEnergyReceiver energyReceiver = (IEnergyReceiver) tile;
-			int diff = this.ExtractEnergy(new EnergyStack(RF, valuedTransfer), SIMULATE);
-			int ContainerDiff = energyReceiver.receiveEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, true);
-			// Check if facing tile has enough storage, and network can handle this operation
-			if (ContainerDiff != 0 && diff != valuedTransfer) {
-				this.ExtractEnergy(new EnergyStack(RF, energyReceiver.receiveEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, false)), MODULATE);
-				return TickRateModulation.FASTER;
-			}
-		} else if (tile instanceof IEnergySink && energyTransferAllowed(EU)) {
+					// Simulate extraction
+					int extracted = ExtractEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
 
-			IEnergySink sink = (IEnergySink) tile;
-			int diff = this.ExtractEnergy(new EnergyStack(EU, valuedTransfer), SIMULATE);
-			int ContainerDiff = (int) sink.getDemandedEnergy();
-			if (ContainerDiff != 0 && diff != valuedTransfer) {
-				sink.injectEnergy(this.getSide().getFacing().getOpposite(), valuedTransfer, 4.0D);
-				this.ExtractEnergy(new EnergyStack(EU, valuedTransfer), MODULATE);
-				return TickRateModulation.FASTER;
+					// Create helper
+					helper.receiveEnergy(extracted, false, energy);
+
+					// Modulate extraction
+					ExtractEnergy(new EnergyStack(energy, extracted), Actionable.MODULATE);
+
+					// Check if energy was actually extracted
+					if(extracted > 0)
+						// Tick faster
+						return TickRateModulation.FASTER;
+				}
 			}
 		}
+
 		return TickRateModulation.SLOWER;
 	}
 }

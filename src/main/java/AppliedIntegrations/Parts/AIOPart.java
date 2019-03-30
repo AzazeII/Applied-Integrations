@@ -1,11 +1,11 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.IInventoryHost;
+import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
-import AppliedIntegrations.Gui.GuiEnergyIO;
+import AppliedIntegrations.Gui.AIGuiHandler;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
@@ -23,12 +23,10 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
 import appeng.me.helpers.MachineSource;
-import cofh.redstoneflux.api.IEnergyReceiver;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -37,12 +35,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static net.minecraftforge.fml.relauncher.Side.CLIENT;
+import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
@@ -50,30 +51,32 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
 public abstract class AIOPart
         extends AIPart
-        implements IGridTickable, IEnergyMachine, IAEAppEngInventory, IInventoryHost
-{
+        implements IGridTickable, IEnergyMachine, IAEAppEngInventory, IInventoryHost {
     /**
-     * How much energy can be transfered per second.
+     * Constant fields
      */
-    private final static int BASE_TRANSFER_PER_SECOND = 4;
+    // How much energy can be transfered in second
+    private final static int BASE_ENERGY_TRANSFER = 40;
 
-    /**
-     * How much additional energy can be transfered per upgrade.
-     */
-    private final static int ADDITIONAL_TRANSFER_PER_SECOND = 8;
+    // How much energy transfer one upgrade adds
+    private final static int TRANSFER_PER_UPGRADE = 80;
 
+    // How much minimum ticks machine need to operate
     private final static int MINIMUM_TICKS_PER_OPERATION = 2;
 
+    // How much max ticks machine needs to opreate
     private final static int MAXIMUM_TICKS_PER_OPERATION = 40;
 
-    private final static int MAXIMUM_TRANSFER_PER_SECOND = 64;
+    // Maximum transfer per second
+    private final static int MAXIMUM_TRANSFER_PER_SECOND = 6400;
 
-    private final static int MINIMUM_TRANSFER_PER_SECOND = 16;
+    // Mininmum transfer per second
+    private final static int MINIMUM_TRANSFER_PER_SECOND = 24;
 
+    // Current max transfer
     protected int maxTransfer;
-    /**
-     * Maximum number of filter slots.
-     */
+
+    // Size of filter
     private final static int MAX_FILTER_SIZE = 9;
 
     private final static int BASE_SLOT_INDEX = 4;
@@ -84,24 +87,14 @@ public abstract class AIOPart
 
     private final static int UPGRADE_INVENTORY_SIZE = 4;
 
-    /**
-     * How much AE power is required to keep the part active.
-     */
+
+    // Passive ae drain
     private static final double IDLE_POWER_DRAIN = 0.7;
 
-    /**
-     * the player, clicked on this machine
-     */
     private EntityPlayer player;
 
-    /**
-     * Default redstone mode for the bus.
-     */
     private static final RedstoneMode DEFAULT_REDSTONE_MODE = RedstoneMode.IGNORE;
 
-    /**
-     * NBT Keys
-     */
     private static final String NBT_KEY_REDSTONE_MODE = "redstoneMode", NBT_KEY_FILTER_NUMBER = "EnergyFilter#",
             NBT_KEY_UPGRADE_INV = "upgradeInventory";
 
@@ -109,21 +102,18 @@ public abstract class AIOPart
 
     private int[] availableFilterSlots = { AIOPart.BASE_SLOT_INDEX };
 
+    // List of all container listeners
     private List<ContainerPartEnergyIOBus> listeners = new ArrayList<ContainerPartEnergyIOBus>();
 
-    /**
-     * How the bus responds to redstone.
-     */
+    // Current mode
     private RedstoneMode redstoneMode = AIOPart.DEFAULT_REDSTONE_MODE;
 
-    /**
-     * Network source representing this part.
-     */
+    // Machine source of this machine
     protected MachineSource asMachineSource;
 
     protected List<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>( AIOPart.MAX_FILTER_SIZE );
 
-    protected IEnergyReceiver facingContainer;
+    protected TileEntity adjacentEnergyStorage;
 
     protected byte filterSize;
     protected byte speedState;
@@ -137,14 +127,7 @@ public abstract class AIOPart
     {
         super( associatedPart, interactionPermissions );
 
-        // Initialize the list
-        for(int index = 0; index < AIOPart.MAX_FILTER_SIZE; index++ )
-        {
-            this.filteredEnergies.add( null );
-        }
-
-        // Create the source
-        this.asMachineSource = new MachineSource( this );
+        // Change transfer
         maxTransfer = 5000*10*upgradeSpeedCount;
     }
 
@@ -179,7 +162,7 @@ public abstract class AIOPart
 
     protected int getTransferAmountPerSecond()
     {
-        return BASE_TRANSFER_PER_SECOND + ( this.upgradeSpeedCount * ADDITIONAL_TRANSFER_PER_SECOND );
+        return BASE_ENERGY_TRANSFER + ( this.upgradeSpeedCount * TRANSFER_PER_UPGRADE);
     }
 
 
@@ -417,21 +400,27 @@ public abstract class AIOPart
         return new TickingRequest( MINIMUM_TICKS_PER_OPERATION, MAXIMUM_TICKS_PER_OPERATION, false, false );
     }
 
-    public boolean isVoidAllowed()
-    {
-        return false;
-    }
-
     @Override
     public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position )
     {
         super.onActivate( player, hand, position );
-        this.updateUpgradeState();
+        if(getLogicalSide() == SERVER) {
+            if (!player.isSneaking()) {
+                this.updateUpgradeState();
 
-        player.openGui(AppliedIntegrations.instance, 5, player.world, hostTile.getPos().getX(), hostTile.getPos().getY(), hostTile.getPos().getZ());
-        this.updateRequested = true;
-        this.player = player;
-        return true;
+                // Open gui trough handler
+                // AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getSide(), getHostTile().getPos());
+
+                // Make part update gui's coordinates
+                this.updateRequested = true;
+
+                // Update player
+                this.player = player;
+                return true;
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -450,15 +439,24 @@ public abstract class AIOPart
         }
 
         // Set that we are not facing a container
-        this.facingContainer = null;
+        this.adjacentEnergyStorage = null;
 
         // Get the tile we are facing
         TileEntity tileEntity = this.getFacingTile();
 
-        // Are we facing a container?
-        if( tileEntity instanceof IEnergyReceiver)
-        {
-            this.facingContainer = (IEnergyReceiver)tileEntity;
+        // Check not null
+        if(tileEntity == null)
+            return;
+
+        // Iterate over all capabiltiy types
+        for(EnumCapabilityType type : EnumCapabilityType.values) {
+            // Iterate over all capabilities
+            for(Capability capability : type.capabilities) {
+                // Check if tile has one of type's capabilities
+                if (tileEntity.hasCapability(capability, getSide().getFacing())) {
+                    this.adjacentEnergyStorage = tileEntity;
+                }
+            }
         }
 
         // Is the bus pulse controlled?
@@ -473,26 +471,14 @@ public abstract class AIOPart
         }
     }
 
-    /**
-     * Called client-side to keep the client-side part in sync
-     * with the server-side part. This aids in keeping the
-     * gui in sync even in high network lag enviroments.
-     *
-     * @param filteredEnergies
-     */
+    // Client sided filter list sync
     @SideOnly(CLIENT)
     public void onReceiveFilterList( final List<LiquidAIEnergy> filteredEnergies )
     {
         this.filteredEnergies = filteredEnergies;
     }
 
-    /**
-     * Called client-side to keep the client-side part in sync
-     * with the server-side part. This aids in keeping the
-     * gui in sync even in high network lag enviroments.
-     *
-     * @param filterSize
-     */
+    // Filter size sync
     @SideOnly(CLIENT)
     public void onReceiveFilterSize( final byte filterSize )
     {
@@ -599,14 +585,16 @@ public abstract class AIOPart
 
         if( ( saveType == PartItemStack.WORLD ) || ( saveType == PartItemStack.WRENCH ) )
         {
+            // Counter
+            int i = 0;
+
             // Write each filter
-            for( int i = 0; i < MAX_FILTER_SIZE; i++ )
-            {
-                LiquidAIEnergy energy = this.filteredEnergies.get( i );
+            for( LiquidAIEnergy energy : filteredEnergies) {
                 if( energy != null )
                 {
                     data.setString( NBT_KEY_FILTER_NUMBER + i, energy.getTag() );
                 }
+                i++;
             }
 
             if( saveType == PartItemStack.WORLD ) {

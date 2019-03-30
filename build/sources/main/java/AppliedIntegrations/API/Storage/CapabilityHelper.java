@@ -230,4 +230,26 @@ public class CapabilityHelper {
         AILog.chatLog("Extracted: " + extracted);
         return extracted;
     }
+
+    public boolean operatesEnergy(LiquidAIEnergy energy) {
+        // Check not null
+        if(EnumCapabilityType.fromEnergy(energy) == null)
+            return false;
+
+        // Get vector
+        Vector<Capability> capabilities = EnumCapabilityType.fromEnergy(energy).getCapabilityWithModCheck();
+
+        // Check not null
+        if(capabilities == null)
+            return false;
+
+        // Iterate over all capabilities from capability type from given energy
+        for(Capability capability : capabilities) {
+            //Iterate over it's capabilities
+            return this.capabilities.contains(capability);
+        }
+
+        // False
+        return false;
+    }
 }

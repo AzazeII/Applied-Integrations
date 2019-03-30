@@ -15,7 +15,7 @@ import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.StorageCells.ManaStorageCell;
-import AppliedIntegrations.Items.multiTool.toolChaosManipulator;
+import AppliedIntegrations.Items.multiTool.AdvancedNetworkTool;
 import AppliedIntegrations.AIConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
@@ -28,7 +28,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedList;
-import java.util.Vector;
 
 /**
  * @Author Azazell
@@ -56,8 +55,8 @@ public enum ItemEnum {
     ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring"), AIConfig.enableManaFeatures),
     ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), AIConfig.enableManaFeatures),
 
-    ITEMENERGYWIRELESSTERMINAL(new itemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
-    CHAOSMANIPULATOR( new toolChaosManipulator(), true),
+    ITEMENERGYWIRELESSTERMINAL(new ItemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
+    CHAOSMANIPULATOR( new AdvancedNetworkTool(), true),
     ENERGYSTORAGE_1k( new EnergyStorageCell("EnergyStorageCell_1k", 1024), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_4k( new EnergyStorageCell("EnergyStorageCell_4k", 4096), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_16k( new EnergyStorageCell("EnergyStorageCell_16k", 16384), AIConfig.enableEnergyFeatures),
@@ -181,8 +180,8 @@ public enum ItemEnum {
                 if (item.item instanceof AIItemRegistrable) {
                     AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
                     registrableItem.registerModel();
-                } else if (item.item instanceof toolChaosManipulator) {
-                    toolChaosManipulator tCM = (toolChaosManipulator) item.item;
+                } else if (item.item instanceof AdvancedNetworkTool) {
+                    AdvancedNetworkTool tCM = (AdvancedNetworkTool) item.item;
                     tCM.registerModel();
                 }
             }

@@ -1,8 +1,10 @@
 {
   "textures": {
     "sides": "appliedenergistics2:parts/monitor_sides_status",
+    "staticSides": "appliedenergistics2:parts/export_bus_sides",
     "back": "appliedenergistics2:parts/transition_plane_back",
-    "particle": "appliedenergistics2:parts/transition_plane_back"
+    "particle": "appliedenergistics2:parts/transition_plane_back",
+    "front": "appliedintegrations:blocks/parts/energy.annihilation.face"
   },
   "elements": [
     {
@@ -31,6 +33,37 @@
         },
         "down": {
           "texture": "#sides"
+        }
+      }
+    },{
+      "from": [
+        15,
+        15,
+        0
+      ],
+      "to": [
+        1,
+        1,
+        1
+      ],
+      "faces": {
+        "down": {
+          "texture": "#staticSides"
+        },
+        "up": {
+          "texture": "#staticSides"
+        },
+        "north": {
+          "texture": "#front"
+        },
+        "east": {
+          "texture": "#staticSides"
+        },
+        "south": {
+          "texture": "#back"
+        },
+        "west": {
+          "texture": "#staticSides"
         }
       }
     }

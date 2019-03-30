@@ -30,7 +30,6 @@ public class HandlerEnergyStorageBusContainer
         this.storage = operand;
         this.type = type;
         this.owner = owner;
-        AILog.info("Initialized new HandlerEnergyStorageBusContainer for " + operand.toString());
     }
     /**
      * Store new items, or simulate the addition of new items into the ME Inventory.
@@ -51,16 +50,11 @@ public class HandlerEnergyStorageBusContainer
         if(!input.isMeaningful())
             return input;
 
-        AILog.info("Inject request; StackSize: " + input.getStack().amount + " EnergyName: " + input.getStack().getEnergyName());
-        AILog.info("Type: " + type.name());
-
         // Create helper
-        CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
+        CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide().getOpposite());
 
         // Get number injected
         int added = helper.receiveEnergy(input.getStackSize(), type == Actionable.SIMULATE, this.type.energy);
-
-        AILog.info("Added: " + added);
 
         // Calculate not added
         int notAdded = (int)input.getStackSize() - added;

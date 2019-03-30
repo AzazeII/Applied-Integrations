@@ -9,6 +9,9 @@ import org.lwjgl.util.glu.Sphere;
 import java.awt.*;
 
 public class TileWhiteHoleRenderer extends TileEntitySpecialRenderer<TileWhiteHole> {
+
+    private Sphere sphere = new Sphere();
+
     private Color getColor(){
         // Color of singularity, moved here because of IntelIJIdea feature with color picker
         return new Color(1,1,1);
@@ -38,7 +41,7 @@ public class TileWhiteHoleRenderer extends TileEntitySpecialRenderer<TileWhiteHo
         GlStateManager.scale(radius, radius, radius);
 
         // Draw sphere
-        new Sphere().draw((float) 0.53, 16, 16);
+        sphere.draw((float) 0.53, 16, 16);
 
         // Re-enable all states of Opengl:
         // Cull

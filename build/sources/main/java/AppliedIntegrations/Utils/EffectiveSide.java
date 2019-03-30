@@ -8,22 +8,36 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public final class EffectiveSide
 {
-
+	/**
+	 * Cache the handler
+	 */
 	private static FMLCommonHandler FCH = FMLCommonHandler.instance();
 
-	// Checks thread for client
+	/**
+	 * True if the thread executing this code is client side.
+	 *
+	 * @return
+	 */
 	public static final boolean isClientSide()
 	{
 		return FCH.getEffectiveSide().isClient();
 	}
 
-	// Checks thread for server
+	/**
+	 * True if the thread executing this code is server side.
+	 *
+	 * @return
+	 */
 	public static final boolean isServerSide()
 	{
 		return FCH.getEffectiveSide().isServer();
 	}
 
-	// Get side
+	/**
+	 * Returns the effective side for the context in the game.
+	 *
+	 * @return
+	 */
 	public static final Side side()
 	{
 		return FCH.getEffectiveSide();

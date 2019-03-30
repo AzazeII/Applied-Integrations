@@ -4,25 +4,18 @@ import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AILog;
+import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
-
-import cofh.redstoneflux.api.IEnergyProvider;
-import crazypants.enderio.base.power.ILegacyPoweredTile;
-import ic2.api.energy.tile.IEnergySource;
-import ic2.core.block.wiring.TileEntityElectricBlock;
-import mekanism.api.energy.IStrictEnergyStorage;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -32,10 +25,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
 import static appeng.api.networking.ticking.TickRateModulation.FASTER;
+import static appeng.api.networking.ticking.TickRateModulation.SLOWER;
 
 /**
  * @Author Azazell
@@ -70,10 +63,7 @@ public class PartEnergyImport extends AIOPart
 	}
 
 	@Override
-	public void onEntityCollision(Entity entity) {
-
-
-	}
+	public void onEntityCollision(Entity entity) {}
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
@@ -82,37 +72,34 @@ public class PartEnergyImport extends AIOPart
 
 	@Override
 	public TickRateModulation doWork(int valuedTransfer, IGridNode node) {
-		// Get the world
-		World world = this.hostTile.getWorld();
+		// Create helper
+		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getSide().getOpposite());
 
-		TileEntity tile = getFacingTile();
+		// Iterate over all energies
+		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()){
+			// Check if filter contains any values
+			if(filteredEnergies.size() > 0)
+				// Check if filter not contains current energy
+				if(!filteredEnergies.contains(energy))
+					continue;
 
-		AILog.info("Reached doWork body");
-		// Iterate over allowed energy type
-		for(EnumCapabilityType energyType : EnumCapabilityType.values){
-			AILog.info("Iterating over enumcapability types");
-			// Get energy from type
-			LiquidAIEnergy energy = energyType.energy;
+			// Check if tile can operate given energy
+			if(helper.operatesEnergy(energy)) {
 
-			if(tile == null && getSide() == null)
-				return TickRateModulation.SLOWER;
-			CapabilityHelper helper = new CapabilityHelper(tile, getSide());
-			// Split value to integer
-			int stored = helper.getStored(energy);
-			AILog.info("Stored: "+stored);
-			// Check if there is energy exists and energy not filtered
-			if(stored > 0 && this.getFilteredEnergy() != energy){
-				AILog.info("Injecting energy");
-				// Find amount of energy that can be injected
-				int InjectedAmount = InjectEnergy(new EnergyStack(energy, valuedTransfer), SIMULATE);
+				// Simulate injection
+				int injected = InjectEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
 
-				// Inject energy in ME Network
-				InjectEnergy(new EnergyStack(energy, InjectedAmount), MODULATE);
-				// Remove injected amount from interface storage
-				helper.extractEnergy(InjectedAmount, false, energy);
-				return FASTER;
+				// Create helper
+				helper.extractEnergy(injected, false, energy);
+
+				// Modulate injection
+				InjectEnergy(new EnergyStack(energy, injected), Actionable.MODULATE);
+
+				// Check if energy was actually injected
+				if(injected > 0)
+					// Tick faster
+					return TickRateModulation.FASTER;
 			}
-
 		}
 
 		return TickRateModulation.SLOWER;

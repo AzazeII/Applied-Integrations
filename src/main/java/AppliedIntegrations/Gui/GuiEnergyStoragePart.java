@@ -203,9 +203,6 @@ public class GuiEnergyStoragePart
 
             if( ( slotUnderMouse == null ) && ( currentWidget.shouldRender ) && ( currentWidget.isMouseOverWidget( mouseX, mouseY ) ) )
             {
-                // Draw the underlay
-                currentWidget.drawMouseHoverUnderlay();
-
                 // Set the slot
                 slotUnderMouse = currentWidget;
             }
@@ -259,12 +256,6 @@ public class GuiEnergyStoragePart
                 i++;
             }
         }
-
-        // Create the priority tab button
-        this.buttonList.add( new GuiButtonAETab( GuiEnergyStoragePart.BUTTON_PRIORITY_ID, this.guiLeft +
-                GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
-                "gui.appliedenergistics2.Priority" ) );
-
     }
 
 

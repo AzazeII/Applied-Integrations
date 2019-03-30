@@ -15,28 +15,22 @@ public class AIConfig {
 
     private static final String CATEGORY_FEATURES = "Features";
 
-    public static boolean enableEnergyFeatures = true; // #1
-    public static boolean enableManaFeatures = false; // #2
-    public static boolean enablEmberFeatures = false; // #3
-    public static boolean enableStarlightFeatures = true; // #4
+    public static boolean enableEnergyFeatures; // #1
+    public static boolean enableManaFeatures; // #2
+    public static boolean enablEmberFeatures; // #3
+    public static boolean enableStarlightFeatures; // #4
 
     private static final String CATEGORY_TILES = "Tile entities";
 
-    public static boolean enableBlackHoleStorage = true; // #5
-    public static boolean enableMEServer = true; // #6
-    public static boolean enableLogicBus = true; // #7
+    public static boolean enableBlackHoleStorage; // #5
+    public static boolean enableMEServer; // #6
+    public static boolean enableLogicBus; // #7
 
     private static final String CATEGORY_PROPERTIES = "Properties";
-    public static int interfaceMaxStorage = 1000000; // #8
+    public static int interfaceMaxStorage; // #8
+    public static int maxPylonDistance;
+    public static double pylonDrain;
 
-    public static boolean blackHoleBlockDestruction = true;
-    public static boolean blackHoleEntityPhysics = false;
-    public static boolean blackHoleEntangling = true;
-
-    public static boolean EMPAnomaly = true;
-    public static boolean EntropyShift = true;
-
-    public static boolean blackHoleDestroyUnbreakableBlocks = false; // TODO: 2019-03-28 Add these properties to config
 
     // Called only on server
     public static void preInit(){
@@ -59,95 +53,39 @@ public class AIConfig {
         return config;
     }
 
+    private static Object addProperty(String category, String key, Object defaultVal, String comment, List<String> order){
+        // Init variable
+        Property property = null;
+
+        // Check for def. val signature
+        if (defaultVal instanceof Boolean)
+            property = config.get(category, key, (Boolean)defaultVal);
+        if (defaultVal instanceof Integer)
+            property = config.get(category, key, (Integer)defaultVal);
+        if (defaultVal instanceof Double)
+            property = config.get(category, key, (Double)defaultVal);
+
+        // Set comment
+        property.setComment(comment);
+        // Add to oder
+        order.add(property.getName());
+
+        // Check for def. val signature
+        if (defaultVal instanceof Boolean)
+            return property.getBoolean();
+        if (defaultVal instanceof Integer)
+            return property.getInt();
+        if (defaultVal instanceof Double)
+            return property.getDouble();
+
+        return 0;
+    }
+
     public static void syncFromFiles(){
         // Sync
         config.load();
 
-        // Create energy feature property
-        Property propertyEnergyFeatures = config.get(CATEGORY_FEATURES, "EnableEnergyFeatures", true);
 
-        // Add comment
-        propertyEnergyFeatures.setComment("Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature");
-
-
-        // Create mana feature property
-        Property propertyManaFeatures = config.get(CATEGORY_FEATURES, "EnableManaFeatures", true);
-
-        // Add comment
-        propertyManaFeatures.setComment("Default: true; If set to true, then all mana features will be enabled.");
-
-
-        // Create ember feature property
-        Property propertyEmberFeatures = config.get(CATEGORY_FEATURES, "EnableEmberFeatures", false);
-
-        // Add comment
-        propertyEmberFeatures.setComment("Default: false; If set to true, then all ember features will be enabled.");
-
-
-        // Create starlight p2p tunnel property
-        Property propertyStarlightTunnel = config.get(CATEGORY_FEATURES, "EnableStarlightTunnel", true);
-
-        // Add comment
-        propertyStarlightTunnel.setComment("Default: true; If set to true, then starlight p2p tunnel will be available.");
-
-
-        // Create black/white hole storage system property
-        Property propertyBlackHoleStorageSystem = config.get(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true);
-
-        // Add comment
-        propertyBlackHoleStorageSystem.setComment("Default: true (only in alpha); If set to true, then all black/white storage system blocks will be available in game.");
-
-
-        // Create me server property
-        Property propertyMEServer = config.get(CATEGORY_TILES, "EnableMEServer", true);
-
-        // Add comment
-        propertyMEServer.setComment("Default: true; If set to true, then ME Server blocks will be available in game.");
-
-
-        // Create me server property
-        Property propertyLogicBus = config.get(CATEGORY_TILES, "EnableLogicBus", true);
-
-        // Add comment
-        propertyLogicBus.setComment("Default: true; If set to true, then Logic bus blocks will be available in game.");
-
-
-        // Create interface storage property
-        Property propertyInterfaceStorage = config.get(CATEGORY_PROPERTIES, "InterfaceStorage", 1000000);
-
-        // Add comment
-        propertyInterfaceStorage.setComment("Default: 1 000 000 RF; Max capacity of ME Energy interface in RF units (all other units is depend on RF capacity).");
-
-
-        // Create block destruction property
-        Property propertyHoleBlockDestruction = config.get(CATEGORY_PROPERTIES, "BlackHoleBlockDestruction", true);
-        // Add comment
-        propertyHoleBlockDestruction.setComment("Default: True; If enabled, then black hole will destroy blocks in range");
-
-        // Create entity physics property
-        Property propertyEntityPhysics = config.get(CATEGORY_PROPERTIES, "BlackHoleEntityPhysics", false);
-        // Add comment
-        propertyEntityPhysics.setComment("Default: False; If enabled, then black hole will pull entities in range");
-
-        // Create entangling property
-        Property propertyBlackHoleEntangling = config.get(CATEGORY_PROPERTIES, "BlackHoleEntangling", true);
-        // Add comment
-        propertyBlackHoleEntangling.setComment("Default: True; If enabled, then black hole may entangle with white hole");
-
-        // Create emp property
-        Property propertyEMPAnomaly = config.get(CATEGORY_PROPERTIES, "EMPAnomaly", true);
-        // Add comment
-        propertyEMPAnomaly.setComment("Default: True; If enabled black/white hole will sometime extract/inject energy to/from own buffer to all machines in range");
-
-        // Create entropy property
-        Property propertyEntropyShift = config.get(CATEGORY_PROPERTIES, "EntropyShift", true);
-        // Add comment
-        propertyEntropyShift.setComment("Default: True; If enabled black/white hole will sometime increase/decrease entropy of 50% of blocks in range");
-
-        // Create unbreakable blocks' destroy property
-        Property propertyBlackHoleDestroyUnbreakableBlocks = config.get(CATEGORY_PROPERTIES, "BlackHoleDestroyUnbreakableBlocks", false);
-        // Add comment
-        propertyBlackHoleDestroyUnbreakableBlocks.setComment("Default: False; If enabled black hole will destroy and eat unbreakable blocks in range");
 
         // Create order list #1
         List<String> featuresOrder = new ArrayList<>();
@@ -158,43 +96,58 @@ public class AIConfig {
         // Create order list #3
         List<String> propertiesOrder = new ArrayList<>();
 
-        // Sort all properties
-        featuresOrder.add(propertyEnergyFeatures.getName());
-        featuresOrder.add(propertyManaFeatures.getName());
-        featuresOrder.add(propertyEmberFeatures.getName());
-        featuresOrder.add(propertyStarlightTunnel.getName());
+        // Add every property
 
-        tileOrder.add(propertyBlackHoleStorageSystem.getName());
-        tileOrder.add(propertyMEServer.getName());
-        tileOrder.add(propertyLogicBus.getName());
+        // Energy parts/tiles/items
+        enableEnergyFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEnergyFeatures", true,
+                "Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature",
+                featuresOrder);
 
-        propertiesOrder.add(propertyInterfaceStorage.getName());
+        // Mana parts/tile/items
+        enableManaFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false,
+                "Default: true; If set to true, then all mana features will be enabled.",
+                featuresOrder);
 
-        propertiesOrder.add(propertyHoleBlockDestruction.getName());
-        propertiesOrder.add(propertyEntityPhysics.getName());
-        propertiesOrder.add(propertyBlackHoleEntangling.getName());
-        propertiesOrder.add(propertyEMPAnomaly.getName());
-        propertiesOrder.add(propertyEntropyShift.getName());
-        propertiesOrder.add(propertyBlackHoleDestroyUnbreakableBlocks.getName());
+        // Ember capability for energy parts and p2p tunnel
+        enablEmberFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", false,
+                "Default: false; If set to true, then all ember features will be enabled.",
+                featuresOrder);
 
-        // Set actual values
-        enableEnergyFeatures = propertyEnergyFeatures.getBoolean();
-        enableManaFeatures = propertyManaFeatures.getBoolean();
-        enablEmberFeatures = propertyEmberFeatures.getBoolean();
-        enableStarlightFeatures = propertyStarlightTunnel.getBoolean();
+        // p2p tunnel starlight
+        enableStarlightFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableStarlightTunnel", true,
+                "Default: true; If set to true, then starlight p2p tunnel will be available.",
+                featuresOrder);
 
-        enableBlackHoleStorage = propertyBlackHoleStorageSystem.getBoolean();
-        enableMEServer = propertyMEServer.getBoolean();
-        enableLogicBus = propertyLogicBus.getBoolean();
+        // Black/white hole storage
+        enableBlackHoleStorage = (Boolean)addProperty(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true,
+                "Default: true (only in alpha); If set to true, then all black/white storage system blocks will be available in game.",
+                tileOrder);
 
-        interfaceMaxStorage = propertyInterfaceStorage.getInt();
+        // ME Server
+        enableMEServer = (Boolean)addProperty(CATEGORY_TILES, "EnableMEServer", true,
+                "Default: true; If set to true, then ME Server blocks will be available in game.",
+                tileOrder);
 
-        blackHoleBlockDestruction = propertyHoleBlockDestruction.getBoolean();
-        blackHoleEntityPhysics = propertyEntityPhysics.getBoolean();
-        blackHoleEntangling = propertyBlackHoleEntangling.getBoolean();
-        EMPAnomaly = propertyEMPAnomaly.getBoolean();
-        EntropyShift = propertyEntropyShift.getBoolean();
-        blackHoleDestroyUnbreakableBlocks = propertyBlackHoleDestroyUnbreakableBlocks.getBoolean();
+        // Logic bus
+        enableLogicBus = (Boolean)addProperty(CATEGORY_TILES, "EnableLogicBus", true,
+                "Default: true; If set to true, then Logic bus blocks will be available in game.",
+                tileOrder);
+
+        // Max storage of ME energy interface
+        interfaceMaxStorage = (Integer)addProperty(CATEGORY_PROPERTIES, "InterfaceStorage", 1000000,
+                "Default: 1 000 000 RF; Max capacity of ME Energy interface in RF units (all other units is depend on RF capacity).",
+                propertiesOrder);
+
+        // Max distance of pylon
+        maxPylonDistance = (Integer)addProperty(CATEGORY_PROPERTIES, "PylonDistance", 97,
+                "Default: 97; Max range of ME Pylon's beam",
+                propertiesOrder);
+
+        // Energy drain per block of pylon
+        pylonDrain = (Double)addProperty(CATEGORY_PROPERTIES, "PylonDrainPerBlock", 20.0D,
+                "Default: 20.0D; Active(used only when matter transmitted) energy drain per block of ME pylon's beam. Limit is: " +
+                        "10000",
+                propertiesOrder);
 
         // Set order
         config.setCategoryPropertyOrder(CATEGORY_FEATURES, featuresOrder);

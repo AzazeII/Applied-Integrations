@@ -12,12 +12,19 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketSingularitySync;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.AITile;
+import AppliedIntegrations.tile.Additions.TimeHandler;
 import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import AppliedIntegrations.tile.Additions.storage.helpers.impl.*;
 import appeng.api.AEApi;
+import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.ticking.IGridTickable;
+import appeng.api.networking.ticking.TickRateModulation;
+import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellInventory;
 import appeng.api.storage.IMEInventoryHandler;
@@ -25,15 +32,19 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.util.AEPartLocation;
+import appeng.me.Grid;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -43,7 +54,7 @@ import java.util.List;
 import static AppliedIntegrations.Blocks.Additions.BlockMEPylon.FACING;
 import static java.util.Collections.singletonList;
 
-public class TileMEPylon extends AITile implements ICellContainer {
+public class TileMEPylon extends AITile implements ICellContainer, IGridTickable {
 
     // Linked maps of *passive* handlers, which standing as handler factory
     private static LinkedHashMap<IStorageChannel, Class<? extends BlackHoleSingularityInventoryHandler<?>>> passiveBlackHoleHandlers = new LinkedHashMap<>();
@@ -58,6 +69,18 @@ public class TileMEPylon extends AITile implements ICellContainer {
     public ISingularity operatedTile;
 
     public boolean syncActive = false;
+
+    // Drain in AE
+    public float beamDrain = 0F;
+
+    // Should this tile drain energy from ME?
+    public boolean shouldDrain = false;
+
+    // How long drain continues?
+    public static final int DRAIN_LASTS_SECONDS = 3;
+
+    // Time handler for drain
+    public TimeHandler drainHandler = new TimeHandler();
 
     // Adds new handler for black hole storage
     public static void addBlackHoleHandler(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, IStorageChannel chan) {
@@ -136,10 +159,21 @@ public class TileMEPylon extends AITile implements ICellContainer {
         }
     }
 
-    @Override
-    public void update() {
-        super.update();
+    private void notifyClient(){
+        // Notify client
+        NetworkHandler.sendToAllInRange(new PacketSingularitySync(this.operatedTile, getBeamState(), shouldDrain, this.getPos()),
+                new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+    }
 
+    @Nonnull
+    @Override
+    public TickingRequest getTickingRequest(@Nonnull IGridNode node) {
+        return new TickingRequest(1,1, false, false);
+    }
+
+    @Nonnull
+    @Override
+    public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
         // Call only on server
         if(!world.isRemote) {
             // Check if handlers not exist yet
@@ -148,11 +182,32 @@ public class TileMEPylon extends AITile implements ICellContainer {
                 initHandlers();
             }
 
-            // Check if has no handled black hole
-            if (!hasSingularity()) {
-                // Check if active
-                if (getGridNode().isActive()) {
+            // Check if active
+            if (getGridNode().isActive()) {
+                // Check if has no handled black hole
+                if (!hasSingularity()) {
                     tryToGetSingularity();
+                } else if (shouldDrain) {
+                    // Check if time not passed yet
+                    if(!drainHandler.hasTimePassed(world, DRAIN_LASTS_SECONDS)) {
+                        // Consume energy for data transmitting, over beam
+                        IEnergyGrid energyGrid = getGridNode().getGrid().getCache(IEnergyGrid.class);
+
+                        // Simulate drain, and check if grid has enough energy
+                        double drain = energyGrid.extractAEPower(beamDrain, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+
+                        // Drain energy
+                        energyGrid.extractAEPower(drain, Actionable.MODULATE, PowerMultiplier.CONFIG);
+
+                        // Sync client
+                        notifyClient();
+                    }else{
+                        // Don't drain energy anymore
+                        shouldDrain = false;
+
+                        // Sync client
+                        notifyClient();
+                    }
                 }
             }
 
@@ -171,6 +226,7 @@ public class TileMEPylon extends AITile implements ICellContainer {
                 syncActive = false;
             }
         }
+        return TickRateModulation.SAME;
     }
 
     private void tryToGetSingularity() {
@@ -180,7 +236,7 @@ public class TileMEPylon extends AITile implements ICellContainer {
             return;
 
         // Check if tile can indirectly see singularity
-        for(int i = 1; i < 85; i++){
+        for(int i = 1; i < AIConfig.maxPylonDistance+1; i++){
             // get block with offset
             IBlockState state = world.getBlockState(pos.offset(getFw(), i));
 
@@ -188,6 +244,12 @@ public class TileMEPylon extends AITile implements ICellContainer {
             if(state.getBlock() instanceof BlockBlackHole) {
                 // Set operated tile
                 setSingularity((ISingularity)world.getTileEntity(pos.offset(getFw(), i)));
+
+                // Change energy drain to current iteration multiplied by config value
+                beamDrain = (float)Math.min(i * AIConfig.pylonDrain, 10000);
+
+                // Sync client
+                notifyClient();
 
                 // Skip other positions
                 break;
@@ -199,19 +261,16 @@ public class TileMEPylon extends AITile implements ICellContainer {
     }
 
     public void setSingularity(ISingularity tileEntity) {
-        // Check not null
-        if(tileEntity == null)
-            return;
-
         // Set singularity
         operatedTile = tileEntity;
 
-        // Notify client
-        NetworkHandler.sendToAllInRange(new PacketSingularitySync(this.operatedTile, this.getPos()),
-                new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+        // Sync client
+        notifyClient();
 
-        // Notify singularity
-        operatedTile.addListener(this);
+        // Check tile not resetting
+        if( operatedTile != null )
+            // Notify singularity
+            operatedTile.addListener(this);
 
         // Post cell array update
         postCellEvent();
@@ -251,6 +310,7 @@ public class TileMEPylon extends AITile implements ICellContainer {
         // Check if we are operating black hole
         if(operatedTile instanceof TileBlackHole)
             return singletonList(activeBlackHoleHandlers.get(iStorageChannel));
+
         // Check if we are operating white hole
         else
             return singletonList(activeWhiteHoleHandlers.get(iStorageChannel));
@@ -260,6 +320,22 @@ public class TileMEPylon extends AITile implements ICellContainer {
     public EnumSet<EnumFacing> getConnectableSides() {
         // Return opposite of facing side
         return EnumSet.of(getFw().getOpposite());
+    }
+
+    public void readFromNBT(NBTTagCompound compound) {
+        // Deserialize operated tile
+        operatedTile = ISingularity.readFromNBT(compound);
+
+        super.readFromNBT(compound);
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        // Check not null
+        if(operatedTile != null)
+            // Serialize operated tile
+            ISingularity.writeNBTTag(operatedTile, compound);
+
+        return super.writeToNBT(compound);
     }
 
     private EnumFacing getFw() {
@@ -282,18 +358,14 @@ public class TileMEPylon extends AITile implements ICellContainer {
     }
 
     public boolean activate(EnumHand hand, EntityPlayer p) {
-        if(hand == EnumHand.MAIN_HAND) {
-            if (!world.isRemote) {
-                if(p.isSneaking()) {
-                    AILog.chatLog("[Server] Has singularity: " + hasSingularity());
-                }else{
-                    tryToGetSingularity();
-                }
-            }else{
-                if(p.isSneaking())
-                    AILog.chatLog("[Client] Has singularity: " + hasSingularity());
-            }
-        }
-        return true;
+        return false;
+    }
+
+    public float getBeamState() {
+        return beamDrain;
+    }
+
+    public boolean drainsEnergy(){
+        return shouldDrain;
     }
 }

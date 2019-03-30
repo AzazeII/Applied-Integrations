@@ -125,10 +125,8 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
     @Override
     public void update() {
         if(!world.isRemote)
-            // Check config
-            if(AIConfig.blackHoleBlockDestruction)
-                // Modulate gravity
-                modulateBlockGravity();
+            // Modulate gravity
+            modulateBlockGravity();
 
         // Check if growth factor changed, or 20 seconds left
         if(getGrowthFactor() != lastGrowth || anomalyTriggerHandler.hasTimePassed(world, 20)){
@@ -337,7 +335,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
                         continue;
 
                     // Check if block is unbreakable
-                    if (b.getBlockHardness(b.getDefaultState(), world, pos) == -1 && !AIConfig.blackHoleDestroyUnbreakableBlocks)
+                    if (b.getBlockHardness(b.getDefaultState(), world, pos) == -1)
                         continue;
 
                     // Check if block is ME pylon
@@ -444,7 +442,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
         if(hand == EnumHand.MAIN_HAND) {
             if (!world.isRemote) {
                 if(!p.isSneaking()) {
-                    AnomalyEnum.EntropyShift.action.accept(this);
+                    AnomalyEnum.EntangleHoles.action.accept(this);
                 }
             }
         }
@@ -477,6 +475,16 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
         }else if(stack instanceof AEEnergyStack){
             storedEnergies.add((AEEnergyStack)stack);
         }
+
+        // Iterate over all listeners
+        for(TileMEPylon pylon : listeners) {
+            // Make tile consume energy
+            pylon.shouldDrain = true;
+
+            // Update time handler
+            pylon.drainHandler.updateData(pylon.getWorld());
+        }
+
 
         // Add mass
         addMass(stack.getStackSize() * MASS_ADDED);

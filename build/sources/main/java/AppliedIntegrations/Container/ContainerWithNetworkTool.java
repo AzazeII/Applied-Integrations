@@ -17,6 +17,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
+import static net.minecraft.init.Items.AIR;
+
 /**
  * @Author Azazell
  */
@@ -359,7 +361,7 @@ super(player);
             if( slotStack.getCount() == 0 )
             {
                 // Set the slot to have no item
-                slot.putStack( null );
+                slot.putStack( new ItemStack(AIR) );
             }
 
             // Inform the slot its stack changed;

@@ -1,6 +1,7 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.tile.Additions.TimeHandler;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
@@ -8,18 +9,34 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
+import appeng.client.EffectType;
+import appeng.core.AppEng;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
-public class AIPlanePart extends AIPart implements IGridTickable {
+public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
-    public Entity workingEntity;
+    protected static final int ENERGY_TRANSFER = 800;
+    private TimeHandler lightningHandler = new TimeHandler();
+
+    protected List<Entity> currentEntities = new ArrayList<>();
 
     public AIPlanePart(PartEnum associatedPart, SecurityPermissions... interactionPermissions) {
         super(associatedPart, interactionPermissions);
     }
+
+    protected abstract void doWork(int ticksSinceLastCall);
+
+    @Override
+    public final void onEntityCollision(Entity entity) { }
 
     @Override
     protected AIGridNodeInventory getUpgradeInventory() {
@@ -33,8 +50,8 @@ public class AIPlanePart extends AIPart implements IGridTickable {
 
     @Override
     public void getBoxes(IPartCollisionHelper bch) {
-        bch.addBox(2, 2, 14, 14, 14, 16);
-        bch.addBox(5, 5, 13, 11, 11, 14);
+        bch.addBox( 5, 5, 14, 11, 11, 15 );
+        bch.addBox( 1, 1, 15, 15, 15, 16 );
     }
 
     @Override
@@ -48,28 +65,38 @@ public class AIPlanePart extends AIPart implements IGridTickable {
     }
 
     @Override
-    public void onEntityCollision(Entity entity) {
-        if(entity.getPosition().equals(new BlockPos(getX() + getSide().xOffset, getY() + getSide().yOffset, getZ() + getSide().zOffset))){
-            workingEntity = entity;
-        }
-    }
-
-    @Override
     public TickingRequest getTickingRequest(IGridNode iGridNode) {
         return new TickingRequest(1, 1, false, false);
     }
 
     @Nonnull
     @Override
-    public TickRateModulation tickingRequest(@Nonnull IGridNode iGridNode, int i) {
-        if(workingEntity != null) {
-            // Check if entity still near the bus
-            if (workingEntity.getPosition().equals(new BlockPos(getX() + getSide().xOffset, getY() + getSide().yOffset, getZ() + getSide().zOffset))) {
-                workingEntity = null;
-            }
-        }
+    public final TickRateModulation tickingRequest(@Nonnull IGridNode iGridNode, int i) {
+        // Get the world
+        World world = this.hostTile.getWorld();
+
+        // Get our location
+        int x = this.hostTile.getPos().getX();
+        int y = this.hostTile.getPos().getY();
+        int z = this.hostTile.getPos().getZ();
+
+        // Get box
+        AxisAlignedBB bb = new AxisAlignedBB(x-1, y-1, z-1, x+1, y+1, z+1);
+
+        // Get current entities
+        currentEntities = world.getEntitiesWithinAABB(Entity.class, bb);
+
+        // Pass func to child classes
+        doWork(i);
+
         return TickRateModulation.SAME;
     }
 
-
+    protected void spawnLightning(Entity workingEntity) {
+        // If time passed
+        if(lightningHandler.hasTimePassed(getHostTile().getWorld(), 1))
+            // Spawn effect
+            AppEng.proxy.spawnEffect(EffectType.Lightning, hostTile.getWorld(), workingEntity.posX,
+                    workingEntity.posY, workingEntity.posZ, null);
+    }
 }

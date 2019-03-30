@@ -68,12 +68,6 @@ public class WidgetEnergySlot
             // Disable lighting
             GL11.glDisable( GL11.GL_LIGHTING );
 
-            // Enable blending
-            GL11.glEnable( GL11.GL_BLEND );
-
-            // Set the blend mode
-            GL11.glBlendFunc( 770, 771 );
-
             // Full white
             GL11.glColor3f( 1.0F, 1.0F, 1.0F );
 
@@ -83,7 +77,7 @@ public class WidgetEnergySlot
             // Draw this slot just like the center slot of the gui
             this.drawTexturedModalRect( this.xPosition, this.yPosition, 79, 39, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
 
-            // Do we have an Energy?
+            // Check not null
             if( this.getEnergy() != null )
             {
                 // Draw the Energy
@@ -92,10 +86,6 @@ public class WidgetEnergySlot
 
             // Re-enable lighting
             GL11.glEnable( GL11.GL_LIGHTING );
-
-            // Re-disable blending
-            GL11.glDisable( GL11.GL_BLEND );
-
         }
 
     }
@@ -103,11 +93,6 @@ public class WidgetEnergySlot
     public void mouseClicked( final LiquidAIEnergy energy ) {
         if(this.d != null) {
             try {
-                if(energy != null)
-                    AILog.chatLog("Mouse clicked with energy: " + energy.getEnergyName());
-                else
-                    AILog.chatLog("Mouse clicked with energy: null");
-
                 setEnergy(energy, 1);
                 NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));
             }catch (Throwable throwable){

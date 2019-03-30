@@ -10,13 +10,17 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OverlayEntropyManipulator {
+        private int displayTickCount;
+        private long lastTick;
         private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/OverlayMTool.png");
-        // List of all states listed at left corner of player's screen
+        int zLevel = 0;
+        // List of all states listed at right corner of player's screen
         private List<Object> ListOfStates = new ArrayList<Object>();
         public OverlayEntropyManipulator() {
             MinecraftForge.EVENT_BUS.register(this);
@@ -28,11 +32,11 @@ public class OverlayEntropyManipulator {
             ItemStack item = minecraft.player.getHeldItemMainhand();
             if(item == null)
                 return;
-            boolean doRender = item.getItem() instanceof toolChaosManipulator;
+            boolean doRender = item.getItem() instanceof AdvancedNetworkTool;
             ScaledResolution scaledresolution = new ScaledResolution(minecraft);
             int j = scaledresolution.getScaledHeight()/32;
             if(doRender){
-                toolChaosManipulator toolEntropyManipulator = (toolChaosManipulator)item.getItem();
+                AdvancedNetworkTool toolEntropyManipulator = (AdvancedNetworkTool)item.getItem();
 
                 Minecraft.getMinecraft().renderEngine.bindTexture(texture);
                 //drawEntropyStates(10,200+toolEntropyManipulator.getMode().index*18,j,j*4+6);
@@ -51,8 +55,8 @@ public class OverlayEntropyManipulator {
                     ItemStack stack = player.getHeldItemMainhand();
                     if (stack != null) {
                         Item item = stack.getItem();
-                        if (item instanceof toolChaosManipulator) {
-                            toolChaosManipulator tool = (toolChaosManipulator) item;
+                        if (item instanceof AdvancedNetworkTool) {
+                            AdvancedNetworkTool tool = (AdvancedNetworkTool) item;
 
                             //tool.nextMode(false);
                             event.setCanceled(true);
@@ -62,8 +66,8 @@ public class OverlayEntropyManipulator {
                     ItemStack stack = player.getHeldItemMainhand();
                     if (stack != null) {
                         Item item = stack.getItem();
-                        if (item instanceof toolChaosManipulator) {
-                            toolChaosManipulator tool = (toolChaosManipulator) item;
+                        if (item instanceof AdvancedNetworkTool) {
+                            AdvancedNetworkTool tool = (AdvancedNetworkTool) item;
 
                             //tool.nextMode(true);
                             event.setCanceled(true);

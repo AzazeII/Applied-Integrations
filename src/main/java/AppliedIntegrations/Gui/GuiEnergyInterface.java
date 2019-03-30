@@ -201,7 +201,6 @@ public class GuiEnergyInterface extends PartGui implements IFilterGUI,IWidgetHos
 				//springValue+=1;
 			}
 			this.energySlot.drawWidget();
-			this.energySlot.setEnergy(this.LinkedFilter, 1);
 		}
 
 	}
