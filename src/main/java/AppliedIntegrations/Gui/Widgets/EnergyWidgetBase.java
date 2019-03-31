@@ -71,7 +71,7 @@ public abstract class EnergyWidgetBase
     }
 
     /**
-     * Draws the Energy icon, or a question mark if not discovered.
+     * Draws the Energy icon
      */
     protected void drawEnergy()
     {
