@@ -1,5 +1,5 @@
 # Applied-Integrations
-
+[mod]applied-integrations[/mod]
 # About
 Applied integrations is applied energitsics 2 addon, which adds many new features. One of main features is storing energy in storage cells
 
