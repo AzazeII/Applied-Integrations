@@ -7,9 +7,9 @@ Applied integrations is applied energitsics 2 addon, which adds many new feature
 [![License](https://img.shields.io/badge/License-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 # Features:
-features marked with * is not currently working
-features marked with ** is work in half, or unstable
-features marked with *** is working only in 1.7.10 version
+Features marked with * is not currently working.
+Features marked with ** is work in half, or unstable.
+Features marked with *** is working only in 1.7.10 version.
 
 features marked with & will/already (be) disabled by default
 
