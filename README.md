@@ -53,7 +53,7 @@ ME Pylon - Allows you to inject any type of matter (item,fluid,energy,mana) into
 To entagle 2 holes together you need to shot two singularities from ME defnce tower in one tick*.
 only white and black hole can be entagled
 
-For developers:
+# For developers
  You can add own matter type to Black/white hole storage system, by typing this in your common proxy*:
  AIApi.instance().addHandlersForMEPylon(#yourHandlerForBlackHole#.class, #yourHandlerForWhiteHole#.class, AEApi.instance().storage().getStorageChannel(#yourStorageChannel#.class));
  
