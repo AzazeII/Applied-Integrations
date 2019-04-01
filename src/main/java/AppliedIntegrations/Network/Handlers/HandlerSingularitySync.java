@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Handlers;
 
 import AppliedIntegrations.Network.Packets.PacketSingularitySync;
-import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
+import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

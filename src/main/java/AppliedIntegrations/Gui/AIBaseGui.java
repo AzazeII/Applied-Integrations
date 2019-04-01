@@ -2,27 +2,18 @@ package AppliedIntegrations.Gui;
 
 
 import AppliedIntegrations.Container.ContainerWithNetworkTool;
-import AppliedIntegrations.Container.slot.SlotNetworkTool;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import appeng.api.AEApi;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.lwjgl.opengl.GL11.GL_LINES;
-import static org.lwjgl.opengl.GL11.GL_POLYGON;
 
 /**
  * @Author Azazell
@@ -30,13 +21,7 @@ import static org.lwjgl.opengl.GL11.GL_POLYGON;
 @SideOnly(Side.CLIENT)
 public abstract class AIBaseGui
         extends GuiContainer
-        implements IWidgetHost
-{
-    private static final int upgradeU = AEStateIconsEnum.UPGRADE_CARD_BACKGROUND.getU();
-    private static final int upgradeV = AEStateIconsEnum.UPGRADE_CARD_BACKGROUND.getV();
-    private static final int upgradeWidth = AEStateIconsEnum.UPGRADE_CARD_BACKGROUND.getWidth();
-    private static final int upgradeHeight = AEStateIconsEnum.UPGRADE_CARD_BACKGROUND.getHeight();
-
+        implements IWidgetHost {
     /**
      * Lines to draw when drawTooltip is called.
      */
@@ -47,13 +32,7 @@ public abstract class AIBaseGui
         super( container );
     }
 
-    /**
-     * Adds to the tooltip based on which button the mouse is over.
-     *
-     * @param mouseX
-     * @param mouseY
-     * @return True when a tooltip was added, false otherwise.
-     */
+
     private final boolean addTooltipFromButtons( final int mouseX, final int mouseY )
     {
         // Is the mouse over any buttons?
@@ -100,69 +79,6 @@ public abstract class AIBaseGui
     }
 
     /**
-     * Checks if a not-left-click was on a button.<BR>
-     * Left click is handled by GuiScreen.mouseClicked()
-     *
-     * @param mouseX
-     * @param mouseY
-     * @return True if click was handled.
-     */
-    private final boolean nonLeftClickHandler_Buttons( final int mouseX, final int mouseY, final int mouseButton )
-    {
-        if( mouseButton != AIGuiHelper.MOUSE_BUTTON_LEFT )
-        {
-            // Mouse over button?
-            for( Object buttonObj : this.buttonList )
-            {
-                // Cast
-                GuiButton button = (GuiButton)buttonObj;
-
-                // Was mouse over the button?
-                if( button.mousePressed( this.mc, mouseX, mouseY ) )
-                {
-                    // Play clicky sound
-                    button.playPressSound( this.mc.getSoundHandler() );
-
-                    // Call button click event
-                    this.onButtonClicked( button, mouseButton );
-
-                    // Handled
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Draws the slot backgrounds for the network tool and upgrade slots.
-     *
-     * @param alpha
-     * @param mouseX
-     * @param mouseY
-     */
-    protected final void drawAEToolAndUpgradeSlots( final float alpha, final int mouseX, final int mouseY )
-    {
-        Minecraft.getMinecraft().renderEngine.bindTexture( AEStateIconsEnum.AE_STATES_TEXTURE );
-
-        // Locate any upgrade or network slots
-        for( int i = 0; i < this.inventorySlots.inventorySlots.size(); i++ )
-        {
-            // Get the slot
-            Slot slot = (Slot)this.inventorySlots.inventorySlots.get( i );
-
-            // Is it network or upgrade?
-            if( ( slot instanceof SlotNetworkTool) )
-            {
-                // Draw background
-                this.drawTexturedModalRect( this.guiLeft + slot.xPos-3, this.guiTop + slot.yPos-5, AIBaseGui.upgradeU,
-                        AIBaseGui.upgradeV, AIBaseGui.upgradeWidth, AIBaseGui.upgradeHeight );
-            }
-        }
-    }
-
-    /**
      * Gets the slot who contains the specified point.
      *
      * @param x
@@ -195,12 +111,6 @@ public abstract class AIBaseGui
     @Override
     protected void mouseClicked( final int mouseX, final int mouseY, final int mouseButton )
     {
-
-        if( this.nonLeftClickHandler_Buttons( mouseX, mouseY, mouseButton ) )
-        {
-            return;
-        }
-
         // Is this container one that could have a network tool?
         if( this.inventorySlots instanceof ContainerWithNetworkTool )
         {
@@ -272,29 +182,12 @@ public abstract class AIBaseGui
             this.tooltip.clear();
         }
     }
-    protected void drawRoundedHollowBox(int x,int y,int height,int width,int color){
-        drawVerticalLine(x-5, y-1-4, y-height+3, color);//left
-        drawHorizontalLine(x, x+width-1, y-height, color);//upper line
-        drawVerticalLine(x+4+width, y-1-4, y-height+3, color);//right
-        drawHorizontalLine(x, x+width-1, y-2, color);//lower line
-        for (int i=0;i<4;i++){
-            drawRect(x-i, y-2-i, x-1-i, y-1-i, color);//lower left
-            drawRect(x+i+width, y-2-i, x+1+i+width, y-1-i, color);//lower right
-            drawRect(x-i, y-height+i, x-1-i, y+1-height+i, color);//upper left
-            drawRect(x+i+width, y-height+i, x+1+width+i, y+1-height+i, color);//upper right
-        }
-    }
-    @Override
-    public final FontRenderer getFontRenderer()
-    {
-        return this.fontRenderer;
-    }
 
     /**
      * Gets the starting X position for the Gui.
      */
     @Override
-    public final int guiLeft()
+    public final int getLeft()
     {
         return this.guiLeft;
     }
@@ -303,7 +196,7 @@ public abstract class AIBaseGui
      * Gets the starting Y position for the Gui.
      */
     @Override
-    public final int guiTop()
+    public final int getTop()
     {
         return this.guiTop;
     }

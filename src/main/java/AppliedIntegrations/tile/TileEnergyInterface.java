@@ -2,8 +2,8 @@ package AppliedIntegrations.tile;
 
 import AppliedIntegrations.API.*;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Container.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.GuiEnergyInterface;
+import AppliedIntegrations.Container.part.ContainerEnergyInterface;
+import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Helpers.InterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;

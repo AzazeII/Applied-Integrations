@@ -1,10 +1,8 @@
 package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
-import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
+import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.BlockStairs;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;

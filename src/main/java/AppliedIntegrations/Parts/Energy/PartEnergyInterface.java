@@ -2,17 +2,17 @@ package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.*;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Container.ContainerEnergyInterface;
+import AppliedIntegrations.Container.part.ContainerEnergyInterface;
+import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Gui.GuiEnergyInterface;
-import AppliedIntegrations.Gui.PartGui;
+import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Helpers.InterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketBarChange;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
-import AppliedIntegrations.Network.Packets.PacketServerFilter;
+import AppliedIntegrations.Network.Packets.PacketServerToClient;
 import AppliedIntegrations.Parts.*;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
@@ -252,25 +252,21 @@ public class PartEnergyInterface
 
 
 	@Override
-	public void removeFromWorld()
-	{
+	public void removeFromWorld() {
 		super.removeFromWorld();
-		if(IntegrationsHelper.instance.isLoaded(EU))
+		if( IntegrationsHelper.instance.isLoaded(EU) )
 			this.invalidateSinkSource();
 	}
 
 	@Override
-	public void addToWorld()
-	{
+	public void addToWorld() {
 		super.addToWorld();
-		if(IntegrationsHelper.instance.isLoaded(EU))
+		if( IntegrationsHelper.instance.isLoaded(EU) )
 			this.updateSinkSource();
 	}
 
-	private void updateSinkSource()
-	{
-		if( getEnergyStorage(EU, INTERNAL) == null )
-		{
+	private void updateSinkSource() {
+		if( getEnergyStorage(EU, INTERNAL) == null ) {
 			EUStorage = new InterfaceSinkSource( this.getHost().getTile().getWorld(), this.getHost().getLocation().getPos(), getMaxEnergyStored(
 					null, EU
 			), 4, 4 );
@@ -279,10 +275,8 @@ public class PartEnergyInterface
 		((InterfaceSinkSource)getEnergyStorage(EU, INTERNAL)).update();
 	}
 
-	private void invalidateSinkSource()
-	{
-		if( getEnergyStorage(EU, INTERNAL) != null )
-		{
+	private void invalidateSinkSource() {
+		if( getEnergyStorage(EU, INTERNAL) != null ) {
 			((InterfaceSinkSource)getEnergyStorage(EU, INTERNAL)).invalidate();
 		}
 	}
@@ -378,11 +372,9 @@ public class PartEnergyInterface
 	@SideOnly(CLIENT)
 	private void notifyListenersOfFilterEnergyChange()
 	{
-		for( ContainerEnergyInterface listener : this.LinkedListeners)
-		{
+		for( ContainerEnergyInterface listener : this.LinkedListeners) {
 			if(listener!=null) {
-				NetworkHandler.sendTo(new PacketServerFilter(this.FilteredEnergy,0,this.getX(),this.getY(),this.getZ()
-						,this.getSide().getFacing(),this.getHostTile().getWorld()), (EntityPlayerMP)listener.player);
+				NetworkHandler.sendTo(new PacketServerToClient(this.FilteredEnergy,0, this), (EntityPlayerMP)listener.player);
 			}
 		}
 	}
@@ -401,7 +393,7 @@ public class PartEnergyInterface
  	private void notifyListenersOfBarFilterChange(LiquidAIEnergy bar){
 		for(ContainerEnergyInterface listener : this.LinkedListeners){
 			if(listener!=null) {
-				NetworkHandler.sendTo(new PacketBarChange(bar,getX(),getY(),getZ(),getSide().getFacing(),this.getHostTile().getWorld()),(EntityPlayerMP)listener.player);
+				NetworkHandler.sendTo(new PacketBarChange(bar,this),(EntityPlayerMP)listener.player);
 			}
 		}
 	}
@@ -437,7 +429,7 @@ public class PartEnergyInterface
 		if(!getHostTile().getWorld().isRemote) {
 			if (updateRequested) {
 				// Check if we have gui to update
-				if (Minecraft.getMinecraft().currentScreen instanceof PartGui)
+				if (Minecraft.getMinecraft().currentScreen instanceof AIBaseGui)
 					this.initGuiCoordinates();
 			}
 
@@ -492,7 +484,6 @@ public class PartEnergyInterface
 			int i = 0;
 			for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 				if (getEnergyStorage(energy, INTERNAL) != null) {
-					Class type = getEnergyStorage(energy, INTERNAL).getTypeClass();
 					if (this.getEnergyStorage(energy, INTERNAL) != null && ((Number) getEnergyStorage(energy, INTERNAL).getStored()).doubleValue() > 0) {
 						this.bar = energy;
 						notifyListenersOfBarFilterChange(this.bar);
@@ -594,8 +585,8 @@ public class PartEnergyInterface
 		if(IntegrationsHelper.instance.isLoaded(Ember))
 			EmberStorage.readFromNBT(tag);
 
-		if(IntegrationsHelper.instance.isLoaded(EU))
-			EUStorage.readFromNBT(tag);
+		//if(IntegrationsHelper.instance.isLoaded(EU))
+			//EUStorage.readFromNBT(tag);
 
 		if(IntegrationsHelper.instance.isLoaded(J))
 			JStorage.readFromNBT(tag);
@@ -607,13 +598,14 @@ public class PartEnergyInterface
 
 		FilteredEnergy = LiquidAIEnergy.readFromNBT(tag);
 	}
+
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
 		if(IntegrationsHelper.instance.isLoaded(Ember))
 			EmberStorage.writeToNBT(tag);
 
 		if(IntegrationsHelper.instance.isLoaded(EU))
-			EUStorage.writeToNBT(tag);
+			tag.setDouble("#EUEnergy", EUStorage.getStored());
 
 		if(IntegrationsHelper.instance.isLoaded(J))
 			JStorage.writeToNBT(tag);

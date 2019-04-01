@@ -1,8 +1,4 @@
 package AppliedIntegrations;
-import AppliedIntegrations.API.AIApi;
-import AppliedIntegrations.API.Botania.IManaStorageChannel;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
@@ -11,24 +7,12 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.EnergyStorageChannel;
-import AppliedIntegrations.tile.Additions.storage.helpers.impl.*;
-import appeng.api.AEApi;
-import appeng.api.storage.channels.IFluidStorageChannel;
-import appeng.api.storage.channels.IItemStorageChannel;
-import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.util.EnumHelper;
-import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -99,9 +83,6 @@ public class AppliedIntegrations {
 
 		if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
 			BotaniaLoader.initRecipes();
-
-		// Register Cache, and monitor
-		//AEApi.instance().registries().gridCache().registerGridCache( IEnergyAIGrid.class, GridEnergyCache.class );
 
 		FMLCommonHandler.instance().bus().register(instance);
 

@@ -10,6 +10,7 @@ import appeng.api.AEApi;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartItem;
+import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
 import net.minecraft.block.Block;
@@ -25,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
 import teamroots.embers.api.item.IEmberChargedTool;
@@ -69,6 +71,9 @@ public class Utils {
         // Check for Ember API loaded, and item can handle Ember
         }else if(IntegrationsHelper.instance.isLoaded(Ember) && item instanceof IEmberChargedTool){
             return Ember;
+        // Check for RF Api loaded and item can handler RF
+        }else if(Loader.isModLoaded("redstoneflux") && item instanceof IEnergyContainerItem){
+            return RF;
         }
         return null;
     }
@@ -84,6 +89,15 @@ public class Utils {
             if(EnumCapabilityType.fromEnergy(energy) != null){
                 // Record type
                 EnumCapabilityType type = EnumCapabilityType.fromEnergy(energy);
+
+                // Check not null
+                if(type == null)
+                    return null;
+
+                // Check has capability
+                if(type.getCapabilityWithModCheck() == null)
+                    return null;
+
                 // Iterate over
                 for(Capability capability : type.getCapabilityWithModCheck()){
                     // Check if part has capability
@@ -108,6 +122,15 @@ public class Utils {
             if(EnumCapabilityType.fromEnergy(energy) != null){
                 // Record type
                 EnumCapabilityType type = EnumCapabilityType.fromEnergy(energy);
+
+                // Check not null
+                if(type == null)
+                    continue;
+
+                // Check not null
+                if(type.getCapabilityWithModCheck() == null)
+                    continue;
+
                 // Iterate over
                 for(Capability capability : type.getCapabilityWithModCheck()){
                     // Check if part has capability

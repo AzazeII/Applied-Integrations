@@ -18,7 +18,7 @@ import net.minecraft.util.EnumFacing;
 /**
  * @Author Azazell
  */
-public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator{
+public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator, ISyncHost{
     IGridNode getGridNode();
     LiquidAIEnergy getCurrentBar(AEPartLocation side);
 

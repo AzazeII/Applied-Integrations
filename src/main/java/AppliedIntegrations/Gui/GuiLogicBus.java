@@ -1,11 +1,9 @@
 package AppliedIntegrations.Gui;
 
+import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.AIContainer;
-import AppliedIntegrations.Container.ContainerLogicBus;
-import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.Container.tile.ContainerLogicBus;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
-import AppliedIntegrations.tile.TileEnergyInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -18,11 +16,6 @@ public class GuiLogicBus extends AIBaseGui{
 
     public GuiLogicBus(EntityPlayer player, TileLogicBusCore maybeCore, ContainerLogicBus container) {
         super(container);
-    }
-
-    @Override
-    public AIContainer getNodeContainer() {
-        return null;
     }
 
     @Override
@@ -43,5 +36,15 @@ public class GuiLogicBus extends AIBaseGui{
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         // Drawing Name
         this.fontRenderer.drawString(I18n.translateToLocal("ME Logic Bus Pattern Storage"), 9, 3-41, 4210752);
+    }
+
+    @Override
+    public ISyncHost getSyncHost() {
+        return null;
+    }
+
+    @Override
+    public void setSyncHost(ISyncHost host) {
+
     }
 }

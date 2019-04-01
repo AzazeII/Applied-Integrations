@@ -7,7 +7,6 @@ import AppliedIntegrations.Network.Packets.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 
@@ -23,7 +22,7 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
         Handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
 
-        Handler.registerMessage(HandlerServerFilter.class, PacketServerFilter.class, packetId++, Side.CLIENT);
+        Handler.registerMessage(HandlerServerToClient.class, PacketServerToClient.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerMEServer.class, PacketMEServer.class, packetId++, Side.CLIENT);
 
@@ -37,7 +36,7 @@ public class NetworkHandler {
     }
 
     public static final void registerServerPackets(){
-        Handler.registerMessage(HandlerClientFilter.class, PacketClientFilter.class, packetId++, Side.SERVER);
+        Handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
     }
 
     // send packet info to player

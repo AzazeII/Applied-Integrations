@@ -1,6 +1,6 @@
 package AppliedIntegrations.Blocks.Additions;
 
-import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
+import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

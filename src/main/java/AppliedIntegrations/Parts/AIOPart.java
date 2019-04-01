@@ -4,12 +4,11 @@ import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.Container.ContainerPartEnergyIOBus;
-import AppliedIntegrations.Gui.AIGuiHandler;
+import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Network.Packets.PacketServerFilter;
+import AppliedIntegrations.Network.Packets.PacketServerToClient;
 import AppliedIntegrations.Utils.EffectiveSide;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -243,8 +242,7 @@ public abstract class AIOPart
             int i = 0;
             for (LiquidAIEnergy energy : this.filteredEnergies) {
                 TileEntity host = this.getHostTile();
-                NetworkHandler.sendTo(new PacketServerFilter(energy, i, host.getPos().getX()
-                        , host.getPos().getY(), host.getPos().getZ(), this.getSide().getFacing(), host.getWorld()), (EntityPlayerMP) this.player);
+                NetworkHandler.sendTo(new PacketServerToClient(energy, i, this), (EntityPlayerMP) this.player);
                 i++;
             }
         }

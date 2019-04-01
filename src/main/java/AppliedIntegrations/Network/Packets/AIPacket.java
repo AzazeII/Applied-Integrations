@@ -3,11 +3,8 @@ package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Utils.AILog;
-import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -17,8 +14,6 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
-
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 public abstract class AIPacket implements IMessage {
     public World w;
@@ -80,7 +75,7 @@ public abstract class AIPacket implements IMessage {
         return world;
     }
 
-    protected void setPart(ByteBuf buf, AIPart part){
+    protected void setPart(ByteBuf buf){
         buf.writeLong(new BlockPos(x,y,z).toLong());
 
         setWorld(buf, w);

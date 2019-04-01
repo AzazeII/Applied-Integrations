@@ -1,15 +1,8 @@
 package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Gui.GuiEnergyInterface;
+import AppliedIntegrations.Parts.AIPart;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * @Author Azazell
@@ -17,23 +10,28 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class PacketBarChange extends AIPacket {
     public LiquidAIEnergy energy;
+    public AIPart part;
 
     public PacketBarChange(){
 
     }
 
-    public PacketBarChange(LiquidAIEnergy energy, int x, int y, int z, EnumFacing side, World w){
-        super(x, y, z, side, w);
+    public PacketBarChange(LiquidAIEnergy energy, AIPart part){
+        super(part.getX(), part.getY(), part.getZ(), part.getSide().getFacing(), part.getWorld());
         this.energy = energy;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         this.energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
+
+        part = getPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.energy.getIndex());
+
+        setPart(buf);
     }
 }

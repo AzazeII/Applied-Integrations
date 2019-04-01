@@ -1,9 +1,11 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.tile.Additions.TimeHandler;
+import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;
 import appeng.api.config.SecurityPermissions;
+import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
@@ -14,8 +16,6 @@ import appeng.client.EffectType;
 import appeng.core.AppEng;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -85,6 +85,22 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
         // Get current entities
         currentEntities = world.getEntitiesWithinAABB(Entity.class, bb);
+
+        // Check if entity list not empty
+        if(!currentEntities.isEmpty()){
+            // Get node
+            IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+            // Check notNull
+            if (node != null) {
+                // Get grid
+                IGrid grid = node.getGrid();
+                // Check not null
+                if(grid != null) {
+                    // Post update
+                    grid.postEvent(new MENetworkCellArrayUpdate());
+                }
+            }
+        }
 
         // Pass func to child classes
         doWork(i);

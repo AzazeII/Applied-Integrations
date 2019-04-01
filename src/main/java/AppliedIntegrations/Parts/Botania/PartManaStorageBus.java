@@ -22,7 +22,7 @@ public class PartManaStorageBus extends PartEnergyStorage {
     public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {return false;}
 
     @Override
-    public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall )
+    public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall)
     {
         // Keep chugging along
         return TickRateModulation.SAME;

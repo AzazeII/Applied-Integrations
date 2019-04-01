@@ -3,8 +3,7 @@
     "particle": "appliedenergistics2:blocks/dense_energy_cell",
     "sides": "appliedenergistics2:blocks/smooth_sky_stone_block",
     "bottom": "appliedenergistics2:blocks/io_port_bottom",
-    "cell": "appliedenergistics2:blocks/energy_cell",
-    "overlay": "appliedintegrations:blocks/turret/turret_overlay"
+    "cell": "appliedenergistics2:blocks/energy_cell"
   },
   "elements": [
     {

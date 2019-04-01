@@ -5,15 +5,18 @@ import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusContainer;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusInterface;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketServerToClient;
 import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
@@ -37,7 +40,8 @@ import ic2.api.energy.tile.IEnergySink;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -53,8 +57,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.J;
+import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiStoragePart;
 import static java.util.Collections.singletonList;
@@ -65,19 +68,22 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
  */
 public class PartEnergyStorage
 		extends AIPart
-		implements ICellContainer, IGridTickable  {
+		implements ICellContainer, IGridTickable, IEnergyMachine {
 
 	// Size of filter
 	public static final int FILTER_SIZE = 18;
 
 	// List of all energies filtered
-	private final Vector<LiquidAIEnergy> filteredEnergies = new Vector<>();
+	public final Vector<LiquidAIEnergy> filteredEnergies = new Vector<>();
 
 	// Handler for tile/interface
 	private IMEInventoryHandler<IAEEnergyStack> handler;
 
 	// Was active?
 	private boolean lastActive = false;
+
+	// List of all container - listeners
+	public List<ContainerEnergyStorage> linkedListeners = new ArrayList<>();
 
 	public PartEnergyStorage()
 	{
@@ -159,14 +165,54 @@ public class PartEnergyStorage
 	@Override
 	public TickingRequest getTickingRequest( final IGridNode node )
 	{
-		// We would like a tick ever 20 MC ticks
+		// Update every 20 ticks
 		return new TickingRequest( 20, 20, false, false );
 	}
 
 	@Nonnull
 	@Override
-	public TickRateModulation tickingRequest(@Nonnull IGridNode iGridNode, int i) {
+	public TickRateModulation tickingRequest(@Nonnull IGridNode iGridNode, int ticksSinceLastCall) {
+		// Iterate over all listeners
+		for(ContainerEnergyStorage listener : linkedListeners) {
+			// Iterate over all filtered energies
+			for (int i = 0; i < FILTER_SIZE; i++) {
+				// Sync with client
+				NetworkHandler.sendTo(new PacketServerToClient(filteredEnergies.get(i), i, this), (EntityPlayerMP)listener.player);
+			}
+		}
+
 		return TickRateModulation.SAME;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		// Iterate for filter size
+		for(int i = 0; i < FILTER_SIZE; i++) {
+			// Read string
+			String energyTag = tag.getString("#ENERGY" + i);
+
+			// Check not "null"
+			if(energyTag.equals("null"))
+				// Set null energy
+				filteredEnergies.set(i, null);
+			else
+				// Otherwise get filtered energy from map
+				filteredEnergies.set(i, energies.get(energyTag));
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tag) {
+		// Iterate for filter size
+		for(int i = 0; i < FILTER_SIZE; i++) {
+			// Check not null
+			if (filteredEnergies.get(i) != null)
+				// Write energy
+				tag.setString("#ENERGY" + i, filteredEnergies.get(i).getTag());
+			else
+				// Write "null"
+				tag.setString("#ENERGY" + i, "null");
+		}
 	}
 
 	@Override
@@ -286,6 +332,11 @@ public class PartEnergyStorage
 
 			postCellEvent();
 		}
+	}
+
+	@Override
+	public void updateFilter(LiquidAIEnergy energy, int index) {
+		filteredEnergies.set(index, energy);
 	}
 }
 

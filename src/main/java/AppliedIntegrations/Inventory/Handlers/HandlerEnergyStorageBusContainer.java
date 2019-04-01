@@ -50,6 +50,14 @@ public class HandlerEnergyStorageBusContainer
         if(!input.isMeaningful())
             return input;
 
+        // Check if filtered energies has any energies
+        if(!owner.filteredEnergies.isEmpty()){
+            // Check if one of filtered energies is equal to input energy
+            if(owner.filteredEnergies.contains(input.getEnergy()))
+                // Ignore
+                return input;
+        }
+
         // Create helper
         CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide().getOpposite());
 
@@ -85,6 +93,14 @@ public class HandlerEnergyStorageBusContainer
         // Check meaningful
         if(!request.isMeaningful())
             return null;
+
+        // Check if filtered energies has any energies
+        if(!owner.filteredEnergies.isEmpty()){
+            // Check if one of filtered energies is equal to input energy
+            if(owner.filteredEnergies.contains(request.getEnergy()))
+                // Ignore
+                return null;
+        }
 
         // Create capability helper
         CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());

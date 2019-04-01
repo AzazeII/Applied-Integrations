@@ -10,15 +10,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/EmbersRekindled-1.12.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/Tesla-1.12.2-1.0.63.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -29,6 +20,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/industrialcraft-2-2.8.110-ex112.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/EmbersRekindled-1.12.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

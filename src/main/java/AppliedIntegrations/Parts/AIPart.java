@@ -1,4 +1,5 @@
 package AppliedIntegrations.Parts;
+import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
@@ -52,7 +53,7 @@ import java.util.Random;
  * @Author Azazell
  */
 public abstract class AIPart
-		implements IPart, IGridHost, IActionHost, IPowerChannelState
+		implements IPart, IGridHost, IActionHost, IPowerChannelState, ISyncHost
 {
 	// NBT Tag
 	private final static String NBT_KEY_OWNER = "Owner";
@@ -361,11 +362,6 @@ public abstract class AIPart
 	public final DimensionalCoord getLocation()
 	{
 		return new DimensionalCoord( this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ() );
-	}
-
-	public AEPartLocation getSide()
-	{
-		return this.cableSide;
 	}
 
 	public String getUnlocalizedName()
@@ -681,6 +677,21 @@ public abstract class AIPart
 
 		// Write powered
 		stream.writeBoolean( this.isPowered() );
+	}
+
+	@Override
+	public BlockPos getPos(){
+		return getHostTile().getPos();
+	}
+
+	@Override
+	public World getWorld(){
+		return getHostTile().getWorld();
+	}
+
+	@Override
+	public AEPartLocation getSide() {
+		return cableSide;
 	}
 
 	//*---------*Storage features*---------*//

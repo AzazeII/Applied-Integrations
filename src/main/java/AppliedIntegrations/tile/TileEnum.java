@@ -1,10 +1,10 @@
 package AppliedIntegrations.tile;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.tile.Additions.*;
-import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
-import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
-import AppliedIntegrations.tile.Additions.singularities.TileWhiteHole;
+import AppliedIntegrations.tile.HoleStorageSystem.*;
+import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
+import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
+import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusPort;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusRib;

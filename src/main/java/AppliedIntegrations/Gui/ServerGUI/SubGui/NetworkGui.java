@@ -7,11 +7,8 @@ import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
 import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
 import appeng.api.config.SecurityPermissions;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -90,13 +87,13 @@ public class NetworkGui extends AIGuiButton {
 
     public boolean isMouseOverMarker( final int mouseX, final int mouseY)
     {
-        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y+16, this.x+4, 8, 4, mouseX, mouseY, root.guiLeft(), root.guiTop() );
+        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y+16, this.x+4, 8, 4, mouseX, mouseY, root.getLeft(), root.getTop() );
     }
 
     @Override
     public boolean isMouseOverButton( final int mouseX, final int mouseY )
     {
-        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y, this.x, 16, 16, mouseX, mouseY, root.guiLeft(), root.guiTop() );
+        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y, this.x, 16, 16, mouseX, mouseY, root.getLeft(), root.getTop() );
     }
     public void renderGui(float zoom) {
         this.zoom = zoom;

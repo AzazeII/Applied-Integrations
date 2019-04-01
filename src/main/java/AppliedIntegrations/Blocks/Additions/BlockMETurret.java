@@ -2,8 +2,7 @@ package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.tile.Additions.TileMETurretFoundation;
-import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
+import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;

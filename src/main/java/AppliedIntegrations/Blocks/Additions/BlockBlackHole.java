@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
+import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

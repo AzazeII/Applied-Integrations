@@ -14,13 +14,7 @@ public class EnergyStack implements IEnergyStack {
 	public long amount;
 
 	public EnergyStack(LiquidAIEnergy energy, long amount) {
-		this(energy != null ? energy.getTag() : "", amount);
-	}
-
-	public EnergyStack(String energy, long amount) {
-		if (energy == null || energy.isEmpty())
-			throw new IllegalArgumentException("Energy cannot be null");
-		this.energy = LiquidAIEnergy.getEnergy(energy);
+		this.energy = energy;
 		this.amount = amount;
 	}
 
@@ -33,10 +27,6 @@ public class EnergyStack implements IEnergyStack {
 
 	}
 
-	public static IEnergyStack loadEnergyStackFromNBT(NBTTagCompound compoundTag) {
-		return null;
-	}
-
 	public String getEnergyTag() {
 		if(energy != null)
 			return this.energy.getTag();
@@ -44,7 +34,7 @@ public class EnergyStack implements IEnergyStack {
 	}
 
 	public LiquidAIEnergy getEnergy() {
-		return LiquidAIEnergy.getEnergy(this.getEnergyTag());
+		return energy;
 	}
 
 	@Nonnull
