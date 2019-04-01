@@ -3,6 +3,8 @@
 # About
 Applied integrations is applied energitsics 2 addon, which adds many new features. One of main features is storing energy in storage cells
 
+[![License](https://img.shields.io/badge/License-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+
 # Features:
 features marked with * is not currently working
 features marked with ** is work in half, or unstable
