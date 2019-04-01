@@ -1,4 +1,4 @@
-# Applied-Integrations
+# Applied-Integrations [![CurseForge](http://cf.way2muchnoise.eu/full_243076_downloads.svg)](https://minecraft.curseforge.com/projects/applied-integrations)
 
 # About
 Applied integrations is applied energitsics 2 addon, which adds many new features. One of main features is storing energy in storage cells
