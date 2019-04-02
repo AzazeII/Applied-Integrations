@@ -1,17 +1,8 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.Gui.GuiEnergyInterface;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.TileEnergyInterface;
-import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * @Author Azazell
@@ -37,11 +28,11 @@ public class PacketProgressBar extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        sender = (PartEnergyInterface)getPart(buf);
+        sender = (PartEnergyInterface) readPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        setPart(buf, sender);
+        writePart(buf);
     }
 }

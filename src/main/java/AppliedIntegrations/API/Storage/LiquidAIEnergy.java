@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
 
 import java.util.LinkedHashMap;
+import java.util.function.Consumer;
 
 /**
  * @Author Azazell
@@ -16,6 +17,7 @@ public class LiquidAIEnergy extends Fluid {
     private String tag;
     private int index;
     private ResourceLocation image;
+    private LiquidAIEnergy lastEnergy;
 
     public LiquidAIEnergy(Integer index,String tag, ResourceLocation image) {
         super(tag, image, image);
@@ -38,6 +40,18 @@ public class LiquidAIEnergy extends Fluid {
         // Map energy by tag
         LiquidAIEnergy.energies.put(tag, this);
     }
+
+    public void onChange(Consumer<LiquidAIEnergy> action){
+        // Check if last recorded energy not synced
+        if(lastEnergy != this) {
+            // Accept action
+            action.accept(this);
+
+            // Record last energy
+            lastEnergy = this;
+        }
+    }
+
     public String getEnergyName() {
         return tag;
     }

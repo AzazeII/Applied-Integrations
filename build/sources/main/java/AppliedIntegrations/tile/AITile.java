@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile;
 
+import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
@@ -40,7 +41,7 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler",modid = "CoFHAPI",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
-public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable, IGridProxyable {
+public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable, IGridProxyable, ISyncHost {
 
     protected IGridNode gridNode = null;
     protected IGridNode node = null;
@@ -57,14 +58,8 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         }
     }
 
-    public Object getServerGuiElement( final EntityPlayer player )
-    {
-        return null;
-    }
-    public Object getClientGuiElement( final EntityPlayer player )
-    {
-        return null;
-    }
+    public Object getServerGuiElement( final EntityPlayer player ){ return null; }
+    public Object getClientGuiElement( final EntityPlayer player ){ return null; }
 
     @Override
     public double getIdlePowerUsage() {
@@ -269,5 +264,10 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         if (returnAmount == null)
             return (int)resource.amount;
         return (int) (resource.amount - returnAmount.getStackSize());
+    }
+
+    @Override
+    public AEPartLocation getSide() {
+        return AEPartLocation.INTERNAL;
     }
 }

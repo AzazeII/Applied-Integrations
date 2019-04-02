@@ -1,8 +1,7 @@
 package AppliedIntegrations.Network.Handlers;
 
-import AppliedIntegrations.Gui.GuiEnergyInterface;
+import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
-import AppliedIntegrations.Utils.AILog;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -24,9 +23,7 @@ public class HandlerProgressBar implements IMessageHandler<PacketProgressBar, Pa
                 GuiEnergyInterface GEI = (GuiEnergyInterface)g;
 
                 // Check if we are updating correct GUI
-                if(GEI.getX() == message.x && GEI.getY() == message.y && GEI.getZ() == message.z && GEI.getSide() ==
-                        message.side &&
-                        GEI.getWorld() == message.w) {
+                if(GEI.getSyncHost().equals(message.sender)) {
                     GEI.storage = (int) message.sender.getEnergyStorage(message.sender.bar, AEPartLocation.INTERNAL).getStored();
                 }
             }

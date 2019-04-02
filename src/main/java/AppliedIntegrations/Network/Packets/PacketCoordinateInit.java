@@ -34,11 +34,11 @@ public class PacketCoordinateInit extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        part = getPart(buf);
+        part = readPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        setPart(buf);
+        writePart(buf);
     }
 }

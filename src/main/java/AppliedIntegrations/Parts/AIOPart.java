@@ -8,7 +8,7 @@ import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Network.Packets.PacketServerToClient;
+import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
 import AppliedIntegrations.Utils.EffectiveSide;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -242,7 +242,7 @@ public abstract class AIOPart
             int i = 0;
             for (LiquidAIEnergy energy : this.filteredEnergies) {
                 TileEntity host = this.getHostTile();
-                NetworkHandler.sendTo(new PacketServerToClient(energy, i, this), (EntityPlayerMP) this.player);
+                NetworkHandler.sendTo(new PacketFilterServerToClient(energy, i, this), (EntityPlayerMP) this.player);
                 i++;
             }
         }

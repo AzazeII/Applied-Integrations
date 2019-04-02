@@ -1,9 +1,11 @@
 package AppliedIntegrations.Items.multiTool;
 
 import AppliedIntegrations.AppliedIntegrations;
+import appeng.core.AppEng;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -11,70 +13,107 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
-import java.util.List;
+import static AppliedIntegrations.Items.multiTool.OverlayEntropyManipulator.ScrollDirection.DOWN;
+import static AppliedIntegrations.Items.multiTool.OverlayEntropyManipulator.ScrollDirection.UP;
+import static org.lwjgl.opengl.GL11.*;
 
 public class OverlayEntropyManipulator {
-        private int displayTickCount;
-        private long lastTick;
-        private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/OverlayMTool.png");
-        int zLevel = 0;
-        // List of all states listed at right corner of player's screen
-        private List<Object> ListOfStates = new ArrayList<Object>();
-        public OverlayEntropyManipulator() {
-            MinecraftForge.EVENT_BUS.register(this);
-        }
 
-        //@SubscribeEvent
-        public void renderOverlay(RenderGameOverlayEvent event) {
-            Minecraft minecraft = Minecraft.getMinecraft();
-            ItemStack item = minecraft.player.getHeldItemMainhand();
-            if(item == null)
-                return;
-            boolean doRender = item.getItem() instanceof AdvancedNetworkTool;
-            ScaledResolution scaledresolution = new ScaledResolution(minecraft);
-            int j = scaledresolution.getScaledHeight()/32;
-            if(doRender){
-                AdvancedNetworkTool toolEntropyManipulator = (AdvancedNetworkTool)item.getItem();
+    private static Minecraft mc = Minecraft.getMinecraft();
 
-                Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-                //drawEntropyStates(10,200+toolEntropyManipulator.getMode().index*18,j,j*4+6);
+    private EntityPlayer player;
 
+    public OverlayEntropyManipulator(EntityPlayer p) {
+        // Set player
+        this.player = p;
 
-            }
-
-
-        }
-
-        //@SubscribeEvent
-        public void onMouseEvent(MouseEvent event) {
-            EntityPlayerSP player = Minecraft.getMinecraft().player;
-            if(player != null && player.isSneaking()) {
-                if(event.getDwheel() < 0) {
-                    ItemStack stack = player.getHeldItemMainhand();
-                    if (stack != null) {
-                        Item item = stack.getItem();
-                        if (item instanceof AdvancedNetworkTool) {
-                            AdvancedNetworkTool tool = (AdvancedNetworkTool) item;
-
-                            //tool.nextMode(false);
-                            event.setCanceled(true);
-                        }
-                    }
-                }else if(event.getDwheel() != 0 || event.getDwheel() < 0){
-                    ItemStack stack = player.getHeldItemMainhand();
-                    if (stack != null) {
-                        Item item = stack.getItem();
-                        if (item instanceof AdvancedNetworkTool) {
-                            AdvancedNetworkTool tool = (AdvancedNetworkTool) item;
-
-                            //tool.nextMode(true);
-                            event.setCanceled(true);
-                        }
-                    }
-                }
-            }
-        }
-
+        // Register event listener
+        MinecraftForge.EVENT_BUS.register(this);
     }
+
+    @SubscribeEvent
+    public void renderOverlay(RenderGameOverlayEvent event) {
+        // Check not null
+        if(player == null)
+            return;
+
+        // Get held stack in main hand
+        ItemStack stack = player.getHeldItemMainhand();
+
+        // Get item from stack
+        Item item = stack.getItem();
+
+        // Check if stack instanceof advanced network tool
+        if (item instanceof AdvancedNetworkTool) {
+            // Get tool
+            AdvancedNetworkTool tool = (AdvancedNetworkTool) item;
+
+            // Set color to passive white
+            GlStateManager.color(1, 1, 1, 1);
+            // Disable lighting
+            GlStateManager.disableLighting();
+            // Enable 2d texturing
+            GlStateManager.enableTexture2D();
+
+            // Bind texture, depending on current mode
+            mc.renderEngine.bindTexture(tool.currentMode.texture);
+
+            // Get scaled screen resolution
+            ScaledResolution resolution = new ScaledResolution(mc);
+
+            // Get scaled width and height
+            int w = resolution.getScaledWidth() / 2;
+            int h = resolution.getScaledHeight() / 2;
+
+            // Start drawing quads
+            glBegin(GL_QUADS);
+
+            // Add vertices
+            glVertex3d(w - 24, h + 16, 0);
+            glVertex3d(w - 8,h + 16, 0);
+            glVertex3d(w - 24, h - 16, 0);
+            glVertex3d(w - 8,h - 16, 0);
+
+            // End drawing quads
+            glEnd();
+        }
+    }
+
+    @SubscribeEvent
+    public void onMouseEvent(MouseEvent event) {
+        // Scroll direction
+        ScrollDirection dir = null;
+
+        // Check not null and player is sneaking
+        if (player != null && player.isSneaking()) {
+            // Get held stack in main hand
+            ItemStack stack = player.getHeldItemMainhand();
+
+            // Get item from stack
+            Item item = stack.getItem();
+
+            // Check if stack instanceof advanced network tool
+            if (item instanceof AdvancedNetworkTool) {
+                // Get tool
+                AdvancedNetworkTool tool = (AdvancedNetworkTool) item;
+
+                if(event.getDwheel() < 0)
+                    tool.triggerState(UP);
+                else if(event.getDwheel() > 0)
+                    tool.triggerState(DOWN);
+
+
+                // Cancel event
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    enum ScrollDirection{
+        DOWN,
+        UP
+    }
+
+}

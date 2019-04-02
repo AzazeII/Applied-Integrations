@@ -1,17 +1,13 @@
 package AppliedIntegrations.Gui.Widgets;
 
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Gui.GuiTextureManager;
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.IWidgetHost;
 
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketClientFilter;
-import AppliedIntegrations.Parts.IEnergyMachine;
-import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.Network.Packets.PacketClientToServerFilter;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -21,44 +17,19 @@ import org.lwjgl.opengl.GL11;
  */
 @SideOnly(Side.CLIENT)
 public class WidgetEnergySlot
-        extends EnergyWidgetBase
+        extends EnergyWidget
 {
 
     public int id;
-    private EntityPlayer player;
     public boolean shouldRender;
 
-    public int x,y,z;
-
-    public EnumFacing d;
-    public World w;
-
-    public WidgetEnergySlot(final IWidgetHost hostGui, final EntityPlayer player,final int id, final int posX,
+    public WidgetEnergySlot(final IWidgetHost hostGui,final int id, final int posX,
                             final int posY, final boolean shouldRender){
-        this(hostGui,player,0,0,0,null,null,id,posX,posY,true);
-    }
-    public WidgetEnergySlot(final IWidgetHost hostGui, final EntityPlayer player,int x,int y,int z,EnumFacing d,World w, final int id, final int posX,
-                            final int posY, final boolean shouldRender){
-        super(hostGui,null,posX,posY,player);
-        this.player = player;
+        super(hostGui, posX, posY);
         this.id = id;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-        this.d = d;
-        this.w = w;
-
 
         this.shouldRender = shouldRender;
     }
-
-    public WidgetEnergySlot(final IWidgetHost hostGui, final EntityPlayer player, final IEnergyMachine part, final int id, final int posX,
-                            final int posY, final boolean shouldRender)
-    {
-        this( hostGui, player, 0,0,0,null,null ,id,posX, posY, true );
-    }
-
-
 
     @Override
     public void drawWidget()
@@ -72,13 +43,13 @@ public class WidgetEnergySlot
             GL11.glColor3f( 1.0F, 1.0F, 1.0F );
 
             // Bind to the gui texture
-            Minecraft.getMinecraft().renderEngine.bindTexture( GuiTextureManager.ENERGY_IO_BUS.getTexture() );
+            Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation( AppliedIntegrations.modid, "textures/gui/energy.io.bus.png" ) );
 
             // Draw this slot just like the center slot of the gui
             this.drawTexturedModalRect( this.xPosition, this.yPosition, 79, 39, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
 
             // Check not null
-            if( this.getEnergy() != null )
+            if( getCurrentEnergy() != null )
             {
                 // Draw the Energy
                 this.drawEnergy();
@@ -91,14 +62,11 @@ public class WidgetEnergySlot
     }
 
     public void mouseClicked( final LiquidAIEnergy energy ) {
-        if(this.d != null) {
-            try {
-                setEnergy(energy, 1);
-                NetworkHandler.sendToServer(new PacketClientFilter(x, y, z, d, w, energy, id));
-            }catch (Throwable throwable){
+        // change energy
+        setCurrentEnergy(energy);
 
-            }
-        }
+        // Notify server
+        NetworkHandler.sendToServer(new PacketClientToServerFilter(hostGUI.getSyncHost(), energy, id));
     }
 
     @Override

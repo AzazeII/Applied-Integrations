@@ -26,30 +26,18 @@ public abstract class AIStateButton
     /**
      * Offset from the top-left corner of the button to draw the icon.
      */
-    private int iconXOffset = 0;
+    private int iconXOffset;
 
     /**
      * Offset from the top-left corner of the button to draw the icon.
      */
-    private int iconYOffset = 0;
+    private int iconYOffset;
 
     /**
      * Icon to draw on the button
      */
     protected IStateIconTexture stateIcon;
 
-    /**
-     *
-     * @param ID
-     * @param xPosition
-     * @param yPosition
-     * @param buttonWidth
-     * @param buttonHeight
-     * @param icon
-     * @param iconXOffset
-     * @param iconYOffset
-     * @param backgroundIcon
-     */
     public AIStateButton(final int ID, final int xPosition, final int yPosition, final int buttonWidth, final int buttonHeight,
                          final IStateIconTexture icon, final int iconXOffset, final int iconYOffset, final IStateIconTexture backgroundIcon )
     {
@@ -67,10 +55,6 @@ public abstract class AIStateButton
         this.backgroundIcon = backgroundIcon;
     }
 
-    /**
-     * Draws a textured rectangle at the stored z-value, the texture will
-     * be scaled to fit within the width and height
-     */
     private void drawScaledTexturedModalRect(	final int xPosition, final int yPosition, final int u, final int v, final int width, final int height,
                                                  final int textureWidth, final int textureHeight )
     {
@@ -108,26 +92,6 @@ public abstract class AIStateButton
     }
 
     /**
-     * Adds info to the tooltip as a white header, and grey body.
-     * The body is broken down into lines of length 30.
-     *
-     * @param tooltip
-     * @param title
-     * @param text
-     */
-    protected void addAboutToTooltip(final List<String> tooltip, final String title, final String text )
-    {
-        // Title
-        tooltip.add( TextFormatting.WHITE + title );
-
-        // Body
-        for( String line : Splitter.on( "\n" ).split( WordUtils.wrap( text, 30, "\n", false ) ) )
-        {
-            tooltip.add( TextFormatting.GRAY + line.trim() );
-        }
-    }
-
-    /**
      * Draws an icon to the screen.
      *
      * @param minecraftInstance
@@ -138,35 +102,13 @@ public abstract class AIStateButton
      * @param iconHeight
      */
     protected void drawIcon(final Minecraft minecraftInstance, final IStateIconTexture icon, final int xPos, final int yPos, final int iconWidth,
-                            final int iconHeight )
-    {
+                            final int iconHeight ) {
         // Bind the sheet
-        minecraftInstance.getTextureManager().bindTexture( icon.getTexture() );
+        minecraftInstance.getTextureManager().bindTexture(icon.getTexture());
 
         // Draw the icon
-        this.drawScaledTexturedModalRect( xPos + this.iconXOffset, yPos + this.iconYOffset, icon.getU(), icon.getV(), iconWidth, iconHeight,
-                icon.getWidth(), icon.getHeight() );
-    }
-
-    //@Override
-    public void drawButton( final Minecraft minecraftInstance, final int x, final int y, int l )
-    {
-        // Full white
-        GL11.glColor4f( 1.0F, 1.0F, 1.0F, 1.0F );
-
-        if( this.backgroundIcon != null )
-        {
-            // Draw the background
-            this.drawIcon( minecraftInstance, this.backgroundIcon, this.x, this.y, this.width, this.height );
-        }
-
-        if( this.stateIcon != null )
-        {
-            // Draw the overlay icon
-            this.drawIcon( minecraftInstance, this.stateIcon, this.x + this.iconXOffset, this.y + this.iconYOffset, this.width,
-                    this.height );
-        }
-
+        this.drawScaledTexturedModalRect(xPos + this.iconXOffset, yPos + this.iconYOffset, icon.getU(), icon.getV(), iconWidth, iconHeight,
+                icon.getWidth(), icon.getHeight());
     }
 
 }

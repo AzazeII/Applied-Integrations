@@ -25,13 +25,13 @@ public class PacketBarChange extends AIPacket {
     public void fromBytes(ByteBuf buf) {
         this.energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
 
-        part = getPart(buf);
+        part = readPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         buf.writeInt(this.energy.getIndex());
 
-        setPart(buf);
+        writePart(buf);
     }
 }

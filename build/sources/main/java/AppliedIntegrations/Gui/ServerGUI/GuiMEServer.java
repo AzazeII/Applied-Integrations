@@ -1,8 +1,8 @@
 package AppliedIntegrations.Gui.ServerGUI;
 
+import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.AIContainer;
-import AppliedIntegrations.Container.Server.ContainerMEServer;
+import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
 import AppliedIntegrations.Gui.AIBaseGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
@@ -16,11 +16,6 @@ public class GuiMEServer extends AIBaseGui {
     }
 
     @Override
-    public AIContainer getNodeContainer() {
-        return null;
-    }
-
-    @Override
     protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
         drawDefaultBackground();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -31,5 +26,15 @@ public class GuiMEServer extends AIBaseGui {
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         this.fontRenderer.drawString("ME Server Drive", 9, -12, 4210752);
+    }
+
+    @Override
+    public ISyncHost getSyncHost() {
+        return null;
+    }
+
+    @Override
+    public void setSyncHost(ISyncHost host) {
+
     }
 }

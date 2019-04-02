@@ -22,7 +22,7 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
         Handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
 
-        Handler.registerMessage(HandlerServerToClient.class, PacketServerToClient.class, packetId++, Side.CLIENT);
+        Handler.registerMessage(HandlerServerToClient.class, PacketFilterServerToClient.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerMEServer.class, PacketMEServer.class, packetId++, Side.CLIENT);
 
@@ -33,10 +33,14 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerMassChange.class, PacketMassChange.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerSingularitySync.class, PacketSingularitySync.class, packetId++, Side.CLIENT);
+
+        Handler.registerMessage(HandlerAccessModeServerToClient.class, PacketAccessModeServerToClient.class, packetId++, Side.CLIENT);
     }
 
     public static final void registerServerPackets(){
         Handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
+
+        Handler.registerMessage(HandlerAccessModeClientToServer.class, PacketAccessModeClientToServer.class, packetId++, Side.SERVER);
     }
 
     // send packet info to player

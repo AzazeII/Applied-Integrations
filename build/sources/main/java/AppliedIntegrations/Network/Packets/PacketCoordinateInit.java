@@ -1,20 +1,8 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.Utils;
-import AppliedIntegrations.Gui.PartGui;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Utils.AILog;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.Util;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 /**
  * @Author Azazell
@@ -46,11 +34,11 @@ public class PacketCoordinateInit extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        part = getPart(buf);
+        part = readPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        setPart(buf, part);
+        writePart(buf);
     }
 }

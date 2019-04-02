@@ -28,11 +28,11 @@ public class PacketProgressBar extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        sender = (PartEnergyInterface)getPart(buf);
+        sender = (PartEnergyInterface) readPart(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        setPart(buf);
+        writePart(buf);
     }
 }

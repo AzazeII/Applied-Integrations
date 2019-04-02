@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui;
 
+import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.Container.AIContainer;
 import net.minecraft.client.gui.FontRenderer;
 
@@ -7,29 +8,14 @@ import javax.annotation.Nonnull;
 /**
  * @Author Azazell
  */
-public interface IWidgetHost
-{
-    /**
-     * Gets the font renderer for the GUI.
-     *
-     * @return
-     */
-    @Nonnull
-    FontRenderer getFontRenderer();
+public interface IWidgetHost{
 
-    /**
-     * Return the left of the GUI.
-     *
-     * @return
-     */
-    int guiLeft();
+    int getLeft();
 
-    /**
-     * Return the top of the GUI.
-     *
-     * @return
-     */
-    int guiTop();
+    int getTop();
 
-    AIContainer getNodeContainer();
+    ISyncHost getSyncHost();
+
+    void setSyncHost(ISyncHost host);
+
 }

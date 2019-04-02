@@ -58,18 +58,12 @@ public abstract class AIWidget
                 this.yPosition, this.xPosition,
                 AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1,
                 mouseX, mouseY,
-                this.hostGUI.guiLeft(), this.hostGUI.guiTop() );
+                this.hostGUI.getLeft(), this.hostGUI.getTop() );
     }
 
     /**
      * Called when the mouse is clicked on the widget.
      */
     public abstract void onMouseClicked();
-
-    public void setPosition( final int xPos, final int yPos )
-    {
-        this.xPosition = xPos;
-        this.yPosition = yPos;
-    }
 
 }

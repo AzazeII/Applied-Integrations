@@ -1,10 +1,8 @@
 package AppliedIntegrations.Utils;
 
-import AppliedIntegrations.Network.Packets.PacketClientFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraft.world.World;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

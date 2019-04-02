@@ -1,8 +1,8 @@
 package AppliedIntegrations.Gui.ServerGUI;
 
+import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.AIContainer;
-import AppliedIntegrations.Container.Server.ContainerServerPacketTracer;
+import AppliedIntegrations.Container.tile.Server.ContainerServerPacketTracer;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
@@ -111,11 +111,6 @@ public class ServerPacketTracer extends AIBaseGui {
             }
         }
         selectedNetwork = null;
-    }
-
-    @Override
-    public AIContainer getNodeContainer() {
-        return null;
     }
 
     @Override
@@ -339,5 +334,16 @@ public class ServerPacketTracer extends AIBaseGui {
 
     public void onStateReceive(boolean state) {
         this.hasMaster = state;
+    }
+
+    @Override
+    public ISyncHost getSyncHost() {
+        return mInstance;
+    }
+
+    @Override
+    public void setSyncHost(ISyncHost host) {
+        if(host instanceof TileServerCore)
+            mInstance = (TileServerCore)host;
     }
 }

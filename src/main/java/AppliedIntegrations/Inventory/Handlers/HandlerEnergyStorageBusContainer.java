@@ -42,6 +42,11 @@ public class HandlerEnergyStorageBusContainer
      */
     @Override
     public IAEEnergyStack injectItems(IAEEnergyStack input, Actionable type, IActionSource src) {
+
+        // Check for permission to write data
+        if(getAccess() == AccessRestriction.READ)
+            return input;
+
         // Check not null
         if(input == null)
             return input;
@@ -53,7 +58,7 @@ public class HandlerEnergyStorageBusContainer
         // Check if filtered energies has any energies
         if(!owner.filteredEnergies.isEmpty()){
             // Check if one of filtered energies is equal to input energy
-            if(owner.filteredEnergies.contains(input.getEnergy()))
+            if(!owner.filteredEnergies.contains(input.getEnergy()))
                 // Ignore
                 return input;
         }
@@ -86,6 +91,10 @@ public class HandlerEnergyStorageBusContainer
      */
     @Override
     public IAEEnergyStack extractItems(IAEEnergyStack request, Actionable mode, IActionSource src) {
+        // Check for permission to read data
+        if(getAccess() == AccessRestriction.WRITE)
+            return null;
+
         // Check not null
         if(request == null)
             return null;
@@ -97,7 +106,7 @@ public class HandlerEnergyStorageBusContainer
         // Check if filtered energies has any energies
         if(!owner.filteredEnergies.isEmpty()){
             // Check if one of filtered energies is equal to input energy
-            if(owner.filteredEnergies.contains(request.getEnergy()))
+            if(!owner.filteredEnergies.contains(request.getEnergy()))
                 // Ignore
                 return null;
         }
@@ -124,6 +133,10 @@ public class HandlerEnergyStorageBusContainer
      */
     @Override
     public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> out) {
+        // Check for permission to read data
+        if(getAccess() == AccessRestriction.WRITE)
+            return null;
+
         // Create capability helper
         CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
 
@@ -140,7 +153,7 @@ public class HandlerEnergyStorageBusContainer
     @Override
     public AccessRestriction getAccess() {
         // TODO: 2019-03-27 Sync with gui
-        return AccessRestriction.READ_WRITE;
+        return owner.access;
     }
 
     @Override

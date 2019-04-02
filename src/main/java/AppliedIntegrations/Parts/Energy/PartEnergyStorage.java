@@ -2,6 +2,7 @@ package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.IEnergyInterface;
+import AppliedIntegrations.API.Storage.EnergyRepo;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
@@ -11,12 +12,15 @@ import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusContainer;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusInterface;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketServerToClient;
+import AppliedIntegrations.Network.Packets.PacketAccessModeServerToClient;
+import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Utils.ChangeHandler;
+import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
@@ -74,7 +78,13 @@ public class PartEnergyStorage
 	public static final int FILTER_SIZE = 18;
 
 	// List of all energies filtered
-	public final Vector<LiquidAIEnergy> filteredEnergies = new Vector<>();
+	public final List<LiquidAIEnergy> filteredEnergies = new LinkedList<>();
+
+	// Handler for onChange event of access
+	private final ChangeHandler<AccessRestriction> accessRestrictionChangeHandler = new ChangeHandler<>();
+
+	// Current access restrictions of handler
+	public AccessRestriction access = AccessRestriction.READ_WRITE;
 
 	// Handler for tile/interface
 	private IMEInventoryHandler<IAEEnergyStack> handler;
@@ -84,6 +94,8 @@ public class PartEnergyStorage
 
 	// List of all container - listeners
 	public List<ContainerEnergyStorage> linkedListeners = new ArrayList<>();
+	private boolean updateRequested;
+	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
 
 	public PartEnergyStorage()
 	{
@@ -94,6 +106,9 @@ public class PartEnergyStorage
 		for( int index = 0; index < this.FILTER_SIZE; index++ ) {
 			// Fill vector
 			this.filteredEnergies.add(null);
+
+			// Fill list
+			this.filteredEnergiesChangeHandler.add(new ChangeHandler<>());
 		}
 	}
 
@@ -117,6 +132,13 @@ public class PartEnergyStorage
 		}
 	}
 
+	public void setAccess(AccessRestriction access) {
+		this.access = access;
+
+		// Notify grid
+		this.postCellEvent();
+	}
+
 	@Override
 	public void onNeighborChanged(IBlockAccess access, BlockPos pos, BlockPos neighbor) {
 		// Check not null
@@ -132,7 +154,7 @@ public class PartEnergyStorage
 		if (getFacingTile() != null) {
 			// Check for energy interface
 			if (getFacingTile() instanceof IEnergyInterface) {
-				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)getFacingTile());
+				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)getFacingTile(), this);
 
 			// Check for part tile
 			} else if(getFacingTile() instanceof TileCableBus){
@@ -141,7 +163,7 @@ public class PartEnergyStorage
 
 				// Check if candidate instanceof IEnergyInterface
 				if(maybeInterface.getPart(getSide().getOpposite()) instanceof IEnergyInterface){
-					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)((TileCableBus) getFacingTile()).getPart(getSide().getOpposite()));
+					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)((TileCableBus) getFacingTile()).getPart(getSide().getOpposite()), this);
 				}
 
 			// Check for all energy types:
@@ -176,10 +198,34 @@ public class PartEnergyStorage
 		for(ContainerEnergyStorage listener : linkedListeners) {
 			// Iterate over all filtered energies
 			for (int i = 0; i < FILTER_SIZE; i++) {
-				// Sync with client
-				NetworkHandler.sendTo(new PacketServerToClient(filteredEnergies.get(i), i, this), (EntityPlayerMP)listener.player);
+				// Create effectively final variable
+				int finalI = i;
+
+				// Create on change event
+				filteredEnergiesChangeHandler.get(i).onChange(filteredEnergies.get(i), (energy -> {
+					// Sync with client
+					NetworkHandler.sendTo(new PacketFilterServerToClient(energy, finalI, this), (EntityPlayerMP) listener.player);
+				}));
+
+				// Check if update was requested
+				if(updateRequested)
+					// Sync with client
+					NetworkHandler.sendTo(new PacketFilterServerToClient(filteredEnergies.get(i), finalI, this), (EntityPlayerMP) listener.player);
 			}
+
+			// Check if energy was changed
+			accessRestrictionChangeHandler.onChange(access, (accessRestriction -> {
+				// Sync with client
+				NetworkHandler.sendTo(new PacketAccessModeServerToClient(access, this), (EntityPlayerMP) listener.player);
+			}));
+
+			// Check if update was requested
+			if(updateRequested)
+				// Sync with client
+				NetworkHandler.sendTo(new PacketAccessModeServerToClient(access, this), (EntityPlayerMP) listener.player);
 		}
+		// Reset update request
+		updateRequested = false;
 
 		return TickRateModulation.SAME;
 	}
@@ -249,6 +295,9 @@ public class PartEnergyStorage
 			if (!player.isSneaking()) {
 				// Open gui
 				AIGuiHandler.open(GuiStoragePart, player, getSide(), getHostTile().getPos());
+
+				// Request filter update
+				updateRequested = true;
 
 				// Render click
 				return true;

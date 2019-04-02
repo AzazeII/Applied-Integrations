@@ -3,6 +3,7 @@ package AppliedIntegrations.Inventory.Handlers;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -19,14 +20,16 @@ public class HandlerEnergyStorageBusInterface
         implements IMEInventoryHandler<IAEEnergyStack> {
 
     private final IEnergyInterface iEnergyInterface;
+    private final PartEnergyStorage owner;
 
-    public HandlerEnergyStorageBusInterface(IEnergyInterface iEnergyInterface){
+    public HandlerEnergyStorageBusInterface(IEnergyInterface iEnergyInterface, PartEnergyStorage owner){
         this.iEnergyInterface = iEnergyInterface;
+        this.owner = owner;
     }
 
     @Override
     public AccessRestriction getAccess() {
-        return AccessRestriction.READ_WRITE;
+        return owner.access;
     }
 
     @Override
@@ -57,16 +60,28 @@ public class HandlerEnergyStorageBusInterface
 
     @Override
     public IAEEnergyStack injectItems(IAEEnergyStack iaeEnergyStack, Actionable actionable, IActionSource iActionSource) {
+        // Check for permission to read data
+        if(getAccess() == AccessRestriction.READ)
+            return null;
+
         return iEnergyInterface.getOuterGridInventory().injectItems(iaeEnergyStack, actionable, iActionSource);
     }
 
     @Override
     public IAEEnergyStack extractItems(IAEEnergyStack iaeEnergyStack, Actionable actionable, IActionSource iActionSource) {
+        // Check for permission to read data
+        if(getAccess() == AccessRestriction.WRITE)
+            return null;
+
         return iEnergyInterface.getOuterGridInventory().extractItems(iaeEnergyStack, actionable, iActionSource);
     }
 
     @Override
     public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> iItemList) {
+        // Check for permission to read data
+        if(getAccess() == AccessRestriction.WRITE)
+            return null;
+
         return iEnergyInterface.getOuterGridInventory().getAvailableItems(iItemList);
     }
 

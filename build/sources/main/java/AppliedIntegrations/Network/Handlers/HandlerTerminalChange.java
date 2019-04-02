@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Handlers;
 
-import AppliedIntegrations.Gui.GuiEnergyTerminalDuality;
+import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
 import AppliedIntegrations.Network.Packets.PacketTerminalChange;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;

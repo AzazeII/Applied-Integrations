@@ -1,7 +1,6 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.tile.Additions.storage.TileMEPylon;
+import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import appeng.api.storage.IStorageChannel;

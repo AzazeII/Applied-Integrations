@@ -1,11 +1,9 @@
 package AppliedIntegrations.Network.Handlers;
 
-import AppliedIntegrations.Gui.GuiEnergyInterface;
+import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Network.Packets.PacketBarChange;
-import AppliedIntegrations.Utils.AILog;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -22,8 +20,7 @@ public class HandlerBarChange implements IMessageHandler<PacketBarChange, Packet
             if (gui instanceof GuiEnergyInterface) {
                 GuiEnergyInterface GEI = (GuiEnergyInterface) gui;
                 // Check if we are updating correct GUI
-                if (GEI.getX() == message.x && GEI.getY() == message.y && GEI.getZ() == message.z && GEI.getSide() ==
-                        message.side && GEI.getWorld() == message.w)
+                if (GEI.getSyncHost().compareTo(message.part, false))
                     GEI.LinkedMetric = message.energy;
             }
         });

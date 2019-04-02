@@ -4,7 +4,6 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIGuiHelper;
 import appeng.client.gui.widgets.GuiToggleButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -28,7 +27,7 @@ public class GuiServerButton extends GuiToggleButton {
     }
     public boolean isMouseOverButton( final int mouseX, final int mouseY )
     {
-        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y, this.x, 16, 16, mouseX, mouseY,rootGui.guiLeft(),rootGui.guiTop() );
+        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y, this.x, 16, 16, mouseX, mouseY,rootGui.getLeft(),rootGui.getTop() );
     }
     //@Override
     public void drawButton( final Minecraft minecraftInstance, final int x, final int y )

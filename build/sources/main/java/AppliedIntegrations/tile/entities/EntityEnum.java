@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile.entities;
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.tile.Additions.render.EntityBlackHoleRenderer;
+import AppliedIntegrations.tile.HoleStorageSystem.render.EntityBlackHoleRenderer;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;

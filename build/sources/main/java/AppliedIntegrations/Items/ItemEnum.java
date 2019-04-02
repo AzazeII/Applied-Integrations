@@ -56,7 +56,7 @@ public enum ItemEnum {
     ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), AIConfig.enableManaFeatures),
 
     ITEMENERGYWIRELESSTERMINAL(new ItemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
-    CHAOSMANIPULATOR( new AdvancedNetworkTool(), true),
+    CHAOSMANIPULATOR( new AdvancedNetworkTool("advancedWrench"), true),
     ENERGYSTORAGE_1k( new EnergyStorageCell("EnergyStorageCell_1k", 1024), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_4k( new EnergyStorageCell("EnergyStorageCell_4k", 4096), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_16k( new EnergyStorageCell("EnergyStorageCell_16k", 16384), AIConfig.enableEnergyFeatures),
@@ -180,9 +180,6 @@ public enum ItemEnum {
                 if (item.item instanceof AIItemRegistrable) {
                     AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
                     registrableItem.registerModel();
-                } else if (item.item instanceof AdvancedNetworkTool) {
-                    AdvancedNetworkTool tCM = (AdvancedNetworkTool) item.item;
-                    tCM.registerModel();
                 }
             }
         }

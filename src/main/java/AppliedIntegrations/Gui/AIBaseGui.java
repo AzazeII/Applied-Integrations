@@ -181,6 +181,9 @@ public abstract class AIBaseGui
             // Clear the tooltip
             this.tooltip.clear();
         }
+
+        // Draw minecraft tooltip of item
+        this.renderHoveredToolTip(mouseX, mouseY);
     }
 
     /**

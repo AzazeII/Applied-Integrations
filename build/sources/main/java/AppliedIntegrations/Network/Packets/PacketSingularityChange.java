@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
+import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import io.netty.buffer.ByteBuf;
 
 public class PacketSingularityChange extends AIPacket {

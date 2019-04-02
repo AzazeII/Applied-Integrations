@@ -1,10 +1,7 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.tile.Additions.TileMETurretFoundation;
-import AppliedIntegrations.tile.Additions.singularities.TileBlackHole;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 
 public class PacketVectorSync extends AIPacket {
 

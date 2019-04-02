@@ -3,11 +3,8 @@ package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Utils.AILog;
-import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -17,8 +14,6 @@ import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
-
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
 public abstract class AIPacket implements IMessage {
     public World w;
@@ -37,11 +32,11 @@ public abstract class AIPacket implements IMessage {
         this.w = w;
     }
 
-    protected AIPart getPart(ByteBuf buf){
+    protected AIPart readPart(ByteBuf buf){
         BlockPos pos = BlockPos.fromLong(buf.readLong());
-        World w = getWorld(buf);
+        World w = readWorld(buf);
 
-        EnumFacing side = getSide(buf);
+        EnumFacing side = readSide(buf);
 
         x = pos.getX();
         y = pos.getY();
@@ -53,12 +48,12 @@ public abstract class AIPacket implements IMessage {
         return Utils.getPartByParams(pos, side, w);
     }
 
-    private EnumFacing getSide(ByteBuf buf) {
+    private EnumFacing readSide(ByteBuf buf) {
         return EnumFacing.getFront(buf.readInt());
     }
 
 
-    protected LiquidAIEnergy getEnergy(ByteBuf buf) {
+    protected LiquidAIEnergy readEnergy(ByteBuf buf) {
         int buffed = buf.readInt();
 
         if(buffed != -1)
@@ -66,7 +61,7 @@ public abstract class AIPacket implements IMessage {
         return null;
     }
 
-    public World getWorld(ByteBuf buf) {
+    public World readWorld(ByteBuf buf) {
         World world = DimensionManager.getWorld( buf.readInt() );
 
         if( FMLCommonHandler.instance().getSide() == Side.CLIENT )
@@ -80,18 +75,18 @@ public abstract class AIPacket implements IMessage {
         return world;
     }
 
-    protected void setPart(ByteBuf buf, AIPart part){
+    protected void writePart(ByteBuf buf){
         buf.writeLong(new BlockPos(x,y,z).toLong());
 
-        setWorld(buf, w);
+        writeWorld(buf, w);
         buf.writeInt(side.ordinal());
     }
 
-    protected void setWorld(ByteBuf buf, World world) {
+    protected void writeWorld(ByteBuf buf, World world) {
         buf.writeInt(world.provider.getDimension());
     }
 
-    protected void setEnergy(LiquidAIEnergy energy, ByteBuf buf) {
+    protected void writeEnergy(LiquidAIEnergy energy, ByteBuf buf) {
         if(energy != null)
             buf.writeInt(energy.getIndex());
         else
@@ -108,12 +103,12 @@ public abstract class AIPacket implements IMessage {
 
     protected void writeTile(TileEntity tile, ByteBuf buf){
         writePos(tile.getPos(), buf);
-        setWorld(buf, tile.getWorld());
+        writeWorld(buf, tile.getWorld());
     }
 
     protected TileEntity readTile(ByteBuf buf){
         BlockPos pos = readPos(buf);
-        return getWorld(buf).getTileEntity(pos);
+        return readWorld(buf).getTileEntity(pos);
     }
 
     protected void writeVec(Vec3d vecA, ByteBuf buf) {

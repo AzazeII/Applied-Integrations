@@ -18,8 +18,6 @@ public class AdvancedNetworkTool extends AIItemRegistrable implements IAEWrench 
         this.setCreativeTab(AppliedIntegrations.AI);
 
         this.setMaxStackSize(1);
-
-        new OverlayEntropyManipulator(Minecraft.getMinecraft().player); // Create event bus
     }
 
 

@@ -47,24 +47,6 @@ public class GuiButtonAETab
     }
 
     @Override
-    public void drawButton(final Minecraft minecraftInstance, final int x, final int y, int l )
-    {
-        // Full white
-        GL11.glColor4f( 1.0F, 1.0F, 1.0F, 1.0F );
-
-        // Draw the tab background
-        this.drawIcon( minecraftInstance, AEStateIconsEnum.TAB_BUTTON, this.x, this.y, this.width, this.height );
-
-        if( this.stateIcon != null )
-        {
-            // Draw the overlay icon
-            this.drawIcon( minecraftInstance, this.stateIcon, this.x, this.y,
-                    AEStateIconsEnum.STANDARD_ICON_SIZE, AEStateIconsEnum.STANDARD_ICON_SIZE );
-        }
-
-    }
-
-    @Override
     public void getTooltip( final List<String> tooltip )
     {
         if( !this.tooltipMessageUnlocalized.equals( "" ) )

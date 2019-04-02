@@ -2,7 +2,7 @@ package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.Multiblocks.Patterns;
-import AppliedIntegrations.Container.Server.ContainerMEServer;
+import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
