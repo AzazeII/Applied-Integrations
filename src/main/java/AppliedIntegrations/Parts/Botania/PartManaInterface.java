@@ -35,7 +35,6 @@ import vazkii.botania.api.mana.spark.ISparkEntity;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static AppliedIntegrations.Utils.EffectiveSide.isServerSide;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
 @Optional.InterfaceList(value = {
@@ -88,7 +87,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall )
     {
-        if(isServerSide()){
+        if(!getWorld().isRemote){
             try {
                 if (isManaFiltered) {
                     DoExtractDualityWork(Actionable.MODULATE);
@@ -104,7 +103,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
 
     @Override
     public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
-        if(isServerSide()) {
+        if(!getWorld().isRemote) {
 
         }
         return true;

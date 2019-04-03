@@ -37,8 +37,9 @@ public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
         // Set the part
         this.part = part;
 
-        this.addUpgradeSlots( part.getUpgradeInventory(), this.NUMBER_OF_UPGRADE_SLOTS,
-                this.UPGRADE_X_POS, this.UPGRADE_Y_POS );
+        // TODO: 2019-04-02 Fix crash and add upgrade inventory back
+        // this.addUpgradeSlots( part.getUpgradeInventory(), this.NUMBER_OF_UPGRADE_SLOTS,
+        //         this.UPGRADE_X_POS, this.UPGRADE_Y_POS );
 
         // Bind to the player's inventory
         this.bindPlayerInventory(player.inventory);

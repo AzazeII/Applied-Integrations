@@ -65,6 +65,11 @@ public class WidgetEnergySlot
         // change energy
         setCurrentEnergy(energy);
 
+        // Check not null
+        if(hostGUI.getSyncHost() == null)
+            // Return
+            return;
+
         // Notify server
         NetworkHandler.sendToServer(new PacketClientToServerFilter(hostGUI.getSyncHost(), energy, id));
     }

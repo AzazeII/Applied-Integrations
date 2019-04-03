@@ -1,6 +1,5 @@
 package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.Utils.WrenchUtil;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.PartItemStack;
@@ -47,7 +46,7 @@ public abstract class AIRotatablePart
         // Is the player not sneaking and using a wrench?
         if( !player.isSneaking() && WrenchUtil.canWrench(player.getHeldItem(hand),player,(int)position.x,(int)position.y,(int)position.z) )
         {
-            if( EffectiveSide.isServerSide() )
+            if( !getWorld().isRemote )
             {
                 // Bounds check the rotation
                 if( ( this.renderRotation > 3 ) || ( this.renderRotation < 0 ) )

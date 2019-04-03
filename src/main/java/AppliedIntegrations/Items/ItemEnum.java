@@ -56,7 +56,10 @@ public enum ItemEnum {
     ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), AIConfig.enableManaFeatures),
 
     ITEMENERGYWIRELESSTERMINAL(new ItemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
+
     CHAOSMANIPULATOR( new AdvancedNetworkTool("advancedWrench"), true),
+    MEGRAPHTOOL(new GraphTool("graphTool"), true),
+
     ENERGYSTORAGE_1k( new EnergyStorageCell("EnergyStorageCell_1k", 1024), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_4k( new EnergyStorageCell("EnergyStorageCell_4k", 4096), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_16k( new EnergyStorageCell("EnergyStorageCell_16k", 16384), AIConfig.enableEnergyFeatures),
