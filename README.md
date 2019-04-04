@@ -26,6 +26,7 @@ Energy capabillities:
 Network features:
 - ME Server, allows you to give connected networks restricted access to main server network***
 - ME Logic bus, allows you to give connected network shared auto-craft space. Can handle up to 54 patterns**
+- ME Graph Tool, allows you to view your network in choosen mode, using locahost web UI
 
 Integrations with other mods:
 Mana storage (botania):
