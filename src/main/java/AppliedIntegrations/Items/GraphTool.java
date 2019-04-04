@@ -2,6 +2,7 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.Topology.GraphToolMode;
 import AppliedIntegrations.Topology.TopologyUtils;
+import AppliedIntegrations.Utils.AILog;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
@@ -33,13 +34,17 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
     }
 
     private void cycleMode(boolean up) {
-        // Check for up scroll
-        if(up)
-            // Switch mode to next
-            mode = GraphToolMode.values()[mode.ordinal() + 1];
-        else
-            // Switch mode to previous
-            mode = GraphToolMode.values()[mode.ordinal() - 1];
+        try {
+            // Check for up scroll
+            if (up)
+                // Switch mode to next
+                mode = GraphToolMode.values()[mode.ordinal() + 1];
+            else
+                // Switch mode to previous
+                mode = GraphToolMode.values()[mode.ordinal() - 1];
+        }catch (IndexOutOfBoundsException indexOutOfBound){
+            // Ignored
+        }
     }
 
     @Override
@@ -96,5 +101,8 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
     public void onWheel(ItemStack is, boolean up) {
         // Pass cycle
         cycleMode(up);
+
+        // Notify player
+        AILog.chatLog("Switching mode to: " + mode.name());
     }
 }
