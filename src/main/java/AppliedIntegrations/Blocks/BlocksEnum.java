@@ -22,6 +22,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedHashMap;
 
+/**
+ * @Author Azazell
+ */
 public enum BlocksEnum {
     BEI(new BlockEnergyInterface("EInterface", "ME Energy Interface"), TileEnum.EnergyInterface, AIConfig.enableEnergyFeatures),
 

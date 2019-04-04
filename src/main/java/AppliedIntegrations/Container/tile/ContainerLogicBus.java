@@ -7,6 +7,9 @@ import appeng.container.slot.SlotRestrictedInput;
 import appeng.helpers.DualityInterface;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * @Author Azazell
+ */
 public class ContainerLogicBus extends ContainerWithPlayerInventory {
     public ContainerLogicBus(EntityPlayer player, TileLogicBusCore core) {
         super(player);

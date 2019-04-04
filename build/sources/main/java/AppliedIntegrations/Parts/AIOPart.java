@@ -1,17 +1,17 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.IInventoryHost;
+import AppliedIntegrations.API.Storage.EnergyRepo;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
-
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
-import AppliedIntegrations.Utils.EffectiveSide;
-
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Utils.ChangeHandler;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
@@ -35,13 +35,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
-import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
@@ -55,22 +53,22 @@ public abstract class AIOPart
      * Constant fields
      */
     // How much energy can be transfered in second
-    private final static int BASE_ENERGY_TRANSFER = 40;
+    private final static int BASE_ENERGY_TRANSFER = 4000;
 
     // How much energy transfer one upgrade adds
-    private final static int TRANSFER_PER_UPGRADE = 80;
+    private final static int TRANSFER_PER_UPGRADE = 8090;
 
     // How much minimum ticks machine need to operate
     private final static int MINIMUM_TICKS_PER_OPERATION = 2;
 
-    // How much max ticks machine needs to opreate
+    // How much max ticks machine needs to operate
     private final static int MAXIMUM_TICKS_PER_OPERATION = 40;
 
     // Maximum transfer per second
-    private final static int MAXIMUM_TRANSFER_PER_SECOND = 6400;
+    private final static int MAXIMUM_TRANSFER_PER_SECOND = 36000;
 
     // Mininmum transfer per second
-    private final static int MINIMUM_TRANSFER_PER_SECOND = 24;
+    private final static int MINIMUM_TRANSFER_PER_SECOND = 4000;
 
     // Current max transfer
     protected int maxTransfer;
@@ -84,8 +82,6 @@ public abstract class AIOPart
 
     private final static int[] TIER1_INDEXS = { 1, 3, 5, 7 };
 
-    private final static int UPGRADE_INVENTORY_SIZE = 4;
-
 
     // Passive ae drain
     private static final double IDLE_POWER_DRAIN = 0.7;
@@ -94,8 +90,8 @@ public abstract class AIOPart
 
     private static final RedstoneMode DEFAULT_REDSTONE_MODE = RedstoneMode.IGNORE;
 
-    private static final String NBT_KEY_REDSTONE_MODE = "redstoneMode", NBT_KEY_FILTER_NUMBER = "EnergyFilter#",
-            NBT_KEY_UPGRADE_INV = "upgradeInventory";
+    private static final String NBT_KEY_REDSTONE_MODE = "redstoneMode";
+    private static final String NBT_KEY_FILTER_NUMBER = "EnergyFilter#";
 
     private boolean lastRedstone;
 
@@ -106,9 +102,6 @@ public abstract class AIOPart
 
     // Current mode
     private RedstoneMode redstoneMode = AIOPart.DEFAULT_REDSTONE_MODE;
-
-    // Machine source of this machine
-    protected MachineSource asMachineSource;
 
     protected List<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>( AIOPart.MAX_FILTER_SIZE );
 
@@ -121,6 +114,7 @@ public abstract class AIOPart
 
     protected boolean redstoneControlled;
     private boolean updateRequested;
+    private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
 
     public AIOPart(final PartEnum associatedPart, final SecurityPermissions... interactionPermissions )
     {
@@ -128,6 +122,15 @@ public abstract class AIOPart
 
         // Change transfer
         maxTransfer = 5000*10*upgradeSpeedCount;
+
+        // Pre-fill filtered energies
+        for(int i = 0; i < MAX_FILTER_SIZE; i++) {
+            // Fill filtered energies list
+            filteredEnergies.add(i, null);
+
+            // Fill handler list
+            filteredEnergiesChangeHandler.add(new ChangeHandler<>());
+        }
     }
 
     private boolean canDoWork()
@@ -159,50 +162,10 @@ public abstract class AIOPart
 
     }
 
-    protected int getTransferAmountPerSecond()
-    {
+    protected int getTransferAmountPerSecond() {
         return BASE_ENERGY_TRANSFER + ( this.upgradeSpeedCount * TRANSFER_PER_UPGRADE);
     }
 
-
-
-    private void resizeAvailableArray()
-    {
-        // Resize the available slots
-        this.availableFilterSlots = new int[1 + ( this.filterSize * 4 )];
-
-        // Add the base slot
-        this.availableFilterSlots[0] = AIOPart.BASE_SLOT_INDEX;
-
-        if( this.filterSize < 2 )
-        {
-            // Reset tier 2 slots
-            for(int i = 0; i < AIOPart.TIER2_INDEXS.length; i++ )
-            {
-                this.filteredEnergies.set( AIOPart.TIER2_INDEXS[i], null );
-            }
-
-            if( this.filterSize < 1 )
-            {
-                // Reset tier 1 slots
-                for(int i = 0; i < AIOPart.TIER1_INDEXS.length; i++ )
-                {
-                    this.filteredEnergies.set( AIOPart.TIER1_INDEXS[i], null );
-                }
-            }
-            else
-            {
-                // Tier 1 slots
-                System.arraycopy( AIOPart.TIER1_INDEXS, 0, this.availableFilterSlots, 1, 4 );
-            }
-        }
-        else
-        {
-            // Add both
-            System.arraycopy( AIOPart.TIER1_INDEXS, 0, this.availableFilterSlots, 1, 4 );
-            System.arraycopy( AIOPart.TIER2_INDEXS, 0, this.availableFilterSlots, 5, 4 );
-        }
-    }
     private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("ME Energy Export/Import Bus", 4,
             1, this) {
 
@@ -236,22 +199,10 @@ public abstract class AIOPart
             }
         }
     }
-    private void notifyListenersOfFilterEnergyChange()
-    {
+
+    private void notifyListenersOfFilterEnergyChange(int i, LiquidAIEnergy energy) {
         if(player != null) {
-            int i = 0;
-            for (LiquidAIEnergy energy : this.filteredEnergies) {
-                TileEntity host = this.getHostTile();
-                NetworkHandler.sendTo(new PacketFilterServerToClient(energy, i, this), (EntityPlayerMP) this.player);
-                i++;
-            }
-        }
-    }
-    private void notifyListenersOfFilterSizeChange()
-    {
-        for( ContainerPartEnergyIOBus listener : this.listeners )
-        {
-            listener.setFilterSize( this.filterSize );
+            NetworkHandler.sendTo(new PacketFilterServerToClient(energy, i, this), (EntityPlayerMP) this.player);
         }
     }
 
@@ -259,63 +210,8 @@ public abstract class AIOPart
     public AIGridNodeInventory getUpgradeInventory() {
         return this.upgradeInventory;
     }
-    private void updateUpgradeState()
-    {
-        int oldFilterSize = this.filterSize;
 
-        this.filterSize = 0;
-        this.redstoneControlled = false;
-        this.upgradeSpeedCount = 0;
-
-        IMaterials aeMaterals = AEApi.instance().definitions().materials();
-            for( int i = 0; i < this.upgradeInventory.getSizeInventory(); i++ )
-            {
-                ItemStack slotStack = this.upgradeInventory.getStackInSlot( i );
-
-                if( slotStack != null )
-                {
-                    if( aeMaterals.cardCapacity().isSameAs( slotStack ) )
-                    {
-                        this.filterSize++ ;
-                    }
-
-                    else if( aeMaterals.cardSpeed().isSameAs( slotStack ) )
-                    {
-                        this.upgradeSpeedCount++ ;
-                    }
-                }
-            }
-
-            // Did the filter size change?
-            if( oldFilterSize != this.filterSize )
-            {
-                this.resizeAvailableArray();
-            }
-
-            // Is this client side?
-            if( EffectiveSide.isClientSide() )
-            {
-                return;
-            }
-            this.notifyListenersOfFilterSizeChange();
-
-        // Did the filter size change?
-        if( oldFilterSize != this.filterSize )
-        {
-            this.resizeAvailableArray();
-        }
-
-        // Is this client side?
-        if( EffectiveSide.isClientSide() )
-        {
-            return;
-        }
-
-
-    }
-
-    public boolean addFilteredEnergyFromItemstack( final EntityPlayer player, final ItemStack itemStack )
-    {
+    public boolean addFilteredEnergyFromItemstack( final EntityPlayer player, final ItemStack itemStack ) {
         LiquidAIEnergy itemEnergy = Utils.getEnergyFromItemStack(itemStack);
 
         if( itemEnergy != null )
@@ -335,7 +231,7 @@ public abstract class AIOPart
                 if( this.filteredEnergies.get( filterIndex ) == null )
                 {
                     // Is this server side?
-                    if( EffectiveSide.isServerSide() )
+                    if( !getWorld().isRemote )
                     {
                         // Set the filter
                         this.updateFilter( itemEnergy, filterIndex);
@@ -349,8 +245,7 @@ public abstract class AIOPart
         return false;
     }
 
-    public void addListener( final ContainerPartEnergyIOBus container )
-    {
+    public void addListener( final ContainerPartEnergyIOBus container ) {
         if( !this.listeners.contains( container ) )
         {
             this.listeners.add( container );
@@ -393,21 +288,18 @@ public abstract class AIOPart
     }
 
     @Override
-    public TickingRequest getTickingRequest(final IGridNode arg0 )
-    {
+    public TickingRequest getTickingRequest(final IGridNode arg0 ) {
         return new TickingRequest( MINIMUM_TICKS_PER_OPERATION, MAXIMUM_TICKS_PER_OPERATION, false, false );
     }
 
     @Override
-    public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position )
-    {
+    public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position ) {
         super.onActivate( player, hand, position );
+        // Activation logic is server sided
         if(getLogicalSide() == SERVER) {
             if (!player.isSneaking()) {
-                this.updateUpgradeState();
-
                 // Open gui trough handler
-                // AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getSide(), getHostTile().getPos());
+                AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getSide(), getHostTile().getPos());
 
                 // Make part update gui's coordinates
                 this.updateRequested = true;
@@ -422,17 +314,14 @@ public abstract class AIOPart
     }
 
     @Override
-    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc, final ItemStack removedStack,
-                                  final ItemStack newStack )
-    {
+    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack ) {
 
     }
 
     @Override
     public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos blockPos1) {
         // Ignored client side
-        if( EffectiveSide.isClientSide() )
-        {
+        if( getWorld().isRemote){
             return;
         }
 
@@ -469,25 +358,8 @@ public abstract class AIOPart
         }
     }
 
-    // Client sided filter list sync
-    @SideOnly(CLIENT)
-    public void onReceiveFilterList( final List<LiquidAIEnergy> filteredEnergies )
-    {
-        this.filteredEnergies = filteredEnergies;
-    }
-
-    // Filter size sync
-    @SideOnly(CLIENT)
-    public void onReceiveFilterSize( final byte filterSize )
-    {
-        this.filterSize = filterSize;
-
-        this.resizeAvailableArray();
-    }
-
     @Override
-    public void readFromNBT( final NBTTagCompound data )
-    {
+    public void readFromNBT( final NBTTagCompound data ) {
         // Call super
         super.readFromNBT( data );
 
@@ -506,6 +378,7 @@ public abstract class AIOPart
                 this.filteredEnergies.set( index, LiquidAIEnergy.energies.get( data.getString( NBT_KEY_FILTER_NUMBER + index ) ) );
             }
         }
+
         data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
         // Read upgrade inventory
         this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory",
@@ -521,63 +394,75 @@ public abstract class AIOPart
      * Called when the internal inventory changes.
      */
     @Override
-    public void saveChanges()
-    {
+    public void saveChanges(){
         this.markForSave();
     }
 
     @Override
-    public final void updateFilter(LiquidAIEnergy energy, int index)
-    {
+    public final void updateFilter(LiquidAIEnergy energy, int index) {
         // Set the filter
         this.filteredEnergies.set( index, energy );
-        this.notifyListenersOfFilterEnergyChange();
 
+        this.notifyListenersOfFilterEnergyChange(index, energy);
     }
 
     public abstract TickRateModulation doWork(int toTransfer, IGridNode node);
 
     @Override
-    public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall )
-    {
+    public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall ) {
         if(updateRequested){
             Gui g = Minecraft.getMinecraft().currentScreen;
             if(g != null){
                 NetworkHandler.sendTo(new PacketCoordinateInit(this),
                         (EntityPlayerMP) player);
-                updateRequested = false;
             }
         }
 
-        if( this.canDoWork() )
-        {
+        // Iterate until i equal to filter size
+        for(int i = 0; i < MAX_FILTER_SIZE; i++){
+
+            // Create effectively final i
+            int finalI = i;
+
+            // Check if energy changed
+            filteredEnergiesChangeHandler.get(i).onChange(filteredEnergies.get(i), (energy -> {
+                // Notify listener
+                this.notifyListenersOfFilterEnergyChange(finalI, energy);
+            }));
+
+            // Check if update requested (player opened GUI)
+            if(updateRequested){
+                // Notify listener
+                this.notifyListenersOfFilterEnergyChange(finalI, filteredEnergies.get(i));
+
+            }
+        }
+
+        // Check if update was requested
+        if(updateRequested)
+            // Trigger request
+            updateRequested = false;
+
+        if( this.canDoWork() ) {
             // Calculate the amount to transfer per second
             int transferAmountPerSecond = this.getTransferAmountPerSecond();
 
-            // Calculate amount to transfer this operation
+            // Get transfer from ticks since last call, divided by one second multiplied by current transfer amount
             int transferAmount = (int)( transferAmountPerSecond * ( ticksSinceLastCall / 20.F ) );
 
-            // Clamp
-            if( transferAmount < MINIMUM_TRANSFER_PER_SECOND )
-            {
-                transferAmount = MINIMUM_TRANSFER_PER_SECOND;
-            }
-            else if( transferAmount > MAXIMUM_TRANSFER_PER_SECOND )
-            {
-                transferAmount = MAXIMUM_TRANSFER_PER_SECOND;
-            }
+            // Normalize transfer
+            transferAmount = Math.min(transferAmount, MAXIMUM_TRANSFER_PER_SECOND);
+            transferAmount = Math.max(transferAmount, MINIMUM_TRANSFER_PER_SECOND);
 
             return doWork(transferAmount, node);
         }
 
-        this.notifyListenersOfFilterEnergyChange();
         return TickRateModulation.IDLE;
     }
 
 
     @Override
-    public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType )
-    {
+    public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType ) {
         // Call super
         super.writeToNBT( data, saveType );
 

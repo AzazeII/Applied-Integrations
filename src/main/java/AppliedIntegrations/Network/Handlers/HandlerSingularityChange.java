@@ -4,6 +4,9 @@ import AppliedIntegrations.Network.Packets.PacketSingularityChange;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerSingularityChange implements IMessageHandler<PacketSingularityChange, PacketSingularityChange> {
     @Override
     public PacketSingularityChange onMessage(PacketSingularityChange message, MessageContext ctx) {

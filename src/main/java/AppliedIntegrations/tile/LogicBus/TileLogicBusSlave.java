@@ -27,6 +27,9 @@ import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock, IGridMultiblock {
     public boolean isCorner = false;
 

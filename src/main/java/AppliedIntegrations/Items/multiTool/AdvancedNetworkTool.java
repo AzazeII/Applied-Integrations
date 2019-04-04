@@ -8,6 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @Author Azazell
+ */
 public class AdvancedNetworkTool extends AIItemRegistrable implements IAEWrench {
 
     public AdvancedToolModes currentMode = AdvancedToolModes.NETWORK_TOOL_MONITOR;

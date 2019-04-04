@@ -32,6 +32,9 @@ import java.util.List;
 
 import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
+/**
+ * @Author Azazell
+ */
 public class TileWhiteHole extends TileEntity implements ISingularity {
 
     public long mass;

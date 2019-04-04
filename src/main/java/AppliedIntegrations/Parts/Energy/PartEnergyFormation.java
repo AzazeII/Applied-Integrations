@@ -34,6 +34,9 @@ import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
 import static java.util.Collections.singletonList;
 
+/**
+ * @Author Azazell
+ */
 public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
     public PartEnergyFormation() {
         super(PartEnum.EnergyFormation, SecurityPermissions.EXTRACT);

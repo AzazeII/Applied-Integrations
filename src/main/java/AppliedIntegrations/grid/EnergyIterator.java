@@ -6,6 +6,9 @@ import appeng.api.storage.data.IAEStack;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
+/**
+ * @Author Azazell
+ */
 public class EnergyIterator<T extends IAEStack> implements Iterator<T> {
     private Iterator<T> parent;
     private T next;

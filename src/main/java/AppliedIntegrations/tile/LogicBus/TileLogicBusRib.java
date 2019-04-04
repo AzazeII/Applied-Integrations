@@ -27,6 +27,9 @@ import java.util.*;
 import static net.minecraft.util.EnumFacing.DOWN;
 import static net.minecraft.util.EnumFacing.UP;
 
+/**
+ * @Author Azazell
+ */
 public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock, IGridMultiblock {
 
     @Override

@@ -1,8 +1,6 @@
-//
-//  main.js
-//
-//  A project template for using arbor.js
-//
+/**
+ * @Author Azazell
+ */
 (function($) {
 
     // Create renderer function

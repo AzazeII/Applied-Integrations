@@ -4,6 +4,9 @@ import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.networking.IGridMultiblock;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * @Author Azazell
+ */
 public interface IAIMultiBlock {
 
     void tryConstruct(EntityPlayer player);

@@ -10,6 +10,9 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class GuiServerButton extends GuiToggleButton {
 
     private final ResourceLocation background = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/Buttons/BackgroundLayer.png");

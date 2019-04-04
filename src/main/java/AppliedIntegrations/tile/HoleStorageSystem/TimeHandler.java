@@ -2,6 +2,9 @@ package AppliedIntegrations.tile.HoleStorageSystem;
 
 import net.minecraft.world.World;
 
+/**
+ * @Author Azazell
+ */
 public class TimeHandler {
 
     // Last updated time, used to compare time with given in #hasTimePassed(World, int)

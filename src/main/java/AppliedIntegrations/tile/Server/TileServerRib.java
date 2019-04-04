@@ -12,6 +12,9 @@ import net.minecraft.util.ITickable;
 import java.util.EnumSet;
 
 
+/**
+ * @Author Azazell
+ */
 public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, ITickable {
 
     public boolean isBlockNotified;

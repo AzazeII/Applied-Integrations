@@ -8,6 +8,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerServerToClient implements IMessageHandler<PacketFilterServerToClient, PacketFilterServerToClient> {
 
     public HandlerServerToClient(){

@@ -6,6 +6,9 @@ import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 
+/**
+ * @Author Azazell
+ */
 public abstract class BlackHoleSingularityInventoryHandler<T extends IAEStack<T>> extends SingularityInventoryHandler<T> {
     @Override
     public final AccessRestriction getAccess() {

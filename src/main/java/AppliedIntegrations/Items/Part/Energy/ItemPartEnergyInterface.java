@@ -6,6 +6,9 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartEnergyInterface extends ItemPartAIBase<PartEnergyInterface> {
     public ItemPartEnergyInterface(String id) {
         super(id);

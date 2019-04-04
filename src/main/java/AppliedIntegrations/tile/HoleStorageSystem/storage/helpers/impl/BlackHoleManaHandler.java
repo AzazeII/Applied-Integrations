@@ -10,6 +10,9 @@ import appeng.api.storage.IStorageChannel;
 
 import static appeng.api.config.Actionable.MODULATE;
 
+/**
+ * @Author Azazell
+ */
 public class BlackHoleManaHandler extends BlackHoleSingularityInventoryHandler<IAEManaStack> {
 
     @Override

@@ -43,6 +43,9 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
         @Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),
 
 })
+/**
+ * @Author Azazell
+ */
 public class PartManaInterface extends PartEnergyInterface implements IManaReceiver, ISparkAttachable, IManaInterface {
 
     private int currentMana = 0;

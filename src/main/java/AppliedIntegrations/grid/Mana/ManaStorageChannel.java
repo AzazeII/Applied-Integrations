@@ -10,6 +10,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 
+/**
+ * @Author Azazell
+ */
 public class ManaStorageChannel implements IManaStorageChannel {
 
     @Nonnull

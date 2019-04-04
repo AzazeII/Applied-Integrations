@@ -8,6 +8,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 
 // TODO: 2019-02-17 Integrations with Astral sorcery
+/**
+ * @Author Azazell
+ */
 public class PartStarlightP2PTunnel extends AIP2PTunnel<PartStarlightP2PTunnel> implements IAstralIntegrated {
     public PartStarlightP2PTunnel() {
         super(PartEnum.P2PStarlight);

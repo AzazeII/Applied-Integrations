@@ -8,6 +8,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @Author Azazell
+ */
 public class ContainerMEServer extends Container
 {
     private TileServerCore master;

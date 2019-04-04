@@ -14,6 +14,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * @Author Azazell
+ */
 public class BlockLogicBusCore extends AIMultiBlock {
     public BlockLogicBusCore(String reg, String unloc) {
         super(reg, unloc);

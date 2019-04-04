@@ -7,6 +7,9 @@ import org.lwjgl.util.glu.Sphere;
 
 import java.awt.*;
 
+/**
+ * @Author Azazell
+ */
 public class TileWhiteHoleRenderer extends TileEntitySpecialRenderer<TileWhiteHole> {
 
     private Sphere sphere = new Sphere();

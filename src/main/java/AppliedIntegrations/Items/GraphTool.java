@@ -22,6 +22,9 @@ import net.minecraft.world.World;
 
 import static appeng.api.util.AEPartLocation.INTERNAL;
 
+/**
+ * @Author Azazell
+ */
 public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 
     private GraphToolMode mode = GraphToolMode.ALL;

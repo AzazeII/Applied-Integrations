@@ -13,6 +13,9 @@ import teamroots.embers.power.IEmberCapability;
 
 import java.util.Vector;
 
+/**
+ * @Author Azazell
+ */
 public abstract class AIP2PTunnel<T> extends AIPart {
     private boolean isOutput;
 

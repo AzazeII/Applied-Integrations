@@ -1,5 +1,8 @@
 package AppliedIntegrations.Topology;
 
+/**
+ * @Author Azazell
+ */
 public enum GraphToolMode {
     LINE, // Show all nodes line from line end to controller TODO
     ALL, // Show all nodes in network

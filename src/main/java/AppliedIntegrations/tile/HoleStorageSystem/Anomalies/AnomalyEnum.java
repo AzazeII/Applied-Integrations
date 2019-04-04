@@ -24,6 +24,9 @@ import java.util.function.Consumer;
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
 import static AppliedIntegrations.tile.HoleStorageSystem.Anomalies.EntropyTransformations.entropyMap;
 
+/**
+ * @Author Azazell
+ */
 public enum AnomalyEnum {
     // Consumes all energy from machines in range
     EMP((t) -> {

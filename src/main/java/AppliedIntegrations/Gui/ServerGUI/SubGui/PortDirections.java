@@ -1,5 +1,8 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
+/**
+ * @Author Azazell
+ */
 public enum PortDirections {
     S(1,0),
     N(-1,0),

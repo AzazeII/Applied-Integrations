@@ -11,6 +11,9 @@ import net.minecraft.util.ResourceLocation;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public enum PartModelEnum implements IPartModel {
     EXPORT_BASE("export_base"),
     EXPORT_HAS_CHANNEL(EXPORT_BASE, "export_has_channel"),

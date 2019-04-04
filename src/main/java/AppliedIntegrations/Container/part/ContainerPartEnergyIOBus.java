@@ -13,6 +13,9 @@ import net.minecraft.item.ItemStack;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
 {
     /**

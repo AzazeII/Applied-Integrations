@@ -15,6 +15,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 // TODO: 2019-02-17 Integration with Embers
+/**
+ * @Author Azazell
+ */
 public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implements IEmberIntegrated {
 
     private IEmberCapability outputHandler = new EmberOutputCapability();

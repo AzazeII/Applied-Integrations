@@ -16,6 +16,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @Author Azazell
+ */
 public class BlockServerCore extends AIMultiBlock {
 
     private final Random rand = new Random();

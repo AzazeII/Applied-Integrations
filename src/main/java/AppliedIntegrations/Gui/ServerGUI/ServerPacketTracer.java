@@ -25,6 +25,9 @@ import java.util.Vector;
 
 import static AppliedIntegrations.Gui.ServerGUI.NetworkPermissions.*;
 
+/**
+ * @Author Azazell
+ */
 public class ServerPacketTracer extends AIBaseGui {
 
     public volatile TileServerCore mInstance;

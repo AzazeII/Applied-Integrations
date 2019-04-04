@@ -50,6 +50,9 @@ import java.util.List;
 import static AppliedIntegrations.Blocks.Additions.BlockMEPylon.FACING;
 import static java.util.Collections.singletonList;
 
+/**
+ * @Author Azazell
+ */
 public class TileMEPylon extends AITile implements ICellContainer, IGridTickable {
 
     // Linked maps of *passive* handlers, which standing as handler factory

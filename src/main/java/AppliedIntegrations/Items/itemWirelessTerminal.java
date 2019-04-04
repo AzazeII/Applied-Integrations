@@ -11,6 +11,9 @@ import net.minecraftforge.energy.EnergyStorage;
 
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class ItemWirelessTerminal extends AIItemRegistrable implements INetworkEncodable,IAEItemPowerStorage {
     private static String EncryptionKey;
 

@@ -47,6 +47,9 @@ import java.util.*;
 
 import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
+/**
+ * @Author Azazell
+ */
 public class TileBlackHole extends TileEntity implements ITickable, ISingularity {
     private final double gravitationalConst = 6.7;
     public long mass = (int)Math.ceil(Math.random() * 16384);

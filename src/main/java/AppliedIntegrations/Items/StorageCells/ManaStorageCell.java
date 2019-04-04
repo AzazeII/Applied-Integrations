@@ -26,6 +26,9 @@ import org.lwjgl.input.Keyboard;
 import javax.annotation.Nonnull;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class ManaStorageCell extends AIItemRegistrable implements IStorageCell<IAEManaStack>, IBotaniaIntegrated {
     private int maxBytes;
 

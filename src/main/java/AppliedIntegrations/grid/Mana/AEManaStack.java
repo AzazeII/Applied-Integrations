@@ -10,6 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+/**
+ * @Author Azazell
+ */
 public class AEManaStack implements IAEManaStack, Comparable<IAEManaStack> {
     private long stackSize;
     private long countRequestable;

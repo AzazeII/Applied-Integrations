@@ -5,6 +5,9 @@ import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.data.IAEStack;
 
+/**
+ * @Author Azazell
+ */
 public abstract class WhiteHoleSingularityInventoryHandler<T extends IAEStack<T>> extends SingularityInventoryHandler<T> {
     @Override
     public final AccessRestriction getAccess() {

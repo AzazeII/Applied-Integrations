@@ -7,6 +7,9 @@ import net.minecraft.client.gui.Gui;
 
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public abstract class EnergyWidget extends AIWidget {
     private LiquidAIEnergy currentEnergy;
 

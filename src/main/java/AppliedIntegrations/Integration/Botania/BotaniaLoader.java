@@ -7,6 +7,9 @@ import appeng.api.AEApi;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.BotaniaAPI;
 
+/**
+ * @Author Azazell
+ */
 public class BotaniaLoader {
     public static void preInit(){
         AEApi.instance().storage().registerStorageChannel(IManaStorageChannel.class, new ManaStorageChannel());

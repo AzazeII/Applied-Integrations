@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartEnergyAnnihilation extends ItemPartAIBase<PartEnergyAnnihilation> {
     public ItemPartEnergyAnnihilation(String id) {
         super(id);

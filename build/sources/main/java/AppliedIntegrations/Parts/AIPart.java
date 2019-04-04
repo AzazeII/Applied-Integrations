@@ -6,8 +6,6 @@ import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.AIUtils;
-import AppliedIntegrations.Utils.EffectiveSide;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.AEPartGridBlock;
 import appeng.api.AEApi;
@@ -29,6 +27,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
+import appeng.me.Grid;
 import appeng.me.helpers.MachineSource;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
@@ -48,6 +47,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
@@ -124,7 +126,7 @@ public abstract class AIPart
 			this.interactionPermissions = null;
 		}
 			// Create the grid block
-		if(EffectiveSide.isServerSide()) {
+		if(getLogicalSide() == SERVER) {
 			this.gridBlock = new AEPartGridBlock(this);
 		}else{
 			this.gridBlock = null;
@@ -134,7 +136,7 @@ public abstract class AIPart
 	private void updateStatus()
 	{
 		// Ignored client side
-		if( EffectiveSide.isClientSide() )
+		if( getWorld().isRemote )
 		{
 			return;
 		}
@@ -163,7 +165,7 @@ public abstract class AIPart
 
 	protected boolean doesPlayerHavePermission( final EntityPlayer player, final SecurityPermissions permission )
 	{
-		if( EffectiveSide.isClientSide() )
+		if( getWorld().isRemote )
 		{
 			return false;
 		}
@@ -186,7 +188,7 @@ public abstract class AIPart
 
 	protected boolean doesPlayerHavePermission( final int playerID, final SecurityPermissions permission )
 	{
-		if( EffectiveSide.isClientSide() )
+		if( getWorld().isRemote )
 		{
 			return false;
 		}
@@ -231,7 +233,7 @@ public abstract class AIPart
 	public void addToWorld()
 	{
 		// Ignored on client side
-		if( EffectiveSide.isClientSide() )
+		if( getWorld().isRemote )
 		{
 			return;
 		}
@@ -373,7 +375,7 @@ public abstract class AIPart
 	public boolean isActive()
 	{
 		// Are we server side?
-		if( EffectiveSide.isServerSide() )
+		if( !getWorld().isRemote )
 		{
 			// Do we have a node?
 			if( this.node != null )
@@ -398,54 +400,6 @@ public abstract class AIPart
 
 	@Override
 	public abstract int getLightLevel();
-	public final boolean isPartUseableByPlayer( final EntityPlayer player )
-	{
-		if( EffectiveSide.isClientSide() )
-		{
-			return false;
-		}
-
-		// Null check host
-		if( ( this.hostTile == null ) || ( this.host == null ) )
-		{
-			return false;
-		}
-
-		// Does the host still exist in the world and the player in range of it?
-		if( !AIUtils.canPlayerInteractWith( player, this.hostTile ) )
-		{
-			return false;
-		}
-
-		// Is the part still attached?
-		if( this.host.getPart( this.cableSide ) != this )
-		{
-			return false;
-		}
-
-		// Are there any permissions to check?
-		if( this.interactionPermissions != null )
-		{
-			// Get the security grid
-			ISecurityGrid sGrid = this.gridBlock.getSecurityGrid();
-			if( sGrid == null )
-			{
-				// Security grid was unaccessible.
-				return false;
-			}
-
-			// Check each permission
-			for( SecurityPermissions perm : this.interactionPermissions )
-			{
-				if( !sGrid.hasPermission( player, perm ) )
-				{
-					return false;
-				}
-			}
-		}
-
-		return true;
-	}
 
 	@Override
 	public boolean isPowered()
@@ -453,7 +407,7 @@ public abstract class AIPart
 		try
 		{
 			// Server side?
-			if( EffectiveSide.isServerSide() && ( this.gridBlock != null ) )
+			if( !getWorld().isRemote && ( this.gridBlock != null ) )
 			{
 				// Get the energy grid
 				IEnergyGrid eGrid = this.gridBlock.getEnergyGrid();
@@ -529,7 +483,7 @@ public abstract class AIPart
 		}
 
 		// Is this server side?
-		if( EffectiveSide.isServerSide() )
+		if( !getWorld().isRemote )
 		{
 			// Launch the gui
 			AppliedIntegrations.launchGui( this, player, this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ() );

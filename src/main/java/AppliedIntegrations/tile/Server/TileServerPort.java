@@ -6,6 +6,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
 
+/**
+ * @Author Azazell
+ */
 public class TileServerPort  extends AIMultiBlockTile {
 
     private EnumFacing side = null;

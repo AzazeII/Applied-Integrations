@@ -27,6 +27,9 @@ import java.util.List;
 import static java.util.Collections.singletonList;
 import static net.minecraft.util.EnumFacing.*;
 
+/**
+ * @Author Azazell
+ */
 public class TileMETurretFoundation extends AITile implements ICellContainer {
 
     private enum Ammo{

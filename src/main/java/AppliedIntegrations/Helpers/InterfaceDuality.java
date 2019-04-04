@@ -32,6 +32,7 @@ import static appeng.api.config.Actionable.SIMULATE;
 import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
+ * @Author Azazell
  * Class handler for both tile interface, and part interface
  */
 public class InterfaceDuality implements IInterfaceDuality{

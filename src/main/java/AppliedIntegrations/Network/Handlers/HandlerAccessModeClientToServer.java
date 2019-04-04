@@ -5,6 +5,9 @@ import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerAccessModeClientToServer implements IMessageHandler<PacketAccessModeClientToServer,PacketAccessModeClientToServer> {
     @Override
     public PacketAccessModeClientToServer onMessage(PacketAccessModeClientToServer message, MessageContext ctx) {

@@ -10,6 +10,9 @@ import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 
+/**
+ * @Author Azazell
+ */
 public class WhiteHoleFluidHandler extends WhiteHoleSingularityInventoryHandler<IAEFluidStack> {
     @Override
     public IAEFluidStack extractItems(IAEFluidStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {

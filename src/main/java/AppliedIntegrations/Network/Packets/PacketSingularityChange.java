@@ -3,6 +3,9 @@ package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * @Author Azazell
+ */
 public class PacketSingularityChange extends AIPacket {
 
     public TileBlackHole singularity;

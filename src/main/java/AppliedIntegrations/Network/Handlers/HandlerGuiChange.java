@@ -5,6 +5,9 @@ import AppliedIntegrations.Network.Packets.PacketGuiChange;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerGuiChange implements IMessageHandler<PacketGuiChange, PacketGuiChange> {
 
     public HandlerGuiChange(){

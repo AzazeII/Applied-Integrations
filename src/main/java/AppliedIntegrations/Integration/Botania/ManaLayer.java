@@ -9,6 +9,9 @@ import vazkii.botania.api.mana.IManaReceiver;
 import vazkii.botania.api.mana.spark.ISparkAttachable;
 import vazkii.botania.api.mana.spark.ISparkEntity;
 
+/**
+ * @Author Azazell
+ */
 public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttachable {
 
     @Override

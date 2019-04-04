@@ -30,6 +30,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static net.minecraft.util.EnumHand.MAIN_HAND;
 
+/**
+ * @Author Azazell
+ */
 public abstract class ModeledLogicBus extends AIMultiBlock {
     // If valid = true, then logic bus formed
     public static final PropertyBool valid = PropertyBool.create( "valid" );

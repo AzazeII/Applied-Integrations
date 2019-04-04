@@ -15,6 +15,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEntityProvider {
 
     protected AIMultiBlock(String registry, String unlocalizedName) {

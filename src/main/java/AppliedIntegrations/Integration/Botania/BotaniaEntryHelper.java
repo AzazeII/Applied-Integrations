@@ -8,6 +8,9 @@ import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.common.lexicon.BLexiconCategory;
 import vazkii.botania.common.lexicon.BasicLexiconEntry;
 
+/**
+ * @Author Azazell
+ */
 public class BotaniaEntryHelper {
     private LexiconCategory appliedIntegrations;
 

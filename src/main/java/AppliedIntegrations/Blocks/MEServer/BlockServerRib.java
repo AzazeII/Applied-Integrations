@@ -15,6 +15,9 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class BlockServerRib extends AIMultiBlock {
 
     public BlockServerRib(String reg, String unloc) {

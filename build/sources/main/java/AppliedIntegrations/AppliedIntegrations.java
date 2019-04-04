@@ -21,7 +21,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = AppliedIntegrations.modid, name="Applied Integrations", version = "9.0.9.2", dependencies = "required-after:appliedenergistics2")
+@Mod(modid = AppliedIntegrations.modid, name="Applied Integrations", version = "9.0.10", dependencies = "required-after:appliedenergistics2")
 /**
  * @Author Azazell
  */
@@ -65,8 +65,6 @@ public class AppliedIntegrations {
 
 		proxy.SidedPreInit();
 
-		// Register HUD for advanced entropy manipulator
-		//MinecraftForge.EVENT_BUS.register(new GuiEntropyManipulator(Minecraft.getMinecraft()));
 		//this.registerRecipes();
 
 		AILog.info("Pre load Completed");

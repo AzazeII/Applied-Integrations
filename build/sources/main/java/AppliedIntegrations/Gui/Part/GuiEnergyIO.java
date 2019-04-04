@@ -121,9 +121,9 @@ public class GuiEnergyIO
 
     public void initGui() {
         super.initGui();
-        this.buttonList.add( new GuiButtonAETab( 0, this.guiLeft +
-                GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
-                "gui.appliedenergistics2.Priority" ) );
+        //this.buttonList.add( new GuiButtonAETab( 0, this.guiLeft +
+        //        GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
+        //        "gui.appliedenergistics2.Priority" ) );
         // Calculate the index
         int index = 0;
         for( int row = 0; row < this.FILTER_GRID_SIZE; row++ )

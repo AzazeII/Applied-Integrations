@@ -6,6 +6,9 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.EnumSet;
 
+/**
+ * @Author Azazell
+ */
 public class TileServerHousing extends AIMultiBlockTile {
 
     @Override

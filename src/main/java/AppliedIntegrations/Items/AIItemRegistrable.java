@@ -8,6 +8,9 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+/**
+ * @Author Azazell
+ */
 public class AIItemRegistrable extends Item {
     public String reg;
 

@@ -9,6 +9,9 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nonnull;
 
+/**
+ * @Author Azazell
+ */
 public class ContainerServerPacketTracer extends AIContainer {
 
     public TileServerCore tile;

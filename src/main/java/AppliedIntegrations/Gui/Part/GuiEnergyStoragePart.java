@@ -31,6 +31,9 @@ import java.util.List;
 
 import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
 
+/**
+ * @Author Azazell
+ */
 @SideOnly(Side.CLIENT)
 public class GuiEnergyStoragePart
         extends AIBaseGui
@@ -65,11 +68,6 @@ public class GuiEnergyStoragePart
      * The width of the gui without a network too
      */
     private static final int GUI_WIDTH_NO_TOOL = 210;
-
-    /**
-     * The height of the gui
-     */
-    private static final int GUI_HEIGHT = 184;
 
     /**
      * X position of the title string.

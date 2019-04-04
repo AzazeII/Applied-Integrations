@@ -10,6 +10,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
+/**
+ * @Author Azazell
+ */
 public class EntityBlackHole extends EntitySnowball {
 
     public EntityBlackHole(World world) {

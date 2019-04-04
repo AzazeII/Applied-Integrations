@@ -14,6 +14,9 @@ import net.minecraft.util.EnumFacing;
 import java.util.EnumSet;
 import java.util.Vector;
 
+/**
+ * @Author Azazell
+ */
 public class TileServerSecurity extends AIMultiBlockTile {
 
     public EnumFacing fw;

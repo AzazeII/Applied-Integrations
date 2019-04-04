@@ -6,6 +6,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerVectorSync implements IMessageHandler<PacketVectorSync, PacketVectorSync> {
     @Override
     public PacketVectorSync onMessage(PacketVectorSync message, MessageContext ctx) {

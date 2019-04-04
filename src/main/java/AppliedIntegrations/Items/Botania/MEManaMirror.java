@@ -34,6 +34,9 @@ import java.util.List;
         @Optional.Interface(iface = "vazkii.botania.api.mana.IManaItem", modid = "botania", striprefs = true),
         @Optional.Interface(iface = "vazkii.botania.api.mana.IManaTooltipDisplay", modid = "botania", striprefs = true),
 })
+/**
+ * @Author Azazell
+ */
 public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHandler, IAEItemPowerStorage, INetworkEncodable, IBotaniaIntegrated,  IManaItem, IManaTooltipDisplay{
 
     private double storage;

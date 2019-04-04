@@ -5,6 +5,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @Author Azazell
+ */
 public class SlotMEServer extends Slot {
     public SlotMEServer(IInventory inv, int index, int x, int y) {
         super(inv, index, x, y);

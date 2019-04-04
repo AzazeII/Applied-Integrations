@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartP2PEmber extends ItemPartAIBase<PartEmberP2PTunnel> implements IEmberIntegrated {
     public ItemPartP2PEmber(String name) {
         super(name);

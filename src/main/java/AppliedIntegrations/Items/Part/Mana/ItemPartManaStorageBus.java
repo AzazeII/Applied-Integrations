@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartManaStorageBus extends ItemPartAIBase<PartManaStorageBus> implements IBotaniaIntegrated {
     public ItemPartManaStorageBus(String registry) {
         super(registry);

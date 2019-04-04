@@ -4,6 +4,9 @@ import AppliedIntegrations.AppliedIntegrations;
 import appeng.core.AppEng;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * @Author Azazell
+ */
 public enum AdvancedToolModes {
     ENTROPY_MANIPULATOR(0, new ResourceLocation(AppEng.MOD_ID, "textures/items/entropy_manipulator.png")),
     NETWORK_TOOL_MONITOR(1, new ResourceLocation(AppEng.MOD_ID, "textures/items/network_tool.png")),

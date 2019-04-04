@@ -22,6 +22,9 @@ import java.util.Map;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 
+/**
+ * @Author Azazell
+ */
 public class ContainerEnergyInterface extends ContainerWithNetworkTool {
     /**
      * The number of upgrade slots we have

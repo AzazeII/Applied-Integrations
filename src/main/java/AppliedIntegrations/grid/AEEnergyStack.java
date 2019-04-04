@@ -12,6 +12,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+/**
+ * @Author Azazell
+ */
 public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack> {
     private LiquidAIEnergy Energy;
     private long stackSize;

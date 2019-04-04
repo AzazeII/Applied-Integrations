@@ -10,6 +10,9 @@ import appeng.api.storage.data.IAEItemStack;
 
 import static appeng.api.config.Actionable.MODULATE;
 
+/**
+ * @Author Azazell
+ */
 public class BlackHoleItemHandler extends BlackHoleSingularityInventoryHandler<IAEItemStack> {
 
     @Override

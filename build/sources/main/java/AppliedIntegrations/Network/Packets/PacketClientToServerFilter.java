@@ -5,6 +5,8 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import io.netty.buffer.ByteBuf;
 
+import javax.annotation.Nonnull;
+
 /**
  * @Author Azazell
  * @Usage This packet needed to write feedback from gui to part, send it when your filter in gui is updated
@@ -20,7 +22,7 @@ public class PacketClientToServerFilter extends AIPacket{
 
     }
 
-    public PacketClientToServerFilter(ISyncHost host, LiquidAIEnergy energy, int index) {
+    public PacketClientToServerFilter(@Nonnull ISyncHost host, LiquidAIEnergy energy, int index) {
         super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
         this.energy = energy;
         this.index = index;

@@ -9,6 +9,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class AIConfig {
     private static Configuration config = null;
 
