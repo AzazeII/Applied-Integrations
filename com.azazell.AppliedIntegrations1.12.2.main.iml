@@ -21,15 +21,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/Tesla-1.12.2-1.0.63.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -40,6 +31,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/EmbersRekindled-1.12.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -76,6 +76,7 @@
     <orderEntry type="library" name="Gradle: mezz.jei:jei_1.12.2:4.13.0.219" level="project" />
     <orderEntry type="library" name="Gradle: cofh:RedstoneFlux:universal:1.12-2.1.0.6" level="project" />
     <orderEntry type="library" name="Gradle: baubles:Baubles:1.5.2:1.12" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20171018" level="project" />
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -150,15 +151,6 @@
       <library>
         <CLASSES>
           <root url="file://$USER_HOME$/.gradle/caches/minecraft/net/minecraftforge/forge/1.12.2-14.23.5.2768/start" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/journeymap-1.12.2-5.5.4.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

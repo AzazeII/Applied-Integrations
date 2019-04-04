@@ -619,6 +619,17 @@
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jline/jline/3.5.1/11c92210c8ad3c9610334d66c4d8662cad8d26a2/jline-3.5.1-sources.jar!/" />
       </SOURCES>
     </library>
+    <library name="Gradle: org.json:json:20171018">
+      <CLASSES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20171018/36ced462c97f0845b4a7b266a25cebe95d18baa3/json-20171018.jar!/" />
+      </CLASSES>
+      <JAVADOC>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20171018/5ebafa6d9eace1ec57e012e6dc0f66fa5306233b/json-20171018-javadoc.jar!/" />
+      </JAVADOC>
+      <SOURCES>
+        <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.json/json/20171018/b4a63d74bc32f012342173c1a1da6fbe90065d69/json-20171018-sources.jar!/" />
+      </SOURCES>
+    </library>
     <library name="Gradle: org.lwjgl.lwjgl:lwjgl-platform:natives-linux:2.9.2-nightly-20140822">
       <CLASSES>
         <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.lwjgl.lwjgl/lwjgl-platform/2.9.2-nightly-20140822/d898a33b5d0a6ef3fed3a4ead506566dce6720a5/lwjgl-platform-2.9.2-nightly-20140822-natives-linux.jar!/" />

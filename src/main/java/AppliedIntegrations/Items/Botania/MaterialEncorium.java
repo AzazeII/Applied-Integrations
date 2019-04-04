@@ -4,6 +4,7 @@ import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,5 +24,8 @@ public class MaterialEncorium extends AIItemRegistrable implements IBotaniaInteg
     public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips ) {
         if(!percent.equals("100%"))
             lines.add(percent);
+
+        lines.add("");
+        lines.add(TextFormatting.DARK_BLUE + "Design by MegaTech");
     }
 }

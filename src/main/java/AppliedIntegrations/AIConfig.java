@@ -28,6 +28,7 @@ public class AIConfig {
 
     private static final String CATEGORY_PROPERTIES = "Properties";
     public static int interfaceMaxStorage; // #8
+    public static int webUIPort;
     public static int maxPylonDistance;
     public static double pylonDrain;
 
@@ -147,6 +148,10 @@ public class AIConfig {
         pylonDrain = (Double)addProperty(CATEGORY_PROPERTIES, "PylonDrainPerBlock", 20.0D,
                 "Default: 20.0D; Active(used only when matter transmitted) energy drain per block of ME pylon's beam. Limit is: " +
                         "10000",
+                propertiesOrder);
+
+        webUIPort = (Integer)addProperty(CATEGORY_PROPERTIES, "Web UI Port", 8000,
+                        "Default: 8000; Port for web UI of network topology",
                 propertiesOrder);
 
         // Set order

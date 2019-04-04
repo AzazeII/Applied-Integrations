@@ -71,6 +71,7 @@ dependencies {
     compile "appeng:appliedenergistics2:rv6-stable-6"
     compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
     compile 'baubles:Baubles:1.12:1.5.2'
+    compile 'org.json:json:20171018'
 }
 
 processResources {

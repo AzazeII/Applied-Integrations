@@ -65,8 +65,6 @@ public class AppliedIntegrations {
 
 		proxy.SidedPreInit();
 
-		// Register HUD for advanced entropy manipulator
-		//MinecraftForge.EVENT_BUS.register(new GuiEntropyManipulator(Minecraft.getMinecraft()));
 		//this.registerRecipes();
 
 		AILog.info("Pre load Completed");
