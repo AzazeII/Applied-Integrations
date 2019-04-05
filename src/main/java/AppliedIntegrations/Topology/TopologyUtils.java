@@ -1,16 +1,20 @@
 package AppliedIntegrations.Topology;
 
 import AppliedIntegrations.AIConfig;
+import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IEnergyGridProvider;
+import appeng.api.parts.IPart;
 import appeng.api.util.AEPartLocation;
 import appeng.me.cache.EnergyGridCache;
 import appeng.me.cache.P2PCache;
 import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -38,12 +42,9 @@ public class TopologyUtils {
      *
      * @param player
      *  Player, who queried this request
-     *
-     * @param mode
+     *@param mode
      *  Current working mode of graph tool
-     *
      * @param machine
-     *  GridHost clicked on by tool
      */
     public static void createWebUI(IGrid grid, EntityPlayer player, GraphToolMode mode, IGridHost machine) {
         // Switch modes
@@ -158,6 +159,9 @@ public class TopologyUtils {
                 nodeList.add(((IGridHost)iEnergyGridProvider).getGridNode(AEPartLocation.INTERNAL));
         }));
 
+        // Add pivot to list
+        nodeList.add(grid.getPivot());
+
         // Create JSON object
         createSubnetworkJSON(nodeList, connections, grid.getPivot());
     }
@@ -234,6 +238,39 @@ public class TopologyUtils {
         return array[array.length-1];
     }
 
+    private static JSONObject serializeNodeData(IGridNode node){
+        // Create temp object
+        JSONObject temp = new JSONObject();
+
+        // Put current node state
+        temp.put("Active", node.isActive());
+
+        // Write pos
+        temp.put("X", node.getGridBlock().getLocation().x); // (1)
+        temp.put("Y", node.getGridBlock().getLocation().y); // (2)
+        temp.put("Z", node.getGridBlock().getLocation().z); // (3)
+
+        // Write color
+        temp.put("Сolor", node.getGridBlock().getGridColor());
+
+        // Iterate over each flag
+        for (GridFlags flag : GridFlags.values()){
+            // Check if node has this flag
+            if(node.getGridBlock().getFlags().contains(flag)){
+                // Set value to true
+                temp.put(flag.name(), true);
+            }else{
+                // Set value to false
+                temp.put(flag.name(), false);
+            }
+        }
+
+        // Write power usage
+        temp.put("Usage", node.getGridBlock().getIdlePowerUsage());
+
+        return temp;
+    }
+
     private static void createJSON(Iterable<IGridNode> nodeList){
         // Create pair list
         List<Pair<IGridNode, IGridNode>> connections = new LinkedList<>();
@@ -275,6 +312,9 @@ public class TopologyUtils {
         JSONArray aNodeList = new JSONArray(); // (1)
         JSONArray bNodeList = new JSONArray(); // (2)
 
+        // List of serialized node data
+        List<JSONObject> serializedDataList = new ArrayList<>();
+
         // Iterate for each connection
         connections.forEach((iGridNodeIGridNodePair -> {
             // Put left node
@@ -288,12 +328,16 @@ public class TopologyUtils {
         nodeList.forEach((iGridNode -> {
             // Add node to list
             jsonNodeList.put(toHumanReadableString(iGridNode.getMachine().toString()));
+
+            // Serialize data of node
+            serializedDataList.add(serializeNodeData(iGridNode));
         }));
 
         // Put created arrays
         network.put("nodes", jsonNodeList); // (1)
         network.put("src", aNodeList); // (2)
         network.put("dest", bNodeList); // (3)
+        network.put("data", serializedDataList); // (4)
 
         try {
             // Write file
@@ -311,8 +355,14 @@ public class TopologyUtils {
         JSONArray aNodeList = new JSONArray(); // (1)
         JSONArray bNodeList = new JSONArray(); // (2)
 
+        // List of serialized node data
+        List<JSONObject> serializedDataList = new ArrayList<>();
+
         // Iterate over all nodes
         for (IGridNode gridNode : nodeList) {
+            // Serialize data of node
+            serializedDataList.add(serializeNodeData(gridNode));
+
             // Check if grid node equal to pivot
             if(mainPivot.getMachine().toString().equals(gridNode.getMachine().toString()))
                 // Mark as main network
@@ -335,6 +385,7 @@ public class TopologyUtils {
         network.put("nodes", jsonNodeList); // (1)
         network.put("src", aNodeList); // (2)
         network.put("dest", bNodeList); // (3)
+        network.put("data", serializedDataList); // (4)
 
         try {
             // Write file

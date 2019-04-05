@@ -22,6 +22,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static AppliedIntegrations.Topology.GraphToolMode.LINE;
+import static AppliedIntegrations.Topology.GraphToolMode.P2P_LINKS;
 import static AppliedIntegrations.Topology.TopologyUtils.sendLink;
 import static appeng.api.util.AEPartLocation.INTERNAL;
 
@@ -42,12 +44,23 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
     private void cycleMode(boolean up) {
         try {
             // Check for up scroll
-            if (up)
-                // Switch mode to next
-                mode = GraphToolMode.values()[mode.ordinal() + 1];
-            else
-                // Switch mode to previous
-                mode = GraphToolMode.values()[mode.ordinal() - 1];
+            if (up) {
+                // Check if it is last mode
+                if(mode == P2P_LINKS)
+                    // Switch to 1st
+                    mode = LINE;
+                else
+                    // Switch mode to next
+                    mode = GraphToolMode.values()[mode.ordinal() + 1];
+            }else {
+                // Check if it is first mode
+                if(mode == LINE)
+                    // Switch to last
+                    mode = P2P_LINKS;
+                else
+                    // Switch mode to previous
+                    mode = GraphToolMode.values()[mode.ordinal() - 1];
+            }
         }catch (IndexOutOfBoundsException indexOutOfBound){
             // Ignored
         }
@@ -97,7 +110,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
             TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
 
             // Log to player
-            AILog.serverMessage("Created grid network graph at http://localhost:" + AIConfig.webUIPort); // (1)
+            AILog.serverMessage("Created grid network graph at: "); // (1)
             sendLink(Minecraft.getMinecraft().player); // (2)
 
             // Success
