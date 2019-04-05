@@ -73,4 +73,8 @@ public class AILog
             }
         }
     }
+
+    public static void serverMessage(String s) {
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(s));
+    }
 }

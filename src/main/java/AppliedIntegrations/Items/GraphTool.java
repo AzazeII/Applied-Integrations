@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Topology.GraphToolMode;
 import AppliedIntegrations.Topology.TopologyUtils;
 import AppliedIntegrations.Utils.AILog;
@@ -9,6 +10,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
 import appeng.helpers.IMouseWheelItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import static AppliedIntegrations.Topology.TopologyUtils.sendLink;
 import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
@@ -93,8 +96,12 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
             // Pass to utils
             TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
 
+            // Log to player
+            AILog.serverMessage("Created grid network graph at http://localhost:" + AIConfig.webUIPort); // (1)
+            sendLink(Minecraft.getMinecraft().player); // (2)
+
             // Success
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
 
         return EnumActionResult.FAIL;

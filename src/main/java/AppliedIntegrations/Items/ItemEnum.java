@@ -58,7 +58,7 @@ public enum ItemEnum {
     ITEMENERGYWIRELESSTERMINAL(new ItemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
 
     CHAOSMANIPULATOR( new AdvancedNetworkTool("advancedWrench"), true),
-    MEGRAPHTOOL(new GraphTool("graphTool"), true),
+    MEGRAPHTOOL(new GraphTool("graphTool"), AIConfig.enableWebServer),
 
     ENERGYSTORAGE_1k( new EnergyStorageCell("EnergyStorageCell_1k", 1024), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_4k( new EnergyStorageCell("EnergyStorageCell_4k", 4096), AIConfig.enableEnergyFeatures),

@@ -18,6 +18,7 @@ public class AIConfig {
 
     private static final String CATEGORY_FEATURES = "Features";
 
+    public static boolean enableWebServer;
     public static boolean enableEnergyFeatures; // #1
     public static boolean enableManaFeatures; // #2
     public static boolean enablEmberFeatures; // #3
@@ -102,6 +103,11 @@ public class AIConfig {
 
         // Add every property
 
+        // Web server
+        enableWebServer = (Boolean)addProperty(CATEGORY_FEATURES, "EnableWebServer", true,
+                "Default: true; If set to true, then all web UI features will be enabled; Used only on client side",
+                featuresOrder);
+
         // Energy parts/tiles/items
         enableEnergyFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEnergyFeatures", true,
                 "Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature",
@@ -153,7 +159,7 @@ public class AIConfig {
                         "10000",
                 propertiesOrder);
 
-        webUIPort = (Integer)addProperty(CATEGORY_PROPERTIES, "Web UI Port", 8000,
+        webUIPort = (Integer)addProperty(CATEGORY_PROPERTIES, "WebUI Port", 8000,
                         "Default: 8000; Port for web UI of network topology",
                 propertiesOrder);
 

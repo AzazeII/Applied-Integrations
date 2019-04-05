@@ -7,6 +7,7 @@ import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Topology.WebServer.WebManager;
 import AppliedIntegrations.tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.grid.EnergyStorageChannel;
@@ -14,6 +15,7 @@ import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -25,13 +27,6 @@ import java.io.*;
  */
 public class CommonProxy
 {
-    private class ExternalRecipeLoader implements IRecipeLoader {
-
-        @Override
-        public BufferedReader getFile(String path) throws Exception {
-            return new BufferedReader(new FileReader(new File(path)));
-        }
-    }
 
     public void SidedPreInit(){
         ItemEnum.register();

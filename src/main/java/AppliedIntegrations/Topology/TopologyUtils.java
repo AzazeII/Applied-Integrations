@@ -9,13 +9,11 @@ import appeng.api.networking.energy.IEnergyGridProvider;
 import appeng.api.util.AEPartLocation;
 import appeng.me.cache.EnergyGridCache;
 import appeng.me.cache.P2PCache;
-import appeng.me.cache.PathGridCache;
 import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
-import net.minecraftforge.common.ForgeHooks;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,7 +32,7 @@ import java.util.List;
 public class TopologyUtils {
 
     /**
-     * Creates Web UI from given parameters
+     * Creates WebUI from given parameters
      * @param grid
      *  Grid of node selected
      *
@@ -83,12 +81,12 @@ public class TopologyUtils {
         }
     }
 
-    private static void sendLink(EntityPlayer player) {
+    public static void sendLink(EntityPlayer player) {
         // Create click event
         ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, "http://127.0.0.1:" + AIConfig.webUIPort);
 
         // Create text message
-        TextComponentString message = new TextComponentString(TextFormatting.DARK_AQUA + ( TextFormatting.UNDERLINE + "http://127.0.0.1:" + AIConfig.webUIPort ));
+        TextComponentString message = new TextComponentString(TextFormatting.AQUA + ( TextFormatting.UNDERLINE + "http://127.0.0.1:" + AIConfig.webUIPort ));
 
         // Set click event
         message.getStyle().setClickEvent(click);
@@ -109,18 +107,9 @@ public class TopologyUtils {
                 nodeList.add(node);
         // Create json from list
         createJSON(nodeList);
-
-        // Send message to player
-        player.sendMessage(new TextComponentString("UI generated ( Only: " + machine.toString() +" ):"));
-
-        // Send link message
-        sendLink(player);
     }
 
     private static void graphSubnetworks(IGrid grid, EntityPlayer player) {
-        // Send message to player
-        player.sendMessage(new TextComponentString("UI generated ( Sub-networks ):"));
-
         // Get energy cache
         EnergyGridCache iEnergyGrid = grid.getCache(IEnergyGrid.class);
 
@@ -171,34 +160,18 @@ public class TopologyUtils {
 
         // Create JSON object
         createSubnetworkJSON(nodeList, connections, grid.getPivot());
-
-        // Send link message
-        sendLink(player);
     }
 
     private static void graphLineNodes(IGrid grid, EntityPlayer player) {
-        // Send message to player
-        player.sendMessage(new TextComponentString("UI generated ( Line ):"));
 
-        // Send link message
-        sendLink(player);
     }
 
     private static void graphAll(IGrid grid, EntityPlayer player) {
         // Pass call to JSON creator
         createJSON(grid.getNodes());
-
-        // Send message to player
-        player.sendMessage(new TextComponentString("UI generated ( All network ):"));
-
-        // Send link message
-        sendLink(player);
     }
 
     private static void graphP2PLinks(IGrid grid, EntityPlayer player) {
-        // Send message to player
-        player.sendMessage(new TextComponentString("UI generated ( P2P links ):"));
-
         // Get cache
         P2PCache cache = grid.getCache(P2PCache.class);
 
@@ -251,8 +224,6 @@ public class TopologyUtils {
         // Create json object
         createJSONFromConnections(nodeList, connections);
 
-        // Send link message
-        sendLink(player);
     }
 
     private static String toHumanReadableString(String toString){
@@ -311,6 +282,12 @@ public class TopologyUtils {
 
             // Put right node
             bNodeList.put(toHumanReadableString(iGridNodeIGridNodePair.getRight().getMachine().toString()));
+        }));
+
+        // Iterate for each node
+        nodeList.forEach((iGridNode -> {
+            // Add node to list
+            jsonNodeList.put(toHumanReadableString(iGridNode.getMachine().toString()));
         }));
 
         // Put created arrays

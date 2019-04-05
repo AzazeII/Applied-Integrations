@@ -72,6 +72,7 @@ dependencies {
     compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
     compile 'baubles:Baubles:1.12:1.5.2'
     compile 'org.json:json:20171018'
+    compile 'org.eclipse.jetty:jetty-server:9.4.7.v20170914'
 }
 
 processResources {
