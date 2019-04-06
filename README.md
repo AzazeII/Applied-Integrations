@@ -54,6 +54,17 @@ ME Pylon - Allows you to inject any type of matter (item,fluid,energy,mana) into
 To entagle 2 holes together you need to shot two singularities from ME defnce tower in one tick*.
 only white and black hole can be entagled
 
+Web AE2 UI - If enabled in config, allows you to inspect ME network, clicked by grapth tool using web interface, at: localhost:<port specified in config>. Default port is: 8000
+	There are 4 working and 1 not working modes of ME Graph Tool. There is list of these mode:
+
+1.	All network. This mode shows all network nodes from specified network
+2.	Sub networks. This mode shows all sub networks connected to specified network
+3.	P2P links. This mode shows all p2p links in specified network
+4.	Only node specified. This mode only shows all network nodes which is equal (by type) to node clicked, and nodes connected to it
+
+
+
+
 # For developers
  You can add own matter type to Black/white hole storage system, by typing this in your common proxy*:
  AIApi.instance().addHandlersForMEPylon(#yourHandlerForBlackHole#.class, #yourHandlerForWhiteHole#.class, AEApi.instance().storage().getStorageChannel(#yourStorageChannel#.class));
