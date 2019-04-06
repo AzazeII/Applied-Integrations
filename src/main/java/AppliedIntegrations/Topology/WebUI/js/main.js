@@ -17,6 +17,27 @@ var stringTranslationMap = new Map();
 // Create message array
 var nodeMessages = [];
 
+// Map of all categories
+var categoryMap = new Map();
+
+// Category of network data
+var networkDataList = ["Active", "color", "Usage"]
+
+// Category of grid flags
+var gridFlagDataList = ["CANNOT_CARRY", "CANNOT_CARRY_COMPRESSED", "COMPRESSED_CHANNEL", "DENSE_CAPACITY", "MULTIBLOCK",
+                        "PREFERRED", "REQUIRE_CHANNEL"]
+
+// Category of position
+var positionDataList = ["x", "y", "z"]
+
+// Set key array
+var keysArray = ["Network Data", "Grid Flags", "Position"]
+
+// Set category map entries
+categoryMap.set("Network Data", networkDataList); // (1)
+categoryMap.set("Grid Flags", gridFlagDataList); // (2)
+categoryMap.set("Position", positionDataList); // (3)
+
 // jQuery function
 (function($) {
     // Wait for ready state
@@ -97,6 +118,9 @@ var options = {};
 // Create network
 var network = new vis.Network(container, data, options);
 
+// Last node clicked
+var lastNode;
+
 // Create click event
 network.on( 'click', function(properties) {
     // Get node ids
@@ -114,7 +138,7 @@ network.on( 'click', function(properties) {
         var message = nodeMessages[ids[0]];
 
         // Create html tag
-        var innerHTML = "<p> Summary for node: " + selectedNode.label + " </p>";
+        var innerHTML = "<p> Summary for node: " + selectedNode.label + " </p>"
 
         // List of keys
         var keys = [];
@@ -134,12 +158,41 @@ network.on( 'click', function(properties) {
         // Sort keys
         keys.sort();
 
-        // Iterate for keys length
-        for(var i = 0; i < keys.length; i++){
-            innerHTML += "<h3> " + keys[i] + " : " + values.get(keys[i]) + " </h3> "
+        // Check if selected node has changed
+        if(selectedNode != lastNode){
+            // Update last node
+            lastNode = selectedNode;
+
+            // Clear all text from tabs
+            // Iterate for each key
+            keys.forEach(function(innerKey, i){
+                // Iterate for each category key
+                keysArray.forEach(function(category, i){
+                    // Clear text
+                    document.getElementById(category).innerHTML = "";
+                })
+            })
         }
 
-        // Change inner html of element
-        document.getElementById("node_panel").innerHTML = innerHTML;
+        // Iterate for each category key
+        keysArray.forEach(function(category, i){
+            // Add text to element
+            document.getElementById(category).innerHTML += innerHTML;
+        })
+
+        // Iterate for each key
+        keys.forEach(function(innerKey, i){
+            // Iterate for each category key
+            keysArray.forEach(function(category, i){
+                // Iterate for each list of category
+                categoryMap.get(category).forEach(function(key, i){
+                    // Check if keys are equal
+                    if(innerKey == key){
+                        // Add text to element
+                        document.getElementById(category).innerHTML += "<h3> " + key + " : " + values.get(key) + " </h3> "
+                    }
+                });
+            });
+        });
     }
 });

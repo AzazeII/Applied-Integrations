@@ -6,39 +6,29 @@
   <script type="text/javascript" src="js/dist/vis.js"></script>
   <link href="js/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
 
-  <style type="text/css">
-    body {
-	  background: #474747 url(Background.png);
-	  max-width: 100%;
-      max-height: 100%;
-    }
-
-    #network {
-      background-color: RGB(255, 255, 255);
-      width: 1200px;
-      height: 800px;
-      border: 10px solid gray;
-    }
-
-    p {
-      font: 18px Tahoma, Helvetica, Arial, Sans-Serif;
-	  color: #999; text-shadow: 0px 3px 8px #2a2a2a;
-    }
-
-    h3 {
-      color: #222; text-shadow: 0px 2px 3px #555;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <div id = "network"></div>
+  <script src="js/jquery.min.js"></script>
+  <script type="text/javascript" src="js/main.js"></script>
+  <script type="text/javascript" src="js/tabs.js"></script>
 
-<script src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
-
-<div id = "node_panel" style = "position:relative; left:1222px; top:-830px;">
-
+  <div id = "node_panel" style = "position:relative; left:1222px; top:-830px;">
 </div>
+
+
+<div class="tab">
+  <button class="tablinks" onclick="switchTab(event, 'Network Data')">Node Network Data</button>
+  <button class="tablinks" onclick="switchTab(event, 'Position')">Node Position Data</button>
+  <button class="tablinks" onclick="switchTab(event, 'Grid Flags')">Node Flags Data</button>
+</div>
+
+<!-- Tab content -->
+<div id="Network Data" class="tabcontent" style = "height: 180px;"></div>
+<div id="Position" class="tabcontent" style = "height: 180px;"></div>
+<div id="Grid Flags" class="tabcontent" style = "height: 350px;"></div>
+<!-- Tab content -->
 
 </body>
 </html>
