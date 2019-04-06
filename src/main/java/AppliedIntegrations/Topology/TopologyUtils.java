@@ -56,10 +56,10 @@ public class TopologyUtils {
                 break;
 
             // Case all network nodes from line end to controller showing
-            case LINE:
+            /*case LINE:
                 // Graph line nodes
                 graphLineNodes(grid, player);
-                break;
+                break;*/
 
             // Graph all p2p links
             case P2P_LINKS:
@@ -257,7 +257,7 @@ public class TopologyUtils {
         temp.put("Z", node.getGridBlock().getLocation().z); // (3)
 
         // Write color
-        temp.put("Сolor", node.getGridBlock().getGridColor());
+        temp.put("Hex", node.getGridBlock().getGridColor().mediumVariant);
 
         // Iterate over each flag
         for (GridFlags flag : GridFlags.values()){

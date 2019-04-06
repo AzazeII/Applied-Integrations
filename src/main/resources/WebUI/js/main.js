@@ -21,7 +21,7 @@ var nodeMessages = [];
 var categoryMap = new Map();
 
 // Category of network data
-var networkDataList = ["Active", "Сolor", "Usage"]
+var networkDataList = ["Active", "Usage"]
 
 // Category of grid flags
 var gridFlagDataList = ["CANNOT_CARRY", "CANNOT_CARRY_COMPRESSED", "COMPRESSED_CHANNEL", "DENSE_CAPACITY", "MULTIBLOCK",
@@ -57,6 +57,19 @@ categoryMap.set("Position", positionDataList); // (3)
 
                 // Change it's label to name of node
                 visNode.label = node.split('@', 1)[0];
+
+                console.log(network.data[i].Hex.toString(16));
+
+                // Change color of node
+                visNode.color = "#" + network.data[i].Hex.toString(16);
+
+                // Check if color is code of transparent color
+                if(network.data[i].Hex == 9002152)
+                    // Change color to color of fluix crystal
+                    visNode.color = "#343161";
+
+                // Change shape to dot
+                visNode.shape = "dot";
 
                 // Add vis node
                 nodes.add(visNode)

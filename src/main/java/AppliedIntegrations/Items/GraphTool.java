@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items;
 
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Topology.GraphToolMode;
 import AppliedIntegrations.Topology.TopologyUtils;
 import AppliedIntegrations.Utils.AILog;
@@ -10,20 +11,25 @@ import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
 import appeng.helpers.IMouseWheelItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.IItemPropertyGetter;
+import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
-import static AppliedIntegrations.Topology.GraphToolMode.LINE;
 import static AppliedIntegrations.Topology.GraphToolMode.P2P_LINKS;
 import static AppliedIntegrations.Topology.TopologyUtils.createLink;
 import static appeng.api.util.AEPartLocation.INTERNAL;
@@ -41,6 +47,10 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 
         // Change stack size
         this.setMaxStackSize(1);
+
+        // Add property for mode animation
+        this.addPropertyOverride(new ResourceLocation(AppliedIntegrations.modid,"mode"), (stack, worldIn, entityIn) ->
+                ((float) mode.ordinal()+1) / (float) 4);
     }
 
     private void cycleMode(boolean up) {
@@ -50,13 +60,13 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
                 // Check if it is last mode
                 if(mode == P2P_LINKS)
                     // Switch to 1st
-                    mode = LINE;
+                    mode = GraphToolMode.values()[0];
                 else
                     // Switch mode to next
                     mode = GraphToolMode.values()[mode.ordinal() + 1];
             }else {
                 // Check if it is first mode
-                if(mode == LINE)
+                if(mode == GraphToolMode.values()[0])
                     // Switch to last
                     mode = P2P_LINKS;
                 else
@@ -126,9 +136,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
         // Pass cycle
         cycleMode(up);
 
-        // Check for correct side
-        if(getLogicalSide() == CLIENT)
-            // Notify player
-            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Switching mode to: " + mode.name()));
+        // Notify player
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Switching mode to: " + mode.name()));
     }
 }

@@ -11,7 +11,7 @@ public class WebManager {
         port(AIConfig.webUIPort);
 
         // Bind static file
-        staticFileLocation("WebUI/");
+        staticFileLocation("webUI/");
 
         // Create json get method
         get("/json", (request, res) -> {

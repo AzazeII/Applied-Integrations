@@ -21,7 +21,7 @@ var nodeMessages = [];
 var categoryMap = new Map();
 
 // Category of network data
-var networkDataList = ["Active", "Сolor", "Usage"]
+var networkDataList = ["Active", "Usage"]
 
 // Category of grid flags
 var gridFlagDataList = ["CANNOT_CARRY", "CANNOT_CARRY_COMPRESSED", "COMPRESSED_CHANNEL", "DENSE_CAPACITY", "MULTIBLOCK",
@@ -43,7 +43,7 @@ categoryMap.set("Position", positionDataList); // (3)
     // Wait for ready state
     $(document).ready(function() {
         // Get network // Create network manager
-        $.getJSON("json", function(network) {
+        $.getJSON("Network.json", function(network) {
             // Iterate for_each node
             $.each(network.nodes, function(i, node) {
                 // Create vis node
@@ -57,6 +57,11 @@ categoryMap.set("Position", positionDataList); // (3)
 
                 // Change it's label to name of node
                 visNode.label = node.split('@', 1)[0];
+
+                console.log(network.data[i].Hex)
+
+                // Change shape to dot
+                visNode.shape = "dot";
 
                 // Add vis node
                 nodes.add(visNode)
