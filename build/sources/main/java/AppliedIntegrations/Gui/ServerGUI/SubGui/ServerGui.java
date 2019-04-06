@@ -15,6 +15,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Vector;
 
+/**
+ * @Author Azazell
+ */
 public class ServerGui extends AIGuiButton {
 
     public NetworkGui[] LinkedNetworks = new NetworkGui[6];

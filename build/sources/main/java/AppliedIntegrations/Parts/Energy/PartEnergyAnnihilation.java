@@ -19,6 +19,9 @@ import net.minecraft.tileentity.TileEntity;
 import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
 
+/**
+ * @Author Azazell
+ */
 public class PartEnergyAnnihilation extends AIPlanePart {
 
     public PartEnergyAnnihilation() {

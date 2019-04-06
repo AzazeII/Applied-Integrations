@@ -90,8 +90,6 @@ public class AIConfig {
         // Sync
         config.load();
 
-
-
         // Create order list #1
         List<String> featuresOrder = new ArrayList<>();
 
@@ -102,10 +100,9 @@ public class AIConfig {
         List<String> propertiesOrder = new ArrayList<>();
 
         // Add every property
-
         // Web server
-        enableWebServer = (Boolean)addProperty(CATEGORY_FEATURES, "EnableWebServer", true,
-                "Default: true; If set to true, then all web UI features will be enabled; Used only on client side",
+        enableWebServer = (Boolean)addProperty(CATEGORY_FEATURES, "EnableWebServer", false,
+                "Default: false; If set to true, then all web UI features will be enabled; Used only on client side",
                 featuresOrder);
 
         // Energy parts/tiles/items
@@ -130,7 +127,7 @@ public class AIConfig {
 
         // Black/white hole storage
         enableBlackHoleStorage = (Boolean)addProperty(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true,
-                "Default: true (only in alpha); If set to true, then all black/white storage system blocks will be available in game.",
+                "Default: true (only in alpha); If set to true, then all black/white hole storage system blocks will be available in game.",
                 tileOrder);
 
         // ME Server

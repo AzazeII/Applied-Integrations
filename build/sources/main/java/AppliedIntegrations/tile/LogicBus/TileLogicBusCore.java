@@ -41,6 +41,9 @@ import net.minecraftforge.items.IItemHandler;
 import javax.annotation.Nonnull;
 import java.util.*;
 
+/**
+ * @Author Azazell
+ */
 public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, IInterfaceHost, IGridMultiblock {
     private boolean isFormed = false;
 

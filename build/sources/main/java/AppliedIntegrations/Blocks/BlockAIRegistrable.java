@@ -16,6 +16,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public abstract class BlockAIRegistrable extends BlockContainer {
 
     public BlockAIRegistrable(String registryName) {

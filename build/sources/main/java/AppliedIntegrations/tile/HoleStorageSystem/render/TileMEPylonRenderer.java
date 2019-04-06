@@ -17,6 +17,9 @@ import static net.minecraft.util.EnumFacing.Axis.X;
 import static net.minecraft.util.EnumFacing.Axis.Z;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * @Author Azazell
+ */
 public class TileMEPylonRenderer extends TileEntitySpecialRenderer<TileMEPylon> {
 
     private Cylinder c = new Cylinder();

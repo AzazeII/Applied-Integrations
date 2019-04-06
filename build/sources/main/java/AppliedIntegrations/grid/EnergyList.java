@@ -7,6 +7,9 @@ import appeng.fluids.util.MeaningfulFluidIterator;
 
 import java.util.*;
 
+/**
+ * @Author Azazell
+ */
 public class EnergyList implements IItemList<IAEEnergyStack> {
 
     private final Map<IAEEnergyStack, IAEEnergyStack> records = new HashMap<>();

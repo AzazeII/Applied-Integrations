@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartP2PStarlight extends ItemPartAIBase<PartStarlightP2PTunnel> implements IAstralIntegrated {
 
     public ItemPartP2PStarlight(String registry) {

@@ -7,6 +7,9 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartEnergyStorageMonitor extends ItemPartAIBase<PartEnergyStorageMonitor> {
     public ItemPartEnergyStorageMonitor(String id) {
         super(id);

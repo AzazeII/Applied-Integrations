@@ -11,6 +11,9 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 @SideOnly(Side.CLIENT)
 public class GuiButtonAETab
         extends AIStateButton

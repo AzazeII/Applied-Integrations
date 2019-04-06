@@ -9,12 +9,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class AIConfig {
     private static Configuration config = null;
 
 
     private static final String CATEGORY_FEATURES = "Features";
 
+    public static boolean enableWebServer;
     public static boolean enableEnergyFeatures; // #1
     public static boolean enableManaFeatures; // #2
     public static boolean enablEmberFeatures; // #3
@@ -86,8 +90,6 @@ public class AIConfig {
         // Sync
         config.load();
 
-
-
         // Create order list #1
         List<String> featuresOrder = new ArrayList<>();
 
@@ -98,6 +100,10 @@ public class AIConfig {
         List<String> propertiesOrder = new ArrayList<>();
 
         // Add every property
+        // Web server
+        enableWebServer = (Boolean)addProperty(CATEGORY_FEATURES, "EnableWebServer", false,
+                "Default: false; If set to true, then all web UI features will be enabled; Used only on client side",
+                featuresOrder);
 
         // Energy parts/tiles/items
         enableEnergyFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEnergyFeatures", true,
@@ -121,7 +127,7 @@ public class AIConfig {
 
         // Black/white hole storage
         enableBlackHoleStorage = (Boolean)addProperty(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true,
-                "Default: true (only in alpha); If set to true, then all black/white storage system blocks will be available in game.",
+                "Default: true (only in alpha); If set to true, then all black/white hole storage system blocks will be available in game.",
                 tileOrder);
 
         // ME Server
@@ -150,7 +156,7 @@ public class AIConfig {
                         "10000",
                 propertiesOrder);
 
-        webUIPort = (Integer)addProperty(CATEGORY_PROPERTIES, "Web UI Port", 8000,
+        webUIPort = (Integer)addProperty(CATEGORY_PROPERTIES, "WebUI Port", 8000,
                         "Default: 8000; Port for web UI of network topology",
                 propertiesOrder);
 

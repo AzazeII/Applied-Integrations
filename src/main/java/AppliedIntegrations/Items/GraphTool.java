@@ -1,6 +1,5 @@
 package AppliedIntegrations.Items;
 
-import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Topology.GraphToolMode;
 import AppliedIntegrations.Topology.TopologyUtils;
 import AppliedIntegrations.Utils.AILog;
@@ -20,12 +19,15 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.Topology.GraphToolMode.LINE;
 import static AppliedIntegrations.Topology.GraphToolMode.P2P_LINKS;
-import static AppliedIntegrations.Topology.TopologyUtils.sendLink;
+import static AppliedIntegrations.Topology.TopologyUtils.createLink;
 import static appeng.api.util.AEPartLocation.INTERNAL;
+import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
 /**
  * @Author Azazell
@@ -110,8 +112,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
             TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
 
             // Log to player
-            AILog.serverMessage("Created grid network graph at: "); // (1)
-            sendLink(Minecraft.getMinecraft().player); // (2)
+            player.sendMessage(new TextComponentString("Created grid network graph at: ").appendSibling(createLink())); // (1)
 
             // Success
             return EnumActionResult.SUCCESS;
@@ -125,7 +126,9 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
         // Pass cycle
         cycleMode(up);
 
-        // Notify player
-        AILog.chatLog("Switching mode to: " + mode.name());
+        // Check for correct side
+        if(getLogicalSide() == CLIENT)
+            // Notify player
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Switching mode to: " + mode.name()));
     }
 }

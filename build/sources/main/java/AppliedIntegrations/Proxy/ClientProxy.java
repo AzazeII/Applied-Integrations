@@ -7,6 +7,7 @@ import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Topology.WebServer.WebManager;
 import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
@@ -19,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -54,6 +56,7 @@ public class ClientProxy
             ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
         }
+
 
         // State mapper for tile port
         /*StateMapperBase stateMapperPort = new StateMapperBase() {
@@ -96,6 +99,11 @@ public class ClientProxy
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
         //EntityEnum.registerRenderer();
+
+        // Check if web server enabled
+        if(AIConfig.enableWebServer)
+            // Init web server
+            WebManager.init();
 
         if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
             BotaniaLoader.init();

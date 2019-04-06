@@ -6,6 +6,9 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @Author Azazell
+ */
 public class EnergyStorageComponent
         extends AIItemRegistrable
 {

@@ -11,6 +11,9 @@ import appeng.api.util.AEPartLocation;
 
 import static appeng.api.config.Actionable.MODULATE;
 
+/**
+ * @Author Azazell
+ */
 public class ManaInterfaceDuality implements IInterfaceDuality {
 
     private IManaInterface owner;

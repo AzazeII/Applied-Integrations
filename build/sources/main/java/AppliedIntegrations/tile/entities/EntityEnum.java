@@ -12,6 +12,9 @@ import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.lang.reflect.InvocationTargetException;
 
+/**
+ * @Author Azazell
+ */
 public enum EntityEnum {
     BlackHole(EntityBlackHole.class, EntityBlackHoleRenderer.class);
 

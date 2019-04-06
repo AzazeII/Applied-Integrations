@@ -6,6 +6,9 @@ import java.util.LinkedHashMap;
 
 import static net.minecraft.init.Blocks.*;
 
+/**
+ * @Author Azazell
+ */
 public class EntropyTransformations {
     // Map of all entropy entries from entropy tool class
     public final static LinkedHashMap<IBlockState, IBlockState> entropyMap = new LinkedHashMap<>();

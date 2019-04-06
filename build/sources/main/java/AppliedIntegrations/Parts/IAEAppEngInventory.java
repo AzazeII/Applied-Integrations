@@ -3,6 +3,9 @@ package AppliedIntegrations.Parts;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+/**
+ * @Author Azazell
+ */
 public interface IAEAppEngInventory
 {
 

@@ -1,5 +1,8 @@
 package AppliedIntegrations.Gui;
 
+/**
+ * @Author Azazell
+ */
 public enum SortMode {
     MOD,
     ALPHABETIC,

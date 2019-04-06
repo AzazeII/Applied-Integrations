@@ -13,6 +13,9 @@ import net.minecraftforge.fml.common.Loader;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 
+/**
+ * @Author Azazell
+ */
 public class IntegrationsHelper {
     public static IntegrationsHelper instance = new IntegrationsHelper();
 

@@ -11,6 +11,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
+/**
+ * @Author Azazell
+ * @Design Megatech
+ */
 public class MaterialEncorium extends AIItemRegistrable implements IBotaniaIntegrated {
 
     private String percent;

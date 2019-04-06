@@ -5,6 +5,9 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Iterator;
 
+/**
+ * @Author Azazell
+ */
 public interface IMaster {
     IMaster readMaster(NBTTagCompound compound);
 

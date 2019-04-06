@@ -5,6 +5,9 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @Author Azazell
+ */
 public class PacketMassChange extends AIPacket {
 
     public ISingularity singularity;

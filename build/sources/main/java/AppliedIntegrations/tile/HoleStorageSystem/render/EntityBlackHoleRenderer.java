@@ -10,6 +10,9 @@ import org.lwjgl.util.glu.Sphere;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class EntityBlackHoleRenderer extends Render<EntityBlackHole> {
     public EntityBlackHoleRenderer(RenderManager renderManager) {
         super(renderManager);

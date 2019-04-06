@@ -7,14 +7,11 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IEnergyGridProvider;
-import appeng.api.parts.IPart;
 import appeng.api.util.AEPartLocation;
 import appeng.me.cache.EnergyGridCache;
 import appeng.me.cache.P2PCache;
 import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -22,6 +19,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -34,6 +32,8 @@ import java.util.List;
  * @Author Azazell
  */
 public class TopologyUtils {
+
+    private static JSONObject innerObject = new JSONObject();
 
     /**
      * Creates WebUI from given parameters
@@ -82,7 +82,13 @@ public class TopologyUtils {
         }
     }
 
-    public static void sendLink(EntityPlayer player) {
+    @Nonnull
+    public static JSONObject getInnerObject(){
+        // Return inner object
+        return innerObject;
+    }
+
+    public static TextComponentString createLink() {
         // Create click event
         ClickEvent click = new ClickEvent(ClickEvent.Action.OPEN_URL, "http://127.0.0.1:" + AIConfig.webUIPort);
 
@@ -92,8 +98,8 @@ public class TopologyUtils {
         // Set click event
         message.getStyle().setClickEvent(click);
 
-        // Create message ("localhost: <PORT_IN_CONFIG>"), and send it as link to player)
-        player.sendMessage(message);
+        // Return newly create message
+        return message;
     }
 
     private static void graphGiven(IGrid grid, EntityPlayer player, IGridHost machine) {
@@ -256,17 +262,14 @@ public class TopologyUtils {
         // Iterate over each flag
         for (GridFlags flag : GridFlags.values()){
             // Check if node has this flag
-            if(node.getGridBlock().getFlags().contains(flag)){
-                // Set value to true
-                temp.put(flag.name(), true);
-            }else{
-                // Set value to false
-                temp.put(flag.name(), false);
-            }
+            temp.put(flag.name(), node.getGridBlock().getFlags().contains(flag));
         }
 
         // Write power usage
-        temp.put("Usage", node.getGridBlock().getIdlePowerUsage());
+        temp.put("Usage", node.getGridBlock().getIdlePowerUsage() + " AE");
+
+        // Write true, if node is pivot
+        temp.put("Pivot", node.getGrid().getPivot() == node);
 
         return temp;
     }
@@ -342,6 +345,9 @@ public class TopologyUtils {
         try {
             // Write file
             Files.write(Paths.get("Network.json"), network.toString().getBytes());
+
+            // Change inner json
+            innerObject = network;
         }catch (IOException e){ e.printStackTrace(); }
     }
 
@@ -390,6 +396,9 @@ public class TopologyUtils {
         try {
             // Write file
             Files.write(Paths.get("Network.json"), network.toString().getBytes());
+
+            // Change inner json
+            innerObject = network;
         }catch (IOException e){ e.printStackTrace(); }
     }
 }

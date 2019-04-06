@@ -2,6 +2,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.AIMultiBlock;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +17,9 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * @Author Azazell
+ */
 public class BlockServerCore extends AIMultiBlock {
 
     private final Random rand = new Random();
@@ -56,7 +60,7 @@ public class BlockServerCore extends AIMultiBlock {
         super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
         if (!p.isSneaking()) {
             if (!world.isRemote) {
-                p.openGui(AppliedIntegrations.instance, 6, world, pos.getX(), pos.getY(), pos.getZ());
+                // TODO: 2019-04-06 GUI
 
                 return true;
             }

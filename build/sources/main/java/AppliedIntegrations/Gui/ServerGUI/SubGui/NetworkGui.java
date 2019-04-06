@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class NetworkGui extends AIGuiButton {
 
     private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/Network.png");

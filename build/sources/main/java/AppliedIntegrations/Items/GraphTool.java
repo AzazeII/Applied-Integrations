@@ -9,6 +9,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.SelectedPart;
 import appeng.helpers.IMouseWheelItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -18,10 +19,19 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static AppliedIntegrations.Topology.GraphToolMode.LINE;
+import static AppliedIntegrations.Topology.GraphToolMode.P2P_LINKS;
+import static AppliedIntegrations.Topology.TopologyUtils.createLink;
 import static appeng.api.util.AEPartLocation.INTERNAL;
+import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
+/**
+ * @Author Azazell
+ */
 public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 
     private GraphToolMode mode = GraphToolMode.ALL;
@@ -36,12 +46,23 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
     private void cycleMode(boolean up) {
         try {
             // Check for up scroll
-            if (up)
-                // Switch mode to next
-                mode = GraphToolMode.values()[mode.ordinal() + 1];
-            else
-                // Switch mode to previous
-                mode = GraphToolMode.values()[mode.ordinal() - 1];
+            if (up) {
+                // Check if it is last mode
+                if(mode == P2P_LINKS)
+                    // Switch to 1st
+                    mode = LINE;
+                else
+                    // Switch mode to next
+                    mode = GraphToolMode.values()[mode.ordinal() + 1];
+            }else {
+                // Check if it is first mode
+                if(mode == LINE)
+                    // Switch to last
+                    mode = P2P_LINKS;
+                else
+                    // Switch mode to previous
+                    mode = GraphToolMode.values()[mode.ordinal() - 1];
+            }
         }catch (IndexOutOfBoundsException indexOutOfBound){
             // Ignored
         }
@@ -90,8 +111,11 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
             // Pass to utils
             TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
 
+            // Log to player
+            player.sendMessage(new TextComponentString("Created grid network graph at: ").appendSibling(createLink())); // (1)
+
             // Success
-            return EnumActionResult.PASS;
+            return EnumActionResult.SUCCESS;
         }
 
         return EnumActionResult.FAIL;
@@ -102,7 +126,9 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
         // Pass cycle
         cycleMode(up);
 
-        // Notify player
-        AILog.chatLog("Switching mode to: " + mode.name());
+        // Check for correct side
+        if(getLogicalSide() == CLIENT)
+            // Notify player
+            Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Switching mode to: " + mode.name()));
     }
 }

@@ -4,6 +4,9 @@ import appeng.api.util.AEPartLocation;
 
 import java.util.EnumSet;
 
+/**
+ * @Author Azazell
+ */
 public class NetworkData {
 
     public boolean isServerNetwork;

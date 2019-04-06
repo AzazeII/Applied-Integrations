@@ -15,6 +15,9 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.Side;
 
+/**
+ * @Author Azazell
+ */
 public abstract class AIPacket implements IMessage {
     public World w;
     public EnumFacing side;

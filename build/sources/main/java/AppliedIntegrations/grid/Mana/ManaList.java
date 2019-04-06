@@ -7,6 +7,9 @@ import appeng.api.storage.data.IItemList;
 
 import java.util.*;
 
+/**
+ * @Author Azazell
+ */
 public class ManaList implements IItemList<IAEManaStack> {
     private final Map<IAEManaStack, IAEManaStack> records = new HashMap<>();
 

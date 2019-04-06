@@ -10,6 +10,9 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 
+/**
+ * @Author Azazell
+ */
 public class WhiteHoleManaHandler extends WhiteHoleSingularityInventoryHandler<IAEManaStack> {
     @Override
     public IAEManaStack extractItems(IAEManaStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {

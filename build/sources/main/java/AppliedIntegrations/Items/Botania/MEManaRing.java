@@ -20,6 +20,9 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
         @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true),
         @Optional.Interface(iface = "baubles.api.BaubleType", modid = "baubles", striprefs = true)
 })
+/**
+ * @Author Azazell
+ */
 public class MEManaRing extends MEManaMirror implements IBotaniaIntegrated, IManaItem, IManaTooltipDisplay, IBauble, ICosmeticAttachable {
 
     public MEManaRing(String registry) {

@@ -6,6 +6,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerSingularitySync implements IMessageHandler<PacketSingularitySync, PacketSingularitySync> {
 
     public HandlerSingularitySync() {

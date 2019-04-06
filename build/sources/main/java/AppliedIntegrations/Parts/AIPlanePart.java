@@ -22,6 +22,9 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
     protected static final int ENERGY_TRANSFER = 800;

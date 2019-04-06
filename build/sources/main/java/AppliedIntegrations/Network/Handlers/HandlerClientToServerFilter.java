@@ -5,6 +5,9 @@ import AppliedIntegrations.Parts.IEnergyMachine;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerClientToServerFilter implements IMessageHandler<PacketClientToServerFilter, PacketClientToServerFilter> {
 
     public HandlerClientToServerFilter(){

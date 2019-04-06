@@ -7,6 +7,9 @@ import net.minecraft.util.math.BlockPos;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * @Author Azazell
+ */
 public class TileMETurretRenderer extends TileEntitySpecialRenderer<TileMETurretFoundation> {
 
     @Override

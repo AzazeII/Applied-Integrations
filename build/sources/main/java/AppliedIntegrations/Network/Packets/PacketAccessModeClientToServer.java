@@ -4,6 +4,9 @@ import AppliedIntegrations.Parts.AIPart;
 import appeng.api.config.AccessRestriction;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * @Author Azazell
+ */
 public class PacketAccessModeClientToServer extends AIPacket {
 
     public AIPart bus;

@@ -57,10 +57,6 @@ public class ClientProxy
             ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
         }
 
-        // check if server enabled
-        if(AIConfig.enableWebServer)
-            // Add bus
-            FMLCommonHandler.instance().bus().register(new WebManager());
 
         // State mapper for tile port
         /*StateMapperBase stateMapperPort = new StateMapperBase() {
@@ -103,6 +99,11 @@ public class ClientProxy
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
         //EntityEnum.registerRenderer();
+
+        // Check if web server enabled
+        if(AIConfig.enableWebServer)
+            // Init web server
+            WebManager.init();
 
         if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
             BotaniaLoader.init();

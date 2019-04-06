@@ -4,6 +4,9 @@ import AppliedIntegrations.API.ISingularity;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.data.IAEStack;
 
+/**
+ * @Author Azazell
+ */
 abstract class SingularityInventoryHandler<T extends IAEStack<T>> implements IMEInventoryHandler<T> {
 
     // Singularity operated

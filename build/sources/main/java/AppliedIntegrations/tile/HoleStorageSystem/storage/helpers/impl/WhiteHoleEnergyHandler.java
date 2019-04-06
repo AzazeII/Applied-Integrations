@@ -10,6 +10,9 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 
+/**
+ * @Author Azazell
+ */
 public class WhiteHoleEnergyHandler extends WhiteHoleSingularityInventoryHandler<IAEEnergyStack> {
     @Override
     public IAEEnergyStack extractItems(IAEEnergyStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {

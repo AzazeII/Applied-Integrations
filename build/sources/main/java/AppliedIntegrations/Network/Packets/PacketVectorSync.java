@@ -3,6 +3,9 @@ package AppliedIntegrations.Network.Packets;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 
+/**
+ * @Author Azazell
+ */
 public class PacketVectorSync extends AIPacket {
 
     public BlockPos vecA;

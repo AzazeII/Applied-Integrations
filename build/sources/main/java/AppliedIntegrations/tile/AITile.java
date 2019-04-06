@@ -41,6 +41,10 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler",modid = "CoFHAPI",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
         @Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
+
+/**
+ * @Author Azazell
+ */
 public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable, IGridProxyable, ISyncHost {
 
     protected IGridNode gridNode = null;

@@ -9,6 +9,9 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.EnumSet;
 
+/**
+ * @Author Azazell
+ */
 public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
 
     protected TileServerCore master;

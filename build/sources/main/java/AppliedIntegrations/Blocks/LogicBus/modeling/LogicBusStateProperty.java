@@ -2,6 +2,9 @@ package AppliedIntegrations.Blocks.LogicBus.modeling;
 
 import net.minecraftforge.common.property.IUnlistedProperty;
 
+/**
+ * @Author Azazell
+ */
 public class LogicBusStateProperty implements IUnlistedProperty<LogicBusState> /* V = LogicBusState*/ {
     // Registry name of this stateProp
     @Override

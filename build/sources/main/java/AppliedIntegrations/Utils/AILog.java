@@ -10,7 +10,9 @@ import java.lang.reflect.Field;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 
-
+/**
+ * @Author Azazell
+ */
 public class AILog
 {
     public static final Logger log = LogManager.getLogger( "Applied Integrations" );
@@ -70,5 +72,9 @@ public class AILog
                 info("null");
             }
         }
+    }
+
+    public static void serverMessage(String s) {
+        Minecraft.getMinecraft().player.sendMessage(new TextComponentString(s));
     }
 }

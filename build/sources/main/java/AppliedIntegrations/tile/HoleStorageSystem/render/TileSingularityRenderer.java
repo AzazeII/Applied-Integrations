@@ -7,6 +7,9 @@ import org.lwjgl.util.glu.Sphere;
 
 import java.awt.*;
 
+/**
+ * @Author Azazell
+ */
 public class TileSingularityRenderer extends TileEntitySpecialRenderer<TileBlackHole> {
 
     private Sphere sphere = new Sphere();

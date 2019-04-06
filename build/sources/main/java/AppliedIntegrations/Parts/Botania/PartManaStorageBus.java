@@ -13,6 +13,9 @@ import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
 
+/**
+ * @Author Azazell
+ */
 public class PartManaStorageBus extends PartEnergyStorage {
     public PartManaStorageBus() {
         super(PartEnum.ManaStorage, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);

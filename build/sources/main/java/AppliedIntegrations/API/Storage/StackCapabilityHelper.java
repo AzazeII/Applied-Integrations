@@ -16,6 +16,10 @@ import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
         @Optional.Interface(iface = "mekanism.api.energy.IEnergizedItem", modid = "mekanism", striprefs = true),
         @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2", striprefs = true)
 })
+
+/**
+ * @Author Azazell
+ */
 public class StackCapabilityHelper {
 
     private ItemStack operatedStack;

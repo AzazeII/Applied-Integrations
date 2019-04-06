@@ -43,6 +43,9 @@ import net.minecraft.util.text.TextComponentTranslation;
 import javax.annotation.Nullable;
 import java.util.*;
 
+/**
+ * @Author Azazell
+ */
 public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, ICellContainer, INetworkToolAgent, IInventoryHost, ITickable {
 
     public static final int BLOCKS_IN_STRUCTURE = Patterns.ME_SERVER.length+1;

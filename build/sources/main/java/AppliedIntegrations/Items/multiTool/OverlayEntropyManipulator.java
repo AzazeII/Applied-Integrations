@@ -19,6 +19,9 @@ import static AppliedIntegrations.Items.multiTool.OverlayEntropyManipulator.Scro
 import static AppliedIntegrations.Items.multiTool.OverlayEntropyManipulator.ScrollDirection.UP;
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * @Author Azazell
+ */
 public class OverlayEntropyManipulator {
 
     private static Minecraft mc = Minecraft.getMinecraft();

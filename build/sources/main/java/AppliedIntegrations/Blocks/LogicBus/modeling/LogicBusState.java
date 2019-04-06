@@ -5,6 +5,9 @@ import net.minecraft.util.EnumFacing;
 import java.util.EnumSet;
 import java.util.Set;
 
+/**
+ * @Author Azazell
+ */
 public class LogicBusState {
 
     // Is isCorner of multiblock?

@@ -10,6 +10,9 @@ import appeng.api.storage.data.IAEFluidStack;
 
 import static appeng.api.config.Actionable.MODULATE;
 
+/**
+ * @Author Azazell
+ */
 public class BlackHoleFluidHandler extends BlackHoleSingularityInventoryHandler<IAEFluidStack> {
 
     @Override

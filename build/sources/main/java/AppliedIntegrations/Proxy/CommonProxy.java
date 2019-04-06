@@ -25,13 +25,6 @@ import java.io.*;
  */
 public class CommonProxy
 {
-    private class ExternalRecipeLoader implements IRecipeLoader {
-
-        @Override
-        public BufferedReader getFile(String path) throws Exception {
-            return new BufferedReader(new FileReader(new File(path)));
-        }
-    }
 
     public void SidedPreInit(){
         ItemEnum.register();

@@ -20,6 +20,9 @@ import java.util.List;
         @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true),
         @Optional.Interface(iface = "baubles.api.BaubleType", modid = "baubles", striprefs = true)
 })
+/**
+ * @Author Azazell
+ */
 public class MEGreaterManaRing extends MEManaRing implements IBotaniaIntegrated {
     public MEGreaterManaRing(String registry) {
         super(registry);
