@@ -1,27 +1,28 @@
 <!doctype html>
 <html>
 <head>
-  <title>ME Network Visualizer</title>
+    <title>ME Network Visualizer</title>
 
-  <script type="text/javascript" src="js/dist/vis.js"></script>
-  <link href="js/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="js/lib/dist/vis.js"></script>
+    <link href="js/lib/dist/vis-network.min.css" rel="stylesheet" type="text/css" />
 
-  <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
 <div id = "network"></div>
-  <script src="js/jquery.min.js"></script>
+    <script src="js/lib/jquery.min.js"></script>
 
-  <script type="text/javascript" src="js/main.js"></script>
-  <script type="text/javascript" src="js/tabs.js"></script>
-  <!--<script type="text/javascript" src="js/data.js"></script>-->
+    <script type="text/javascript" src="js/functions/graphNetwork.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script type="text/javascript" src="js/functions/tabs.js"></script>
+    <!--<script type="text/javascript" src="js/data.js"></script>-->
 </div>
 
 
 <div class="tab">
-  <button class="tablinks" onclick="switchTab(event, 'Network Data')">Node Network Data</button>
-  <button class="tablinks" onclick="switchTab(event, 'Position')">Node Position Data</button>
-  <button class="tablinks" onclick="switchTab(event, 'Grid Flags')">Node Flags Data</button>
+    <button class="tablinks" onclick="switchTab(event, 'Network Data')">Node Network Data</button>
+    <button class="tablinks" onclick="switchTab(event, 'Position')">Node Position Data</button>
+    <button class="tablinks" onclick="switchTab(event, 'Grid Flags')">Node Flags Data</button>
 </div>
 
 <!-- Tab content -->

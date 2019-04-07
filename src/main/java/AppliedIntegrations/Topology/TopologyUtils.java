@@ -7,11 +7,16 @@ import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IEnergyGridProvider;
+import appeng.api.parts.IPart;
 import appeng.api.util.AEPartLocation;
+import appeng.me.Grid;
+import appeng.me.GridNode;
 import appeng.me.cache.EnergyGridCache;
 import appeng.me.cache.P2PCache;
+import appeng.parts.networking.PartQuartzFiber;
 import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -23,10 +28,8 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * @Author Azazell
@@ -113,7 +116,7 @@ public class TopologyUtils {
                 // Add node
                 nodeList.add(node);
         // Create json from list
-        createJSON(nodeList);
+        innerObject = createJSONFromGridNodes(nodeList);
     }
 
     private static void graphSubnetworks(IGrid grid, EntityPlayer player) {
@@ -178,7 +181,7 @@ public class TopologyUtils {
 
     private static void graphAll(IGrid grid, EntityPlayer player) {
         // Pass call to JSON creator
-        createJSON(grid.getNodes());
+        innerObject = createJSONFromGridNodes(grid.getNodes());
     }
 
     private static void graphP2PLinks(IGrid grid, EntityPlayer player) {
@@ -232,7 +235,7 @@ public class TopologyUtils {
         }));
 
         // Create json object
-        createJSONFromConnections(nodeList, connections);
+        innerObject = createJSONFromConnections(nodeList, connections);
 
     }
 
@@ -268,13 +271,25 @@ public class TopologyUtils {
         // Write power usage
         temp.put("Usage", node.getGridBlock().getIdlePowerUsage() + " AE");
 
+        // Check if host is p2p tunnel
+        if(node.getMachine() instanceof PartP2PTunnel){
+            // Create p2p tunnel pointer
+            PartP2PTunnel<?> partP2PTunnel = (PartP2PTunnel<?>)node.getMachine();
+
+            // Write frequency
+            temp.put("Frequency", partP2PTunnel.getFrequency());
+        }else{
+            // Write integer frequency
+            temp.put("Frequency", Short.MAX_VALUE+1);
+        }
+
         // Write true, if node is pivot
         temp.put("Pivot", node.getGrid().getPivot() == node);
 
         return temp;
     }
 
-    private static void createJSON(Iterable<IGridNode> nodeList){
+    private static JSONObject createJSONFromGridNodes(Iterable<IGridNode> nodeList){
         // Create pair list
         List<Pair<IGridNode, IGridNode>> connections = new LinkedList<>();
 
@@ -303,10 +318,10 @@ public class TopologyUtils {
         }
 
         // Pass to primitive function
-        createJSONFromConnections(nodeList, connections);
+        return createJSONFromConnections(nodeList, connections);
     }
 
-    private static void createJSONFromConnections(Iterable<IGridNode> nodeList, List<Pair<IGridNode, IGridNode>> connections) {
+    private static JSONObject createJSONFromConnections(Iterable<IGridNode> nodeList, List<Pair<IGridNode, IGridNode>> connections) {
         // Create node object
         JSONObject network = new JSONObject();
         // Create node array
@@ -341,17 +356,13 @@ public class TopologyUtils {
         network.put("src", aNodeList); // (2)
         network.put("dest", bNodeList); // (3)
         network.put("data", serializedDataList); // (4)
+        network.put("mode", "not_sub_network"); // (5)
 
-        try {
-            // Write file
-            Files.write(Paths.get("Network.json"), network.toString().getBytes());
-
-            // Change inner json
-            innerObject = network;
-        }catch (IOException e){ e.printStackTrace(); }
+        // Change inner json
+        return network;
     }
 
-    // Same as createJSON(list), but with custom connection list
+    // Same as createJSONFromGridNodes(list), but with custom connection list
     private static void createSubnetworkJSON(List<IGridNode> nodeList, List<Pair<IGridNode, IGridNode>> connections, IGridNode mainPivot) {
         // Create node object
         JSONObject network = new JSONObject();
@@ -364,41 +375,80 @@ public class TopologyUtils {
         // List of serialized node data
         List<JSONObject> serializedDataList = new ArrayList<>();
 
+        // List of serialized grids
+        List<JSONObject> serializedGridList = new ArrayList<>();
+
         // Iterate over all nodes
         for (IGridNode gridNode : nodeList) {
             // Serialize data of node
             serializedDataList.add(serializeNodeData(gridNode));
 
             // Check if grid node equal to pivot
-            if(mainPivot.getMachine().toString().equals(gridNode.getMachine().toString()))
+            if(mainPivot.getMachine().toString().equals(gridNode.getMachine().toString())) {
                 // Mark as main network
                 jsonNodeList.put("Selected Network");
-            else
+
+                // Serialize grid of node
+                serializedGridList.add(createJSONFromGridNodes(gridNode.getGrid().getNodes()));
+            } else {
                 // Convert to readable string
                 jsonNodeList.put(toHumanReadableString(gridNode.getMachine().toString()));
 
-            // Create for_each cycle
-            connections.forEach((iGridNodePair -> {
-                // Fill "A" node list
-                aNodeList.put("Selected Network");
+                // Convert given grid node, to outer grid node, by getting it's providers, and converting 1st to outer node
+                // Get list of energy cache providers
+                Collection<IEnergyGridProvider> providers = ((IEnergyGridProvider)gridNode.getMachine()).providers();
 
-                // Fill "B" node list
-                bNodeList.put(toHumanReadableString(iGridNodePair.getRight().getMachine().toString()));
-            }));
+                // Iterate for each provider
+                providers.forEach((iEnergyGridProvider -> {
+                    // Check if grid differs from main grid
+                    if(iEnergyGridProvider != mainPivot.getGrid().getCache(IEnergyGrid.class)) {
+                        // Iterate over all providers
+                        iEnergyGridProvider.providers().forEach((hostProvider) -> {
+                            // Check if host provider instanceof IGridHost
+                            if(hostProvider instanceof IGridHost){
+                                // If part is not from AE2, then use very, very unstable method ;(
+                                // Write grid
+                                IGrid outerGrid = Objects.requireNonNull(((IGridHost) hostProvider).getGridNode(AEPartLocation.INTERNAL)).getGrid();
+
+                                // Get JSON object
+                                JSONObject obj = createJSONFromGridNodes(outerGrid.getNodes());
+
+                                // Write grid node string(only has used)
+                                obj.put("iGridProvider", toHumanReadableString(gridNode.getMachine().toString()));
+
+                                // Serialize outer grid
+                                serializedGridList.add(obj);
+                            }
+                        });
+                    }
+                }));
+
+            }
         }
+
+
+        // Create for_each cycle
+        connections.forEach((iGridNodePair -> {
+            // Fill "A" node list
+            aNodeList.put("Selected Network");
+
+            // Fill "B" node list
+            bNodeList.put(toHumanReadableString(iGridNodePair.getRight().getMachine().toString()));
+        }));
 
         // Put created arrays
         network.put("nodes", jsonNodeList); // (1)
         network.put("src", aNodeList); // (2)
         network.put("dest", bNodeList); // (3)
         network.put("data", serializedDataList); // (4)
+        network.put("mode", "sub_network"); // (5)
+        network.put("iGridData", serializedGridList); // (6)
+
+        // Change inner json
+        innerObject = network;
 
         try {
-            // Write file
-            Files.write(Paths.get("Network.json"), network.toString().getBytes());
-
-            // Change inner json
-            innerObject = network;
-        }catch (IOException e){ e.printStackTrace(); }
+            Files.write(Paths.get("network.json"), innerObject.toString().getBytes());
+        }catch (IOException io) {}
     }
 }

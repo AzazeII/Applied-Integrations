@@ -8,6 +8,9 @@ var nodes = new vis.DataSet();
 // create an array with edges
 var edges = new vis.DataSet();
 
+// Primal network
+var mainNetwork;
+
 // Currently selected node
 var selectedNode;
 
@@ -21,7 +24,7 @@ var nodeMessages = [];
 var categoryMap = new Map();
 
 // Category of network data
-var networkDataList = ["Active", "Usage"]
+var networkDataList = ["Active", "Frequency", "Usage"]
 
 // Category of grid flags
 var gridFlagDataList = ["CANNOT_CARRY", "CANNOT_CARRY_COMPRESSED", "COMPRESSED_CHANNEL", "DENSE_CAPACITY", "MULTIBLOCK",
@@ -33,6 +36,12 @@ var positionDataList = ["X", "Y", "Z"]
 // Set key array
 var keysArray = ["Network Data", "Grid Flags", "Position"]
 
+// Current mode
+var mode;
+
+// Map of sub network grids
+var sub_networkList = [];
+
 // Set category map entries
 categoryMap.set("Network Data", networkDataList); // (1)
 categoryMap.set("Grid Flags", gridFlagDataList); // (2)
@@ -43,7 +52,7 @@ categoryMap.set("Position", positionDataList); // (3)
     // Wait for ready state
     $(document).ready(function() {
         // Get network // Create network manager
-        $.getJSON("Network.json", function(network) {
+        $.getJSON("json", function(network) {
             // Iterate for_each node
             $.each(network.nodes, function(i, node) {
                 // Create vis node
@@ -58,13 +67,25 @@ categoryMap.set("Position", positionDataList); // (3)
                 // Change it's label to name of node
                 visNode.label = node.split('@', 1)[0];
 
-                console.log(network.data[i].Hex)
+                // Change color of node
+                visNode.color = "#" + network.data[i].Hex.toString(16);
+
+                // Check if color is code of transparent color
+                if(network.data[i].Hex == 9002152)
+                    // Change color to color of fluix crystal
+                    visNode.color = "#343161";
 
                 // Change shape to dot
                 visNode.shape = "dot";
 
                 // Add vis node
                 nodes.add(visNode)
+
+                // Check if mode is sub network mode
+                if (network.mode == "sub_network"){
+                    // Put grid object in sub network grid map
+                    sub_networkList.push(network.iGridData[i]);
+                }
 
                 // Add data of node to map
                 nodeMessages.push(network.data[i]);
@@ -105,7 +126,11 @@ categoryMap.set("Position", positionDataList); // (3)
                 edges.add(edge);
             }
 
+            // Switch mode
+            mode = network.mode;
 
+            // Write network
+            mainNetwork = network;
         });
     })
 })(this.jQuery)
@@ -200,13 +225,58 @@ network.on( 'click', function(properties) {
             keysArray.forEach(function(category, i){
                 // Iterate for each list of category
                 categoryMap.get(category).forEach(function(key, i){
+                    // Should current cycle not be written?
+                    let skip = false;
+
                     // Check if keys are equal
                     if(innerKey == key){
-                        // Add text to element
-                        document.getElementById(category).innerHTML += "<h3> " + key + " : " + values.get(key) + " </h3> "
+                        // Check if key is frequency
+                        if(key == "Frequency"){
+                            // Check if frequency coded correctly
+                            if(values.get(key) <= 32767 && values.get(key) >= -32768){
+                                // Update height of element
+                                document.getElementById(category).style.height = "180px";
+
+                                // Check if inner html not already contains this entry
+                                if(document.getElementById(category).innerHTML.indexOf("<h3> " + key + " : " + values.get(key) + " </h3> ") !== -1)
+                                    // Add text to element
+                                    document.getElementById(category).innerHTML += "<h3> " + key + " : " + values.get(key) + " </h3> "
+                            }else{
+                                skip = true;
+                            }
+                        }
+
+                        // Check if state not intended to skip
+                        if(!skip)
+                            // Add text to element
+                            document.getElementById(category).innerHTML += "<h3> " + key + " : " + values.get(key) + " </h3> "
                     }
                 });
             });
         });
+    }
+});
+
+// Create double click event
+network.on( 'doubleClick', function(properties) {
+    // Check if mode is sub network mode
+    if (mode != "sub_network")
+        return;
+
+    // Get node ids
+    var ids = properties.nodes;
+
+    // Get clicked nodes
+    var clickedNodes = nodes.get(ids);
+
+    // Check if size greater than 0
+    if(clickedNodes.length > 0){
+        // Write 1st node
+        selectedNode = clickedNodes[0];
+
+        // Create new node set
+        //var subNodes = network.data.nodes = new vis.DataSet();
+
+        console.log(sub_networkList);
     }
 });
