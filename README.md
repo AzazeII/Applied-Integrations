@@ -27,6 +27,12 @@ Network features:
 - ME Server, allows you to give connected networks restricted access to main server network***
 - ME Logic bus, allows you to give connected network shared auto-craft space. Can handle up to 54 patterns**
 - ME Graph Tool, allows you to view your network in choosen mode, using locahost web UI
+	There are currently four modes:
+	-ALL, // Show all nodes in network
+	-NODE_CLICKED, // Show all nodes, same type as node clicked
+	-SUBNETWORK, // Show only sub-networks connected to main network, clicking on subnetwork will give you graph of it
+	-P2P_LINKS // Show all p2p links in network
+
 
 Integrations with other mods:
 Mana storage (botania):
