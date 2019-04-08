@@ -1,15 +1,13 @@
 package AppliedIntegrations.Topology;
 
 import AppliedIntegrations.AIConfig;
-import appeng.api.networking.GridFlags;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridHost;
-import appeng.api.networking.IGridNode;
+import appeng.api.networking.*;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IEnergyGridProvider;
 import appeng.api.parts.IPart;
 import appeng.api.util.AEPartLocation;
 import appeng.me.Grid;
+import appeng.me.GridAccessException;
 import appeng.me.GridNode;
 import appeng.me.cache.EnergyGridCache;
 import appeng.me.cache.P2PCache;
@@ -132,6 +130,9 @@ public class TopologyUtils {
         // Create custom connections list
         List<Pair<IGridNode, IGridNode>> connections = new ArrayList<>();
 
+        // Add pivot to list
+        nodeList.add(grid.getPivot());
+
         // Create for each object
         gridProviders.forEach((iEnergyGridProvider -> {
             // Create tuple pair
@@ -168,11 +169,8 @@ public class TopologyUtils {
                 nodeList.add(((IGridHost)iEnergyGridProvider).getGridNode(AEPartLocation.INTERNAL));
         }));
 
-        // Add pivot to list
-        nodeList.add(grid.getPivot());
-
         // Create JSON object
-        createSubnetworkJSON(nodeList, connections, grid.getPivot());
+        createSubnetworkJSON(nodeList, connections, grid);
     }
 
     private static void graphLineNodes(IGrid grid, EntityPlayer player) {
@@ -363,7 +361,7 @@ public class TopologyUtils {
     }
 
     // Same as createJSONFromGridNodes(list), but with custom connection list
-    private static void createSubnetworkJSON(List<IGridNode> nodeList, List<Pair<IGridNode, IGridNode>> connections, IGridNode mainPivot) {
+    private static void createSubnetworkJSON(List<IGridNode> nodeList, List<Pair<IGridNode, IGridNode>> connections, IGrid mainNet) {
         // Create node object
         JSONObject network = new JSONObject();
         // Create node array
@@ -383,49 +381,60 @@ public class TopologyUtils {
             // Serialize data of node
             serializedDataList.add(serializeNodeData(gridNode));
 
-            // Check if grid node equal to pivot
-            if(mainPivot.getMachine().toString().equals(gridNode.getMachine().toString())) {
-                // Mark as main network
-                jsonNodeList.put("Selected Network");
+            // Check if grid node equal to pivot of main net
+            if(gridNode == mainNet.getPivot()) {
+                // Check if node list not already contains main network
+                if(!jsonNodeList.toList().contains("Selected Network")) {
+                    // Mark as main network
+                    jsonNodeList.put("Selected Network");
 
-                // Serialize grid of node
-                serializedGridList.add(createJSONFromGridNodes(gridNode.getGrid().getNodes()));
+                    // Get JSON object
+                    JSONObject obj = createJSONFromGridNodes(mainNet.getNodes());
+
+                    // Write grid node string(only has used)
+                    obj.put("iGridProvider", toHumanReadableString(gridNode.getMachine().toString()));
+
+                    // Serialize outer grid
+                    serializedGridList.add(obj);
+                }
             } else {
                 // Convert to readable string
                 jsonNodeList.put(toHumanReadableString(gridNode.getMachine().toString()));
 
-                // Convert given grid node, to outer grid node, by getting it's providers, and converting 1st to outer node
+                // All next code used to get outer grid from sub network provider
                 // Get list of energy cache providers
                 Collection<IEnergyGridProvider> providers = ((IEnergyGridProvider)gridNode.getMachine()).providers();
 
                 // Iterate for each provider
                 providers.forEach((iEnergyGridProvider -> {
-                    // Check if grid differs from main grid
-                    if(iEnergyGridProvider != mainPivot.getGrid().getCache(IEnergyGrid.class)) {
-                        // Iterate over all providers
-                        iEnergyGridProvider.providers().forEach((hostProvider) -> {
-                            // Check if host provider instanceof IGridHost
-                            if(hostProvider instanceof IGridHost){
-                                // If part is not from AE2, then use very, very unstable method ;(
-                                // Write grid
-                                IGrid outerGrid = Objects.requireNonNull(((IGridHost) hostProvider).getGridNode(AEPartLocation.INTERNAL)).getGrid();
+                    // Check if energy provider not from inner grid
+                    if(iEnergyGridProvider != mainNet.getCache(IEnergyGrid.class)) {
+                        // Pass function call to subnet helper
+                        IGrid outerGrid = null;
 
-                                // Get JSON object
-                                JSONObject obj = createJSONFromGridNodes(outerGrid.getNodes());
+                        // Surround with try/catch
+                        try {
+                            // Pass call to subnet helper
+                            outerGrid = SubnetHelper.getOuterGridOrNull((IGridCache) iEnergyGridProvider);
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
 
-                                // Write grid node string(only has used)
-                                obj.put("iGridProvider", toHumanReadableString(gridNode.getMachine().toString()));
+                        // Check not null
+                        if (outerGrid != null) {
+                            // Get JSON object
+                            JSONObject obj = createJSONFromGridNodes(outerGrid.getNodes());
 
-                                // Serialize outer grid
-                                serializedGridList.add(obj);
-                            }
-                        });
+                            // Write grid node string(only has used)
+                            obj.put("iGridProvider", toHumanReadableString(gridNode.getMachine().toString()));
+
+                            // Serialize outer grid
+                            serializedGridList.add(obj);
+                        }
                     }
                 }));
-
             }
         }
-
 
         // Create for_each cycle
         connections.forEach((iGridNodePair -> {
