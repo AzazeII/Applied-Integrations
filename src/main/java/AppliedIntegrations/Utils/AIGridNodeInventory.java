@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.ItemStackHandler;
 
 /**
  * @Author Azazell
@@ -18,6 +19,8 @@ public class AIGridNodeInventory implements IInventory {
     private int stackLimit;
     private IInventoryHost receiver;
 
+    private ItemStackHandler capabilityWrapper;
+
     public AIGridNodeInventory(String _customName, int _size, int _stackLimit) {
         this(_customName, _size, _stackLimit, null);
     }
@@ -28,6 +31,7 @@ public class AIGridNodeInventory implements IInventory {
         this.customName = _customName;
         this.stackLimit = _stackLimit;
         this.receiver = _receiver;
+        this.capabilityWrapper = new ItemStackHandler(_size);
     }
 
     @Override
@@ -192,5 +196,9 @@ public class AIGridNodeInventory implements IInventory {
     @Override
     public ITextComponent getDisplayName() {
         return null;
+    }
+
+    public ItemStackHandler getCapability() {
+        return this.capabilityWrapper;
     }
 }

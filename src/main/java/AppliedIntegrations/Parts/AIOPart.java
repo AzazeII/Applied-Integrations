@@ -36,11 +36,15 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static appeng.api.util.AEPartLocation.INTERNAL;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
+import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
 /**
  * @Author Azazell
@@ -491,4 +495,17 @@ public abstract class AIOPart
             }
         }
     }
+
+    @Override
+    public boolean hasCapability( @Nonnull Capability<?> capability ) {
+        return capability == ITEM_HANDLER_CAPABILITY;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T> T getCapability( @Nonnull Capability<T> capability ) {
+        return capability == ITEM_HANDLER_CAPABILITY ? (T) getUpgradeInventory().getCapability() : null;
+    }
+
 }
