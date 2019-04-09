@@ -63,3 +63,9 @@ only white and black hole can be entagled
  or
  AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler<#your IAEStack#>
 
+
+
+Thanks for: 
+Algorithm X2, for creating great mod and great API. 
+Megatech & Jur012, for some textures
+DurableBasic, for some great ideas for mod
