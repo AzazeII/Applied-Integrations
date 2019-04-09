@@ -1,29 +1,21 @@
 sudo: required
 dist: trusty
 
-before_install:
- - wget https://files.minecraftforge.net/maven/net/minecraftforge/forge/1.12.2-14.23.5.2768/forge-1.12.2-14.23.5.2768-mdk.zip
- - unzip -n forge-1.12.2-14.23.5.2768-mdk.zip
- - rm forge-1.12.2-14.23.5.2768-mdk.zip
-
 language: java
 jdk:
  - oraclejdk8
  - openjdk8
 
+before_cache:
+ - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+ - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+ - rm -f  $HOME/.gradle/caches/minecraft/deobfedDeps/providedDummy.jar
+ - rm -f  $HOME/.gradle/caches/minecraft/deobfedDeps/compileDummy.jar
 cache:
  directories:
-  - '$HOME/.m2/repository'
-  - '$HOME/.sonar/cache'
-  - '$HOME/.gradle/wrapper'
-  - '$HOME/.gradle/caches'
-
-addons:
- sonarcloud:
-  organization: "appliedenergistics"
+  - $HOME/.gradle/caches/
+  - $HOME/.gradle/wrapper/
 
 install: "./gradlew setupCIWorkspace"
-script:
- - "./gradlew build"
- - "./gradlew test"
- - "./gradlew sonarqube"
+script: "./gradlew build"
+

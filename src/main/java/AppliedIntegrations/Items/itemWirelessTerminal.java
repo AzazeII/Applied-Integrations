@@ -38,12 +38,12 @@ public class ItemWirelessTerminal extends AIItemRegistrable implements INetworkE
     }
     @Override
     public String getEncryptionKey(ItemStack item) {
-        return this.EncryptionKey;
+        return EncryptionKey;
     }
 
     @Override
     public void setEncryptionKey(ItemStack item, String encKey, String name) {
-        this.EncryptionKey = encKey;
+        EncryptionKey = encKey;
     }
 
     @Override
