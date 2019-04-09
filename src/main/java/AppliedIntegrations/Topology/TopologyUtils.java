@@ -4,17 +4,11 @@ import AppliedIntegrations.AIConfig;
 import appeng.api.networking.*;
 import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.energy.IEnergyGridProvider;
-import appeng.api.parts.IPart;
 import appeng.api.util.AEPartLocation;
-import appeng.me.Grid;
-import appeng.me.GridAccessException;
-import appeng.me.GridNode;
 import appeng.me.cache.EnergyGridCache;
 import appeng.me.cache.P2PCache;
-import appeng.parts.networking.PartQuartzFiber;
 import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
@@ -26,8 +20,10 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @Author Azazell
@@ -43,9 +39,12 @@ public class TopologyUtils {
      *
      * @param player
      *  Player, who queried this request
-     *@param mode
+     *
+     * @param mode
      *  Current working mode of graph tool
+     *
      * @param machine
+     *  Machine, which queried this request
      */
     public static void createWebUI(IGrid grid, EntityPlayer player, GraphToolMode mode, IGridHost machine) {
         // Switch modes
@@ -79,7 +78,6 @@ public class TopologyUtils {
                 // Graph nodes
                 graphGiven(grid, player, machine);
                 break;
-
         }
     }
 
@@ -228,9 +226,7 @@ public class TopologyUtils {
         List<IGridNode> nodeList = new LinkedList<>();
 
         // Create for each lambda of tunnel list
-        tunnelList.forEach((partP2PTunnel -> {
-            nodeList.add(partP2PTunnel.getGridNode());
-        }));
+        tunnelList.forEach((partP2PTunnel -> nodeList.add(partP2PTunnel.getGridNode())));
 
         // Create json object
         innerObject = createJSONFromConnections(nodeList, connections);
@@ -458,6 +454,6 @@ public class TopologyUtils {
 
         try {
             Files.write(Paths.get("network.json"), innerObject.toString().getBytes());
-        }catch (IOException io) {}
+        }catch (IOException ignored) {}
     }
 }
