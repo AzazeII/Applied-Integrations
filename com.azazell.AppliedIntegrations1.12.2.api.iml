@@ -26,15 +26,6 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/Mekanism-1.12.2-9.4.13.349.jar!/" />
         </CLASSES>
         <JAVADOC />
@@ -45,6 +36,15 @@
       <library>
         <CLASSES>
           <root url="jar://$MODULE_DIR$/libs/EmbersRekindled-1.12.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/libs/Botania+r1.10-360.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -33,9 +33,6 @@ import java.util.LinkedList;
  * @Author Azazell
  */
 public enum ItemEnum {
-    ENERGYANNIHILATIONCORE(new AIItemRegistrable("annihilation_core"), AIConfig.enableEnergyFeatures),
-    ENERGYFORMATIONCORE(new AIItemRegistrable("formation_core"), AIConfig.enableEnergyFeatures),
-
     ITEMPARTIMPORT(new ItemPartEnergyImport("energyImportPartItem"), AIConfig.enableEnergyFeatures),
     ITEMPARTEXPORT(new ItemPartEnergyExport("energyExportPartItem"), AIConfig.enableEnergyFeatures),
     ITEMPARTSTORAGE(new ItemPartEnergyStorage("energyStoragePartItem"), AIConfig.enableEnergyFeatures),
