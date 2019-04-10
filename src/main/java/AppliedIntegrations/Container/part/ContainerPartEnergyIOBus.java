@@ -41,8 +41,8 @@ public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
         this.part = part;
 
         // TODO: 2019-04-02 Fix crash and add upgrade inventory back
-        this.addUpgradeSlots( part.getUpgradeInventory(), this.NUMBER_OF_UPGRADE_SLOTS,
-                 this.UPGRADE_X_POS, this.UPGRADE_Y_POS );
+        this.addUpgradeSlots( part.getUpgradeInventory(), NUMBER_OF_UPGRADE_SLOTS,
+                UPGRADE_X_POS, UPGRADE_Y_POS );
 
         // Bind to the player's inventory
         this.bindPlayerInventory(player.inventory);
@@ -70,13 +70,7 @@ public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
     public boolean canInteractWith(EntityPlayer p_75145_1_) {
         return true;
     }
-    public void setFilterSize( final byte filterSize )
-    {
 
-    }
-    public void setFilteredEnergy( final List<LiquidAIEnergy> filteredEnergies )
-    {
-    }
     @Override
     public ItemStack transferStackInSlot( final EntityPlayer player, final int slotNumber )
     {

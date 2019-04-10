@@ -17,7 +17,7 @@ import static net.minecraft.init.Items.AIR;
 public class AIGridNodeInventory implements IInventory {
 
     public ItemStack[] slots;
-    public String customName;
+    private String customName;
     private int stackLimit;
     private IInventoryHost receiver;
 
@@ -44,12 +44,12 @@ public class AIGridNodeInventory implements IInventory {
 
     @Override
     public ItemStack decrStackSize(int slotId, int amount) {
-        if (this.slots[slotId] == null)
+        if (this.slots[slotId].getItem() == AIR)
             return null;
         ItemStack itemstack;
         if (this.slots[slotId].getCount() <= amount) {
             itemstack = this.slots[slotId];
-            this.slots[slotId] = null;
+            this.slots[slotId] = new ItemStack(AIR);
             markDirty();
             return itemstack;
         } else {
@@ -57,7 +57,7 @@ public class AIGridNodeInventory implements IInventory {
             itemstack = temp.splitStack(amount);
             this.slots[slotId] = temp;
             if (temp.getCount() == 0) {
-                this.slots[slotId] = null;
+                this.slots[slotId] = new ItemStack(AIR);
             } else {
                 this.slots[slotId] = temp;
             }
@@ -68,7 +68,7 @@ public class AIGridNodeInventory implements IInventory {
 
     @Override
     public ItemStack removeStackFromSlot(int index) {
-        return null;
+        return new ItemStack(AIR);
     }
 
     @Override
@@ -89,19 +89,6 @@ public class AIGridNodeInventory implements IInventory {
     @Override
     public ItemStack getStackInSlot(int i) {
         return this.slots[i];
-    }
-
-    public ItemStack incrStackSize(int slotId, int amount) {
-        ItemStack slot = this.slots[slotId];
-        if (slot == null)
-            return null;
-        int stackLimit = getInventoryStackLimit();
-        if (stackLimit > slot.getMaxStackSize())
-            stackLimit = slot.getMaxStackSize();
-        ItemStack added = slot.copy();
-        added.setCount(slot.getCount() + amount > stackLimit ? stackLimit : amount);
-        slot.setCount(slot.getCount() + added.getCount());
-        return added;
     }
 
     @Override
@@ -153,7 +140,7 @@ public class AIGridNodeInventory implements IInventory {
     public void readFromNBT(NBTTagList nbtList) {
         if(nbtList == null){
             for(int i = 0; i < slots.length; i++){
-                slots[i] = null;
+                slots[i] = new ItemStack(AIR);
             }
             return;
         }
@@ -169,7 +156,7 @@ public class AIGridNodeInventory implements IInventory {
 
     @Override
     public void setInventorySlotContents(int slotId, ItemStack itemstack) {
-        if (itemstack != null && itemstack.getCount() > getInventoryStackLimit()) {
+        if (itemstack.getItem() != AIR && itemstack.getCount() > getInventoryStackLimit()) {
             itemstack.setCount(getInventoryStackLimit());
         }
         this.slots[slotId] = itemstack;
@@ -181,7 +168,7 @@ public class AIGridNodeInventory implements IInventory {
         NBTTagList nbtList = new NBTTagList();
 
         for (int i = 0; i < this.slots.length; ++i) {
-            if (this.slots[i] != null) {
+            if (this.slots[i].getItem() != AIR) {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setByte("Slot", (byte) i);
                 this.slots[i].writeToNBT(nbttagcompound);
