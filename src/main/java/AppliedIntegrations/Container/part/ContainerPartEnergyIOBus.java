@@ -1,8 +1,6 @@
 package AppliedIntegrations.Container.part;
 
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-
-import AppliedIntegrations.Container.ContainerWithNetworkTool;
+import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.AIOPart;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,12 +9,11 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * @Author Azazell
  */
-public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
+public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots
 {
     /**
      * The number of upgrade slots we have
@@ -40,7 +37,6 @@ public class ContainerPartEnergyIOBus extends ContainerWithNetworkTool
         // Set the part
         this.part = part;
 
-        // TODO: 2019-04-02 Fix crash and add upgrade inventory back
         this.addUpgradeSlots( part.getUpgradeInventory(), NUMBER_OF_UPGRADE_SLOTS,
                 UPGRADE_X_POS, UPGRADE_Y_POS );
 

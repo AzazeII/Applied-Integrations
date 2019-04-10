@@ -2,14 +2,15 @@
   "result": {
     "item": "appliedintegrations:energyexportpartitem"
   },
-  "type": "appliedenergistics2:part_shaped",
+  "type": "forge:ore_shaped",
   "pattern": [
     "aba",
-    " c "
+    "rcr"
   ],
   "key": {
     "b": {
-      "item": "appliedintegrations:formation_core"
+      "item": "appliedenergistics2:material",
+      "data": 43
     },
     "a": {
       "type": "forge:ore_dict",
@@ -17,6 +18,9 @@
     },
     "c": {
       "item": "minecraft:piston"
+    },
+    "r": {
+      "item": "minecraft:redstone"
     }
   }
 }

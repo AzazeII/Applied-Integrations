@@ -1,85 +1,46 @@
 package AppliedIntegrations.Container;
 
 import AppliedIntegrations.API.IEnergyInterface;
-import AppliedIntegrations.Container.slot.SlotNetworkTool;
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
-import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Parts.AIOPart;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import appeng.api.AEApi;
-import appeng.api.implementations.guiobjects.IGuiItem;
-import appeng.api.implementations.guiobjects.INetworkTool;
 import appeng.api.implementations.items.IUpgradeModule;
-import appeng.api.util.DimensionalCoord;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import static net.minecraft.init.Items.AIR;
 
 /**
  * @Author Azazell
  */
-public abstract class ContainerWithNetworkTool
+public abstract class ContainerWithUpgradeSlots
         extends ContainerWithPlayerInventory
 {
-    /**
-     * Number of rows in the network tool
-     */
-    private static final int TOOL_ROWS = 3;
-
-    /**
-     * Number of columns in the network tool
-     */
-    private static final int TOOL_COLUMNS = 3;
-
-    /**
-     * X position to start drawing slots
-     */
-    private static final int TOOL_SLOT_X_OFFSET = 187;
-
-    /**
-     * Y position to start drawing slots
-     */
-    private static final int TOOL_SLOT_Y_OFFSET = 102;
-
-
-    /**
-     * Index of the first network tool slot
-     */
+    // First tool slot
     private int firstToolSlotNumber = -1;
 
-    /**
-     * Index of the last network tool slot
-     */
+    // Last tool slot
     private int lastToolSlotNumber = -1;
 
-    /**
-     * Index of the first upgrade slot
-     */
+    // First upgrade slot
     private int firstUpgradeSlot = -1;
 
-    /**
-     * Index of the first upgrade slot
-     */
+    // Last upgrade slot
     private int lastUpgradeSlot = -1;
 
-    /**
-     * How far apart each slot should be drawn
-     */
+    // Distance between Y point, of each upgrade slot
     private static int UPGRADE_Y_POSITION_MULTIPLIER = 18;
-    /**
-     * The part associated with this container
-     */
-    private AIOPart bus;
 
-    public ContainerWithNetworkTool(IEnergyInterface Einterface, EntityPlayer player) {
-super(player);
+    public ContainerWithUpgradeSlots(IEnergyInterface Einterface, EntityPlayer player) {
+        super(player);
     }
 
-    public ContainerWithNetworkTool(PartEnergyStorage EStorage, EntityPlayer player) {
+    public ContainerWithUpgradeSlots(PartEnergyStorage EStorage, EntityPlayer player) {
         super(player);
     }
 
@@ -92,7 +53,14 @@ super(player);
         {
             // Create the slot
             upgradeSlot = new SlotRestrictive( upgradeInventory, slotIndex, xPosition, yPosition +
-                    ( slotIndex * this.UPGRADE_Y_POSITION_MULTIPLIER ) );
+                    ( slotIndex * UPGRADE_Y_POSITION_MULTIPLIER ) ) {
+
+                // Override icon getter for this slot
+                @SideOnly(Side.CLIENT)
+                public String getSlotTexture() {
+                    return AppliedIntegrations.modid + ":gui/slots/upgradesloticon";
+                }
+            };
 
             // Add the slot
             this.addSlotToContainer( upgradeSlot );
@@ -112,7 +80,7 @@ super(player);
     }
 
     protected boolean hasNetworkTool = false;
-    public ContainerWithNetworkTool(AIOPart part, final EntityPlayer player)
+    public ContainerWithUpgradeSlots(AIOPart part, final EntityPlayer player)
     {
         super( player );
     }

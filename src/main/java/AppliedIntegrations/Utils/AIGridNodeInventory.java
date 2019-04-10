@@ -7,7 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
+
+import javax.annotation.Nonnull;
 
 import static net.minecraft.init.Items.AIR;
 
@@ -87,8 +90,8 @@ public class AIGridNodeInventory implements IInventory {
     }
 
     @Override
-    public ItemStack getStackInSlot(int i) {
-        return this.slots[i];
+    public ItemStack getStackInSlot(int index) {
+        return slots[index];
     }
 
     @Override
@@ -148,7 +151,7 @@ public class AIGridNodeInventory implements IInventory {
             NBTTagCompound nbttagcompound = nbtList.getCompoundTagAt(i);
             int j = nbttagcompound.getByte("Slot") & 255;
 
-            if (j >= 0 && j < this.slots.length) {
+            if (j < this.slots.length) {
                 this.slots[j] = new ItemStack(nbttagcompound);
             }
         }
@@ -168,12 +171,10 @@ public class AIGridNodeInventory implements IInventory {
         NBTTagList nbtList = new NBTTagList();
 
         for (int i = 0; i < this.slots.length; ++i) {
-            if (this.slots[i].getItem() != AIR) {
-                NBTTagCompound nbttagcompound = new NBTTagCompound();
-                nbttagcompound.setByte("Slot", (byte) i);
-                this.slots[i].writeToNBT(nbttagcompound);
-                nbtList.appendTag(nbttagcompound);
-            }
+            NBTTagCompound nbttagcompound = new NBTTagCompound();
+            nbttagcompound.setByte("Slot", (byte) i);
+            this.slots[i].writeToNBT(nbttagcompound);
+            nbtList.appendTag(nbttagcompound);
         }
         return nbtList;
     }

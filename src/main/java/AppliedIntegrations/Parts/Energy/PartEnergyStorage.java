@@ -262,7 +262,7 @@ public class PartEnergyStorage
 	}
 
 	@Override
-	protected AIGridNodeInventory getUpgradeInventory() {
+    public AIGridNodeInventory getUpgradeInventory() {
 		return null;
 	}
 

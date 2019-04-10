@@ -13,13 +13,15 @@
       "item": "minecraft:redstone"
     },
     "F": {
-      "item": "appliedintegrations:formation_core"
+      "item": "appliedenergistics2:material",
+      "data": 43
     },
     "E": {
       "item": "appliedenergistics2:energy_cell"
     },
     "A": {
-      "item": "appliedintegrations:annihilation_core"
+      "item": "appliedenergistics2:material",
+      "data": 44
     }
   },
   "result": {

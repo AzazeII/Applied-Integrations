@@ -5,18 +5,21 @@
   "type": "appliedenergistics2:part_shapeless",
   "ingredients": [
     {
-      "item": "appliedintegrations:formation_core"
-    },
-    {
+      "item": "appliedenergistics2:material",
+      "data": 43
+    }, {
       "type": "forge:ore_dict",
       "ore": "itemIlluminatedPanel"
-    },
-    {
+    }, {
       "type": "appliedenergistics2:part",
       "part": "material.logic_processor"
-    },
-    {
-      "item": "appliedintegrations:annihilation_core"
+    }, {
+      "item": "appliedenergistics2:material",
+      "data": 44
+    }, {
+      "item": "minecraft:redstone"
+    }, {
+      "item": "minecraft:redstone"
     }
   ]
 }

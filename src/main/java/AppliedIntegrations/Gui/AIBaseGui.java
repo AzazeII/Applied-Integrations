@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui;
 
 
-import AppliedIntegrations.Container.ContainerWithNetworkTool;
+import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import appeng.api.AEApi;
 import net.minecraft.client.gui.GuiButton;
@@ -112,10 +112,10 @@ public abstract class AIBaseGui
     protected void mouseClicked( final int mouseX, final int mouseY, final int mouseButton )
     {
         // Is this container one that could have a network tool?
-        if( this.inventorySlots instanceof ContainerWithNetworkTool )
+        if( this.inventorySlots instanceof ContainerWithUpgradeSlots)
         {
             // Do we have a network tool?
-            if( ( (ContainerWithNetworkTool)this.inventorySlots ).hasNetworkTool() )
+            if( ( (ContainerWithUpgradeSlots)this.inventorySlots ).hasNetworkTool() )
             {
                 // Get the slot the mouse was clicked over
                 Slot slot = this.getSlotAtMousePosition( mouseX, mouseY );

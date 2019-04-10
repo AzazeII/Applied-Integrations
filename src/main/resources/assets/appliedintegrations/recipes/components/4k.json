@@ -1,0 +1,27 @@
+{
+  "result": {
+    "item": "appliedintegrations:energystoragecell_4k"
+  },
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "aba",
+    "cdc",
+    "aca"
+  ],
+  "key": {
+    "d": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "a": {
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
+    },
+    "c": {
+      "item": "appliedintegrations:energystoragecell_1k"
+    },
+    "b": {
+      "item": "appliedenergistics2:material",
+      "data": 23
+    }
+  }
+}

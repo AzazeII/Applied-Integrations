@@ -1,22 +1,20 @@
 package AppliedIntegrations.Container.part;
 
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Container.ContainerWithNetworkTool;
+import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @Author Azazell
  */
 public class ContainerEnergyStorage
-		extends ContainerWithNetworkTool
+		extends ContainerWithUpgradeSlots
 {
 	private static int PLAYER_INV_POSITION_Y = 102;
 
@@ -52,8 +50,8 @@ public class ContainerEnergyStorage
 		}
 
 		// Add the upgrade slot
-		/*this.addUpgradeSlots( part.getUpgradeInventory(), 1, this.UPGRADE_SLOT_X,
-				this.UPGRADE_SLOT_Y );*/
+		//this.addUpgradeSlots( part.getUpgradeInventory(), 1, this.UPGRADE_SLOT_X,
+		//		this.UPGRADE_SLOT_Y );
 
 		// Bind to the player's inventory
 		this.bindPlayerInventory( player.inventory, this.PLAYER_INV_POSITION_Y+67,

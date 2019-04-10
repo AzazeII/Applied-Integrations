@@ -1,5 +1,6 @@
 package AppliedIntegrations;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Client.TextureEventManager;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Parts.AIPart;
@@ -47,8 +48,10 @@ public class AppliedIntegrations {
 	public static CommonProxy proxy;
 
 	@Mod.EventHandler
-	public void preInit(FMLPreInitializationEvent event)
-	{
+	public void preInit(FMLPreInitializationEvent event) {
+		// Register texture manager to event bus
+		FMLCommonHandler.instance().bus().register(new TextureEventManager());
+
 		// Init config
 		AIConfig.preInit();
 
@@ -71,8 +74,8 @@ public class AppliedIntegrations {
 	}
 
 	@Mod.EventHandler
-	public void init(FMLInitializationEvent event)
-	{
+	public void init(FMLInitializationEvent event) {
+
 		// Register GuiHandler
 		NetworkRegistry.INSTANCE.registerGuiHandler(this,new AIGuiHandler());
 		// Register objects, that can be moved by spatial cards io

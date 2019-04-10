@@ -23,12 +23,4 @@ public class EnergyStorageComponent
 
         this.setCreativeTab(AppliedIntegrations.AI);
     }
-
-    @Override
-    public EnumRarity getRarity(final ItemStack itemStack )
-    {
-        // Return the rarity
-        return EnumRarity.EPIC;
-    }
-
 }

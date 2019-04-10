@@ -2,6 +2,7 @@ package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlocksEnum;
+import AppliedIntegrations.Client.TextureEventManager;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
@@ -56,39 +57,6 @@ public class ClientProxy
             ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
             ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
         }
-
-
-        // State mapper for tile port
-        /*StateMapperBase stateMapperPort = new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
-                return LogicBusBakedModel.variantTagPort;
-            }
-        };
-
-        // State mapper for tile rib
-        StateMapperBase stateMapperRib = new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState iBlockState) {
-                return LogicBusBakedModel.variantTagRib;
-            }
-        };
-
-        ModelLoader.setCustomStateMapper(BlocksEnum.BLBRibs.b, stateMapperPort);
-        ModelLoader.setCustomStateMapper(BlocksEnum.BLBPort.b, stateMapperRib);
-
-
-        MinecraftForge.EVENT_BUS.register(LogicBusModelBakeEventHandler.instance);
-
-
-        ModelResourceLocation itemRibLocation
-                = new ModelResourceLocation(AppliedIntegrations.modid+":logic_bus/logic_ribs", "inventory");
-        ModelLoader.setCustomModelResourceLocation(BlocksEnum.BLBRibs.itemBlock, 0, itemRibLocation);
-
-        ModelResourceLocation itemPortLocation =
-                new ModelResourceLocation(AppliedIntegrations.modid+":logic_bus/logic_port", "inventory");
-
-        ModelLoader.setCustomModelResourceLocation(BlocksEnum.BLBPort.itemBlock, 0, itemPortLocation);*/
     }
 
     @SideOnly(Side.CLIENT)

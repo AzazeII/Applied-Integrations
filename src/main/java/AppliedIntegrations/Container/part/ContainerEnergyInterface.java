@@ -2,7 +2,7 @@ package AppliedIntegrations.Container.part;
 
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Container.ContainerWithNetworkTool;
+import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.TileEnergyInterface;
@@ -25,7 +25,7 @@ import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 /**
  * @Author Azazell
  */
-public class ContainerEnergyInterface extends ContainerWithNetworkTool {
+public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
     /**
      * The number of upgrade slots we have
      */
@@ -76,8 +76,8 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
             this.part = (PartEnergyInterface)EnergyInterface;// add slots
 
             AIGridNodeInventory inventory = part.getUpgradeInventory();
-            /*this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
-                    this.UPGRADE_X_POS, this.UPGRADE_Y_POS);*/
+            this.addUpgradeSlots(inventory, NUMBER_OF_UPGRADE_SLOTS,
+                    UPGRADE_X_POS, UPGRADE_Y_POS);
         } else if (energyInterface instanceof TileEnergyInterface) {
             TileEnergyInterface tile = (TileEnergyInterface) this.EnergyInterface;
             this.tile = (TileEnergyInterface)this.EnergyInterface;
@@ -85,8 +85,8 @@ public class ContainerEnergyInterface extends ContainerWithNetworkTool {
 
             AIGridNodeInventory inventory = (AIGridNodeInventory)tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null /* Internal facing ;) */);
             // add slots
-            //this.addUpgradeSlots(inventory, this.NUMBER_OF_UPGRADE_SLOTS,
-            //        this.UPGRADE_X_POS + 1, this.UPGRADE_Y_POS);
+            this.addUpgradeSlots(inventory, NUMBER_OF_UPGRADE_SLOTS,
+                    UPGRADE_X_POS + 1, UPGRADE_Y_POS);
         }
     }
 

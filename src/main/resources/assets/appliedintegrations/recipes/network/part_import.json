@@ -2,9 +2,9 @@
   "result": {
     "item": "appliedintegrations:energyimportpartitem"
   },
-  "type": "appliedenergistics2:part_shaped",
+  "type": "forge:ore_shaped",
   "pattern": [
-    " a ",
+    "rar",
     "bcb"
   ],
   "key": {
@@ -16,7 +16,11 @@
       "ore": "ingotIron"
     },
     "a": {
-      "item": "appliedintegrations:annihilation_core"
+      "item": "appliedenergistics2:material",
+      "data": 44
+    },
+    "r": {
+      "item": "minecraft:redstone"
     }
   }
 }

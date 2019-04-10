@@ -78,8 +78,6 @@ public enum ItemEnum {
     MANAANNIHILATIONCORE(new ManaAnnihilationCore("mana_annihilation_core"), AIConfig.enableManaFeatures),
     MANAFORMATIONCORE(new ManaFormationCore("mana_formation_core"), AIConfig.enableManaFeatures),
 
-    ENERGYSTORAGECASING(new EnergyStorageCasing(), AIConfig.enableEnergyFeatures),
-
     ENERGYSTORAGECOMPONENT_1k(new EnergyStorageComponent("EnergyStorageComponent_1k"), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGECOMPONENT_4k(new EnergyStorageComponent("EnergyStorageComponent_4k"), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGECOMPONENT_16k(new EnergyStorageComponent("EnergyStorageComponent_16k"), AIConfig.enableEnergyFeatures),
