@@ -495,17 +495,4 @@ public abstract class AIOPart
             }
         }
     }
-
-    @Override
-    public boolean hasCapability( @Nonnull Capability<?> capability ) {
-        return capability == ITEM_HANDLER_CAPABILITY;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Nullable
-    @Override
-    public <T> T getCapability( @Nonnull Capability<T> capability ) {
-        return capability == ITEM_HANDLER_CAPABILITY ? (T) getUpgradeInventory().getCapability() : null;
-    }
-
 }

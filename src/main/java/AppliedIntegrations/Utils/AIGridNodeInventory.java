@@ -9,6 +9,8 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 
+import static net.minecraft.init.Items.AIR;
+
 /**
  * @Author Azazell
  */
@@ -32,6 +34,12 @@ public class AIGridNodeInventory implements IInventory {
         this.stackLimit = _stackLimit;
         this.receiver = _receiver;
         this.capabilityWrapper = new ItemStackHandler(_size);
+
+        // Iterate until i >= size
+        for(int i = 0; i < _size; i++){
+            // Fill up slots with air
+            slots[i] = new ItemStack(AIR);
+        }
     }
 
     @Override
