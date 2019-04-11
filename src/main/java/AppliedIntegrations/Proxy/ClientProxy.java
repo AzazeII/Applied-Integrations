@@ -50,6 +50,9 @@ public class ClientProxy
         super.SidedPreInit();
         NetworkHandler.registerClientPackets();
 
+        // Register texture manager to event bus
+        FMLCommonHandler.instance().bus().register(new TextureEventManager());
+
         if(AIConfig.enableBlackHoleStorage) {
             // Register custom renderers
             ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());

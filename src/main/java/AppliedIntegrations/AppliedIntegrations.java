@@ -49,9 +49,6 @@ public class AppliedIntegrations {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		// Register texture manager to event bus
-		FMLCommonHandler.instance().bus().register(new TextureEventManager());
-
 		// Init config
 		AIConfig.preInit();
 

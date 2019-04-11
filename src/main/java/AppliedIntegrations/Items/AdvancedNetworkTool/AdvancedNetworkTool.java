@@ -6,6 +6,7 @@ import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.implementations.items.IAEWrench;
+import appeng.core.AppEng;
 import appeng.helpers.IMouseWheelItem;
 import appeng.hooks.IBlockTool;
 import appeng.items.tools.powered.ToolEntropyManipulator;
