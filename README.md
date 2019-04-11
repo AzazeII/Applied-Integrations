@@ -1,4 +1,7 @@
-# Applied-Integrations [![CurseForge](http://cf.way2muchnoise.eu/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations) [![](http://cf.way2muchnoise.eu/versions/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations)  
+# Applied-Integrations
+[![CurseForge](http://cf.way2muchnoise.eu/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations)
+[![](http://cf.way2muchnoise.eu/versions/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations)
+[![Travis](https://img.shields.io/travis/AzazeII/Applied-Integrations.svg?maxAge=2592000&style=flat-square)](https://travis-ci.org/AzazeII/Applied-Integrations)
 
 # About  
 Applied integrations is applied energitsics 2 addon, which adds many new features. One of main features is storing energy in   storage cells  
