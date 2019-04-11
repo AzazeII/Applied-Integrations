@@ -1,6 +1,0 @@
-{
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "appliedintegrations:blocks/block_logic_core"
-  }
-}

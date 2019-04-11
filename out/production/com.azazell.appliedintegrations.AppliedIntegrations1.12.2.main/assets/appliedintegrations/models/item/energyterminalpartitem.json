@@ -1,9 +1,0 @@
-{
-  "parent": "appliedenergistics2:item/part/display",
-  "textures": {
-    "front": "appliedenergistics2:items/part/crafting_terminal",
-    "front_bright": "appliedintegrations:blocks/parts/energy.terminal.overlay.light",
-    "front_medium": "appliedintegrations:blocks/parts/energy.terminal.overlay.medium",
-    "front_dark": "appliedintegrations:blocks/parts/energy.terminal.overlay.dark"
-  }
-}

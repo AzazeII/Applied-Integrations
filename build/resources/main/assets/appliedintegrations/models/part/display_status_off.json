@@ -1,8 +1,0 @@
-{
-  "parent": "appliedenergistics2:part/display_off",
-  "textures": {
-    "lightsBright": "appliedintegrations:blocks/parts/energy.terminal.overlay.light",
-    "lightsMedium": "appliedintegrations:blocks/parts/energy.terminal.overlay.medium",
-    "lightsDark": "appliedintegrations:blocks/parts/energy.terminal.overlay.dark"
-  }
-}

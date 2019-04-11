@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "appliedintegrations:items/graph_tool/mode_p2p"
-  }
-}
