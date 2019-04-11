@@ -17,4 +17,6 @@ addons:
   organization: "appliedenergistics"
 
 script:
- - "./gradlew build"
+ - "./gradlew build --scan -s"
+ - "./gradlew test"
+ - "./gradlew sonarqube"
