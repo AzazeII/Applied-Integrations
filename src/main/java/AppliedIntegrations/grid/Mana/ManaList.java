@@ -65,9 +65,7 @@ public class ManaList implements IItemList<IAEManaStack> {
 
     @Override
     public IAEManaStack getFirstItem() {
-        for (IAEManaStack stack : this)
-            return stack;
-        return null;
+        return iterator().hasNext()? iterator().next() : null;
     }
 
     @Override

@@ -173,7 +173,7 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 
     @Override
     public float getManaFractionForDisplay(ItemStack itemStack) {
-        return currentMana/getMaxMana(itemStack);
+        return (float)currentMana/(float)getMaxMana(itemStack);
     }
 
     @Override

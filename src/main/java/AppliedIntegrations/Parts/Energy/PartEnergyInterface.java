@@ -639,12 +639,8 @@ public class PartEnergyInterface
 			return null;
 		// Getting net of node
 		IGrid grid = getGridNode(INTERNAL).getGrid();
-		if (grid == null)
-			return null;
 		// Cache of net
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-		if (storage == null)
-			return null;
 		// fluidInventory of cache
 		return storage.getInventory(channel);
 	}

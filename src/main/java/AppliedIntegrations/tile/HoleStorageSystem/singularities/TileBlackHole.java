@@ -210,12 +210,12 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
     public AxisAlignedBB getAxisAABB(int modulateRadius) {
         // Square with x1,y1,z1 as negative modulate radius and coords
         // x2, y2, z2 as positive modulate radius and coords
-        return new AxisAlignedBB(getPos().getX() - modulateRadius,
-                                 getPos().getY() - modulateRadius,
-                                 getPos().getZ() - modulateRadius,
-                                 getPos().getX() + modulateRadius,
-                                 getPos().getY() + modulateRadius,
-                                 getPos().getZ() + modulateRadius);
+        return new AxisAlignedBB(getPos().getX() - (double)modulateRadius,
+                                 getPos().getY() - (double)modulateRadius,
+                                 getPos().getZ() - (double)modulateRadius,
+                                 getPos().getX() + (double)modulateRadius,
+                                 getPos().getY() + (double)modulateRadius,
+                                 getPos().getZ() + (double)modulateRadius);
     }
 
     // Destroys entity if it crossed getBlackHoleRadius()

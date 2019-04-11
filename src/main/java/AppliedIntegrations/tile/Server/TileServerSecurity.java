@@ -36,8 +36,6 @@ public class TileServerSecurity extends AIMultiBlockTile {
         if(!hasMaster()){
             if(gridNode == null)
                 return;
-            if(gridNode.getGrid() == null)
-                return;
             IGrid grid = gridNode.getGrid();
             for(IGridNode node : grid.getNodes()){
                 if(node.getMachine() instanceof TileServerCore ) {

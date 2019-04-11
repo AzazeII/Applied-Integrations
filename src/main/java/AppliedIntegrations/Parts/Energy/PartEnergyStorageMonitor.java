@@ -92,20 +92,6 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
         if (player.world.isRemote)
             return false;
         ItemStack s = player.getHeldItem(hand);
-        if (s == null) {
-            if (this.locked)
-                return false;
-            if (this.energy == null)
-                return false;
-            if (this.watcher != null)
-                this.watcher.remove(getChannel().createStack(new FluidStack(energy, 1)));
-            this.energy = null;
-            this.amount = 0L;
-            IPartHost host = getHost();
-            if (host != null)
-                host.markForUpdate();
-            return true;
-        }
         if (WrenchUtil.canWrench(s, player, this.hostTile.getPos().getX(), this.hostTile.getPos().getY(),
                 this.hostTile.getPos().getZ())) {
             this.locked = !this.locked;
@@ -150,7 +136,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
             this.amount = data.getLong("amount");
         if (data.hasKey("Energy")) {
             String id = data.getString("Energy");
-            if (id == "")
+            if (id.equals(""))
                 this.energy = null;
             else
                 this.energy = LiquidAIEnergy.getEnergy(data.getString("Energy"));
@@ -188,15 +174,6 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
     @Override
     public void onStackChange(IItemList<?> iItemList, IAEStack<?> iaeStack, IAEStack<?> iaeStack1, IActionSource iActionSource, IStorageChannel<?> iStorageChannel) {
         if (this.energy != null) {
-            IGridNode n = getGridNode();
-            if (n == null)
-                return;
-            IGrid g = n.getGrid();
-            if (g == null)
-                return;
-            IStorageGrid storage = g.getCache(IStorageGrid.class);
-            if (storage == null)
-                return;
             IMEMonitor<IAEEnergyStack> Energies = super.getEnergyProvidingInventory();
             if (Energies == null)
                 return;

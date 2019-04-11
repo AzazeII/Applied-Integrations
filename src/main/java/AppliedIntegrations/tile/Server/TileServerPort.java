@@ -30,8 +30,7 @@ public class TileServerPort  extends AIMultiBlockTile {
         if(hasMaster()){
             if(gridNode == null)
                 return;
-            if(gridNode.getGrid() == null)
-                return;
+            gridNode.getGrid();
             IGrid Network = gridNode.getGrid();
 
             TileServerCore core = (TileServerCore)getMaster();

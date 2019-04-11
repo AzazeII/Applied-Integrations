@@ -658,11 +658,9 @@ public abstract class AIPart
 		if (n == null)
 			return null;
 		IGrid g = n.getGrid();
-		if (g == null)
-			return null;
+
 		IStorageGrid storage = g.getCache(IStorageGrid.class);
-		if (storage == null)
-			return null;
+
 		IMEMonitor<IAEEnergyStack> energyStorage = storage.getInventory(this.getChannel());
 		if (energyStorage == null)
 			return null;

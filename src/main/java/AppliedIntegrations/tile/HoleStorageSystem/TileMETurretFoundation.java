@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static net.minecraft.util.EnumFacing.*;
@@ -140,8 +141,15 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
                    // Get item stack's item
                    Item item = iaeItemStack.getItem();
 
-                   return item == AEApi.instance().definitions().materials().singularity().maybeItem().get() ||
-                           item == AEApi.instance().definitions().materials().matterBall().maybeItem().get();
+                   // Get optional items
+                   Optional<Item> optionalMatterBall = AEApi.instance().definitions().materials().matterBall().maybeItem();
+                   Optional<Item> optionalBlackHoleBall = AEApi.instance().definitions().materials().matterBall().maybeItem();
+
+                   return (optionalBlackHoleBall.isPresent() &&
+                           item == optionalBlackHoleBall.get()) ||
+
+                           (optionalMatterBall.isPresent()) &&
+                                   item == optionalMatterBall.get();
                }
 
                @Override

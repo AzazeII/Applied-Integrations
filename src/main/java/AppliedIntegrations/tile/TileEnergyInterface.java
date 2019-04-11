@@ -144,7 +144,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	@Override
 	public void update() {
 		super.update();
-		if (!EUloaded && hasWorld() && !world.isRemote &&!EUloaded) {
+		if (!EUloaded && hasWorld() && !world.isRemote) {
 			EUloaded = true;
 			//MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
 		}
@@ -156,7 +156,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		}
 
 		try {
-			if (this.DualityMode) {
+			if (DualityMode) {
 				DoInjectDualityWork(Actionable.MODULATE);
 			} else {
 				DoInjectDualityWork(SIMULATE);
@@ -211,17 +211,9 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		duality.DoExtractDualityWork(action);
 	}
 
-	/**
-	 * IC2:
-	 */
-	//@Override
-	public double getDemandedEnergy() {
-		return capacity-EuStorage;
-	}
-
 	@Override
 	public double getMaxTransfer(AEPartLocation side) {
-		return capacity/2;
+		return capacity/(double)2;
 	}
 
 	@Override
@@ -280,12 +272,8 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 			return null;
 		// Getting net of node
 		IGrid grid = getGridNode(AEPartLocation.INTERNAL).getGrid();
-		if (grid == null)
-			return null;
 		// Cache of net
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-		if (storage == null)
-			return null;
 		// fluidInventory of cache
 		return storage.getInventory(iStorageChannel);
 	}

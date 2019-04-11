@@ -8,12 +8,14 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author Azazell
@@ -120,16 +122,16 @@ public abstract class AIBaseGui
                 // Get the slot the mouse was clicked over
                 Slot slot = this.getSlotAtMousePosition( mouseX, mouseY );
 
-                // Was the slot the network tool?
-                if( ( slot != null ) &&
-                        // Check present
-                        AEApi.instance().definitions().items().networkTool().maybeStack( 1 ).isPresent() &&
+                // Get optional stack
+                Optional<ItemStack> stackOptional = AEApi.instance().definitions().items().networkTool().maybeStack( 1 );
 
-                        // Check equal
-                        ( slot.getStack().isItemEqual( AEApi.instance().definitions().items().networkTool().maybeStack( 1 ).get() ) ) )
-                {
-                    // Do not allow any interaction with the network tool slot.
-                    return;
+                // Check present
+                if(stackOptional.isPresent()) {
+                    // Was the slot the network tool?
+                    if ((slot != null) && (slot.getStack().isItemEqual(stackOptional.get()))) {
+                        // Do not allow any interaction with the network tool slot.
+                        return;
+                    }
                 }
             }
         }

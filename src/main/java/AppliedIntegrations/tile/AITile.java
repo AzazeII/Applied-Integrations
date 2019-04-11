@@ -26,6 +26,7 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 
+import javax.annotation.Nonnull;
 import java.util.EnumSet;
 
 @Optional.InterfaceList(value = { // ()____()
@@ -70,6 +71,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return 1;
     }
 
+    @Nonnull
     @Override
     public EnumSet<GridFlags> getFlags() {
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
@@ -80,11 +82,13 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return true;
     }
 
+    @Nonnull
     @Override
     public DimensionalCoord getLocation() {
         return new DimensionalCoord(this);
     }
 
+    @Nonnull
     @Override
     public AEColor getGridColor() {
         return AEColor.TRANSPARENT;
@@ -104,6 +108,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return proxy;
     }
 
+    @Nonnull
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
         return EnumSet.of(EnumFacing.SOUTH,EnumFacing.DOWN,EnumFacing.EAST,EnumFacing.UP,EnumFacing.NORTH,EnumFacing.WEST);
@@ -121,6 +126,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         if (gridNode != null) gridNode.destroy();
     }
 
+    @Nonnull
     @Override
     public IGridHost getMachine() {
         return this;
@@ -134,8 +140,6 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     @Override
     public ItemStack getMachineRepresentation() {
         DimensionalCoord location = this.getLocation();
-        if (location == null)
-            return null;
         return new ItemStack(location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock(), 1,
                 location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock().getMetaFromState((location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)))));
 
@@ -159,6 +163,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public IGridNode getGridNode() {
         return getGridNode(AEPartLocation.INTERNAL);
     }
+
     @Override
     public IGridNode getGridNode(AEPartLocation dir) {
         if(gridNode == null)
@@ -166,6 +171,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return gridNode;
     }
 
+    @Nonnull
     @Override
     public AECableType getCableConnectionType(AEPartLocation dir) {
         return AECableType.DENSE_SMART;
@@ -176,6 +182,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     }
 
+    @Nonnull
     @Override
     public IGridNode getActionableNode() {
         if (this.gridNode == null)
@@ -210,18 +217,10 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         if(node == null)
             return 0;
         IGrid grid = node.getGrid();
-        if (grid == null) {
-            AILog.info("Grid cannot be initialized");
-            return 0;
-        }
 
-        IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
-        if (storage == null) {
-            AILog.info("StorageGrid cannot be initialized");
-            return 0;
-        }
+        IStorageGrid storage = grid.getCache(IStorageGrid.class);
 
-        IAEEnergyStack notRemoved = (IAEEnergyStack)storage.getInventory(getEnergyChannel()).extractItems(
+        IAEEnergyStack notRemoved = storage.getInventory(getEnergyChannel()).extractItems(
                 getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
 
         if (notRemoved == null)
@@ -247,10 +246,6 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         IGrid grid = node.getGrid();
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
-        if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
-            AILog.info("StorageGrid cannot be initialized");
-            return 0;
-        }
 
         IAEEnergyStack returnAmount = storage.getInventory(this.getEnergyChannel()).injectItems(
                 getEnergyChannel().createStack(resource), actionable, new MachineSource(this));

@@ -7,6 +7,8 @@ import appeng.api.AEApi;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.BotaniaAPI;
 
+import java.util.Optional;
+
 /**
  * @Author Azazell
  */
@@ -58,11 +60,22 @@ public class BotaniaLoader {
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_16384k.getItem(), 1, 0),
                 new ItemStack(ItemEnum.ENERGYSTORAGE_16384k.getItem(), 1, 0), 300000);
 
-        ItemStack fluixStack = AEApi.instance().definitions().materials().fluixCrystal().maybeStack(1).get();
-        ItemStack fluixPureStack = AEApi.instance().definitions().materials().purifiedFluixCrystal().maybeStack(1).get();
-        BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixStack);
-        BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixPureStack);
+        /*------------------------------------------Elven Trade------------------------------------------*/
 
+        // Optionals
+        Optional<ItemStack> fluixOptional = AEApi.instance().definitions().materials().fluixCrystal().maybeStack(1);
+        Optional<ItemStack> pureFluixOptional = AEApi.instance().definitions().materials().purifiedFluixCrystal().maybeStack(1);
+
+        if(fluixOptional.isPresent()){
+            ItemStack fluixStack = fluixOptional.get();
+            BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixStack);
+        }
+
+        if(pureFluixOptional.isPresent()) {
+            ItemStack fluixPureStack = pureFluixOptional.get();
+            BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixPureStack);
+        }
+        /*------------------------------------------Elven Trade------------------------------------------*/
 
         BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(1), 1,0),
                 new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), 1000);

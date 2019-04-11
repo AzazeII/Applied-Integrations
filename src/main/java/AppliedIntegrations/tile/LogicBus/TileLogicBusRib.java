@@ -97,16 +97,8 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
         if(getGridNode() == null)
             return null;
         IGrid grid = getGridNode().getGrid(); // check grid node
-        if (grid == null) {
-            AILog.info("Grid cannot be initialized");
-            return null;
-        }
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
-        if (storage == null && this.getGridNode().getGrid().getCache(IStorageGrid.class) == null) {
-            AILog.info("StorageGrid cannot be initialized");
-            return null;
-        }
 
         return storage.getInventory(getItemChannel());
     }

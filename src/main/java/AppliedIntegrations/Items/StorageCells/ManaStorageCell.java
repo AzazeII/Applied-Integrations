@@ -50,24 +50,21 @@ public class ManaStorageCell extends AIItemRegistrable implements IStorageCell<I
                 // Show only bytes, since mana is only material which can be stored, and there is only 1 type available
                 lines.add(cellInventory.getUsedBytes() + " " + GuiText.Of.getLocal() + ' ' + cellInventory.getTotalBytes() + ' ' + GuiText.BytesUsed.getLocal());
             }
-        }
-        if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))) {
-            // Get the list of stored energies
-            IItemList<IAEManaStack> cellEnergies = inventoryHandler.getAvailableItems(getChannel().createList());
-            for( IAEManaStack currentStack : cellEnergies )
-            {
-                if( currentStack != null )
-                {
-                    // Add to the list
-                    String energyInfo = TextFormatting.AQUA.toString() + "Mana x " + currentStack.getStackSize();
-                    lines.add( energyInfo );
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))) {
+                // Get the list of stored energies
+                IItemList<IAEManaStack> cellEnergies = inventoryHandler.getAvailableItems(getChannel().createList());
+                for (IAEManaStack currentStack : cellEnergies) {
+                    if (currentStack != null) {
+                        // Add to the list
+                        String energyInfo = TextFormatting.AQUA.toString() + "Mana x " + currentStack.getStackSize();
+                        lines.add(energyInfo);
+                    }
                 }
+            } else {
+                // Let the user know they can hold shift
+                lines.add(TextFormatting.WHITE.toString() + "Hold" + TextFormatting.DARK_AQUA.toString() + " Shift " + TextFormatting.WHITE.toString() + "for");
             }
-        } else {
-            // Let the user know they can hold shift
-            lines.add(TextFormatting.WHITE.toString() + "Hold" + TextFormatting.DARK_AQUA.toString() + " Shift " + TextFormatting.WHITE.toString() + "for");
         }
-
     }
 
     @Override

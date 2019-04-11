@@ -390,13 +390,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         }
     }
 
-    public void onFeedback(boolean Connected, int serverID, AEPartLocation port, LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions) {
-        if(Connected){
-
-        }else{
-
-        }
-    }
+    public void onFeedback(boolean Connected, int serverID, AEPartLocation port, LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions) { }
 
     @Override
     public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {

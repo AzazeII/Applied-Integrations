@@ -67,6 +67,7 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
         return 0;
     }
 
+    @Nonnull
     @Override
     public TickingRequest getTickingRequest(IGridNode iGridNode) {
         return new TickingRequest(1, 1, false, false);
@@ -84,7 +85,7 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
         int z = this.hostTile.getPos().getZ();
 
         // Get box
-        AxisAlignedBB bb = new AxisAlignedBB(x-1, y-1, z-1, x+1, y+1, z+1);
+        AxisAlignedBB bb = new AxisAlignedBB(x-1.0, y-1.0, z-1.0, x+1.0, y+1.0, z+1.0);
 
         // Get current entities
         currentEntities = world.getEntitiesWithinAABB(Entity.class, bb);
@@ -97,11 +98,8 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
             if (node != null) {
                 // Get grid
                 IGrid grid = node.getGrid();
-                // Check not null
-                if(grid != null) {
-                    // Post update
-                    grid.postEvent(new MENetworkCellArrayUpdate());
-                }
+                // Post update
+                grid.postEvent(new MENetworkCellArrayUpdate());
             }
         }
 

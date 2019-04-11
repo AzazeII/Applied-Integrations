@@ -243,13 +243,7 @@ public class CapabilityHelper {
         if(capabilities == null)
             return false;
 
-        // Iterate over all capabilities from capability type from given energy
-        for(Capability capability : capabilities) {
-            //Iterate over it's capabilities
-            return this.capabilities.contains(capability);
-        }
-
-        // False
-        return false;
+        //Iterate over it's capabilities
+        return this.capabilities.contains(capabilities.firstElement());
     }
 }

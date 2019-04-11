@@ -87,6 +87,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
         return new ManaInterfaceDuality(this);
     }
 
+    @Nonnull
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall )
     {
@@ -163,16 +164,8 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
         if(node == null)
             return 0;
         IGrid grid = node.getGrid();
-        if (grid == null) {
-            AILog.info("Grid cannot be initialized");
-            return 0;
-        }
 
         IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
-        if (storage == null) {
-            AILog.info("StorageGrid cannot be initialized");
-            return 0;
-        }
 
         IAEManaStack notRemoved = (IAEManaStack)storage.getInventory(getManaChannel()).extractItems(
                 new AEManaStack(resource), actionable, new MachineSource(this));
@@ -194,16 +187,8 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
         if(node == null)
             return 0;
         IGrid grid = node.getGrid(); // check grid node
-        if (grid == null) {
-            AILog.info("Grid cannot be initialized");
-            return 0;
-        }
 
-        IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
-        if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
-            AILog.info("StorageGrid cannot be initialized");
-            return 0;
-        }
+        IStorageGrid storage = grid.getCache(IStorageGrid.class);
 
         IAEManaStack returnAmount = storage.getInventory(this.getManaChannel()).injectItems(
                 new AEManaStack(resource), actionable, new MachineSource(this));

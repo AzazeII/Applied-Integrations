@@ -5,6 +5,7 @@ import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IItemList;
 import appeng.fluids.util.MeaningfulFluidIterator;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -66,9 +67,7 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
 
     @Override
     public IAEEnergyStack getFirstItem() {
-        for (IAEEnergyStack stack : this)
-            return stack;
-        return null;
+        return iterator().hasNext()? iterator().next() : null;
     }
 
     @Override
@@ -76,6 +75,7 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
         return this.records.values().size();
     }
 
+    @Nonnull
     @Override
     public Iterator<IAEEnergyStack> iterator() {
         return new EnergyIterator<>(this.records.values().iterator());

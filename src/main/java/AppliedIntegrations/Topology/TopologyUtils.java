@@ -451,9 +451,5 @@ public class TopologyUtils {
 
         // Change inner json
         innerObject = network;
-
-        try {
-            Files.write(Paths.get("network.json"), innerObject.toString().getBytes());
-        }catch (IOException ignored) {}
     }
 }

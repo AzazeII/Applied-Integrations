@@ -143,12 +143,8 @@ public class PartEnergyTerminal extends AIRotatablePart implements IStackWatcher
 			return null;
 		// Getting net of node
 		IGrid grid = getGridNode(AEPartLocation.INTERNAL).getGrid();
-		if (grid == null)
-			return null;
 		// Storage cache of network
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-		if (storage == null)
-			return null;
 		// Get inventory of cache
 		return storage.getInventory(channel);
 	}
