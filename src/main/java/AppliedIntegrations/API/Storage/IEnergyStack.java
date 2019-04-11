@@ -36,7 +36,6 @@ public interface IEnergyStack
     LiquidAIEnergy getEnergy();
 
 
-	@Nonnull
 	String getEnergyName();
 
 	/**

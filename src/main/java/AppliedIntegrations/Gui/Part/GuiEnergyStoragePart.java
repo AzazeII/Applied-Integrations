@@ -113,7 +113,7 @@ public class GuiEnergyStoragePart
     /**
      * Storage bus associated with this gui
      */
-    public volatile PartEnergyStorage storageBus;
+    public PartEnergyStorage storageBus;
 
     /**
      * Title of the gui

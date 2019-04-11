@@ -5,6 +5,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,9 @@ public class AIConfig {
             property = config.get(category, key, (Integer)defaultVal);
         if (defaultVal instanceof Double)
             property = config.get(category, key, (Double)defaultVal);
+
+        if (property == null)
+            return new Property(null, (String) null, Property.Type.STRING);
 
         // Set comment
         property.setComment(comment);

@@ -51,7 +51,7 @@ public class GuiEnergyIO
 
     private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
 
-    public volatile AIOPart part;
+    public AIOPart part;
 
     String stringName;
     public EntityPlayer player;

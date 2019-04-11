@@ -35,12 +35,6 @@ public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator
         // Create grid
         IGrid grid = getGridNode().getGrid(); // check grid node
 
-        // Check not null
-        if (grid == null) {
-            AILog.info("Grid cannot be initialized");
-            return null;
-        }
-
         // Create storage grid
         IStorageGrid storage = grid.getCache(IStorageGrid.class);
 

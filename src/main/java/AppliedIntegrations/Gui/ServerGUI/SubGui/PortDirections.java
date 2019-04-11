@@ -1,5 +1,7 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
+import static java.lang.Float.NaN;
+
 /**
  * @Author Azazell
  */
@@ -9,7 +11,9 @@ public enum PortDirections {
     E(1,1),
     W(-1,-1),
     U(-1,1),
-    D(1,-1);
+    D(1,-1),
+    // Stands for "Not a direction"
+    NaD(0,0);
 
     public int offsetX, offsetY;
 

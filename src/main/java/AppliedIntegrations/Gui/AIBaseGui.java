@@ -121,7 +121,11 @@ public abstract class AIBaseGui
                 Slot slot = this.getSlotAtMousePosition( mouseX, mouseY );
 
                 // Was the slot the network tool?
-                if( ( slot != null ) && ( slot.getStack() != null ) &&
+                if( ( slot != null ) &&
+                        // Check present
+                        AEApi.instance().definitions().items().networkTool().maybeStack( 1 ).isPresent() &&
+
+                        // Check equal
                         ( slot.getStack().isItemEqual( AEApi.instance().definitions().items().networkTool().maybeStack( 1 ).get() ) ) )
                 {
                     // Do not allow any interaction with the network tool slot.

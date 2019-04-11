@@ -37,7 +37,6 @@ public class EnergyStack implements IEnergyStack {
 		return energy;
 	}
 
-	@Nonnull
 	@Override
 	public String getEnergyName() {
 		if(energy != null)

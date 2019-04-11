@@ -57,9 +57,11 @@ public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceSt
     @Override
     public Double extract(Double value, boolean simulate) {
         double storedBefore = getEnergyStored();
+
         drawEnergy(value);
+
         double storedAfter = getEnergyStored();
 
-        return storedAfter - storedAfter;
+        return storedBefore - storedAfter;
     }
 }

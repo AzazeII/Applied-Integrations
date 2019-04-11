@@ -33,9 +33,9 @@ public class BlockServerRib extends AIMultiBlock {
                     ((TileServerCore)rib.getMaster()).getWorld().getBlockState(((TileServerCore)rib.getMaster()).getPos()).getBlock().onBlockActivated(world, pos,
                             state, p, EnumHand.MAIN_HAND, facing, hitX, hitY, hitZ);
                 }catch(Exception e){
-                }finally {
-                    return true;
                 }
+
+                return true;
             }
         }else{
             final List<ItemStack> list = Lists.newArrayList( appeng.util.Platform.getBlockDrops(world,new BlockPos(pos)) );

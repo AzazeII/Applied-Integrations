@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 
+import javax.annotation.Nonnull;
 import java.awt.*;
 import java.util.LinkedHashMap;
 import java.util.Vector;
@@ -30,7 +31,7 @@ import static AppliedIntegrations.Gui.ServerGUI.NetworkPermissions.*;
  */
 public class ServerPacketTracer extends AIBaseGui {
 
-    public volatile TileServerCore mInstance;
+    public TileServerCore mInstance;
 
     private final int GUI_X = 342;
     private final int GUI_Y = 139;
@@ -289,6 +290,7 @@ public class ServerPacketTracer extends AIBaseGui {
         }
     }
 
+    @Nonnull
     private PortDirections portDirection(EnumFacing dir) {
         switch (dir){
             case EAST:
@@ -304,7 +306,7 @@ public class ServerPacketTracer extends AIBaseGui {
             case UP:
                 return PortDirections.U;
         }
-        return null;
+        return PortDirections.NaD;
     }
 
     public void setMaster(NetworkData data){
