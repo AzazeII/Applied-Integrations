@@ -22,19 +22,13 @@ import appeng.me.helpers.MachineSource;
 import appeng.util.item.AEItemStack;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
@@ -170,8 +164,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
                             lineFormed = true;
 
                             // Add port-slave candidates to slave candidates
-                            for (TileLogicBusPort port : subNetworkPortsCandidates)
-                                slaveCandidates.add(port);
+                            slaveCandidates.addAll(subNetworkPortsCandidates);
 
                             // Add to counter
                             portCounter += 2;
@@ -292,40 +285,6 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
 
     @Override
     public void setMaster(IMaster tileServerCore) { }
-
-    private World getWorld(NBTTagCompound nbt) {
-        World world = DimensionManager.getWorld( nbt.getInteger("#World") );
-
-        if( FMLCommonHandler.instance().getSide() == Side.CLIENT ) {
-            if( world == null ) {
-                world = Minecraft.getMinecraft().world;
-            }
-        }
-
-        return world;
-    }
-
-    protected void setWorld(NBTTagCompound nbt, World world) {
-        if( FMLCommonHandler.instance().getSide() == Side.CLIENT ) {
-            return;
-        }
-        nbt.setInteger("#World", world.provider.getDimension());
-    }
-
-    @Override
-    public IMaster readMaster(NBTTagCompound compound) {
-
-        BlockPos pos = BlockPos.fromLong(compound.getLong("#Pos"));
-        World w = getWorld(compound);
-
-        return (TileLogicBusCore)w.getTileEntity(pos);
-    }
-
-    @Override
-    public void writeMaster(NBTTagCompound compound) {
-        compound.setLong("#Pos", pos.toLong());
-        setWorld(compound, world);
-    }
 
     @Override
     public Iterator<IGridNode> getMultiblockNodes() {

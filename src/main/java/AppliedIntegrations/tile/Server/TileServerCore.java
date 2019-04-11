@@ -390,7 +390,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         }
     }
 
-
     public void onFeedback(boolean Connected, int serverID, AEPartLocation port, LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions) {
         if(Connected){
 
@@ -407,16 +406,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     @Override
     public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
         return false;
-    }
-
-    @Override
-    public IMaster readMaster(NBTTagCompound compound) {
-        return null;
-    }
-
-    @Override
-    public void writeMaster(NBTTagCompound compound) {
-
     }
 
     @Override

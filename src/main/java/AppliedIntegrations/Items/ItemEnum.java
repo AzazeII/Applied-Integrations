@@ -1,22 +1,21 @@
 package AppliedIntegrations.Items;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
+import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
 import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PStarlight;
-import AppliedIntegrations.Items.StorageCells.EnergyStorageCasing;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.StorageCells.ManaStorageCell;
-import AppliedIntegrations.Items.multiTool.AdvancedNetworkTool;
-import AppliedIntegrations.AIConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;

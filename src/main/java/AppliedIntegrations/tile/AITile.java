@@ -130,13 +130,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public void gridChanged() {
 
     }
-    public boolean isServer() {
-        return !isClient();
-    }
 
-    public boolean isClient() {
-        return world.isRemote;
-    }
     @Override
     public ItemStack getMachineRepresentation() {
         DimensionalCoord location = this.getLocation();
@@ -235,7 +229,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         return (int)(resource.amount - notRemoved.getStackSize());
     }
 
-    public IEnergyStorageChannel getEnergyChannel(){
+    private IEnergyStorageChannel getEnergyChannel(){
         return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
     }
 
@@ -250,11 +244,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public int InjectEnergy(EnergyStack resource, Actionable actionable) {
         if(node == null)
             return 0;
-        IGrid grid = node.getGrid(); // check grid node
-        if (grid == null) {
-            AILog.info("Grid cannot be initialized");
-            return 0;
-        }
+        IGrid grid = node.getGrid();
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
         if (storage == null && this.node.getGrid().getCache(IStorageGrid.class) == null) {
