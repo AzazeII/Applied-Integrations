@@ -62,5 +62,4 @@ public abstract class AIContainer extends Container
         // Clear the map
         this.slotMap.clear();
     }
-    public abstract boolean onFilterReceive(AIPart part);
 }

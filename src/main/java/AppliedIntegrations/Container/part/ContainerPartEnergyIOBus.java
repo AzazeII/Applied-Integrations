@@ -1,7 +1,6 @@
 package AppliedIntegrations.Container.part;
 
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.AIOPart;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -82,10 +81,4 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots {
     }
 
 
-
-    @Override
-    public boolean onFilterReceive(AIPart part) {
-        return part == this.part;
-
-    }
 }

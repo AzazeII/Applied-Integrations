@@ -10,6 +10,7 @@ import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
+import AppliedIntegrations.Network.Packets.PacketFullSync;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.ChangeHandler;
 import appeng.api.AEApi;
@@ -43,6 +44,7 @@ import java.util.List;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static appeng.api.util.AEPartLocation.INTERNAL;
+import static net.minecraft.init.Items.AIR;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
 import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
@@ -112,8 +114,6 @@ public abstract class AIOPart
     protected TileEntity adjacentEnergyStorage;
 
     protected byte filterSize;
-    protected byte speedState;
-
     protected byte upgradeSpeedCount = 0;
 
     protected boolean redstoneControlled;
@@ -188,19 +188,52 @@ public abstract class AIOPart
     };
     @Override
     public void onInventoryChanged() {
+        //=========+Reset+=========//
+        // Set current filter size to zero
         this.filterSize = 0;
+
+        // Trigger redstone control
         this.redstoneControlled = false;
-        this.speedState = 0;
+
+        // Set speed to 0
+        this.upgradeSpeedCount = 0;
+        //=========+Reset+=========//
+
+        // Iterate until i equal to stack size
         for (int i = 0; i < this.upgradeInventory.getSizeInventory(); i++) {
+
+            // Get current stack from slot
             ItemStack currentStack = this.upgradeInventory.getStackInSlot(i);
-            if (currentStack != null) {
-                if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(currentStack))
+
+            // Check not air
+            if (currentStack.getItem() != AIR) {
+                // Check if current stack is capacity card stack
+                if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(currentStack)) {
+                    // Increase filter size
                     this.filterSize++;
-                if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(currentStack))
+                }
+
+                // Check if current stack is redstone card stack
+                if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(currentStack)) {
+                    // Trigger restone control
                     this.redstoneControlled = true;
-                if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(currentStack))
-                    this.speedState++;
+                }
+
+                // Check if current stack is speed card stack
+                if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(currentStack)) {
+                    // Increase speed
+                    this.upgradeSpeedCount++;
+                }
             }
+        }
+
+        // Request full state update
+        notifyListenersOfStateUpdate(filterSize, redstoneControlled, upgradeSpeedCount);
+    }
+
+    private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled, byte upgradeSpeedCount) {
+        if(player != null){
+            NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneControlled, upgradeSpeedCount, this), (EntityPlayerMP) this.player);
         }
     }
 

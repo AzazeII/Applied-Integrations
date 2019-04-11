@@ -4,7 +4,6 @@ import AppliedIntegrations.API.IEnergySelectorContainer;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
@@ -69,10 +68,5 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
     }
 
 
-
-    @Override
-    public boolean onFilterReceive(AIPart part) {
-        return false;
-    }
 }
 

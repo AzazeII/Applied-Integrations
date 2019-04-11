@@ -1,10 +1,7 @@
 package AppliedIntegrations.Container.tile;
 
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
-import appeng.container.slot.SlotRestrictedInput;
-import appeng.helpers.DualityInterface;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
@@ -29,8 +26,4 @@ public class ContainerLogicBus extends ContainerWithPlayerInventory {
         }*/
     }
 
-    @Override
-    public boolean onFilterReceive(AIPart part) {
-        return false;
-    }
 }

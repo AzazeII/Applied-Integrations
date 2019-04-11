@@ -3,7 +3,6 @@ package AppliedIntegrations.Container.part;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
@@ -102,12 +101,6 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
             //this.part.flowMode = Gui;
     }
 
-
-    @Override
-    public boolean onFilterReceive(AIPart part) {
-        return part.getLocation().x == this.part.getX() && part.getLocation().y == this.part.getY()
-                && part.getLocation().z == this.part.getZ() && part.getSide() == this.part.getSide();
-    }
 
     @Override
     public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber )

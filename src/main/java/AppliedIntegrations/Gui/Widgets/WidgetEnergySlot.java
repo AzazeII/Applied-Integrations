@@ -32,10 +32,8 @@ public class WidgetEnergySlot
     }
 
     @Override
-    public void drawWidget()
-    {
-        if( shouldRender )
-        {
+    public void drawWidget() {
+        if( shouldRender ) {
             // Disable lighting
             GL11.glDisable( GL11.GL_LIGHTING );
 
@@ -62,7 +60,11 @@ public class WidgetEnergySlot
     }
 
     public void mouseClicked( final LiquidAIEnergy energy ) {
-        // change energy
+        // Check if slot is currently rendering
+        if( !shouldRender )
+            return;
+
+        // Change energy
         setCurrentEnergy(energy);
 
         // Check not null
@@ -75,8 +77,7 @@ public class WidgetEnergySlot
     }
 
     @Override
-    public void onMouseClicked()
-    {
+    public void onMouseClicked() {
         // Ignored
     }
 }

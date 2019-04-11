@@ -189,4 +189,31 @@ public class GuiEnergyIO
         if(host instanceof AIOPart)
             part = (AIOPart)host;
     }
+
+    public void updateState(boolean redstoneControl, byte upgradeCount, byte filterSize) {
+        // Set filter matrix, from filter size
+        if (filterSize == 1)
+            // Update matrix
+            configMatrix = new boolean[]{false, false, false,
+                                         false, true, false,
+                                         false, false, false};
+        if (filterSize == 2)
+            // Update matrix
+            configMatrix = new boolean[]{false, true, false,
+                                         true, true, true,
+                                         false, true, false};
+
+        if (filterSize == 3)
+            // Update matrix
+            configMatrix = new boolean[]{true, true, true,
+                                         true, true, true,
+                                         true, true, true};
+
+        // Iterate for i until it equal to cM.length
+        for(int i = 0; i < configMatrix.length; i++){
+            // Get slot and update it to value from config matrix
+            energySlotList.get(i).shouldRender = configMatrix[i];
+        }
+
+    }
 }

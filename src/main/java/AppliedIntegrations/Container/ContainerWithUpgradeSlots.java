@@ -189,24 +189,19 @@ public abstract class ContainerWithUpgradeSlots
      * Checks if the shift+click happend in the network tool.
      */
     @Override
-    public ItemStack transferStackInSlot( final EntityPlayer player, final int slotNumber )
-    {
-        // Note: mergeItemStack args: ItemStack stack, int slotStart, int slotEnd(exclusive), boolean reverse
-
+    public ItemStack transferStackInSlot( final EntityPlayer player, final int slotNumber ) {
         // Get the slot that was clicked on
         Slot slot = this.getSlotOrNull( slotNumber );
 
         boolean didMerge = false;
 
         // Did we get a slot, and does it have a valid item?
-        if( ( slot != null ) && ( slot.getHasStack() ) )
-        {
+        if( ( slot != null ) && ( slot.getHasStack() ) ) {
             // Get the slots item stack
             ItemStack slotStack = slot.getStack();
 
             // Was the slot clicked in the player or hotbar inventory?
-            if( this.slotClickedWasInPlayerInventory( slotNumber ) || this.slotClickedWasInHotbarInventory( slotNumber ) )
-            {
+            if( this.slotClickedWasInPlayerInventory( slotNumber ) || this.slotClickedWasInHotbarInventory( slotNumber ) ) {
                 // Attempt to merge with the upgrade inventory
                 didMerge = this.mergeSlotWithUpgrades( slotStack );
 
@@ -225,8 +220,7 @@ public abstract class ContainerWithUpgradeSlots
                 }
             }
             // Was the slot clicked in the upgrades?
-            else if( this.slotClickedWasInUpgrades( slotNumber ) )
-            {
+            else if( this.slotClickedWasInUpgrades( slotNumber ) ) {
                 // Attempt to merge with the network tool
                 didMerge = this.mergeSlotWithNetworkTool( slotStack );
 
@@ -238,8 +232,7 @@ public abstract class ContainerWithUpgradeSlots
                 }
             }
             // Was the slot clicked in the network tool?
-            else if( this.hasNetworkTool && this.slotClickedWasInNetworkTool( slotNumber ) )
-            {
+            else if( this.hasNetworkTool && this.slotClickedWasInNetworkTool( slotNumber ) ) {
                 // Attempt to merge with the upgrade inventory
                 didMerge = this.mergeSlotWithUpgrades( slotStack );
 
@@ -252,14 +245,12 @@ public abstract class ContainerWithUpgradeSlots
             }
 
             // Were we able to merge?
-            if( !didMerge )
-            {
+            if( !didMerge ) {
                 return null;
             }
 
             // Did the merger drain the stack?
-            if( slotStack.getCount() == 0 )
-            {
+            if( slotStack.getCount() == 0 ) {
                 // Set the slot to have no item
                 slot.putStack( new ItemStack(AIR) );
             }

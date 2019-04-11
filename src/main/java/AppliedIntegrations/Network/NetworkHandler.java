@@ -22,6 +22,8 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
         Handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
 
+        Handler.registerMessage(HandlerFullSync.class, PacketFullSync.class, packetId++, Side.CLIENT);
+
         Handler.registerMessage(HandlerServerToClient.class, PacketFilterServerToClient.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerMEServer.class, PacketMEServer.class, packetId++, Side.CLIENT);

@@ -1,14 +1,10 @@
 package AppliedIntegrations.Container.part;
 
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-
-import java.util.ArrayList;
 
 /**
  * @Author Azazell
@@ -49,11 +45,6 @@ public class ContainerEnergyStorage
 				HOTBAR_INV_POSITION_Y+67 );
 
 
-	}
-
-	@Override
-	public boolean onFilterReceive(AIPart part) {
-		return part == this.storageBus;
 	}
 
 	@Override

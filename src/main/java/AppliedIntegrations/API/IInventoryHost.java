@@ -3,6 +3,6 @@ package AppliedIntegrations.API;
  * @Author Azazell
  */
 public interface IInventoryHost {
-
-	public void onInventoryChanged();
+	// Called whenever inventory is changed somehow
+	void onInventoryChanged();
 }
