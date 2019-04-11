@@ -1,6 +1,7 @@
 {
   "result": {
-    "item": "appliedintegrations:energystoragecell_1k"
+    "item": "appliedintegrations:energystoragecomponent_1k",
+    "data": 0
   },
   "type": "forge:ore_shaped",
   "pattern": [
@@ -14,7 +15,8 @@
       "data": 8
     },
     "b": {
-      "item": "#appliedenergistics2:certusCrystal"
+      "item": "appliedenergistics2:material",
+      "data": 0
     },
     "c": {
       "item": "appliedenergistics2:material",

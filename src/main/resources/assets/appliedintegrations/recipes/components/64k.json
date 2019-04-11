@@ -1,29 +1,29 @@
 {
   "result": {
-    "item": "appliedintegrations:energystoragecell_16k",
+    "item": "appliedintegrations:energystoragecomponent_64k",
     "data": 0
   },
   "type": "forge:ore_shaped",
   "pattern": [
     "aba",
-    "bcb",
-    "ddd"
+    "cdc",
+    "aca"
   ],
   "key": {
-    "a": {
+    "d": {
       "item": "appliedenergistics2:quartz_glass"
     },
-    "d": {
+    "a": {
       "type": "forge:ore_dict",
-      "ore": "ingotIron"
-    },
-    "b": {
-      "type": "forge:ore_dict",
-      "ore": "dustRedstone"
+      "ore": "dustGlowstone"
     },
     "c": {
       "item": "appliedintegrations:energystoragecomponent_16k",
       "data": 0
+    },
+    "b": {
+      "item": "appliedenergistics2:material",
+      "data": 23
     }
   }
 }

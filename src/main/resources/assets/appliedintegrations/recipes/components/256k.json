@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "appliedintegrations:energystoragecomponent_4k",
+    "item": "appliedintegrations:energystoragecomponent_256k",
     "data": 0
   },
   "type": "forge:ore_shaped",
@@ -11,19 +11,20 @@
   ],
   "key": {
     "d": {
-      "item": "appliedenergistics2:quartz_glass"
+      "item": "appliedenergistics2:material",
+      "data": 22
     },
     "a": {
       "type": "forge:ore_dict",
-      "ore": "dustRedstone"
+      "ore": "dustGlowstone"
     },
     "c": {
-      "item": "appliedintegrations:energystoragecomponent_1k",
+      "item": "appliedintegrations:energystoragecomponent_64k",
       "data": 0
     },
     "b": {
       "item": "appliedenergistics2:material",
-      "data": 23
+      "data": 24
     }
   }
 }

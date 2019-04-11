@@ -2,7 +2,7 @@
   "result": {
     "item": "appliedintegrations:energyterminalpartitem"
   },
-  "type": "appliedenergistics2:part_shapeless",
+  "type": "forge:ore_shapeless",
   "ingredients": [
     {
       "item": "appliedenergistics2:material",
@@ -17,9 +17,11 @@
       "item": "appliedenergistics2:material",
       "data": 44
     }, {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     }, {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     }
   ]
 }

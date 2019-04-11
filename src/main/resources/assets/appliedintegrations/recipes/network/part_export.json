@@ -20,7 +20,8 @@
       "item": "minecraft:piston"
     },
     "r": {
-      "item": "minecraft:redstone"
+      "type": "forge:ore_dict",
+      "ore": "dustRedstone"
     }
   }
 }

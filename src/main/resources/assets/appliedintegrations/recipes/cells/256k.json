@@ -1,6 +1,7 @@
 {
   "result": {
-    "item": "appliedintegrations:energystoragecell_256k"
+    "item": "appliedintegrations:energystoragecell_256k",
+    "data": 0
   },
   "type": "forge:ore_shaped",
   "pattern": [
@@ -21,7 +22,8 @@
       "ore": "dustRedstone"
     },
     "c": {
-      "item": "appliedintegrations:energystoragecomponent_256k"
+      "item": "appliedintegrations:energystoragecomponent_256k",
+      "data": 0
     }
   }
 }
