@@ -2,6 +2,7 @@ package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.IEnergyInterface;
+import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.Storage.EnergyRepo;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
@@ -20,6 +21,7 @@ import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.ChangeHandler;
+import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -45,6 +47,7 @@ import mekanism.common.capabilities.Capabilities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -72,7 +75,7 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
  */
 public class PartEnergyStorage
 		extends AIPart
-		implements ICellContainer, IGridTickable, IEnergyMachine {
+		implements ICellContainer, IGridTickable, IEnergyMachine, IInventoryHost {
 
 	// Size of filter
 	public static final int FILTER_SIZE = 18;
@@ -96,6 +99,18 @@ public class PartEnergyStorage
 	public List<ContainerEnergyStorage> linkedListeners = new ArrayList<>();
 	private boolean updateRequested;
 	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
+	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("ME Energy Export/Import Bus", 4,
+			1, this) {
+
+		@Override
+		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+			if (itemStack == null)
+				return false;
+			if (AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack))
+				return true;
+			return false;
+		}
+	};
 
 	public PartEnergyStorage()
 	{
@@ -263,7 +278,7 @@ public class PartEnergyStorage
 
 	@Override
     public AIGridNodeInventory getUpgradeInventory() {
-		return null;
+		return upgradeInventory;
 	}
 
 	@Override
@@ -386,6 +401,11 @@ public class PartEnergyStorage
 	@Override
 	public void updateFilter(LiquidAIEnergy energy, int index) {
 		filteredEnergies.set(index, energy);
+	}
+
+	@Override
+	public void onInventoryChanged() {
+
 	}
 }
 

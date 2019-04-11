@@ -26,20 +26,15 @@ import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
  * @Author Azazell
  */
 public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
-    /**
-     * The number of upgrade slots we have
-     */
+    // Number of upgrades
     private static int NUMBER_OF_UPGRADE_SLOTS = 1;
 
-    /**
-     * The x position of the upgrade slots
-     */
+    // X of upgrades
     private static int UPGRADE_X_POS = 186;
 
-    /**
-     * The Y position for the upgrade slots
-     */
+    // Y of upgrades
     private static int UPGRADE_Y_POS = 8;
+
     public String realContainer;
 
     public boolean firstUpdate = true;

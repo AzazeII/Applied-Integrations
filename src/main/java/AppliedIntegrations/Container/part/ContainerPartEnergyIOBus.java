@@ -13,26 +13,18 @@ import javax.annotation.Nonnull;
 /**
  * @Author Azazell
  */
-public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots
-{
-    /**
-     * The number of upgrade slots we have
-     */
+public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots {
+    // Number of upgrade slots
     private static int NUMBER_OF_UPGRADE_SLOTS = 4;
 
-    /**
-     * The x position of the upgrade slots
-     */
+    // X of upgrades
     private static int UPGRADE_X_POS = 187;
 
-    /**
-     * The Y position for the upgrade slots
-     */
+    // Y of upgrades
     private static int UPGRADE_Y_POS = 8;
 
     private final AIOPart part;
-    public ContainerPartEnergyIOBus(final AIOPart part, final EntityPlayer player )
-    {
+    public ContainerPartEnergyIOBus(final AIOPart part, final EntityPlayer player ) {
         super(part,player);
         // Set the part
         this.part = part;
@@ -45,6 +37,7 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots
 
         this.part.addListener(this);
     }
+
     protected void bindPlayerInventory(IInventory inventoryPlayer) {
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
@@ -62,14 +55,14 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots
         super.onContainerClosed(player);
         this.part.removeListener(this);
     }
+
     @Override
     public boolean canInteractWith(EntityPlayer p_75145_1_) {
         return true;
     }
 
     @Override
-    public ItemStack transferStackInSlot( final EntityPlayer player, final int slotNumber )
-    {
+    public ItemStack transferStackInSlot( final EntityPlayer player, final int slotNumber ) {
         // Get the slot
         Slot slot = this.getSlotOrNull( slotNumber );
 

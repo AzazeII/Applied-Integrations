@@ -14,27 +14,23 @@ import java.util.ArrayList;
  * @Author Azazell
  */
 public class ContainerEnergyStorage
-		extends ContainerWithUpgradeSlots
-{
+		extends ContainerWithUpgradeSlots {
+	// X position of upgrade cluster
+	private static final int UPGRADE_SLOT_X = 187;
+
+	// Y position of upgrade cluster
+	private static final int UPGRADE_SLOT_Y = 8;
+
+	// Y position of player's inv
 	private static int PLAYER_INV_POSITION_Y = 102;
 
-	/**
-	 * Y position for the hotbar inventory
-	 */
+	// Y position of hotbar slot cluster
 	private static int HOTBAR_INV_POSITION_Y = 160;
 
-	/**
-	 * The Energy storage bus.
-	 */
+	// Storage bus operated
 	private final PartEnergyStorage storageBus;
 
-	/**
-	 * Cache of filteredEnergies.
-	 */
-	private final ArrayList<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>( PartEnergyStorage.FILTER_SIZE );
-
-	public ContainerEnergyStorage(final PartEnergyStorage part, final EntityPlayer player )
-	{
+	public ContainerEnergyStorage(final PartEnergyStorage part, final EntityPlayer player ) {
 		super(part,player);
 		// Call super
 
@@ -44,18 +40,13 @@ public class ContainerEnergyStorage
 		// Set the part
 		this.storageBus = part;
 
-		for( int i = 0; i < PartEnergyStorage.FILTER_SIZE; ++i )
-		{
-			this.filteredEnergies.add( null );
-		}
-
 		// Add the upgrade slot
-		//this.addUpgradeSlots( part.getUpgradeInventory(), 1, this.UPGRADE_SLOT_X,
-		//		this.UPGRADE_SLOT_Y );
+		this.addUpgradeSlots( part.getUpgradeInventory(), 1, UPGRADE_SLOT_X,
+				UPGRADE_SLOT_Y );
 
 		// Bind to the player's inventory
-		this.bindPlayerInventory( player.inventory, this.PLAYER_INV_POSITION_Y+67,
-				this.HOTBAR_INV_POSITION_Y+67 );
+		this.bindPlayerInventory( player.inventory, PLAYER_INV_POSITION_Y+67,
+				HOTBAR_INV_POSITION_Y+67 );
 
 
 	}
@@ -66,14 +57,12 @@ public class ContainerEnergyStorage
 	}
 
 	@Override
-	public boolean canInteractWith( final EntityPlayer player )
-	{
+	public boolean canInteractWith( final EntityPlayer player ) {
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber )
-	{
+	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber ) {
 		// Get the slot
 		Slot slot = this.getSlotOrNull( slotNumber );
 

@@ -18,31 +18,22 @@ import net.minecraft.item.ItemStack;
 /**
  * @Author Azazell
  */
-public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implements IEnergySelectorContainer
-{
+public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implements IEnergySelectorContainer{
     private PartEnergyTerminal terminal;
     public EntityPlayer player;
 
     private static int OUTPUT_INV_INDEX = 1, INPUT_INV_INDEX = 0;
 
-    /**
-     * X position for the output slot
-     */
+    // X of output
     private static final int OUTPUT_POSITION_X = 26;
 
-    /**
-     * Y position for the output slot
-     */
+    // Y of output
     private static final int OUTPUT_POSITION_Y = 92;
 
-    /**
-     * X position for the input slot
-     */
+    // X of input
     private static final int INPUT_POSITION_X = 8;
 
-    /**
-     * Y position for the input slot
-     */
+    // Y of input
     private static final int INPUT_POSITION_Y = OUTPUT_POSITION_Y;
     
     private AIGridNodeInventory privateInventory = new AIGridNodeInventory( AppliedIntegrations.modid + ".item.energy.cell.inventory", 2, 64 )
