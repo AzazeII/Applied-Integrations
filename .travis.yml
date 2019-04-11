@@ -14,7 +14,7 @@ cache:
 
 addons:
  sonarcloud:
-  organization: "azazell's-organization"
+  organization: "Azazell's-Organization"
 
 script:
  - "./gradlew build"
