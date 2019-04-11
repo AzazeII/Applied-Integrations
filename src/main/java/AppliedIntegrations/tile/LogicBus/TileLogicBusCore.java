@@ -2,7 +2,6 @@ package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.API.Multiblocks.BlockData;
 import AppliedIntegrations.API.Multiblocks.Patterns;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
@@ -16,7 +15,7 @@ import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEItemStack;
-import appeng.api.util.*;
+import appeng.api.util.IConfigManager;
 import appeng.helpers.DualityInterface;
 import appeng.helpers.IInterfaceHost;
 import appeng.me.helpers.MachineSource;
@@ -96,7 +95,6 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
     @Override
     public void tryConstruct(EntityPlayer p) {
         if(!isFormed() && !world.isRemote) {
-            AILog.chatLog("Trying to construct logic bus");
             // Create list of tiles which may be slaves
             Vector<TileLogicBusSlave> slaveCandidates = new Vector<>();
 
@@ -241,7 +239,6 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
 
                     // Now formed
                     isFormed = true;
-                    AILog.chatLog("Successfully formed logic bus from " + slaves.size() + " slaves");
                 }
             }
         }
@@ -249,7 +246,6 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
 
     // Called on invalidate()
     public void destroyMultiBlock() {
-        AILog.chatLog("Destroying logic bus");
         // Release slaves
         for (TileLogicBusSlave slave : slaves){
             // Set master to null
@@ -300,10 +296,8 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
     private World getWorld(NBTTagCompound nbt) {
         World world = DimensionManager.getWorld( nbt.getInteger("#World") );
 
-        if( FMLCommonHandler.instance().getSide() == Side.CLIENT )
-        {
-            if( world == null )
-            {
+        if( FMLCommonHandler.instance().getSide() == Side.CLIENT ) {
+            if( world == null ) {
                 world = Minecraft.getMinecraft().world;
             }
         }
@@ -312,6 +306,9 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock, 
     }
 
     protected void setWorld(NBTTagCompound nbt, World world) {
+        if( FMLCommonHandler.instance().getSide() == Side.CLIENT ) {
+            return;
+        }
         nbt.setInteger("#World", world.provider.getDimension());
     }
 
