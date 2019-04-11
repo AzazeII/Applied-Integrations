@@ -8,23 +8,22 @@
 !build.gradle
 !gradle.properties
 
-# Include CI itself
+# Include config CI itself
 !.travis.yml
 
 # include license and readme
 !README.md
 !LICENSE
 
-# include sourcecode
+# Include all sources
 !src/
 
 # Include git files
 !.gitmodules
 !.gitignore
 
-# Github specific files and directories
+# Include git directory
 !.github/
 
-# Explicit ignores
-Thumbs.db
+# Ignore these guys:
 .DS_Store

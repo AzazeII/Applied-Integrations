@@ -1,10 +1,8 @@
 package AppliedIntegrations.API;
 
-import appeng.me.helpers.BaseActionSource;
 import ic2.api.energy.prefab.BasicSinkSource;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;

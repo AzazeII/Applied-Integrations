@@ -1,7 +1,6 @@
 package AppliedIntegrations.API;
 
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @Author Azazell
