@@ -27,3 +27,4 @@
 
 # Explicit ignores
 Thumbs.db
+.DS_Store
