@@ -17,6 +17,5 @@ addons:
  sonarcloud:
   organization: "appliedenergistics"
 
-install: "./gradlew setupCIWorkspace"
 script:
  - "./gradlew build"
