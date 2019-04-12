@@ -1,5 +1,5 @@
 # Applied-Integrations
-[![Discord](https://img.shields.io/discord/565997320278376463.svg](https://discord.gg/H2TtBK)
+[![Discord](https://img.shields.io/discord/565997320278376463.svg)](https://discord.gg/H2TtBK)
 [![CurseForge](http://cf.way2muchnoise.eu/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations)
 [![](http://cf.way2muchnoise.eu/versions/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations)
 [![Travis](https://img.shields.io/travis/AzazeII/Applied-Integrations.svg?maxAge=2592000&style=flat-square)](https://travis-ci.org/AzazeII/Applied-Integrations)
