@@ -113,11 +113,6 @@ public class PartEnergyImport extends AIOPart
 		return null;
 	}
 
-	@Override
-	public void onInventoryChanged() {
-
-	}
-
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {

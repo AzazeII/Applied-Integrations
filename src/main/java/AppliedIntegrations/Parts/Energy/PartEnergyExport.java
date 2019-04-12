@@ -102,11 +102,6 @@ public class PartEnergyExport extends AIOPart {
 	}
 
 	@Override
-	public void onInventoryChanged() {
-
-	}
-
-	@Override
 	public TickRateModulation doWork(int valuedTransfer, IGridNode node) {
 		// Create helper
 		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getSide().getOpposite());

@@ -96,7 +96,7 @@ public class PartEnergyInterface
 		extends AIPart
 		implements IInventory,
 		IEnergyInterface, IInventoryHost,
-		IEnergyMachine,IAEAppEngInventory, IPriorityHost,IGridTickable,
+		IEnergyMachine, IPriorityHost,IGridTickable,
 		IStorageMonitorable,ICraftingProvider,IPowerChannelState, IEnergySink {
 
 	private static boolean EUloaded = false;
@@ -345,21 +345,6 @@ public class PartEnergyInterface
 		return duality.getCapability(capability, INTERNAL);
 	}
 
-	@Override
-	public void saveChanges() {
-		// Ensure there is a host
-		if( this.host != null )
-		{
-			// Mark
-			this.host.markForSave();
-		}
-	}
-
-	@Override
-	public void onChangeInventory(IInventory inv, int slot, InvOperation mc, ItemStack removedStack, ItemStack newStack) {
-
-	}
-
 	/**
 	 *  marks GUI, as gui of THIS machine
 	 */
@@ -514,6 +499,14 @@ public class PartEnergyInterface
 			this.saveChanges();
 		}
 		return IDLE;
+	}
+
+	private void saveChanges() {
+		// Ensure there is a host
+		if( this.host != null ) {
+			// Mark
+			this.host.markForSave();
+		}
 	}
 
 	@Override

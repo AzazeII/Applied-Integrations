@@ -17,6 +17,10 @@ public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFu
             if (gui instanceof GuiEnergyIO) {
                 GuiEnergyIO GEIO = (GuiEnergyIO) gui;
 
+                // Check not null
+                if(GEIO.getSyncHost() == null)
+                    return;
+
                 // Compare sync hosts
                 if(GEIO.getSyncHost().compareTo(message.part, true)){
                     // Update each state

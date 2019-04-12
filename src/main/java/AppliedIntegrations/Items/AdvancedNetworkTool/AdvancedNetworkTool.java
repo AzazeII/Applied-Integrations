@@ -7,6 +7,7 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerUnits;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.implementations.items.IAEWrench;
+import appeng.api.util.DimensionalCoord;
 import appeng.core.AppEng;
 import appeng.core.localization.GuiText;
 import appeng.helpers.IMouseWheelItem;
@@ -14,6 +15,8 @@ import appeng.hooks.IBlockTool;
 import appeng.items.tools.powered.ToolEntropyManipulator;
 import appeng.items.tools.powered.powersink.AEBasePoweredItem;
 import appeng.util.Platform;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,6 +25,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -62,6 +66,19 @@ public class AdvancedNetworkTool extends AIItemRegistrable implements IMouseWhee
     public boolean canWrench(ItemStack wrench, EntityPlayer player, BlockPos pos) {
         return currentMode == AdvancedToolModes.WRENCH;
     }
+
+    @Override
+    public EnumActionResult onItemUse( EntityPlayer p, World w, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ ) {
+        // Check if mode is entropy manipulator mode
+        if(currentMode == AdvancedToolModes.ENTROPY_MANIPULATOR) {
+            // Pass call to wrapper
+            return entropyWrapper.onItemUse(p.getHeldItem(hand), p, w, pos, hand, side, hitX, hitY, hitZ);
+        }
+
+        // Fail
+        return EnumActionResult.FAIL;
+    }
+
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(final World w, final EntityPlayer p, final EnumHand hand ) {

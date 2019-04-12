@@ -82,7 +82,6 @@ public class GuiEnergyIO
     }
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-        this.fontRenderer.drawString(stringName, 9, 3, 4210752);
         // Call super
         super.drawGuiContainerForegroundLayer( mouseX, mouseY );
 
@@ -117,6 +116,8 @@ public class GuiEnergyIO
             // Add the tooltip from the widget
             slotUnderMouse.getTooltip( this.tooltip );
         }
+
+        this.fontRenderer.drawString(stringName, 9, 3, 4210752);
     }
 
     public void initGui() {
@@ -192,18 +193,18 @@ public class GuiEnergyIO
 
     public void updateState(boolean redstoneControl, byte upgradeCount, byte filterSize) {
         // Set filter matrix, from filter size
-        if (filterSize == 1)
+        if (filterSize == 0)
             // Update matrix
             configMatrix = new boolean[]{false, false, false,
                                          false, true, false,
                                          false, false, false};
-        if (filterSize == 2)
+        if (filterSize == 1)
             // Update matrix
             configMatrix = new boolean[]{false, true, false,
                                          true, true, true,
                                          false, true, false};
 
-        if (filterSize == 3)
+        if (filterSize == 2)
             // Update matrix
             configMatrix = new boolean[]{true, true, true,
                                          true, true, true,

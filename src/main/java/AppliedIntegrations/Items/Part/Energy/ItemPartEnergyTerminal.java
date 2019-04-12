@@ -18,6 +18,6 @@ public class ItemPartEnergyTerminal extends ItemPartAIBase<PartEnergyTerminal> {
     @Nullable
     @Override
     public PartEnergyTerminal createPartFromItemStack(ItemStack itemStack) {
-        return null;
+        return new PartEnergyTerminal();
     }
 }

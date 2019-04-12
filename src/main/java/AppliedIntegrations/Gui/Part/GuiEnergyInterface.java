@@ -49,7 +49,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 	private EntityPlayer player;
 
-	private ContainerEnergyInterface LinkedContainer;
 	private List<String> buttonTooltip = new ArrayList<String>();
 
 	public int id;
@@ -65,8 +64,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		this.Einterface = part;
 		this.part = (PartEnergyInterface) Einterface;
 
-		this.LinkedContainer = CEI;
-
 		this.guiLeft = this.guiLeft - 51;
 	}
 
@@ -75,7 +72,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		this.player = player;
 		this.Einterface = Einterface;
 
-		this.LinkedContainer = container;
 		if (this.Einterface instanceof TileEnergyInterface) {
 			this.tile = (TileEnergyInterface) Einterface;
 		}
@@ -252,9 +248,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	public int getStorage(LiquidAIEnergy energy, EnumFacing side) {
 		if (this.part != null) {
 			return this.storage;
-		} else if (this.tile != null) {
-			if (this.LinkedContainer.LinkedTileStorageMap.get(side) != null)
-				return this.LinkedContainer.LinkedTileStorageMap.get(side).get(energy);
 		}
 		return 0;
 	}

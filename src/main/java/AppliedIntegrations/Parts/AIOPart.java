@@ -54,7 +54,7 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 
 public abstract class AIOPart
         extends AIPart
-        implements IGridTickable, IEnergyMachine, IAEAppEngInventory, IInventoryHost {
+        implements IGridTickable, IEnergyMachine, IInventoryHost {
     /**
      * Constant fields
      */
@@ -351,11 +351,6 @@ public abstract class AIOPart
     }
 
     @Override
-    public void onChangeInventory(final IInventory inv, final int slot, final InvOperation mc, final ItemStack removedStack, final ItemStack newStack ) {
-
-    }
-
-    @Override
     public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos blockPos1) {
         // Ignored client side
         if( getWorld().isRemote){
@@ -425,14 +420,6 @@ public abstract class AIOPart
     public void removeListener( final ContainerPartEnergyIOBus container )
     {
         this.listeners.remove( container );
-    }
-
-    /**
-     * Called when the internal inventory changes.
-     */
-    @Override
-    public void saveChanges(){
-        this.markForSave();
     }
 
     @Override

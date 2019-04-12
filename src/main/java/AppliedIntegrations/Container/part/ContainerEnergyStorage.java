@@ -6,6 +6,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
+import static net.minecraft.init.Items.AIR;
+
 /**
  * @Author Azazell
  */
@@ -50,25 +52,5 @@ public class ContainerEnergyStorage
 	@Override
 	public boolean canInteractWith( final EntityPlayer player ) {
 		return true;
-	}
-
-	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber ) {
-		// Get the slot
-		Slot slot = this.getSlotOrNull( slotNumber );
-
-		// Do we have a valid slot with an item?
-		if( ( slot != null ) && ( slot.getHasStack() ) )
-		{
-			/*if( ( this.storageBus != null ) && ( this.storageBus.addFilteredEnergyFromItemstack( player, slot.getStack() ) ) )
-			{
-				return null;
-			}*/
-
-			// Pass to super
-			return super.transferStackInSlot( player, slotNumber );
-		}
-
-		return null;
 	}
 }
