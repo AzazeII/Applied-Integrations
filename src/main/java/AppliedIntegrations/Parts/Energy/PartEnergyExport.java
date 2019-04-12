@@ -117,7 +117,7 @@ public class PartEnergyExport extends AIOPart {
 			// Check if we are filtering this energy
 			if(filteredEnergies.contains(energy)) {
 
-				// Check if tile can operate given energy
+				// Check if Tile can operate given energy
 				if(helper.operatesEnergy(energy)) {
 
 					// Simulate extraction

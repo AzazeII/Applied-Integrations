@@ -4,7 +4,7 @@ import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.tile.TileEnergyInterface;
+import AppliedIntegrations.Tile.TileEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
@@ -55,7 +55,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
         this.player = player;
         super.bindPlayerInventory(player.inventory,149,207);
 
-        // check if interface part or tile?
+        // check if interface part or Tile?
         if (energyInterface instanceof PartEnergyInterface) {
             LinkedStorageMap.put(RF,LinkedRFStorage);
             for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){

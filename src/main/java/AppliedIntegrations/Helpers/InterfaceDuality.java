@@ -6,20 +6,15 @@ import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.tile.TileEnergyInterface;
+import AppliedIntegrations.Tile.TileEnergyInterface;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.capabilities.Capabilities;
-import appeng.me.helpers.IGridProxyable;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.energy.IEnergyStorage;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.items.CapabilityItemHandler;
 import teamroots.embers.power.EmberCapabilityProvider;
 
 import java.util.LinkedList;
@@ -33,7 +28,7 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
- * Class handler for both tile interface, and part interface
+ * Class handler for both Tile interface, and part interface
  */
 public class InterfaceDuality implements IInterfaceDuality{
 
@@ -151,7 +146,7 @@ public class InterfaceDuality implements IInterfaceDuality{
                             // Drain energy from network
                             owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE);
 
-                            // Give energy to tile's storage
+                            // Give energy to Tile's storage
                             interfaceStorageDuality.modifyEnergyStored(extracted);
                         }
 

@@ -97,7 +97,7 @@ public class LogicBusBakedModel implements IBakedModel {
         }
         else
         {
-            // If tile is corner
+            // If Tile is corner
             if( formedState.isCorner() )
             {
                 // render one cable

@@ -1,6 +1,6 @@
 package AppliedIntegrations.Blocks.Additions;
 
-import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
+import AppliedIntegrations.Tile.HoleStorageSystem.singularities.TileWhiteHole;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -29,9 +29,9 @@ public class BlockWhiteHole extends BlockBlackHole {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
         if (!p.isSneaking()) {
-            // Pass activated to tile entity ( nothing new :) )
+            // Pass activated to Tile entity ( nothing new :) )
             if (tile instanceof TileWhiteHole) {
-                // Pass activate to tile
+                // Pass activate to Tile
                 return ((TileWhiteHole) tile).activate(world, pos, state, p, hand);
             }
         }

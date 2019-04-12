@@ -1,6 +1,6 @@
 package AppliedIntegrations.Container.tile.Server;
 
-import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.Tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;

@@ -1,6 +1,6 @@
 package AppliedIntegrations.Blocks;
 
-import AppliedIntegrations.tile.IAIMultiBlock;
+import AppliedIntegrations.Tile.IAIMultiBlock;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import net.minecraft.block.ITileEntityProvider;

@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
+import AppliedIntegrations.Tile.HoleStorageSystem.storage.TileMEPylon;
 import net.minecraft.block.BlockHorizontal;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -91,9 +91,9 @@ public class BlockMEPylon extends BlockAIRegistrable {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
-        // Pass activated to tile entity ( nothing new :) )
+        // Pass activated to Tile entity ( nothing new :) )
         if (tile instanceof TileMEPylon) {
-            // Pass activate to tile
+            // Pass activate to Tile
             return ((TileMEPylon) tile).activate(hand, p);
         }
         return false;

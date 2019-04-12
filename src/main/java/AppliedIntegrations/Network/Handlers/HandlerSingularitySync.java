@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Handlers;
 
 import AppliedIntegrations.Network.Packets.PacketSingularitySync;
-import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
+import AppliedIntegrations.Tile.HoleStorageSystem.storage.TileMEPylon;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -17,7 +17,7 @@ public class HandlerSingularitySync implements IMessageHandler<PacketSingularity
 
     @Override
     public PacketSingularitySync onMessage(PacketSingularitySync message, MessageContext ctx) {
-        // Update client sided tile
+        // Update client sided Tile
         Minecraft.getMinecraft().addScheduledTask(() -> {
             TileMEPylon te = (TileMEPylon)Minecraft.getMinecraft().world.getTileEntity(message.pos);
             te.operatedTile = message.operatedTile;

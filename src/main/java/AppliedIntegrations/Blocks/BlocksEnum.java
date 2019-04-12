@@ -9,7 +9,7 @@ import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusCore;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusPort;
 import AppliedIntegrations.Blocks.LogicBus.BlockLogicBusRibs;
 import AppliedIntegrations.Blocks.MEServer.*;
-import AppliedIntegrations.tile.TileEnum;
+import AppliedIntegrations.Tile.TileEnum;
 import AppliedIntegrations.AIConfig;
 
 import net.minecraft.block.Block;

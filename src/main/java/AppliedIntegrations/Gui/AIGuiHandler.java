@@ -11,7 +11,7 @@ import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.*;
-import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
+import AppliedIntegrations.Tile.LogicBus.TileLogicBusCore;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -120,7 +120,7 @@ public class AIGuiHandler implements IGuiHandler {
 
             return new ContainerEnergyInterface(player, part);
         }else if(gui == GuiEnum.GuiLogicBus){
-            // Find tile candidate for core
+            // Find Tile candidate for core
             TileEntity maybeCore = world.getTileEntity(new BlockPos(x,y,z));
             // Check if it is logic bus core
             if(maybeCore instanceof TileLogicBusCore){
@@ -151,7 +151,7 @@ public class AIGuiHandler implements IGuiHandler {
 
             return new GuiEnergyInterface((ContainerEnergyInterface)getServerGuiElement(ID, player, world, x, y, z), part, player);
         }else if(gui == GuiEnum.GuiLogicBus){
-            // Find tile candidate for core
+            // Find Tile candidate for core
             TileEntity maybeCore = world.getTileEntity(new BlockPos(x,y,z));
             // Check if it is logic bus core
             if(maybeCore instanceof TileLogicBusCore){

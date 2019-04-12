@@ -1,12 +1,8 @@
 package AppliedIntegrations.Blocks.LogicBus.modeling;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.Blocks.LogicBus.modeling.LogicBusState;
-import AppliedIntegrations.Blocks.LogicBus.modeling.LogicBusStateProperty;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
-import AppliedIntegrations.tile.LogicBus.TileLogicBusSlave;
-import net.minecraft.block.Block;
+import AppliedIntegrations.Tile.LogicBus.TileLogicBusCore;
+import AppliedIntegrations.Tile.LogicBus.TileLogicBusSlave;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -27,8 +23,6 @@ import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import static net.minecraft.util.EnumHand.MAIN_HAND;
 
 /**
  * @Author Azazell
@@ -130,9 +124,9 @@ public abstract class ModeledLogicBus extends AIMultiBlock {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
         if (!p.isSneaking()) {
-            // Pass activated to tile entity ( nothing new :) )
+            // Pass activated to Tile entity ( nothing new :) )
             if (tile instanceof TileLogicBusSlave) {
-                // Pass activate to tile
+                // Pass activate to Tile
                 return ((TileLogicBusSlave) tile).activate(world, pos, state, p, hand);
             }
         }

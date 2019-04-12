@@ -3,7 +3,7 @@ package AppliedIntegrations.Gui.ServerGUI;
 import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.Server.ContainerServerPacketTracer;
-import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.Tile.Server.TileServerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkGui;

@@ -21,7 +21,7 @@ public final class AIUtils
     private static final double SQUARED_REACH = 64.0D;
 
     /**
-     * Returns true if the tile still exists and the player is within reach range.
+     * Returns true if the Tile still exists and the player is within reach range.
      *
      * @param player
      * @param tile

@@ -4,11 +4,6 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
-import AppliedIntegrations.Items.AIItemRegistrable;
-import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.tile.AITile;
-import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Loader;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;

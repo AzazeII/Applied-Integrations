@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
+import AppliedIntegrations.Tile.HoleStorageSystem.singularities.TileBlackHole;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,9 +64,9 @@ public class BlockSingularity extends BlockAIRegistrable {
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
-        // Pass activated to tile entity ( nothing new :) )
+        // Pass activated to Tile entity ( nothing new :) )
         if (tile instanceof TileBlackHole) {
-            // Pass activate to tile
+            // Pass activate to Tile
             return ((TileBlackHole) tile).activate(world, pos, state, p, hand);
         }
         return false;

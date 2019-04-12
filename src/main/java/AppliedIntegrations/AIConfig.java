@@ -114,7 +114,7 @@ public class AIConfig {
                 "Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature",
                 featuresOrder);
 
-        // Mana parts/tile/items
+        // Mana parts/Tile/items
         enableManaFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false,
                 "Default: true; If set to true, then all mana features will be enabled.",
                 featuresOrder);

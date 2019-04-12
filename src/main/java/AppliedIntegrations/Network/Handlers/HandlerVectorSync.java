@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Handlers;
 
 import AppliedIntegrations.Network.Packets.PacketVectorSync;
-import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
+import AppliedIntegrations.Tile.HoleStorageSystem.TileMETurretFoundation;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -13,7 +13,7 @@ public class HandlerVectorSync implements IMessageHandler<PacketVectorSync, Pack
     @Override
     public PacketVectorSync onMessage(PacketVectorSync message, MessageContext ctx) {
 
-        // Update client sided tile
+        // Update client sided Tile
         Minecraft.getMinecraft().addScheduledTask(() -> {
             TileMETurretFoundation te = (TileMETurretFoundation)Minecraft.getMinecraft().world.getTileEntity(message.tile);
             te.renderingDirection = message.vecA;

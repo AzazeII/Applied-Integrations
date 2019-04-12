@@ -1,6 +1,6 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
+import AppliedIntegrations.Tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import appeng.api.storage.IStorageChannel;

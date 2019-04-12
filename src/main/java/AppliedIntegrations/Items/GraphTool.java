@@ -84,13 +84,13 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
         // Trace ray on hitX,Y,Z
         final RayTraceResult mop = new RayTraceResult( new Vec3d( hitX, hitY, hitZ ), side, pos );
 
-        // Get tile entity
+        // Get Tile entity
         final TileEntity te = world.getTileEntity( pos );
 
         // Create grid node
         IGridNode node = null;
 
-        // Check if tile is part host
+        // Check if Tile is part host
         if( te instanceof IPartHost) {
             // Get part from host
             final SelectedPart part = ( (IPartHost) te ).selectPart( mop.hitVec );
@@ -102,7 +102,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
                     // Update node
                     node = part.part.getGridNode();
 
-        // Check if tile is grid node
+        // Check if Tile is grid node
         }else if(te instanceof IGridHost){
             // Get host
             IGridHost host = (IGridHost)te;

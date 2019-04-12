@@ -17,7 +17,7 @@ public class HandlerMassChange implements IMessageHandler<PacketMassChange, Pack
 
     @Override
     public PacketMassChange onMessage(PacketMassChange message, MessageContext ctx) {
-        // Update client sided tile
+        // Update client sided Tile
         Minecraft.getMinecraft().addScheduledTask(() -> {
             ISingularity te = (ISingularity)Minecraft.getMinecraft().world.getTileEntity(message.pos);
             te.setMassFromServer(message.singularity.getMass());

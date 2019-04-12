@@ -89,7 +89,7 @@ public class PartEnergyStorage
 	// Current access restrictions of handler
 	public AccessRestriction access = AccessRestriction.READ_WRITE;
 
-	// Handler for tile/interface
+	// Handler for Tile/interface
 	private IMEInventoryHandler<IAEEnergyStack> handler;
 
 	// Was active?
@@ -171,7 +171,7 @@ public class PartEnergyStorage
 			if (getFacingTile() instanceof IEnergyInterface) {
 				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)getFacingTile(), this);
 
-			// Check for part tile
+			// Check for part Tile
 			} else if(getFacingTile() instanceof TileCableBus){
 				// Get interface candidate
 				TileCableBus maybeInterface = (TileCableBus)getFacingTile();
@@ -344,7 +344,7 @@ public class PartEnergyStorage
 		if (channel != this.getChannel() || this.handler == null)
 			return new LinkedList<>();
 
-		// Return only one handler for tile
+		// Return only one handler for Tile
 		return singletonList(handler);
 	}
 

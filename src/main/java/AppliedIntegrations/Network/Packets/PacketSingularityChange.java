@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
+import AppliedIntegrations.Tile.HoleStorageSystem.singularities.TileBlackHole;
 import io.netty.buffer.ByteBuf;
 
 /**

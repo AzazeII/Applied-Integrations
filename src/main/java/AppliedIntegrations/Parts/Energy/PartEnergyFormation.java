@@ -68,7 +68,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
         if (channel != this.getChannel() || currentEntities.isEmpty())
             return new LinkedList<>();
 
-        // Return only one handler for tile
+        // Return only one handler for Tile
         return singletonList(new IMEInventoryHandler() {
             @Override
             public AccessRestriction getAccess() {

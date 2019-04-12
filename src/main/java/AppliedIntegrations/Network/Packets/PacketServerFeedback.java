@@ -1,12 +1,10 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.Tile.Server.TileServerCore;
 import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.LinkedHashMap;
 

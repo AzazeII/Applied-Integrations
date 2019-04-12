@@ -223,7 +223,7 @@ public abstract class AIPart
 		int y = this.hostTile.getPos().getY();
 		int z = this.hostTile.getPos().getZ();
 
-		// Get the tile entity we are facing
+		// Get the Tile entity we are facing
 		return world.getTileEntity( new BlockPos(x + this.cableSide.xOffset, y + this.cableSide.yOffset, z + this.cableSide.zOffset ));
 	}
 

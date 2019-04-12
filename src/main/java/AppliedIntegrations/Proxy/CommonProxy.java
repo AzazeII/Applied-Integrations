@@ -7,7 +7,7 @@ import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.tile.TileEnum;
+import AppliedIntegrations.Tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.grid.EnergyStorageChannel;
 import appeng.api.AEApi;
@@ -64,7 +64,7 @@ public class CommonProxy
         }
     }
     /**
-     * Adds tile entities to the AE2 SpatialIO whitelist
+     * Adds Tile entities to the AE2 SpatialIO whitelist
      */
     public void registerSpatialIOMovables()
     {

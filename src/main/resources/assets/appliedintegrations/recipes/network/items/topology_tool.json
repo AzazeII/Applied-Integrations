@@ -1,6 +1,6 @@
 {
   "result": {
-    "item": "appliedintegrations:graphtool"
+    "item": "appliedintegrations:graphTool"
   },
   "type": "forge:ore_shaped",
   "pattern": [
