@@ -21,7 +21,7 @@ public class HandlerTerminalChange implements IMessageHandler<PacketTerminalChan
         Gui gui = Minecraft.getMinecraft().currentScreen;
         if(gui instanceof GuiEnergyTerminalDuality){
             GuiEnergyTerminalDuality GETD = (GuiEnergyTerminalDuality)gui;
-            GETD.List = message.List;
+            GETD.list = message.List;
         }
         return null;
     }

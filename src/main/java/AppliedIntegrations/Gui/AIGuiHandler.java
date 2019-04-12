@@ -4,11 +4,13 @@ import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
+import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Container.tile.ContainerLogicBus;
 import AppliedIntegrations.Gui.Part.GuiEnergyIO;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
+import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.Tile.LogicBus.TileLogicBusCore;
@@ -20,6 +22,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import javax.annotation.Nullable;
+
+import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiTerminalPart;
 
 /**
  * @Author Azazell
@@ -134,6 +138,10 @@ public class AIGuiHandler implements IGuiHandler {
             PartEnergyStorage part = (PartEnergyStorage)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
 
             return new ContainerEnergyStorage(part, player);
+        }else if(gui == GuiTerminalPart){
+            PartEnergyTerminal part = (PartEnergyTerminal)Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
+
+            return new ContainerEnergyTerminal(part, player);
         }
 
         return null;
@@ -166,6 +174,10 @@ public class AIGuiHandler implements IGuiHandler {
 
             return new GuiEnergyStoragePart((ContainerEnergyStorage)getServerGuiElement(ID, player, world, x, y, z),
                     part, player);
+        }else if(gui == GuiTerminalPart){
+            PartEnergyTerminal part = (PartEnergyTerminal)Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
+
+            return new GuiEnergyTerminalDuality((ContainerEnergyTerminal)getServerGuiElement(ID, player, world, x, y, z), part, player);
         }
 
         return null;

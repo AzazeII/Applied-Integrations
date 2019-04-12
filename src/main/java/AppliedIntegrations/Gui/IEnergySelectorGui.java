@@ -9,22 +9,15 @@ import javax.annotation.Nullable;
  * @Author Azazell
  */
 public interface IEnergySelectorGui
-        extends IWidgetHost
-{
-    /**
-     * Return the selector container.
-     *
-     * @return
-     */
+        extends IWidgetHost {
+    // Container linked to selector gui
     @Nonnull
     IEnergySelectorContainer getContainer();
 
-    /**
-     * Return the selected energy, or null if no energy is selected.
-     *
-     * @return
-     */
+    // Currently selected energy
     @Nullable
     LiquidAIEnergy getSelectedEnergy();
 
+    // Setter for current energy
+    void setSelectedEnergy(@Nullable LiquidAIEnergy energy);
 }

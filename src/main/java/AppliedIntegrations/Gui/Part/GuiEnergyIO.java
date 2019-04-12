@@ -168,7 +168,7 @@ public class GuiEnergyIO
                 if (EnergySlot.getCurrentEnergy() == itemEnergy)
                     return;
 
-                EnergySlot.mouseClicked(itemEnergy);
+                EnergySlot.onMouseClicked(itemEnergy);
 
                 break;
             }

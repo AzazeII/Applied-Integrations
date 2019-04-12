@@ -67,22 +67,22 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
     // Count of mass added per any operation
     public int MASS_ADDED = 10;
 
-    // List of all ae items stored in this singularity
+    // list of all ae items stored in this singularity
     public ItemList storedItems = new ItemList();
 
-    // List of all ae fluids stored in this singularity
+    // list of all ae fluids stored in this singularity
     public FluidList storedFluids = new FluidList();
 
-    // List of all ae energies stored in this singularity
+    // list of all ae energies stored in this singularity
     public EnergyList storedEnergies = new EnergyList();
 
-    // List of all ae mana stored in this singularity
+    // list of all ae mana stored in this singularity
     public ManaList storedMana = new ManaList();
 
-    // List of size factor
+    // list of size factor
     public static LinkedHashMap<Long, Float> sizeFactor = new LinkedHashMap<>();
 
-    // List of type factor
+    // list of type factor
     private static LinkedHashMap<Short, Byte> typeFactor = new LinkedHashMap<>();
 
     private TileWhiteHole entangledHole = null;
@@ -249,7 +249,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
     public List<BlockPos> getBlocksInRadius(double radius){
 
-        // List of positions
+        // list of positions
         List<BlockPos> blockPositions = new ArrayList<>();
 
         // Stage #1: Create "iteration square" and find block break candidates for next break stage

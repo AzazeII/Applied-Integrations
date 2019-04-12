@@ -52,7 +52,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     private static final int RESERVED_MASTER_ID = 1;
     private int AVAILABLE_ID = RESERVED_MASTER_ID+1;
 
-    // List of blocks in multiblock
+    // list of blocks in multiblock
     public Vector<IAIMultiBlock> Slaves = new Vector<>();
 
     public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1,this){

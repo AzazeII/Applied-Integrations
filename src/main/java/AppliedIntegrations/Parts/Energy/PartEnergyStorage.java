@@ -80,7 +80,7 @@ public class PartEnergyStorage
 	// Size of filter
 	public static final int FILTER_SIZE = 18;
 
-	// List of all energies filtered
+	// list of all energies filtered
 	public final List<LiquidAIEnergy> filteredEnergies = new LinkedList<>();
 
 	// Handler for onChange event of access
@@ -95,7 +95,7 @@ public class PartEnergyStorage
 	// Was active?
 	private boolean lastActive = false;
 
-	// List of all container - listeners
+	// list of all container - listeners
 	public List<ContainerEnergyStorage> linkedListeners = new ArrayList<>();
 	private boolean updateRequested;
 	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();

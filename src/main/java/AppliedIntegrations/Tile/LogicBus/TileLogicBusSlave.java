@@ -150,7 +150,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
     }
 
     public EnumSet<EnumFacing> getSidesWithSlaves() {
-        // List of sides
+        // list of sides
         List<EnumFacing> sides = new ArrayList<>();
         // Iterate over all sides
         for(EnumFacing side : EnumFacing.values()){

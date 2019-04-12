@@ -324,7 +324,7 @@ public class TopologyUtils {
         JSONArray aNodeList = new JSONArray(); // (1)
         JSONArray bNodeList = new JSONArray(); // (2)
 
-        // List of serialized node data
+        // list of serialized node data
         List<JSONObject> serializedDataList = new ArrayList<>();
 
         // Iterate for each connection
@@ -366,10 +366,10 @@ public class TopologyUtils {
         JSONArray aNodeList = new JSONArray(); // (1)
         JSONArray bNodeList = new JSONArray(); // (2)
 
-        // List of serialized node data
+        // list of serialized node data
         List<JSONObject> serializedDataList = new ArrayList<>();
 
-        // List of serialized grids
+        // list of serialized grids
         List<JSONObject> serializedGridList = new ArrayList<>();
 
         // Iterate over all nodes

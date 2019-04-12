@@ -103,7 +103,7 @@ public abstract class AIOPart
 
     private int[] availableFilterSlots = { AIOPart.BASE_SLOT_INDEX };
 
-    // List of all container listeners
+    // list of all container listeners
     private List<ContainerPartEnergyIOBus> listeners = new ArrayList<ContainerPartEnergyIOBus>();
 
     // Current mode

@@ -124,13 +124,13 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		if (this.energySlot.isMouseOverWidget(mouseX, mouseY)) {
 			// avoid null pointer exception
 			if (player.inventory.getItemStack() == null) {
-				energySlot.mouseClicked(null);
+				energySlot.onMouseClicked(null);
 				return;
 			}
 			LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
 
 			try {
-				energySlot.mouseClicked(EnergyItem);
+				energySlot.onMouseClicked(EnergyItem);
 
 			} catch (Exception e) {
 				AILog.debug(e + "");

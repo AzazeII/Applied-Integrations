@@ -25,8 +25,7 @@ public abstract class EnergyWidget extends AIWidget {
         this.currentEnergy = currentEnergy;
     }
 
-    protected void drawEnergy()
-    {
+    protected void drawEnergy() {
         // Check not null
         if( currentEnergy == null ) {
             return;
@@ -40,9 +39,14 @@ public abstract class EnergyWidget extends AIWidget {
     }
 
     @Override
-    public void drawWidget() {
-
+    public final void onMouseClicked() {
+        // Ignored
     }
+
+    public abstract void onMouseClicked(LiquidAIEnergy energy);
+
+    @Override
+    public abstract void drawWidget();
 
     @Override
     public void getTooltip(List<String> tooltip) {

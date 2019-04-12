@@ -35,7 +35,7 @@ public class TileLogicBusPort extends TileLogicBusSlave implements IAIMultiBlock
 
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
-        // List of sides
+        // list of sides
         List<EnumFacing> sides = new ArrayList<>();
         // Iterate only over horizontal sides, as only these sides can be connected to cable
         for(EnumFacing side : EnumFacing.HORIZONTALS){

@@ -65,5 +65,4 @@ public abstract class AIWidget
      * Called when the mouse is clicked on the widget.
      */
     public abstract void onMouseClicked();
-
 }

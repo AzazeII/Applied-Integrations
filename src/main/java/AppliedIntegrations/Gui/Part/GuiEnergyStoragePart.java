@@ -228,7 +228,7 @@ public class GuiEnergyStoragePart
                 if (energySlot.getCurrentEnergy() == itemEnergy)
                     return;
 
-                energySlot.mouseClicked(itemEnergy);
+                energySlot.onMouseClicked(itemEnergy);
 
                 break;
             }

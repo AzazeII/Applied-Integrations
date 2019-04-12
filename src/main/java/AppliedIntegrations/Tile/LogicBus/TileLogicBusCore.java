@@ -90,7 +90,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
             // Create list of tiles which may be slaves
             Vector<TileLogicBusSlave> slaveCandidates = new Vector<>();
 
-            // List of tiles that should become corners
+            // list of tiles that should become corners
             Vector<TileLogicBusRib> corners = new Vector<>();
 
             // Count all slaves

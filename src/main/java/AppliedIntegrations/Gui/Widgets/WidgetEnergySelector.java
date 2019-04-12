@@ -2,33 +2,17 @@ package AppliedIntegrations.Gui.Widgets;
 
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.IWidgetHost;
-
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketClientToServerFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-/**
- * @Author Azazell
- */
-@SideOnly(Side.CLIENT)
-public class WidgetEnergySlot
-        extends EnergyWidget
-{
+public class WidgetEnergySelector extends EnergyWidget {
+    private boolean shouldRender;
 
-    public int id;
-    public boolean shouldRender;
-
-    public WidgetEnergySlot(final IWidgetHost hostGui,final int id, final int posX,
-                            final int posY, final boolean shouldRender){
-        super(hostGui, posX, posY);
-        this.id = id;
-
-        this.shouldRender = shouldRender;
+    public WidgetEnergySelector(IEnergySelectorGui hostGUI, int xPos, int yPos) {
+        super(hostGUI, xPos, yPos);
     }
 
     @Override
@@ -59,20 +43,11 @@ public class WidgetEnergySlot
     }
 
     @Override
-    public void onMouseClicked( final LiquidAIEnergy energy ) {
-        // Check if slot is currently rendering
-        if( !shouldRender )
-            return;
+    public void onMouseClicked(LiquidAIEnergy energy) {
+        // Get widget host
+        IEnergySelectorGui selector = (IEnergySelectorGui)hostGUI;
 
-        // Change energy
-        setCurrentEnergy(energy);
-
-        // Check not null
-        if(hostGUI.getSyncHost() == null)
-            // Return
-            return;
-
-        // Notify server
-        NetworkHandler.sendToServer(new PacketClientToServerFilter(hostGUI.getSyncHost(), energy, id));
+        // Update energy of selector
+        selector.setSelectedEnergy(energy);
     }
 }

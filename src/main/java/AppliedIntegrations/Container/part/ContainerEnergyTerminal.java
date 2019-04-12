@@ -44,7 +44,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
         }
     };
     
-    public ContainerEnergyTerminal(EntityPlayer player, PartEnergyTerminal terminal) {
+    public ContainerEnergyTerminal(PartEnergyTerminal terminal, EntityPlayer player) {
         super(player);
         this.bindPlayerInventory(player.inventory,122,180);
         this.terminal = terminal;

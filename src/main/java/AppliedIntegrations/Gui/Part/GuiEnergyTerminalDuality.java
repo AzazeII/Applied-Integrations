@@ -12,6 +12,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
+import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import appeng.api.storage.data.IItemList;
 import net.minecraft.client.Minecraft;
@@ -24,50 +25,53 @@ import org.lwjgl.opengl.GL11;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
 
 @SideOnly(Side.CLIENT)
-public class GuiEnergyTerminalDuality
-        extends AIBaseGui
-        implements IEnergySelectorGui {
-    //private static WidgetEnergySelector[] ArrayOfWidgets;
+public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelectorGui {
     private ResourceLocation mainTexture = new ResourceLocation(AppliedIntegrations.modid,"textures/gui/energy.terminal.png");
 
     @Nonnull
     private static ContainerEnergyTerminal LinkedContainer;
+
     private EntityPlayer player;
-    private LiquidAIEnergy selectedEnergy = RF;
+
+    @Nullable
+    private LiquidAIEnergy selectedEnergy = null;
     private Long amount = 0L;
+
     private PartEnergyTerminal part;
-    public IItemList<IAEEnergyStack> List;
+    public IItemList<IAEEnergyStack> list;
 
-    public static final int WIDGETS_PER_ROW = 9;
+    private static final int WIDGETS_PER_ROW = 9;
 
-    public static final int WIDGET_ROWS_PER_PAGE = 4;
+    private static final int WIDGET_ROWS_PER_PAGE = 4;
+
+    private final List<WidgetEnergySelector> widgetEnergySelectors = new ArrayList<>();
 
     public GuiEnergyTerminalDuality(ContainerEnergyTerminal container,PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
         super(container);
+
         this.LinkedContainer = container;
+
         this.player = player;
         this.part = partEnergyTerminal;
 
         this.xSize = 195;
         this.ySize = 204;
 
-        // Create the widgets
-        //this.ArrayOfWidgets = new WidgetEnergySelector[GUI_CONSTANTS.WIDGETS_PER_PAGE];
-
         // Rows
-        for(int y = 0; y < WIDGET_ROWS_PER_PAGE; y++ )
-        {
+        for(int y = 0; y < WIDGET_ROWS_PER_PAGE; y++ ) {
             // Columns
-            for(int x = 0; x < WIDGETS_PER_ROW; x++ )
-            {
-                ///WidgetEnergySelector widget = new WidgetEnergySelector( this, null,
-                        /*7 + ( x * 18 ),
-                        17 + ( y * 18 ),
-                        player );*/
-                ///this.ArrayOfWidgets[( y * GUI_CONSTANTS.WIDGETS_PER_ROW ) + x] = widget;
+            for(int x = 0; x < WIDGETS_PER_ROW; x++ ) {
+                // Update widget in array
+                this.widgetEnergySelectors.add(new WidgetEnergySelector( this,
+                        7 + ( x * 18 ),
+                        17 + ( y * 18 )));
+
             }
         }
     }
@@ -75,13 +79,18 @@ public class GuiEnergyTerminalDuality
     @Nonnull
     @Override
     public IEnergySelectorContainer getContainer() {
-        return this.LinkedContainer;
+        return LinkedContainer;
     }
 
     @Nullable
     @Override
     public LiquidAIEnergy getSelectedEnergy() {
         return this.selectedEnergy;
+    }
+
+    @Override
+    public void setSelectedEnergy(@Nullable LiquidAIEnergy energy) {
+        this.selectedEnergy = energy;
     }
 
     @Override
@@ -97,19 +106,21 @@ public class GuiEnergyTerminalDuality
     }
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX,int mouseY) {
-        if (this.selectedEnergy != null) {
+        // Check not null
+        if (this.selectedEnergy != null)
+            // Draw energy name
             this.fontRenderer.drawString("Energy: " + this.selectedEnergy.getEnergyName(),
                     45, 101, 0);
 
-            // Draw the amount
-            this.fontRenderer.drawString("Amount: " + this.amount + "",
+        // Check stack size greater than zero
+        if (this.amount > 0)
+            // Draw energy amount
+            this.fontRenderer.drawString("Amount: " + this.amount,
                     45, 91, 0);
-        }
-        /*WidgetEnergySelector test = new WidgetEnergySelector(this, new EnergyStack(RF, 1), 7, 18, player);
-        test.drawWidget();
-        for (WidgetEnergySelector widgetEnergySelector : this.ArrayOfWidgets) {
-            widgetEnergySelector.drawWidget();
-        }*/
+
+        // Iterate for each widget
+        // Draw each widget
+        widgetEnergySelectors.forEach((WidgetEnergySelector::drawWidget));
     }
 
     @Override

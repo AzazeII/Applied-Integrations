@@ -35,7 +35,7 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
 
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
-        // List of sides
+        // list of sides
         List<EnumFacing> sides = new ArrayList<>();
         // Iterate over all sides
         for(EnumFacing side : EnumFacing.values()){
