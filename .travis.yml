@@ -3,18 +3,18 @@ dist: trusty
 
 language: java
 jdk:
- - oraclejdk8
+  - oraclejdk8
 
 cache:
- directories:
-  - '$HOME/.m2/repository'
-  - '$HOME/.sonar/cache'
-  - '$HOME/.gradle/wrapper'
-  - '$HOME/.gradle/caches'
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+    - '$HOME/.gradle/wrapper'
+    - '$HOME/.gradle/caches'
 
 addons:
- sonarcloud:
-  organization: "kof0sdf9sdf09"
+  sonarcloud:
+    organization: "kof0sdf9sdf09"
 
 script:
- - "./gradlew build"
+  - "./gradlew build"
