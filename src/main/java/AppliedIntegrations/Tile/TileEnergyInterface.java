@@ -58,8 +58,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	private InterfaceDuality duality = new InterfaceDuality(this);
 
-	public static int EuStorage;
-
 	public static int capacity = 100000;
 
 	private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();

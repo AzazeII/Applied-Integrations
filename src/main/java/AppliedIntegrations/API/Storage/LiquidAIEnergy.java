@@ -18,8 +18,9 @@ public class LiquidAIEnergy extends Fluid {
     private int index;
     private ResourceLocation image;
     private LiquidAIEnergy lastEnergy;
+    private String modid;
 
-    public LiquidAIEnergy(Integer index,String tag, ResourceLocation image) {
+    private LiquidAIEnergy(String modid, Integer index,String tag, ResourceLocation image) {
         super(tag, image, image);
 
         // Check if energy is already registered
@@ -27,6 +28,9 @@ public class LiquidAIEnergy extends Fluid {
 
         // Set tag
         this.tag = tag;
+
+        // Set modid
+        this.modid = modid;
 
         // Set image
         this.image = image;
@@ -63,6 +67,11 @@ public class LiquidAIEnergy extends Fluid {
         }
      */
 
+    // #Getter for mod id
+    public String getModid() {
+        return modid;
+    }
+
     // #Getter for tag
     public String getTag() {
         return tag;
@@ -98,16 +107,16 @@ public class LiquidAIEnergy extends Fluid {
         linkedIndexMap.put(0,null);
     }
 
-    public static final LiquidAIEnergy RF = new LiquidAIEnergy(1,"RF",new ResourceLocation(AppliedIntegrations.modid,"textures/gui/energy.rf.bar.png")); // Redstone flux
-    public static final LiquidAIEnergy J = new LiquidAIEnergy(2,"J",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Mekansim joules
-    public static final LiquidAIEnergy EU = new LiquidAIEnergy(3,"EU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Energy units IC2
-    public static final LiquidAIEnergy HU = new LiquidAIEnergy(4,"HU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Heat units IC2
-    public static final LiquidAIEnergy KU = new LiquidAIEnergy(5,"KU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Kinetic units IC2
-    public static final LiquidAIEnergy FZ = new LiquidAIEnergy(6,"Charge",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Factorization Charge
-    public static final LiquidAIEnergy WA = new LiquidAIEnergy(7,"WA",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Watts(from RotaryCraft)
-    public static final LiquidAIEnergy AE = new LiquidAIEnergy(8,"AE",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // AE fluid energy
-    public static final LiquidAIEnergy Ember = new LiquidAIEnergy(9, "Ember", new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Ember fluid energy
-    public static final LiquidAIEnergy TESLA = new LiquidAIEnergy(10, "TESLA", new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Tesla flui energy (From TESLA)
+    public static final LiquidAIEnergy RF = new LiquidAIEnergy("minecraft", 1,"RF",new ResourceLocation(AppliedIntegrations.modid,"textures/gui/energy.rf.bar.png")); // Redstone flux
+    public static final LiquidAIEnergy J = new LiquidAIEnergy("mekanism",2,"J",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Mekansim joules
+    public static final LiquidAIEnergy EU = new LiquidAIEnergy("ic2",3,"EU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Energy units IC2
+    public static final LiquidAIEnergy HU = new LiquidAIEnergy("ic2",4,"HU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Heat units IC2
+    public static final LiquidAIEnergy KU = new LiquidAIEnergy("ic2", 5,"KU",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Kinetic units IC2
+    public static final LiquidAIEnergy FZ = new LiquidAIEnergy("ic2", 6,"Charge",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Factorization Charge
+    public static final LiquidAIEnergy WA = new LiquidAIEnergy("rotarycraft",7,"WA",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Watts(from RotaryCraft)
+    public static final LiquidAIEnergy AE = new LiquidAIEnergy("appliedenergistics2",8,"AE",new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // AE fluid energy
+    public static final LiquidAIEnergy Ember = new LiquidAIEnergy("embers",9, "Ember", new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Ember fluid energy
+    public static final LiquidAIEnergy TESLA = new LiquidAIEnergy("tesla",10, "TESLA", new ResourceLocation(AppliedIntegrations.modid,"textures/fluids/empty.png")); // Tesla flui energy (From TESLA)
 
     public void writeToNBT(NBTTagCompound tag) {
         tag.setInteger("#AIEnergy", this.getIndex());

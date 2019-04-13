@@ -10,7 +10,7 @@ import java.util.Set;
  */
 public class LogicBusState {
 
-    // Is isCorner of multiblock?
+    // is corner of multiblock?
     private final boolean isCorner;
     private final boolean hasMaster;
     private final EnumSet<EnumFacing> sidesWithSlaves;
@@ -27,8 +27,4 @@ public class LogicBusState {
         return this.isCorner;
     }
     public boolean hasMaster() { return this.hasMaster; }
-
-    public Set<EnumFacing> getSidesWithSlave() {
-        return sidesWithSlaves;
-    }
 }

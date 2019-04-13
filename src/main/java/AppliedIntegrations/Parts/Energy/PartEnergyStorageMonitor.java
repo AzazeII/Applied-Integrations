@@ -8,12 +8,9 @@ import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.WrenchUtil;
 import appeng.api.implementations.IPowerChannelState;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartHost;
 import appeng.api.storage.IMEMonitor;
@@ -174,7 +171,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
     @Override
     public void onStackChange(IItemList<?> iItemList, IAEStack<?> iaeStack, IAEStack<?> iaeStack1, IActionSource iActionSource, IStorageChannel<?> iStorageChannel) {
         if (this.energy != null) {
-            IMEMonitor<IAEEnergyStack> Energies = super.getEnergyProvidingInventory();
+            IMEMonitor<IAEEnergyStack> Energies = super.getEnergyInventory();
             if (Energies == null)
                 return;
             for (IAEEnergyStack s : Energies.getStorageList()) {

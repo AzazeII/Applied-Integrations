@@ -27,7 +27,6 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.DimensionalCoord;
-import appeng.me.Grid;
 import appeng.me.helpers.MachineSource;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
@@ -653,7 +652,7 @@ public abstract class AIPart
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 
-    public IMEMonitor<IAEEnergyStack> getEnergyProvidingInventory() {
+    public IMEMonitor<IAEEnergyStack> getEnergyInventory() {
 		IGridNode n = getGridNode();
 		if (n == null)
 			return null;
@@ -677,7 +676,7 @@ public abstract class AIPart
 	 */
 	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
 		// Extract energy from MEInventory
-		IAEEnergyStack extracted = getEnergyProvidingInventory().extractItems(
+		IAEEnergyStack extracted = getEnergyInventory().extractItems(
 				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
 		if (extracted == null)
@@ -695,7 +694,7 @@ public abstract class AIPart
 	 */
 	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
 		// Insert energy to MEInventory
-		IAEEnergyStack notInjected = getEnergyProvidingInventory().injectItems(
+		IAEEnergyStack notInjected = getEnergyInventory().injectItems(
 				AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
 		// Check for null result

@@ -14,7 +14,11 @@ import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
+import AppliedIntegrations.grid.EnergyList;
+import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IItemList;
+import appeng.fluids.client.gui.GuiFluidTerminal;
+import com.google.common.collect.Ordering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -44,13 +48,15 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
     private Long amount = 0L;
 
     private PartEnergyTerminal part;
-    public IItemList<IAEEnergyStack> list;
+    public IItemList<IAEEnergyStack> list = new EnergyList();
 
     private static final int WIDGETS_PER_ROW = 9;
 
     private static final int WIDGET_ROWS_PER_PAGE = 4;
 
     private final List<WidgetEnergySelector> widgetEnergySelectors = new ArrayList<>();
+
+    private SortOrder sortMode = SortOrder.NAME;
 
     public GuiEnergyTerminalDuality(ContainerEnergyTerminal container,PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
         super(container);
@@ -132,5 +138,66 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
     public void setSyncHost(ISyncHost host) {
         if(host instanceof PartEnergyTerminal)
             part = (PartEnergyTerminal)host;
+    }
+
+    public void updateList(IItemList<IAEEnergyStack> list) {
+        // Create comparator for
+        Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {
+            @Override
+            public int compare(@Nullable IAEEnergyStack left, @Nullable IAEEnergyStack right) {
+                // Check both energies not null
+                if( left == null || right == null)
+                    // Same place in slots
+                    return 0;
+
+                //------------ Alphabet Sorting ------------//
+                if(sortMode == SortOrder.NAME){
+                    // Get left energy name or "null"
+                    String leftEnergyName = left.getEnergy() == null ? "null" : left.getEnergy().getEnergyName();
+
+                    // Get right energy name or "null"
+                    String rightEnergyName = right.getEnergy() == null ? "null" : right.getEnergy().getEnergyName();
+
+                    // Compare first energy to second by default method of class String
+                    return leftEnergyName.compareTo(rightEnergyName);
+
+                //------------ Amount Sorting ------------//
+                }else if(sortMode == SortOrder.AMOUNT){
+                    // Get left energy amount
+                    Long leftAmount = left.getStackSize();
+
+                    // Get right energy amount
+                    Long rightAmount = right.getStackSize();
+
+                    // Compare first energy to second by default method of class Long
+                    return leftAmount.compareTo(rightAmount);
+
+                //------------ Mod Sorting ------------//
+                }else if(sortMode == SortOrder.MOD){
+                    // Get mod id of left energy
+                    String leftModid = left.getEnergy() == null ? "null" : left.getEnergy().getModid();
+
+                    // Get mod id of right energy
+                    String rightModid = right.getEnergy() == null ? "null" : right.getEnergy().getModid();
+
+                    return leftModid.compareTo(rightModid);
+                }
+
+                // Random sorting
+                return 0;
+            }
+        };
+        // Create sorted list
+        List<IAEEnergyStack> sorted = sorter.sortedCopy(list);
+
+        // Iterate for each entry of sorted copy of list
+        // Add entry in order of list
+        sorted.forEach(this.list::add);
+
+        // Iterate until i = list.size
+        for (int i = 0; i < list.size(); i++){
+            // Get selector at (i)
+            widgetEnergySelectors.get(i).setCurrentEnergy(sorted.get(i).getEnergy());
+        }
     }
 }

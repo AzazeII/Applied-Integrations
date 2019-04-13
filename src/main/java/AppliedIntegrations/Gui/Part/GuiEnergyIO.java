@@ -196,12 +196,12 @@ public class GuiEnergyIO
         if (filterSize == 0)
             // Update matrix
             configMatrix = new boolean[]{false, false, false,
-                                         false, true, false,
+                                         false, true,  false,
                                          false, false, false};
         if (filterSize == 1)
             // Update matrix
             configMatrix = new boolean[]{false, true, false,
-                                         true, true, true,
+                                         true,  true, true,
                                          false, true, false};
 
         if (filterSize == 2)

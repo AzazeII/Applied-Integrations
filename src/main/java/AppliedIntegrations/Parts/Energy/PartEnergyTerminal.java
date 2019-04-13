@@ -1,9 +1,10 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.API.Grid.ICraftingIssuerHost;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.AIGuiHandler;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketTerminalUpdate;
 import AppliedIntegrations.Parts.AIRotatablePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
@@ -13,8 +14,6 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
-import appeng.api.networking.storage.IStackWatcher;
-import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -26,7 +25,6 @@ import appeng.api.storage.IMEMonitorHandlerReceiver;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.ITerminalHost;
 import appeng.api.storage.data.IAEStack;
-import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.IConfigManager;
@@ -34,11 +32,14 @@ import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static appeng.api.networking.ticking.TickRateModulation.SAME;
 
@@ -48,6 +49,7 @@ import static appeng.api.networking.ticking.TickRateModulation.SAME;
 public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost, IConfigManagerHost, IGridTickable, IMEMonitorHandlerReceiver<IAEEnergyStack> {
 
 	private IConfigManager configManager = new ConfigManager(this);
+	public List<ContainerEnergyTerminal> listeners = new ArrayList<>();
 
 	public PartEnergyTerminal() {
 		super(PartEnum.EnergyTerminal, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT, SecurityPermissions.CRAFT);
@@ -124,13 +126,16 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> channel) {
+		// Get node
+		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+
 		// Getting Node
-		if (getGridNode(AEPartLocation.INTERNAL) == null)
+		if (node == null)
 			// No inventory provided
 			return null;
 
 		// Getting net of node
-		IGrid grid = getGridNode(AEPartLocation.INTERNAL).getGrid();
+		IGrid grid = node.getGrid();
 
 		// Storage cache of network
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
@@ -162,12 +167,14 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	public boolean isValid(Object verificationToken) {
-		return verificationToken == this;
+		return true;
 	}
 
 	@Override
 	public void postChange(IBaseMonitor<IAEEnergyStack> monitor, Iterable<IAEEnergyStack> change, IActionSource actionSource) {
-
+		for (ContainerEnergyTerminal listener : listeners) {
+			NetworkHandler.sendTo(new PacketTerminalUpdate(((IMEMonitor<IAEEnergyStack>)monitor).getStorageList(), this), (EntityPlayerMP) listener.player);
+		}
 	}
 
 	@Override

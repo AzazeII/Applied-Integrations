@@ -9,7 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class WidgetEnergySelector extends EnergyWidget {
-    private boolean shouldRender;
+    // True by default
+    private boolean shouldRender = true;
 
     public WidgetEnergySelector(IEnergySelectorGui hostGUI, int xPos, int yPos) {
         super(hostGUI, xPos, yPos);

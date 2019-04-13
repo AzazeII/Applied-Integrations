@@ -25,8 +25,7 @@ public abstract class AIContainer extends Container
      */
     public final EntityPlayer player;
 
-    public AIContainer(final EntityPlayer player )
-    {
+    public AIContainer(final EntityPlayer player ) {
         // Set the player
         this.player = player;
     }
@@ -54,8 +53,7 @@ public abstract class AIContainer extends Container
     }
 
     @Override
-    public void onContainerClosed( @Nonnull final EntityPlayer player )
-    {
+    public void onContainerClosed( @Nonnull final EntityPlayer player ) {
         // Call super
         super.onContainerClosed( player );
 
