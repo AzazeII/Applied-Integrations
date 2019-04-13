@@ -13,7 +13,7 @@ tile.ME Server Security Terminal.name=МЭ Терминал Безопаснос
 
 # TODO Russian localization
 
-item.graphTool.name=МЭ Топологический Инструмент
+item.graph_tool.name=МЭ Топологический Инструмент
 
 tile.ME Energy Interface.name=МЭ Интерфейс Энергии
 tile.ME Turret.name=МЭ Турель

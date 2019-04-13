@@ -81,54 +81,63 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
     @Override
     public EnumActionResult onItemUseFirst( final EntityPlayer player, final World world, final BlockPos pos, final EnumFacing side,
                                             final float hitX, final float hitY, final float hitZ, final EnumHand hand ) {
-        // Trace ray on hitX,Y,Z
-        final RayTraceResult mop = new RayTraceResult( new Vec3d( hitX, hitY, hitZ ), side, pos );
+        // Did operation ended with success? Variable created here to also notify server
+        boolean success = false;
 
-        // Get Tile entity
-        final TileEntity te = world.getTileEntity( pos );
+        // Mechanics only on client
+        if(!player.isServerWorld()) {
+            // Trace ray on hitX,Y,Z
+            final RayTraceResult mop = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos);
 
-        // Create grid node
-        IGridNode node = null;
+            // Get Tile entity
+            final TileEntity te = world.getTileEntity(pos);
 
-        // Check if Tile is part host
-        if( te instanceof IPartHost) {
-            // Get part from host
-            final SelectedPart part = ( (IPartHost) te ).selectPart( mop.hitVec );
+            // Create grid node
+            IGridNode node = null;
 
-            // Check not null (part)
-            if(part != null && part.part != null)
-                // Check not null (node)
-                if(part.part.getGridNode() != null)
+            // Check if Tile is part host
+            if (te instanceof IPartHost) {
+                // Get part from host
+                final SelectedPart part = ((IPartHost) te).selectPart(mop.hitVec);
+
+                // Check not null (part)
+                if (part != null && part.part != null)
+                    // Check not null (node)
+                    if (part.part.getGridNode() != null)
+                        // Update node
+                        node = part.part.getGridNode();
+
+                // Check if Tile is grid node
+            } else if (te instanceof IGridHost) {
+                // Get host
+                IGridHost host = (IGridHost) te;
+
+                // Check not null
+                if ((host.getGridNode(INTERNAL) != null))
                     // Update node
-                    node = part.part.getGridNode();
-
-        // Check if Tile is grid node
-        }else if(te instanceof IGridHost){
-            // Get host
-            IGridHost host = (IGridHost)te;
+                    node = host.getGridNode(INTERNAL);
+            }
 
             // Check not null
-            if((host.getGridNode(INTERNAL) != null))
-                // Update node
-                node = host.getGridNode(INTERNAL);
+            if (node != null) {
+                // Get grid
+                IGrid grid = node.getGrid();
+
+                // Pass to utils
+                TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
+
+                // Log to player
+                player.sendMessage(new TextComponentString("Created grid network graph at: ").appendSibling(createLink())); // (1)
+
+                // Notify client
+                success = true;
+            }
         }
 
-        // Check not null
-        if(node != null){
-            // Get grid
-            IGrid grid = node.getGrid();
-
-            // Pass to utils
-            TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
-
-            // Log to player
-            player.sendMessage(new TextComponentString("Created grid network graph at: ").appendSibling(createLink())); // (1)
-
-            // Success
-            return EnumActionResult.SUCCESS;
-        }
-
-        return EnumActionResult.FAIL;
+        // Check if operation ended with success on client
+        if(!success)
+            return EnumActionResult.FAIL;
+        return EnumActionResult.SUCCESS;
     }
 
     @Override
