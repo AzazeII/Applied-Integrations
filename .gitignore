@@ -8,8 +8,9 @@
 !build.gradle
 !gradle.properties
 
-# Include config CI itself
+# Include CI folders/files
 !.travis.yml
+!.circleci/
 
 # include license and readme
 !README.md
