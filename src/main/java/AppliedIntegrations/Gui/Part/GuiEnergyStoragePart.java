@@ -235,8 +235,7 @@ public class GuiEnergyStoragePart
     }
 
     @Override
-    public void initGui()
-    {
+    public void initGui() {
         super.initGui();
 
         // Create widget @for_each row and @for_each column with zero index

@@ -47,19 +47,11 @@ public class ClientProxy
     @SideOnly(Side.CLIENT)
     @Override
     public void SidedPreInit(){
-        super.SidedPreInit();
         NetworkHandler.registerClientPackets();
 
         // Register texture manager to event bus
         FMLCommonHandler.instance().bus().register(new TextureEventManager());
 
-        if(AIConfig.enableBlackHoleStorage) {
-            // Register custom renderers
-            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
-        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -82,6 +74,14 @@ public class ClientProxy
             EmberLoader.init();
         if(Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures)
             AstralLoader.init();
+
+        if(AIConfig.enableBlackHoleStorage) {
+            // Register custom renderers
+            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
+        }
 
     }
 

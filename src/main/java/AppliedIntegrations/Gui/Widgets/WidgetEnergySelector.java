@@ -40,49 +40,19 @@ public class WidgetEnergySelector extends EnergyWidget {
                 // Draw the Energy
                 this.drawEnergy();
 
-                // Check if energy of stack isn't null
-                if( getCurrentStack().getEnergy() != null ){
+                // Check if energy of stack isn't null and this is currently selected widget
+                if( getCurrentStack().getEnergy() != null && ((IEnergySelectorGui)hostGUI).getSelectedEnergy() == getCurrentStack().getEnergy()){
                     // Bind to the gui texture
                     Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation( AppliedIntegrations.modid, "textures/gui/slots/selection.png" ) );
 
-                    // Get tesselator
-                    Tessellator tessellator = Tessellator.getInstance();
+                    // Size of overlay edges
+                    final int size = 1;
 
-                    // Get buffered renderer
-                    BufferBuilder helper = tessellator.getBuffer();
-
-                    // Start drawing quads
-                    helper.begin(7, DefaultVertexFormats.POSITION_TEX);
-
-                    // Width of overlay edges
-                    final float width = 1.5F;
-
-                    // Draw first edge
-                    helper.pos(this.xPosition, this.yPosition, this.zLevel);
-                    helper.pos(this.xPosition, this.yPosition + WIDGET_SIZE, this.zLevel);
-                    helper.pos(this.xPosition + width, this.yPosition + WIDGET_SIZE, this.zLevel);
-                    helper.pos(this.xPosition + width, this.yPosition, this.zLevel);
-
-                    // Draw second edge
-                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition, this.zLevel);
-                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + WIDGET_SIZE, this.zLevel);
-                    helper.pos(this.xPosition + WIDGET_SIZE - width, this.yPosition + WIDGET_SIZE, this.zLevel);
-                    helper.pos(this.xPosition + WIDGET_SIZE - width, this.yPosition, this.zLevel);
-
-                    // Draw third edge
-                    helper.pos(this.xPosition, this.yPosition, this.zLevel);
-                    helper.pos(this.xPosition, this.yPosition + width, this.zLevel);
-                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + width, this.zLevel);
-                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition, this.zLevel);
-
-                    // Draw fourth edge
-                    helper.pos(this.xPosition, this.yPosition + WIDGET_SIZE, this.zLevel);
-                    helper.pos(this.xPosition, this.yPosition + WIDGET_SIZE + width, this.zLevel);
-                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + WIDGET_SIZE + width, this.zLevel);
-                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + WIDGET_SIZE, this.zLevel);
-
-                    // End drawing quads
-                    tessellator.draw();
+                    // Draw edges of selection
+                    this.drawTexturedModalRect( this.xPosition, this.yPosition, 0, 0,  size, WIDGET_SIZE); // (1)
+                    this.drawTexturedModalRect( this.xPosition + WIDGET_SIZE - size, this.yPosition, 0, 0,  size, WIDGET_SIZE); // (2)
+                    this.drawTexturedModalRect( this.xPosition, this.yPosition, 0, 0, WIDGET_SIZE, size  ); // (3)
+                    this.drawTexturedModalRect( this.xPosition, this.yPosition + WIDGET_SIZE - size, 0, 0, WIDGET_SIZE, size  ); // (4)
                 }
             }
 
