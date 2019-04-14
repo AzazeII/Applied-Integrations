@@ -6,6 +6,9 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -41,11 +44,47 @@ public class WidgetEnergySelector extends EnergyWidget {
 
                 // Check if energy of stack isn't null
                 if( getCurrentStack().getEnergy() != null ){
-                    // Bind to the overlay texture
-                    Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation( AppliedIntegrations.modid, "textures/gui/slots/selection.png" ) );
+                    // Full white
+                    GL11.glColor3f( 1.0F, 1.0F, 0.0F );
 
-                    // Draw energy overlay
-                    this.drawTexturedModalRect( this.xPosition, this.yPosition, 0, 0, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
+                    // Get tesselator
+                    Tessellator tessellator = Tessellator.getInstance();
+
+                    // Get buffered renderer
+                    BufferBuilder helper = tessellator.getBuffer();
+
+                    // Start drawing quads
+                    helper.begin(7, DefaultVertexFormats.POSITION_TEX);
+
+                    // Width of overlay edges
+                    final float width = 0.1F;
+
+                    // Draw first edge
+                    helper.pos(this.xPosition, this.yPosition, this.zLevel);
+                    helper.pos(this.xPosition, this.yPosition + WIDGET_SIZE, this.zLevel);
+                    helper.pos(this.xPosition + width, this.yPosition + WIDGET_SIZE, this.zLevel);
+                    helper.pos(this.xPosition + width, this.yPosition, this.zLevel);
+
+                    // Draw second edge
+                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition, this.zLevel);
+                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + WIDGET_SIZE, this.zLevel);
+                    helper.pos(this.xPosition + WIDGET_SIZE - width, this.yPosition + WIDGET_SIZE, this.zLevel);
+                    helper.pos(this.xPosition + WIDGET_SIZE - width, this.yPosition, this.zLevel);
+
+                    // Draw third edge
+                    helper.pos(this.xPosition, this.yPosition, this.zLevel);
+                    helper.pos(this.xPosition, this.yPosition + width, this.zLevel);
+                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + width, this.zLevel);
+                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition, this.zLevel);
+
+                    // Draw fourth edge
+                    helper.pos(this.xPosition, this.yPosition + WIDGET_SIZE, this.zLevel);
+                    helper.pos(this.xPosition, this.yPosition + WIDGET_SIZE + width, this.zLevel);
+                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + WIDGET_SIZE + width, this.zLevel);
+                    helper.pos(this.xPosition + WIDGET_SIZE, this.yPosition + WIDGET_SIZE, this.zLevel);
+
+                    // End drawing quads
+                    tessellator.draw();
                 }
             }
 
