@@ -55,7 +55,7 @@ public class WidgetEnergySelector extends EnergyWidget {
                     helper.begin(7, DefaultVertexFormats.POSITION_TEX);
 
                     // Width of overlay edges
-                    final float width = 0.1F;
+                    final float width = 1.5F;
 
                     // Draw first edge
                     helper.pos(this.xPosition, this.yPosition, this.zLevel);
