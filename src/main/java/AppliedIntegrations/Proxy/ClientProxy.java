@@ -67,7 +67,6 @@ public class ClientProxy extends CommonProxy {
 
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
-        //EntityEnum.registerRenderer();
 
         // Check if web server enabled
         if(AIConfig.enableWebServer)
