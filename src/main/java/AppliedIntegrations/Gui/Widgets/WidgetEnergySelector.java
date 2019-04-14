@@ -42,8 +42,8 @@ public class WidgetEnergySelector extends EnergyWidget {
 
                 // Check if energy of stack isn't null
                 if( getCurrentStack().getEnergy() != null ){
-                    // Full white
-                    GL11.glColor3f( 1.0F, 1.0F, 0.0F );
+                    // Bind to the gui texture
+                    Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation( AppliedIntegrations.modid, "textures/gui/slots/selection.png" ) );
 
                     // Get tesselator
                     Tessellator tessellator = Tessellator.getInstance();
