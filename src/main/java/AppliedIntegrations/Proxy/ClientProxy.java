@@ -31,11 +31,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @Author Azazell
  */
-public class ClientProxy
-        extends CommonProxy
-{
-    public ClientProxy()
-    {
+public class ClientProxy extends CommonProxy {
+    public ClientProxy() {
         MinecraftForge.EVENT_BUS.register( this );
     }
 
