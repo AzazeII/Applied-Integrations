@@ -24,7 +24,9 @@ jobs:
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
-      - run: ./gradlew dependencies
+      # Install
+      - run: ./gradlew dependencies # (1) Dependencies
+      - run: ./gradlew setupCIWorkspace # (2) CI workspace
 
       - save_cache:
           paths:
@@ -34,3 +36,4 @@ jobs:
       # run tests!
       - run: ./gradlew build # (1) Build
       - run: ./gradlew test # (2) Test
+      - run: ./gradlew sonarqube # (3) Test with sonar qube

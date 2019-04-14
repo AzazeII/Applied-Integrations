@@ -8,11 +8,14 @@ import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketTerminalUpdate;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.storage.IMEMonitor;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
 
@@ -52,17 +55,27 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
         this.terminal = terminal;
         this.player = player;
 
-        // Get energy inventory
-        IMEMonitor<IAEEnergyStack> inv = terminal.getEnergyInventory();
+        // Do all AE2 mechanics only on server
+        if(!terminal.getWorld().isRemote) {
 
-        // Check not null
-        if(inv != null) {
-            // Add listener for ME monitor
-            inv.addListener(terminal, null);
+            // Get energy inventory
+            IMEMonitor<IAEEnergyStack> inv = terminal.getEnergyInventory();
+
+            // Check not null
+            if (inv != null) {
+                // Add listener for ME monitor
+                inv.addListener(terminal, null);
+
+                // Notify GUI first time about list, to make it show current list of all energies
+                for (ContainerEnergyTerminal listener : terminal.listeners) {
+                    // Send packet over network
+                    NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), terminal), (EntityPlayerMP) listener.player);
+                }
+            }
+
+            // Add listener
+            terminal.listeners.add(this);
         }
-
-        // Add listener
-        terminal.listeners.add(this);
 
         this.addSlotToContainer( new SlotRestrictive( privateInventory, INPUT_INV_INDEX,
                 INPUT_POSITION_X, INPUT_POSITION_Y ));

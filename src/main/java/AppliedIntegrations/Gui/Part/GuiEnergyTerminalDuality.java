@@ -11,6 +11,7 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
+import AppliedIntegrations.Grid.AEEnergyStack;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
@@ -161,7 +162,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
     }
 
     public void updateList(IItemList<IAEEnergyStack> list) {
-        // Create comparator for
+        // Create comparator for list
         Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {
             @Override
             public int compare(@Nullable IAEEnergyStack left, @Nullable IAEEnergyStack right) {
@@ -200,6 +201,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
                     // Get mod id of right energy
                     String rightModid = right.getEnergy() == null ? "null" : right.getEnergy().getModid();
 
+
                     return leftModid.compareTo(rightModid);
                 }
 
@@ -219,5 +221,13 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
             // Get selector at (i)
             widgetEnergySelectors.get(i).setCurrentStack(new EnergyStack(sorted.get(i).getEnergy(), sorted.get(i).getStackSize()));
         }
+
+
+        // Now, if stack is selected it should be updated, when monitor changes
+        // Check if both stack size and energy are greater than zero(or not equal null)
+        if (this.selectedStack.getEnergy() != null && this.selectedStack.amount > 0)
+            // Call list to give as precisely equal stack, to stack we have, then convert it to normal Energy stack and set our selected stack to it.
+            // It will update size of monitored stack
+            selectedStack = list.findPrecise(AEEnergyStack.fromStack(selectedStack)).getStack();
     }
 }
