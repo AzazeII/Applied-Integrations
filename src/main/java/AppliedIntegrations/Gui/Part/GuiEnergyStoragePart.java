@@ -224,7 +224,7 @@ public class GuiEnergyStoragePart
                 // Get the Energy of the currently held item
                 LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
 
-                if (energySlot.getCurrentStack().getEnergy() == itemEnergy)
+                if (energySlot.getCurrentStack() == null || energySlot.getCurrentStack().getEnergy() == itemEnergy)
                     return;
 
                 energySlot.onMouseClicked(new EnergyStack(itemEnergy, 0));
@@ -240,10 +240,8 @@ public class GuiEnergyStoragePart
         super.initGui();
 
         // Create widget @for_each row and @for_each column with zero index
-        for( int row = 0; row < GuiEnergyStoragePart.WIDGET_COLUMNS; row++ )
-        {
-            for( int column = 0; column < GuiEnergyStoragePart.WIDGET_ROWS; column++ )
-            {
+        for( int row = 0; row < GuiEnergyStoragePart.WIDGET_COLUMNS; row++ ) {
+            for( int column = 0; column < GuiEnergyStoragePart.WIDGET_ROWS; column++ ) {
                 this.energyWidgetList.add( new WidgetEnergySlot( this, 0, this.WIDGET_X_POS + ( AIWidget.WIDGET_SIZE * column )-6,
                         this.WIDGET_Y_POS + ( AIWidget.WIDGET_SIZE * row ) -1,true));
             }
