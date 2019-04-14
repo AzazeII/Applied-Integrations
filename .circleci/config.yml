@@ -34,3 +34,4 @@ jobs:
       # run tests!
       - run: ./gradlew build # (1) Build
       - run: ./gradlew test # (2) Test
+      - run: ./gradlew sonarqube # (3) Test with sonar cloud
