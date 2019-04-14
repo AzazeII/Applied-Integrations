@@ -52,15 +52,6 @@ public class WidgetEnergySlot
             if( getCurrentStack() != null ) {
                 // Draw the Energy
                 this.drawEnergy();
-
-                // Check if energy of stack isn't null
-                if( getCurrentStack().getEnergy() != null ){
-                    // Bind to the overlay texture
-                    Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation( AppliedIntegrations.modid, "textures/gui/slots/selection.png" ) );
-
-                    // Draw energy overlay
-                    this.drawTexturedModalRect( this.xPosition, this.yPosition, 0, 0, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
-                }
             }
 
             // Re-enable lighting

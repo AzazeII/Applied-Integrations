@@ -34,4 +34,4 @@ jobs:
       # run tests!
       - run: ./gradlew build # (1) Build
       - run: ./gradlew test # (2) Test
-      - run: ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io # (3) Test with sonar cloud
+      - run: ./gradlew sonarqube -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=kof0sdf9sdf09 # (3) Test with sonar cloud

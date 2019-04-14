@@ -19,7 +19,6 @@ public abstract class EnergyWidget extends AIWidget {
         super(hostGUI, xPos, yPos);
     }
 
-    @Nonnull
     public EnergyStack getCurrentStack() {
         return currentStack;
     }
@@ -30,11 +29,10 @@ public abstract class EnergyWidget extends AIWidget {
 
     protected void drawEnergy() {
         // Check not null
-        if( currentStack == null || currentStack.getEnergy() == null ) {
+        if( currentStack == null || currentStack.getEnergy() == null )
             return;
-        }
 
-        // Bind energies texture
+        // Bind energies' texture
         Minecraft.getMinecraft().renderEngine.bindTexture(currentStack.getEnergy().getImage());
 
         // Draw energy

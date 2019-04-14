@@ -87,6 +87,10 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
         widgetEnergySelectors.forEach((widgetEnergySelector -> {
             // Check if mouse is over widget
             if(widgetEnergySelector.isMouseOverWidget(mouseX, mouseY)){
+                // Check not null
+                if(widgetEnergySelector.getCurrentStack() == null)
+                    return;
+
                 // Update current energy stack
                 selectedStack = widgetEnergySelector.getCurrentStack();
             }
