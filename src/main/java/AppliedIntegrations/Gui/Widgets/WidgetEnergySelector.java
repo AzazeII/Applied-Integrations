@@ -1,8 +1,6 @@
 package AppliedIntegrations.Gui.Widgets;
 
 import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import net.minecraft.client.Minecraft;
