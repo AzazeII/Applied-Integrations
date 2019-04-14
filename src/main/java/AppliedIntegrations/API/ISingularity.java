@@ -1,6 +1,6 @@
 package AppliedIntegrations.API;
 
-import AppliedIntegrations.Tile.HoleStorageSystem.storage.TileMEPylon;
+import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import appeng.api.config.Actionable;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;

@@ -40,7 +40,7 @@ public abstract class AIRotatablePart
     @Override
     public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position )
     {
-        // Get the host Tile entity
+        // Get the host tile entity
         TileEntity hte = this.getHostTile();
 
         // Is the player not sneaking and using a wrench?

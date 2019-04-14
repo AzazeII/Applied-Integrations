@@ -520,7 +520,7 @@ public class PartEnergyInterface
 	}
 
 	/**
-     * Inject energy from facing Tile, with mode #Link Action
+     * Inject energy from facing tile, with mode #Link Action
      * @param action
      * @return
      */

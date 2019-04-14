@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.Tile.Server.TileServerPort;
+import AppliedIntegrations.tile.Server.TileServerPort;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;

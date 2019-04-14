@@ -1,8 +1,8 @@
 package AppliedIntegrations.Blocks.LogicBus.modeling;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.Tile.LogicBus.TileLogicBusCore;
-import AppliedIntegrations.Tile.LogicBus.TileLogicBusSlave;
+import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
+import AppliedIntegrations.tile.LogicBus.TileLogicBusSlave;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockStateContainer;
@@ -124,9 +124,9 @@ public abstract class ModeledLogicBus extends AIMultiBlock {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
         if (!p.isSneaking()) {
-            // Pass activated to Tile entity ( nothing new :) )
+            // Pass activated to tile entity ( nothing new :) )
             if (tile instanceof TileLogicBusSlave) {
-                // Pass activate to Tile
+                // Pass activate to tile
                 return ((TileLogicBusSlave) tile).activate(world, pos, state, p, hand);
             }
         }

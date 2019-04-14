@@ -21,7 +21,7 @@ public abstract class AIP2PTunnel<T> extends AIPart {
 
     private Vector<T> outputs = new Vector<>();
 
-    // Tile operated by this tunnel
+    // tile operated by this tunnel
     private TileEntity operand;
 
     public AIP2PTunnel(PartEnum associatedPart, SecurityPermissions... interactionPermissions) {

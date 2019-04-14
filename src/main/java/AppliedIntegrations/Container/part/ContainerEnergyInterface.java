@@ -1,25 +1,15 @@
 package AppliedIntegrations.Container.part;
 
 import AppliedIntegrations.API.IEnergyInterface;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.Tile.TileEnergyInterface;
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
-import appeng.api.util.AEPartLocation;
-import com.google.common.collect.Maps;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.ContainerFurnace;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
-
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 
 /**
  * @Author Azazell
@@ -54,7 +44,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
         // Bind player's inventory
         super.bindPlayerInventory(player.inventory,149,207);
 
-        // check if interface part or Tile?
+        // check if interface part or tile?
         if (energyInterface instanceof PartEnergyInterface) {
             // Get part
             PartEnergyInterface part = (PartEnergyInterface) this.EnergyInterface;

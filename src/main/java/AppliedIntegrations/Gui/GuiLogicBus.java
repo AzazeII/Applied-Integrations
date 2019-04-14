@@ -3,7 +3,7 @@ package AppliedIntegrations.Gui;
 import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.ContainerLogicBus;
-import AppliedIntegrations.Tile.LogicBus.TileLogicBusCore;
+import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

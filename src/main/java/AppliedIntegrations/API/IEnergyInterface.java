@@ -25,17 +25,17 @@ public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator
     TileEntity getFacingTile(EnumFacing side);
 
     /**
-     * @return Outer Grid inventory of this host. Used by AppliedIntegrations.Inventory.Handlers#HandlerEnergyStorageBusInterface
+     * @return Outer grid inventory of this host. Used by AppliedIntegrations.Inventory.Handlers#HandlerEnergyStorageBusInterface
      */
     default IMEInventory<IAEEnergyStack> getOuterGridInventory() {
         // Check not null
         if(getGridNode() == null)
             return null;
 
-        // Create Grid
-        IGrid grid = getGridNode().getGrid(); // check Grid node
+        // Create grid
+        IGrid grid = getGridNode().getGrid(); // check grid node
 
-        // Create storage Grid
+        // Create storage grid
         IStorageGrid storage = grid.getCache(IStorageGrid.class);
 
         return storage.getInventory(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class));

@@ -25,7 +25,7 @@ public class AIConfig {
     public static boolean enablEmberFeatures; // #3
     public static boolean enableStarlightFeatures; // #4
 
-    private static final String CATEGORY_TILES = "Tile entities";
+    private static final String CATEGORY_TILES = "tile entities";
 
     public static boolean enableBlackHoleStorage; // #5
     public static boolean enableMEServer; // #6
@@ -114,7 +114,7 @@ public class AIConfig {
                 "Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature",
                 featuresOrder);
 
-        // Mana parts/Tile/items
+        // Mana parts/tile/items
         enableManaFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false,
                 "Default: true; If set to true, then all mana features will be enabled.",
                 featuresOrder);

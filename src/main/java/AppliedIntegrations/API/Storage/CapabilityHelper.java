@@ -172,7 +172,7 @@ public class CapabilityHelper {
 
         // Iterate over all capabilities from this energy
         for(Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
-            // Check if Tile has this capability
+            // Check if tile has this capability
             if (capabilities.contains(capability)){
                 // Check if capability belong to RF system
                 if(capability == CapabilityEnergy.ENERGY){

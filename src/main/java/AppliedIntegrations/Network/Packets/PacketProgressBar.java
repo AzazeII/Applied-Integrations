@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
-import AppliedIntegrations.Tile.TileEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import io.netty.buffer.ByteBuf;
 
 /**

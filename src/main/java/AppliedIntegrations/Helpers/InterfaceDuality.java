@@ -6,7 +6,7 @@ import AppliedIntegrations.API.Storage.CapabilityHelper;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Tile.TileEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGridNode;
@@ -28,7 +28,7 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
- * Class handler for both Tile interface, and part interface
+ * Class handler for both tile interface, and part interface
  */
 public class InterfaceDuality implements IInterfaceDuality{
 
@@ -146,7 +146,7 @@ public class InterfaceDuality implements IInterfaceDuality{
                             // Drain energy from network
                             owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE);
 
-                            // Give energy to Tile's storage
+                            // Give energy to tile's storage
                             interfaceStorageDuality.modifyEnergyStored(extracted);
                         }
 

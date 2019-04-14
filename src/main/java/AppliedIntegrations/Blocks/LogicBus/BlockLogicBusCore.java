@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.LogicBus;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.Tile.LogicBus.TileLogicBusCore;
+import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 

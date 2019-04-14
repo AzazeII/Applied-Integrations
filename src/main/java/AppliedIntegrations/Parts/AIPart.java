@@ -6,8 +6,8 @@ import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Grid.AEEnergyStack;
-import AppliedIntegrations.Grid.AEPartGridBlock;
+import AppliedIntegrations.grid.AEEnergyStack;
+import AppliedIntegrations.grid.AEPartGridBlock;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -71,7 +71,7 @@ public abstract class AIPart
 	// Host of this gridblock
 	protected IPartHost host;
 
-	// Tile representation of part
+	// tile representation of part
 	protected TileEntity hostTile;
 
 	// Side where part connected
@@ -92,7 +92,7 @@ public abstract class AIPart
 	// Node representation of part
 	protected IGridNode node;
 
-	// Grid block where part placed
+	// grid block where part placed
 	protected AEPartGridBlock gridBlock;
 
 	public int getX(){
@@ -124,7 +124,7 @@ public abstract class AIPart
 		{
 			this.interactionPermissions = null;
 		}
-			// Create the Grid block
+			// Create the grid block
 		if(getLogicalSide() == SERVER) {
 			this.gridBlock = new AEPartGridBlock(this);
 		}else{
@@ -169,13 +169,13 @@ public abstract class AIPart
 			return false;
 		}
 
-		// Get the security Grid
+		// Get the security grid
 		ISecurityGrid sGrid = this.gridBlock.getSecurityGrid();
 
-		// Did we get the Grid?
+		// Did we get the grid?
 		if( sGrid == null )
 		{
-			// No security Grid to check against.
+			// No security grid to check against.
 			return false;
 		}
 
@@ -192,13 +192,13 @@ public abstract class AIPart
 			return false;
 		}
 
-		// Get the security Grid
+		// Get the security grid
 		ISecurityGrid sGrid = this.gridBlock.getSecurityGrid();
 
-		// Did we get the Grid?
+		// Did we get the grid?
 		if( sGrid == null )
 		{
-			// No security Grid to check against.
+			// No security grid to check against.
 			return false;
 		}
 
@@ -222,7 +222,7 @@ public abstract class AIPart
 		int y = this.hostTile.getPos().getY();
 		int z = this.hostTile.getPos().getZ();
 
-		// Get the Tile entity we are facing
+		// Get the tile entity we are facing
 		return world.getTileEntity( new BlockPos(x + this.cableSide.xOffset, y + this.cableSide.yOffset, z + this.cableSide.zOffset ));
 	}
 
@@ -408,7 +408,7 @@ public abstract class AIPart
 			// Server side?
 			if( !getWorld().isRemote && ( this.gridBlock != null ) )
 			{
-				// Get the energy Grid
+				// Get the energy grid
 				IEnergyGrid eGrid = this.gridBlock.getEnergyGrid();
 				if( eGrid != null )
 				{

@@ -89,13 +89,13 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
             // Trace ray on hitX,Y,Z
             final RayTraceResult mop = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos);
 
-            // Get Tile entity
+            // Get tile entity
             final TileEntity te = world.getTileEntity(pos);
 
-            // Create Grid node
+            // Create grid node
             IGridNode node = null;
 
-            // Check if Tile is part host
+            // Check if tile is part host
             if (te instanceof IPartHost) {
                 // Get part from host
                 final SelectedPart part = ((IPartHost) te).selectPart(mop.hitVec);
@@ -107,7 +107,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
                         // Update node
                         node = part.part.getGridNode();
 
-                // Check if Tile is Grid node
+                // Check if tile is grid node
             } else if (te instanceof IGridHost) {
                 // Get host
                 IGridHost host = (IGridHost) te;
@@ -120,14 +120,14 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 
             // Check not null
             if (node != null) {
-                // Get Grid
+                // Get grid
                 IGrid grid = node.getGrid();
 
                 // Pass to utils
                 TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
 
                 // Log to player
-                player.sendMessage(new TextComponentString("Created Grid network graph at: ").appendSibling(createLink())); // (1)
+                player.sendMessage(new TextComponentString("Created grid network graph at: ").appendSibling(createLink())); // (1)
 
                 // Notify client
                 success = true;

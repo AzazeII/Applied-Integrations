@@ -7,9 +7,9 @@ import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Tile.TileEnum;
+import AppliedIntegrations.tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.Grid.EnergyStorageChannel;
+import AppliedIntegrations.grid.EnergyStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;
@@ -23,8 +23,7 @@ import java.io.*;
 /**
  * @Author Azazell
  */
-public class CommonProxy
-{
+public class CommonProxy {
 
     public void SidedPreInit(){
         ItemEnum.register();
@@ -64,7 +63,7 @@ public class CommonProxy
         }
     }
     /**
-     * Adds Tile entities to the AE2 SpatialIO whitelist
+     * Adds tile entities to the AE2 SpatialIO whitelist
      */
     public void registerSpatialIOMovables()
     {

@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.Tile.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.util.AEPartLocation;

@@ -112,7 +112,7 @@ public class Utils {
     }
 
     /**
-     * @param tile Tile to check
+     * @param tile tile to check
      * @return first energy handled by TileEntity
      */
     public static LiquidAIEnergy getEnergyFromContainer(TileEntity tile) {

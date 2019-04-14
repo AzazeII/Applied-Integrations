@@ -83,7 +83,7 @@ public class PartEnergyImport extends AIOPart
 				if(!filteredEnergies.contains(energy))
 					continue;
 
-			// Check if Tile can operate given energy
+			// Check if tile can operate given energy
 			if(helper.operatesEnergy(energy)) {
 
 				// Simulate injection

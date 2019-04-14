@@ -15,7 +15,7 @@ import AppliedIntegrations.Gui.IWidgetHost;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Tile.TileEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
@@ -36,7 +36,7 @@ import static net.minecraft.util.EnumFacing.*;
 public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidgetHost {
 	private IEnergyInterface Einterface;
 
-	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.Tile.png");
+	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
 	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
 	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
 

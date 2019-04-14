@@ -8,15 +8,15 @@ import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
+import AppliedIntegrations.tile.HoleStorageSystem.render.TileMEPylonRenderer;
+import AppliedIntegrations.tile.HoleStorageSystem.render.TileMETurretRenderer;
+import AppliedIntegrations.tile.HoleStorageSystem.render.TileSingularityRenderer;
+import AppliedIntegrations.tile.HoleStorageSystem.render.TileWhiteHoleRenderer;
+import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
+import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
+import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.Topology.WebServer.WebManager;
-import AppliedIntegrations.Tile.HoleStorageSystem.TileMETurretFoundation;
-import AppliedIntegrations.Tile.HoleStorageSystem.storage.TileMEPylon;
-import AppliedIntegrations.Tile.HoleStorageSystem.singularities.TileBlackHole;
-import AppliedIntegrations.Tile.HoleStorageSystem.singularities.TileWhiteHole;
-import AppliedIntegrations.Tile.HoleStorageSystem.render.TileMEPylonRenderer;
-import AppliedIntegrations.Tile.HoleStorageSystem.render.TileMETurretRenderer;
-import AppliedIntegrations.Tile.HoleStorageSystem.render.TileSingularityRenderer;
-import AppliedIntegrations.Tile.HoleStorageSystem.render.TileWhiteHoleRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,11 +47,20 @@ public class ClientProxy
     @SideOnly(Side.CLIENT)
     @Override
     public void SidedPreInit(){
+        super.SidedPreInit();
+
         NetworkHandler.registerClientPackets();
 
         // Register texture manager to event bus
         FMLCommonHandler.instance().bus().register(new TextureEventManager());
 
+        if(AIConfig.enableBlackHoleStorage) {
+            // Register custom renderers
+            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -74,15 +83,6 @@ public class ClientProxy
             EmberLoader.init();
         if(Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures)
             AstralLoader.init();
-
-        if(AIConfig.enableBlackHoleStorage) {
-            // Register custom renderers
-            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
-        }
-
     }
 
     @Override

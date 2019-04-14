@@ -360,7 +360,7 @@ public abstract class AIOPart
         // Set that we are not facing a container
         this.adjacentEnergyStorage = null;
 
-        // Get the Tile we are facing
+        // Get the tile we are facing
         TileEntity tileEntity = this.getFacingTile();
 
         // Check not null
@@ -371,7 +371,7 @@ public abstract class AIOPart
         for(EnumCapabilityType type : EnumCapabilityType.values) {
             // Iterate over all capabilities
             for(Capability capability : type.capabilities) {
-                // Check if Tile has one of type's capabilities
+                // Check if tile has one of type's capabilities
                 if (tileEntity.hasCapability(capability, getSide().getFacing())) {
                     this.adjacentEnergyStorage = tileEntity;
                 }

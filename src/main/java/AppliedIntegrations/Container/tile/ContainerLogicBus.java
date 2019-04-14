@@ -1,7 +1,7 @@
 package AppliedIntegrations.Container.tile;
 
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
-import AppliedIntegrations.Tile.LogicBus.TileLogicBusCore;
+import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**

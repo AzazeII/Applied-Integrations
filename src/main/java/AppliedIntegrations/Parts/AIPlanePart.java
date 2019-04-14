@@ -1,7 +1,7 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.Tile.HoleStorageSystem.TimeHandler;
+import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -96,7 +96,7 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
             IGridNode node = getGridNode(AEPartLocation.INTERNAL);
             // Check notNull
             if (node != null) {
-                // Get Grid
+                // Get grid
                 IGrid grid = node.getGrid();
                 // Post update
                 grid.postEvent(new MENetworkCellArrayUpdate());

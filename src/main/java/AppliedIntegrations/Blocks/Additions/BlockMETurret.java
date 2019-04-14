@@ -2,7 +2,7 @@ package AppliedIntegrations.Blocks.Additions;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
-import AppliedIntegrations.Tile.HoleStorageSystem.TileMETurretFoundation;
+import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -45,9 +45,9 @@ public class BlockMETurret extends BlockAIRegistrable {
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         TileEntity tile = world.getTileEntity(pos);
         if (!p.isSneaking()) {
-            // Pass activated to Tile entity ( nothing new :) )
+            // Pass activated to tile entity ( nothing new :) )
             if (tile instanceof TileMETurretFoundation) {
-                // Pass activate to Tile
+                // Pass activate to tile
                 return ((TileMETurretFoundation) tile).activate(hand, p);
             }
         }

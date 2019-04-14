@@ -2,7 +2,7 @@ package AppliedIntegrations.Blocks;
 
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Tile.TileEnergyInterface;
+import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.util.AEPartLocation;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
