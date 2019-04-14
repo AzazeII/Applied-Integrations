@@ -2,7 +2,7 @@ package AppliedIntegrations.Integration.Botania;
 
 import AppliedIntegrations.API.Botania.IManaStorageChannel;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.grid.Mana.ManaStorageChannel;
+import AppliedIntegrations.Grid.Mana.ManaStorageChannel;
 import appeng.api.AEApi;
 import net.minecraft.item.ItemStack;
 import vazkii.botania.api.BotaniaAPI;

@@ -191,7 +191,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     @Override
     public void update() {
-        //create grid node on add to world
+        //create Grid node on add to world
         if (!loaded && hasWorld() && !world.isRemote) {
             loaded = true;
             createAENode();

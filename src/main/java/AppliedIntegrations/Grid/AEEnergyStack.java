@@ -1,4 +1,4 @@
-package AppliedIntegrations.grid;
+package AppliedIntegrations.Grid;
 
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;

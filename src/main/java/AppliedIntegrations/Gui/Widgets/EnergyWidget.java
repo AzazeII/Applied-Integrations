@@ -1,38 +1,41 @@
 package AppliedIntegrations.Gui.Widgets;
 
+import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.IWidgetHost;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
  * @Author Azazell
  */
 public abstract class EnergyWidget extends AIWidget {
-    private LiquidAIEnergy currentEnergy;
+    private EnergyStack currentStack;
 
     public EnergyWidget(IWidgetHost hostGUI, int xPos, int yPos) {
         super(hostGUI, xPos, yPos);
     }
 
-    public LiquidAIEnergy getCurrentEnergy() {
-        return currentEnergy;
+    @Nonnull
+    public EnergyStack getCurrentStack() {
+        return currentStack;
     }
 
-    public void setCurrentEnergy(LiquidAIEnergy currentEnergy) {
-        this.currentEnergy = currentEnergy;
+    public void setCurrentStack(@Nonnull EnergyStack currentStack) {
+        this.currentStack = currentStack;
     }
 
     protected void drawEnergy() {
         // Check not null
-        if( currentEnergy == null ) {
+        if( currentStack == null || currentStack.getEnergy() == null ) {
             return;
         }
 
         // Bind energies texture
-        Minecraft.getMinecraft().renderEngine.bindTexture(currentEnergy.getImage());
+        Minecraft.getMinecraft().renderEngine.bindTexture(currentStack.getEnergy().getImage());
 
         // Draw energy
         drawTexturedModalRect(this.xPosition+1,this.yPosition+1,1,1,16,16);
@@ -43,7 +46,7 @@ public abstract class EnergyWidget extends AIWidget {
         // Ignored
     }
 
-    public abstract void onMouseClicked(LiquidAIEnergy energy);
+    public abstract void onMouseClicked(EnergyStack stack);
 
     @Override
     public abstract void drawWidget();
@@ -51,10 +54,10 @@ public abstract class EnergyWidget extends AIWidget {
     @Override
     public void getTooltip(List<String> tooltip) {
         // Check not null
-        if(currentEnergy == null)
+        if( currentStack == null || currentStack.getEnergy() == null )
             return;
 
         // Add energy name
-        tooltip.add(currentEnergy.getEnergyName());
+        tooltip.add(currentStack.getEnergy().getEnergyName());
     }
 }

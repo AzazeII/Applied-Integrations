@@ -84,15 +84,15 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
         // Did operation ended with success? Variable created here to also notify server
         boolean success = false;
 
-        // Mechanics only on client
-        if(!player.isServerWorld()) {
+        // Mechanics only on server
+        if(player.isServerWorld()) {
             // Trace ray on hitX,Y,Z
             final RayTraceResult mop = new RayTraceResult(new Vec3d(hitX, hitY, hitZ), side, pos);
 
             // Get Tile entity
             final TileEntity te = world.getTileEntity(pos);
 
-            // Create grid node
+            // Create Grid node
             IGridNode node = null;
 
             // Check if Tile is part host
@@ -107,7 +107,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
                         // Update node
                         node = part.part.getGridNode();
 
-                // Check if Tile is grid node
+                // Check if Tile is Grid node
             } else if (te instanceof IGridHost) {
                 // Get host
                 IGridHost host = (IGridHost) te;
@@ -120,21 +120,21 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 
             // Check not null
             if (node != null) {
-                // Get grid
+                // Get Grid
                 IGrid grid = node.getGrid();
 
                 // Pass to utils
                 TopologyUtils.createWebUI(grid, player, mode, node.getMachine());
 
                 // Log to player
-                player.sendMessage(new TextComponentString("Created grid network graph at: ").appendSibling(createLink())); // (1)
+                player.sendMessage(new TextComponentString("Created Grid network graph at: ").appendSibling(createLink())); // (1)
 
                 // Notify client
                 success = true;
             }
         }
 
-        // Check if operation ended with success on client
+        // Check if operation ended with success on server
         if(!success)
             return EnumActionResult.FAIL;
         return EnumActionResult.SUCCESS;

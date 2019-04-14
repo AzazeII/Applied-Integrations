@@ -1,6 +1,7 @@
 package AppliedIntegrations.Gui.Part;
 
 import AppliedIntegrations.API.ISyncHost;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
@@ -10,11 +11,9 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketAccessModeClientToServer;
-import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Settings;
-import appeng.client.gui.implementations.GuiStorageBus;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -225,10 +224,10 @@ public class GuiEnergyStoragePart
                 // Get the Energy of the currently held item
                 LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
 
-                if (energySlot.getCurrentEnergy() == itemEnergy)
+                if (energySlot.getCurrentStack().getEnergy() == itemEnergy)
                     return;
 
-                energySlot.onMouseClicked(itemEnergy);
+                energySlot.onMouseClicked(new EnergyStack(itemEnergy, 0));
 
                 break;
             }
@@ -267,7 +266,7 @@ public class GuiEnergyStoragePart
     @Override
     public void updateEnergy(final LiquidAIEnergy energy, int index )
     {
-        this.energyWidgetList.get(index).setCurrentEnergy(energy);
+        this.energyWidgetList.get(index).setCurrentStack(new EnergyStack(energy, 0));
     }
 
     @Override

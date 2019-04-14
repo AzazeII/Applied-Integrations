@@ -5,7 +5,7 @@ import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.Blocks.Additions.BlockWhiteHole;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.AEEnergyStack;
+import AppliedIntegrations.Grid.AEEnergyStack;
 import AppliedIntegrations.Tile.HoleStorageSystem.singularities.TileBlackHole;
 import AppliedIntegrations.Tile.HoleStorageSystem.singularities.TileWhiteHole;
 import appeng.api.config.Actionable;

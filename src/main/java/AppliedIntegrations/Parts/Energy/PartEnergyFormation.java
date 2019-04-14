@@ -4,7 +4,6 @@ import AppliedIntegrations.API.Storage.*;
 import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
-import AppliedIntegrations.grid.AEEnergyStack;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
@@ -17,20 +16,16 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
-import appeng.client.EffectType;
-import appeng.core.AppEng;
 import appeng.util.item.ItemList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.asm.transformers.ItemStackTransformer;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
 import static java.util.Collections.singletonList;
 

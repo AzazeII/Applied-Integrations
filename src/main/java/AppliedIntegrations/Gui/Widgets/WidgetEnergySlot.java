@@ -1,6 +1,6 @@
 package AppliedIntegrations.Gui.Widgets;
 
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.IWidgetHost;
 
@@ -11,6 +11,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nonnull;
 
 /**
  * @Author Azazell
@@ -47,9 +49,18 @@ public class WidgetEnergySlot
             this.drawTexturedModalRect( this.xPosition, this.yPosition, 79, 39, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
 
             // Check not null
-            if( getCurrentEnergy() != null ) {
+            if( getCurrentStack() != null ) {
                 // Draw the Energy
                 this.drawEnergy();
+
+                // Check if energy of stack isn't null
+                if( getCurrentStack().getEnergy() != null ){
+                    // Bind to the overlay texture
+                    Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation( AppliedIntegrations.modid, "textures/gui/slots/selection.png" ) );
+
+                    // Draw energy overlay
+                    this.drawTexturedModalRect( this.xPosition, this.yPosition, 0, 0, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
+                }
             }
 
             // Re-enable lighting
@@ -59,13 +70,13 @@ public class WidgetEnergySlot
     }
 
     @Override
-    public void onMouseClicked( final LiquidAIEnergy energy ) {
+    public void onMouseClicked( @Nonnull final EnergyStack stack ) {
         // Check if slot is currently rendering
         if( !shouldRender )
             return;
 
-        // Change energy
-        setCurrentEnergy(energy);
+        // Change stack
+        setCurrentStack(stack);
 
         // Check not null
         if(hostGUI.getSyncHost() == null)
@@ -73,6 +84,6 @@ public class WidgetEnergySlot
             return;
 
         // Notify server
-        NetworkHandler.sendToServer(new PacketClientToServerFilter(hostGUI.getSyncHost(), energy, id));
+        NetworkHandler.sendToServer(new PacketClientToServerFilter(hostGUI.getSyncHost(), stack.getEnergy(), id));
     }
 }

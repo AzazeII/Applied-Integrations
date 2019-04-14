@@ -1,4 +1,4 @@
-package AppliedIntegrations.grid.Mana;
+package AppliedIntegrations.Grid.Mana;
 
 import appeng.api.storage.data.IAEStack;
 

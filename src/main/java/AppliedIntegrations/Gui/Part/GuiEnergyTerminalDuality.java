@@ -6,6 +6,7 @@ package AppliedIntegrations.Gui.Part;
  */
 import AppliedIntegrations.API.IEnergySelectorContainer;
 import AppliedIntegrations.API.ISyncHost;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
@@ -14,10 +15,9 @@ import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
-import AppliedIntegrations.grid.EnergyList;
+import AppliedIntegrations.Grid.EnergyList;
 import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IItemList;
-import appeng.fluids.client.gui.GuiFluidTerminal;
 import com.google.common.collect.Ordering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,8 +32,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
-
 @SideOnly(Side.CLIENT)
 public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelectorGui {
     private ResourceLocation mainTexture = new ResourceLocation(AppliedIntegrations.modid,"textures/gui/energy.terminal.png");
@@ -43,9 +41,8 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
     private EntityPlayer player;
 
-    @Nullable
-    private LiquidAIEnergy selectedEnergy = null;
-    private Long amount = 0L;
+    @Nonnull
+    private EnergyStack selectedStack = new EnergyStack(null, 0);
 
     private PartEnergyTerminal part;
     public IItemList<IAEEnergyStack> list = new EnergyList();
@@ -82,6 +79,20 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
         }
     }
 
+    @Override
+    protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
+        // Call super
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        // Iterate for each selector
+        widgetEnergySelectors.forEach((widgetEnergySelector -> {
+            // Check if mouse is over widget
+            if(widgetEnergySelector.isMouseOverWidget(mouseX, mouseY)){
+                // Update current energy stack
+                selectedStack = widgetEnergySelector.getCurrentStack();
+            }
+        }));
+    }
+
     @Nonnull
     @Override
     public IEnergySelectorContainer getContainer() {
@@ -91,12 +102,17 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
     @Nullable
     @Override
     public LiquidAIEnergy getSelectedEnergy() {
-        return this.selectedEnergy;
+        return selectedStack.getEnergy();
     }
 
     @Override
     public void setSelectedEnergy(@Nullable LiquidAIEnergy energy) {
-        this.selectedEnergy = energy;
+        selectedStack.setEnergy(energy);
+    }
+
+    @Override
+    public void setAmount(long stackSize) {
+        selectedStack.amount = stackSize;
     }
 
     @Override
@@ -113,15 +129,15 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX,int mouseY) {
         // Check not null
-        if (this.selectedEnergy != null)
+        if (this.selectedStack.getEnergy() != null)
             // Draw energy name
-            this.fontRenderer.drawString("Energy: " + this.selectedEnergy.getEnergyName(),
+            this.fontRenderer.drawString("Energy: " + this.selectedStack.getEnergy().getEnergyName(),
                     45, 101, 0);
 
         // Check stack size greater than zero
-        if (this.amount > 0)
+        if (this.selectedStack.amount > 0)
             // Draw energy amount
-            this.fontRenderer.drawString("Amount: " + this.amount,
+            this.fontRenderer.drawString("Amount: " + this.selectedStack.amount,
                     45, 91, 0);
 
         // Iterate for each widget
@@ -197,7 +213,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
         // Iterate until i = list.size
         for (int i = 0; i < list.size(); i++){
             // Get selector at (i)
-            widgetEnergySelectors.get(i).setCurrentEnergy(sorted.get(i).getEnergy());
+            widgetEnergySelectors.get(i).setCurrentStack(new EnergyStack(sorted.get(i).getEnergy(), sorted.get(i).getStackSize()));
         }
     }
 }

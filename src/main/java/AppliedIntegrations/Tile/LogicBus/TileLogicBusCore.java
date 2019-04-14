@@ -245,7 +245,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
             slave.notifyBlock();
             // destroy node ( very cruel moment in code )
             slave.destroyAENode();
-            // Notify grid node
+            // Notify Grid node
             slave.getGridNode().updateState();
             // Remove from slave list
             slaves.remove(slave);

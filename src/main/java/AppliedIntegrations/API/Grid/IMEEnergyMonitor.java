@@ -13,7 +13,7 @@ import java.util.Collection;
  */
 public interface IMEEnergyMonitor {
     /**
-     * Adds a listener to the energy grid.
+     * Adds a listener to the energy Grid.
      *
      * @param listener
      * @param verificationToken

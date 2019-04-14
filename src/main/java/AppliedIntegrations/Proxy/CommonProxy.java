@@ -9,7 +9,7 @@ import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.grid.EnergyStorageChannel;
+import AppliedIntegrations.Grid.EnergyStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;

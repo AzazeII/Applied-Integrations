@@ -20,4 +20,7 @@ public interface IEnergySelectorGui
 
     // Setter for current energy
     void setSelectedEnergy(@Nullable LiquidAIEnergy energy);
+
+    // Setter for current energy amount
+    void setAmount(long stackSize);
 }

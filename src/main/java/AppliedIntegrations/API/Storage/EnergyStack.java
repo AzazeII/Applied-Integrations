@@ -95,10 +95,7 @@ public class EnergyStack implements IEnergyStack {
 
 	@Override
 	public void setEnergy(@Nullable LiquidAIEnergy energy) {
-		if(energy != null)
-			this.energy = energy;
-		else
-			this.energy = null;
+		this.energy = energy;
 	}
 
 	@Override

@@ -1,12 +1,15 @@
 package AppliedIntegrations.Gui.Widgets;
 
+import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
-import AppliedIntegrations.Gui.IWidgetHost;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
+
+import javax.annotation.Nonnull;
 
 public class WidgetEnergySelector extends EnergyWidget {
     // True by default
@@ -32,7 +35,7 @@ public class WidgetEnergySelector extends EnergyWidget {
             this.drawTexturedModalRect( this.xPosition, this.yPosition, 79, 39, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
 
             // Check not null
-            if( getCurrentEnergy() != null ) {
+            if( getCurrentStack() != null ) {
                 // Draw the Energy
                 this.drawEnergy();
             }
@@ -44,11 +47,14 @@ public class WidgetEnergySelector extends EnergyWidget {
     }
 
     @Override
-    public void onMouseClicked(LiquidAIEnergy energy) {
+    public void onMouseClicked(@Nonnull EnergyStack energy) {
         // Get widget host
         IEnergySelectorGui selector = (IEnergySelectorGui)hostGUI;
 
         // Update energy of selector
-        selector.setSelectedEnergy(energy);
+        selector.setSelectedEnergy(energy.getEnergy());
+
+        // Update energy amount of selector
+        selector.setAmount(energy.getStackSize());
     }
 }

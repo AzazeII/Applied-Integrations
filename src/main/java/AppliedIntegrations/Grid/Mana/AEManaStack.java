@@ -1,4 +1,4 @@
-package AppliedIntegrations.grid.Mana;
+package AppliedIntegrations.Grid.Mana;
 
 import AppliedIntegrations.API.Botania.IAEManaStack;
 import AppliedIntegrations.API.Botania.IManaStorageChannel;

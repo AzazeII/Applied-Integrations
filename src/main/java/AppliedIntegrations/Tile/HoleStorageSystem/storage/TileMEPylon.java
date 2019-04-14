@@ -148,7 +148,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
         IGridNode node = getGridNode(AEPartLocation.INTERNAL);
         // Check notNull
         if (node != null) {
-            // Get grid
+            // Get Grid
             IGrid grid = node.getGrid();
             // Check not null
             if(grid != null) {
@@ -192,7 +192,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
                         // Consume energy for data transmitting, over beam
                         IEnergyGrid energyGrid = getGridNode().getGrid().getCache(IEnergyGrid.class);
 
-                        // Simulate drain, and check if grid has enough energy
+                        // Simulate drain, and check if Grid has enough energy
                         double drain = energyGrid.extractAEPower(beamDrain, Actionable.SIMULATE, PowerMultiplier.CONFIG);
 
                         // Drain energy

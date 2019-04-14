@@ -6,8 +6,8 @@ import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.AEEnergyStack;
-import AppliedIntegrations.grid.AEPartGridBlock;
+import AppliedIntegrations.Grid.AEEnergyStack;
+import AppliedIntegrations.Grid.AEPartGridBlock;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -124,7 +124,7 @@ public abstract class AIPart
 		{
 			this.interactionPermissions = null;
 		}
-			// Create the grid block
+			// Create the Grid block
 		if(getLogicalSide() == SERVER) {
 			this.gridBlock = new AEPartGridBlock(this);
 		}else{
@@ -169,13 +169,13 @@ public abstract class AIPart
 			return false;
 		}
 
-		// Get the security grid
+		// Get the security Grid
 		ISecurityGrid sGrid = this.gridBlock.getSecurityGrid();
 
-		// Did we get the grid?
+		// Did we get the Grid?
 		if( sGrid == null )
 		{
-			// No security grid to check against.
+			// No security Grid to check against.
 			return false;
 		}
 
@@ -192,13 +192,13 @@ public abstract class AIPart
 			return false;
 		}
 
-		// Get the security grid
+		// Get the security Grid
 		ISecurityGrid sGrid = this.gridBlock.getSecurityGrid();
 
-		// Did we get the grid?
+		// Did we get the Grid?
 		if( sGrid == null )
 		{
-			// No security grid to check against.
+			// No security Grid to check against.
 			return false;
 		}
 
@@ -408,7 +408,7 @@ public abstract class AIPart
 			// Server side?
 			if( !getWorld().isRemote && ( this.gridBlock != null ) )
 			{
-				// Get the energy grid
+				// Get the energy Grid
 				IEnergyGrid eGrid = this.gridBlock.getEnergyGrid();
 				if( eGrid != null )
 				{

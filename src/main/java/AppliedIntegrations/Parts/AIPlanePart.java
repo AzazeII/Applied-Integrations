@@ -96,7 +96,7 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
             IGridNode node = getGridNode(AEPartLocation.INTERNAL);
             // Check notNull
             if (node != null) {
-                // Get grid
+                // Get Grid
                 IGrid grid = node.getGrid();
                 // Post update
                 grid.postEvent(new MENetworkCellArrayUpdate());

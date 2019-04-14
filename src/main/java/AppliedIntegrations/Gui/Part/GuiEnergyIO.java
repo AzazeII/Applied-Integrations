@@ -1,12 +1,10 @@
 package AppliedIntegrations.Gui.Part;
 
-import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.ISyncHost;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Gui.AEStateIconsEnum;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
@@ -165,10 +163,10 @@ public class GuiEnergyIO
                 // Get the Energy of the currently held item
                 LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
 
-                if (EnergySlot.getCurrentEnergy() == itemEnergy)
+                if (EnergySlot.getCurrentStack().getEnergy() == itemEnergy)
                     return;
 
-                EnergySlot.onMouseClicked(itemEnergy);
+                EnergySlot.onMouseClicked(new EnergyStack(itemEnergy, 0));
 
                 break;
             }
@@ -177,7 +175,7 @@ public class GuiEnergyIO
 
     @Override
     public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
-        this.energySlotList.get( index ).setCurrentEnergy( energy );
+        this.energySlotList.get( index ).setCurrentStack( new EnergyStack(energy, 0) );
     }
 
     @Override

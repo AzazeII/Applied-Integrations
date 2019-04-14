@@ -2,14 +2,11 @@ package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.grid.AEEnergyStack;
-import AppliedIntegrations.grid.EnergyList;
-import appeng.api.storage.IMEMonitor;
+import AppliedIntegrations.Grid.AEEnergyStack;
+import AppliedIntegrations.Grid.EnergyList;
 import appeng.api.storage.data.IItemList;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.nbt.NBTTagCompound;
 
 /**
  * @Author Azazell

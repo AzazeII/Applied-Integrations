@@ -1,4 +1,4 @@
-package AppliedIntegrations.grid;
+package AppliedIntegrations.Grid;
 
 import AppliedIntegrations.Parts.AIPart;
 import appeng.api.networking.*;
@@ -8,7 +8,6 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.data.IAEFluidStack;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AEColor;
 import appeng.api.util.DimensionalCoord;
 import net.minecraft.item.ItemStack;
@@ -44,30 +43,30 @@ public class AEPartGridBlock
 
     public IEnergyGrid getEnergyGrid()
     {
-        // Get the grid
+        // Get the Grid
         IGrid grid = this.getGrid();
 
-        // Ensure we have a grid
+        // Ensure we have a Grid
         if( grid == null )
         {
             return null;
         }
 
-        // Return the energy grid
+        // Return the energy Grid
         return grid.getCache( IEnergyGrid.class );
     }
 
     /**
-     * Returns the energy monitor for the current grid.
+     * Returns the energy monitor for the current Grid.
      *
      * @return
      */
     public IMEMonitor<IAEFluidStack> getEnergyMonitor()
     {
-        // Get the grid.
+        // Get the Grid.
         IGrid grid = this.getGrid();
 
-        // Ensure there is a grid
+        // Ensure there is a Grid
         if( grid == null )
         {
             return null;
@@ -88,13 +87,13 @@ public class AEPartGridBlock
 
     public final IGrid getGrid()
     {
-        // Get the grid node
+        // Get the Grid node
         IGridNode node = this.part.getGridNode();
 
         // Ensure we have a node
         if( node != null )
         {
-            // Get the grid
+            // Get the Grid
             return node.getGrid();
         }
 
@@ -102,7 +101,7 @@ public class AEPartGridBlock
     }
 
     /**
-     * Returns the color of the grid.
+     * Returns the color of the Grid.
      */
     @Override
     public AEColor getGridColor()
@@ -148,42 +147,42 @@ public class AEPartGridBlock
     }
 
     /**
-     * Gets the security grid
+     * Gets the security Grid
      *
      * @return
      */
     public ISecurityGrid getSecurityGrid()
     {
-        // Get the grid.
+        // Get the Grid.
         IGrid grid = this.getGrid();
 
-        // Do we have a grid?
+        // Do we have a Grid?
         if( grid == null )
         {
             return null;
         }
 
-        // Get the security grid from the cache.
+        // Get the security Grid from the cache.
         return (ISecurityGrid)grid.getCache( ISecurityGrid.class );
     }
 
     /**
-     * Gets the storage grid.
+     * Gets the storage Grid.
      *
      * @return
      */
     public IStorageGrid getStorageGrid()
     {
-        // Get the grid.
+        // Get the Grid.
         IGrid grid = this.getGrid();
 
-        // Do we have a grid?
+        // Do we have a Grid?
         if( grid == null )
         {
             return null;
         }
 
-        // Get the storage grid from the cache.
+        // Get the storage Grid from the cache.
         return (IStorageGrid)grid.getCache( IStorageGrid.class );
     }
 
@@ -209,7 +208,7 @@ public class AEPartGridBlock
     }
 
     /**
-     * Called to update the grid and the channels used.
+     * Called to update the Grid and the channels used.
      */
     @Override
     public final void setNetworkStatus( final IGrid grid, final int usedChannels )

@@ -2,6 +2,7 @@ package AppliedIntegrations.Gui.Part;
 
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.ISyncHost;
+import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
@@ -106,8 +107,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 			drawHoveringText(this.buttonTooltip, MouseX, MouseY, fontRenderer);
 		if (this.energySlot.isMouseOverWidget(MouseX, MouseY)) {
 			List<String> tip = new ArrayList<String>();
-			if (energySlot.getCurrentEnergy() != null) {
-				tip.add(this.energySlot.getCurrentEnergy().getEnergyName());
+			if (energySlot.getCurrentStack() != null) {
+				tip.add(this.energySlot.getCurrentStack().getEnergyName());
 				drawHoveringText(tip, MouseX, MouseY, fontRenderer);
 			}
 		}
@@ -122,15 +123,10 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 					getX(),getY(),getZ(),player));
 		}*/
 		if (this.energySlot.isMouseOverWidget(mouseX, mouseY)) {
-			// avoid null pointer exception
-			if (player.inventory.getItemStack() == null) {
-				energySlot.onMouseClicked(null);
-				return;
-			}
 			LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
 
 			try {
-				energySlot.onMouseClicked(EnergyItem);
+				energySlot.onMouseClicked(new EnergyStack(EnergyItem, 1));
 
 			} catch (Exception e) {
 				AILog.debug(e + "");
@@ -172,7 +168,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	@Override
 	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
 		// Change widget's energy
-		this.EnergySlotList.get(index).setCurrentEnergy(energy);
+		this.EnergySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 
 	@Override

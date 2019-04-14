@@ -1,9 +1,8 @@
-package AppliedIntegrations.grid;
+package AppliedIntegrations.Grid;
 
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IItemList;
-import appeng.fluids.util.MeaningfulFluidIterator;
 
 import javax.annotation.Nonnull;
 import java.util.*;

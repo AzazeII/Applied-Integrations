@@ -1,6 +1,5 @@
-package AppliedIntegrations.grid;
+package AppliedIntegrations.Grid;
 
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import appeng.api.storage.data.IAEStack;
 
 import java.util.Iterator;

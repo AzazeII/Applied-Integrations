@@ -8,8 +8,7 @@ import AppliedIntegrations.Helpers.ManaInterfaceDuality;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.Mana.AEManaStack;
+import AppliedIntegrations.Grid.Mana.AEManaStack;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
@@ -186,7 +185,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
     public int InjectMana(int resource, Actionable actionable) {
         if(node == null)
             return 0;
-        IGrid grid = node.getGrid(); // check grid node
+        IGrid grid = node.getGrid(); // check Grid node
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class);
 

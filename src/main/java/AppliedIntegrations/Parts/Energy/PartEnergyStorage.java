@@ -137,7 +137,7 @@ public class PartEnergyStorage
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 		// Check notNull
 		if (node != null) {
-			// Get grid
+			// Get Grid
 			IGrid grid = node.getGrid();
 			// Check not null
 			if(grid != null) {
@@ -150,7 +150,7 @@ public class PartEnergyStorage
 	public void setAccess(AccessRestriction access) {
 		this.access = access;
 
-		// Notify grid
+		// Notify Grid
 		this.postCellEvent();
 	}
 

@@ -117,7 +117,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 
     @Override
     public void update() {
-        //create grid node on add to world
+        //create Grid node on add to world
         if (!loaded && hasWorld() && !world.isRemote && hasMaster()) {
             loaded = true;
             createAENode();

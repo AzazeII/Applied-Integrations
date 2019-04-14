@@ -58,7 +58,7 @@ public class TopologyUtils {
             // Case all network nodes from line end to controller showing
             /*case LINE:
                 // Graph line nodes
-                graphLineNodes(grid, player);
+                graphLineNodes(Grid, player);
                 break;*/
 
             // Graph all p2p links
@@ -105,7 +105,7 @@ public class TopologyUtils {
         // Create node list
         List<IGridNode> nodeList = new ArrayList<>();
 
-        // Iterate for each node in given grid
+        // Iterate for each node in given Grid
         for (IGridNode node : grid.getNodes())
             // Check if host of node is equal (by type) to given machine
             if( node.getMachine().getClass() == machine.getClass() )
@@ -119,7 +119,7 @@ public class TopologyUtils {
         // Get energy cache
         EnergyGridCache iEnergyGrid = grid.getCache(IEnergyGrid.class);
 
-        // Get energy grid providers
+        // Get energy Grid providers
         Collection<IEnergyGridProvider> gridProviders = iEnergyGrid.providers();
 
         // Create node list
@@ -142,7 +142,7 @@ public class TopologyUtils {
 
                 @Override
                 public IGridNode getRight() {
-                    // Check if provider instanceof grid host
+                    // Check if provider instanceof Grid host
                     if(iEnergyGridProvider instanceof IGridHost)
                         // Return node
                         return ((IGridHost) iEnergyGridProvider).getGridNode(AEPartLocation.INTERNAL);
@@ -161,7 +161,7 @@ public class TopologyUtils {
                 // Add pair to connections
                 connections.add(pair);
 
-            // Check if provider instanceof grid host
+            // Check if provider instanceof Grid host
             if(iEnergyGridProvider instanceof IGridHost)
                 // Add node
                 nodeList.add(((IGridHost)iEnergyGridProvider).getGridNode(AEPartLocation.INTERNAL));
@@ -187,7 +187,7 @@ public class TopologyUtils {
         // Create p2p tunnel list
         List<PartP2PTunnel> tunnelList = new LinkedList<>();
 
-        // Iterate for each grid node
+        // Iterate for each Grid node
         grid.getNodes().forEach((iGridNode -> {
             // Check if machine of node instanceof p2p tunnel
             if(iGridNode.getMachine() instanceof PartP2PTunnel){
@@ -377,7 +377,7 @@ public class TopologyUtils {
             // Serialize data of node
             serializedDataList.add(serializeNodeData(gridNode));
 
-            // Check if grid node equal to pivot of main net
+            // Check if Grid node equal to pivot of main net
             if(gridNode == mainNet.getPivot()) {
                 // Check if node list not already contains main network
                 if(!jsonNodeList.toList().contains("Selected Network")) {
@@ -387,23 +387,23 @@ public class TopologyUtils {
                     // Get JSON object
                     JSONObject obj = createJSONFromGridNodes(mainNet.getNodes());
 
-                    // Write grid node string(only has used)
+                    // Write Grid node string(only has used)
                     obj.put("iGridProvider", toHumanReadableString(gridNode.getMachine().toString()));
 
-                    // Serialize outer grid
+                    // Serialize outer Grid
                     serializedGridList.add(obj);
                 }
             } else {
                 // Convert to readable string
                 jsonNodeList.put(toHumanReadableString(gridNode.getMachine().toString()));
 
-                // All next code used to get outer grid from sub network provider
+                // All next code used to get outer Grid from sub network provider
                 // Get list of energy cache providers
                 Collection<IEnergyGridProvider> providers = ((IEnergyGridProvider)gridNode.getMachine()).providers();
 
                 // Iterate for each provider
                 providers.forEach((iEnergyGridProvider -> {
-                    // Check if energy provider not from inner grid
+                    // Check if energy provider not from inner Grid
                     if(iEnergyGridProvider != mainNet.getCache(IEnergyGrid.class)) {
                         // Pass function call to subnet helper
                         IGrid outerGrid = null;
@@ -421,10 +421,10 @@ public class TopologyUtils {
                             // Get JSON object
                             JSONObject obj = createJSONFromGridNodes(outerGrid.getNodes());
 
-                            // Write grid node string(only has used)
+                            // Write Grid node string(only has used)
                             obj.put("iGridProvider", toHumanReadableString(gridNode.getMachine().toString()));
 
-                            // Serialize outer grid
+                            // Serialize outer Grid
                             serializedGridList.add(obj);
                         }
                     }

@@ -82,12 +82,12 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
 
     /**
      * @return Interface (not block) for interacting with ME Network's inventory, used by logic bus core to
-     * inject autocrafting items to outer grid
+     * inject autocrafting items to outer Grid
      */
     public IMEInventory<IAEItemStack> getOuterGridInventory() {
         if(getGridNode() == null)
             return null;
-        IGrid grid = getGridNode().getGrid(); // check grid node
+        IGrid grid = getGridNode().getGrid(); // check Grid node
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
 

@@ -2,8 +2,7 @@ package AppliedIntegrations.Inventory.Handlers;
 
 import AppliedIntegrations.API.Storage.*;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
-import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.grid.AEEnergyStack;
+import AppliedIntegrations.Grid.AEEnergyStack;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
