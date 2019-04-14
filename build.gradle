@@ -16,9 +16,45 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-version = "1.0"
+// Just a pompous name for "getGitBranch"
+def getGitTimeField = { ->
+    // Create std output stream, to read command line ouput
+    def stdout = new ByteArrayOutputStream()
+
+    // Execute next block:
+    exec {
+        // Get commit hash
+        commandLine 'git', 'rev-parse', '--abbrev-ref', 'HEAD'
+
+        // Write standart output
+        standardOutput = stdout
+    }
+
+    // Return hash from stdout
+    return stdout.toString().trim()
+}
+
+// Just a pompous name for "getGitCommitHash"
+def getGitTimeLineHash = { ->
+    // Create std output stream, to read command line ouput
+    def stdout = new ByteArrayOutputStream()
+
+    // Execute next block:
+    exec {
+        // Get commit hash
+        commandLine 'git', 'rev-parse', '--short', 'HEAD'
+        
+        // Write standart output
+        standardOutput = stdout
+    }
+
+    // Return hash from stdout
+    return stdout.toString().trim()
+}
+
+version = getGitTimeField() + '-' + getGitTimeLineHash()
 group = "com.azazell" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
-archivesBaseName = "AppliedIntegrations-1.12.2-Alpha"
+archivesBaseName = "AppliedIntegrations"
 
 sourceCompatibility = targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 compileJava {
