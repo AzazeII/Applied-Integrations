@@ -4,7 +4,9 @@ import AppliedIntegrations.API.ISyncHost;
 import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Gui.AEStateIconsEnum;
 import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
@@ -69,8 +71,8 @@ public class GuiEnergyIO
         drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize,this.ySize+75);
 
         // Draw upgrade slots
-        this.drawTexturedModalRect( this.guiLeft + this.GUI_MAIN_WIDTH, this.guiTop, this.GUI_MAIN_WIDTH, 0,
-                this.GUI_UPGRADES_WIDTH, this.GUI_UPGRADES_HEIGHT );
+        this.drawTexturedModalRect( this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0,
+                GUI_UPGRADES_WIDTH, GUI_UPGRADES_HEIGHT );
 
     }
     @Override
@@ -85,11 +87,9 @@ public class GuiEnergyIO
         WidgetEnergySlot slotUnderMouse = null;
 
         // Iterate over widgets
-        for( WidgetEnergySlot slotWidget : energySlotList )
-        {
+        for( WidgetEnergySlot slotWidget : energySlotList ) {
             // Check if overlay not rendering, slot widget should render and mouse is under widget
-            if( ( !hoverUnderlayRendered ) && ( slotWidget.shouldRender ) && ( slotWidget.isMouseOverWidget( mouseX, mouseY ) ) )
-            {
+            if( ( !hoverUnderlayRendered ) && ( slotWidget.shouldRender ) && ( slotWidget.isMouseOverWidget( mouseX, mouseY ) ) ) {
                 // Draw widget's underlay
                 slotWidget.drawMouseHoverUnderlay();
 
@@ -103,9 +103,9 @@ public class GuiEnergyIO
             // Draw widget
             slotWidget.drawWidget();
         }
+        //
         // Should we get the tooltip from the slot?
-        if( slotUnderMouse != null )
-        {
+        if( slotUnderMouse != null ) {
             // Add the tooltip from the widget
             slotUnderMouse.getTooltip( this.tooltip );
         }
@@ -120,9 +120,12 @@ public class GuiEnergyIO
 
     public void initGui() {
         super.initGui();
-        //this.buttonList.add( new GuiButtonAETab( 0, this.guiLeft +
-        //        GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
-        //        "gui.appliedenergistics2.Priority" ) );
+
+        // Add priority button
+        this.buttonList.add( new GuiButtonAETab( 0, this.guiLeft +
+                GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
+                "gui.appliedenergistics2.Priority" ) );
+
         // Calculate the index
         int index = 0;
         for( int row = 0; row < this.FILTER_GRID_SIZE; row++ )

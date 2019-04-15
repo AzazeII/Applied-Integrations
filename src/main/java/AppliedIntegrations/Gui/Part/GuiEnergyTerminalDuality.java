@@ -130,7 +130,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
         Minecraft.getMinecraft().renderEngine.bindTexture( this.mainTexture );
 
         // Draw the gui
-        this.drawTexturedModalRect( this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize );
+        drawTexturedModalRect( this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize );
     }
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX,int mouseY) {
@@ -150,7 +150,8 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
         // Draw each widget
         widgetEnergySelectors.forEach((WidgetEnergySelector::drawWidget));
 
-        this.fontRenderer.drawString( I18n.translateToLocal("ME Energy Terminal") , 9, 3, 4210752);
+        // Draw name of GUI
+        fontRenderer.drawString( I18n.translateToLocal("ME Energy Terminal") , 9, 3, 4210752);
     }
 
     @Override

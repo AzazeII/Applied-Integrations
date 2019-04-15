@@ -5,7 +5,9 @@ import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
+import AppliedIntegrations.Gui.AEStateIconsEnum;
 import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
@@ -79,20 +81,9 @@ public class GuiEnergyStoragePart
     private static final int TITLE_Y_POS = 5;
 
     /**
-     * ID of the priority button
-     */
-    private static final int BUTTON_PRIORITY_ID = 0;
-
-    /**
      * X offset position of the priority button
      */
     public static final int BUTTON_PRIORITY_X_POSITION = 151;
-
-    private static final int BUTTON_ALLOW_VOID_ID = 1;
-
-    private static final int BUTTON_ALLOW_VOID_X_POS = -18;
-
-    private static final int BUTTON_ALLOW_VOID_Y_POS = 8;
 
     /**
      * Player viewing this gui.
@@ -104,15 +95,13 @@ public class GuiEnergyStoragePart
      */
     private List<WidgetEnergySlot> energyWidgetList = new ArrayList<WidgetEnergySlot>();
 
-    /**
-     * Does the player have a network tool?
-     */
+    // Should gui render network tool slots?
     private boolean hasNetworkTool;
 
     /**
      * Storage bus associated with this gui
      */
-    public PartEnergyStorage storageBus;
+    private PartEnergyStorage storageBus;
 
     /**
      * Title of the gui
@@ -237,6 +226,11 @@ public class GuiEnergyStoragePart
     @Override
     public void initGui() {
         super.initGui();
+
+        // Add priority button
+        this.buttonList.add( new GuiButtonAETab( 0, this.guiLeft +
+                GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
+                "gui.appliedenergistics2.Priority" ) );
 
         // Create widget @for_each row and @for_each column with zero index
         for( int row = 0; row < GuiEnergyStoragePart.WIDGET_COLUMNS; row++ ) {
