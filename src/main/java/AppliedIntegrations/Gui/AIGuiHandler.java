@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui;
 
+import AppliedIntegrations.API.IPriorityHostExtended;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerAIPriority;
@@ -147,7 +148,7 @@ public class AIGuiHandler implements IGuiHandler {
 
             return new ContainerEnergyTerminal(part, player);
         }else if(gui == GuiAIPriority){
-            IPriorityHost host = (IPriorityHost) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+            IPriorityHostExtended host = (IPriorityHostExtended) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
 
             return new ContainerAIPriority(player.inventory, host);
         }
@@ -187,7 +188,7 @@ public class AIGuiHandler implements IGuiHandler {
 
             return new GuiEnergyTerminalDuality((ContainerEnergyTerminal)getServerGuiElement(ID, player, world, x, y, z), part, player);
         }else if(gui == GuiAIPriority){
-            IPriorityHost host = (IPriorityHost) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+            IPriorityHostExtended host = (IPriorityHostExtended) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
 
             return new GuiPriorityAI(player.inventory, host);
         }
