@@ -65,7 +65,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 		// Sort direction (default: ascending)
 		configManager.registerSetting( Settings.SORT_DIRECTION, SortDir.ASCENDING );
 	}
-
+	
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
 		// Check if terminal is active
