@@ -228,7 +228,7 @@ public class GuiEnergyIO
         // Check if click was performed on priority button
         if (btn == priorityButton){
             // Send packet to client
-            NetworkHandler.sendTo(new PacketGuiShift(GuiAIPriority, part), (EntityPlayerMP) player);
+            NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, part));
         }
     }
 }
