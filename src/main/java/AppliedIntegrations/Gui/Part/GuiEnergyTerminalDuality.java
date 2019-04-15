@@ -58,9 +58,9 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
     private SortOrder sortMode = SortOrder.NAME;
 
     public GuiEnergyTerminalDuality(ContainerEnergyTerminal container,PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
-        super(container);
+        super(container, player);
 
-        this.LinkedContainer = container;
+        LinkedContainer = container;
 
         this.player = player;
         this.part = partEnergyTerminal;

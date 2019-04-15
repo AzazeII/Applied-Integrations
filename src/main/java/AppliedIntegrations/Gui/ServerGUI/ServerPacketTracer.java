@@ -89,7 +89,7 @@ public class ServerPacketTracer extends AIBaseGui {
     private AIGuiButton selectedNetwork;
 
     public ServerPacketTracer(ContainerServerPacketTracer container, TileServerCore master,EntityPlayer player) {
-        super(container);
+        super(container, player);
 
         this.player = player;
 

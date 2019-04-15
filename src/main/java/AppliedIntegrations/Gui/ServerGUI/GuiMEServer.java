@@ -5,6 +5,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
 import AppliedIntegrations.Gui.AIBaseGui;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -14,8 +15,8 @@ import org.lwjgl.opengl.GL11;
 public class GuiMEServer extends AIBaseGui {
     private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/ServerStorage.png");
 
-    public GuiMEServer(ContainerMEServer container) {
-        super(container);
+    public GuiMEServer(ContainerMEServer container, EntityPlayer p) {
+        super(container, p);
     }
 
     @Override

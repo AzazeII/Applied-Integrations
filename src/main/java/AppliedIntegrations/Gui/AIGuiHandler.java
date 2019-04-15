@@ -2,6 +2,7 @@ package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Container.ContainerAIPriority;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
@@ -15,6 +16,7 @@ import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import appeng.api.util.AEPartLocation;
+import appeng.helpers.IPriorityHost;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -23,6 +25,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import javax.annotation.Nullable;
 
+import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiTerminalPart;
 
 /**
@@ -37,7 +40,8 @@ public class AIGuiHandler implements IGuiHandler {
         GuiTerminalPart,
         GuiTerminalSecurity,
         GuiLogicBus,
-        GuiIOPart;
+        GuiAIPriority,
+        GuiIOPart
     }
 
     public static void open(GuiEnum gui, EntityPlayer player, AEPartLocation side, BlockPos pos){
@@ -142,6 +146,10 @@ public class AIGuiHandler implements IGuiHandler {
             PartEnergyTerminal part = (PartEnergyTerminal)Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
             return new ContainerEnergyTerminal(part, player);
+        }else if(gui == GuiAIPriority){
+            IPriorityHost host = (IPriorityHost) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+
+            return new ContainerAIPriority(player.inventory, host);
         }
 
         return null;
@@ -178,6 +186,10 @@ public class AIGuiHandler implements IGuiHandler {
             PartEnergyTerminal part = (PartEnergyTerminal)Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
             return new GuiEnergyTerminalDuality((ContainerEnergyTerminal)getServerGuiElement(ID, player, world, x, y, z), part, player);
+        }else if(gui == GuiAIPriority){
+            IPriorityHost host = (IPriorityHost) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+
+            return new GuiPriorityAI(player.inventory, host);
         }
 
         return null;

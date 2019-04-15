@@ -262,9 +262,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         return new ContainerMEServer(player,this);
     }
     @Override
-    public Object getClientGuiElement( final EntityPlayer player )
-    {
-        return new GuiMEServer((ContainerMEServer)this.getServerGuiElement(player));
+    public Object getClientGuiElement( final EntityPlayer player ) {
+        return new GuiMEServer((ContainerMEServer)this.getServerGuiElement(player), player);
     }
 
     @Override

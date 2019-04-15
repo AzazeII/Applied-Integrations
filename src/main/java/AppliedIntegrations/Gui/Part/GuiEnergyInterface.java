@@ -7,17 +7,18 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.AIGuiHelper;
-import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
-import AppliedIntegrations.Gui.IFilterGUI;
-import AppliedIntegrations.Gui.IWidgetHost;
+import AppliedIntegrations.Gui.*;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketGuiShift;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.TileEnergyInterface;
+import appeng.client.gui.widgets.GuiTabButton;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 import static net.minecraft.util.EnumFacing.*;
 
 /**
@@ -46,7 +48,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	protected final List<String> tooltip = new ArrayList<String>();
 	private List<WidgetEnergySlot> EnergySlotList = new ArrayList<WidgetEnergySlot>();
 
-	private GuiButtonAETab priority;
+	private GuiTabButton priority;
 
 	private EntityPlayer player;
 
@@ -59,7 +61,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	public int storage;
 
 	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part, EntityPlayer player) {
-		super(CEI);
+		super(CEI, player);
 		this.player = player;
 
 		this.Einterface = part;
@@ -69,7 +71,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	}
 
 	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface Einterface, EntityPlayer player) {
-		super(container);
+		super(container, player);
 		this.player = player;
 		this.Einterface = Einterface;
 
@@ -142,8 +144,10 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		if (LinkedMetric == RF || LinkedMetric == J || LinkedMetric == EU)
 			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + LinkedMetric.getTag() + ".bar.png");
 		Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
+
 		// Drawing Name
 		this.fontRenderer.drawString(I18n.translateToLocal("ME Energy Interface"), 9, 3, 4210752);
+
 		// Drawing Tooltips
 		if (this.Einterface instanceof TileEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
@@ -162,7 +166,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 			}
 			this.energySlot.drawWidget();
 		}
-
 	}
 
 	@Override
@@ -179,11 +182,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 		this.EnergySlotList.add(this.energySlot);
 
-		//priority = new GuiButtonAETab(0, this.getLeft +
-		//		GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.getTop - 3, AEStateIconsEnum.WRENCH,
-		//		"gui.appliedenergistics2.Priority");
-		//this.buttonList.add(priority);
-
+		// Add priority button
+		addPriorityButton();
 	}
 
 	private void drawPower(int pLeft, int pTop, int pMouseX, int pMouseY, int width, EnumFacing side) {
@@ -257,6 +257,19 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	public void setSyncHost(ISyncHost host) {
 		if(host instanceof IEnergyInterface)
 			Einterface = (IEnergyInterface)host;
+	}
+
+	@Override
+	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+		// Avoid null pointer exception in packet
+		if(part == null)
+			return;
+
+		// Check if click was performed on priority button
+		if (btn == priorityButton){
+			// Send packet to client
+			NetworkHandler.sendTo(new PacketGuiShift(GuiAIPriority, part), (EntityPlayerMP) player);
+		}
 	}
 }
 

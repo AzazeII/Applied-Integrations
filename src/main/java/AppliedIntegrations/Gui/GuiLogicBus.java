@@ -18,7 +18,7 @@ public class GuiLogicBus extends AIBaseGui{
     public final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/logic_bus.png");
 
     public GuiLogicBus(EntityPlayer player, TileLogicBusCore maybeCore, ContainerLogicBus container) {
-        super(container);
+        super(container, player);
     }
 
     @Override

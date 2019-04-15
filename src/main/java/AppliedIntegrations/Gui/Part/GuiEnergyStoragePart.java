@@ -5,21 +5,22 @@ import AppliedIntegrations.API.Storage.EnergyStack;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
-import AppliedIntegrations.Gui.AEStateIconsEnum;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.Buttons.GuiButtonAETab;
 import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketAccessModeClientToServer;
+import AppliedIntegrations.Network.Packets.PacketGuiShift;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Settings;
+import appeng.client.gui.implementations.GuiPriority;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,6 +32,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
+import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 
 /**
  * @Author Azazell
@@ -80,10 +82,6 @@ public class GuiEnergyStoragePart
      */
     private static final int TITLE_Y_POS = 5;
 
-    /**
-     * X offset position of the priority button
-     */
-    public static final int BUTTON_PRIORITY_X_POSITION = 151;
 
     /**
      * Player viewing this gui.
@@ -98,15 +96,8 @@ public class GuiEnergyStoragePart
     // Should gui render network tool slots?
     private boolean hasNetworkTool;
 
-    /**
-     * Storage bus associated with this gui
-     */
+    // Owner of this GUI
     private PartEnergyStorage storageBus;
-
-    /**
-     * Title of the gui
-     */
-    private final String guiTitle = I18n.translateToLocal("ME Energy Storage Bus");
 
     // Current access mode
     public GuiImgButton accessMode;
@@ -122,7 +113,7 @@ public class GuiEnergyStoragePart
     public GuiEnergyStoragePart( ContainerEnergyStorage CEI,final PartEnergyStorage storageBus, final EntityPlayer player)
     {
         // Call super
-        super( CEI );
+        super( CEI, player );
 
         // Set the player
         this.player = player;
@@ -165,21 +156,18 @@ public class GuiEnergyStoragePart
     }
 
     @Override
-    protected void drawGuiContainerForegroundLayer( final int mouseX, final int mouseY )
-    {
+    protected void drawGuiContainerForegroundLayer( final int mouseX, final int mouseY ) {
         // Call super
         super.drawGuiContainerForegroundLayer( mouseX, mouseY );
 
         // Draw the title
-        this.fontRenderer.drawString( this.guiTitle, GuiEnergyStoragePart.TITLE_X_POS, GuiEnergyStoragePart.TITLE_Y_POS, 0x000000 );
+        this.fontRenderer.drawString( I18n.translateToLocal("ME Energy Storage Bus"), GuiEnergyStoragePart.TITLE_X_POS, GuiEnergyStoragePart.TITLE_Y_POS, 0x000000 );
 
         WidgetEnergySlot slotUnderMouse = null;
 
 
-        for( WidgetEnergySlot currentWidget : this.energyWidgetList)
-        {
-            if( ( slotUnderMouse == null ) && ( currentWidget.shouldRender ) && ( currentWidget.isMouseOverWidget( mouseX, mouseY ) ) )
-            {
+        for( WidgetEnergySlot currentWidget : this.energyWidgetList) {
+            if( ( slotUnderMouse == null ) && ( currentWidget.shouldRender ) && ( currentWidget.isMouseOverWidget( mouseX, mouseY ) ) ) {
                 // Set the slot
                 slotUnderMouse = currentWidget;
             }
@@ -194,10 +182,8 @@ public class GuiEnergyStoragePart
             tooltip.addAll(Arrays.asList(accessMode.getMessage().split("\n")));
         }
 
-
         // Should we get the tooltip from the slot?
-        if( slotUnderMouse != null )
-        {
+        if( slotUnderMouse != null ) {
             // Add the tooltip from the widget
             slotUnderMouse.getTooltip( this.tooltip );
         }
@@ -228,9 +214,7 @@ public class GuiEnergyStoragePart
         super.initGui();
 
         // Add priority button
-        this.buttonList.add( new GuiButtonAETab( 0, this.guiLeft +
-                GuiEnergyStoragePart.BUTTON_PRIORITY_X_POSITION, this.guiTop-3, AEStateIconsEnum.WRENCH,
-                "gui.appliedenergistics2.Priority" ) );
+        addPriorityButton();
 
         // Create widget @for_each row and @for_each column with zero index
         for( int row = 0; row < GuiEnergyStoragePart.WIDGET_COLUMNS; row++ ) {
@@ -255,8 +239,7 @@ public class GuiEnergyStoragePart
 
 
     @Override
-    public void updateEnergy(final LiquidAIEnergy energy, int index )
-    {
+    public void updateEnergy(final LiquidAIEnergy energy, int index ) {
         this.energyWidgetList.get(index).setCurrentStack(new EnergyStack(energy, 0));
     }
 
@@ -272,7 +255,9 @@ public class GuiEnergyStoragePart
     }
 
     @Override
-    public void actionPerformed( final GuiButton btn ) {
+    public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+        super.onButtonClicked(btn, mouseButton);
+
         // Check if action performed on access mode button
         if(btn == accessMode){
             AccessRestriction mode = (AccessRestriction)accessMode.getCurrentValue();
@@ -289,6 +274,16 @@ public class GuiEnergyStoragePart
 
             // Notify server
             NetworkHandler.sendToServer(new PacketAccessModeClientToServer((AccessRestriction)accessMode.getCurrentValue(), storageBus));
+        }
+
+        // Avoid null pointer exception in packet
+        if(storageBus == null)
+            return;
+
+        // Check if click was performed on priority button
+        if (btn == priorityButton){
+            // Send packet to client
+            NetworkHandler.sendTo(new PacketGuiShift(GuiAIPriority, storageBus), (EntityPlayerMP) player);
         }
     }
 }

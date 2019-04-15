@@ -39,6 +39,8 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerAccessModeServerToClient.class, PacketAccessModeServerToClient.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerTerminalUpdate.class, PacketTerminalUpdate.class, packetId++, Side.CLIENT);
+
+        Handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.CLIENT);
     }
 
     public static final void registerServerPackets(){
