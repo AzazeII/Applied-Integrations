@@ -1,6 +1,7 @@
 package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.IInventoryHost;
+import AppliedIntegrations.API.IPriorityHostExtended;
 import AppliedIntegrations.API.Storage.EnergyRepo;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
@@ -56,7 +57,7 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 
 public abstract class AIOPart
         extends AIPart
-        implements IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHost {
+        implements IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHostExtended {
     /**
      * Constant fields
      */
@@ -538,5 +539,11 @@ public abstract class AIOPart
     @Override
     public GuiBridge getGuiBridge() {
         return null;
+    }
+
+    @Nonnull
+    @Override
+    public AIGuiHandler.GuiEnum getGui() {
+        return AIGuiHandler.GuiEnum.GuiIOPart;
     }
 }

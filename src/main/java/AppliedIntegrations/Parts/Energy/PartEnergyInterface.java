@@ -97,7 +97,7 @@ public class PartEnergyInterface
 		extends AIPart
 		implements IInventory,
 		IEnergyInterface, IInventoryHost,
-		IEnergyMachine, IPriorityHost,IGridTickable,
+		IEnergyMachine, IPriorityHostExtended,IGridTickable,
 		IStorageMonitorable,ICraftingProvider,IPowerChannelState, IEnergySink {
 
 	private static boolean EUloaded = false;
@@ -780,6 +780,12 @@ public class PartEnergyInterface
 	@Override
 	public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
 		return true;
+	}
+
+	@Nonnull
+	@Override
+	public AIGuiHandler.GuiEnum getGui() {
+		return AIGuiHandler.GuiEnum.GuiInterfacePart;
 	}
 }
 

@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
+import AppliedIntegrations.API.IPriorityHostExtended;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Parts.AIPart;
 import appeng.core.sync.AppEngPacket;
@@ -15,8 +16,8 @@ public class PacketGuiShift extends AIPacket {
 
     public PacketGuiShift(){}
 
-    public PacketGuiShift(AIGuiHandler.GuiEnum newGui, AIPart part) {
-        super(part.getX(), part.getY(), part.getZ(), part.getSide().getFacing(), part.getWorld());
+    public PacketGuiShift(AIGuiHandler.GuiEnum newGui, IPriorityHostExtended part) {
+        super(part.getPos().getX(), part.getPos().getY(), part.getPos().getZ(), part.getSide().getFacing(), part.getWorld());
 
         gui = newGui;
     }

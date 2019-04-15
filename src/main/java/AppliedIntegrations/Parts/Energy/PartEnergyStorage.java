@@ -3,6 +3,7 @@ package AppliedIntegrations.Parts.Energy;
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.IEnergyInterface;
 import AppliedIntegrations.API.IInventoryHost;
+import AppliedIntegrations.API.IPriorityHostExtended;
 import AppliedIntegrations.API.Storage.EnergyRepo;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
@@ -78,7 +79,7 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
  */
 public class PartEnergyStorage
 		extends AIPart
-		implements ICellContainer, IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHost {
+		implements ICellContainer, IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHostExtended {
 
 	// Size of filter
 	public static final int FILTER_SIZE = 18;
@@ -428,6 +429,12 @@ public class PartEnergyStorage
 	@Override
 	public void onInventoryChanged() {
 
+	}
+
+	@Nonnull
+	@Override
+	public AIGuiHandler.GuiEnum getGui() {
+		return GuiStoragePart;
 	}
 }
 
