@@ -40,5 +40,5 @@ jobs:
       - run: ./gradlew test # (2) Test
       - run: ./gradlew sonarqube
                               -Dsonar.host.url=https://sonarcloud.io
-                              -Dsonar.organization=#(key)
+                              -Dsonar.organization=$(key)
                               -Dsonar.login=$(token) # (3) Test with sonar qube
