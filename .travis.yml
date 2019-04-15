@@ -11,7 +11,12 @@ cache:
     - '$HOME/.sonar/cache'
     - '$HOME/.gradle/wrapper'
     - '$HOME/.gradle/caches'
+    -
+addons:
+  sonarcloud:
+    organization: "kof0sdf9sdf09"
 
 script:
   - "./gradlew build"
   - "./gradlew test"
+  - "./gradlew sonarqube"
