@@ -23,6 +23,8 @@ public class GuiPriorityAI extends GuiPriority {
     }
 
     public void initGui(){
+        // Pass call to super
+        super.initGui();
         // Add original tab button to button list
         this.buttonList.add( this.originalTab = new GuiTabButton( this.guiLeft + 154,
                                                     this.guiTop, 2 + 4 * 16, GuiText.Priority.getLocal(),
