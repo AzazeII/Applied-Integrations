@@ -23,6 +23,7 @@ import com.google.common.collect.Ordering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
@@ -148,6 +149,8 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
         // Iterate for each widget
         // Draw each widget
         widgetEnergySelectors.forEach((WidgetEnergySelector::drawWidget));
+
+        this.fontRenderer.drawString( I18n.translateToLocal("ME Energy Terminal") , 9, 3, 4210752);
     }
 
     @Override

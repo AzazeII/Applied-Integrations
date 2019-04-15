@@ -107,3 +107,7 @@ Linked=Linked
 UnLinked=UnLinked
 
 ME Server Network Tracer=ME Server Network Tracer
+ME Energy Terminal=ME Energy Terminal
+ME Energy Import Bus=ME Energy Import Bus
+ME Energy Export Bus=ME Energy Export Bus
+ME Energy Interface=ME Energy Interface

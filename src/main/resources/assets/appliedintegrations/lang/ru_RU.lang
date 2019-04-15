@@ -36,11 +36,11 @@ item.energyFormationPartItem.name=МЭ Плоскость Формировани
 
 Energy Stored=Энергии Хранится
 
-appliedintegrations.Energy.ImportBus.name=МЭ Энерго-Шина Импорта
-appliedintegrations.Energy.ExportBus.name=МЭ Энерго-Шина Экспорта
-appliedintegrations.Energy.Interface.name=МЭ Энерго-Интерфейс
-appliedintegrations.Energy.StorageBus.name=МЭ Энерго-Шина Хранения
-appliedintegrations.Energy.terminal.name=МЭ Энергетический Терминал
+appliedintegrations.Energy.ImportBus.name=Шина Импорта Энергии
+appliedintegrations.Energy.ExportBus.name=МЭ Шина Экспорта Энергии
+appliedintegrations.Energy.Interface.name=МЭ Интерфейс Энергии
+appliedintegrations.Energy.StorageBus.name=МЭ Шина Хранения Энергии
+appliedintegrations.Energy.terminal.name=МЭ Терминал Энергии
 appliedintegrations.Energy.StorageMonitor.name=МЭ Монитор Хранения Энергии
 appliedintegrations.Energy.Machine.P2PRotary=Туннель Точка-Точка Ватты
 appliedintegrations.Energy.Machine.P2PJoules=Туннель Точка-Точка Джоули
@@ -92,3 +92,8 @@ Linked=Привязан
 UnLinked=Не Привязан
 
 ME Server Network Tracer=МЭ Трассировщик Сети
+ME Energy Terminal=МЭ Терминал Энергии
+
+ME Energy Import Bus=МЭ Шина Экспорта Энергии
+ME Energy Export Bus=МЭ Шина Импорта Энергии
+ME Energy Interface=МЭ Интерфейс Энергии

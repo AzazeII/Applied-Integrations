@@ -68,8 +68,6 @@ public class AppliedIntegrations {
 
 		proxy.SidedPreInit();
 
-		//this.registerRecipes();
-
 		AILog.info("Pre load Completed");
 	}
 

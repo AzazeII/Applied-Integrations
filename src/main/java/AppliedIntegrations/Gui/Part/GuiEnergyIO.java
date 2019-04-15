@@ -59,11 +59,6 @@ public class GuiEnergyIO
     public GuiEnergyIO(Container container, EntityPlayer player) {
         super(container);
         this.player = player;
-
-        if(part instanceof PartEnergyExport)
-            this.stringName = I18n.translateToLocal("ME Energy Export Bus");
-        if(part instanceof PartEnergyImport)
-            this.stringName = I18n.translateToLocal("ME Energy Import Bus");
     }
 
     @Override
@@ -114,6 +109,11 @@ public class GuiEnergyIO
             // Add the tooltip from the widget
             slotUnderMouse.getTooltip( this.tooltip );
         }
+
+        if(part instanceof PartEnergyExport)
+            this.stringName = I18n.translateToLocal("ME Energy Export Bus");
+        if(part instanceof PartEnergyImport)
+            this.stringName = I18n.translateToLocal("ME Energy Import Bus");
 
         this.fontRenderer.drawString(stringName, 9, 3, 4210752);
     }
