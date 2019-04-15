@@ -2,13 +2,13 @@
 # About
 Applied integrations is applied energitsics 2 addon, which adds many new features. One of main features is storing energy in storage cells
 
-For fans of discord (everyone here), there is discord server of project:
+For fans of discord (everyone here), there is discord server of project:  
 [![Discord](https://img.shields.io/discord/565997320278376463.svg)](https://discord.gg/H2TtBK)
 
-Travis CI:
+Travis CI:  
 [![Travis](https://img.shields.io/travis/AzazeII/Applied-Integrations.svg?maxAge=2592000&style=shield)](https://travis-ci.org/AzazeII/Applied-Integrations)
 
-Circle CI:
+Circle CI:  
 [![CircleCI](https://circleci.com/gh/AzazeII/Applied-Integrations.svg?style=shield)](https://circleci.com/gh/AzazeII/Applied-Integrations)
 
 (C) Azazell 2018-2019 [![License](https://img.shields.io/badge/License-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
