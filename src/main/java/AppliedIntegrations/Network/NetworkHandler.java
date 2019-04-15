@@ -39,14 +39,13 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerAccessModeServerToClient.class, PacketAccessModeServerToClient.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerTerminalUpdate.class, PacketTerminalUpdate.class, packetId++, Side.CLIENT);
-
-        Handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.CLIENT);
     }
 
     public static final void registerServerPackets(){
         Handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
 
         Handler.registerMessage(HandlerAccessModeClientToServer.class, PacketAccessModeClientToServer.class, packetId++, Side.SERVER);
+        Handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.SERVER);
     }
 
     // send packet info to player

@@ -74,6 +74,7 @@ import java.util.List;
 import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
+import static appeng.api.parts.PartItemStack.BREAK;
 import static appeng.api.util.AEPartLocation.INTERNAL;
 import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
@@ -308,7 +309,7 @@ public class PartEnergyInterface
 
 	@Override
 	public ItemStack getItemStackRepresentation() {
-		return null;
+		return getItemStack(BREAK);
 	}
 
 	@Override

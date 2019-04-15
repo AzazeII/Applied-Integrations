@@ -24,16 +24,6 @@ import javax.annotation.Nonnull;
  */
 public class PartEnergyExport extends AIOPart {
 
-	private int baseTransfer = 800;
-
-	private final static int MINIMUM_TICKS_PER_OPERATION = 10;
-
-	private final static int MAXIMUM_TICKS_PER_OPERATION = 40;
-
-	private final static int MAXIMUM_TRANSFER_PER_SECOND = 6400;
-
-	private final static int MINIMUM_TRANSFER_PER_SECOND = 1;
-
 	public PartEnergyExport() {
 		super(PartEnum.EnergyExportBus, SecurityPermissions.EXTRACT);
 	}

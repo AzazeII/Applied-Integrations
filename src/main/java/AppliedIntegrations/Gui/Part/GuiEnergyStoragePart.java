@@ -16,8 +16,10 @@ import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Settings;
 import appeng.client.gui.implementations.GuiPriority;
+import appeng.client.gui.implementations.GuiStorageBus;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -283,7 +285,7 @@ public class GuiEnergyStoragePart
         // Check if click was performed on priority button
         if (btn == priorityButton){
             // Send packet to client
-            NetworkHandler.sendTo(new PacketGuiShift(GuiAIPriority, storageBus), (EntityPlayerMP) player);
+            NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, storageBus));
         }
     }
 }

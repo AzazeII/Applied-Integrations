@@ -10,8 +10,8 @@ public class HandlerGuiShift implements IMessageHandler<PacketGuiShift, PacketGu
     @Override
     public PacketGuiShift onMessage(PacketGuiShift message, MessageContext ctx) {
 
-        // Schedule gui update event on server side
-        Minecraft.getMinecraft().addScheduledTask(() -> AIGuiHandler.open(
+        // Open new gui
+        AIGuiHandler.open(
                 // Requested gui
                 message.gui,
 
@@ -22,7 +22,7 @@ public class HandlerGuiShift implements IMessageHandler<PacketGuiShift, PacketGu
                 message.part.getSide(),
 
                 // Part position in world
-                message.part.getHostTile().getPos()));
+                message.part.getHostTile().getPos());
 
         return null;
     }

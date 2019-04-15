@@ -35,12 +35,15 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
+import appeng.api.parts.PartItemStack;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
+import appeng.core.sync.GuiBridge;
+import appeng.helpers.IPriorityHost;
 import appeng.tile.networking.TileCableBus;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.common.capabilities.Capabilities;
@@ -75,7 +78,7 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
  */
 public class PartEnergyStorage
 		extends AIPart
-		implements ICellContainer, IGridTickable, IEnergyMachine, IInventoryHost {
+		implements ICellContainer, IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHost {
 
 	// Size of filter
 	public static final int FILTER_SIZE = 18;
@@ -94,6 +97,9 @@ public class PartEnergyStorage
 
 	// Was active?
 	private boolean lastActive = false;
+
+	// current priority of part
+	private int priority = 0;
 
 	// list of all container - listeners
 	public List<ContainerEnergyStorage> linkedListeners = new ArrayList<>();
@@ -350,7 +356,23 @@ public class PartEnergyStorage
 
 	@Override
 	public int getPriority() {
-		return 0;
+		return this.priority;
+	}
+
+	@Override
+	public void setPriority(int newValue) {
+		this.priority = newValue;
+	}
+
+	@Override
+	public ItemStack getItemStackRepresentation() {
+		return getItemStack(PartItemStack.BREAK);
+	}
+
+	@Override
+	public GuiBridge getGuiBridge() {
+		// Ignored
+		return null;
 	}
 
 	@Override

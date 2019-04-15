@@ -22,6 +22,8 @@ import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
+import appeng.core.sync.GuiBridge;
+import appeng.helpers.IPriorityHost;
 import appeng.me.helpers.MachineSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -54,7 +56,7 @@ import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABI
 
 public abstract class AIOPart
         extends AIPart
-        implements IGridTickable, IEnergyMachine, IInventoryHost {
+        implements IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHost {
     /**
      * Constant fields
      */
@@ -113,12 +115,14 @@ public abstract class AIOPart
 
     protected TileEntity adjacentEnergyStorage;
 
-    protected byte filterSize;
-    protected byte upgradeSpeedCount = 0;
+    private byte filterSize;
+    private byte upgradeSpeedCount = 0;
 
-    protected boolean redstoneControlled;
+    private boolean redstoneControlled;
     private boolean updateRequested;
     private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
+
+    private int priority = 0;
 
     public AIOPart(final PartEnum associatedPart, final SecurityPermissions... interactionPermissions )
     {
@@ -514,5 +518,25 @@ public abstract class AIOPart
 
             }
         }
+    }
+
+    @Override
+    public int getPriority() {
+        return this.priority;
+    }
+
+    @Override
+    public void setPriority(int newValue) {
+        this.priority = newValue;
+    }
+
+    @Override
+    public ItemStack getItemStackRepresentation() {
+        return getItemStack(PartItemStack.BREAK);
+    }
+
+    @Override
+    public GuiBridge getGuiBridge() {
+        return null;
     }
 }
