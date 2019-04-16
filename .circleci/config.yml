@@ -90,6 +90,8 @@ jobs:
                     -Dsonar.host.url=https://sonarcloud.io
                     -Dsonar.organization=${key}
                     -Dsonar.login=${token}
+    deploy:
+        # past deploy code here later
 
 
 workflows:
@@ -115,4 +117,7 @@ workflows:
                   requires:
                       - build
                       - test
+            -  deploy:
+                  requires:
+                      - hold
 
