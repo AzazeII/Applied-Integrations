@@ -4,8 +4,8 @@ version: 2
 jobs:
     download_dependencies:
         docker:
-          # Specify java 8
-          - image: circleci/openjdk:8-jdk
+            # Specify java 8
+            - image: circleci/openjdk:8-jdk
 
         parallelism: 4
 
@@ -35,9 +35,11 @@ jobs:
                 - ~/.gradle
               key: v1-dependencies-{{ checksum "build.gradle" }}
     build:
+        requires:
+            - download_dependencies
         docker:
-        # Specify java 8
-        -   image: circleci/openjdk:8-jdk
+            # Specify java 8
+            - image: circleci/openjdk:8-jdk
 
         parallelism: 4
 
@@ -53,9 +55,11 @@ jobs:
             - run: ./gradlew build
 
     test:
+        requires:
+            - download_dependencies
         docker:
-        # Specify java 8
-        -   image: circleci/openjdk:8-jdk
+            # Specify java 8
+            - image: circleci/openjdk:8-jdk
 
         parallelism: 4
 
@@ -71,9 +75,12 @@ jobs:
             - run: ./gradlew test
 
     sonar_test:
+        requires:
+            - build
+            - test
         docker:
-        # Specify java 8
-        -   image: circleci/openjdk:8-jdk
+            # Specify java 8
+            - image: circleci/openjdk:8-jdk
 
         parallelism: 4
 
@@ -94,11 +101,14 @@ jobs:
 
 workflows:
     version: 2
-    build_and_test:
+
+    # Main flow sequence: Download_dependencies -> Test -> Run                                          False --> Notify me
+    #                                           -> Build -> | -> Sonarcloud test -> Notify human tester True ---> Deploy
+    main_flow:
         jobs:
             - download_dependencies
             - build
-            - run
+            #- run
             - test
             - sonar_test
 
