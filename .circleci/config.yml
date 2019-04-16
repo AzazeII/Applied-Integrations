@@ -6,12 +6,11 @@ executors:
         docker:
             - circleci/openjdk:8-jdk
         working_directory: /tmp
-        parallelism: 4
-
-
 jobs:
     download_dependencies:
         executor: main_flow_executor
+
+        parallelism: 4
 
         environment:
             # Customize the JVM maximum heap limit
@@ -38,6 +37,8 @@ jobs:
     build:
         executor: main_flow_executor
 
+        parallelism: 4
+
         environment:
             # Customize the JVM maximum heap limit
             JVM_OPTS: -Xmx3200m
@@ -50,6 +51,8 @@ jobs:
     test:
         executor: main_flow_executor
 
+        parallelism: 4
+
         environment:
             # Customize the JVM maximum heap limit
             JVM_OPTS: -Xmx3200m
@@ -61,6 +64,8 @@ jobs:
 
     sonar_test:
         executor: main_flow_executor
+
+        parallelism: 4
 
         environment:
             # Customize the JVM maximum heap limit
@@ -75,6 +80,8 @@ jobs:
                     -Dsonar.login=${token}
     deploy:
         executor: main_flow_executor
+
+        parallelism: 4
 
         environment:
             # Customize the JVM maximum heap limit
