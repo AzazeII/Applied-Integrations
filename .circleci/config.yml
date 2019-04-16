@@ -4,7 +4,7 @@ version: 2.1
 executors:
     main_flow_executor:
         docker:
-            - circleci/openjdk:8-jdk
+            - image: circleci/openjdk:8-jdk
         working_directory: /tmp
 jobs:
     download_dependencies:
