@@ -35,8 +35,6 @@ jobs:
                 - ~/.gradle
               key: v1-dependencies-{{ checksum "build.gradle" }}
     build:
-        requires:
-            - download_dependencies
         docker:
             # Specify java 8
             - image: circleci/openjdk:8-jdk
@@ -55,8 +53,6 @@ jobs:
             - run: ./gradlew build
 
     test:
-        requires:
-            - download_dependencies
         docker:
             # Specify java 8
             - image: circleci/openjdk:8-jdk
@@ -75,9 +71,6 @@ jobs:
             - run: ./gradlew test
 
     sonar_test:
-        requires:
-            - build
-            - test
         docker:
             # Specify java 8
             - image: circleci/openjdk:8-jdk
@@ -106,9 +99,20 @@ workflows:
     #                                           -> Build -> | -> Sonarcloud test -> Notify human tester True ---> Deploy
     main_flow:
         jobs:
-            - download_dependencies
-            - build
-            #- run
-            - test
-            - sonar_test
+            # Run each job in sequence above
+            - download_dependencies # (1) dependenceis
+            - build: # (2) build code
+                requires:
+                    - download_dependencies
+            - test: # (3) test code
+                requires:
+                    - download_dependencies
+            #- run: # (4) run minecraft with code
+            #    requires:
+            #        - build
+            #        - test
+            - sonar_test: # (5) run sonar cloud tests for code
+                  requires:
+                      - build
+                      - test
 
