@@ -1,88 +1,56 @@
 # Set version to 2.0
 version: 2
 
-jobs:
-    download_dependencies:
+executors:
+    main_flow_executor:
         docker:
-            # Specify java 8
-            - image: circleci/openjdk:8-jdk
+            - circleci/openjdk:8-jdk
+        working_directory: /tmp
 
         parallelism: 4
-
-        working_directory: ~/repo
-
-        environment:
-          # Customize the JVM maximum heap limit
-          JVM_OPTS: -Xmx3200m
-          TERM: dumb
-
-        steps:
-          - checkout
-
-          # Load caches
-          - restore_cache:
-              keys:
-                - v1-dependencies-{{ checksum "build.gradle" }}
-                # fallback to using the latest cache if no exact match is found
-                - v1-dependencies-
-
-          # Install
-          - run: ./gradlew dependencies # (1) Dependencies
-          - run: ./gradlew setupCIWorkspace # (2) CI workspace
-
-          - save_cache:
-              paths:
-                - ~/.gradle
-              key: v1-dependencies-{{ checksum "build.gradle" }}
-    build:
-        docker:
-            # Specify java 8
-            - image: circleci/openjdk:8-jdk
-
-        parallelism: 4
-
-        working_directory: ~/repo
 
         environment:
             # Customize the JVM maximum heap limit
             JVM_OPTS: -Xmx3200m
             TERM: dumb
+
+jobs:
+    download_dependencies:
+        executor: main_flow_executor
+
+        steps:
+            - checkout
+
+            # Load caches
+            - restore_cache:
+                keys:
+                    - v1-dependencies-{{ checksum "build.gradle" }}
+                    # fallback to using the latest cache if no exact match is found
+                    - v1-dependencies-
+            # Install
+            - run: ./gradlew dependencies # (1) Dependencies
+            - run: ./gradlew setupCIWorkspace # (2) CI workspace
+
+            - save_cache:
+                paths:
+                    - ~/.gradle
+                key: v1-dependencies-{{ checksum "build.gradle" }}
+    build:
+        executor: main_flow_executor
 
         steps:
             - checkout
             - run: ./gradlew build
 
     test:
-        docker:
-            # Specify java 8
-            - image: circleci/openjdk:8-jdk
-
-        parallelism: 4
-
-        working_directory: ~/repo
-
-        environment:
-            # Customize the JVM maximum heap limit
-            JVM_OPTS: -Xmx3200m
-            TERM: dumb
+        executor: main_flow_executor
 
         steps:
             - checkout
             - run: ./gradlew test
 
     sonar_test:
-        docker:
-            # Specify java 8
-            - image: circleci/openjdk:8-jdk
-
-        parallelism: 4
-
-        working_directory: ~/repo
-
-        environment:
-            # Customize the JVM maximum heap limit
-            JVM_OPTS: -Xmx3200m
-            TERM: dumb
+        executor: main_flow_executor
 
         steps:
             - checkout
@@ -91,18 +59,7 @@ jobs:
                     -Dsonar.organization=${key}
                     -Dsonar.login=${token}
     deploy:
-        docker:
-            # Specify java 8
-            - image: circleci/openjdk:8-jdk
-
-        parallelism: 4
-
-        working_directory: ~/repo
-
-        environment:
-            # Customize the JVM maximum heap limit
-            JVM_OPTS: -Xmx3200m
-            TERM: dumb
+        executor: main_flow_executor
 
         steps:
             - checkout
