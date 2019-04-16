@@ -2,43 +2,103 @@
 version: 2
 
 jobs:
-  build:
-    docker:
-      # specify the version you desire here
-      - image: circleci/openjdk:8-jdk
+    download_dependencies:
+        docker:
+          # Specify java 8
+          - image: circleci/openjdk:8-jdk
 
-    parallelism: 4
+        parallelism: 4
 
-    working_directory: ~/repo
+        working_directory: ~/repo
 
-    environment:
-      # Customize the JVM maximum heap limit
-      JVM_OPTS: -Xmx3200m
-      TERM: dumb
+        environment:
+          # Customize the JVM maximum heap limit
+          JVM_OPTS: -Xmx3200m
+          TERM: dumb
 
-    steps:
-      - checkout
+        steps:
+          - checkout
 
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "build.gradle" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
+          # Load caches
+          - restore_cache:
+              keys:
+                - v1-dependencies-{{ checksum "build.gradle" }}
+                # fallback to using the latest cache if no exact match is found
+                - v1-dependencies-
 
-      # Install
-      - run: ./gradlew dependencies # (1) Dependencies
-      - run: ./gradlew setupCIWorkspace # (2) CI workspace
+          # Install
+          - run: ./gradlew dependencies # (1) Dependencies
+          - run: ./gradlew setupCIWorkspace # (2) CI workspace
 
-      - save_cache:
-          paths:
-            - ~/.gradle
-          key: v1-dependencies-{{ checksum "build.gradle" }}
+          - save_cache:
+              paths:
+                - ~/.gradle
+              key: v1-dependencies-{{ checksum "build.gradle" }}
+    build:
+        docker:
+        # Specify java 8
+        -   image: circleci/openjdk:8-jdk
 
-      # run tests!
-      - run: ./gradlew build # (1) Build
-      - run: ./gradlew test # (2) Test
-      - run: ./gradlew sonarqube
-                              -Dsonar.host.url=https://sonarcloud.io
-                              -Dsonar.organization=${key}
-                              -Dsonar.login=${token} # (3) Test with sonar qube
+        parallelism: 4
+
+        working_directory: ~/repo
+
+        environment:
+            # Customize the JVM maximum heap limit
+            JVM_OPTS: -Xmx3200m
+            TERM: dumb
+
+        steps:
+            - checkout
+            - run: ./gradlew build
+
+    test:
+        docker:
+        # Specify java 8
+        -   image: circleci/openjdk:8-jdk
+
+        parallelism: 4
+
+        working_directory: ~/repo
+
+        environment:
+            # Customize the JVM maximum heap limit
+            JVM_OPTS: -Xmx3200m
+            TERM: dumb
+
+        steps:
+            - checkout
+            - run: ./gradlew test
+
+    sonar_test:
+        docker:
+        # Specify java 8
+        -   image: circleci/openjdk:8-jdk
+
+        parallelism: 4
+
+        working_directory: ~/repo
+
+        environment:
+            # Customize the JVM maximum heap limit
+            JVM_OPTS: -Xmx3200m
+            TERM: dumb
+
+        steps:
+            - checkout
+            - run: ./gradlew sonarqube
+                    -Dsonar.host.url=https://sonarcloud.io
+                    -Dsonar.organization=${key}
+                    -Dsonar.login=${token}
+
+
+workflows:
+    version: 2
+    build_and_test:
+        jobs:
+            - download_dependencies
+            - build
+            - run
+            - test
+            - sonar_test
+
