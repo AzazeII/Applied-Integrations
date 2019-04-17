@@ -90,8 +90,6 @@ jobs:
         executor: run_executor
         parallelism: 1
 
-        background: true
-
         steps:
             - attach_workspace:
                   # Attach gradle from workspace
@@ -107,7 +105,9 @@ jobs:
             #- run: echo "eula=true" > run/eula.txt
 
             # Run server
-            - run: ./gradlew runServer
+            - run:
+                  background: true
+                  command: ./gradlew runServer
             - run: ls
 
     sonar_test:
