@@ -122,8 +122,11 @@ jobs:
                 # Attach gradle from workspace
                 at: ~/.gradle/
 
+            # Prepare dev workspace, create eula.txt
             - prepare_dev_workspace
-            - run: ./gradlew runServer
+
+            # Run server via xvfb, to avoid any crash with display
+            - run: xvfb-run ./gradlew runServer
 
 workflows:
     version: 2
