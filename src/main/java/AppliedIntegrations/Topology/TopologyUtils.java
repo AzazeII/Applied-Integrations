@@ -17,9 +17,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -54,7 +51,6 @@ public class TopologyUtils {
                 // Graph p2p links
                 graphAll(grid, player);
                 break;
-
             // Case all network nodes from line end to controller showing
             /*case LINE:
                 // Graph line nodes

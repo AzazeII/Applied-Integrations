@@ -30,8 +30,6 @@ jobs:
         steps:
             - checkout
 
-            - run: mkdir -p cache
-
             # Load caches
             - restore_cache:
                 keys:
