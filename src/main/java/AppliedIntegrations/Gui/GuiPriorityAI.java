@@ -39,7 +39,7 @@ public class GuiPriorityAI extends GuiPriority {
 
         try{
             // Get private priority field
-            GuiNumberBox priority = (GuiNumberBox) this.getClass().getField("priority").get(this);
+            GuiNumberBox priority = (GuiNumberBox) super.getClass().getField("priority").get(this);
 
             // Send packet
             NetworkHandler.sendToServer( new PacketPriorityChange( priority.getText(), host ));
