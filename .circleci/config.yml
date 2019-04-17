@@ -1,6 +1,11 @@
 # Set version to 2.1
 version: 2.1
 
+commands:
+    prepareDevWorkspace:
+        steps:
+            - checkout
+            - run: ./gradlew setupDecompWorkspace
 executors:
     main_flow_executor:
         docker:
@@ -102,7 +107,7 @@ jobs:
                   # Attach gradle from workspace
                   at: ~/.gradle/
 
-            - checkout
+            - prepareDevWorkspace
             - run: ./gradlew runClient
 
     run_server:
@@ -114,7 +119,7 @@ jobs:
                 # Attach gradle from workspace
                 at: ~/.gradle/
 
-            - checkout
+            - prepareDevWorkspace
             - run: ./gradlew runServer
 
 workflows:
