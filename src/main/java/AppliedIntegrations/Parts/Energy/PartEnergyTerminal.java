@@ -2,6 +2,7 @@ package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
+import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketTerminalUpdate;
@@ -30,6 +31,7 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.IConfigManager;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -50,6 +52,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	private IConfigManager configManager = new ConfigManager(this);
 	public List<ContainerEnergyTerminal> listeners = new ArrayList<>();
+	private boolean updateRequsted;
 
 	public PartEnergyTerminal() {
 		super(PartEnum.EnergyTerminal, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT, SecurityPermissions.CRAFT);
@@ -71,6 +74,9 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 		if(isActive()) {
 			// Open gui
 			AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiTerminalPart, player, getSide(), getPos());
+
+			// Trigger update request
+			updateRequsted = true;
 
 			return true;
 		}
@@ -120,6 +126,35 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
+
+		// Check if update was requested
+		if(updateRequsted){
+			// Check if we have gui to update
+			if (!(Minecraft.getMinecraft().currentScreen instanceof AIBaseGui)) {
+				// Break function
+				return SAME;
+			}
+
+			// Do all AE2 mechanics only on server
+			if(!this.getWorld().isRemote) {
+
+				// Get energy inventory
+				IMEMonitor<IAEEnergyStack> inv = this.getEnergyInventory();
+
+				// Check not null
+				if (inv != null) {
+					// Notify GUI first time about list, to make it show current list of all energies
+					for (ContainerEnergyTerminal listener : this.listeners) {
+						// Send packet over network
+						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), this), (EntityPlayerMP) listener.player);
+
+						// Trigger request
+						updateRequsted = false;
+					}
+				}
+			}
+		}
+
 		return SAME;
 	}
 

@@ -360,8 +360,7 @@ public class PartEnergyInterface
 	}
 
 	@SideOnly(CLIENT)
-	private void notifyListenersOfFilterEnergyChange()
-	{
+	private void notifyListenersOfFilterEnergyChange() {
 		for( ContainerEnergyInterface listener : this.LinkedListeners) {
 			if(listener!=null) {
 				NetworkHandler.sendTo(new PacketFilterServerToClient(this.filteredEnergy,0, this), (EntityPlayerMP)listener.player);

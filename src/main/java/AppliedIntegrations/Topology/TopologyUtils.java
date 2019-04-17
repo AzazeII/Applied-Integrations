@@ -45,8 +45,6 @@ public class TopologyUtils {
      *  Machine, which queried this request
      */
     public static void createWebUI(IGrid grid, EntityPlayer player, GraphToolMode mode, IGridHost machine) {
-        LoggerNamePatternSelector l;
-
         // Switch modes
         switch (mode) {
             // Case all network nodes showing

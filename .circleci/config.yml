@@ -85,6 +85,26 @@ jobs:
             - checkout
             - run: ./gradlew test
 
+
+    run_server:
+        executor: run_executor
+        parallelism: 4
+
+        steps:
+            - attach_workspace:
+                  # Attach gradle from workspace
+                  at: ~/.gradle/
+
+            # Prepare dev workspace, create eula.txt
+            - prepare_run_workspace
+
+            # Accept eula
+            - run: echo "eula=true" > eula.txt
+
+            # Run server
+            - run: ./gradlew runServer
+            - run: ls
+
     sonar_test:
         executor: main_flow_executor
         parallelism: 2
@@ -99,24 +119,6 @@ jobs:
                     -Dsonar.host.url=https://sonarcloud.io
                     -Dsonar.organization=${key}
                     -Dsonar.login=${token}
-
-    run_server:
-        executor: run_executor
-        parallelism: 2
-
-        steps:
-            - attach_workspace:
-                # Attach gradle from workspace
-                at: ~/.gradle/
-
-            # Prepare dev workspace, create eula.txt
-            - prepare_run_workspace
-
-            # Accept eula
-            - run: echo "eula=true" > eula.txt
-
-            # Run server
-            - run: ./gradlew runServer
 
     deploy:
         executor: run_executor
