@@ -150,6 +150,5 @@ workflows:
                       - run_server
             - deploy:
                   requires:
-                      - run_client
                       - run_server
 
