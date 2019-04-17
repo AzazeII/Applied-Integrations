@@ -6,9 +6,6 @@ executors:
         docker:
             - image: circleci/openjdk:8-jdk
         working_directory: ~/repo
-jobs:
-    download_dependencies:
-        executor: main_flow_executor
 
         parallelism: 4
 
@@ -16,6 +13,9 @@ jobs:
             # Customize the JVM maximum heap limit
             JVM_OPTS: -Xmx3200m
             TERM: dumb
+jobs:
+    download_dependencies:
+        executor: main_flow_executor
 
         steps:
             - checkout
@@ -37,13 +37,6 @@ jobs:
     build:
         executor: main_flow_executor
 
-        parallelism: 4
-
-        environment:
-            # Customize the JVM maximum heap limit
-            JVM_OPTS: -Xmx3200m
-            TERM: dumb
-
         steps:
             - checkout
             - run: ./gradlew build
@@ -51,26 +44,12 @@ jobs:
     test:
         executor: main_flow_executor
 
-        parallelism: 4
-
-        environment:
-            # Customize the JVM maximum heap limit
-            JVM_OPTS: -Xmx3200m
-            TERM: dumb
-
         steps:
             - checkout
             - run: ./gradlew test
 
     sonar_test:
         executor: main_flow_executor
-
-        parallelism: 4
-
-        environment:
-            # Customize the JVM maximum heap limit
-            JVM_OPTS: -Xmx3200m
-            TERM: dumb
 
         steps:
             - checkout
@@ -80,13 +59,6 @@ jobs:
                     -Dsonar.login=${token}
     deploy:
         executor: main_flow_executor
-
-        parallelism: 4
-
-        environment:
-            # Customize the JVM maximum heap limit
-            JVM_OPTS: -Xmx3200m
-            TERM: dumb
 
         steps:
             - checkout
