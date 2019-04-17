@@ -98,6 +98,9 @@ jobs:
             # Prepare dev workspace, create eula.txt
             - prepare_run_workspace
 
+            # Create folder
+            - run: mkdir -p run
+
             # Accept eula
             - run: echo "eula=true" > run/eula.txt
 
