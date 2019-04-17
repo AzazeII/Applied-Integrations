@@ -90,6 +90,8 @@ jobs:
         executor: run_executor
         parallelism: 1
 
+        background: true
+
         steps:
             - attach_workspace:
                   # Attach gradle from workspace
@@ -102,7 +104,7 @@ jobs:
             - run: mkdir -p run
 
             # Accept eula
-            - run: echo "eula=true" > run/eula.txt
+            #- run: echo "eula=true" > run/eula.txt
 
             # Run server
             - run: ./gradlew runServer
