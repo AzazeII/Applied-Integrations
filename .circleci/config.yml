@@ -106,19 +106,20 @@ workflows:
     main_flow:
         jobs:
             # Run each job in sequence above
-            - download_dependencies # (1) dependenceis
+            - download_dependencies # (1) dependencies
             - build: # (2) build code
                 requires:
                     - download_dependencies
             - test: # (3) test code
                 requires:
                     - download_dependencies
-            - run: # (4) run minecraft with code
-                requires:
-                    - build
-                    - test
-            - sonar_test: # (5) run sonar cloud tests for code
+            - sonar_test: # (4) run sonar cloud tests for code
                   requires:
                       - build
                       - test
+            - run: # (5) run minecraft with code
+                  requires:
+                      - build
+                      - test
+                      - sonar_test
 
