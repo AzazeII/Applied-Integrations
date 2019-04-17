@@ -85,7 +85,7 @@ jobs:
                     -Dsonar.host.url=https://sonarcloud.io
                     -Dsonar.organization=${key}
                     -Dsonar.login=${token}
-    run:
+    run_client:
         executor: main_flow_executor
         parallelism: 4
 
@@ -95,8 +95,19 @@ jobs:
                   at: ~/.gradle/
 
             - checkout
-        # TODO run code here later
+            - run: ./gradlew runClient
 
+    run_server:
+        executor: main_flow_executor
+        parallelism: 4
+
+        steps:
+            - attach_workspace:
+                # Attach gradle from workspace
+                at: ~/.gradle/
+
+            - checkout
+            - run: ./gradlew runClient
 
 workflows:
     version: 2
@@ -117,9 +128,10 @@ workflows:
                   requires:
                       - build
                       - test
-            - run: # (5) run minecraft with code
+            - run_client: # (5) run minecraft
                   requires:
-                      - build
-                      - test
+                      - sonar_test
+            - run_server: # (6) run minecraft server
+                  requires:
                       - sonar_test
 
