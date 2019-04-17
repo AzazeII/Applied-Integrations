@@ -110,7 +110,7 @@ jobs:
                   # Attach gradle from workspace
                   at: ~/.gradle/
 
-            - prepare_dev_workspace
+            - prepare_run_workspace
             - run: ./gradlew runClient
 
     run_server:
@@ -123,7 +123,7 @@ jobs:
                 at: ~/.gradle/
 
             # Prepare dev workspace, create eula.txt
-            - prepare_dev_workspace
+            - prepare_run_workspace
 
             # Run server via xvfb, to avoid any crash with display
             - run: xvfb-run ./gradlew runServer
