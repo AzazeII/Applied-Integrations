@@ -97,7 +97,7 @@ jobs:
                   at: ~/
 
             # Setup dev & CI and decompile workspace
-            - prepare_run_workspace
+            # - prepare_run_workspace
 
             # Create folder
             - run: mkdir -p run
