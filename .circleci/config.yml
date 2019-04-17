@@ -29,8 +29,8 @@ jobs:
                     # fallback to using the latest cache if no exact match is found
                     - v1-dependencies-
             # Install
-            - run: ./gradlew dependencies --project-cache-dir ~/.gradle/caches/ # (1) Dependencies
-            - run: ./gradlew setupCIWorkspace --project-cache-dir ~/.gradle/caches/ # (2) CI workspace
+            - run: ./gradlew dependencies # (1) Dependencies
+            - run: ./gradlew setupCIWorkspace # (2) CI workspace
             - run: ./gradlew showMeCache
 
             - save_cache:
