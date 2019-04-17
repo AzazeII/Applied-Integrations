@@ -13,8 +13,8 @@ executors:
             TERM: dumb
 
     run_executor:
-        machine:
-            - image: circleci/classic:2017-01
+        machine: true
+
         working_directory: ~/repo
 
         environment:
