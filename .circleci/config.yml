@@ -113,7 +113,7 @@ jobs:
             - prepare_run_workspace
 
             # Accept eula
-            - run: echo eula=true >> eula.txt
+            - run: echo "eula=true" > eula.txt
 
             # Run server
             - run: ./gradlew runServer
@@ -148,7 +148,7 @@ workflows:
             - sonar_test: # (5) run sonar cloud tests for code
                   requires:
                       - run_server
-            - deploy:
+            - deploy: # (6) deploy mod on all services
                   requires:
                       - run_server
 
