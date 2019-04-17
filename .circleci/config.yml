@@ -5,7 +5,6 @@ commands:
     prepare_run_workspace:
         steps:
             - checkout
-            - run: ./gradlew dependencies
             - run: ./gradlew setupDecompWorkspace
 
 executors:
@@ -45,7 +44,8 @@ jobs:
                     - v1-dependencies-
 
             # Install dependencies
-            - prepare_run_workspace
+            - run: ./gradlew dependencies
+            - run: ./gradlew setupCIWorkspace
 
             - save_cache:
                 paths:
@@ -95,6 +95,9 @@ jobs:
             - attach_workspace:
                   # Attach gradle from workspace
                   at: ~/
+
+            # Setup dev & CI and decompile workspace
+            - prepare_run_workspace
 
             # Create folder
             - run: mkdir -p run
