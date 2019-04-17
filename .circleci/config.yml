@@ -2,10 +2,13 @@
 version: 2.1
 
 commands:
-    prepare_dev_workspace:
+    prepare_run_workspace:
         steps:
             - checkout
             - run: ./gradlew setupDecompWorkspace
+            - run: touch eula.txt
+            - run: echo "eula=true" >> eula.txt
+
 executors:
     main_flow_executor:
         docker:
@@ -148,6 +151,5 @@ workflows:
                       - test
             - sonar_test: # (6) run sonar cloud tests for code
                   requires:
-                      #- run_client Consider replacing with "tester"
                       - run_server
 
