@@ -99,25 +99,6 @@ jobs:
                     -Dsonar.host.url=https://sonarcloud.io
                     -Dsonar.organization=${key}
                     -Dsonar.login=${token}
-    run_client:
-        executor: run_executor
-        parallelism: 2
-
-        steps:
-            - attach_workspace:
-                  # Attach gradle from workspace
-                  at: ~/.gradle/
-
-            # Prepare dev workspace, create eula.txt
-            - prepare_run_workspace
-
-            # Download needed packages
-            - run: sudo apt-get install -y x11vnc # VNC
-            - run: sudo apt-get install -y xtightvncviewer # VNC addition
-            - run: sudo apt-get install -y xvfb # Null display input
-
-            # Run client via xvfb, to avoid any crash with display
-            - run: xvfb-run -a ./gradlew runClient
 
     run_server:
         executor: run_executor
@@ -132,8 +113,7 @@ jobs:
             - prepare_run_workspace
 
             # Accept eula
-            - run: touch eula.txt
-            - run: echo "eula=true" >> eula.txt
+            - run: echo eula=true >> eula.txt
 
             # Run server
             - run: ./gradlew runServer
@@ -144,9 +124,6 @@ jobs:
 
         steps:
             # Download gdrive API
-            - run: curl -L -o gdrive "https://docs.google.com/uc?id=0B3X9GlR6EmbnbURvYnVyVmNNX2M&export=download"
-            - run: chmod +x gdrive
-
 workflows:
     version: 2
 
@@ -163,20 +140,15 @@ workflows:
             - test: # (3) test code
                 requires:
                     - download_dependencies
-            #- run_client: # (4) run minecraft
-            #      requires:
-            #          - build
-            #          - test
-            - run_server: # (5) run minecraft server
+            - run_server: # (4) run minecraft server
                   requires:
                       - build
                       - test
-            - sonar_test: # (6) run sonar cloud tests for code
+            - sonar_test: # (5) run sonar cloud tests for code
                   requires:
-                      #- run_client
                       - run_server
-            #- deploy:
-            #      requires:
-            #          - run_client
-            #          - run_server
+            - deploy:
+                  requires:
+                      - run_client
+                      - run_server
 
