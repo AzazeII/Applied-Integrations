@@ -112,7 +112,7 @@ jobs:
 
     run_server:
         executor: run_executor
-        parallelism: 2
+        parallelism: 4
 
         steps:
             - attach_workspace:
@@ -125,8 +125,9 @@ jobs:
 workflows:
     version: 2
 
-    # Main flow sequence: Download_dependencies -> Test -> Run                                          False --> Notify me
-    #                                           -> Build -> | -> Sonarcloud test -> Notify human tester True ---> Deploy
+    #                                                                                            | ----> Backups
+    # Main flow sequence: Download_dependencies -> Test -----------|                             | ----> Curseforge
+    #                                           -> Build -> Run client/server -> human test -> deploy -> Sonarcloud.io test
     main_flow:
         jobs:
             # Run each job in sequence above
@@ -137,14 +138,16 @@ workflows:
             - test: # (3) test code
                 requires:
                     - download_dependencies
-            - sonar_test: # (4) run sonar cloud tests for code
+            #- run_client: # (4) run minecraft TODO replace, or fix crash
+             #     requires:
+              #        - build
+               #       - test
+            - run_server: # (5) run minecraft server
                   requires:
                       - build
                       - test
-            - run_client: # (5) run minecraft
+            - sonar_test: # (6) run sonar cloud tests for code
                   requires:
-                      - sonar_test
-            - run_server: # (6) run minecraft server
-                  requires:
-                      - sonar_test
+                      #- run_client Consider replacing with "tester"
+                      - run_server
 
