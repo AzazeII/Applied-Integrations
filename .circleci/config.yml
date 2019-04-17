@@ -31,6 +31,8 @@ jobs:
             - run: ./gradlew dependencies # (1) Dependencies
             - run: ./gradlew setupCIWorkspace # (2) CI workspace
             - run: ls
+            - run: ls ~/
+            - run: tree
 
             - save_cache:
                 paths:
