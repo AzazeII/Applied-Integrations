@@ -41,7 +41,7 @@ jobs:
                     # Specify core directory
                     root: ~/
                     # Specify everything
-                    paths: *
+                    paths: /
     build:
         executor: main_flow_executor
         parallelism: 4
