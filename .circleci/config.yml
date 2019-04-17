@@ -47,11 +47,11 @@ jobs:
         executor: main_flow_executor
         parallelism: 4
 
-        - attach_workspace:
-              # Attach everything from workspace
-              at: ~/
-
         steps:
+            - attach_workspace:
+                # Attach everything from workspace
+                at: ~/
+
             - checkout
             - run: ./gradlew build
 
@@ -59,11 +59,11 @@ jobs:
         executor: main_flow_executor
         parallelism: 4
 
-        - attach_workspace:
-              # Attach everything from workspace
-              at: ~/
-
         steps:
+            - attach_workspace:
+                # Attach everything from workspace
+                at: ~/
+
             - checkout
             - run: ./gradlew test
 
@@ -71,11 +71,11 @@ jobs:
         executor: main_flow_executor
         parallelism: 4
 
-        - attach_workspace:
-              # Attach everything from workspace
-              at: ~/
-
         steps:
+            - attach_workspace:
+                # Attach everything from workspace
+                at: ~/
+
             - checkout
             - run: ./gradlew sonarqube
                     -Dsonar.host.url=https://sonarcloud.io
@@ -85,13 +85,13 @@ jobs:
         executor: main_flow_executor
         parallelism: 4
 
-        - attach_workspace:
-              # Attach everything from workspace
-              at: ~/
-
         steps:
+            - attach_workspace:
+                # Attach everything from workspace
+                at: ~/
+
             - checkout
-        # TODO past deploy code here later
+        # TODO deploy code here later
 
 
 workflows:
