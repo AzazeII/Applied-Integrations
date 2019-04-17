@@ -95,21 +95,18 @@ jobs:
                   # Attach gradle from workspace
                   at: ~/.gradle/
 
-            # Prepare dev workspace, create eula.txt
+            # Prepare dev workspace
             - prepare_run_workspace
 
             # Create folder
             - run: mkdir -p run
 
             # Accept eula
-            #- run: echo "eula=true" > run/eula.txt
+            - run: echo "eula=true" > run/eula.txt
 
             # Run server
             - run:
-                  background: true
-                  command: ./gradlew runServer
-            - run: ls
-
+                  command: ./gradlew runServer --daemon # Run as demon
     sonar_test:
         executor: main_flow_executor
         parallelism: 1
@@ -182,6 +179,13 @@ jobs:
                 at: ~/repo/build/libs/
     #------------ Deploying ------------#
 
+    STOP_THIS_DEMON:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - run: ./gradlew --stop
+
 workflows:
     version: 2
 
@@ -234,4 +238,10 @@ workflows:
                   requires:
                       - push_build_at_flow
             #------------ Deploying ------------#
+
+            - STOP_THIS_DEMON: # (7) Stop daemon task from task #5
+                  requires:
+                      - google_drive
+                      - dropbox
+                      - icloud
 
