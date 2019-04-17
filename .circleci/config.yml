@@ -30,17 +30,25 @@ jobs:
             # Install
             - run: ./gradlew dependencies # (1) Dependencies
             - run: ./gradlew setupCIWorkspace # (2) CI workspace
-            - run: ls
-            - run: ls ~/
-            - run: tree
 
             - save_cache:
                 paths:
                     - ~/.gradle
                 key: v1-dependencies-{{ checksum "build.gradle" }}
+
+            # Pass everything to next jobs
+            -   persist_to_workspace:
+                    # Specify core directory
+                    root: ~/
+                    # Specify everything
+                    paths: *
     build:
         executor: main_flow_executor
         parallelism: 4
+
+        - attach_workspace:
+              # Attach everything from workspace
+              at: ~/
 
         steps:
             - checkout
@@ -50,6 +58,10 @@ jobs:
         executor: main_flow_executor
         parallelism: 4
 
+        - attach_workspace:
+              # Attach everything from workspace
+              at: ~/
+
         steps:
             - checkout
             - run: ./gradlew test
@@ -57,6 +69,10 @@ jobs:
     sonar_test:
         executor: main_flow_executor
         parallelism: 4
+
+        - attach_workspace:
+              # Attach everything from workspace
+              at: ~/
 
         steps:
             - checkout
@@ -67,6 +83,10 @@ jobs:
     deploy:
         executor: main_flow_executor
         parallelism: 4
+
+        - attach_workspace:
+              # Attach everything from workspace
+              at: ~/
 
         steps:
             - checkout
