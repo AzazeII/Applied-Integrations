@@ -19,7 +19,7 @@ jobs:
         steps:
             - checkout
 
-            #- run: mkdir -p workspace
+            - run: mkdir -p cache
 
             # Load caches
             - restore_cache:
@@ -28,29 +28,29 @@ jobs:
                     # fallback to using the latest cache if no exact match is found
                     - v1-dependencies-
             # Install
-            - run: ./gradlew dependencies # (1) Dependencies
-            - run: ./gradlew setupCIWorkspace # (2) CI workspace
+            - run: ./gradlew dependencies --project-cache-dir ~/repo/cache/ # (1) Dependencies
+            - run: ./gradlew setupCIWorkspace --project-cache-dir ~/repo/cache/ # (2) CI workspace
 
             - save_cache:
                 paths:
                     - ~/.gradle
                 key: v1-dependencies-{{ checksum "build.gradle" }}
 
-            # Pass everything to next jobs
+            # Pass cache to next jobs
             - persist_to_workspace:
-                # Specify core directory
-                root: /
-                # Specify everything
+                # Specify core repo directory
+                root: ~/repo/
+                # Specify cache
                 paths:
-                    - .
+                    - cache/
     build:
         executor: main_flow_executor
         parallelism: 4
 
         steps:
             - attach_workspace:
-                # Attach everything from workspace
-                at: ~/
+                # Attach cache from workspace
+                at: cache
 
             - checkout
             - run: ./gradlew build
@@ -61,8 +61,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                # Attach everything from workspace
-                at: ~/
+                # Attach cache from workspace
+                at: cache
 
             - checkout
             - run: ./gradlew test
@@ -73,8 +73,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                # Attach everything from workspace
-                at: ~/
+                # Attach cache from workspace
+                at: cache
 
             - checkout
             - run: ./gradlew sonarqube
@@ -87,8 +87,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                # Attach everything from workspace
-                at: ~/
+                # Attach cache from workspace
+                at: cache
 
             - checkout
         # TODO deploy code here later
