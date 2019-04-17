@@ -17,15 +17,15 @@ public class PacketPriorityChange extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        writePart(buf);
+        host = (IPriorityHostExtended) readPart(buf);
 
-        ByteBufUtil.writeUtf8(buf, text);
+        ByteBufUtils.readUTF8String(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        host = (IPriorityHostExtended) readPart(buf);
+        writePart(buf);
 
-        ByteBufUtils.readUTF8String(buf);
+        ByteBufUtil.writeUtf8(buf, text);
     }
 }
