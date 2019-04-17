@@ -69,7 +69,6 @@ jobs:
                   at: ~/.gradle/
 
             - checkout
-            - run: ls ~/.gradle/
             - run: ./gradlew test
 
     sonar_test:
@@ -86,7 +85,7 @@ jobs:
                     -Dsonar.host.url=https://sonarcloud.io
                     -Dsonar.organization=${key}
                     -Dsonar.login=${token}
-    deploy:
+    run:
         executor: main_flow_executor
         parallelism: 4
 
@@ -96,7 +95,7 @@ jobs:
                   at: ~/.gradle/
 
             - checkout
-        # TODO deploy code here later
+        # TODO run code here later
 
 
 workflows:
@@ -114,17 +113,12 @@ workflows:
             - test: # (3) test code
                 requires:
                     - download_dependencies
-            #- run: # (4) run minecraft with code
-            #    requires:
-            #        - build
-            #        - test
+            - run: # (4) run minecraft with code
+                requires:
+                    - build
+                    - test
             - sonar_test: # (5) run sonar cloud tests for code
                   requires:
                       - build
                       - test
-            -  deploy:
-                  type: approval
-                  requires:
-                      - test
-                      - sonar_test
 
