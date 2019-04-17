@@ -37,11 +37,12 @@ jobs:
                 key: v1-dependencies-{{ checksum "build.gradle" }}
 
             # Pass everything to next jobs
-            -   persist_to_workspace:
-                    # Specify core directory
-                    root: ~/
-                    # Specify everything
-                    paths: /
+            - persist_to_workspace:
+                # Specify core directory
+                root: ~/
+                # Specify everything
+                paths:
+                    - ~/
     build:
         executor: main_flow_executor
         parallelism: 4
