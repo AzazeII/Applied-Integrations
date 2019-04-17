@@ -31,7 +31,6 @@ jobs:
             # Install
             - run: ./gradlew dependencies # (1) Dependencies
             - run: ./gradlew setupCIWorkspace # (2) CI workspace
-            - run: ./gradlew showMeCache
 
             - save_cache:
                 paths:
@@ -40,8 +39,8 @@ jobs:
 
             # Pass cache to next jobs
             - persist_to_workspace:
-                # Specify cache
-                root: ~/.gradle/caches/
+                # Specify gradle core as root
+                root: ~/.gradle/
                 # Specify everything
                 paths:
                     - .
@@ -54,8 +53,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                # Attach cache from workspace
-                at: ~/.gradle/caches/
+                # Attach gradle from workspace
+                at: ~/.gradle/
 
             - checkout
             - run: ./gradlew build
@@ -66,10 +65,11 @@ jobs:
 
         steps:
             - attach_workspace:
-                  # Attach cache from workspace
-                  at: ~/.gradle/caches/
+                  # Attach gradle from workspace
+                  at: ~/.gradle/
 
             - checkout
+            - run: ls ~/.gradle/
             - run: ./gradlew test
 
     sonar_test:
@@ -78,8 +78,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                  # Attach cache from workspace
-                  at: ~/.gradle/caches/
+                  # Attach gradle from workspace
+                  at: ~/.gradle/
 
             - checkout
             - run: ./gradlew sonarqube
@@ -92,8 +92,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                  # Attach cache from workspace
-                  at: ~/.gradle/caches/
+                  # Attach gradle from workspace
+                  at: ~/.gradle/
 
             - checkout
         # TODO deploy code here later
