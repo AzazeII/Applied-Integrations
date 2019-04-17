@@ -5,7 +5,7 @@ executors:
     main_flow_executor:
         docker:
             - image: circleci/openjdk:8-jdk
-        working_directory: /tmp
+        working_directory: ~/repo
 jobs:
     download_dependencies:
         executor: main_flow_executor
