@@ -114,15 +114,12 @@ jobs:
             - prepare_run_workspace
 
             # Download needed packages
-            - run: sudo apt-get install -y x11vnc
-                 x11vnc -forever -nopw
-            - run: sudo apt-get install -y xtightvncviewer
-                 x11vnc -forever -nopw
-            - run: sudo apt-get install -y xvfb
-                 x11vnc -forever -nopw
+            #- run: sudo apt-get install -y x11vnc -forever -nopw
+            #- run: sudo apt-get install -y xtightvncviewer -forever -nopw
+            #- run: sudo apt-get install -y xvfb -forever -nopw
 
             # Run client via xvfb, to avoid any crash with display
-            - run: xvfb-run ./gradlew runClient
+            #- run: xvfb-run ./gradlew runClient
 
     run_server:
         executor: run_executor
