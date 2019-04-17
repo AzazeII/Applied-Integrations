@@ -42,7 +42,7 @@ jobs:
                 root: ~/
                 # Specify everything
                 paths:
-                    - ~/
+                    - .
     build:
         executor: main_flow_executor
         parallelism: 4
