@@ -40,7 +40,7 @@ jobs:
             # Pass cache to next jobs
             - persist_to_workspace:
                 # Specify cache
-                root: ~/.gradle/
+                root: ~/.gradle/caches/
                 # Specify everything
                 paths:
                     - .
@@ -54,7 +54,7 @@ jobs:
         steps:
             - attach_workspace:
                 # Attach cache from workspace
-                at: ~/.gradle/
+                at: ~/.gradle/caches/
 
             - checkout
             - run: ./gradlew build
@@ -66,7 +66,7 @@ jobs:
         steps:
             - attach_workspace:
                   # Attach cache from workspace
-                  at: ~/.gradle/
+                  at: ~/.gradle/caches/
 
             - checkout
             - run: ./gradlew test
@@ -78,7 +78,7 @@ jobs:
         steps:
             - attach_workspace:
                   # Attach cache from workspace
-                  at: ~/.gradle/
+                  at: ~/.gradle/caches/
 
             - checkout
             - run: ./gradlew sonarqube
@@ -92,7 +92,7 @@ jobs:
         steps:
             - attach_workspace:
                   # Attach cache from workspace
-                  at: ~/.gradle/
+                  at: ~/.gradle/caches/
 
             - checkout
         # TODO deploy code here later
