@@ -63,7 +63,7 @@ jobs:
 
     build:
         executor: main_flow_executor
-        parallelism: 2
+        parallelism: 1
 
         steps:
             - attach_workspace:
@@ -75,7 +75,7 @@ jobs:
 
     test:
         executor: main_flow_executor
-        parallelism: 2
+        parallelism: 1
 
         steps:
             - attach_workspace:
@@ -88,7 +88,7 @@ jobs:
 
     run_server:
         executor: run_executor
-        parallelism: 4
+        parallelism: 1
 
         steps:
             - attach_workspace:
@@ -99,7 +99,7 @@ jobs:
             - prepare_run_workspace
 
             # Accept eula
-            - run: echo "eula=true" > /run/eula.txt
+            - run: echo "eula=true" > run/eula.txt
 
             # Run server
             - run: ./gradlew runServer
@@ -107,7 +107,7 @@ jobs:
 
     sonar_test:
         executor: main_flow_executor
-        parallelism: 4
+        parallelism: 1
 
         steps:
             - attach_workspace:
@@ -188,14 +188,11 @@ jobs:
 workflows:
     version: 2
 
-    #                                                                                            | ----> Backups
-    # Main flow sequence: Download_dependencies -> Test -----------|                             | ----> Curseforge
-    #                                           -> Build -> Run client/server -> human test -> deploy -> Sonarcloud.io test
     main_flow:
         jobs:
             # Run each job in sequence above
             - download_dependencies # (1) dependencies
-
+            #------------ Testing Code ------------#
             - build: # (2) build code
                 requires:
                     - download_dependencies
@@ -204,22 +201,25 @@ workflows:
                 requires:
                     - download_dependencies
 
-            - run_server: # (4) run minecraft server
-                  requires:
-                      - build
-                      - test
+            - sonar_test: # (4) run sonar cloud tests for code
+                requires:
+                     - download_dependencies
 
-            - sonar_test: # (5) run sonar cloud tests for code
+            - run_server: # (5) run minecraft server
                   requires:
-                      - run_server
+                      - download_dependencies
+            #------------ Testing Code ------------#
+
 
 
             - push_build_at_flow: # (6) deploy mod on all services
                   # Wait for tester/developer to approve code [in-game testing(tester) / sonar cloud review(dev)]
                   type: approval
                   requires:
+                      - build
+                      - test
                       - sonar_test
-
+                      - run_server
             #------------ Deploying ------------#
             - curse_forge:
                   requires:
