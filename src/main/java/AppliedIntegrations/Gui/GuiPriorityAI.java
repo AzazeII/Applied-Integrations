@@ -3,7 +3,9 @@ package AppliedIntegrations.Gui;
 import AppliedIntegrations.API.IPriorityHostExtended;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
+import AppliedIntegrations.Network.Packets.PacketPriorityChange;
 import appeng.client.gui.implementations.GuiPriority;
+import appeng.client.gui.widgets.GuiNumberBox;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.core.localization.GuiText;
 import net.minecraft.client.gui.GuiButton;
@@ -29,6 +31,19 @@ public class GuiPriorityAI extends GuiPriority {
         this.buttonList.add( this.originalTab = new GuiTabButton( this.guiLeft + 154,
                                                     this.guiTop, 2 + 4 * 16, GuiText.Priority.getLocal(),
                                                     this.itemRender ));
+    }
+
+    @Override
+    protected void keyTyped( final char character, final int key ) throws IOException {
+        super.keyTyped(character, key);
+
+        try{
+            // Get private priority field
+            GuiNumberBox priority = (GuiNumberBox) this.getClass().getField("priority").get(this);
+
+            // Send packet
+            NetworkHandler.sendToServer( new PacketPriorityChange( priority.getText(), host ));
+        }catch (Exception ignored) {}
     }
 
     @Override

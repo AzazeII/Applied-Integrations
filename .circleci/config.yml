@@ -203,9 +203,6 @@ workflows:
                   requires:
                       - download_dependencies
             #------------ Testing Code ------------#
-
-
-
             - push_build_at_flow: # (6) deploy mod on all services
                   # Wait for tester/developer to approve code [in-game testing(tester) / sonar cloud review(dev)]
                   type: approval
