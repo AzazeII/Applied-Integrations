@@ -45,7 +45,7 @@ jobs:
                     - v1-dependencies-
 
             # Install dependencies
-            prepare_run_workspace
+            - prepare_run_workspace
 
             - save_cache:
                 paths:
