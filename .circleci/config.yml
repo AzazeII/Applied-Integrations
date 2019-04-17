@@ -51,10 +51,10 @@ jobs:
                     - ~/.gradle
                 key: v1-dependencies-{{ checksum "build.gradle" }}
 
-            # Pass cache to next jobs
+            # Pass everything to next jobs
             - persist_to_workspace:
                 # Specify gradle core as root
-                root: ~/.gradle/
+                root: ~/
                 # Specify everything
                 paths:
                     - .
@@ -68,7 +68,7 @@ jobs:
         steps:
             - attach_workspace:
                 # Attach gradle from workspace
-                at: ~/.gradle/
+                at: ~/
 
             - checkout
             - run: ./gradlew build
@@ -80,7 +80,7 @@ jobs:
         steps:
             - attach_workspace:
                   # Attach gradle from workspace
-                  at: ~/.gradle/
+                  at: ~/
 
             - checkout
             - run: ./gradlew test
@@ -93,7 +93,7 @@ jobs:
         steps:
             - attach_workspace:
                   # Attach gradle from workspace
-                  at: ~/.gradle/
+                  at: ~/
 
             # Prepare dev workspace
             - prepare_run_workspace
@@ -106,7 +106,7 @@ jobs:
 
             # Run server
             - run:
-                  command: ./gradlew runServer --daemon # Run as demon
+                  command: ./gradlew runServer # Run as demon
     sonar_test:
         executor: main_flow_executor
         parallelism: 1
@@ -114,7 +114,7 @@ jobs:
         steps:
             - attach_workspace:
                   # Attach gradle from workspace
-                  at: ~/.gradle/
+                  at: ~/
 
             - checkout
             - run: ./gradlew sonarqube
@@ -129,7 +129,7 @@ jobs:
         steps:
             - attach_workspace:
                   # Attach gradle from workspace
-                  at: ~/.gradle/
+                  at: ~/
 
             - checkout
 
@@ -178,13 +178,6 @@ jobs:
                 # Attach build from workspace
                 at: ~/repo/build/libs/
     #------------ Deploying ------------#
-
-    STOP_THIS_DEMON:
-        executor: main_flow_executor
-        parallelism: 1
-
-        steps:
-            - run: ./gradlew --stop
 
 workflows:
     version: 2
@@ -238,10 +231,4 @@ workflows:
                   requires:
                       - push_build_at_flow
             #------------ Deploying ------------#
-
-            - STOP_THIS_DEMON: # (7) Stop daemon task from task #5
-                  requires:
-                      - google_drive
-                      - dropbox
-                      - icloud
 
