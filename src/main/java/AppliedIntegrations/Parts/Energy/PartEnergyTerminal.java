@@ -135,6 +135,8 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 				return SAME;
 			}
 
+			// Circle CI test
+
 			// Do all AE2 mechanics only on server
 			if(!this.getWorld().isRemote) {
 
