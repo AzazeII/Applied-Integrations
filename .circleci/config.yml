@@ -163,17 +163,17 @@ workflows:
             - test: # (3) test code
                 requires:
                     - download_dependencies
-            - run_client: # (4) run minecraft
-                  requires:
-                      - build
-                      - test
+            #- run_client: # (4) run minecraft
+            #      requires:
+            #          - build
+            #          - test
             - run_server: # (5) run minecraft server
                   requires:
                       - build
                       - test
             - sonar_test: # (6) run sonar cloud tests for code
                   requires:
-                      - run_client
+                      #- run_client
                       - run_server
             #- deploy:
             #      requires:
