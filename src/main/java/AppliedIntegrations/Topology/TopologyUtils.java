@@ -12,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.event.ClickEvent;
+import net.minecraftforge.server.terminalconsole.util.LoggerNamePatternSelector;
 import org.apache.commons.lang3.tuple.Pair;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -44,6 +45,8 @@ public class TopologyUtils {
      *  Machine, which queried this request
      */
     public static void createWebUI(IGrid grid, EntityPlayer player, GraphToolMode mode, IGridHost machine) {
+        LoggerNamePatternSelector l;
+
         // Switch modes
         switch (mode) {
             // Case all network nodes showing

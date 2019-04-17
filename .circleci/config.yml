@@ -115,7 +115,7 @@ jobs:
                 at: ~/.gradle/
 
             - checkout
-            - run: ./gradlew runClient
+            - run: ./gradlew runServer
 
 workflows:
     version: 2
@@ -136,9 +136,9 @@ workflows:
                   requires:
                       - build
                       - test
-            - run_client: # (5) run minecraft
-                  requires:
-                      - sonar_test
+            #- run_client: # (5) run minecraft
+            #      requires:
+            #          - sonar_test
             - run_server: # (6) run minecraft server
                   requires:
                       - sonar_test
