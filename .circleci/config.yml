@@ -38,11 +38,11 @@ jobs:
 
             # Pass cache to next jobs
             - persist_to_workspace:
-                # Specify core repo directory
-                root: ~/repo/
                 # Specify cache
+                root: cache
+                # Specify everything
                 paths:
-                    - cache/
+                    - *
     build:
         executor: main_flow_executor
         parallelism: 4
@@ -50,7 +50,7 @@ jobs:
         steps:
             - attach_workspace:
                 # Attach cache from workspace
-                at: cache
+                at: ~/repo/cache
 
             - checkout
             - run: ./gradlew build
@@ -61,8 +61,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                # Attach cache from workspace
-                at: cache
+                  # Attach cache from workspace
+                  at: ~/repo/cache
 
             - checkout
             - run: ./gradlew test
@@ -73,8 +73,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                # Attach cache from workspace
-                at: cache
+                  # Attach cache from workspace
+                  at: ~/repo/cache
 
             - checkout
             - run: ./gradlew sonarqube
@@ -87,8 +87,8 @@ jobs:
 
         steps:
             - attach_workspace:
-                # Attach cache from workspace
-                at: cache
+                  # Attach cache from workspace
+                  at: ~/repo/cache
 
             - checkout
         # TODO deploy code here later
