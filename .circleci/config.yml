@@ -156,8 +156,6 @@ jobs:
             - attach_workspace:
                 # Attach build from workspace
                 at: ~/repo/build/libs/
-
-            - checkout
     google_drive:
         executor: main_flow_executor
         parallelism: 1
@@ -166,8 +164,6 @@ jobs:
             - attach_workspace:
                 # Attach build from workspace
                 at: ~/repo/build/libs/
-
-            - checkout
     dropbox:
         executor: main_flow_executor
         parallelism: 1
@@ -176,8 +172,6 @@ jobs:
             - attach_workspace:
                 # Attach build from workspace
                 at: ~/repo/build/libs/
-
-            - checkout
     icloud:
         executor: main_flow_executor
         parallelism: 1
@@ -186,8 +180,6 @@ jobs:
             - attach_workspace:
                 # Attach build from workspace
                 at: ~/repo/build/libs/
-
-            - checkout
     #------------ Deploying ------------#
 
 workflows:
