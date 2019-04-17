@@ -110,8 +110,19 @@ jobs:
                   # Attach gradle from workspace
                   at: ~/.gradle/
 
+            # Prepare dev workspace, create eula.txt
             - prepare_run_workspace
-            - run: ./gradlew runClient
+
+            # Download needed packages
+            - run: sudo apt-get install -y x11vnc
+                 x11vnc -forever -nopw
+            - run: sudo apt-get install -y xtightvncviewer
+                 x11vnc -forever -nopw
+            - run: sudo apt-get install -y xvfb
+                 x11vnc -forever -nopw
+
+            # Run client via xvfb, to avoid any crash with display
+            - run: xvfb-run ./gradlew runClient
 
     run_server:
         executor: run_executor
@@ -125,8 +136,8 @@ jobs:
             # Prepare dev workspace, create eula.txt
             - prepare_run_workspace
 
-            # Run server via xvfb, to avoid any crash with display
-            - run: xvfb-run ./gradlew runServer
+            # Run server
+            - run: ./gradlew runServer
 
 workflows:
     version: 2
@@ -144,15 +155,16 @@ workflows:
             - test: # (3) test code
                 requires:
                     - download_dependencies
-            #- run_client: # (4) run minecraft TODO replace, or fix crash
-             #     requires:
-              #        - build
-               #       - test
+            - run_client: # (4) run minecraft TODO replace, or fix crash
+                  requires:
+                      - build
+                      - test
             - run_server: # (5) run minecraft server
                   requires:
                       - build
                       - test
             - sonar_test: # (6) run sonar cloud tests for code
                   requires:
+                      - run_client
                       - run_server
 
