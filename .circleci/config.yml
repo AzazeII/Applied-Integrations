@@ -89,7 +89,7 @@ jobs:
 
     sonar_test:
         executor: main_flow_executor
-        parallelism: 4
+        parallelism: 2
 
         steps:
             - attach_workspace:
@@ -126,7 +126,7 @@ jobs:
 
     run_server:
         executor: run_executor
-        parallelism: 4
+        parallelism: 2
 
         steps:
             - attach_workspace:
@@ -138,6 +138,15 @@ jobs:
 
             # Run server
             - run: ./gradlew runServer
+
+    deploy:
+        executor: run_executor
+        parallelism: 2
+
+        steps:
+            # Download gdrive API
+            - run: curl -L -o gdrive "https://docs.google.com/uc?id=0B3X9GlR6EmbnbURvYnVyVmNNX2M&export=download"
+            - run: chmod +x gdrive
 
 workflows:
     version: 2
@@ -155,7 +164,7 @@ workflows:
             - test: # (3) test code
                 requires:
                     - download_dependencies
-            - run_client: # (4) run minecraft TODO replace, or fix crash
+            - run_client: # (4) run minecraft
                   requires:
                       - build
                       - test
@@ -167,4 +176,8 @@ workflows:
                   requires:
                       - run_client
                       - run_server
+            #- deploy:
+            #      requires:
+            #          - run_client
+            #          - run_server
 
