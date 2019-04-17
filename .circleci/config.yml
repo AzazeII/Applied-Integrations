@@ -19,6 +19,8 @@ jobs:
         steps:
             - checkout
 
+            #- run: mkdir -p workspace
+
             # Load caches
             - restore_cache:
                 keys:
@@ -28,6 +30,7 @@ jobs:
             # Install
             - run: ./gradlew dependencies # (1) Dependencies
             - run: ./gradlew setupCIWorkspace # (2) CI workspace
+            - run: ls
 
             - save_cache:
                 paths:
