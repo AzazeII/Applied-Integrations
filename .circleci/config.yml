@@ -39,7 +39,7 @@ jobs:
             # Pass everything to next jobs
             - persist_to_workspace:
                 # Specify core directory
-                root: ~/
+                root: /
                 # Specify everything
                 paths:
                     - .
