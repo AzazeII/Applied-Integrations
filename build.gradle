@@ -125,8 +125,8 @@ dependencies {
     compile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
     compile "mekanism:Mekanism:1.12.2:9.4.13.349"
 
-    compileOnly "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
-    compileOnly "vazkii.botania:Botania:r1.10-359.39"
+    compile "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
+    compile "vazkii.botania:Botania:r1.10-359.39"
     compile "teamroots.embers:EmbersRekindled:1.13"
 }
 
