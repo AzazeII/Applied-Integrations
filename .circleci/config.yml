@@ -5,7 +5,7 @@ commands:
     prepare_run_workspace:
         steps:
             - checkout
-            - run: ./grdalew dependencies
+            - run: ./gradlew dependencies
             - run: ./gradlew setupDecompWorkspace
 
 executors:
