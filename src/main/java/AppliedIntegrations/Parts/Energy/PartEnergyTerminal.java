@@ -128,7 +128,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
 
 		// Check if update was requested
-		if(updateRequsted){
+		if(updateRequsted) {
 			// Check if we have gui to update
 			if (!(Minecraft.getMinecraft().currentScreen instanceof AIBaseGui)) {
 				// Break function

@@ -99,7 +99,7 @@ jobs:
             - prepare_run_workspace
 
             # Accept eula
-            - run: echo "eula=true" > eula.txt
+            - run: echo "eula=true" > /run/eula.txt
 
             # Run server
             - run: ./gradlew runServer
@@ -107,7 +107,7 @@ jobs:
 
     sonar_test:
         executor: main_flow_executor
-        parallelism: 2
+        parallelism: 4
 
         steps:
             - attach_workspace:
@@ -120,13 +120,71 @@ jobs:
                     -Dsonar.organization=${key}
                     -Dsonar.login=${token}
 
-    deploy:
-        executor: run_executor
-        parallelism: 2
+    push_build_at_flow:
+        executor: main_flow_executor
+        parallelism: 4
 
         steps:
-            # Download gdrive API
-            - run: echo "Deploy" # placeholder
+            - attach_workspace:
+                  # Attach gradle from workspace
+                  at: ~/.gradle/
+
+            - checkout
+
+            # Build
+            - run: ./gradlew build
+
+            # Pass cache to next jobs
+            - persist_to_workspace:
+                # Specify gradle core as root
+                root: ~/repo/build/libs
+                # Specify everything
+                paths:
+                    - .
+
+    #------------ Deploying ------------#
+    curse_forge:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                # Attach build from workspace
+                at: ~/repo/build/libs/
+
+            - checkout
+    google_drive:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                # Attach build from workspace
+                at: ~/repo/build/libs/
+
+            - checkout
+    dropbox:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                # Attach build from workspace
+                at: ~/repo/build/libs/
+
+            - checkout
+    icloud:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                # Attach build from workspace
+                at: ~/repo/build/libs/
+
+            - checkout
+    #------------ Deploying ------------#
+
 workflows:
     version: 2
 
@@ -137,20 +195,46 @@ workflows:
         jobs:
             # Run each job in sequence above
             - download_dependencies # (1) dependencies
+
             - build: # (2) build code
                 requires:
                     - download_dependencies
+
             - test: # (3) test code
                 requires:
                     - download_dependencies
+
             - run_server: # (4) run minecraft server
                   requires:
                       - build
                       - test
+
             - sonar_test: # (5) run sonar cloud tests for code
                   requires:
                       - run_server
-            - deploy: # (6) deploy mod on all services
+
+
+            - push_build_at_flow: # (6) deploy mod on all services
+                  # Wait for tester/developer to approve code [in-game testing(tester) / sonar cloud review(dev)]
+                  type: approval
                   requires:
-                      - run_server
+                      - sonar_test
+
+            #------------ Deploying ------------#
+            - curse_forge:
+                  requires:
+                      - push_build_at_flow
+
+            - google_drive:
+                  requires:
+                      - push_build_at_flow
+
+            - dropbox:
+                  requires:
+                      - push_build_at_flow
+
+            - icloud:
+                  requires:
+                      - push_build_at_flow
+            #------------ Deploying ------------#
 
