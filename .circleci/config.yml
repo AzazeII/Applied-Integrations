@@ -62,7 +62,7 @@ jobs:
 
     build:
         executor: main_flow_executor
-        parallelism: 4
+        parallelism: 2
 
         steps:
             - attach_workspace:
@@ -74,7 +74,7 @@ jobs:
 
     test:
         executor: main_flow_executor
-        parallelism: 4
+        parallelism: 2
 
         steps:
             - attach_workspace:
@@ -100,7 +100,7 @@ jobs:
                     -Dsonar.login=${token}
     run_client:
         executor: run_executor
-        parallelism: 4
+        parallelism: 2
 
         steps:
             - attach_workspace:
@@ -112,7 +112,7 @@ jobs:
 
     run_server:
         executor: run_executor
-        parallelism: 4
+        parallelism: 2
 
         steps:
             - attach_workspace:
