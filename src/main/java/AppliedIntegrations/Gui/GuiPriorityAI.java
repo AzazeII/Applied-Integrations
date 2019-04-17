@@ -12,6 +12,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.InventoryPlayer;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 public class GuiPriorityAI extends GuiPriority {
     private IPriorityHostExtended host;
@@ -38,8 +39,11 @@ public class GuiPriorityAI extends GuiPriority {
         super.keyTyped(character, key);
 
         try{
+            // Get private field and make it accessible
+            Field f = GuiPriority.class.getField("priority");f.setAccessible(true);
+
             // Get private priority field
-            GuiNumberBox priority = (GuiNumberBox) super.getClass().getField("priority").get(this);
+            GuiNumberBox priority = (GuiNumberBox) f.get(this);
 
             // Send packet
             NetworkHandler.sendToServer( new PacketPriorityChange( priority.getText(), host ));
