@@ -13,6 +13,10 @@ import AppliedIntegrations.Network.Packets.PacketGuiShift;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 import AppliedIntegrations.Parts.Energy.PartEnergyImport;
+import appeng.api.config.RedstoneMode;
+import appeng.api.config.Settings;
+import appeng.client.gui.widgets.GuiImgButton;
+import appeng.fluids.client.gui.GuiFluidIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +34,7 @@ import java.util.List;
 
 import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
+import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiIOPart;
 
 /**
  * @Author Azazell
@@ -61,9 +66,12 @@ public class GuiEnergyIO
     private boolean[] configMatrix = {false,false,false,
                                     false,true,false,
                                     false,false,false};
+    private GuiImgButton redstoneControlBtn;
+
     public GuiEnergyIO(Container container, EntityPlayer player) {
         super(container, player);
         this.player = player;
+
     }
 
     @Override
@@ -126,6 +134,12 @@ public class GuiEnergyIO
 
         // Add priority button
         addPriorityButton();
+
+        // Add redstone control button
+        redstoneControlBtn = new GuiImgButton( this.guiLeft - 18, this.guiTop + 8, Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE );
+
+        // Set visible to false
+        redstoneControlBtn.setVisibility(false);
 
         // Calculate the index
         int index = 0;
@@ -192,7 +206,7 @@ public class GuiEnergyIO
             part = (AIOPart)host;
     }
 
-    public void updateState(boolean redstoneControl, byte upgradeCount, byte filterSize) {
+    public void updateState(boolean redstoneControl, byte filterSize) {
         // Set filter matrix, from filter size
         if (filterSize == 0)
             // Update matrix
@@ -217,6 +231,8 @@ public class GuiEnergyIO
             energySlotList.get(i).shouldRender = configMatrix[i];
         }
 
+        // Set redstone control button visibility to redstone control
+        redstoneControlBtn.setVisibility(redstoneControl);
     }
 
     @Override

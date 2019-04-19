@@ -1,7 +1,6 @@
 package AppliedIntegrations.Network.Handlers;
 
 import AppliedIntegrations.Gui.Part.GuiEnergyIO;
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Network.Packets.PacketFullSync;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -24,7 +23,7 @@ public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFu
                 // Compare sync hosts
                 if(GEIO.getSyncHost().compareTo(message.part, true)){
                     // Update each state
-                    GEIO.updateState(message.redstoneControl, message.upgradeCount, message.filterSize);
+                    GEIO.updateState(message.redstoneControl, message.filterSize);
                 }
             }
         });

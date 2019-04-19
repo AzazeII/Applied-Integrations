@@ -2,7 +2,6 @@ package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.API.IInventoryHost;
 import AppliedIntegrations.API.IPriorityHostExtended;
-import AppliedIntegrations.API.Storage.EnergyRepo;
 import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Utils;
@@ -17,20 +16,16 @@ import AppliedIntegrations.Utils.ChangeHandler;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SecurityPermissions;
-import appeng.api.definitions.IMaterials;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
 import appeng.core.sync.GuiBridge;
-import appeng.helpers.IPriorityHost;
-import appeng.me.helpers.MachineSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -41,15 +36,12 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.capabilities.Capability;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
-import static appeng.api.util.AEPartLocation.INTERNAL;
 import static net.minecraft.init.Items.AIR;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
-import static net.minecraftforge.items.CapabilityItemHandler.ITEM_HANDLER_CAPABILITY;
 
 /**
  * @Author Azazell
@@ -238,7 +230,7 @@ public abstract class AIOPart
 
     private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled, byte upgradeSpeedCount) {
         if(player != null){
-            NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneControlled, upgradeSpeedCount, this), (EntityPlayerMP) this.player);
+            NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneControlled, this), (EntityPlayerMP) this.player);
         }
     }
 

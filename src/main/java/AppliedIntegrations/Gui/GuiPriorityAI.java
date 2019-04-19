@@ -40,7 +40,10 @@ public class GuiPriorityAI extends GuiPriority {
 
         try{
             // Get private field and make it accessible
-            Field f = GuiPriority.class.getDeclaredField("priority");f.setAccessible(true);
+            Field f = GuiPriority.class.getDeclaredField("priority");
+
+            // Make field accessible
+            f.setAccessible(true);
 
             // Get private priority field
             GuiNumberBox priority = (GuiNumberBox) f.get(this);
