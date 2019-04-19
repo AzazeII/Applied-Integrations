@@ -225,10 +225,10 @@ public abstract class AIOPart
         }
 
         // Request full state update
-        notifyListenersOfStateUpdate(filterSize, redstoneControlled, upgradeSpeedCount);
+        notifyListenersOfStateUpdate(filterSize, redstoneControlled);
     }
 
-    private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled, byte upgradeSpeedCount) {
+    private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled) {
         if(player != null){
             NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneControlled, this), (EntityPlayerMP) this.player);
         }

@@ -141,6 +141,9 @@ public class GuiEnergyIO
         // Set visible to false
         redstoneControlBtn.setVisibility(false);
 
+        // Add to button list
+        buttonList.add(redstoneControlBtn);
+
         // Calculate the index
         int index = 0;
         for( int row = 0; row < this.FILTER_GRID_SIZE; row++ )
