@@ -538,4 +538,10 @@ public abstract class AIOPart
     public AIGuiHandler.GuiEnum getGui() {
         return AIGuiHandler.GuiEnum.GuiIOPart;
     }
+
+    public void setRedstoneMode(RedstoneMode mode) {
+        this.redstoneMode = mode;
+
+        this.redstoneControlled = mode != RedstoneMode.IGNORE;
+    }
 }

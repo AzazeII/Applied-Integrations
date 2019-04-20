@@ -47,7 +47,10 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
 
         Handler.registerMessage(HandlerAccessModeClientToServer.class, PacketAccessModeClientToServer.class, packetId++, Side.SERVER);
+
         Handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.SERVER);
+
+        Handler.registerMessage(HandlerIOSyncReturn.class, PacketIOSyncReturn.class, packetId++, Side.SERVER);
     }
 
     // send packet info to player

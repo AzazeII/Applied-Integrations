@@ -10,6 +10,7 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
+import AppliedIntegrations.Network.Packets.PacketIOSyncReturn;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 import AppliedIntegrations.Parts.Energy.PartEnergyImport;
@@ -84,8 +85,8 @@ public class GuiEnergyIO
         // Draw upgrade slots
         this.drawTexturedModalRect( this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0,
                 GUI_UPGRADES_WIDTH, GUI_UPGRADES_HEIGHT );
-
     }
+
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
         // Call super
@@ -146,10 +147,8 @@ public class GuiEnergyIO
 
         // Calculate the index
         int index = 0;
-        for( int row = 0; row < this.FILTER_GRID_SIZE; row++ )
-        {
-            for( int column = 0; column < this.FILTER_GRID_SIZE; column++ )
-            {
+        for( int row = 0; row < this.FILTER_GRID_SIZE; row++ ) {
+            for( int column = 0; column < this.FILTER_GRID_SIZE; column++ ) {
 
 
                 // Calculate the x position
@@ -248,6 +247,11 @@ public class GuiEnergyIO
         if (btn == priorityButton){
             // Send packet to client
             NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, part));
+
+        // Check if click was performed on redstone control button
+        }else if (btn == redstoneControlBtn){
+            // Send packet to client
+            NetworkHandler.sendToServer(new PacketIOSyncReturn((RedstoneMode)redstoneControlBtn.getCurrentValue(), this.part));
         }
     }
 }
