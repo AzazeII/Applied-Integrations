@@ -431,13 +431,13 @@ public abstract class AIPart
 
 
 
-	public boolean isReceivingRedstonePower()
-	{
-		if( this.host != null )
-		{
+	public boolean isReceivingRedstonePower(){
+		// Check host not null
+		if( this.host != null ){
 			// Get redstone stateProp
 			return this.host.hasRedstone( this.cableSide );
 		}
+
 		return false;
 	}
 
@@ -448,11 +448,9 @@ public abstract class AIPart
 	}
 
 
-	public final void markForSave()
-	{
+	public final void markForSave() {
 		// Ensure there is a host
-		if( this.host != null )
-		{
+		if( this.host != null ) {
 			// Mark
 			this.host.markForSave();
 		}

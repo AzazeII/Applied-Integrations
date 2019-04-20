@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static appeng.api.config.RedstoneMode.*;
 import static net.minecraft.init.Items.AIR;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
@@ -89,7 +90,7 @@ public abstract class AIOPart
 
     private EntityPlayer player;
 
-    private static final RedstoneMode DEFAULT_REDSTONE_MODE = RedstoneMode.IGNORE;
+    private static final RedstoneMode DEFAULT_REDSTONE_MODE = IGNORE;
 
     private static final String NBT_KEY_REDSTONE_MODE = "redstoneMode";
     private static final String NBT_KEY_FILTER_NUMBER = "EnergyFilter#";
@@ -134,30 +135,17 @@ public abstract class AIOPart
         }
     }
 
-    private boolean canDoWork()
-    {
+    private boolean canDoWork() {
         boolean canWork = true;
 
-        if( this.redstoneControlled )
-        {
-            switch ( this.getRedstoneMode() )
-            {
-                case HIGH_SIGNAL:
-                    canWork = this.isReceivingRedstonePower();
+        if (redstoneMode == RedstoneMode.HIGH_SIGNAL)
+            canWork = this.isReceivingRedstonePower();
 
-                    break;
-                case IGNORE:
-                    break;
+        if (redstoneMode == LOW_SIGNAL)
+            canWork = !this.isReceivingRedstonePower();
 
-                case LOW_SIGNAL:
-                    canWork = !this.isReceivingRedstonePower();
-
-                    break;
-                case SIGNAL_PULSE:
-                    canWork = false;
-                    break;
-            }
-        }
+        if (redstoneMode == SIGNAL_PULSE)
+            canWork = false;
 
         return canWork;
 
@@ -245,40 +233,6 @@ public abstract class AIOPart
         return this.upgradeInventory;
     }
 
-    public boolean addFilteredEnergyFromItemstack( final EntityPlayer player, final ItemStack itemStack ) {
-        LiquidAIEnergy itemEnergy = Utils.getEnergyFromItemStack(itemStack);
-
-        if( itemEnergy != null )
-        {
-            // Are we already filtering this energy?
-            if( this.filteredEnergies.contains( itemEnergy ) )
-            {
-                return true;
-            }
-
-            // Add to the first open slot
-            for( int avalibleIndex = 0; avalibleIndex < this.availableFilterSlots.length; avalibleIndex++ )
-            {
-                int filterIndex = this.availableFilterSlots[avalibleIndex];
-
-                // Is this space empty?
-                if( this.filteredEnergies.get( filterIndex ) == null )
-                {
-                    // Is this server side?
-                    if( !getWorld().isRemote )
-                    {
-                        // Set the filter
-                        this.updateFilter( itemEnergy, filterIndex);
-                    }
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     public void addListener( final ContainerPartEnergyIOBus container ) {
         if( !this.listeners.contains( container ) )
         {
@@ -302,8 +256,7 @@ public abstract class AIOPart
      * existing.
      */
     @Override
-    public double getIdlePowerUsage()
-    {
+    public double getIdlePowerUsage() {
         return AIOPart.IDLE_POWER_DRAIN;
     }
 
@@ -311,13 +264,11 @@ public abstract class AIOPart
      * Produces a small amount of light when active.
      */
     @Override
-    public int getLightLevel()
-    {
+    public int getLightLevel() {
         return( this.isActive() ? 4 : 0 );
     }
 
-    public RedstoneMode getRedstoneMode()
-    {
+    public RedstoneMode getRedstoneMode() {
         return this.redstoneMode;
     }
 
@@ -542,6 +493,6 @@ public abstract class AIOPart
     public void setRedstoneMode(RedstoneMode mode) {
         this.redstoneMode = mode;
 
-        this.redstoneControlled = mode != RedstoneMode.IGNORE;
+        this.redstoneControlled = mode != IGNORE;
     }
 }

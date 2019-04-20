@@ -99,7 +99,7 @@ public abstract class AIBaseGui
         // Loop over all slots
         for( int i = 0; i < this.inventorySlots.inventorySlots.size(); i++ ) {
             // Get the slot
-            Slot slot = (Slot)this.inventorySlots.inventorySlots.get( i );
+            Slot slot = this.inventorySlots.inventorySlots.get( i );
 
             // Is the point within the slot?
             if( this.isPointWithinSlot( slot, x, y ) ) {

@@ -53,7 +53,7 @@ def getGitTimeLineHash = { ->
     return stdout.toString().trim()
 }
 
-// - WTF, Azazell, i'm your github reader, what'a'fuck is this? (Stranger)
+// - WTF, Azazell, i'm your github reader, what'a'**** is this? (Stranger)
 // - You mean "getGitTimeField", or "getGitCommitHash"? (Aza.)
 // - BOTH! (Stranger)
 // - Steins;gate :) (Aza.)
@@ -162,4 +162,8 @@ processResources {
 
 task showMeCache << {
     configurations.compile.each { println it }
+}
+
+sourceSets {
+    main { output.resourcesDir = output.classesDir }
 }
