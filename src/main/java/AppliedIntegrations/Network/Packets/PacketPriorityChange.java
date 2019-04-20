@@ -10,6 +10,10 @@ public class PacketPriorityChange extends AIPacket {
     public IPriorityHostExtended host;
     public String text;
 
+    public PacketPriorityChange(){
+
+    }
+
     public PacketPriorityChange(String text, IPriorityHostExtended host) {
         super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
         this.text = text;
