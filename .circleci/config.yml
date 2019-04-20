@@ -1,0 +1,231 @@
+# Set version to 2.1
+version: 2.1
+
+commands:
+    prepare_run_workspace:
+        steps:
+            - checkout
+            - run: ./gradlew setupDecompWorkspace
+
+executors:
+    main_flow_executor:
+        docker:
+            - image: circleci/openjdk:8-jdk
+        working_directory: ~/repo
+
+        environment:
+            # Customize the JVM maximum heap limit
+            JVM_OPTS: -Xmx3200m
+            TERM: dumb
+
+    run_executor:
+        machine: true
+
+        working_directory: ~/repo
+
+        environment:
+            # Customize the JVM maximum heap limit
+            JVM_OPTS: -Xmx3200m
+            TERM: dumb
+jobs:
+    #--- This function (below) will push all caches to workspace of workflow ---#
+    download_dependencies:
+        executor: main_flow_executor
+        parallelism: 4
+
+        steps:
+            - checkout
+
+            # Load caches
+            - restore_cache:
+                  keys:
+                      - v1-dependencies-{{ checksum "build.gradle" }}
+                      # fallback to using the latest cache if no exact match is found
+                      - v1-dependencies-
+
+            # Install dependencies
+            - run: ./gradlew dependencies
+            - run: ./gradlew setupCIWorkspace
+
+            - save_cache:
+                  paths:
+                      - ~/.gradle
+                  key: v1-dependencies-{{ checksum "build.gradle" }}
+
+            # Pass everything to next jobs
+            - persist_to_workspace:
+                  # Specify gradle core as root
+                  root: ~/
+                  # Specify everything
+                  paths:
+                      - .
+    #--- This function (above) will push all caches to workspace of workflow ---#
+
+
+    build:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach gradle from workspace
+                  at: ~/
+
+            - checkout
+            - run: ./gradlew build
+
+    test:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach gradle from workspace
+                  at: ~/
+
+            - checkout
+            - run: ./gradlew test
+
+
+    run_server:
+        executor: run_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach gradle from workspace
+                  at: ~/
+
+            # Setup dev & CI and decompile workspace
+            - prepare_run_workspace
+
+            # Create folder
+            - run: mkdir -p run
+
+            # Accept eula
+            - run: echo "eula=true" > run/eula.txt
+
+            # Run server
+            - run: echo "/stop" | ./gradlew runServer # Run server and type /stop in it's std input
+    sonar_test:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach gradle from workspace
+                  at: ~/
+
+            - checkout
+            - run: ./gradlew sonarqube
+                  -Dsonar.host.url=https://sonarcloud.io
+                  -Dsonar.organization=${key}
+                  -Dsonar.login=${token}
+
+    push_build_at_flow:
+        executor: main_flow_executor
+        parallelism: 4
+
+        steps:
+            - attach_workspace:
+                  # Attach gradle from workspace
+                  at: ~/
+
+            - checkout
+
+            # Build
+            - run: ./gradlew build
+
+            # Pass cache to next jobs
+            - persist_to_workspace:
+                  # Specify gradle core as root
+                  root: ~/repo/build/libs
+                  # Specify everything
+                  paths:
+                      - .
+
+    #------------ Deploying ------------#
+    curse_forge:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach build from workspace
+                  at: ~/repo/build/libs/
+    google_drive:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach build from workspace
+                  at: ~/repo/build/libs/
+    dropbox:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach build from workspace
+                  at: ~/repo/build/libs/
+    icloud:
+        executor: main_flow_executor
+        parallelism: 1
+
+        steps:
+            - attach_workspace:
+                  # Attach build from workspace
+                  at: ~/repo/build/libs/
+    #------------ Deploying ------------#
+
+workflows:
+    version: 2
+
+    main_flow:
+        jobs:
+            # Run each job in sequence above
+            - download_dependencies # (1) dependencies
+            #------------ Testing Code ------------#
+            - build: # (2) build code
+                  requires:
+                      - download_dependencies
+
+            - test: # (3) test code
+                  requires:
+                      - download_dependencies
+
+            - sonar_test: # (4) run sonar cloud tests for code
+                  requires:
+                      - download_dependencies
+
+            #- run_server: # (5) run minecraft server
+            #      requires:
+            #          - download_dependencies
+            #------------ Testing Code ------------#
+            - push_build_at_flow: # (6) deploy mod on all services
+                  # Wait for tester/developer to approve code [in-game testing(tester) / sonar cloud review(dev)]
+                  type: approval
+                  requires:
+                      - build
+                      - test
+                      - sonar_test
+                      #- run_server
+            #------------ Deploying ------------#
+            - curse_forge:
+                  requires:
+                      - push_build_at_flow
+
+            - google_drive:
+                  requires:
+                      - push_build_at_flow
+
+            - dropbox:
+                  requires:
+                      - push_build_at_flow
+
+            - icloud:
+                  requires:
+                      - push_build_at_flow
+            #------------ Deploying ------------#
+
