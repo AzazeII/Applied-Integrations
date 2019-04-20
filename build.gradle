@@ -165,5 +165,7 @@ task showMeCache << {
 }
 
 sourceSets {
-    main { output.resourcesDir = output.classesDir }
+    main { 
+        output.resourcesDir = output.classesDir
+    }
 }
