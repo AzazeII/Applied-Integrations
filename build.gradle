@@ -159,13 +159,3 @@ processResources {
         exclude 'mcmod.info'
     }
 }
-
-task showMeCache << {
-    configurations.compile.each { println it }
-}
-
-sourceSets {
-    main { 
-        output.resourcesDir = output.classesDir
-    }
-}
