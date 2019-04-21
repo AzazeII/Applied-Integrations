@@ -31,6 +31,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
@@ -122,6 +123,13 @@ public class GuiEnergyIO
             slotUnderMouse.getTooltip( this.tooltip );
         }
 
+        // Add tooltip to redstone control button
+        // Check if mouse over redstone control button
+        if(redstoneControlBtn.isMouseOver()){
+            // Split messages using regex "\n"
+            tooltip.addAll(Arrays.asList(redstoneControlBtn.getMessage().split("\n")));
+        }
+
         if(part instanceof PartEnergyExport)
             this.stringName = I18n.translateToLocal("ME Energy Export Bus");
         if(part instanceof PartEnergyImport)
@@ -190,6 +198,18 @@ public class GuiEnergyIO
                 break;
             }
         }
+
+        // Check if mouse over redstone control button
+        if(redstoneControlBtn.isMouseOver()) {
+            // Get current mode ordinal
+            short ordinal = (short) redstoneControlBtn.getCurrentValue().ordinal();
+
+            // Switch to next mode
+            redstoneControlBtn.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
+
+            // Send packet to client
+            NetworkHandler.sendToServer(new PacketIOSyncReturn((RedstoneMode)redstoneControlBtn.getCurrentValue(), this.part));
+        }
     }
 
     @Override
@@ -247,11 +267,6 @@ public class GuiEnergyIO
         if (btn == priorityButton){
             // Send packet to client
             NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, part));
-
-        // Check if click was performed on redstone control button
-        }else if (btn == redstoneControlBtn){
-            // Send packet to client
-            NetworkHandler.sendToServer(new PacketIOSyncReturn((RedstoneMode)redstoneControlBtn.getCurrentValue(), this.part));
         }
     }
 }

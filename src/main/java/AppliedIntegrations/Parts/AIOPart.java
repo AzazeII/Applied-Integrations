@@ -273,7 +273,7 @@ public abstract class AIOPart
     }
 
     @Override
-    public TickingRequest getTickingRequest(final IGridNode arg0 ) {
+    public TickingRequest getTickingRequest(final IGridNode node ) {
         return new TickingRequest( MINIMUM_TICKS_PER_OPERATION, MAXIMUM_TICKS_PER_OPERATION, false, false );
     }
 
@@ -404,8 +404,11 @@ public abstract class AIOPart
 
             // Check if update requested (player opened GUI)
             if(updateRequested){
-                // Notify listener
+                // Notify listeners
                 this.notifyListenersOfFilterEnergyChange(finalI, filteredEnergies.get(i));
+
+                // Notify listeners
+                notifyListenersOfStateUpdate(filterSize, redstoneControlled);
 
             }
         }

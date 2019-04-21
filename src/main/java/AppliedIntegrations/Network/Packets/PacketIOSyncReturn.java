@@ -10,6 +10,8 @@ public class PacketIOSyncReturn extends AIPacket{
     public ISyncHost host;
     public RedstoneMode mode;
 
+    public PacketIOSyncReturn() { }
+
     public PacketIOSyncReturn(RedstoneMode currentValue, ISyncHost syncHost) {
         super(syncHost.getPos().getX(), syncHost.getPos().getY(), syncHost.getPos().getZ(), syncHost.getSide().getFacing(), syncHost.getWorld());
         this.mode = currentValue;
