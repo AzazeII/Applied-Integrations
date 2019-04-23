@@ -61,8 +61,8 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
     private final List<WidgetEnergySelector> widgetEnergySelectors = new ArrayList<>();
 
-    private SortOrder sortMode = SortOrder.NAME;
-    private GuiImgButton sortButton;
+    public SortOrder sortMode = SortOrder.NAME;
+    public GuiImgButton sortButton;
 
     // Create comparator for list
     private Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {

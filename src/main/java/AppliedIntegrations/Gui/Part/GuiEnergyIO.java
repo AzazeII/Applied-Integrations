@@ -10,18 +10,16 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
-import AppliedIntegrations.Network.Packets.PacketIOSyncReturn;
+import AppliedIntegrations.Network.Packets.PacketSyncReturn;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 import AppliedIntegrations.Parts.Energy.PartEnergyImport;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
 import appeng.client.gui.widgets.GuiImgButton;
-import appeng.fluids.client.gui.GuiFluidIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -36,7 +34,6 @@ import java.util.List;
 
 import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
-import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiIOPart;
 
 /**
  * @Author Azazell
@@ -209,7 +206,7 @@ public class GuiEnergyIO
             redstoneControlBtn.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
 
             // Send packet to client
-            NetworkHandler.sendToServer(new PacketIOSyncReturn((RedstoneMode)redstoneControlBtn.getCurrentValue(), this.part));
+            NetworkHandler.sendToServer(new PacketSyncReturn((RedstoneMode)redstoneControlBtn.getCurrentValue(), this.part));
         }
     }
 
@@ -229,33 +226,36 @@ public class GuiEnergyIO
             part = (AIOPart)host;
     }
 
-    public void updateState(boolean redstoneControl, byte filterSize) {
+    public void updateState(boolean redstoneControl, RedstoneMode redstoneMode, byte filterSize) {
         // Set filter matrix, from filter size
         if (filterSize == 0)
             // Update matrix
-            configMatrix = new boolean[]{false, false, false,
+            this.configMatrix = new boolean[]{false, false, false,
                                          false, true,  false,
                                          false, false, false};
         if (filterSize == 1)
             // Update matrix
-            configMatrix = new boolean[]{false, true, false,
+            this.configMatrix = new boolean[]{false, true, false,
                                          true,  true, true,
                                          false, true, false};
 
         if (filterSize == 2)
             // Update matrix
-            configMatrix = new boolean[]{true, true, true,
+            this.configMatrix = new boolean[]{true, true, true,
                                          true, true, true,
                                          true, true, true};
 
         // Iterate for i until it equal to cM.length
         for(int i = 0; i < configMatrix.length; i++){
             // Get slot and update it to value from config matrix
-            energySlotList.get(i).shouldRender = configMatrix[i];
+            this.energySlotList.get(i).shouldRender = configMatrix[i];
         }
 
         // Set redstone control button visibility to redstone control
-        redstoneControlBtn.setVisibility(redstoneControl);
+        this.redstoneControlBtn.setVisibility(redstoneControl);
+
+        // Update redstone mode
+        this.redstoneControlBtn.set(redstoneMode);
     }
 
     @Override

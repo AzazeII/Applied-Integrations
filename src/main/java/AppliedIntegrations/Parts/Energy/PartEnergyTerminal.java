@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
@@ -29,6 +30,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.IConfigManager;
+import appeng.core.AEConfig;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import net.minecraft.client.Minecraft;
@@ -53,6 +55,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	private IConfigManager configManager = new ConfigManager(this);
 	public List<ContainerEnergyTerminal> listeners = new ArrayList<>();
 	private boolean updateRequsted;
+	private SortOrder sortingOrder = SortOrder.NAME;
 
 	public PartEnergyTerminal() {
 		super(PartEnum.EnergyTerminal, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT, SecurityPermissions.CRAFT);
@@ -146,7 +149,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 					// Notify GUI first time about list, to make it show current list of all energies
 					for (ContainerEnergyTerminal listener : this.listeners) {
 						// Send packet over network
-						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), this), (EntityPlayerMP) listener.player);
+						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(),sortingOrder, this), (EntityPlayerMP) listener.player);
 
 						// Trigger request
 						updateRequsted = false;
@@ -207,12 +210,20 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	@Override
 	public void postChange(IBaseMonitor<IAEEnergyStack> monitor, Iterable<IAEEnergyStack> change, IActionSource actionSource) {
 		for (ContainerEnergyTerminal listener : listeners) {
-			NetworkHandler.sendTo(new PacketTerminalUpdate(((IMEMonitor<IAEEnergyStack>)monitor).getStorageList(), this), (EntityPlayerMP) listener.player);
+			NetworkHandler.sendTo(new PacketTerminalUpdate(((IMEMonitor<IAEEnergyStack>)monitor).getStorageList(), sortingOrder, this), (EntityPlayerMP) listener.player);
 		}
 	}
 
 	@Override
 	public void onListUpdate() {
 
+	}
+
+	public void setSortMode(SortOrder mode) {
+		this.sortingOrder = mode;
+	}
+
+	public SortOrder getSortOrder() {
+		return this.sortingOrder;
 	}
 }

@@ -23,7 +23,7 @@ public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFu
                 // Compare sync hosts
                 if(GEIO.getSyncHost().compareTo(message.part, true)){
                     // Update each state
-                    GEIO.updateState(message.redstoneControl, message.filterSize);
+                    GEIO.updateState(message.redstoneControl, message.redstoneMode, message.filterSize);
                 }
             }
         });

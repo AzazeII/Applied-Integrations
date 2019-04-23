@@ -50,7 +50,7 @@ public class NetworkHandler {
 
         Handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.SERVER);
 
-        Handler.registerMessage(HandlerIOSyncReturn.class, PacketIOSyncReturn.class, packetId++, Side.SERVER);
+        Handler.registerMessage(HandlerSyncReturn.class, PacketSyncReturn.class, packetId++, Side.SERVER);
     }
 
     // send packet info to player

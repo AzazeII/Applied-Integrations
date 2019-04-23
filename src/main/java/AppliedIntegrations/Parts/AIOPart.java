@@ -218,7 +218,7 @@ public abstract class AIOPart
 
     private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled) {
         if(player != null){
-            NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneControlled, this), (EntityPlayerMP) this.player);
+            NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneMode, redstoneControlled, this), (EntityPlayerMP) this.player);
         }
     }
 

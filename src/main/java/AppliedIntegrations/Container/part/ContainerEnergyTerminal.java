@@ -69,7 +69,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
                 // Notify GUI first time about list, to make it show current list of all energies
                 for (ContainerEnergyTerminal listener : terminal.listeners) {
                     // Send packet over network
-                    NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), terminal), (EntityPlayerMP) listener.player);
+                    NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), terminal.getSortOrder(), terminal), (EntityPlayerMP) listener.player);
                 }
             }
 

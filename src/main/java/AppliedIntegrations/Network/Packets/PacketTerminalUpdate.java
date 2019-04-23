@@ -5,8 +5,11 @@ import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnergyList;
+import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IItemList;
 import io.netty.buffer.ByteBuf;
+
+import javax.annotation.Nonnull;
 
 /**
  * @Author Azazell
@@ -14,15 +17,16 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketTerminalUpdate extends AIPacket {
     public AIPart part;
+    public IItemList<IAEEnergyStack> list;
+    public SortOrder order;
 
     public PacketTerminalUpdate(){}
 
-    public IItemList<IAEEnergyStack> list;
-
-    public PacketTerminalUpdate(IItemList<IAEEnergyStack> monitor, AIPart partToken){
+    public PacketTerminalUpdate(IItemList<IAEEnergyStack> monitor, @Nonnull SortOrder order, AIPart partToken){
         super(partToken.getX(), partToken.getY(), partToken.getZ(), partToken.getSide().getFacing(), partToken.getWorld());
         this.list = monitor;
         this.part = partToken;
+        this.order = order;
     }
 
     @Override
@@ -50,6 +54,9 @@ public class PacketTerminalUpdate extends AIPacket {
 
         // Set list
         this.list = list;
+
+        // Read order ordinal
+        this.order = SortOrder.values()[buf.readByte()];
     }
 
     @Override
@@ -69,5 +76,8 @@ public class PacketTerminalUpdate extends AIPacket {
 
         // Write part
         writePart(buf);
+
+        // Write ordinal of order
+        buf.writeByte((byte)order.ordinal());
     }
 }

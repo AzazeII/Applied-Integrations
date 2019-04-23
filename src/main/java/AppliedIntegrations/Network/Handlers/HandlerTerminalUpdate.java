@@ -23,9 +23,14 @@ public class HandlerTerminalUpdate implements IMessageHandler<PacketTerminalUpda
         Minecraft.getMinecraft().addScheduledTask(() -> {
             Gui gui = Minecraft.getMinecraft().currentScreen;
             if (gui instanceof GuiEnergyTerminalDuality) {
+                // Get terminal gui
+                GuiEnergyTerminalDuality dualityTerminal = (GuiEnergyTerminalDuality)gui;
+
                 // Check if we are updating correct GUI
-                if ((((GuiEnergyTerminalDuality) gui).getSyncHost().compareTo(message.part, true))) {
-                    ((GuiEnergyTerminalDuality) gui).updateList(message.list);
+                if ((dualityTerminal.getSyncHost().compareTo(message.part, true))) {
+                    dualityTerminal.updateList(message.list);
+                    dualityTerminal.sortMode = message.order;
+                    dualityTerminal.sortButton.set(message.order);
                 }
             }
         });
