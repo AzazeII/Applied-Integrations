@@ -17,6 +17,7 @@ import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.grid.EnergyList;
+import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
 import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IItemList;
@@ -36,6 +37,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
@@ -61,6 +63,54 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
     private SortOrder sortMode = SortOrder.NAME;
     private GuiImgButton sortButton;
+
+    // Create comparator for list
+    private Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {
+        @Override
+        public int compare(@Nullable IAEEnergyStack left, @Nullable IAEEnergyStack right) {
+            // Check both energies not null
+            if( left == null || right == null)
+                // Same place in slots
+                return 0;
+
+            //------------ Alphabet Sorting ------------//
+            if(sortMode == SortOrder.NAME){
+                // Get left energy name or "null"
+                String leftEnergyName = left.getEnergy() == null ? "null" : left.getEnergy().getEnergyName();
+
+                // Get right energy name or "null"
+                String rightEnergyName = right.getEnergy() == null ? "null" : right.getEnergy().getEnergyName();
+
+                // Compare first energy to second by default method of class String
+                return leftEnergyName.compareTo(rightEnergyName);
+
+                //------------ Amount Sorting ------------//
+            }else if(sortMode == SortOrder.AMOUNT){
+                // Get left energy amount
+                Long leftAmount = left.getStackSize();
+
+                // Get right energy amount
+                Long rightAmount = right.getStackSize();
+
+                // Compare first energy to second by default method of class Long
+                return leftAmount.compareTo(rightAmount);
+
+                //------------ Mod Sorting ------------//
+            }else if(sortMode == SortOrder.MOD){
+                // Get mod id of left energy
+                String leftModid = left.getEnergy() == null ? "null" : left.getEnergy().getModid();
+
+                // Get mod id of right energy
+                String rightModid = right.getEnergy() == null ? "null" : right.getEnergy().getModid();
+
+
+                return leftModid.compareTo(rightModid);
+            }
+
+            // Random sorting
+            return 0;
+        }
+    };
 
     public GuiEnergyTerminalDuality(ContainerEnergyTerminal container,PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
         super(container, player);
@@ -88,6 +138,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
     @Override
     public void initGui() {
+        super.initGui();
         this.buttonList.add( this.sortButton = new GuiImgButton( this.guiLeft - 18, this.guiTop, Settings.SORT_BY, sortMode ) );
     }
 
@@ -162,6 +213,13 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
         // Draw name of GUI
         fontRenderer.drawString( I18n.translateToLocal("ME Energy Terminal") , 9, 3, 4210752);
+
+        // Add tooltip to sort button
+        // Check if mouse over sort button
+        if(sortButton.isMouseOver()){
+            // Split messages using regex "\n"
+            tooltip.addAll(Arrays.asList(sortButton.getMessage().split("\n")));
+        }
     }
 
     @Override
@@ -175,67 +233,12 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
             part = (PartEnergyTerminal)host;
     }
 
-    public void updateList(IItemList<IAEEnergyStack> list) {
-        // Create comparator for list
-        Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {
-            @Override
-            public int compare(@Nullable IAEEnergyStack left, @Nullable IAEEnergyStack right) {
-                // Check both energies not null
-                if( left == null || right == null)
-                    // Same place in slots
-                    return 0;
-
-                //------------ Alphabet Sorting ------------//
-                if(sortMode == SortOrder.NAME){
-                    // Get left energy name or "null"
-                    String leftEnergyName = left.getEnergy() == null ? "null" : left.getEnergy().getEnergyName();
-
-                    // Get right energy name or "null"
-                    String rightEnergyName = right.getEnergy() == null ? "null" : right.getEnergy().getEnergyName();
-
-                    // Compare first energy to second by default method of class String
-                    return leftEnergyName.compareTo(rightEnergyName);
-
-                //------------ Amount Sorting ------------//
-                }else if(sortMode == SortOrder.AMOUNT){
-                    // Get left energy amount
-                    Long leftAmount = left.getStackSize();
-
-                    // Get right energy amount
-                    Long rightAmount = right.getStackSize();
-
-                    // Compare first energy to second by default method of class Long
-                    return leftAmount.compareTo(rightAmount);
-
-                //------------ Mod Sorting ------------//
-                }else if(sortMode == SortOrder.MOD){
-                    // Get mod id of left energy
-                    String leftModid = left.getEnergy() == null ? "null" : left.getEnergy().getModid();
-
-                    // Get mod id of right energy
-                    String rightModid = right.getEnergy() == null ? "null" : right.getEnergy().getModid();
-
-
-                    return leftModid.compareTo(rightModid);
-                }
-
-                // Random sorting
-                return 0;
-            }
-        };
-        // Create sorted list
-        List<IAEEnergyStack> sorted = sorter.sortedCopy(list);
-
-        // Iterate for each entry of sorted copy of list
-        // Add entry in order of list
-        sorted.forEach(this.list::add);
-
+    private void updateStacksPrecise(List<IAEEnergyStack> sorted) {
         // Iterate until i = list.size
-        for (int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             // Get selector at (i)
             widgetEnergySelectors.get(i).setCurrentStack(new EnergyStack(sorted.get(i).getEnergy(), sorted.get(i).getStackSize()));
         }
-
 
         // Now, if stack is selected it should be updated, when monitor changes
         // Check if both stack size and energy are greater than zero(or not equal null)
@@ -245,8 +248,45 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
             selectedStack = list.findPrecise(AEEnergyStack.fromStack(selectedStack)).getStack();
     }
 
+    public void updateList(IItemList<IAEEnergyStack> list) {
+        // Create sorted list
+        List<IAEEnergyStack> sorted = sorter.sortedCopy(list);
+
+        // Iterate for each entry of sorted copy of list
+        // Add entry in order of list
+        sorted.forEach(this.list::add);
+
+        // Call update function
+        updateStacksPrecise(sorted);
+    }
+
     @Override
     public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+        super.onButtonClicked(btn, mouseButton);
 
+        // Check if click was performed on sort mode button
+        if (btn == sortButton){
+            // Get current mode ordinal
+            byte ordinal = (byte) sortButton.getCurrentValue().ordinal();
+
+            // Switch to next mode
+            sortButton.set(ordinal == 3 ? SortOrder.NAME : SortOrder.values()[ordinal + 1]);
+
+            // Change sorting mode
+            sortMode = (SortOrder)sortButton.getCurrentValue();
+
+            // Create sorted list from current list
+            List<IAEEnergyStack> sorted = sorter.sortedCopy(list);
+
+            // Clear current list
+            list = new EnergyList();
+
+            // Iterate for each entry of sorted copy of list
+            // Add entry in order of list
+            sorted.forEach(list::add);
+
+            // Call update function
+            updateStacksPrecise(sorted);
+        }
     }
 }
