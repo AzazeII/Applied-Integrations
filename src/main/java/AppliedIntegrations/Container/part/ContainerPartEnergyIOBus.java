@@ -26,14 +26,14 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots {
 
     private final AIOPart part;
     public ContainerPartEnergyIOBus(final AIOPart part, final EntityPlayer player ) {
-        super(part,player);
+        super(part, player);
 
         // Set the part
         this.part = part;
 
         // Add upgrade slots
-        this.addUpgradeSlots( part.getUpgradeInventory(), NUMBER_OF_UPGRADE_SLOTS,
-                UPGRADE_X_POS, UPGRADE_Y_POS );
+        this.addUpgradeSlots(part.getUpgradeInventory(), NUMBER_OF_UPGRADE_SLOTS,
+                UPGRADE_X_POS, UPGRADE_Y_POS);
 
         // Bind to the player's inventory
         this.bindPlayerInventory(player.inventory, 102, 160);

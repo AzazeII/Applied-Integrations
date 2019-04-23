@@ -228,9 +228,47 @@ public abstract class AIOPart
         }
     }
 
-    @Override
-    public AIGridNodeInventory getUpgradeInventory() {
-        return this.upgradeInventory;
+    public void updateGui() {
+        // Check if update was requested
+        if(updateRequested){
+            // Get current gui
+            Gui g = Minecraft.getMinecraft().currentScreen;
+
+            // Check not null
+            if(g != null){
+                // Send packet
+                NetworkHandler.sendTo(new PacketCoordinateInit(this),
+                        (EntityPlayerMP) player);
+            }
+        }
+
+        // Iterate until i equal to filter size
+        for(int i = 0; i < MAX_FILTER_SIZE; i++){
+
+            // Create effectively final i
+            int finalI = i;
+
+            // Check if energy changed
+            filteredEnergiesChangeHandler.get(i).onChange(filteredEnergies.get(i), (energy -> {
+                // Notify listener
+                this.notifyListenersOfFilterEnergyChange(finalI, energy);
+            }));
+
+            // Check if update requested (player opened GUI)
+            if(updateRequested){
+                // Notify listeners
+                this.notifyListenersOfFilterEnergyChange(finalI, filteredEnergies.get(i));
+
+                // Notify listeners
+                notifyListenersOfStateUpdate(filterSize, redstoneControlled);
+
+            }
+        }
+
+        // Check if update was requested
+        if(updateRequested)
+            // Trigger request
+            updateRequested = false;
     }
 
     public void addListener( final ContainerPartEnergyIOBus container ) {
@@ -241,6 +279,11 @@ public abstract class AIOPart
     }
 
     public abstract boolean energyTransferAllowed( LiquidAIEnergy energy );
+
+    @Override
+    public AIGridNodeInventory getUpgradeInventory() {
+        return this.upgradeInventory;
+    }
 
     @Override
     public void getDrops( List<ItemStack> drops, boolean wrenched) {
@@ -359,7 +402,6 @@ public abstract class AIOPart
             }
         }
 
-        data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
         // Read upgrade inventory
         this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory",
                 10));
@@ -382,46 +424,8 @@ public abstract class AIOPart
 
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall ) {
-        // Check if update was requested
-        if(updateRequested){
-            // Get current gui
-            Gui g = Minecraft.getMinecraft().currentScreen;
-
-            // Check not null
-            if(g != null){
-                // Send packet
-                NetworkHandler.sendTo(new PacketCoordinateInit(this),
-                        (EntityPlayerMP) player);
-            }
-        }
-
-        // Iterate until i equal to filter size
-        for(int i = 0; i < MAX_FILTER_SIZE; i++){
-
-            // Create effectively final i
-            int finalI = i;
-
-            // Check if energy changed
-            filteredEnergiesChangeHandler.get(i).onChange(filteredEnergies.get(i), (energy -> {
-                // Notify listener
-                this.notifyListenersOfFilterEnergyChange(finalI, energy);
-            }));
-
-            // Check if update requested (player opened GUI)
-            if(updateRequested){
-                // Notify listeners
-                this.notifyListenersOfFilterEnergyChange(finalI, filteredEnergies.get(i));
-
-                // Notify listeners
-                notifyListenersOfStateUpdate(filterSize, redstoneControlled);
-
-            }
-        }
-
-        // Check if update was requested
-        if(updateRequested)
-            // Trigger request
-            updateRequested = false;
+        // Update gui
+        updateGui();
 
         if( this.canDoWork() ) {
             // Calculate the amount to transfer per second
@@ -439,7 +443,6 @@ public abstract class AIOPart
 
         return TickRateModulation.IDLE;
     }
-
 
     @Override
     public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType ) {

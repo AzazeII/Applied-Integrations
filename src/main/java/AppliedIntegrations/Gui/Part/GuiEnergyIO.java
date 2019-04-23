@@ -206,7 +206,7 @@ public class GuiEnergyIO
             redstoneControlBtn.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
 
             // Send packet to client
-            NetworkHandler.sendToServer(new PacketSyncReturn((RedstoneMode)redstoneControlBtn.getCurrentValue(), this.part));
+            NetworkHandler.sendToServer(new PacketSyncReturn(redstoneControlBtn.getCurrentValue(), this.part));
         }
     }
 

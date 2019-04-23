@@ -11,6 +11,8 @@ import AppliedIntegrations.API.Storage.LiquidAIEnergy;
 import AppliedIntegrations.API.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketSyncReturn;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
@@ -287,6 +289,9 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
             // Call update function
             updateStacksPrecise(sorted);
+
+            // Send packet
+            NetworkHandler.sendToServer(new PacketSyncReturn(sortButton.getCurrentValue(), this.part));
         }
     }
 }
