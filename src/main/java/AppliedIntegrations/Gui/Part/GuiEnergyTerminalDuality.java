@@ -17,10 +17,14 @@ import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.grid.EnergyList;
+import appeng.api.config.Settings;
 import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IItemList;
+import appeng.client.gui.widgets.GuiImgButton;
+import appeng.fluids.client.gui.GuiFluidTerminal;
 import com.google.common.collect.Ordering;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -56,6 +60,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
     private final List<WidgetEnergySelector> widgetEnergySelectors = new ArrayList<>();
 
     private SortOrder sortMode = SortOrder.NAME;
+    private GuiImgButton sortButton;
 
     public GuiEnergyTerminalDuality(ContainerEnergyTerminal container,PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
         super(container, player);
@@ -79,6 +84,11 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
             }
         }
+    }
+
+    @Override
+    public void initGui() {
+        this.buttonList.add( this.sortButton = new GuiImgButton( this.guiLeft - 18, this.guiTop, Settings.SORT_BY, sortMode ) );
     }
 
     @Override
@@ -233,5 +243,10 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
             // Call list to give as precisely equal stack, to stack we have, then convert it to normal Energy stack and set our selected stack to it.
             // It will update size of monitored stack
             selectedStack = list.findPrecise(AEEnergyStack.fromStack(selectedStack)).getStack();
+    }
+
+    @Override
+    public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+
     }
 }

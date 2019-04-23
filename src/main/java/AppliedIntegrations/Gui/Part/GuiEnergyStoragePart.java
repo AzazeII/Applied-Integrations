@@ -42,47 +42,21 @@ import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 @SideOnly(Side.CLIENT)
 public class GuiEnergyStoragePart
         extends AIBaseGui
-        implements IFilterGUI
-{
-    /**
-     * The number of columns in the gui.
-     */
-    private static final int WIDGET_COLUMNS = 2;
+        implements IFilterGUI {
 
-    /**
-     * The number of rows in the gui.
-     */
-    private static final int WIDGET_ROWS = 9;
+    // Widget constants
+    private static final int WIDGET_COLUMNS = 2; // (1)
+    private static final int WIDGET_ROWS = 9; // (2)
+    private static final int WIDGET_X_POS = 13; // (3)
+    private static final int WIDGET_Y_POS = 29; // (4)
 
-    /**
-     * The starting X position of the widgets.
-     */
-    private static final int WIDGET_X_POS = 13;
+    // Network tool constants
+    private static final int GUI_WIDTH_NETWORK_TOOL = 246; // (1)
+    private static final int GUI_WIDTH_NO_TOOL = 210; // (2)
 
-    /**
-     * The starting Y position of the widgets.
-     */
-    private static final int WIDGET_Y_POS = 29;
-
-    /**
-     * The width of the gui with a network tool.
-     */
-    private static final int GUI_WIDTH_NETWORK_TOOL = 246;
-
-    /**
-     * The width of the gui without a network too
-     */
-    private static final int GUI_WIDTH_NO_TOOL = 210;
-
-    /**
-     * X position of the title string.
-     */
-    private static final int TITLE_X_POS = 6;
-
-    /**
-     * Y position of the title string.
-     */
-    private static final int TITLE_Y_POS = 5;
+    // Tittle constants
+    private static final int TITLE_X_POS = 6; // (1)
+    private static final int TITLE_Y_POS = 5; // (2)
 
 
     /**

@@ -138,6 +138,7 @@ public class GuiEnergyIO
         this.fontRenderer.drawString(stringName, 9, 3, 4210752);
     }
 
+    @Override
     public void initGui() {
         super.initGui();
 

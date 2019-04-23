@@ -382,9 +382,14 @@ public abstract class AIOPart
 
     @Override
     public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall ) {
+        // Check if update was requested
         if(updateRequested){
+            // Get current gui
             Gui g = Minecraft.getMinecraft().currentScreen;
+
+            // Check not null
             if(g != null){
+                // Send packet
                 NetworkHandler.sendTo(new PacketCoordinateInit(this),
                         (EntityPlayerMP) player);
             }
