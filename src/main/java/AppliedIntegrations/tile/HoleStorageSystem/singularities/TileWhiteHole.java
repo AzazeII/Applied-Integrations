@@ -1,9 +1,10 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.API.Botania.IManaStorageChannel;
-import AppliedIntegrations.API.ISingularity;
-import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.api.BlackHoleSystem.IPylon;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.grid.EnergyList;
 import AppliedIntegrations.grid.Mana.ManaList;
@@ -40,7 +41,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
     public long mass;
     private TileBlackHole entangledHole = null;
 
-    private List<TileMEPylon> listeners = new ArrayList<>();
+    private List<IPylon> listeners = new ArrayList<>();
 
     public TileWhiteHole(){
         mass = (long)(Math.random() * 2048);
@@ -61,7 +62,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
         super.invalidate();
 
         // Iterate over listeners
-        for(TileMEPylon pylon : listeners){
+        for(IPylon pylon : listeners){
             // Invalidate singularity
             pylon.setSingularity(null);
         }
@@ -125,7 +126,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
             }
 
             // Update cell array
-            for(TileMEPylon pylon : listeners)
+            for(IPylon pylon : listeners)
                 pylon.postCellEvent();
 
             // Return stack
@@ -179,12 +180,12 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
         entangledHole = (TileBlackHole)t;
 
         // Update cell array
-        for(TileMEPylon pylon : listeners)
+        for(IPylon pylon : listeners)
             pylon.postCellEvent();
     }
 
     @Override
-    public void addListener(TileMEPylon pylon) {
+    public void addListener(IPylon pylon) {
         listeners.add(pylon);
     }
 }

@@ -1,13 +1,12 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.API.IEnergyInterface;
-import AppliedIntegrations.API.IInventoryHost;
-import AppliedIntegrations.API.IPriorityHostExtended;
-import AppliedIntegrations.API.Storage.EnergyRepo;
-import AppliedIntegrations.API.Storage.EnumCapabilityType;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.IEnergyInterface;
+import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
+import AppliedIntegrations.grid.EnumCapabilityType;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
@@ -44,7 +43,6 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.core.sync.GuiBridge;
-import appeng.helpers.IPriorityHost;
 import appeng.tile.networking.TileCableBus;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.common.capabilities.Capabilities;
@@ -66,11 +64,11 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.api.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiStoragePart;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static java.util.Collections.singletonList;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
@@ -193,9 +191,9 @@ public class PartEnergyStorage
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.FE);
 			} else if (IntegrationsHelper.instance.isLoaded(Ember) && getFacingTile().hasCapability(EmberCapabilityProvider.emberCapability, getSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Ember);
-			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.J) && getFacingTile().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
+			} else if (IntegrationsHelper.instance.isLoaded(J) && getFacingTile().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Joules);
-			} else if (IntegrationsHelper.instance.isLoaded(LiquidAIEnergy.EU) && getFacingTile() instanceof IEnergySink) {
+			} else if (IntegrationsHelper.instance.isLoaded(EU) && getFacingTile() instanceof IEnergySink) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.EU);
 			}
 		}

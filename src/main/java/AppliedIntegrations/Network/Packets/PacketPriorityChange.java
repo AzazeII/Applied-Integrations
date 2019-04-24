@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.IPriorityHostExtended;
+import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

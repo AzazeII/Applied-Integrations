@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.Widgets;
 
 import AppliedIntegrations.Gui.AIGuiHelper;
-import AppliedIntegrations.Gui.IWidgetHost;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

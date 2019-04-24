@@ -1,9 +1,7 @@
 package AppliedIntegrations.Gui.Widgets;
 
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Gui.IWidgetHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import net.minecraft.client.Minecraft;
 
 import javax.annotation.Nonnull;

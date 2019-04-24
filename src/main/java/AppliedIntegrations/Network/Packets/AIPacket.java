@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIPart;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;

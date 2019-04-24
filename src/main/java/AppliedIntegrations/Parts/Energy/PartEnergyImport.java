@@ -1,13 +1,11 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.API.Storage.CapabilityHelper;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.EnumCapabilityType;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
-import AppliedIntegrations.Utils.AILog;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
@@ -16,7 +14,6 @@ import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
 import appeng.api.util.AECableType;
 import net.minecraft.entity.Entity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -24,11 +21,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.util.Random;
-
-import static appeng.api.config.Actionable.MODULATE;
-import static appeng.api.config.Actionable.SIMULATE;
-import static appeng.api.networking.ticking.TickRateModulation.FASTER;
-import static appeng.api.networking.ticking.TickRateModulation.SLOWER;
 
 /**
  * @Author Azazell

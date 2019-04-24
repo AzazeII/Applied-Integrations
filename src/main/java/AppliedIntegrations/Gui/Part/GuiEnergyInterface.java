@@ -1,10 +1,11 @@
 package AppliedIntegrations.Gui.Part;
 
-import AppliedIntegrations.API.IEnergyInterface;
-import AppliedIntegrations.API.ISyncHost;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
+import AppliedIntegrations.api.IEnergyInterface;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.*;
@@ -18,7 +19,6 @@ import appeng.client.gui.widgets.GuiTabButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -28,8 +28,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static net.minecraft.util.EnumFacing.*;
 
 /**

@@ -93,7 +93,7 @@ repositories {
         url = "https://minecraft.curseforge.com/api/maven/"
     }
 
-    // Include tesla API
+    // Include tesla api
     maven {
         url 'http://maven.mcmoddev.com'
     }

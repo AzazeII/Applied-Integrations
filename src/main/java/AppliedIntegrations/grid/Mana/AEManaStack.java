@@ -1,7 +1,7 @@
 package AppliedIntegrations.grid.Mana;
 
-import AppliedIntegrations.API.Botania.IAEManaStack;
-import AppliedIntegrations.API.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.Botania.IAEManaStack;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.IStorageChannel;

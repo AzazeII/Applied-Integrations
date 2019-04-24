@@ -1,7 +1,8 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
+import AppliedIntegrations.api.*;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -41,7 +42,6 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.core.sync.GuiBridge;
-import appeng.helpers.IPriorityHost;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.block.state.IBlockState;
@@ -71,8 +71,8 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 import static appeng.api.parts.PartItemStack.BREAK;
 import static appeng.api.util.AEPartLocation.INTERNAL;

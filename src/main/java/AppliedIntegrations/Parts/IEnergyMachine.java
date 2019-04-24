@@ -1,6 +1,6 @@
 package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 
 /**
  * @Author Azazell

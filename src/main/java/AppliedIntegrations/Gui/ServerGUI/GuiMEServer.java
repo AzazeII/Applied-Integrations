@@ -1,6 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI;
 
-import AppliedIntegrations.API.ISyncHost;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
 import AppliedIntegrations.Gui.AIBaseGui;

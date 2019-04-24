@@ -1,6 +1,6 @@
 package AppliedIntegrations.grid.Mana;
 
-import AppliedIntegrations.API.Botania.IAEManaStack;
+import AppliedIntegrations.api.Botania.IAEManaStack;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IItemList;
 

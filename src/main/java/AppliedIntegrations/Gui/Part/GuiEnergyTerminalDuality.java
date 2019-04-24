@@ -4,11 +4,11 @@ package AppliedIntegrations.Gui.Part;
 /**
  * @Author Azazell
  */
-import AppliedIntegrations.API.IEnergySelectorContainer;
-import AppliedIntegrations.API.ISyncHost;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.IEnergySelectorContainer;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -19,12 +19,10 @@ import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.grid.EnergyList;
-import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
 import appeng.api.config.SortOrder;
 import appeng.api.storage.data.IItemList;
 import appeng.client.gui.widgets.GuiImgButton;
-import appeng.fluids.client.gui.GuiFluidTerminal;
 import com.google.common.collect.Ordering;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;

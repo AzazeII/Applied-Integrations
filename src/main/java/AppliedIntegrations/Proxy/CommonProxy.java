@@ -1,7 +1,7 @@
 package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;

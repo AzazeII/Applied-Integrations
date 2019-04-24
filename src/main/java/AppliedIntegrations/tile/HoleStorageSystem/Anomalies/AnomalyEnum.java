@@ -1,11 +1,11 @@
 package AppliedIntegrations.tile.HoleStorageSystem.Anomalies;
 
-import AppliedIntegrations.API.Storage.CapabilityHelper;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.EnumCapabilityType;
 import AppliedIntegrations.Blocks.Additions.BlockWhiteHole;
+import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.grid.AEEnergyStack;
+import AppliedIntegrations.grid.EnumCapabilityType;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import appeng.api.config.Actionable;
@@ -21,7 +21,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.RF;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.RF;
 import static AppliedIntegrations.tile.HoleStorageSystem.Anomalies.EntropyTransformations.entropyMap;
 
 /**

@@ -1,6 +1,6 @@
 package AppliedIntegrations.Items.StorageCells;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;

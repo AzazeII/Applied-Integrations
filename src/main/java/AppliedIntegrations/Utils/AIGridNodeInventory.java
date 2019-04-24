@@ -1,16 +1,13 @@
 package AppliedIntegrations.Utils;
 
-import AppliedIntegrations.API.IInventoryHost;
+import AppliedIntegrations.api.IInventoryHost;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-
-import javax.annotation.Nonnull;
 
 import static net.minecraft.init.Items.AIR;
 

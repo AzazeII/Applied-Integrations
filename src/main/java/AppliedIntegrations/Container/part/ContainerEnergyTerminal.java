@@ -1,11 +1,11 @@
 package AppliedIntegrations.Container.part;
 
-import AppliedIntegrations.API.IEnergySelectorContainer;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.IEnergySelectorContainer;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
-import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Network.NetworkHandler;

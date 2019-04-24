@@ -1,8 +1,10 @@
 package AppliedIntegrations.Inventory.Handlers;
 
-import AppliedIntegrations.API.Storage.*;
+import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
+import AppliedIntegrations.api.Storage.*;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.grid.AEEnergyStack;
+import AppliedIntegrations.grid.EnumCapabilityType;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;

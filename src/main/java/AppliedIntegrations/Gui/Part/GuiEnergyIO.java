@@ -1,8 +1,8 @@
 package AppliedIntegrations.Gui.Part;
 
-import AppliedIntegrations.API.ISyncHost;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IFilterGUI;
@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static AppliedIntegrations.API.Utils.getEnergyFromItemStack;
+import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 
 /**

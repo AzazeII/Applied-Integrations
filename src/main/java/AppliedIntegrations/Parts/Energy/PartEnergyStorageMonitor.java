@@ -1,8 +1,8 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIRotatablePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;

@@ -1,7 +1,8 @@
 package AppliedIntegrations.tile.LogicBus;
 
-import AppliedIntegrations.API.Multiblocks.BlockData;
-import AppliedIntegrations.API.Multiblocks.Patterns;
+import AppliedIntegrations.api.Multiblocks.BlockData;
+import AppliedIntegrations.api.Multiblocks.BlockType;
+import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
@@ -85,9 +86,9 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
             // Count all slaves
             int count = 0;
             // Iterate over logic bus pattern
-            for (int i = 0; i < Patterns.ME_LOGIC.length; i++) {
+            for (int i = 0; i < AIPatterns.ME_LOGIC.length; i++) {
                 // Get pattern data
-                BlockData data = Patterns.ME_LOGIC[i];
+                BlockData data = AIPatterns.ME_LOGIC[i];
 
                 // Get block
                 Block block = world.getBlockState(new BlockPos(pos.getX() + data.x,
@@ -103,7 +104,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
                             pos.getY() + data.y,
                             pos.getZ() + data.z)));
 
-                    if(data.type == Patterns.BlockType.Corner){
+                    if(data.type == BlockType.Corner){
                         corners.add((TileLogicBusRib) world.getTileEntity(new BlockPos(pos.getX() + data.x,
                                 pos.getY() + data.y,
                                 pos.getZ() + data.z)));
@@ -112,7 +113,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
             }
 
             // Check if count is equal to pattern's block count
-            if (count == Patterns.ME_LOGIC.length) {
+            if (count == AIPatterns.ME_LOGIC.length) {
 
                 // Count of ribs in layer two of structure ( should be 4)
                 int ribCounter = 0;

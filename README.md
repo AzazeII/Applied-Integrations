@@ -66,9 +66,9 @@ only white and black hole can be entagled
  AIApi.instance().addHandlersForMEPylon(#yourHandlerForBlackHole#.class, #yourHandlerForWhiteHole#.class,   AEApi.instance().storage().getStorageChannel(#yourStorageChannel#.class));  
  
  black and white hole handlers must extend  
- AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler<#your IAEStack#>  
+ AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler<#your IAEStack#>
  or  
- AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler<#your IAEStack#>  
+ AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler<#your IAEStack#>
 
 
 # Thanks for: 

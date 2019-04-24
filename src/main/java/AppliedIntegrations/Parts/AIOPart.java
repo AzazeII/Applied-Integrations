@@ -1,10 +1,9 @@
 package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.API.IInventoryHost;
-import AppliedIntegrations.API.IPriorityHostExtended;
-import AppliedIntegrations.API.Storage.EnumCapabilityType;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
+import AppliedIntegrations.grid.EnumCapabilityType;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Network.NetworkHandler;

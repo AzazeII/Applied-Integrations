@@ -1,10 +1,8 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.IPriorityHostExtended;
+import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Parts.AIPart;
-import appeng.core.sync.AppEngPacket;
-import appeng.core.sync.packets.PacketSwitchGuis;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;

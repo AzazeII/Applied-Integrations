@@ -1,6 +1,6 @@
 package AppliedIntegrations.Integration.Botania;
 
-import AppliedIntegrations.API.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.grid.Mana.ManaStorageChannel;
 import appeng.api.AEApi;

@@ -1,8 +1,8 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage.helpers.impl;
 
-import AppliedIntegrations.API.Botania.IAEManaStack;
-import AppliedIntegrations.API.Botania.IManaStorageChannel;
-import AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler;
+import AppliedIntegrations.api.Botania.IAEManaStack;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;

@@ -1,8 +1,8 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.API.Storage.CapabilityHelper;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;

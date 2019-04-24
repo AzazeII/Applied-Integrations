@@ -3,16 +3,13 @@ package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketGuiShift;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import appeng.api.AEApi;
-import appeng.client.gui.implementations.GuiPriority;
 import appeng.client.gui.widgets.GuiTabButton;
 import appeng.core.localization.GuiText;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -24,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 
 /**
  * @Author Azazell

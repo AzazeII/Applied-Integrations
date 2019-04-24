@@ -1,12 +1,13 @@
 package AppliedIntegrations.Helpers;
 
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
 import net.minecraftforge.fml.common.Loader;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.api.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 
 /**
  * @Author Azazell

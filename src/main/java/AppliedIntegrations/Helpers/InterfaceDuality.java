@@ -1,11 +1,11 @@
 package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Storage.CapabilityHelper;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.EnumCapabilityType;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
+import AppliedIntegrations.api.*;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.grid.EnumCapabilityType;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
@@ -20,8 +20,7 @@ import teamroots.embers.power.EmberCapabilityProvider;
 import java.util.LinkedList;
 import java.util.List;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.Ember;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
 import static appeng.api.util.AEPartLocation.INTERNAL;

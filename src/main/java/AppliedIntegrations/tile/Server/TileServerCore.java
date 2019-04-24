@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.API.IInventoryHost;
-import AppliedIntegrations.API.Multiblocks.Patterns;
+import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.tile.AITile;
@@ -47,7 +47,7 @@ import java.util.*;
  */
 public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, ICellContainer, INetworkToolAgent, IInventoryHost, ITickable {
 
-    public static final int BLOCKS_IN_STRUCTURE = Patterns.ME_SERVER.length+1;
+    public static final int BLOCKS_IN_STRUCTURE = AIPatterns.ME_SERVER.length+1;
 
     private static final int RESERVED_MASTER_ID = 1;
     private int AVAILABLE_ID = RESERVED_MASTER_ID+1;
@@ -151,15 +151,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             blocksToPlace = BLOCKS_IN_STRUCTURE - 1;
             int count = 0;
             List<IAIMultiBlock> toUpdate = new ArrayList<>();
-            for (int i = 0; i < Patterns.ME_SERVER.length; i++) {
+            for (int i = 0; i < AIPatterns.ME_SERVER.length; i++) {
                 if (!this.world.isRemote) {
                     int x, y, z;
                     Block block;
 
-                    x = this.pos.getX() + Patterns.ME_SERVER[blocksToPlace - 1].x;
-                    y = this.pos.getY() + Patterns.ME_SERVER[blocksToPlace - 1].y;
-                    z = this.pos.getZ() + Patterns.ME_SERVER[blocksToPlace - 1].z;
-                    block = Patterns.ME_SERVER[blocksToPlace - 1].b;
+                    x = this.pos.getX() + AIPatterns.ME_SERVER[blocksToPlace - 1].x;
+                    y = this.pos.getY() + AIPatterns.ME_SERVER[blocksToPlace - 1].y;
+                    z = this.pos.getZ() + AIPatterns.ME_SERVER[blocksToPlace - 1].z;
+                    block = AIPatterns.ME_SERVER[blocksToPlace - 1].b;
                     if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == block) {
                         count++;
                         toUpdate.add((IAIMultiBlock) world.getTileEntity(new BlockPos(x, y, z)));
@@ -168,19 +168,19 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                 }
             }
             int counter = 0;
-            for (int i = 0; i < Patterns.ME_SERVER.length; i++)
-                if (Patterns.ME_SERVER[i] != null)
+            for (int i = 0; i < AIPatterns.ME_SERVER.length; i++)
+                if (AIPatterns.ME_SERVER[i] != null)
                     counter++;
-            int BlocksToPlace = Patterns.ME_SERVER_FILL.length - 1;
+            int BlocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
             if (counter == count) {
-                for (int i = 0; i < Patterns.ME_SERVER_FILL.length; i++) {
+                for (int i = 0; i < AIPatterns.ME_SERVER_FILL.length; i++) {
                     int x, y, z, meta;
-                    Block block = Patterns.ME_SERVER_FILL[BlocksToPlace].b;
+                    Block block = AIPatterns.ME_SERVER_FILL[BlocksToPlace].b;
 
-                    x = this.pos.getX() + Patterns.ME_SERVER_FILL[BlocksToPlace].x;
-                    y = this.pos.getY() + Patterns.ME_SERVER_FILL[BlocksToPlace].y;
-                    z = this.pos.getZ() + Patterns.ME_SERVER_FILL[BlocksToPlace].z;
-                    meta = Patterns.ME_SERVER_FILL[BlocksToPlace].meta;
+                    x = this.pos.getX() + AIPatterns.ME_SERVER_FILL[BlocksToPlace].x;
+                    y = this.pos.getY() + AIPatterns.ME_SERVER_FILL[BlocksToPlace].y;
+                    z = this.pos.getZ() + AIPatterns.ME_SERVER_FILL[BlocksToPlace].z;
+                    meta = AIPatterns.ME_SERVER_FILL[BlocksToPlace].meta;
 
                     world.setBlockToAir(new BlockPos(x, y, z));
                     world.setBlockState(new BlockPos(x, y, z), block.getDefaultState());

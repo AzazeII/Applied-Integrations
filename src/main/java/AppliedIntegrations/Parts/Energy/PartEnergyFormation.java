@@ -1,6 +1,7 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.API.Storage.*;
+import AppliedIntegrations.Helpers.Energy.StackCapabilityHelper;
+import AppliedIntegrations.api.Storage.*;
 import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;

@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui;
 
-import AppliedIntegrations.API.IPriorityHostExtended;
-import AppliedIntegrations.API.Utils;
+import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
+import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerAIPriority;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
@@ -17,7 +17,6 @@ import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import appeng.api.util.AEPartLocation;
-import appeng.helpers.IPriorityHost;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;

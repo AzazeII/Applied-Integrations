@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Handlers;
 
-import AppliedIntegrations.API.ISingularity;
+import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
 import AppliedIntegrations.Network.Packets.PacketMassChange;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

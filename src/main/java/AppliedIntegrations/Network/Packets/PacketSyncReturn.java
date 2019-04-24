@@ -1,13 +1,9 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.ISyncHost;
+import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.SortOrder;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import scala.util.control.Exception;
 
 public class PacketSyncReturn extends AIPacket{
 

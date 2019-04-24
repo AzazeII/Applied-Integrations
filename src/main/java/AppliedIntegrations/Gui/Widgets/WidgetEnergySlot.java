@@ -1,8 +1,8 @@
 package AppliedIntegrations.Gui.Widgets;
 
-import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Gui.IWidgetHost;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketClientToServerFilter;

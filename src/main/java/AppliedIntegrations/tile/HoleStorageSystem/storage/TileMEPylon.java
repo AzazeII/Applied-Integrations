@@ -1,12 +1,13 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.API.AIApi;
-import AppliedIntegrations.API.Botania.IManaStorageChannel;
-import AppliedIntegrations.API.ISingularity;
-import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
-import AppliedIntegrations.API.Storage.helpers.BlackHoleSingularityInventoryHandler;
-import AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler;
+import AppliedIntegrations.api.AIApi;
+import AppliedIntegrations.api.BlackHoleSystem.IPylon;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
+import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketSingularitySync;
@@ -53,7 +54,7 @@ import static java.util.Collections.singletonList;
 /**
  * @Author Azazell
  */
-public class TileMEPylon extends AITile implements ICellContainer, IGridTickable {
+public class TileMEPylon extends AITile implements ICellContainer, IGridTickable, IPylon {
 
     // Linked maps of *passive* handlers, which standing as handler factory
     private static LinkedHashMap<IStorageChannel, Class<? extends BlackHoleSingularityInventoryHandler<?>>> passiveBlackHoleHandlers = new LinkedHashMap<>();
@@ -273,6 +274,15 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 
         // Post cell array update
         postCellEvent();
+    }
+
+    @Override
+    public void setDrain(boolean b) {
+        // Make tile consume energy
+        this.shouldDrain = b;
+
+        // Update time handler
+        this.drainHandler.updateData(this.getWorld());
     }
 
     @Override

@@ -1,6 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage.helpers.impl;
 
-import AppliedIntegrations.API.Storage.helpers.WhiteHoleSingularityInventoryHandler;
+import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.security.IActionSource;

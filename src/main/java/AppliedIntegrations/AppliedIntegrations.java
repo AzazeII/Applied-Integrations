@@ -1,6 +1,5 @@
 package AppliedIntegrations;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Client.TextureEventManager;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Parts.AIPart;

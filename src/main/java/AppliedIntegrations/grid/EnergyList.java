@@ -1,6 +1,6 @@
 package AppliedIntegrations.grid;
 
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IItemList;
 

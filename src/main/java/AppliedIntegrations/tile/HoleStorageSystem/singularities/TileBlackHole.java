@@ -1,8 +1,9 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.API.ISingularity;
-import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.api.BlackHoleSystem.IPylon;
+import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketMassChange;
 import AppliedIntegrations.Utils.AILog;
@@ -61,7 +62,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
     private float lastGrowth = 1;
 
-    private List<TileMEPylon> listeners = new ArrayList<>();
+    private List<IPylon> listeners = new ArrayList<>();
 
     // Count of mass added per any operation
     public int MASS_ADDED = 10;
@@ -118,7 +119,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
         super.invalidate();
 
         // Iterate over listeners
-        for(TileMEPylon pylon : listeners){
+        for(IPylon pylon : listeners){
             // Invalidate singularity
             pylon.setSingularity(null);
         }
@@ -405,12 +406,9 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
         }
 
         // Iterate over all listeners
-        for(TileMEPylon pylon : listeners) {
-            // Make tile consume energy
-            pylon.shouldDrain = true;
-
-            // Update time handler
-            pylon.drainHandler.updateData(pylon.getWorld());
+        for(IPylon pylon : listeners) {
+            // Pass to implementation
+            pylon.setDrain(true);
         }
 
 
@@ -459,7 +457,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
     }
 
     @Override
-    public void addListener(TileMEPylon pylon) {
+    public void addListener(IPylon pylon) {
         listeners.add(pylon);
     }
 }

@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.ISyncHost;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
 import io.netty.buffer.ByteBuf;
 

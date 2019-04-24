@@ -1,6 +1,6 @@
 package AppliedIntegrations.Container.part;
 
-import AppliedIntegrations.API.IEnergyInterface;
+import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.TileEnergyInterface;

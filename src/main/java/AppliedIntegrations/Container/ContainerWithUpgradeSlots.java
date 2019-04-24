@@ -1,6 +1,6 @@
 package AppliedIntegrations.Container;
 
-import AppliedIntegrations.API.IEnergyInterface;
+import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Parts.AIOPart;

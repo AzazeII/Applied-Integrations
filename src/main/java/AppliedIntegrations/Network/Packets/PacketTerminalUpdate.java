@@ -1,7 +1,7 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnergyList;

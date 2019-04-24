@@ -26,5 +26,9 @@
 # Include git directory
 !.github/
 
+# Include intel|idea project files
+!*.iml
+!*.ipr
+
 # Ignore these guys:
 .DS_Store

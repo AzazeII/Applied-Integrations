@@ -1,9 +1,9 @@
 package AppliedIntegrations.tile;
 
-import AppliedIntegrations.API.ISyncHost;
-import AppliedIntegrations.API.Storage.EnergyStack;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
-import AppliedIntegrations.API.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -39,8 +39,8 @@ import java.util.EnumSet;
         @Optional.Interface(iface = "cofh.api.energy.EnergyStorage",modid = "CoFHAPI",striprefs = true),
         @Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver",modid = "CoFHAPI",striprefs = true),
         @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler",modid = "CoFHAPI",striprefs = true),
-        @Optional.Interface(iface = "Reika.RotaryCraft.API.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
-        @Optional.Interface(iface = "Reika.RotaryCraft.API.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
+        @Optional.Interface(iface = "Reika.RotaryCraft.api.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
+        @Optional.Interface(iface = "Reika.RotaryCraft.api.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
 
 /**
  * @Author Azazell

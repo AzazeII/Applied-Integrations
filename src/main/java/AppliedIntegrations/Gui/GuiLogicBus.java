@@ -1,6 +1,6 @@
 package AppliedIntegrations.Gui;
 
-import AppliedIntegrations.API.ISyncHost;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.ContainerLogicBus;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;

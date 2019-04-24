@@ -1,12 +1,9 @@
 package AppliedIntegrations.Gui.Widgets;
 
-import AppliedIntegrations.API.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 

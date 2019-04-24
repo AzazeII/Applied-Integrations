@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile;
 
-import AppliedIntegrations.API.*;
-import AppliedIntegrations.API.Storage.LiquidAIEnergy;
+import AppliedIntegrations.api.*;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
@@ -37,7 +37,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static AppliedIntegrations.API.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.api.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static appeng.api.config.Actionable.SIMULATE;
 
 /**

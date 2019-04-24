@@ -1,9 +1,9 @@
 package AppliedIntegrations.Parts.Botania;
 
-import AppliedIntegrations.API.Botania.IAEManaStack;
-import AppliedIntegrations.API.Botania.IManaStorageChannel;
-import AppliedIntegrations.API.Botania.IManaInterface;
-import AppliedIntegrations.API.IInterfaceDuality;
+import AppliedIntegrations.api.Botania.IAEManaStack;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.Botania.IManaInterface;
+import AppliedIntegrations.api.IInterfaceDuality;
 import AppliedIntegrations.Helpers.ManaInterfaceDuality;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Parts.PartEnum;

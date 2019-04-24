@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.API.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -30,7 +29,6 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.IConfigManager;
-import appeng.core.AEConfig;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import net.minecraft.client.Minecraft;
