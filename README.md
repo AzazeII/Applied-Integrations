@@ -84,4 +84,4 @@ Curseforge page: https://minecraft.curseforge.com/projects/applied-integrations
 Travis insights: https://travis-ci.org/AzazeII/Applied-Integrations
 CircleCI insights: https://circleci.com/gh/AzazeII/Applied-Integrations
 
-Discord (already mentioned above): https://discordapp.com/invite/eC7JpZe
+Discord (already mentioned above): https://discordapp.com/invite/Apbtnbd
