@@ -23,6 +23,9 @@
 !.gitmodules
 !.gitignore
 
+# Intel | idea
+Applied-Integrations.ipr
+
 # Include git directory
 !.github/
 

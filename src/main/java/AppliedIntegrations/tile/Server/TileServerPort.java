@@ -2,6 +2,7 @@ package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import appeng.api.networking.IGrid;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
@@ -57,6 +58,14 @@ public class TileServerPort  extends AIMultiBlockTile {
     // Returns outer grid. Grid is taken from side vector from core to this port, like this:
     // Core ----Side_Vec.----> Port ----> Grid
     public IGrid getOuterGrid() {
+        // Check not null
+        if(getGridNode() == null)
+            // Avoid null pointer exception
+            return null;
         return this.getNetwork();
+    }
+
+    public AEPartLocation getSideVector() {
+        return AEPartLocation.fromFacing(side);
     }
 }

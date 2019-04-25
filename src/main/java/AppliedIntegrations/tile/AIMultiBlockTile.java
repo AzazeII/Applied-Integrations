@@ -53,7 +53,7 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
     public void invalidate() {
         super.invalidate();
         if (hasMaster())
-            master.DestroyMultiBlock();
+            master.destoryMultiBlock();
     }
 
     @Override

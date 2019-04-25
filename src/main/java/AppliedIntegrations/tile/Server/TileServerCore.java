@@ -185,19 +185,19 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                     world.setBlockToAir(new BlockPos(x, y, z));
                     world.setBlockState(new BlockPos(x, y, z), block.getDefaultState());
                     toUpdate.add((TileServerRib) world.getTileEntity(new BlockPos(x,y,z)));
-                    ((TileServerRib) world.getTileEntity(new BlockPos(x, y, z))).changeAlt(true);
                     BlocksToPlace--;
                 }
-                for (int i = 0; i < toUpdate.size(); i++) {
-                    toUpdate.get(i).setMaster(this);
-                    if (toUpdate.get(i) instanceof TileServerPort) {
-                        TileServerPort port = (TileServerPort) toUpdate.get(i);
+                for (IAIMultiBlock iaiMultiBlock : toUpdate) {
+                    iaiMultiBlock.setMaster(this);
+                    if (iaiMultiBlock instanceof TileServerPort) {
+                        TileServerPort port = (TileServerPort) iaiMultiBlock;
                         port.createAENode();
-                    } else if (toUpdate.get(i) instanceof TileServerRib) {
-                        TileServerRib rib = (TileServerRib) toUpdate.get(i);
+                    } else if (iaiMultiBlock instanceof TileServerRib) {
+                        TileServerRib rib = (TileServerRib) iaiMultiBlock;
                         rib.createAENode();
+                        //rib.getWorld().setBlockState(rib.getPos(), rib.getWorld().getBlockState().withProperty());
                     }
-                    Slaves.add(toUpdate.get(i));
+                    Slaves.add(iaiMultiBlock);
                 }
                 for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){
                     TileEntity tile = world.getTileEntity(new BlockPos(getPos().getX()+side.xOffset*2,getPos().getY()+side.yOffset*2,getPos().getZ()+side.zOffset*2));
@@ -219,7 +219,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         return this.AVAILABLE_ID++;
     }
 
-    public void DestroyMultiBlock(){
+    public void destoryMultiBlock(){
         for(IAIMultiBlock tile : Slaves){
             if(tile instanceof TileServerRib){
                 TileServerRib Rib = (TileServerRib)tile;
@@ -353,7 +353,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             destroyAENode();
         }
         if(isFormed)
-            this.DestroyMultiBlock();
+            this.destoryMultiBlock();
 
     }
 
