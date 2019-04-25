@@ -53,12 +53,6 @@ def getGitTimeLineHash = { ->
     return stdout.toString().trim()
 }
 
-// - WTF, Azazell, i'm your github reader, what'a'**** is this? (Stranger)
-// - You mean "getGitTimeField", or "getGitCommitHash"? (Aza.)
-// - BOTH! (Stranger)
-// - Steins;gate :) (Aza.)
-// :P
-
 version = getGitTimeField() + '-' + getGitTimeLineHash()
 group = "com.azazell" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AppliedIntegrations"
