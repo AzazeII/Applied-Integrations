@@ -2,7 +2,7 @@
   "textures": {
     "particle": "appliedenergistics2:blocks/dense_energy_cell",
     "sides": "appliedenergistics2:blocks/smooth_sky_stone_block",
-    "bottom": "appliedenergistics2:blocks/io_port_bottom",
+    "bottom": "appliedintegrations:blocks/pylon_bottom",
     "cell": "appliedintegrations:blocks/pylon_cell",
     "top": "appliedintegrations:blocks/pylon_top"
   },
@@ -20,7 +20,7 @@
       ],
       "faces": {
         "down": {
-          "texture": "#bottom"
+          "texture": "#sides"
         },
         "up": {
           "texture": "#sides"
@@ -35,7 +35,7 @@
           "texture": "#sides"
         },
         "west": {
-          "texture": "#sides"
+          "texture": "#bottom"
         }
       }
     },{
@@ -147,13 +147,13 @@
           "texture": "#sides"
         },
         "up": {
-          "texture": "#top"
+          "texture": "#sides"
         },
         "north": {
           "texture": "#sides"
         },
         "east": {
-          "texture": "#sides"
+          "texture": "#top"
         },
         "south": {
           "texture": "#sides"
