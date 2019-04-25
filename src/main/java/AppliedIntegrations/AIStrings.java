@@ -53,20 +53,20 @@ public enum AIStrings {
 
     private String unlocalized;
 	private boolean isDotName;
-	private AIStrings(final String unloc, final boolean isDotName )
-	{
+
+	AIStrings(final String unloc, final boolean isDotName ) {
 		this.unlocalized = AppliedIntegrations.modid + "." + unloc;
 		this.isDotName = isDotName;
 	}
-	public String getLocalized()
-	{
-		if( this.isDotName )
-		{
+
+	public String getLocalized() {
+		if( this.isDotName ) {
 			return I18n.translateToLocal( this.unlocalized + ".name" );
 		}
 
 		return I18n.translateToLocal( this.unlocalized );
 	}
+
 	public String getUnlocalized()
 	{
 		return this.unlocalized;

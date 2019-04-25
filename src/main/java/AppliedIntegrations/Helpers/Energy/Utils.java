@@ -153,9 +153,11 @@ public class Utils {
         return Stack;
     }
 
+    @Deprecated
     public static AIPart getPartByParams(AppliedCoord coord){
         return getPartByParams(new BlockPos(coord.x,coord.y,coord.z),coord.side,coord.getWorld());
     }
+
     public static AIPart getPartByParams(BlockPos pos, EnumFacing side, World worldObj) {
 
         World world = worldObj;

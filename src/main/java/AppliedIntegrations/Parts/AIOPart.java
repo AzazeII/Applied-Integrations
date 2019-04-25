@@ -21,6 +21,7 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
 import appeng.core.sync.GuiBridge;
+import appeng.me.Grid;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
+import static AppliedIntegrations.tile.TileEnergyInterface.validateStack;
 import static appeng.api.config.RedstoneMode.*;
 import static net.minecraft.init.Items.AIR;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
@@ -159,17 +161,10 @@ public abstract class AIOPart
 
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-            if (itemStack == null)
-                return false;
-            if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack))
-                return true;
-            else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
-                return true;
-            else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
-                return true;
-            return false;
+            return validateStack(itemStack);
         }
     };
+
     @Override
     public void onInventoryChanged() {
         //=========+Reset+=========//
@@ -406,6 +401,39 @@ public abstract class AIOPart
                 10));
     }
 
+
+    @Override
+    public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType ) {
+        // Call super
+        super.writeToNBT( data, saveType );
+
+        if( ( saveType == PartItemStack.WORLD ) || ( saveType == PartItemStack.WRENCH ) )
+        {
+            // Counter
+            int i = 0;
+
+            // Write each filter
+            for( LiquidAIEnergy energy : filteredEnergies) {
+                if( energy != null )
+                {
+                    data.setString( NBT_KEY_FILTER_NUMBER + i, energy.getTag() );
+                }
+                i++;
+                Grid a;
+            }
+
+            if( saveType == PartItemStack.WORLD ) {
+                // Write the redstone mode
+                if (this.redstoneMode != DEFAULT_REDSTONE_MODE) {
+                    data.setInteger(NBT_KEY_REDSTONE_MODE, this.redstoneMode.ordinal());
+                }
+
+                data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
+
+            }
+        }
+    }
+
     public void removeListener( final ContainerPartEnergyIOBus container )
     {
         this.listeners.remove( container );
@@ -441,37 +469,6 @@ public abstract class AIOPart
         }
 
         return TickRateModulation.IDLE;
-    }
-
-    @Override
-    public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType ) {
-        // Call super
-        super.writeToNBT( data, saveType );
-
-        if( ( saveType == PartItemStack.WORLD ) || ( saveType == PartItemStack.WRENCH ) )
-        {
-            // Counter
-            int i = 0;
-
-            // Write each filter
-            for( LiquidAIEnergy energy : filteredEnergies) {
-                if( energy != null )
-                {
-                    data.setString( NBT_KEY_FILTER_NUMBER + i, energy.getTag() );
-                }
-                i++;
-            }
-
-            if( saveType == PartItemStack.WORLD ) {
-                // Write the redstone mode
-                if (this.redstoneMode != DEFAULT_REDSTONE_MODE) {
-                    data.setInteger(NBT_KEY_REDSTONE_MODE, this.redstoneMode.ordinal());
-                }
-
-                data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
-
-            }
-        }
     }
 
     @Override

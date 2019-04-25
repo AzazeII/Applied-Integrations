@@ -19,7 +19,6 @@
             <option value="$PROJECT_DIR$" />
           </set>
         </option>
-        <option name="useAutoImport" value="true" />
         <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
@@ -32,7 +31,6 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Applied-Integrations.iml" filepath="$PROJECT_DIR$/Applied-Integrations.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.Applied-Integrations.iml" filepath="$PROJECT_DIR$/com.azazell.Applied-Integrations.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.Applied-Integrations.api.iml" filepath="$PROJECT_DIR$/com.azazell.Applied-Integrations.api.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.Applied-Integrations.main.iml" filepath="$PROJECT_DIR$/com.azazell.Applied-Integrations.main.iml" />
@@ -41,6 +39,16 @@
   </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="jdk-8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
+  </component>
+  <component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Client" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="GradleStart" />
+      <module name="com.azazell.Applied-Integrations.main" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/run" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />

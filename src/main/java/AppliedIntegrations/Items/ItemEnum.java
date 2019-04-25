@@ -32,6 +32,7 @@ import java.util.LinkedList;
  * @Author Azazell
  */
 public enum ItemEnum {
+    // & ------------------------------------PARTS------------------------------------ &
     ITEMPARTIMPORT(new ItemPartEnergyImport("energyImportPartItem"), AIConfig.enableEnergyFeatures),
     ITEMPARTEXPORT(new ItemPartEnergyExport("energyExportPartItem"), AIConfig.enableEnergyFeatures),
     ITEMPARTSTORAGE(new ItemPartEnergyStorage("energyStoragePartItem"), AIConfig.enableEnergyFeatures),
@@ -44,18 +45,27 @@ public enum ItemEnum {
     ITEMP2PStarlight(new ItemPartP2PStarlight("starlightP2PPartItem"), AIConfig.enableStarlightFeatures),
     ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), AIConfig.enablEmberFeatures),
 
+    // & ------------------------------------MANA------------------------------------ &
     ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem"), AIConfig.enableManaFeatures),
     ITEMMANAPARTSTORAGEBUS(new ItemPartManaStorageBus("manaStoragePartItem"), AIConfig.enableManaFeatures),
+    // & ------------------------------------PARTS------------------------------------ &
+
 
     ITEMMANAWIRELESSMIRROR(new MEManaMirror("me_mana_mirror"), AIConfig.enableManaFeatures),
     ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring"), AIConfig.enableManaFeatures),
     ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), AIConfig.enableManaFeatures),
+    // & ------------------------------------MANA------------------------------------ &
 
     ITEMENERGYWIRELESSTERMINAL(new ItemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
 
     CHAOSMANIPULATOR( new AdvancedNetworkTool("advancedWrench"), true),
-    MEGRAPHTOOL(new GraphTool("graph_tool"), AIConfig.enableWebServer),
 
+    // & ------------------------------------NETWORK------------------------------------ &
+    MEGRAPHTOOL(new GraphTool("graph_tool"), AIConfig.enableWebServer),
+    MENETWORK_CARD(new NetworkCard("network_card"), AIConfig.enableMEServer),
+    // & ------------------------------------NETWORK------------------------------------ &
+
+    // & ------------------------------------CELLS------------------------------------ &
     ENERGYSTORAGE_1k( new EnergyStorageCell("EnergyStorageCell_1k", 1024), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_4k( new EnergyStorageCell("EnergyStorageCell_4k", 4096), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGE_16k( new EnergyStorageCell("EnergyStorageCell_16k", 16384), AIConfig.enableEnergyFeatures),
@@ -73,10 +83,12 @@ public enum ItemEnum {
     MANASTORAGE_1024k(new ManaStorageCell("ManaStorageCell_1024k", 1048576), AIConfig.enableManaFeatures),
     MANASTORAGE_4096k( new ManaStorageCell("ManaStorageCell_4096k", 4194304), AIConfig.enableManaFeatures),
     MANASTORAGE_16384k( new ManaStorageCell("ManaStorageCell_16384k", 16777216), AIConfig.enableManaFeatures),
+    // & ------------------------------------CELLS------------------------------------ &
 
     MANAANNIHILATIONCORE(new ManaAnnihilationCore("mana_annihilation_core"), AIConfig.enableManaFeatures),
     MANAFORMATIONCORE(new ManaFormationCore("mana_formation_core"), AIConfig.enableManaFeatures),
 
+    // & ------------------------------------COMPONENTS------------------------------------ &
     ENERGYSTORAGECOMPONENT_1k(new EnergyStorageComponent("EnergyStorageComponent_1k"), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGECOMPONENT_4k(new EnergyStorageComponent("EnergyStorageComponent_4k"), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGECOMPONENT_16k(new EnergyStorageComponent("EnergyStorageComponent_16k"), AIConfig.enableEnergyFeatures),
@@ -85,6 +97,8 @@ public enum ItemEnum {
     ENERGYSTORAGECOMPONENT_1024k(new EnergyStorageComponent("EnergyStorageComponent_1024k"), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGECOMPONENT_4096k(new EnergyStorageComponent("EnergyStorageComponent_4096k"), AIConfig.enableEnergyFeatures),
     ENERGYSTORAGECOMPONENT_16384k(new EnergyStorageComponent("EnergyStorageComponent_16384k"), AIConfig.enableEnergyFeatures);
+    // & ------------------------------------COMPONENTS------------------------------------ &
+
     public static LinkedList<MaterialEncorium> encoriumVariants = new LinkedList<>();
 
     private boolean enabled;

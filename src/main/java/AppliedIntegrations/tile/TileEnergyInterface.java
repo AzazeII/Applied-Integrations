@@ -64,7 +64,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
 
 	byte outputTracker;
-	public boolean EnergyStates[] = new boolean[6];
 
 	private boolean EUloaded = false;
 
@@ -180,17 +179,21 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			if (itemStack == null)
-				return false;
-			if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack))
-				return true;
-			else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
-				return true;
-			else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
-				return true;
-			return false;
+			return validateStack(itemStack);
 		}
 	};
+
+	public static boolean validateStack(ItemStack itemStack) {
+		if (itemStack == null)
+			return false;
+		if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack))
+			return true;
+		else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
+			return true;
+		else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
+			return true;
+		return false;
+	}
 
 	public AIGridNodeInventory getUpgradeInventory(){
 		return this.upgradeInventory;

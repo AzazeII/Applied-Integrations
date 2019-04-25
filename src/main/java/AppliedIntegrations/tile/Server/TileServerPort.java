@@ -26,6 +26,7 @@ public class TileServerPort  extends AIMultiBlockTile {
     public void validate(){
         this.updateGrid();
     }
+
     public void updateGrid() {
         if(hasMaster()){
             if(gridNode == null)
@@ -51,5 +52,11 @@ public class TileServerPort  extends AIMultiBlockTile {
 
     public void setDir(EnumFacing side) {
         this.side = side;
+    }
+
+    // Returns outer grid. Grid is taken from side vector from core to this port, like this:
+    // Core ----Side_Vec.----> Port ----> Grid
+    public IGrid getOuterGrid() {
+        return this.getNetwork();
     }
 }
