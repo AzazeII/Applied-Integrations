@@ -133,7 +133,7 @@ network.on('click', function(properties) {
                 // Iterate for each list of category
                 categoryMap.get(category).forEach(function(key, i) {
                     // Should current cycle not be written?
-                    let skip = false;
+                    var skip = false;
 
                     // Check if keys are equal
                     if (innerKey == key) {
