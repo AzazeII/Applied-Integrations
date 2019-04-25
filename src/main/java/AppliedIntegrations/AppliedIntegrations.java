@@ -105,11 +105,6 @@ public class AppliedIntegrations {
         return Side.CLIENT;
     }
 
-    public static void launchGui(AIPart AIPart, EntityPlayer player, World worldObj, int xCoord, int yCoord,
-                                 int zCoord) {
-        // TODO Auto-generated method stub
-    }
-
     @Mod.EventHandler
     public static void metadata(FMLPreInitializationEvent event){
         ModMetadata meta = event.getModMetadata();

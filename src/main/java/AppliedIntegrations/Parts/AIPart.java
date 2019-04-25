@@ -479,12 +479,6 @@ public abstract class AIPart
 			return false;
 		}
 
-		// Is this server side?
-		if( !getWorld().isRemote )
-		{
-			// Launch the gui
-			AppliedIntegrations.launchGui( this, player, this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ() );
-		}
 		return true;
 	}
 
