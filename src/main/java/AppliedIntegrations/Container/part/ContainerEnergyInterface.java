@@ -44,15 +44,15 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
         // Bind player's inventory
         super.bindPlayerInventory(player.inventory,149,207);
 
-        // check if interface part or tile?
+        // check if interface host or tile?
         if (energyInterface instanceof PartEnergyInterface) {
-            // Get part
+            // Get host
             PartEnergyInterface part = (PartEnergyInterface) this.EnergyInterface;
 
             // register listener
             part.addListener(this);
 
-            // Assign part
+            // Assign host
             this.part = (PartEnergyInterface)EnergyInterface;// add slots
 
             // Get upgrade inventory

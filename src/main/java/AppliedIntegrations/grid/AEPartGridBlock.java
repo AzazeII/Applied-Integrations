@@ -21,12 +21,12 @@ public class AEPartGridBlock
         implements IGridBlock
 {
     /**
-     * The part using this gridblock.
+     * The host using this gridblock.
      */
     protected AIPart part;
 
     /**
-     * Create the gridblock for the specified part.
+     * Create the gridblock for the specified host.
      *
      * @param part
      */
@@ -111,7 +111,7 @@ public class AEPartGridBlock
     }
 
     /**
-     * Gets how much power the part is using.
+     * Gets how much power the host is using.
      */
     @Override
     public double getIdlePowerUsage()
@@ -120,7 +120,7 @@ public class AEPartGridBlock
     }
 
     /**
-     * Gets the location of the part.
+     * Gets the location of the host.
      */
     @Override
     public DimensionalCoord getLocation()
@@ -129,7 +129,7 @@ public class AEPartGridBlock
     }
 
     /**
-     * Gets the part
+     * Gets the host
      */
     @Override
     public IGridHost getMachine()

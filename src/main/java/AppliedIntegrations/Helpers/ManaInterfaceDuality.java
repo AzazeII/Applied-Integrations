@@ -1,7 +1,7 @@
 package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.api.Botania.IManaInterface;
-import AppliedIntegrations.api.IInterfaceDuality;
+import AppliedIntegrations.api.IEnergyInterfaceDuality;
 import AppliedIntegrations.api.IInterfaceStorageDuality;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
@@ -13,7 +13,7 @@ import static appeng.api.config.Actionable.MODULATE;
 /**
  * @Author Azazell
  */
-public class ManaInterfaceDuality implements IInterfaceDuality {
+public class ManaInterfaceDuality implements IEnergyInterfaceDuality {
 
     private IManaInterface owner;
     public ManaInterfaceDuality(IManaInterface manaInterface) {
@@ -36,7 +36,7 @@ public class ManaInterfaceDuality implements IInterfaceDuality {
     }
 
     @Override
-    public void DoInjectDualityWork(Actionable mode) throws NullNodeConnectionException {
+    public void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException {
         int ValuedReceive = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
 
         if(owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null) == 0){
@@ -47,7 +47,7 @@ public class ManaInterfaceDuality implements IInterfaceDuality {
     }
 
     @Override
-    public void DoExtractDualityWork(Actionable mode) throws NullNodeConnectionException {
+    public void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException {
         int ValuedExtract = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
         if(owner.InjectMana(ValuedExtract, Actionable.SIMULATE) - getMaxTransfer(null) == 0){
             int extractedAmount = owner.ExtractMana(ValuedExtract, MODULATE);

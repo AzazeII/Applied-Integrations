@@ -24,7 +24,7 @@ public class HandlerServerToClient implements IMessageHandler<PacketFilterServer
             if (gui instanceof IFilterGUI) {
                 if (gui instanceof AIBaseGui) {
                     // Check if we are updating correct GUI
-                    if (((AIBaseGui) gui).getSyncHost().compareTo(message.part, true)) {
+                    if (((AIBaseGui) gui).getSyncHost().compareTo(message.host, true)) {
                         ((IFilterGUI) gui).updateEnergy(message.energy, message.index);
                     }
                 }

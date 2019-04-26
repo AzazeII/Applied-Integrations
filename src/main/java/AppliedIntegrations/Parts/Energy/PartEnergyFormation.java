@@ -55,7 +55,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 
     @Override
     public void blinkCell(int slot) {
-        // Ignored (this part not operating any cells)
+        // Ignored (this host not operating any cells)
     }
 
     @Override

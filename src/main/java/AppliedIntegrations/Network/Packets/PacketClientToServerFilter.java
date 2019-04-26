@@ -9,7 +9,7 @@ import javax.annotation.Nonnull;
 
 /**
  * @Author Azazell
- * @Usage This packet needed to write feedback from gui to part, send it when your filter in gui is updated
+ * @Usage This packet needed to write feedback from gui to host, send it when your filter in gui is updated
  */
 public class PacketClientToServerFilter extends AIPacket{
 

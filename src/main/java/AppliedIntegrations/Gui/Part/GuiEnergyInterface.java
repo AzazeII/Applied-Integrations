@@ -39,7 +39,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	private IEnergyInterface Einterface;
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
-	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
+	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.host.png");
 	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
 
 	public PartEnergyInterface part;
@@ -121,7 +121,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		// Call super
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		/*if (this.priority.isMouseOverButton(mouseX, mouseY)) {
-			NetworkHandler.sendToServer(new PacketGuiChange(new GuiPriority(this.player.inventory, this.part),
+			NetworkHandler.sendToServer(new PacketGuiChange(new GuiPriority(this.player.inventory, this.host),
 					getX(),getY(),getZ(),player));
 		}*/
 		if (this.energySlot.isMouseOverWidget(mouseX, mouseY)) {

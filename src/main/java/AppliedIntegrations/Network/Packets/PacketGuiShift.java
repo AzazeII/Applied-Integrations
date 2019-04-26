@@ -22,7 +22,7 @@ public class PacketGuiShift extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        // Read part
+        // Read host
         part = readPart(buf);
 
         // Read gui
@@ -34,7 +34,7 @@ public class PacketGuiShift extends AIPacket {
 
     @Override
     public void toBytes(ByteBuf buf) {
-        // Write part
+        // Write host
         writePart(buf);
 
         // Write gui

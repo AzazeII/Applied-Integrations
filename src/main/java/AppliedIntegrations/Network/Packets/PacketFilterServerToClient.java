@@ -1,7 +1,9 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
+import AppliedIntegrations.tile.AITile;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -12,24 +14,30 @@ public class PacketFilterServerToClient extends AIPacket {
 
     public LiquidAIEnergy energy;
     public int index;
-    public AIPart part;
+    public ISyncHost host;
 
     public PacketFilterServerToClient(){
 
     }
 
-    public PacketFilterServerToClient(LiquidAIEnergy energy, int index, AIPart part){
-        super(part.getX(), part.getY(), part.getZ(), part.getSide().getFacing(), part.getHostTile().getWorld());
+    public PacketFilterServerToClient(LiquidAIEnergy energy, int index, ISyncHost host){
+        super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
         this.energy = energy;
         this.index = index;
-        this.part = part;
+        this.host = host;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-       this.energy = readEnergy(buf);
-       this.index = buf.readInt();
-       this.part = readPart(buf);
+        this.energy = readEnergy(buf);
+        this.index = buf.readInt();
+
+        boolean isPart = buf.readBoolean();
+
+        if(isPart)
+            host = readPart(buf);
+        else
+            host = (ISyncHost) readTile(buf);
     }
 
 
@@ -37,6 +45,7 @@ public class PacketFilterServerToClient extends AIPacket {
     public void toBytes(ByteBuf buf) {
         writeEnergy(energy, buf);
         buf.writeInt(index);
-        writePart(buf);
+
+        writeSyncHost(host, buf);
     }
 }

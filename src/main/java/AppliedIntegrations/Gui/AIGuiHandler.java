@@ -52,7 +52,7 @@ public class AIGuiHandler implements IGuiHandler {
         if (gui == null)
             throw new IllegalStateException("How can gui handler open null gui?");
         if (side == null)
-            throw new IllegalStateException("Null part location, Is it server side?");
+            throw new IllegalStateException("Null host location, Is it server side?");
 
         player.openGui(AppliedIntegrations.instance, concat(gui, side), player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
     }

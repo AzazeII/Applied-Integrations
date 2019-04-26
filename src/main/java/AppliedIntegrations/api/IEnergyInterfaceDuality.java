@@ -8,12 +8,12 @@ import appeng.api.util.AEPartLocation;
 /**
  * @Author Azazell
  */
-public interface IInterfaceDuality {
+public interface IEnergyInterfaceDuality {
 
     double getMaxTransfer(AEPartLocation side);
     LiquidAIEnergy getFilteredEnergy(AEPartLocation side);
 
     IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side);
-    void DoInjectDualityWork(Actionable mode) throws NullNodeConnectionException;
-    void DoExtractDualityWork(Actionable mode) throws NullNodeConnectionException;
+    void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException;
+    void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException;
 }

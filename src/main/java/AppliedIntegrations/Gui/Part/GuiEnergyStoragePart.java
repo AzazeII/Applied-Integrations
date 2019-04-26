@@ -78,7 +78,7 @@ public class GuiEnergyStoragePart
      * Creates the GUI.
      *
      * @param storageBus
-     * The part associated with the gui.
+     * The host associated with the gui.
      * @param player
      * The inventory container.
      */

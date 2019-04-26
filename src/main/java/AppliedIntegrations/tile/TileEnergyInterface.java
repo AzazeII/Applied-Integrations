@@ -1,17 +1,19 @@
 package AppliedIntegrations.tile;
 
+import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGuiHandler;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
+import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
+import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.*;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
-import AppliedIntegrations.Helpers.IntegrationsHelper;
-import AppliedIntegrations.Helpers.InterfaceDuality;
+import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketProgressBar;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.Utils.AILog;
-import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGrid;
@@ -23,6 +25,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -37,15 +40,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static AppliedIntegrations.api.Storage.LiquidAIEnergy.*;
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
-import static appeng.api.config.Actionable.SIMULATE;
+import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
  */
 public class TileEnergyInterface extends AITile implements IEnergyMachine,
-		INetworkToolAgent,IEnergyInterface,IStorageMonitorable,IInventoryHost {
+		INetworkToolAgent, IEnergyInterface, IStorageMonitorable, IInventoryHost {
 
 	private static final boolean DualityMode = true;
 	private Boolean energyStates[] = new Boolean[6];
@@ -57,29 +60,23 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	private EnergyInterfaceStorage Storage = new EnergyInterfaceStorage(this, capacity, capacity/2);
 
-	private InterfaceDuality duality = new InterfaceDuality(this);
+	private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
 
 	public static int capacity = 100000;
 
 	private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
 
-	byte outputTracker;
+	private byte outputTracker;
 
 	private boolean EUloaded = false;
 
 	private AIGridNodeInventory slotInventory = new AIGridNodeInventory("slot.inventory",9,1,this);
+	private boolean updateRequested;
 
 	public TileEnergyInterface() {
 		this.energyStates[1] = true;
 		for(AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS){
-			if(IntegrationsHelper.instance.isLoaded(RF))
-				RFStorage.put(dir,new EnergyInterfaceStorage(this, capacity,capacity/2));
-			if(IntegrationsHelper.instance.isLoaded(EU))
-				EUStorage.put(dir,new EnergyInterfaceStorage(this, (int)(capacity*0.25), capacity*2));
-			if(IntegrationsHelper.instance.isLoaded(J))
-				JOStorage.put(dir,new JouleInterfaceStorage(this, capacity*2));
-			if(IntegrationsHelper.instance.isLoaded(Ember))
-				EmberStorage.put(dir, new EmberInterfaceStorageDuality());
+			duality.initStorage(dir);
 		}
 	}
 
@@ -99,6 +96,114 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		return this.Storage;
 	}
 
+	private void notifyListenersOfEnergyBarChange(LiquidAIEnergy Energy, int id, AEPartLocation side){
+		for(ContainerEnergyInterface listener : this.LinkedListeners){
+			if(listener!=null) {
+				NetworkHandler.sendTo(new PacketProgressBar(this), (EntityPlayerMP)listener.player);
+			}
+		}
+	}
+
+	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+		if(energy == RF){
+			return this.RFStorage.get(side);
+		}else if(energy == EU){
+			return this.EUStorage.get(side);
+		}else if(energy == J){
+			return this.JOStorage.get(side);
+		}else if(energy == Ember){
+			return this.EmberStorage.get(side);
+		}
+		return null;
+	}
+
+	public void addListener( final ContainerEnergyInterface container ) {
+		if(!this.LinkedListeners.contains(container)){
+			this.LinkedListeners.add(container);
+		}
+	}
+
+	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("", 1,
+			1, this) {
+		@Override
+		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+			return validateStack(itemStack);
+		}
+	};
+
+	public void onActivate(EntityPlayer player, AEPartLocation side) {
+		// Activation logic is server sided
+		if(getLogicalSide() == SERVER) {
+			if(!player.isSneaking()) {
+
+				// Open GUI
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getSide(), getPos());
+				// Request gui update
+				updateRequested = true;
+
+			}
+		}
+	}
+
+	public AIGridNodeInventory getUpgradeInventory(){
+		return this.upgradeInventory;
+	}
+
+
+	private void notifyListenersOfFilterEnergyChange() {
+		for( ContainerEnergyInterface listener : this.LinkedListeners) {
+			if (listener != null) {
+				// Iterate for each side
+				for (AEPartLocation side : AEPartLocation.values()) {
+					// Iterate for each energy
+					LiquidAIEnergy.energies.values().forEach((liquidAIEnergy -> {
+						NetworkHandler.sendTo(new PacketFilterServerToClient(getFilteredEnergy(side), side.ordinal(), this), (EntityPlayerMP) listener.player);
+					}));
+				}
+			}
+		}
+	}
+
+	private void initGuiCoordinates() {
+		// Iterate for each listener
+		for( ContainerEnergyInterface listener : this.LinkedListeners){
+			// Check not null
+			if(listener!=null) {
+				// Send packet init
+				NetworkHandler.sendTo(new PacketCoordinateInit(this),
+						(EntityPlayerMP)listener.player);
+
+				// Toggle request
+				updateRequested = false;
+			}
+		}
+	}
+
+	@Override
+	public void update(){
+		super.update();
+
+		if (updateRequested) {
+			// Check if we have gui to update
+			if (Minecraft.getMinecraft().currentScreen instanceof AIBaseGui) {
+				// Init gui coordinate set
+				initGuiCoordinates();
+
+				// Force update filtered energy of gui
+				notifyListenersOfFilterEnergyChange();
+			}
+		}
+
+		try {
+			if(this.getGridNode().isActive()) {
+				doInjectDualityWork(Actionable.MODULATE);
+				doExtractDualityWork(Actionable.MODULATE);
+			}
+		} catch (NullNodeConnectionException e) {
+			AILog.error(e, "Node of Tile Energy Interface, when it's active could not be null.. But it is");
+		}
+	}
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -114,89 +219,14 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		return nbt;
 	}
 
-
 	@Override
-	public void invalidate() {
-	    super.invalidate();
-		if (world != null && !world.isRemote) {
-			//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-		}
-	}
-
-	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		if (world != null && !world.isRemote) {
-			//MinecraftForge.EVENT_BUS.post(new EnergyTileUnloadEvent(this));
-		}
-
-	}
-
-	private void notifyListenersOfEnergyBarChange(LiquidAIEnergy Energy, int id, AEPartLocation side){
-		for(ContainerEnergyInterface listener : this.LinkedListeners){
-			if(listener!=null) {
-				 NetworkHandler.sendTo(new PacketProgressBar(this), (EntityPlayerMP)listener.player);
-			}
-		}
-	}
-	@Override
-	public void update() {
-		super.update();
-		if (!EUloaded && hasWorld() && !world.isRemote) {
-			EUloaded = true;
-			//MinecraftForge.EVENT_BUS.post(new EnergyTileLoadEvent(this));
-		}
-
-		for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			notifyListenersOfEnergyBarChange(RF, 0, side);
-			notifyListenersOfEnergyBarChange(EU, 1, side);
-			notifyListenersOfEnergyBarChange(J, 2, side);
-		}
-
-		try {
-			if (DualityMode) {
-				DoInjectDualityWork(Actionable.MODULATE);
-			} else {
-				DoInjectDualityWork(SIMULATE);
-			}
-		}catch (NullNodeConnectionException error){
-
-		}
-	}
-
-	@Override
-	public Object getServerGuiElement( final EntityPlayer player )
-	{
+	public Object getServerGuiElement( final EntityPlayer player ) {
 		return new ContainerEnergyInterface(player,this);
 	}
+
 	@Override
-	public Object getClientGuiElement( final EntityPlayer player )
-	{
+	public Object getClientGuiElement( final EntityPlayer player ) {
 		return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player),this,player);
-	}
-	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("", 1,
-			1, this) {
-
-		@Override
-		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-			return validateStack(itemStack);
-		}
-	};
-
-	public static boolean validateStack(ItemStack itemStack) {
-		if (itemStack == null)
-			return false;
-		if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack))
-			return true;
-		else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
-			return true;
-		else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
-			return true;
-		return false;
-	}
-
-	public AIGridNodeInventory getUpgradeInventory(){
-		return this.upgradeInventory;
 	}
 
 	@Override
@@ -205,12 +235,12 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	}
 
 	@Override
-	public void DoInjectDualityWork(Actionable action) throws NullNodeConnectionException {
-		duality.DoInjectDualityWork(action);
+	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
+		duality.doInjectDualityWork(action);
 	}
 	@Override
-	public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
-		duality.DoExtractDualityWork(action);
+	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+		duality.doExtractDualityWork(action);
 	}
 
 	@Override
@@ -223,33 +253,16 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		return null;
 	}
 
-	/**
-	 * RedstoneFluxAPI:
-	 */
-
-	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
-		if(energy == RF){
-			return this.RFStorage.get(side);
-		}else if(energy == EU){
-			return this.EUStorage.get(side);
-		}else if(energy == J){
-			return this.JOStorage.get(side);
-		}else if(energy == Ember){
-			return this.EmberStorage.get(side);
-		}
-		return null;
-	}
-
-	public void addListener( final ContainerEnergyInterface container )
-	{
-		if(!this.LinkedListeners.contains(container)){
-			this.LinkedListeners.add(container);
-		}
-	}
-
 	@Override
-	public LiquidAIEnergy getCurrentBar(AEPartLocation side) {
-		return null;
+	public void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+		if (energy == RF)
+			RFStorage.put(side, new EnergyInterfaceStorage(this, capacity,capacity/2));
+		if (energy == EU)
+			EUStorage.put(side, new EnergyInterfaceStorage(this, (int)(capacity*0.25), capacity*2));
+		if (energy == J)
+			JOStorage.put(side, new JouleInterfaceStorage(this, capacity*2));
+		if (energy == Ember)
+			EmberStorage.put(side, new EmberInterfaceStorageDuality());
 	}
 
 	@Override
@@ -294,11 +307,5 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		return duality.getCapability(capability, AEPartLocation.fromFacing(facing));
-	}
-
-	public void onActivate(EntityPlayer player, AEPartLocation side) {
-		AILog.chatLog("Stored: " + getEnergyStorage(RF, side).getStored() + " RF / " + getEnergyStorage(RF, side).getMaxStored() + " RF", player);
-		AILog.chatLog("Stored: " + getEnergyStorage(EU, side).getStored() + " EU / " + getEnergyStorage(EU, side).getMaxStored() + " EU", player);
-		AILog.chatLog("Stored: " + getEnergyStorage(J, side).getStored() + " J / " + getEnergyStorage(J, side).getMaxStored() + " J", player);
 	}
 }

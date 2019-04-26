@@ -24,7 +24,7 @@ public class HandlerCoordinateInit implements IMessageHandler<PacketCoordinateIn
             if (g instanceof AIBaseGui) {
                 AIBaseGui partGui = (AIBaseGui) g;
 
-                partGui.setSyncHost(message.part);
+                partGui.setSyncHost(message.host);
             }
         });
         return null;

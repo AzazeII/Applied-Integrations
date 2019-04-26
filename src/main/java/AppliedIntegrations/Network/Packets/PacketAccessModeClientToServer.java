@@ -19,7 +19,7 @@ public class PacketAccessModeClientToServer extends AIPacket {
         // Set val
         val = currentValue;
 
-        // Set part
+        // Set host
         bus = part;
     }
 

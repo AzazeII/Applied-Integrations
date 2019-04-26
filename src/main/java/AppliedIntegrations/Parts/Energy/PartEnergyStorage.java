@@ -97,7 +97,7 @@ public class PartEnergyStorage
 	// Was active?
 	private boolean lastActive = false;
 
-	// current priority of part
+	// current priority of host
 	private int priority = 0;
 
 	// list of all container - listeners
@@ -176,7 +176,7 @@ public class PartEnergyStorage
 			if (getFacingTile() instanceof IEnergyInterface) {
 				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface)getFacingTile(), this);
 
-			// Check for part tile
+			// Check for host tile
 			} else if(getFacingTile() instanceof TileCableBus){
 				// Get interface candidate
 				TileCableBus maybeInterface = (TileCableBus)getFacingTile();

@@ -35,7 +35,7 @@ public class ContainerEnergyStorage
 		// Add listener
 		part.linkedListeners.add(this);
 
-		// Set the part
+		// Set the host
 		this.storageBus = part;
 
 		// Add the upgrade slot

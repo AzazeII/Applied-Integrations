@@ -79,7 +79,7 @@ public class Utils {
     }
 
     /**
-     * @param part part to check
+     * @param part host to check
      * @return first energy handled by IPart
      */
     public static LiquidAIEnergy getEnergyFromPart(IPart part){
@@ -100,7 +100,7 @@ public class Utils {
 
                 // Iterate over
                 for(Capability capability : type.getCapabilityWithModCheck()){
-                    // Check if part has capability
+                    // Check if host has capability
                     if(part.hasCapability(capability))
                         // return
                         return type.energy;
@@ -133,7 +133,7 @@ public class Utils {
 
                 // Iterate over
                 for(Capability capability : type.getCapabilityWithModCheck()){
-                    // Check if part has capability
+                    // Check if host has capability
                     if(tile.hasCapability(capability, null))
                         // return
                         return type.energy;

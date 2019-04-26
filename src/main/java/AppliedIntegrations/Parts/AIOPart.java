@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
-import static AppliedIntegrations.tile.TileEnergyInterface.validateStack;
 import static appeng.api.config.RedstoneMode.*;
 import static net.minecraft.init.Items.AIR;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
@@ -289,7 +288,7 @@ public abstract class AIOPart
     }
 
     /**
-     * Determines how much power the part takes for just
+     * Determines how much power the host takes for just
      * existing.
      */
     @Override
@@ -323,7 +322,7 @@ public abstract class AIOPart
                 // Open gui trough handler
                 AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getSide(), getHostTile().getPos());
 
-                // Make part update gui's coordinates
+                // Make host update gui's coordinates
                 this.updateRequested = true;
 
                 // Update player

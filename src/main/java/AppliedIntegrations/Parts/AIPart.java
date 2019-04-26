@@ -65,16 +65,16 @@ public abstract class AIPart
 	// Constant value; Brightness of active terminal
 	protected final static int ACTIVE_TERMINAL_LIGHT_LEVEL = 9;
 
-	// Interaction permissions of this part
+	// Interaction permissions of this host
 	private final SecurityPermissions[] interactionPermissions;
 
 	// Host of this gridblock
 	protected IPartHost host;
 
-	// tile representation of part
+	// tile representation of host
 	protected TileEntity hostTile;
 
-	// Side where part connected
+	// Side where host connected
 	private AEPartLocation cableSide;
 
 	// Does this machine has channel, and can work?
@@ -86,13 +86,13 @@ public abstract class AIPart
 	// Player id of owner
 	private int ownerID;
 
-	// Item, that creates this part
+	// Item, that creates this host
 	public final ItemStack associatedItem;
 
-	// Node representation of part
+	// Node representation of host
 	protected IGridNode node;
 
-	// grid block where part placed
+	// grid block where host placed
 	protected AEPartGridBlock gridBlock;
 
 	public int getX(){
@@ -251,12 +251,12 @@ public abstract class AIPart
 			}
 			catch( Exception e )
 			{
-				AILog.error( e, "Machine (%s) was unable to update it's node. The part may not function correctly",
+				AILog.error( e, "Machine (%s) was unable to update it's node. The host may not function correctly",
 						this.associatedItem.getDisplayName() );
 			}
 		}
 
-		// Update the part
+		// Update the host
 		this.updateStatus();
 	}
 
@@ -335,7 +335,7 @@ public abstract class AIPart
 		// Get the itemstack
 		ItemStack itemStack = this.associatedItem.copy();
 
-		// Save NBT data if the part was wrenched
+		// Save NBT data if the host was wrenched
 		if( type == PartItemStack.WRENCH )
 		{
 			// Create the item tag
@@ -360,8 +360,7 @@ public abstract class AIPart
 
 	}
 
-	public final DimensionalCoord getLocation()
-	{
+	public final DimensionalCoord getLocation() {
 		return new DimensionalCoord( this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ() );
 	}
 
@@ -371,19 +370,14 @@ public abstract class AIPart
 	}
 
 	@Override
-	public boolean isActive()
-	{
+	public boolean isActive() {
 		// Are we server side?
-		if( !getWorld().isRemote )
-		{
+		if( !getWorld().isRemote ) {
 			// Do we have a node?
-			if( this.node != null )
-			{
+			if( this.node != null ) {
 				// Get it's activity
 				this.isActive = this.node.isActive();
-			}
-			else
-			{
+			} else {
 				this.isActive = false;
 			}
 		}
@@ -401,27 +395,20 @@ public abstract class AIPart
 	public abstract int getLightLevel();
 
 	@Override
-	public boolean isPowered()
-	{
-		try
-		{
+	public boolean isPowered() {
+		try {
 			// Server side?
-			if( !getWorld().isRemote && ( this.gridBlock != null ) )
-			{
+			if( !getWorld().isRemote && ( this.gridBlock != null ) ) {
 				// Get the energy grid
 				IEnergyGrid eGrid = this.gridBlock.getEnergyGrid();
 				if( eGrid != null )
 				{
 					this.isPowered = eGrid.isNetworkPowered();
-				}
-				else
-				{
+				} else {
 					this.isPowered = false;
 				}
 			}
-		}
-		catch( Exception e )
-		{
+		} catch( Exception e ) {
 			// Network unavailable, return cached value.
 		}
 
@@ -456,10 +443,8 @@ public abstract class AIPart
 		}
 	}
 
-	public final void markForUpdate()
-	{
-		if( this.host != null )
-		{
+	public final void markForUpdate() {
+		if( this.host != null ) {
 			this.host.markForUpdate();
 		}
 	}
@@ -558,12 +543,12 @@ public abstract class AIPart
 		// Get this item
 		drops.add( this.getItemStack( PartItemStack.BREAK ) );
 
-		// Get the drops for this part
+		// Get the drops for this host
 		this.getDrops( drops, false );
 
 
 
-		// Remove the part
+		// Remove the host
 		this.host.removePart( this.cableSide, false );
 
 	}

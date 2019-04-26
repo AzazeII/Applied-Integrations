@@ -95,12 +95,12 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
             // Create grid node
             IGridNode node = null;
 
-            // Check if tile is part host
+            // Check if tile is host host
             if (te instanceof IPartHost) {
-                // Get part from host
+                // Get host from host
                 final SelectedPart part = ((IPartHost) te).selectPart(mop.hitVec);
 
-                // Check not null (part)
+                // Check not null (host)
                 if (part != null && part.part != null)
                     // Check not null (node)
                     if (part.part.getGridNode() != null)

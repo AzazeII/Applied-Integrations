@@ -1,6 +1,7 @@
 package AppliedIntegrations.Utils;
 
 import AppliedIntegrations.api.IInventoryHost;
+import appeng.api.AEApi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
@@ -40,6 +41,18 @@ public class AIGridNodeInventory implements IInventory {
             // Fill up slots with air
             slots[i] = new ItemStack(AIR);
         }
+    }
+
+    public static boolean validateStack(ItemStack itemStack) {
+        if (itemStack == null)
+            return false;
+        if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(itemStack))
+            return true;
+        else if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(itemStack))
+            return true;
+        else if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemStack))
+            return true;
+        return false;
     }
 
     @Override

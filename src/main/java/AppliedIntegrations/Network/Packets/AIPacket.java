@@ -1,8 +1,10 @@
 package AppliedIntegrations.Network.Packets;
 
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.tile.AITile;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -120,5 +122,21 @@ public abstract class AIPacket implements IMessage {
 
     protected Vec3d readVec(ByteBuf buf) {
         return new Vec3d(readPos(buf));
+    }
+
+
+    protected void writeSyncHost(ISyncHost host, ByteBuf buf) {
+        if (host instanceof AIPart) {
+            // Write state to buf
+            buf.writeBoolean(true);
+
+            writePart(buf);
+
+        }else if (host instanceof AITile){
+            // Write state to buf
+            buf.writeBoolean(false);
+
+            writeTile((AITile) host, buf);
+        }
     }
 }

@@ -8,7 +8,7 @@ import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
-import AppliedIntegrations.Helpers.InterfaceDuality;
+import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketBarChange;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
@@ -112,15 +112,16 @@ public class PartEnergyInterface
 
     private final ChangeHandler<LiquidAIEnergy> energyChangeHandler = new ChangeHandler<>();
 
-    protected EmberInterfaceStorageDuality EmberStorage;
-    protected EnergyInterfaceStorage RFStorage = new EnergyInterfaceStorage(this, capacity,maxTransfer);
-    protected InterfaceSinkSource EUStorage;
+    private EnergyInterfaceStorage RFStorage;
+    private InterfaceSinkSource EUStorage;
 
-    protected TeslaInterfaceStorageDuality TESLAStorage;
-    protected JouleInterfaceStorage JStorage;
+    private JouleInterfaceStorage JStorage;
+
+    private EmberInterfaceStorageDuality EmberStorage;
+    private TeslaInterfaceStorageDuality TESLAStorage;
 
     // Interface duality, or interface host
-    private InterfaceDuality duality = new InterfaceDuality(this);
+    private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
 
     // AE storage
     private double fluixStorage;
@@ -143,6 +144,16 @@ public class PartEnergyInterface
     private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
     public LiquidAIEnergy filteredEnergy = null;
 
+
+    private void initRFStorage() {
+        RFStorage = new EnergyInterfaceStorage(this, capacity,maxTransfer);
+    }
+
+    @Optional.Method(modid = "ic2")
+    private void initEUStorage() {
+        //EUStorage = new InterfaceSinkSource(getWorld(), );
+    }
+
     @Optional.Method(modid = "mekanism")
     private void initJStorage(){
         JStorage = new JouleInterfaceStorage(this, (int)(capacity*2.5));
@@ -160,7 +171,7 @@ public class PartEnergyInterface
         TESLAStorage = new TeslaInterfaceStorageDuality(this, (long)capacity, (long)maxTransfer);
     }
 
-    // Make part available as "extendant(class to extend)S"
+    // Make host available as "extendant(class to extend)S"
     // ** IMPORTANT FOR MANA INTERFACE **
     public PartEnergyInterface(PartEnum corespondingEnumPart, SecurityPermissions... permissions){
         super(corespondingEnumPart, permissions);
@@ -168,12 +179,9 @@ public class PartEnergyInterface
 
     public PartEnergyInterface() {
         super(PartEnum.EnergyInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
-        if(IntegrationsHelper.instance.isLoaded(J))
-            initJStorage();
-        if(IntegrationsHelper.instance.isLoaded(Ember))
-            initEmberStorage();
-        if(IntegrationsHelper.instance.isLoaded(TESLA))
-            initTESLAStorage();
+
+        // Pass init to duality
+        duality.initStorage(INTERNAL);
     }
 
     // Registring Inventory for slots of upgrades
@@ -359,7 +367,6 @@ public class PartEnergyInterface
         }
     }
 
-    @SideOnly(CLIENT)
     private void notifyListenersOfFilterEnergyChange() {
         for( ContainerEnergyInterface listener : this.LinkedListeners) {
             if(listener!=null) {
@@ -429,11 +436,11 @@ public class PartEnergyInterface
 
             try {
                 if (this.isActive()) {
-                    DoInjectDualityWork(Actionable.MODULATE);
-                    DoExtractDualityWork(Actionable.MODULATE);
+                    doInjectDualityWork(Actionable.MODULATE);
+                    doExtractDualityWork(Actionable.MODULATE);
                 }
             } catch (NullNodeConnectionException e) {
-                AILog.error(e, "Node of PartEnergy Interface, when it's active could not be null.. But it is");
+                AILog.error(e, "Node of Part Energy Interface, when it's active could not be null.. But it is");
             }
 
             /** Manually take ember energy, as receptor code is not dedicated for ae parts:
@@ -473,7 +480,7 @@ public class PartEnergyInterface
             }
 
             // Check if energy changed
-            energyChangeHandler.onChange(filteredEnergy, (energy) ->{
+            energyChangeHandler.onChange(filteredEnergy, (energy) -> {
                 // Sync filtered energy
                 notifyListenersOfFilterEnergyChange();
             });
@@ -525,16 +532,16 @@ public class PartEnergyInterface
      * @return
      */
     @Override
-    public void DoInjectDualityWork(Actionable action) throws NullNodeConnectionException {
-        getDuality().DoInjectDualityWork(action);
+    public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
+        getDuality().doInjectDualityWork(action);
     }
 
     @Override
-    public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
-        getDuality().DoExtractDualityWork(action);
+    public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+        getDuality().doExtractDualityWork(action);
     }
 
-    public IInterfaceDuality getDuality() {
+    public IEnergyInterfaceDuality getDuality() {
         return this.duality;
     }
 
@@ -728,8 +735,17 @@ public class PartEnergyInterface
     public void setRealContainer(String realContainer) { }
 
     @Override
-    public LiquidAIEnergy getCurrentBar(AEPartLocation side) {
-        return bar;
+    public void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+        if(energy == RF)
+            initRFStorage();
+        if(energy == EU)
+            initEUStorage();
+        if(energy == J)
+            initJStorage();
+        if(energy == Ember)
+            initEmberStorage();
+        if(energy == TESLA)
+            initTESLAStorage();
     }
 
     @Override

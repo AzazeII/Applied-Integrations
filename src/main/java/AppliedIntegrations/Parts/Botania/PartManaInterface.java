@@ -3,7 +3,7 @@ package AppliedIntegrations.Parts.Botania;
 import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import AppliedIntegrations.api.Botania.IManaInterface;
-import AppliedIntegrations.api.IInterfaceDuality;
+import AppliedIntegrations.api.IEnergyInterfaceDuality;
 import AppliedIntegrations.Helpers.ManaInterfaceDuality;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Parts.PartEnum;
@@ -82,7 +82,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
     }
 
     @Override
-    public IInterfaceDuality getDuality(){
+    public IEnergyInterfaceDuality getDuality(){
         return new ManaInterfaceDuality(this);
     }
 
@@ -93,9 +93,9 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
         if(!getWorld().isRemote){
             try {
                 if (isManaFiltered) {
-                    DoExtractDualityWork(Actionable.MODULATE);
+                    doExtractDualityWork(Actionable.MODULATE);
                 } else {
-                    DoInjectDualityWork(Actionable.MODULATE);
+                    doInjectDualityWork(Actionable.MODULATE);
                 }
             }catch (NullNodeConnectionException e){
 

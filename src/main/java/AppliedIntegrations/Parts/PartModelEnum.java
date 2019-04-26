@@ -71,7 +71,7 @@ public enum PartModelEnum implements IPartModel {
             if (o instanceof IPartModel) {
                 builder.addAll(((IPartModel) o).getModels());
             } else {
-                builder.add(new ResourceLocation(AppliedIntegrations.modid, "part/" + o.toString()));
+                builder.add(new ResourceLocation(AppliedIntegrations.modid, "host/" + o.toString()));
             }
         }
         locations = builder.build();

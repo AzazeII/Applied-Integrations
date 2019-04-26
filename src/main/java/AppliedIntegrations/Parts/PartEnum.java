@@ -87,7 +87,7 @@ public enum PartEnum
         // Set the group name
         this.groupName = groupName;
 
-        // Set item form of part
+        // Set item form of host
         this.parentItem = parent;
     }
 
@@ -115,24 +115,24 @@ public enum PartEnum
         // Clamp the damage
         int clamped = MathHelper.clamp( itemStack.getItemDamage(), 0, PartEnum.VALUES.length - 1 );
 
-        // Get the part
+        // Get the host
         return PartEnum.VALUES[clamped];
     }
 
     public AIPart createPartInstance(final ItemStack itemStack ) throws InstantiationException, IllegalAccessException
     {
-        // Create a new instance of the part
+        // Create a new instance of the host
         AIPart part = this.partClass.newInstance();
 
         // Setup based on the itemStack
         part.setupPartFromItem( itemStack );
 
-        // Return the newly created part
+        // Return the newly created host
         return part;
 
     }
     /**
-     * Gets the group associated with this part.
+     * Gets the group associated with this host.
      *
      * @return
      */
@@ -153,7 +153,7 @@ public enum PartEnum
     }
 
     /**
-     * Gets the unlocalized name for this part.
+     * Gets the unlocalized name for this host.
      *
      * @return
      */

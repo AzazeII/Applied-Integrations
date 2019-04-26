@@ -49,7 +49,7 @@ public class PacketTerminalUpdate extends AIPacket {
             list.add(stack);
         }
 
-        // Read part
+        // Read host
         this.part = readPart(buf);
 
         // Set list
@@ -74,7 +74,7 @@ public class PacketTerminalUpdate extends AIPacket {
             buf.writeLong(entry.getStack().amount);
         }));
 
-        // Write part
+        // Write host
         writePart(buf);
 
         // Write ordinal of order

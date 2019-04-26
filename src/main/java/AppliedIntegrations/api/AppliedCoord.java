@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 /**
  * @Author Azazell
- * Represents coordinates of any AE2 part
+ * Represents coordinates of any AE2 host
  */
 @Deprecated
 public class AppliedCoord extends DimensionalCoord{

@@ -12,7 +12,7 @@ public class HandlerSyncReturn implements IMessageHandler<PacketSyncReturn, Pack
     @Override
     public PacketSyncReturn onMessage(PacketSyncReturn message, MessageContext ctx) {
         // Check for enum type (^)
-        // Update enum of part (&)
+        // Update enum of host (&)
         if(message.mode instanceof RedstoneMode) // ^1
             ((AIOPart)message.host).setRedstoneMode((RedstoneMode)message.mode); // &1
         if(message.mode instanceof SortOrder) // ^2

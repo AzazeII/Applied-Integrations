@@ -35,7 +35,7 @@ public abstract class AIRotatablePart
     }
 
     /**
-     * Called when the part is right-clicked
+     * Called when the host is right-clicked
      */
     @Override
     public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position )

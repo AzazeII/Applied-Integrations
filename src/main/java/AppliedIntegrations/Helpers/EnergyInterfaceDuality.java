@@ -27,15 +27,15 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
- * Class handler for both tile interface, and part interface
+ * Class handler for both tile interface, and host interface
  */
-public class InterfaceDuality implements IInterfaceDuality{
+public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
     public boolean debug;
     private IEnergyInterface owner;
     private List<LiquidAIEnergy> initializedStorages = new LinkedList<>();
 
-    public InterfaceDuality(IEnergyInterface owner){
+    public EnergyInterfaceDuality(IEnergyInterface owner){
         this.owner = owner;
 
         // RF always Initialized, as FE
@@ -64,7 +64,7 @@ public class InterfaceDuality implements IInterfaceDuality{
     }
 
     @Override
-    public void DoInjectDualityWork(Actionable action) throws NullNodeConnectionException {
+    public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
         IGridNode node = owner.getGridNode();
         if (node == null) {
             throw new NullNodeConnectionException();
@@ -117,7 +117,7 @@ public class InterfaceDuality implements IInterfaceDuality{
     }
 
     @Override
-    public void DoExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+    public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
         IGridNode node = owner.getGridNode();
         if (node == null) {
             throw new NullNodeConnectionException();
@@ -212,5 +212,15 @@ public class InterfaceDuality implements IInterfaceDuality{
                  return true;
         }
         return false;
+    }
+
+    public void initStorage(AEPartLocation side) {
+        // Iterate for each energy
+        for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
+            // Check if storage is initialized
+            if(IntegrationsHelper.instance.isLoaded(energy))
+                // Update energy
+                owner.initEnergyStorage(energy, side);
+        }
     }
 }

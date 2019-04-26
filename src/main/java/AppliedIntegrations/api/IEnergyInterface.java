@@ -15,9 +15,10 @@ import net.minecraft.util.EnumFacing;
 /**
  * @Author Azazell
  */
-public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator, ISyncHost{
+public interface IEnergyInterface extends IEnergyInterfaceDuality, INetworkManipulator, ISyncHost {
+    void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side);
+
     IGridNode getGridNode();
-    LiquidAIEnergy getCurrentBar(AEPartLocation side);
 
     TileEntity getFacingTile(EnumFacing side);
 
@@ -26,7 +27,7 @@ public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator
      */
     default IMEInventory<IAEEnergyStack> getOuterGridInventory() {
         // Check not null
-        if(getGridNode() == null)
+        if (getGridNode() == null)
             return null;
 
         // Create grid
@@ -38,15 +39,5 @@ public interface IEnergyInterface extends IInterfaceDuality, INetworkManipulator
         return storage.getInventory(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class));
     }
 
-    // Work mode
-    enum DualityMode{
-        Inject,
-        Extract;
-    }
-    // Packet work mode
-    enum FlowMode{
-        Gui, // send data from part to gui
-        Machine; // send data from gui to machine
-    }
-         LiquidAIEnergy getFilter(int index);
-};
+    LiquidAIEnergy getFilter(int index);
+}
