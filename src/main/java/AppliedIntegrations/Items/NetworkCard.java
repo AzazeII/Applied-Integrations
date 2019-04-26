@@ -25,7 +25,7 @@ public class NetworkCard extends AIItemRegistrable {
 
         // Add property for mode animation
         this.addPropertyOverride(new ResourceLocation(AppliedIntegrations.modid,"bit"), (stack, worldIn, entityIn) ->
-                ((float) side.ordinal()) / (float) 10);
+                ((float) (side.ordinal() + 1)) / (float) 10);
     }
 
     @Override

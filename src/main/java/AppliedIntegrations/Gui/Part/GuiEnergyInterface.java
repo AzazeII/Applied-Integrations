@@ -39,7 +39,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	private IEnergyInterface Einterface;
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
-	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.host.png");
+	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
 	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
 
 	public PartEnergyInterface part;
