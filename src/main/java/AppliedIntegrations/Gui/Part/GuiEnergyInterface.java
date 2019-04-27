@@ -197,14 +197,14 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		}else if (energyInterface instanceof TileEnergyInterface){
 			byte id = 0;
 
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 2, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 30, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 59, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 94, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 123, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id, 149, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 39, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 55, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++,71, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 87, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 103, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id, 119, 111, true));
 		}
-
+//sdfkal/
 		// Add priority button
 		addPriorityButton();
 	}
@@ -216,8 +216,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 					int height = this.getStorage(LinkedMetric, side) / (part.getMaxEnergyStored(null, LinkedMetric) / 83);
 					int v = 0, u = v;
 					// Draw Bar
-					drawTexturedModalRect(pLeft, pTop + (83 - height), v, u, width, height);
-					boolean hover = AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
+					boolean hover = drawPowerBar(pLeft, pTop, pMouseX, pMouseY, width, height, v, u);
+
 					if (hover) {
 						String str = String.format(
 								"%s: %,d %s/%,d %s",
@@ -239,8 +239,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 				int height = this.getStorage(LinkedMetric, side) / (tile.getStorage().getMaxEnergyStored() / 83);
 				int v = 6, u = v;
 				// Draw Bar
-				drawTexturedModalRect(pLeft, pTop + (83 - height), v, u, width, height);
-				boolean hover = AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
+				boolean hover = drawPowerBar(pLeft, pTop, pMouseX, pMouseY, width, height, v, u);
+
 				if (hover) {
 					String str = String.format(
 							"%s: %,d %s/%,d %s",
@@ -255,6 +255,14 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		} catch (Exception e) {
 
 		}
+	}
+
+	private boolean drawPowerBar(int pLeft, int pTop, int pMouseX, int pMouseY, int width, int height, int v, int u) {
+		// Draw power bar
+		drawTexturedModalRect(pLeft, pTop + (83 - height), v, u, width, height);
+
+		// Return true if mouse over widget
+		return AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
 	}
 
 	public void drawMouseOver(String pText) {
