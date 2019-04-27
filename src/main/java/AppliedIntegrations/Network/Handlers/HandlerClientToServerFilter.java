@@ -16,8 +16,8 @@ public class HandlerClientToServerFilter implements IMessageHandler<PacketClient
 
     @Override
     public PacketClientToServerFilter onMessage(PacketClientToServerFilter message, MessageContext ctx) {
-        if(message.clientPart instanceof IEnergyMachine){
-            ((IEnergyMachine) message.clientPart).updateFilter(message.energy, message.index);
+        if(message.host instanceof IEnergyMachine){
+            ((IEnergyMachine) message.host).updateFilter(message.energy, message.index);
         }
 
         return null;
