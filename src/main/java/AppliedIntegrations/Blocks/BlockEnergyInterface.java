@@ -41,10 +41,9 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		Block block = world.getBlockState(pos).getBlock();
 		TileEntity entity = world.getTileEntity(pos);
 
-		if(p.isSneaking()) {
+		if(!p.isSneaking()) {
 			if (entity instanceof TileEnergyInterface) {
 				((TileEnergyInterface) entity).onActivate(p, AEPartLocation.fromFacing(facing));
 			}
@@ -59,14 +58,9 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 					world.setBlockToAir(pos);
 					return false;
 				}
-			} else if (block != null && entity instanceof TileEntity && p != null) {
-				// if not sneaking open gui
-				if (!p.isSneaking()) {
-					p.openGui(AppliedIntegrations.instance, 2, world, pos.getX(), pos.getY(), pos.getZ());
-					return true;
-				}
 			}
 		}
+
 		return false;
 	}
 }

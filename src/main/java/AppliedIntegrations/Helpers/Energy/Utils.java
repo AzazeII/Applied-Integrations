@@ -1,16 +1,19 @@
 package AppliedIntegrations.Helpers.Energy;
 
 import AppliedIntegrations.api.AppliedCoord;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.tile.AITile;
 import appeng.api.AEApi;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartItem;
+import appeng.api.util.AEPartLocation;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
@@ -158,17 +161,40 @@ public class Utils {
         return getPartByParams(new BlockPos(coord.x,coord.y,coord.z),coord.side,coord.getWorld());
     }
 
-    public static AIPart getPartByParams(BlockPos pos, EnumFacing side, World worldObj) {
-
-        World world = worldObj;
+    private static World getClientOrServerWorld(World w){
+        World world = w;
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             if (world == null) {
                 world = Minecraft.getMinecraft().world;
             }
         }
+
+        return world;
+    }
+
+    public static AIPart getPartByParams(BlockPos pos, EnumFacing side, World worldObj) {
+        World world = getClientOrServerWorld(worldObj);
+
         TileEntity entity = world.getTileEntity(pos);
 
         return (AIPart) (((IPartHost) entity).getPart(side));
     }
+
+
+    private static AITile getTileByParams(BlockPos pos, World worldObj) {
+        World world = getClientOrServerWorld(worldObj);
+
+        // Check if tile instance of AIpart, depending on it return null or part
+        return world.getTileEntity(pos) instanceof AITile ? (AITile) world.getTileEntity(pos) : null;
+    }
+
+    public static ISyncHost getSyncHostByParams(BlockPos pos, AEPartLocation side, World obj){
+        if(side == AEPartLocation.INTERNAL)
+            return getTileByParams(pos, obj);
+        else if (side != null)
+            return getPartByParams(pos, side.getFacing(), obj);
+        return null;
+    }
+
 }

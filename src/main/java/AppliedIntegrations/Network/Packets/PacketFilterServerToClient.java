@@ -31,21 +31,13 @@ public class PacketFilterServerToClient extends AIPacket {
     public void fromBytes(ByteBuf buf) {
         this.energy = readEnergy(buf);
         this.index = buf.readInt();
-
-        boolean isPart = buf.readBoolean();
-
-        if(isPart)
-            host = readPart(buf);
-        else
-            host = (ISyncHost) readTile(buf);
+        this.host = readSyncHost(buf);
     }
-
 
     @Override
     public void toBytes(ByteBuf buf) {
         writeEnergy(energy, buf);
         buf.writeInt(index);
-
         writeSyncHost(host, buf);
     }
 }

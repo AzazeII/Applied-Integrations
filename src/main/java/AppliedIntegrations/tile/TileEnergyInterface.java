@@ -135,9 +135,9 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		// Activation logic is server sided
 		if(getLogicalSide() == SERVER) {
 			if(!player.isSneaking()) {
-
 				// Open GUI
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getSide(), getPos());
+
 				// Request gui update
 				updateRequested = true;
 
@@ -195,7 +195,10 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		}
 
 		try {
-			if(this.getGridNode().isActive()) {
+			if (getGridNode() == null)
+				return;
+
+			if (this.getGridNode().isActive()) {
 				doInjectDualityWork(Actionable.MODULATE);
 				doExtractDualityWork(Actionable.MODULATE);
 			}

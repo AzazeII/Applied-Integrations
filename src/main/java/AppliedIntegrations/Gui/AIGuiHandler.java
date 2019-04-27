@@ -15,6 +15,8 @@ import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
 import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.*;
+import AppliedIntegrations.api.IEnergyInterface;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -124,9 +126,9 @@ public class AIGuiHandler implements IGuiHandler {
 
         // Energy interface container
         if(gui == GuiEnum.GuiInterfacePart){
-            PartEnergyInterface part = (PartEnergyInterface)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+            ISyncHost host = Utils.getSyncHostByParams(new BlockPos(x,y,z), side, world);
 
-            return new ContainerEnergyInterface(player, part);
+            return new ContainerEnergyInterface(player, (IEnergyInterface) host);
         }else if(gui == GuiEnum.GuiLogicBus){
             // Find tile candidate for core
             TileEntity maybeCore = world.getTileEntity(new BlockPos(x,y,z));
@@ -163,9 +165,9 @@ public class AIGuiHandler implements IGuiHandler {
 
         // Energy interface gui
         if(gui == GuiEnum.GuiInterfacePart){
-            PartEnergyInterface part = (PartEnergyInterface)Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
+            ISyncHost host = Utils.getSyncHostByParams(new BlockPos(x,y,z), side, world);
 
-            return new GuiEnergyInterface((ContainerEnergyInterface)getServerGuiElement(ID, player, world, x, y, z), part, player);
+            return new GuiEnergyInterface((ContainerEnergyInterface)getServerGuiElement(ID, player, world, x, y, z), (IEnergyInterface) host, player);
         }else if(gui == GuiEnum.GuiLogicBus){
             // Find tile candidate for core
             TileEntity maybeCore = world.getTileEntity(new BlockPos(x,y,z));

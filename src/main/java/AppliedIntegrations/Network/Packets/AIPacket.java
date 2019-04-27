@@ -139,4 +139,18 @@ public abstract class AIPacket implements IMessage {
             writeTile((AITile) host, buf);
         }
     }
+
+
+    protected ISyncHost readSyncHost(ByteBuf buf) {
+        boolean isPart = buf.readBoolean();
+
+        ISyncHost host = null;
+
+        if(isPart)
+            host = readPart(buf);
+        else
+            host = (ISyncHost) readTile(buf);
+
+        return host;
+    }
 }

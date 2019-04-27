@@ -36,7 +36,7 @@ import static net.minecraft.util.EnumFacing.*;
  * @Author Azazell
  */
 public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidgetHost {
-	private IEnergyInterface Einterface;
+	private IEnergyInterface energyInterface;
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
 	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
@@ -46,7 +46,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	private TileEnergyInterface tile;
 
 	protected final List<String> tooltip = new ArrayList<String>();
-	private List<WidgetEnergySlot> EnergySlotList = new ArrayList<WidgetEnergySlot>();
+	private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
 
 	private GuiTabButton priority;
 
@@ -56,7 +56,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 	public int id;
 	public LiquidAIEnergy LinkedMetric = RF;
-	private WidgetEnergySlot energySlot;
 
 	public int storage;
 
@@ -64,8 +63,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		super(CEI, player);
 		this.player = player;
 
-		this.Einterface = part;
-		this.part = (PartEnergyInterface) Einterface;
+		this.energyInterface = part;
+		this.part = (PartEnergyInterface) energyInterface;
 
 		this.guiLeft = this.guiLeft - 51;
 	}
@@ -73,9 +72,9 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface Einterface, EntityPlayer player) {
 		super(container, player);
 		this.player = player;
-		this.Einterface = Einterface;
+		this.energyInterface = Einterface;
 
-		if (this.Einterface instanceof TileEnergyInterface) {
+		if (this.energyInterface instanceof TileEnergyInterface) {
 			this.tile = (TileEnergyInterface) Einterface;
 		}
 
@@ -86,10 +85,10 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		if (this.Einterface instanceof PartEnergyInterface) {
+		if (this.energyInterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.texturePart);
 		}
-		if (this.Einterface instanceof TileEnergyInterface) {
+		if (this.energyInterface instanceof TileEnergyInterface) {
 
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
 		}
@@ -107,11 +106,22 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		drawHoveringText(this.tooltip, MouseX, MouseY, fontRenderer);
 		if (AIGuiHelper.INSTANCE.isPointInGuiRegion(this.guiLeft - 18, this.guiTop + 8, 16, 16, MouseX, MouseY, this.guiLeft, this.guiTop))
 			drawHoveringText(this.buttonTooltip, MouseX, MouseY, fontRenderer);
-		if (this.energySlot.isMouseOverWidget(MouseX, MouseY)) {
-			List<String> tip = new ArrayList<String>();
-			if (energySlot.getCurrentStack() != null) {
-				tip.add(this.energySlot.getCurrentStack().getEnergyName());
-				drawHoveringText(tip, MouseX, MouseY, fontRenderer);
+
+		// Iterate over all energy widgets
+		for (WidgetEnergySlot slot : energySlotList) {
+			// Check if mouse over widget
+			if (slot.isMouseOverWidget(MouseX, MouseY)) {
+				// Create tooltip list
+				List<String> tip = new ArrayList<String>();
+
+				// Check if slot has energy stack
+				if (slot.getCurrentStack() != null) {
+					// Add entry in list
+					tip.add(slot.getCurrentStack().getEnergyName());
+
+					// Draw tooltip
+					drawHoveringText(tip, MouseX, MouseY, fontRenderer);
+				}
 			}
 		}
 	}
@@ -124,16 +134,19 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 			NetworkHandler.sendToServer(new PacketGuiChange(new GuiPriority(this.player.inventory, this.host),
 					getX(),getY(),getZ(),player));
 		}*/
-		if (this.energySlot.isMouseOverWidget(mouseX, mouseY)) {
-			LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
 
-			try {
-				energySlot.onMouseClicked(new EnergyStack(EnergyItem, 1));
+		energySlotList.forEach((energySlot) -> {
+			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
+				LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
 
-			} catch (Exception e) {
-				AILog.debug(e + "");
+				try {
+					energySlot.onMouseClicked(new EnergyStack(EnergyItem, 1));
+
+				} catch (Exception e) {
+					AILog.debug(e + "");
+				}
 			}
-		}
+		});
 	}
 
 	@Override
@@ -149,7 +162,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		this.fontRenderer.drawString(I18n.translateToLocal("ME Energy Interface"), 9, 3, 4210752);
 
 		// Drawing Tooltips
-		if (this.Einterface instanceof TileEnergyInterface) {
+		if (this.energyInterface instanceof TileEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
 			drawPower(3, 11, mouseX - 10, mouseY - 10, 16, SOUTH);
 			drawPower(31, 11, mouseX - 10, mouseY - 10, 16, NORTH);
@@ -158,29 +171,39 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 			drawPower(124, 11, mouseX - 10, mouseY - 10, 16, UP);
 			drawPower(150, 11, mouseX - 10, mouseY - 10, 16, DOWN);
 
-		} else if (this.Einterface instanceof PartEnergyInterface) {
+		} else if (this.energyInterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
 
 			if (this.LinkedMetric != WA) {
 				drawPower(80, 13, mouseX - 10, mouseY - 10, 16, null);
 			}
-			this.energySlot.drawWidget();
 		}
+
+		energySlotList.forEach((energySlot) -> energySlot.drawWidget());
 	}
 
 	@Override
 	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
 		// Change widget's energy
-		this.EnergySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
+		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
 
-		this.energySlot = new WidgetEnergySlot(this, 0, 79, 111, true);
+		if (energyInterface instanceof PartEnergyInterface) {
+			this.energySlotList.add(new WidgetEnergySlot(this, 0, 79, 111, true));
+		}else if (energyInterface instanceof TileEnergyInterface){
+			byte id = 0;
 
-		this.EnergySlotList.add(this.energySlot);
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 2, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 30, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 59, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 94, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 123, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id, 149, 111, true));
+		}
 
 		// Add priority button
 		addPriorityButton();
@@ -250,13 +273,13 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 	@Override
 	public ISyncHost getSyncHost() {
-		return Einterface;
+		return energyInterface;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
 		if(host instanceof IEnergyInterface)
-			Einterface = (IEnergyInterface)host;
+			energyInterface = (IEnergyInterface)host;
 	}
 
 	@Override

@@ -16,7 +16,7 @@ public class PacketClientToServerFilter extends AIPacket{
     public LiquidAIEnergy energy;
     public int index;
 
-    public AIPart clientPart;
+    public ISyncHost host;
 
     public PacketClientToServerFilter(){
 
@@ -26,20 +26,22 @@ public class PacketClientToServerFilter extends AIPacket{
         super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
         this.energy = energy;
         this.index = index;
+        this.host = host;
     }
 
     // Decode serialized data
     @Override
     public void fromBytes(ByteBuf buf) {
-        clientPart = readPart(buf);
+        host = readSyncHost(buf);
         energy = readEnergy(buf);
         index = buf.readInt();
     }
 
+
     // Encode data from client to server
     @Override
     public void toBytes(ByteBuf buf) {
-        writePart(buf);
+        writeSyncHost(host, buf);
         writeEnergy(energy, buf);
         buf.writeInt(index);
     }

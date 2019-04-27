@@ -349,8 +349,7 @@ public class PartEnergyInterface
 
     @Nullable
     @Override
-    public <T> T getCapability( @Nonnull Capability<T> capability )
-    {
+    public <T> T getCapability( @Nonnull Capability<T> capability ) {
         return duality.getCapability(capability, INTERNAL);
     }
 
@@ -726,10 +725,6 @@ public class PartEnergyInterface
     @Override
     public void clear() {
 
-    }
-
-    public LiquidAIEnergy getFilter(EnumFacing unknown) {
-        return this.filteredEnergy;
     }
 
     public void setRealContainer(String realContainer) { }

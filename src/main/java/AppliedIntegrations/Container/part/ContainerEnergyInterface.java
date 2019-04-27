@@ -69,7 +69,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
             tile.addListener(this);
 
             // Get upgrade inventory
-            AIGridNodeInventory inventory = (AIGridNodeInventory)tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null /* Internal facing ;) */);
+            AIGridNodeInventory inventory = tile.getUpgradeInventory();
 
             // add slots
             this.addUpgradeSlots(inventory, NUMBER_OF_UPGRADE_SLOTS,
