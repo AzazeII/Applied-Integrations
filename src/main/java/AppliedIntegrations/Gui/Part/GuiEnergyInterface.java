@@ -164,12 +164,12 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		// Drawing Tooltips
 		if (this.energyInterface instanceof TileEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
-			drawPower(3, 11, mouseX - 10, mouseY - 10, 16, SOUTH);
-			drawPower(31, 11, mouseX - 10, mouseY - 10, 16, NORTH);
-			drawPower(60, 11, mouseX - 10, mouseY - 10, 16, WEST);
-			drawPower(95, 11, mouseX - 10, mouseY - 10, 16, EAST);
-			drawPower(124, 11, mouseX - 10, mouseY - 10, 16, UP);
-			drawPower(150, 11, mouseX - 10, mouseY - 10, 16, DOWN);
+			drawPower(35, 11, mouseX - 10, mouseY - 10, 16, SOUTH);
+			drawPower(52, 11, mouseX - 10, mouseY - 10, 16, NORTH);
+			drawPower(70, 11, mouseX - 10, mouseY - 10, 16, WEST);
+			drawPower(88, 11, mouseX - 10, mouseY - 10, 16, EAST);
+			drawPower(106, 11, mouseX - 10, mouseY - 10, 16, UP);
+			drawPower(124, 11, mouseX - 10, mouseY - 10, 16, DOWN);
 
 		} else if (this.energyInterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
@@ -197,14 +197,14 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		}else if (energyInterface instanceof TileEnergyInterface){
 			byte id = 0;
 
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 39, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 55, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++,71, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 87, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 103, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id, 119, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 34, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 52, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++,70, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 88, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 106, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id, 124, 111, true));
 		}
-//sdfkal/
+
 		// Add priority button
 		addPriorityButton();
 	}
