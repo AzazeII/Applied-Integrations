@@ -39,7 +39,7 @@ public class CommonProxy {
 
         if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
             BotaniaLoader.preInit();
-        if(Loader.isModLoaded("embers") && AIConfig.enablEmberFeatures)
+        if(Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures)
             EmberLoader.preInit();
         if(Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures)
             AstralLoader.preInit();

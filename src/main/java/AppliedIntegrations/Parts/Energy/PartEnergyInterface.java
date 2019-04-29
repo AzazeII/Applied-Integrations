@@ -6,7 +6,6 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -399,7 +398,7 @@ public class PartEnergyInterface
              * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
              * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
              */
-            if(AIConfig.enablEmberFeatures) {
+            if(AIConfig.enableEmberFeatures) {
                 if (bar == null) {
                     if (IntegrationsHelper.instance.isLoaded(Ember)) {
                         if (getFacingTile() instanceof TileEntityReceiver) {

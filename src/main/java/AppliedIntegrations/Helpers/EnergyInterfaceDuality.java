@@ -194,7 +194,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
             // FE (RF) Capability
             return (T) this.getEnergyStorage(RF, side);
             // Ember capability
-        }else if(AIConfig.enablEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
+        }else if(AIConfig.enableEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability){
             return (T) this.getEnergyStorage(Ember, side);
             // Joule capability
         }else if(IntegrationsHelper.instance.isLoaded(J) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||
@@ -210,7 +210,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
         // Register FE capability
         if (capability == Capabilities.FORGE_ENERGY) {
             return true;
-        } else if (AIConfig.enablEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
+        } else if (AIConfig.enableEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
             return true;
         } else if (IntegrationsHelper.instance.isLoaded(J)){
             if(capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY ||

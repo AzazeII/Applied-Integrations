@@ -36,7 +36,7 @@ public interface IEnergyInterface extends IEnergyInterfaceDuality, INetworkManip
             return null;
 
         // Create grid
-        IGrid grid = getGridNode().getGrid(); // check grid node
+        IGrid grid = getGridNode().getGrid();
 
         // Create storage grid
         IStorageGrid storage = grid.getCache(IStorageGrid.class);

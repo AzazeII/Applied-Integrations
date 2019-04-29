@@ -392,7 +392,7 @@ public class PartEnergyStorage
 		capabilities.add(CapabilityEnergy.ENERGY);
 
 		// (If loaded -> add to allowed) blocks:
-		if(IntegrationsHelper.instance.isLoaded(Ember) && AIConfig.enablEmberFeatures)
+		if(IntegrationsHelper.instance.isLoaded(Ember) && AIConfig.enableEmberFeatures)
 			capabilities.add(EmberCapabilityProvider.emberCapability);
 		if(IntegrationsHelper.instance.isLoaded(J)) {
 			capabilities.add(Capabilities.ENERGY_STORAGE_CAPABILITY);

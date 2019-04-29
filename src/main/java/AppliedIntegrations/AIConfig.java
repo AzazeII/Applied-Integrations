@@ -1,11 +1,9 @@
 package AppliedIntegrations;
 
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,7 @@ public class AIConfig {
     public static boolean enableWebServer;
     public static boolean enableEnergyFeatures; // #1
     public static boolean enableManaFeatures; // #2
-    public static boolean enablEmberFeatures; // #3
+    public static boolean enableEmberFeatures; // #3
     public static boolean enableStarlightFeatures; // #4
 
     private static final String CATEGORY_TILES = "tile entities";
@@ -120,7 +118,7 @@ public class AIConfig {
                 featuresOrder);
 
         // Ember capability for energy parts and p2p tunnel
-        enablEmberFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", false,
+        enableEmberFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", false,
                 "Default: false; If set to true, then all ember features will be enabled.",
                 featuresOrder);
 

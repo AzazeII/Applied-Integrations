@@ -19,8 +19,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 /**
  * @Author Azazell
  */
-public enum TileEnum
-{
+public enum TileEnum {
     TLBPort( TileLogicBusPort.class, AIConfig.enableLogicBus),
     TLBRib( TileLogicBusRib.class, AIConfig.enableLogicBus),
     TLBCore( TileLogicBusCore.class, AIConfig.enableLogicBus),
@@ -42,8 +41,7 @@ public enum TileEnum
     // tile entities's class
     public Class clazz;
 
-    TileEnum(final Class clazz, boolean enabled)
-    {
+    TileEnum(final Class clazz, boolean enabled) {
         this.clazz = clazz;
         this.enabled = enabled;
     }

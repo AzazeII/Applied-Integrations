@@ -75,7 +75,7 @@ public class ClientProxy extends CommonProxy {
 
         if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
             BotaniaLoader.init();
-        if(Loader.isModLoaded("embers") && AIConfig.enablEmberFeatures)
+        if(Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures)
             EmberLoader.init();
         if(Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures)
             AstralLoader.init();

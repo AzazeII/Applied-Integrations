@@ -43,7 +43,7 @@ public enum ItemEnum {
     ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem"), AIConfig.enableEnergyFeatures),
 
     ITEMP2PStarlight(new ItemPartP2PStarlight("starlightP2PPartItem"), AIConfig.enableStarlightFeatures),
-    ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), AIConfig.enablEmberFeatures),
+    ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), AIConfig.enableEmberFeatures),
 
     // & ------------------------------------MANA------------------------------------ &
     ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem"), AIConfig.enableManaFeatures),
@@ -106,11 +106,6 @@ public enum ItemEnum {
 
     ItemEnum(AIItemRegistrable _item, boolean enabled) {
         this(_item, AppliedIntegrations.AI, enabled);
-    }
-
-    ItemEnum(Item _item, boolean enabled){
-        this.item = _item;
-        this.enabled = enabled;
     }
 
     ItemEnum(AIItemRegistrable _item, CreativeTabs creativeTab, boolean enabled) {

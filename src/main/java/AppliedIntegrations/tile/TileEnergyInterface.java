@@ -49,7 +49,6 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
 public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		INetworkToolAgent, IEnergyInterface, IStorageMonitorable, IInventoryHost {
 
-	private static final boolean DualityMode = true;
 	private Boolean energyStates[] = new Boolean[6];
 
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> RFStorage = new LinkedHashMap<>();
@@ -66,9 +65,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	private byte outputTracker;
 
-	private boolean EUloaded = false;
-
-	private AIGridNodeInventory slotInventory = new AIGridNodeInventory("slot.inventory",9,1,this);
 	private boolean updateRequested;
 
 	public TileEnergyInterface() {
@@ -288,7 +284,19 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	@Override
 	public int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric) {
-		return ((Number)getEnergyStorage(linkedMetric, side).getMaxStored()).intValue();
+		// Check not null
+		if (getEnergyStorage(linkedMetric, side) == null)
+			return 0;
+
+		// Get max energy stored number
+		Number num = (Number)getEnergyStorage(linkedMetric, side).getMaxStored();
+
+		// Check not null
+		if (num == null)
+			return 0;
+
+		// Extract int value
+		return num.intValue();
 	}
 
 	@Override
