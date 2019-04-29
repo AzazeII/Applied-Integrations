@@ -1,7 +1,13 @@
 package AppliedIntegrations.Helpers;
 
 import AppliedIntegrations.AIConfig;
+import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketBarChange;
+import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
+import AppliedIntegrations.Network.Packets.PacketProgressBar;
+import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.api.*;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.grid.EnumCapabilityType;
@@ -12,6 +18,7 @@ import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.capabilities.Capabilities;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
@@ -221,6 +228,41 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
             if(IntegrationsHelper.instance.isLoaded(energy))
                 // Update energy
                 owner.initEnergyStorage(energy, side);
+        }
+    }
+
+
+    public void notifyListenersOfFilterEnergyChange(LiquidAIEnergy energy) {
+        for( ContainerEnergyInterface listener : owner.getListeners()) {
+            if(listener!=null) {
+                NetworkHandler.sendTo(new PacketFilterServerToClient(energy,0, owner), (EntityPlayerMP)listener.player);
+            }
+        }
+    }
+
+    // Synchronize data with all listeners
+    public void notifyListenersOfEnergyBarChange(LiquidAIEnergy energy, AEPartLocation energySide){
+        // Iterate for each container listener of host
+        for(ContainerEnergyInterface listener : owner.getListeners()){
+            // Check not null
+            if(listener!=null) {
+                // Get host tile
+                TileEntity hostTile = owner instanceof PartEnergyInterface ? ((PartEnergyInterface)owner).getHostTile() : (TileEnergyInterface)owner;
+
+                // Check not null
+                if(hostTile != null) {
+                    // Send packet
+                    NetworkHandler.sendTo(new PacketProgressBar(owner, energy, energySide), (EntityPlayerMP) listener.player);
+                }
+            }
+        }
+    }
+
+    public void notifyListenersOfBarFilterChange(LiquidAIEnergy bar){
+        for(ContainerEnergyInterface listener : owner.getListeners()){
+            if(listener!=null) {
+                NetworkHandler.sendTo(new PacketBarChange(bar, owner),(EntityPlayerMP)listener.player);
+            }
         }
     }
 }

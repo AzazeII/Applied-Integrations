@@ -15,6 +15,7 @@ import AppliedIntegrations.Network.Packets.PacketGuiShift;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.TileEnergyInterface;
+import appeng.api.util.AEPartLocation;
 import appeng.client.gui.widgets.GuiTabButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -30,7 +31,7 @@ import java.util.List;
 
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
-import static net.minecraft.util.EnumFacing.*;
+import static appeng.api.util.AEPartLocation.*;
 
 /**
  * @Author Azazell
@@ -55,7 +56,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	private List<String> buttonTooltip = new ArrayList<String>();
 
 	public int id;
-	public LiquidAIEnergy LinkedMetric = RF;
+	public LiquidAIEnergy linkedMetric = RF;
 
 	public int storage;
 
@@ -154,8 +155,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		//binding correct Gui
-		if (LinkedMetric == RF || LinkedMetric == J || LinkedMetric == EU)
-			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + LinkedMetric.getTag() + ".bar.png");
+		if (linkedMetric == RF || linkedMetric == J || linkedMetric == EU)
+			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + linkedMetric.getTag() + ".bar.png");
 		Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
 
 		// Drawing Name
@@ -164,7 +165,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		// Drawing Tooltips
 		if (this.energyInterface instanceof TileEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
-			drawPower(35, 11, mouseX - 10, mouseY - 10, 16, SOUTH);
+			drawPower(35, 11, mouseX - 10, mouseY - 10, 16, AEPartLocation.SOUTH);
 			drawPower(52, 11, mouseX - 10, mouseY - 10, 16, NORTH);
 			drawPower(70, 11, mouseX - 10, mouseY - 10, 16, WEST);
 			drawPower(88, 11, mouseX - 10, mouseY - 10, 16, EAST);
@@ -174,7 +175,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		} else if (this.energyInterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
 
-			if (this.LinkedMetric != WA) {
+			if (this.linkedMetric != WA) {
 				drawPower(80, 13, mouseX - 10, mouseY - 10, 16, null);
 			}
 		}
@@ -209,51 +210,49 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		addPriorityButton();
 	}
 
-	private void drawPower(int pLeft, int pTop, int pMouseX, int pMouseY, int width, EnumFacing side) {
-		try {
-			if (part != null) {
-				if (part.getMaxEnergyStored(null, LinkedMetric) != 0) {
-					int height = this.getStorage(LinkedMetric, side) / (part.getMaxEnergyStored(null, LinkedMetric) / 83);
-					int v = 0, u = v;
-					// Draw Bar
-					boolean hover = drawPowerBar(pLeft, pTop, pMouseX, pMouseY, width, height, v, u);
 
-					if (hover) {
-						String str = String.format(
-								"%s: %,d %s/%,d %s",
-								I18n.translateToLocal("Energy Stored"),
-								this.getStorage(LinkedMetric, null),
-								this.LinkedMetric.getEnergyName(),
-								this.part.getMaxEnergyStored(null, LinkedMetric),
-								this.LinkedMetric.getEnergyName());
-						drawMouseOver(str);
-					}
-				} else {
-					boolean hover = AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
-					if (hover) {
-						String str = "Energy Stored: 0 / ?";
-						drawMouseOver(str);
-					}
-				}
-			} else if (tile != null) {
-				int height = this.getStorage(LinkedMetric, side) / (tile.getStorage().getMaxEnergyStored() / 83);
-				int v = 6, u = v;
+	// Adds tooltip on hover to bar
+	private void addBarTooltip(AEPartLocation side, boolean hover) {
+		if (hover) {
+			String str = String.format(
+					"%s: %,d %s/%,d %s",
+					I18n.translateToLocal("Energy Stored"),
+					this.getStorage(linkedMetric, side),
+					this.linkedMetric.getEnergyName(),
+					this.energyInterface.getMaxEnergyStored(side, linkedMetric),
+					this.linkedMetric.getEnergyName());
+			drawMouseOver(str);
+		}
+	}
+
+	private void drawPower(int pLeft, int pTop, int pMouseX, int pMouseY, int width, AEPartLocation side) {
+		// Height (in pixels) of energy bar
+		int height = this.getStorage(linkedMetric, side) / (energyInterface.getMaxEnergyStored(side, linkedMetric) / 83);
+
+		int v = 0;
+
+		// Draw Bar
+		boolean hover = drawPowerBar(pLeft, pTop, pMouseX, pMouseY, width, height, v, v);
+
+		// Check not null
+		if (energyInterface != null) {
+			// Check if storage at linked metric has storage at all
+			if (energyInterface.getMaxEnergyStored(null, linkedMetric) != 0) {
 				// Draw Bar
-				boolean hover = drawPowerBar(pLeft, pTop, pMouseX, pMouseY, width, height, v, u);
+				addBarTooltip(side, hover);
+			} else {
+				// Mouse over widget or not?
+				hover = AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
 
+				// Check if moues over widget
 				if (hover) {
-					String str = String.format(
-							"%s: %,d %s/%,d %s",
-							"Energy Stored",
-							this.getStorage(LinkedMetric, side),
-							this.LinkedMetric.getEnergyName(),
-							this.tile.getStorage().getMaxEnergyStored(),
-							this.LinkedMetric.getEnergyName());
+					// Write undefined energy tooltip
+					String str = "Energy Stored: 0 / ?";
+
+					// Add tooltip
 					drawMouseOver(str);
 				}
 			}
-		} catch (Exception e) {
-
 		}
 	}
 
@@ -272,11 +271,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		}
 	}
 
-	public int getStorage(LiquidAIEnergy energy, EnumFacing side) {
-		if (this.part != null) {
-			return this.storage;
-		}
-		return 0;
+	public int getStorage(LiquidAIEnergy energy, AEPartLocation side) {
+		return storage;
 	}
 
 	@Override

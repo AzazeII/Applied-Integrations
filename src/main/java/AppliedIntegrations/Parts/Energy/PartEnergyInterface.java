@@ -10,10 +10,7 @@ import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketBarChange;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Network.Packets.PacketProgressBar;
-import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
 import AppliedIntegrations.Parts.*;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
@@ -60,7 +57,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import teamroots.embers.api.power.IEmberCapability;
 import teamroots.embers.block.BlockEmberEmitter;
 import teamroots.embers.tileentity.TileEntityEmitter;
@@ -76,7 +72,6 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 import static appeng.api.parts.PartItemStack.BREAK;
 import static appeng.api.util.AEPartLocation.INTERNAL;
-import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
@@ -99,12 +94,6 @@ public class PartEnergyInterface
         IEnergyInterface, IInventoryHost,
         IEnergyMachine, IPriorityHostExtended,IGridTickable,
         IStorageMonitorable,ICraftingProvider,IPowerChannelState, IEnergySink {
-
-    private static boolean EUloaded = false;
-
-    // Watts
-    private long WattPower = 0;
-
     private int priority;
 
     private int capacity = AIConfig.interfaceMaxStorage;
@@ -123,25 +112,15 @@ public class PartEnergyInterface
     // Interface duality, or interface host
     private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
 
-    // AE storage
-    private double fluixStorage;
-
     // Gui Units
     private boolean redstoneControlled;
     public LiquidAIEnergy bar;
     private boolean updateRequested;
-    private LiquidAIEnergy lastFilteredEnergy;
-
-    public boolean canConnectEnergy(AEPartLocation from) {
-        return from==this.getSide();
-    }
 
     public double IDLE_POWER_DRAIN = 0.5D;
 
-    public GuiEnergyInterface LinkedGui;
-
     //Linked array of containers, that syncing this Machine with server
-    private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
+    private List<ContainerEnergyInterface> linkedListeners = new ArrayList<ContainerEnergyInterface>();
     public LiquidAIEnergy filteredEnergy = null;
 
 
@@ -357,7 +336,7 @@ public class PartEnergyInterface
      *  marks GUI, as gui of THIS machine
      */
     private void initGuiCoordinates(){
-        for( ContainerEnergyInterface listener : this.LinkedListeners){
+        for( ContainerEnergyInterface listener : this.linkedListeners){
             if(listener!=null) {
                 NetworkHandler.sendTo(new PacketCoordinateInit(this),
                         (EntityPlayerMP)listener.player);
@@ -366,48 +345,23 @@ public class PartEnergyInterface
         }
     }
 
-    private void notifyListenersOfFilterEnergyChange() {
-        for( ContainerEnergyInterface listener : this.LinkedListeners) {
-            if(listener!=null) {
-                NetworkHandler.sendTo(new PacketFilterServerToClient(this.filteredEnergy,0, this), (EntityPlayerMP)listener.player);
-            }
-        }
-    }
-
-    // Synchronize data with all listeners
-    private void notifyListenersOfEnergyBarChange(LiquidAIEnergy Energy){
-        for(ContainerEnergyInterface listener : this.LinkedListeners){
-            if(listener!=null) {
-                if(this.getHostTile() != null) {
-                    NetworkHandler.sendTo(new PacketProgressBar(this), (EntityPlayerMP) listener.player);
-                }
-            }
-        }
-    }
-
-    private void notifyListenersOfBarFilterChange(LiquidAIEnergy bar){
-        for(ContainerEnergyInterface listener : this.LinkedListeners){
-            if(listener!=null) {
-                NetworkHandler.sendTo(new PacketBarChange(bar,this),(EntityPlayerMP)listener.player);
-            }
-        }
-    }
     public void removeListener( final ContainerEnergyInterface container )
     {
-        this.LinkedListeners.remove( container );
+        this.linkedListeners.remove( container );
     }
     public void addListener( final ContainerEnergyInterface container )
     {
-        if(!this.LinkedListeners.contains(container)){
-            this.LinkedListeners.add(container);
+        if(!this.linkedListeners.contains(container)){
+            this.linkedListeners.add(container);
         }
     }
     @Override
-    public final void updateFilter( final LiquidAIEnergy energy,final int index)
-    {
+    public final void updateFilter( final LiquidAIEnergy energy,final int index) {
         // Set the filter
         this.filteredEnergy = energy;
-        notifyListenersOfFilterEnergyChange();
+
+        // Send callback packet
+        duality.notifyListenersOfFilterEnergyChange(energy);
     }
     /**
      * Ticking Request:
@@ -419,17 +373,16 @@ public class PartEnergyInterface
     }
 
     @Override
-    public TickRateModulation tickingRequest( final IGridNode node, final int TicksSinceLastCall )
-    {
+    public TickRateModulation tickingRequest( final IGridNode node, final int TicksSinceLastCall ) {
         if(!getHostTile().getWorld().isRemote) {
             if (updateRequested) {
                 // Check if we have gui to update
                 if (Minecraft.getMinecraft().currentScreen instanceof AIBaseGui) {
                     // Init gui coordinate set
-                    this.initGuiCoordinates();
+                    initGuiCoordinates();
 
                     // Force update filtered energy of gui
-                    notifyListenersOfFilterEnergyChange();
+                    duality.notifyListenersOfFilterEnergyChange(filteredEnergy);
                 }
             }
 
@@ -481,26 +434,30 @@ public class PartEnergyInterface
             // Check if energy changed
             energyChangeHandler.onChange(filteredEnergy, (energy) -> {
                 // Sync filtered energy
-                notifyListenersOfFilterEnergyChange();
+                duality.notifyListenersOfFilterEnergyChange(energy);
             });
 
             // Energy Stored with GUI
             int i = 0;
+
+            // Iterate for each energy
             for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
+                // Check not null
                 if (getEnergyStorage(energy, INTERNAL) != null) {
-                    if (this.getEnergyStorage(energy, INTERNAL) != null && ((Number) getEnergyStorage(energy, INTERNAL).getStored()).doubleValue() > 0) {
-                        this.bar = energy;
-                        notifyListenersOfBarFilterChange(this.bar);
+                    // Check if energy storage have any stored energy
+                    if (((Number) getEnergyStorage(energy, INTERNAL).getStored()).doubleValue() > 0) {
+                        bar = energy;
+                        duality.notifyListenersOfBarFilterChange(bar);
                         i += 1;
                     }
                 }
             }
             if (i == 0)
-                this.bar = null;
+                bar = null;
             // Notify container and gui
             if (bar != null)
                 // Bar Filter With Gui
-                this.notifyListenersOfEnergyBarChange(this.bar);
+                duality.notifyListenersOfEnergyBarChange(bar, INTERNAL);
 
             this.saveChanges();
         }
@@ -544,8 +501,8 @@ public class PartEnergyInterface
         return this.duality;
     }
 
-
-    public int getMaxEnergyStored(EnumFacing unknown,@Nullable LiquidAIEnergy linkedMetric) {
+    @Override
+    public int getMaxEnergyStored(AEPartLocation unknown, @Nullable LiquidAIEnergy linkedMetric) {
         if(linkedMetric == RF){
             return this.capacity;
         }
@@ -749,8 +706,8 @@ public class PartEnergyInterface
     }
 
     @Override
-    public LiquidAIEnergy getFilter(int index) {
-        return null;
+    public List<ContainerEnergyInterface> getListeners() {
+        return this.linkedListeners;
     }
 
     @Override

@@ -11,7 +11,6 @@ import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketProgressBar;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.config.Actionable;
@@ -57,14 +56,13 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> EUStorage = new LinkedHashMap<>();
 	private LinkedHashMap<AEPartLocation, JouleInterfaceStorage> JOStorage = new LinkedHashMap<>();
 	private LinkedHashMap<AEPartLocation, EmberInterfaceStorageDuality> EmberStorage = new LinkedHashMap<>();
-
-	private EnergyInterfaceStorage Storage = new EnergyInterfaceStorage(this, capacity, capacity/2);
+	private LinkedHashMap<AEPartLocation, LiquidAIEnergy> barMap = new LinkedHashMap<>();
 
 	private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
 
 	public static int capacity = 100000;
 
-	private List<ContainerEnergyInterface> LinkedListeners = new ArrayList<ContainerEnergyInterface>();
+	private List<ContainerEnergyInterface> linkedListeners = new ArrayList<ContainerEnergyInterface>();
 
 	private byte outputTracker;
 
@@ -92,18 +90,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 		return super.pos.getZ();
 	}
 
-	public EnergyInterfaceStorage getStorage() {
-		return this.Storage;
-	}
-
-	private void notifyListenersOfEnergyBarChange(LiquidAIEnergy Energy, int id, AEPartLocation side){
-		for(ContainerEnergyInterface listener : this.LinkedListeners){
-			if(listener!=null) {
-				NetworkHandler.sendTo(new PacketProgressBar(this), (EntityPlayerMP)listener.player);
-			}
-		}
-	}
-
 	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
 		if(energy == RF){
 			return this.RFStorage.get(side);
@@ -118,8 +104,8 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	}
 
 	public void addListener( final ContainerEnergyInterface container ) {
-		if(!this.LinkedListeners.contains(container)){
-			this.LinkedListeners.add(container);
+		if(!this.linkedListeners.contains(container)){
+			this.linkedListeners.add(container);
 		}
 	}
 
@@ -151,7 +137,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 
 	private void notifyListenersOfFilterEnergyChange() {
-		for( ContainerEnergyInterface listener : this.LinkedListeners) {
+		for( ContainerEnergyInterface listener : this.linkedListeners) {
 			if (listener != null) {
 				// Iterate for each side
 				for (AEPartLocation side : AEPartLocation.values()) {
@@ -166,7 +152,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	private void initGuiCoordinates() {
 		// Iterate for each listener
-		for( ContainerEnergyInterface listener : this.LinkedListeners){
+		for( ContainerEnergyInterface listener : this.linkedListeners){
 			// Check not null
 			if(listener!=null) {
 				// Send packet init
@@ -194,6 +180,40 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 			}
 		}
 
+		// Iterate for each side of part location
+		for (AEPartLocation side : AEPartLocation.values()) {
+			// Place bar counter here, because we have not one, but six bars
+			int barCounter = 0;
+
+			// Iterate for each energy
+			for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
+				// Check if storage for given side and energy not null
+				if (getEnergyStorage(energy, side) != null) {
+					// Check if storage from given side and energy has any stored energy
+					if (((Number) getEnergyStorage(energy, side).getStored()).doubleValue() > 0) {
+						// Put put energy in bar map
+						barMap.put(side, energy);
+
+						// Notify client
+						duality.notifyListenersOfBarFilterChange(barMap.get(side));
+
+						// Add to counter
+						barCounter += 1;
+					}
+				}
+			}
+
+			// Check if bar counter equal to 0
+			if (barCounter == 0)
+				// Put null in this bar map entry
+				barMap.put(side, null);
+
+			// Notify container and gui
+			if (barMap.get(side) != null)
+				// Bar Filter With Gui
+				duality.notifyListenersOfEnergyBarChange(barMap.get(side), side);
+		}
+
 		try {
 			if (getGridNode() == null)
 				return;
@@ -215,10 +235,8 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
-
 		super.writeToNBT(nbt);
 		nbt.setByte("Tracker", outputTracker);
-		nbt.setInteger("Energy", Storage.getEnergyStored());
 		return nbt;
 	}
 
@@ -269,13 +287,18 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine,
 	}
 
 	@Override
+	public int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric) {
+		return ((Number)getEnergyStorage(linkedMetric, side).getMaxStored()).intValue();
+	}
+
+	@Override
 	public TileEntity getFacingTile(EnumFacing side) {
 		return null;
 	}
 
 	@Override
-	public LiquidAIEnergy getFilter(int index) {
-		return null;
+	public List<ContainerEnergyInterface> getListeners() {
+		return linkedListeners;
 	}
 
 	@Override

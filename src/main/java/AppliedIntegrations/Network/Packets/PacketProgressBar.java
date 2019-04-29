@@ -1,7 +1,11 @@
 package AppliedIntegrations.Network.Packets;
 
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.api.IEnergyInterface;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.TileEnergyInterface;
+import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -10,29 +14,32 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketProgressBar extends AIPacket {
 
-    public PartEnergyInterface sender;
+    public IEnergyInterface sender;
+    public LiquidAIEnergy energy;
+    public AEPartLocation energySide;
 
     public PacketProgressBar(){
 
     }
 
-    public PacketProgressBar(PartEnergyInterface sender){
-        super(sender.getX(), sender.getY(), sender.getZ(), sender.getSide().getFacing(), sender.getHostTile().getWorld());
+    public PacketProgressBar(IEnergyInterface sender, LiquidAIEnergy energy, AEPartLocation energySide){
+        super(sender.getPos().getX(), sender.getPos().getY(), sender.getPos().getZ(), sender.getSide().getFacing(), sender.getWorld());
         this.sender = sender;
-    }
-
-    public PacketProgressBar(TileEnergyInterface sender) {
-        super(sender.x(), sender.y(), sender.z(), null, sender.getWorld());
-
+        this.energy = energy;
+        this.energySide = energySide;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
-        sender = (PartEnergyInterface) readPart(buf);
+        sender = (IEnergyInterface) readSyncHost(buf);
+        energy = readEnergy(buf);
+        energySide = AEPartLocation.values()[buf.readByte()];
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-        writePart(buf);
+        writeSyncHost(sender, buf);
+        writeEnergy(energy, buf);
+        buf.writeByte(energySide.ordinal());
     }
 }

@@ -23,8 +23,8 @@ public class HandlerBarChange implements IMessageHandler<PacketBarChange, Packet
             if (gui instanceof GuiEnergyInterface) {
                 GuiEnergyInterface GEI = (GuiEnergyInterface) gui;
                 // Check if we are updating correct GUI
-                if (GEI.getSyncHost().compareTo(message.part, false))
-                    GEI.LinkedMetric = message.energy;
+                if (GEI.getSyncHost().compareTo(message.host, false))
+                    GEI.linkedMetric = message.energy;
             }
         });
         return null;
