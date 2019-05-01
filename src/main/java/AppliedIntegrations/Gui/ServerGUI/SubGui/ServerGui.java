@@ -55,6 +55,7 @@ public class ServerGui extends AIGuiButton {
 
         return tip;
     }
+
     //@Override
     public void drawButton( final Minecraft minecraftInstance, final int x, final int y, int l ) {
         // Full white

@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.render;
 
+import AppliedIntegrations.Client.AITileRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -10,22 +11,13 @@ import static org.lwjgl.opengl.GL11.*;
 /**
  * @Author Azazell
  */
-public class TileMETurretRenderer extends TileEntitySpecialRenderer<TileMETurretFoundation> {
+public class TileMETurretRenderer extends AITileRenderer<TileMETurretFoundation> {
 
     @Override
     public void render(TileMETurretFoundation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        // Save matrix to stack
-        GlStateManager.pushMatrix();
-        // Set color to black
-        GlStateManager.color(0, 0, 0, 1);
-        // Move gl pointer to x, y + 1.5 (one block upper), z
-        GlStateManager.translate(x + 0.5, y + 1.5, z + 0.5);
-        // Disable cull
-        GlStateManager.disableCull();
-        // Disable 2D texturing
-        GlStateManager.disableTexture2D();
-        // Disable auto enlightment
-        GlStateManager.disableLighting();
+        // Pass preparing to super() function
+        prepareMatrix(x, y, z);
+
         // Scale render
         GlStateManager.scale(3, 3, 3);
 

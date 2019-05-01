@@ -88,14 +88,12 @@ public class NetworkGui extends AIGuiButton {
         GL11.glPopMatrix();
     }*/
 
-    public boolean isMouseOverMarker( final int mouseX, final int mouseY)
-    {
+    public boolean isMouseOverMarker( final int mouseX, final int mouseY) {
         return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y+16, this.x+4, 8, 4, mouseX, mouseY, root.getLeft(), root.getTop() );
     }
 
     @Override
-    public boolean isMouseOverButton( final int mouseX, final int mouseY )
-    {
+    public boolean isMouseOverButton( final int mouseX, final int mouseY ) {
         return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y, this.x, 16, 16, mouseX, mouseY, root.getLeft(), root.getTop() );
     }
     public void renderGui(float zoom) {

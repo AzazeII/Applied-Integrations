@@ -8,6 +8,7 @@ import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
@@ -22,6 +23,12 @@ public class BlockServerRib extends AIMultiBlock {
 
     public BlockServerRib(String reg, String unloc) {
         super(reg, unloc);
+    }
+
+    @Override
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        // Make block invisible, and give all render handling to TESR
+        return EnumBlockRenderType.INVISIBLE;
     }
 
     @Override

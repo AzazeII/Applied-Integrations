@@ -17,6 +17,10 @@ import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.Topology.WebServer.WebManager;
+import AppliedIntegrations.tile.Server.Render.ServerRibRenderer;
+import AppliedIntegrations.tile.Server.Render.ServerSecurityRenderer;
+import AppliedIntegrations.tile.Server.TileServerRib;
+import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.MinecraftForge;
@@ -51,12 +55,18 @@ public class ClientProxy extends CommonProxy {
         // Register texture manager to event bus
         FMLCommonHandler.instance().bus().register(new TextureEventManager());
 
-        if(AIConfig.enableBlackHoleStorage) {
+        if (AIConfig.enableMEServer){
             // Register custom renderers
-            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer());
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer());
+            ClientRegistry.bindTileEntitySpecialRenderer(TileServerRib.class, new ServerRibRenderer()); // (1)
+            ClientRegistry.bindTileEntitySpecialRenderer(TileServerSecurity.class, new ServerSecurityRenderer()); // (2)
+        }
+
+        if (AIConfig.enableBlackHoleStorage) {
+            // Register custom renderers
+            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer()); // (1)
+            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer()); // (2)
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer()); // (3)
+            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer()); // (4)
         }
     }
 

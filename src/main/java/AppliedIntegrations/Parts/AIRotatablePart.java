@@ -101,8 +101,7 @@ public abstract class AIRotatablePart
      * Reads the rotation from the stream.
      */
     @Override
-    public boolean readFromStream( final ByteBuf stream ) throws IOException
-    {
+    public boolean readFromStream( final ByteBuf stream ) throws IOException {
         boolean redraw = false;
 
         // Call super

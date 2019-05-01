@@ -149,14 +149,12 @@ public class ServerPacketTracer extends AIBaseGui {
         SettingList.add(this.craft = new GuiToggleButton(xCoord+32,yCoord+2,11 * 16 + 2, 12 * 16 + 2,SecurityPermissions.CRAFT.getUnlocalizedName(), SecurityPermissions.CRAFT.getUnlocalizedTip()));
 
         for(int i=0;i<3;i++){
-
             SettingList.add(this.item[i] = new GuiServerButton(xCoord+i*16,yCoord+20,Items,this));
             SettingList.add(this.fluid[i] = new GuiServerButton(xCoord+i*16,yCoord+38,Fluid,this));
             SettingList.add(this.gas[i] = new GuiServerButton(xCoord+i*16,yCoord+56,Gas,this));
             SettingList.add(this.essentia[i] = new GuiServerButton(xCoord+i*16,yCoord+72,Essentia,this));
             SettingList.add(this.energy[i] = new GuiServerButton(xCoord+i*16,yCoord+90,Energy,this));
             SettingList.add(this.mana[i] = new GuiServerButton(xCoord+i*16,yCoord+108,Mana,this));
-
         }
 
         SettingList.add(this.energyGrid = new GuiServerButton(xCoord+16, yCoord+126,EnergyGrid,this));

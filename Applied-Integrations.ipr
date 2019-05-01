@@ -8,6 +8,13 @@
     </bytecodeTargetLevel>
   </component>
   <component name="Encoding" addBOMForNewFiles="with NO BOM" />
+  <component name="EntryPointsManager">
+    <list size="3">
+      <item index="0" class="java.lang.String" itemvalue="net.minecraftforge.fml.common.Mod" />
+      <item index="1" class="java.lang.String" itemvalue="net.minecraftforge.fml.common.Mod.EventHandler" />
+      <item index="2" class="java.lang.String" itemvalue="net.minecraftforge.fml.common.eventhandler.SubscribeEvent" />
+    </list>
+  </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
@@ -19,6 +26,7 @@
             <option value="$PROJECT_DIR$" />
           </set>
         </option>
+        <option name="useAutoImport" value="true" />
         <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
@@ -162,6 +170,18 @@
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="AI-Container" type="docker-deploy" factoryName="docker-image" server-name="IJDockerDebug">
+      <deployment type="docker-image">
+        <settings>
+          <option name="command" value="" />
+          <option name="containerName" value="applied-integrations" />
+          <option name="entrypoint" value="" />
+          <option name="imageTag" value="applied-integrations" />
+          <option name="commandLineOptions" value="--rm -ti -e DISPLAY=$DISPLAY_MAC" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration default="false" name="Client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="GradleStart" />
       <module name="com.azazell.Applied-Integrations.main" />

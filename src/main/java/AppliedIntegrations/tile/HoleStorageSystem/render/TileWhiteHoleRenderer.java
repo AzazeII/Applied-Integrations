@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.render;
 
+import AppliedIntegrations.Client.AITileRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
@@ -10,7 +11,7 @@ import java.awt.*;
 /**
  * @Author Azazell
  */
-public class TileWhiteHoleRenderer extends TileEntitySpecialRenderer<TileWhiteHole> {
+public class TileWhiteHoleRenderer extends AITileRenderer<TileWhiteHole> {
 
     private Sphere sphere = new Sphere();
 
@@ -27,18 +28,8 @@ public class TileWhiteHoleRenderer extends TileEntitySpecialRenderer<TileWhiteHo
         // Add cosine of world time (always <= 1) to radius
         radius += Math.cos(te.getWorld().getWorldTime()) * 0.01;
 
-        // Save matrix to stack
-        GlStateManager.pushMatrix();
-        // Set color to black
-        GlStateManager.color(getColor().getRed(), getColor().getGreen(), getColor().getBlue(), 1);
-        // Move gl pointer to x,y,z
-        GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
-        // Disable cull
-        GlStateManager.disableCull();
-        // Disable 2D texturing
-        GlStateManager.disableTexture2D();
-        // Disable auto enlightment
-        GlStateManager.disableLighting();
+        // Pass preparing to super() function
+        prepareMatrix(x, y, z);
         // Change drawing scale
         GlStateManager.scale(radius, radius, radius);
 

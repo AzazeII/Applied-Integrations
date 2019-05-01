@@ -8,6 +8,7 @@ import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.util.IOrientable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 
@@ -17,7 +18,7 @@ import java.util.Vector;
 /**
  * @Author Azazell
  */
-public class TileServerSecurity extends AIMultiBlockTile {
+public class TileServerSecurity extends AIMultiBlockTile implements IOrientable {
 
     public EnumFacing fw;
     public Vector<ContainerServerPacketTracer> Listeners = new Vector<>();
@@ -99,4 +100,23 @@ public class TileServerSecurity extends AIMultiBlockTile {
     }
 
 
+    @Override
+    public boolean canBeRotated() {
+        return true;
+    }
+
+    @Override
+    public EnumFacing getForward() {
+        return null;
+    }
+
+    @Override
+    public EnumFacing getUp() {
+        return null;
+    }
+
+    @Override
+    public void setOrientation(EnumFacing Forward, EnumFacing Up) {
+
+    }
 }

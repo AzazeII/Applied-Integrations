@@ -146,31 +146,53 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     }
     @Override
     public void tryConstruct(EntityPlayer p) {
+        // Check if multi block isn't formed yet
         if(!isFormed) {
             // For 4d humans =)
             blocksToPlace = BLOCKS_IN_STRUCTURE - 1;
-            int count = 0;
-            List<IAIMultiBlock> toUpdate = new ArrayList<>();
-            for (int i = 0; i < AIPatterns.ME_SERVER.length; i++) {
-                if (!this.world.isRemote) {
-                    int x, y, z;
-                    Block block;
 
-                    x = this.pos.getX() + AIPatterns.ME_SERVER[blocksToPlace - 1].x;
-                    y = this.pos.getY() + AIPatterns.ME_SERVER[blocksToPlace - 1].y;
-                    z = this.pos.getZ() + AIPatterns.ME_SERVER[blocksToPlace - 1].z;
+            // Count of blocks matched the pattern
+            int count = 0;
+
+            // Create list of blocks to update later
+            List<IAIMultiBlock> toUpdate = new ArrayList<>();
+
+            // Iterate for i >= pattern.len
+            for (int i = 0; i < AIPatterns.ME_SERVER.length; i++) {
+                // Call on server
+                if (!this.world.isRemote) {
+                    // Create block and it's coordinates
+                    int x, y, z; // (1)
+                    Block block; // (2)
+
+                    // Add x, y and z of block in patter to our location
+                    x = this.pos.getX() + AIPatterns.ME_SERVER[blocksToPlace - 1].x; // (1)
+                    y = this.pos.getY() + AIPatterns.ME_SERVER[blocksToPlace - 1].y; // (2)
+                    z = this.pos.getZ() + AIPatterns.ME_SERVER[blocksToPlace - 1].z; // (3)
+
+                    // Get block
                     block = AIPatterns.ME_SERVER[blocksToPlace - 1].b;
+
+                    // Get block in world, and check if it's equal to block in pattern
                     if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == block) {
+                        // Add to count
                         count++;
+
+                        // Add to list
                         toUpdate.add((IAIMultiBlock) world.getTileEntity(new BlockPos(x, y, z)));
+
+                        // Remove one block to place
                         blocksToPlace--;
                     }
                 }
             }
+
             int counter = 0;
             for (int i = 0; i < AIPatterns.ME_SERVER.length; i++)
                 if (AIPatterns.ME_SERVER[i] != null)
                     counter++;
+
+
             int BlocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
             if (counter == count) {
                 for (int i = 0; i < AIPatterns.ME_SERVER_FILL.length; i++) {
@@ -215,7 +237,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         }
     }
 
-    public int getNextNetID(){
+    int getNextNetID(){
         return this.AVAILABLE_ID++;
     }
 
