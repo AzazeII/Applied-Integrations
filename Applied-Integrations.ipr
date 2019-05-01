@@ -7,7 +7,6 @@
       <module name="com.azazell.Applied-Integrations.test" target="1.8" />
     </bytecodeTargetLevel>
   </component>
-  <component name="Encoding" addBOMForNewFiles="with NO BOM" />
   <component name="EntryPointsManager">
     <list size="3">
       <item index="0" class="java.lang.String" itemvalue="net.minecraftforge.fml.common.Mod" />
@@ -19,6 +18,7 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
+        <option name="disableWrapperSourceDistributionNotification" value="true" />
         <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
@@ -160,7 +160,7 @@
   </component>
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/com.azazell.Applied-Integrations.iml" filepath="$PROJECT_DIR$/com.azazell.Applied-Integrations.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Applied-Integrations.iml" filepath="$PROJECT_DIR$/Applied-Integrations.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.Applied-Integrations.api.iml" filepath="$PROJECT_DIR$/com.azazell.Applied-Integrations.api.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.Applied-Integrations.main.iml" filepath="$PROJECT_DIR$/com.azazell.Applied-Integrations.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/com.azazell.Applied-Integrations.test.iml" filepath="$PROJECT_DIR$/com.azazell.Applied-Integrations.test.iml" />
@@ -170,6 +170,21 @@
     <output url="file://$PROJECT_DIR$/out" />
   </component>
   <component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="AI-Build" type="docker-deploy" factoryName="dockerfile" server-name="IJDockerDebug">
+      <deployment type="dockerfile">
+        <settings>
+          <option name="buildCliOptions" value="" />
+          <option name="buildOnly" value="true" />
+          <option name="command" value="" />
+          <option name="containerName" value="" />
+          <option name="entrypoint" value="" />
+          <option name="imageTag" value="applied-integrations" />
+          <option name="commandLineOptions" value="" />
+          <option name="sourceFilePath" value="../X Docker AI/dockerfile" />
+        </settings>
+      </deployment>
+      <method v="2" />
+    </configuration>
     <configuration default="false" name="AI-Container" type="docker-deploy" factoryName="docker-image" server-name="IJDockerDebug">
       <deployment type="docker-image">
         <settings>
@@ -180,7 +195,9 @@
           <option name="commandLineOptions" value="--rm -ti -e DISPLAY=$DISPLAY_MAC" />
         </settings>
       </deployment>
-      <method v="2" />
+      <method v="2">
+        <option name="RunConfigurationTask" enabled="true" run_configuration_name="AI-Build" run_configuration_type="docker-deploy" />
+      </method>
     </configuration>
     <configuration default="false" name="Client" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="GradleStart" />
