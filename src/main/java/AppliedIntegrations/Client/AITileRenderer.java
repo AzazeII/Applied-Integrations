@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 
 public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
-    public void prepareMatrix(double x, double y, double z) {
+    protected void prepareMatrix(double x, double y, double z) {
         // Save matrix to stack
         GlStateManager.pushMatrix();
         // Set color to black
@@ -21,7 +21,7 @@ public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRende
         GlStateManager.disableLighting();
     }
 
-    public void pushMatrix(double x, double y, double z) {
+    protected void pushMatrix(double x, double y, double z) {
         // Re-enable all states of Opengl:
         // Cull
         GlStateManager.enableCull();

@@ -20,14 +20,11 @@
 !src
 
 # Include docker file
-dockerfile
+!dockerfile
 
 # Include git files
 !.gitmodules
 !.gitignore
 
 # Include git directory
-!.github/
-
-# Ignore these guys:
-.DS_Store
+!.github/s
