@@ -22,15 +22,40 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
     private static final ResourceLocation offSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off.png"); // (2)
     private static final ResourceLocation offDirectionalSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off_a.png"); // (2)
 
+
+    private ResourceLocation bindDirectionalTexture(TileServerRib te) {
+        // Check not null
+        if (te.getGridNode() == null)
+            return offDirectionalSide;
+        // Check if node is not active
+        else if (!te.getGridNode().isActive())
+            return offDirectionalSide;
+
+        // Return active directional side
+        return directionalSide;
+    }
+
+    private ResourceLocation bindNondirectionaTexture(TileServerRib te) {
+        // Check not null
+        if (te.getGridNode() == null)
+            return offSide;
+            // Check if node is not active
+        else if (!te.getGridNode().isActive())
+            return offSide;
+
+        // Return active non-directional side
+        return side;
+    }
+
     private void bindTileTexture(TileServerRib te) {
         // Check if tile has master
-        if (te.hasMaster()){
+        if (te.hasMaster() && !te.isCorner()){
             // -- Directional Branch -- //
-
+            Minecraft.getMinecraft().renderEngine.bindTexture(bindDirectionalTexture(te));
             // -- Directional Branch -- //
         } else {
             // -- Non-directional Branch -- //
-
+            Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionaTexture(te));
             // -- Non-directional Branch -- //
         }
     }

@@ -2,6 +2,7 @@ package AppliedIntegrations.tile;
 
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.api.Multiblocks.BlockData;
+import AppliedIntegrations.api.Multiblocks.BlockType;
 
 /**
  * @Author Azazell
@@ -82,15 +83,15 @@ public class AIPatterns {
             // Final Layer:
             // 0,0,0
             //Corners
-            new BlockData(-2,-2,-2, BlocksEnum.BSRib.b),
-            new BlockData(-2,-2,2, BlocksEnum.BSRib.b),
-            new BlockData(-2,2,2, BlocksEnum.BSRib.b),
-            new BlockData(2,2,2, BlocksEnum.BSRib.b),
+            new BlockData(-2,-2,-2, BlocksEnum.BSRib.b, BlockType.Corner),
+            new BlockData(-2,-2,2, BlocksEnum.BSRib.b, BlockType.Corner),
+            new BlockData(-2,2,2, BlocksEnum.BSRib.b, BlockType.Corner),
+            new BlockData(2,2,2, BlocksEnum.BSRib.b, BlockType.Corner),
 
-            new BlockData(-2,2,-2, BlocksEnum.BSRib.b),
-            new BlockData(2,2,-2, BlocksEnum.BSRib.b),
-            new BlockData(2,-2,-2, BlocksEnum.BSRib.b),
-            new BlockData(2,-2,2, BlocksEnum.BSRib.b),
+            new BlockData(-2,2,-2, BlocksEnum.BSRib.b, BlockType.Corner),
+            new BlockData(2,2,-2, BlocksEnum.BSRib.b, BlockType.Corner),
+            new BlockData(2,-2,-2, BlocksEnum.BSRib.b, BlockType.Corner),
+            new BlockData(2,-2,2, BlocksEnum.BSRib.b, BlockType.Corner),
             //Ribs
             new BlockData(2,2,0, BlocksEnum.BSRib.b),
             new BlockData(2,-2,0, BlocksEnum.BSRib.b),

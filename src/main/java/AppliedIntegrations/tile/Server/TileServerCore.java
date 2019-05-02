@@ -1,6 +1,7 @@
 package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
 import AppliedIntegrations.tile.AIMultiBlockTile;
@@ -53,7 +54,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     private int AVAILABLE_ID = RESERVED_MASTER_ID+1;
 
     // list of blocks in multiblock
-    public Vector<IAIMultiBlock> Slaves = new Vector<>();
+    public Vector<IAIMultiBlock> slaves = new Vector<>();
 
     public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1,this){
         @Override
@@ -94,6 +95,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     // Wait for updating
     public int blocksToPlace = 0;
     private boolean updateRequested;
+    private LinkedHashMap<IAIMultiBlock, BlockType> archMap = new LinkedHashMap<>();
 
     public void requestUpdate(){
 
@@ -108,7 +110,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                 ServerNetworkMap.put(MainNetwork,RESERVED_MASTER_ID);
             }
 
-            for (IAIMultiBlock slave : Slaves) {
+            for (IAIMultiBlock slave : slaves) {
 
             }
             if(updateRequested){
@@ -178,8 +180,14 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                         // Add to count
                         count++;
 
+                        // Get tile
+                        IAIMultiBlock multiBlock = (IAIMultiBlock) world.getTileEntity(new BlockPos(x, y, z));
+
                         // Add to list
-                        toUpdate.add((IAIMultiBlock) world.getTileEntity(new BlockPos(x, y, z)));
+                        toUpdate.add(multiBlock);
+
+                        // Add to architecture map
+                        archMap.put(multiBlock, AIPatterns.ME_SERVER[blocksToPlace - 1].type);
 
                         // Remove one block to place
                         blocksToPlace--;
@@ -187,45 +195,79 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                 }
             }
 
+            // Count blocks in pattern
             int counter = 0;
+
+            // Iterate for length of pattern
             for (int i = 0; i < AIPatterns.ME_SERVER.length; i++)
+                // Check not null
                 if (AIPatterns.ME_SERVER[i] != null)
+                    // Add to counter
                     counter++;
 
 
-            int BlocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
+            int blocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
             if (counter == count) {
                 for (int i = 0; i < AIPatterns.ME_SERVER_FILL.length; i++) {
-                    int x, y, z, meta;
-                    Block block = AIPatterns.ME_SERVER_FILL[BlocksToPlace].b;
+                    int x, y, z;
+                    Block block = AIPatterns.ME_SERVER_FILL[blocksToPlace].b;
 
-                    x = this.pos.getX() + AIPatterns.ME_SERVER_FILL[BlocksToPlace].x;
-                    y = this.pos.getY() + AIPatterns.ME_SERVER_FILL[BlocksToPlace].y;
-                    z = this.pos.getZ() + AIPatterns.ME_SERVER_FILL[BlocksToPlace].z;
-                    meta = AIPatterns.ME_SERVER_FILL[BlocksToPlace].meta;
+                    x = this.pos.getX() + AIPatterns.ME_SERVER_FILL[blocksToPlace].x;
+                    y = this.pos.getY() + AIPatterns.ME_SERVER_FILL[blocksToPlace].y;
+                    z = this.pos.getZ() + AIPatterns.ME_SERVER_FILL[blocksToPlace].z;
 
                     world.setBlockToAir(new BlockPos(x, y, z));
                     world.setBlockState(new BlockPos(x, y, z), block.getDefaultState());
                     toUpdate.add((TileServerRib) world.getTileEntity(new BlockPos(x,y,z)));
-                    BlocksToPlace--;
+                    blocksToPlace--;
                 }
-                for (IAIMultiBlock iaiMultiBlock : toUpdate) {
-                    iaiMultiBlock.setMaster(this);
-                    if (iaiMultiBlock instanceof TileServerPort) {
-                        TileServerPort port = (TileServerPort) iaiMultiBlock;
+
+                // Iterate for each block to update
+                for (IAIMultiBlock slave : toUpdate) {
+                    // Set slave master
+                    slave.setMaster(this);
+
+                    // Check for instance of port
+                    if (slave instanceof TileServerPort) {
+                        // Get port
+                        TileServerPort port = (TileServerPort) slave;
+                        // Create node
                         port.createAENode();
-                    } else if (iaiMultiBlock instanceof TileServerRib) {
-                        TileServerRib rib = (TileServerRib) iaiMultiBlock;
+
+                    // Check for instance of rib
+                    } else if (slave instanceof TileServerRib) {
+                        // Get rib
+                        TileServerRib rib = (TileServerRib) slave;
+
+                        // Create node
                         rib.createAENode();
+
+                        // Check if type of rib in map is corner
+                        if (archMap.get(rib) == BlockType.Corner)
+                            // Notify rib
+                            rib.isCorner = true;
+
                         //rib.getWorld().setBlockState(rib.getPos(), rib.getWorld().getBlockState().withProperty());
                     }
-                    Slaves.add(iaiMultiBlock);
+
+                    // Add to salve list
+                    slaves.add(slave);
                 }
+
+                // Iterate for each side
                 for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){
+                    // get tile with double offset from this side
                     TileEntity tile = world.getTileEntity(new BlockPos(getPos().getX()+side.xOffset*2,getPos().getY()+side.yOffset*2,getPos().getZ()+side.zOffset*2));
+
+                    // Check for instanceof port
                     if(tile instanceof TileServerPort){
+                        // Get port
                         TileServerPort port = (TileServerPort)tile;
+
+                        // Set proper direction
                         port.setDir(side.getFacing());
+
+                        // Update grid of port
                         port.updateGrid();
                     }
                 }
@@ -242,7 +284,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     }
 
     public void destoryMultiBlock(){
-        for(IAIMultiBlock tile : Slaves){
+        for(IAIMultiBlock tile : slaves){
             if(tile instanceof TileServerRib){
                 TileServerRib Rib = (TileServerRib)tile;
                 Rib.changeAlt(false);
@@ -389,7 +431,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     }
 
     public void addSlave(AIMultiBlockTile slave) {
-        Slaves.add(slave);
+        slaves.add(slave);
     }
 
     public void updateGUI(TileServerSecurity sender) {

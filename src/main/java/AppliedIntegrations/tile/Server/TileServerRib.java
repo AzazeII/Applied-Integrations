@@ -18,6 +18,7 @@ import java.util.EnumSet;
 public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, ITickable {
 
     public boolean isBlockNotified;
+    public boolean isCorner = false;
 
     @Override
     public void update() {
@@ -47,4 +48,7 @@ public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, IT
     }
 
 
+    public boolean isCorner() {
+        return isCorner;
+    }
 }
