@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Handlers;
 
-import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Network.Packets.PacketMEServer;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.client.Minecraft;
@@ -20,8 +20,8 @@ public class HandlerMEServer implements IMessageHandler<PacketMEServer, PacketME
     @Override
     public PacketMEServer onMessage(PacketMEServer message, MessageContext ctx) {
         Gui g = Minecraft.getMinecraft().currentScreen;
-        if(g instanceof ServerPacketTracer){
-            ServerPacketTracer SPT = (ServerPacketTracer)g;
+        if(g instanceof GuiServerTerminal){
+            GuiServerTerminal SPT = (GuiServerTerminal)g;
 
             if (message.networkData.dir != AEPartLocation.INTERNAL)
                 SPT.addNetwork(message.networkData);

@@ -182,7 +182,7 @@ public class Utils {
     }
 
 
-    private static AITile getTileByParams(BlockPos pos, World worldObj) {
+    public static AITile getTileByParams(BlockPos pos, World worldObj) {
         World world = getClientOrServerWorld(worldObj);
 
         // Check if tile instance of AIpart, depending on it return null or part

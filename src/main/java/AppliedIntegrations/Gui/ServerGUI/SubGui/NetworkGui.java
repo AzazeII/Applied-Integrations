@@ -4,7 +4,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
-import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import appeng.api.config.SecurityPermissions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.EnumFacing;
@@ -19,13 +19,13 @@ import java.util.List;
  */
 public class NetworkGui extends AIGuiButton {
 
-    private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/Network.png");
-    private ResourceLocation lightOff = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/NetworkAdapter_Off.png");
-    private ResourceLocation lightOn = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/NetworkAdapter_On.png");
+    private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/network.png");
+    private ResourceLocation lightOff = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/network_adapter_off.png");
+    private ResourceLocation lightOn = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/network_adapter_on.png");
 
     public int LinkedServer;
     public EnumFacing dir;
-    public ServerPacketTracer root;
+    public GuiServerTerminal root;
 
     public boolean isLinked;
     public float zoom;
@@ -37,7 +37,7 @@ public class NetworkGui extends AIGuiButton {
      */
     public LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions = new LinkedHashMap<>();
 
-    public NetworkGui(int posX,int posY,ServerPacketTracer rootGUI,int ID, EnumFacing side, int linkedTo) {
+    public NetworkGui(int posX, int posY, GuiServerTerminal rootGUI, int ID, EnumFacing side, int linkedTo) {
         super(ID, posX,posY,null);
 
         this.dir = side;

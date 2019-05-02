@@ -76,9 +76,13 @@ public abstract class AIBaseGui
     protected void drawGuiContainerForegroundLayer( final int mouseX, final int mouseY ) {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
+        // Check not null
+        if (priorityButton == null)
+            return;
+
         // Add tooltip to priority button
         // Check if mouse over priority button
-        if(priorityButton.isMouseOver()){
+        if (priorityButton.isMouseOver()){
             // Split messages using regex "\n"
             tooltip.addAll(Arrays.asList(priorityButton.getMessage().split("\n")));
         }

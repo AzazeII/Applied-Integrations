@@ -6,7 +6,7 @@ import net.minecraft.world.World;
 
 /**
  * @Author Azazell
- * @Usage This packet needed to send data from any slave of MEServer to me server packet tracer gui.
+ * @Usage This packet needed to send data from any slave of MEServer to ME server terminal gui.
  */
 public class PacketMEServer extends AIPacket {
 
@@ -21,6 +21,7 @@ public class PacketMEServer extends AIPacket {
         super(x,y,z,null,world);
         this.networkData = networkData;
     }
+
     @Override
     public void fromBytes(ByteBuf buf) {
 

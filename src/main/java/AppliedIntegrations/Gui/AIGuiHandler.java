@@ -1,6 +1,8 @@
 package AppliedIntegrations.Gui;
 
+import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerAIPriority;
@@ -18,6 +20,8 @@ import AppliedIntegrations.Parts.Energy.*;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
+import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerSecurity;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -27,8 +31,7 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 
 import javax.annotation.Nullable;
 
-import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
-import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiTerminalPart;
+import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.*;
 
 /**
  * @Author Azazell
@@ -40,7 +43,7 @@ public class AIGuiHandler implements IGuiHandler {
         GuiStoragePart,
         GuiServerStorage,
         GuiTerminalPart,
-        GuiTerminalSecurity,
+        GuiServerTerminal,
         GuiLogicBus,
         GuiAIPriority,
         GuiIOPart
@@ -152,6 +155,10 @@ public class AIGuiHandler implements IGuiHandler {
             IPriorityHostExtended host = (IPriorityHostExtended) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
 
             return new ContainerAIPriority(player.inventory, host);
+        }else if(gui == GuiServerTerminal) {
+            TileServerSecurity terminal = (TileServerSecurity) Utils.getTileByParams(new BlockPos(x,y,z), world);
+
+            return new ContainerServerTerminal((TileServerCore)terminal.getMaster(), player);
         }
 
         return null;
@@ -192,6 +199,10 @@ public class AIGuiHandler implements IGuiHandler {
             IPriorityHostExtended host = (IPriorityHostExtended) Utils.getPartByParams(new BlockPos(x,y,z), side.getFacing(), world);
 
             return new GuiPriorityAI(player.inventory, host);
+        }else if(gui == GuiServerTerminal) {
+            TileServerSecurity terminal = (TileServerSecurity) Utils.getTileByParams(new BlockPos(x,y,z), world);
+
+            return new GuiServerTerminal((ContainerServerTerminal)getServerGuiElement(ID, player, world, x, y, z), (TileServerCore)terminal.getMaster(), player);
         }
 
         return null;

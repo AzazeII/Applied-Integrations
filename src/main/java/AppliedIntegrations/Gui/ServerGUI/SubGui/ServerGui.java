@@ -1,35 +1,30 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
-import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Vector;
 
 /**
  * @Author Azazell
  */
 public class ServerGui extends AIGuiButton {
 
-    public NetworkGui[] LinkedNetworks = new NetworkGui[6];
-    private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/Server/Server.png");
+    public NetworkGui[] linkedNetworks = new NetworkGui[6];
+    private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server.png");
 
     private boolean renderOverlay;
     private float zoom;
 
-    public ServerPacketTracer rootGui;
+    public GuiServerTerminal rootGui;
     public boolean isMainServer;
 
-    public ServerGui(final int ID, int pX, int pY, boolean option, ServerPacketTracer rootGUI)
+    public ServerGui(final int ID, int pX, int pY, boolean option, GuiServerTerminal rootGUI)
     {
         super(ID,pX,pY,null);
         this.isMainServer = option;
@@ -44,7 +39,7 @@ public class ServerGui extends AIGuiButton {
     public List<String> getTip(){
 
         int counter = 0;
-        for(NetworkGui g : LinkedNetworks){
+        for(NetworkGui g : linkedNetworks){
             if(g != null)
                 counter+=1;
         }

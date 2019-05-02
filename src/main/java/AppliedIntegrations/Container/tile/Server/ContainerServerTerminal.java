@@ -11,11 +11,11 @@ import javax.annotation.Nonnull;
 /**
  * @Author Azazell
  */
-public class ContainerServerPacketTracer extends AIContainer {
+public class ContainerServerTerminal extends AIContainer {
 
     public TileServerCore tile;
 
-    public ContainerServerPacketTracer(TileServerCore instance, EntityPlayer player) {
+    public ContainerServerTerminal(TileServerCore instance, EntityPlayer player) {
         super(player);
     }
 

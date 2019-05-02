@@ -1,9 +1,9 @@
 package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.Blocks.MEServer.BlockServerSecurity;
-import AppliedIntegrations.Container.tile.Server.ContainerServerPacketTracer;
+import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.tile.AIMultiBlockTile;
-import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
@@ -12,18 +12,15 @@ import appeng.api.util.IOrientable;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 
+import javax.annotation.Nonnull;
 import java.util.EnumSet;
-import java.util.Vector;
 
 /**
  * @Author Azazell
  */
 public class TileServerSecurity extends AIMultiBlockTile implements IOrientable {
 
-    public EnumFacing fw;
-    public Vector<ContainerServerPacketTracer> Listeners = new Vector<>();
-
-
+    private EnumFacing fw;
 
     @Override
     public void update() {
@@ -51,15 +48,17 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
         }
 
     }
+
     @Override
     public Object getServerGuiElement( final EntityPlayer player ) {
-        return new ContainerServerPacketTracer((TileServerCore)getMaster(),player);
+        return new ContainerServerTerminal((TileServerCore)getMaster(),player);
     }
+
     @Override
-    public Object getClientGuiElement( final EntityPlayer player )
-    {
-        return new ServerPacketTracer((ContainerServerPacketTracer)this.getServerGuiElement(player),(TileServerCore)getMaster(),player);
+    public Object getClientGuiElement( final EntityPlayer player ) {
+        return new GuiServerTerminal((ContainerServerTerminal)this.getServerGuiElement(player),(TileServerCore)getMaster(),player);
     }
+
     @Override
     public void createAENode() {
         if (!world.isRemote) {
@@ -68,10 +67,14 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
                 gridNode.updateState();
         }
     }
+
+    @Nonnull
     @Override
     public EnumSet<GridFlags> getFlags() {
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
     }
+
+    @Nonnull
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
         // TODO Auto-generated method stub
@@ -98,7 +101,6 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
     public void notifyBlock(){
 
     }
-
 
     @Override
     public boolean canBeRotated() {

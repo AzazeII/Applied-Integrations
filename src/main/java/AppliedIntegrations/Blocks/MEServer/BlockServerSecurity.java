@@ -1,7 +1,7 @@
 package AppliedIntegrations.Blocks.MEServer;
 
-import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraft.block.ITileEntityProvider;
@@ -13,6 +13,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
@@ -41,7 +43,7 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
         super.onBlockActivated(world,pos,state, p, hand, facing, hitX, hitY, hitZ);
         if(!world.isRemote) {
             if (!p.isSneaking()) {
-                p.openGui(AppliedIntegrations.instance, 8, world, pos.getX(), pos.getY(),pos.getZ());
+                AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerTerminal, p, INTERNAL, pos);
 
                 if(world.getTileEntity(pos)!=null) {
                     TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(pos);

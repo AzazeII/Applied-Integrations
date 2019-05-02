@@ -10,7 +10,7 @@ import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
 import AppliedIntegrations.Gui.ServerGUI.NetworkData;
 import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
-import AppliedIntegrations.Gui.ServerGUI.ServerPacketTracer;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -115,8 +115,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             }
             if(updateRequested){
                 Gui g = Minecraft.getMinecraft().currentScreen;
-                if(g instanceof ServerPacketTracer){
-                    ServerPacketTracer SPT = (ServerPacketTracer)g;
+                if(g instanceof GuiServerTerminal){
+                    GuiServerTerminal SPT = (GuiServerTerminal)g;
                     SPT.mInstance = this;
 
                     updateRequested = false;

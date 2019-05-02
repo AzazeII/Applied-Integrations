@@ -21,9 +21,9 @@ public class GuiServerButton extends GuiToggleButton {
     public boolean isActive;
     public ButtonAction action;
 
-    private ServerPacketTracer rootGui;
+    private GuiServerTerminal rootGui;
 
-    public GuiServerButton(int x, int y, NetworkPermissions type, ServerPacketTracer root) {
+    public GuiServerButton(int x, int y, NetworkPermissions type, GuiServerTerminal root) {
         super(x, y, 0, 0, "", "");
         this.type = type;
         rootGui = root;
