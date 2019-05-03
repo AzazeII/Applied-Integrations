@@ -17,7 +17,7 @@ public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRende
         GlStateManager.disableCull();
         // Disable 2D texturing
         GlStateManager.disableTexture2D();
-        // Disable auto enlightment
+        // Disable light
         GlStateManager.disableLighting();
     }
 

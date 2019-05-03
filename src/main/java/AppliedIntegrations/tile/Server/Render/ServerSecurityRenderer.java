@@ -38,7 +38,7 @@ public class ServerSecurityRenderer extends AITileRenderer<TileServerSecurity> {
             return;
         }
 
-        // Bind on texture
+        // Bind "on" texture
         bindTexture(top);
     }
 
