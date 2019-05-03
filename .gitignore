@@ -27,4 +27,4 @@
 !.gitignore
 
 # Include git directory
-!.github/s
+!.github/

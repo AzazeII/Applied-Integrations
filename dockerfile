@@ -2,7 +2,7 @@
 # This file is used to test mod in dockerized container space
 # If you don't want to use dockerized space to run this mod, then just ignore this file
 
-FROM ubuntu:18.04
+FROM debian
 
 #-- PRE LOAD --#
 # Prepare apt
@@ -22,11 +22,8 @@ RUN apt-get -y install unzip
 RUN apt-get -y install git-core
 #-- PRE LOAD --#
 
-# Prepare repository
-RUN git clone https://github.com/AzazeII/Applied-Integrations.git
+# Copy repository
+COPY . AI
 
-# Change directory
-WORKDIR Applied-Integrations
-
-# Install gradle wrapper and dependencies
-RUN ./gradlew dependencies
+# Select directory
+WORKDIR AI
