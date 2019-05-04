@@ -12,7 +12,7 @@ import AppliedIntegrations.Gui.ServerGUI.NetworkData;
 import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketMEServer;
+import AppliedIntegrations.Network.Packets.Server.PacketMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.IMaster;
 import appeng.api.AEApi;
@@ -222,9 +222,10 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     public void destoryMultiBlock(){
         for(IAIMultiBlock tile : slaves){
             if(tile instanceof TileServerRib){
-                TileServerRib Rib = (TileServerRib)tile;
-                Rib.changeAlt(false);
+                TileServerRib rib = (TileServerRib)tile;
+                rib.changeAlt(false);
             }
+
             if(tile instanceof TileServerPort){
                 TileServerPort port = (TileServerPort)tile;
             }

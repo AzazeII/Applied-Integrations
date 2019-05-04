@@ -5,6 +5,11 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
+/**
+ * @Author Azazell
+ * @Side Client -> Server
+ * @Usage used to change priority value on server
+ */
 public class PacketPriorityChange extends AIPacket {
 
     public IPriorityHostExtended host;

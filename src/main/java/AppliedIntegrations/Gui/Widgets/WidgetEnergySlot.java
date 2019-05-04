@@ -5,7 +5,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketClientToServerFilter;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketClientToServerFilter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

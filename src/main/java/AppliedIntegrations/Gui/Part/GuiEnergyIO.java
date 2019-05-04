@@ -10,7 +10,7 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
-import AppliedIntegrations.Network.Packets.PacketSyncReturn;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketSyncReturn;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 import AppliedIntegrations.Parts.Energy.PartEnergyImport;

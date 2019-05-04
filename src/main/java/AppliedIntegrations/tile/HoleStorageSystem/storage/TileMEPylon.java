@@ -10,7 +10,7 @@ import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHand
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketSingularitySync;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;

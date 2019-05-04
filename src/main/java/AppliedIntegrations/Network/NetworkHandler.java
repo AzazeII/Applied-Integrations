@@ -2,8 +2,20 @@ package AppliedIntegrations.Network;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Network.Handlers.*;
+import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerMassChange;
+import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerSingularitySync;
+import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerVectorSync;
+import AppliedIntegrations.Network.Handlers.PartGUI.*;
+import AppliedIntegrations.Network.Handlers.Server.HandlerMEServer;
+import AppliedIntegrations.Network.Handlers.Server.HandlerRibSync;
 import AppliedIntegrations.Network.Packets.*;
 
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
+import AppliedIntegrations.Network.Packets.PartGUI.*;
+import AppliedIntegrations.Network.Packets.Server.PacketMEServer;
+import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -41,6 +53,8 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerTerminalUpdate.class, PacketTerminalUpdate.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerPriorityChange.class, PacketPriorityChange.class, packetId++, Side.CLIENT);
+
+        Handler.registerMessage(HandlerRibSync.class, PacketRibSync.class, packetId++, Side.CLIENT);
     }
 
     public static final void registerServerPackets(){

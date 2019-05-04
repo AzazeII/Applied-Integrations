@@ -12,7 +12,7 @@ import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketSyncReturn;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketSyncReturn;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;

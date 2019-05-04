@@ -42,7 +42,5 @@ public class TileSingularityRenderer extends AITileRenderer<TileBlackHole> {
 
         // Re-enable all states of Opengl:
         pushMatrix(x, y, z);
-
-        // My first renderer done! :)
     }
 }

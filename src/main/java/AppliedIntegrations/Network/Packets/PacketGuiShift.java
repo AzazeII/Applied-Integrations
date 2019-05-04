@@ -7,6 +7,11 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * @Author Azazell
+ * @Side Client -> Server
+ * @Usage Send this packet to change current gui
+ */
 public class PacketGuiShift extends AIPacket {
     public EntityPlayer player;
     public AIGuiHandler.GuiEnum gui;

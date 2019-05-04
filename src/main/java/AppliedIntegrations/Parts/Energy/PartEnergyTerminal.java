@@ -5,7 +5,7 @@ import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketTerminalUpdate;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketTerminalUpdate;
 import AppliedIntegrations.Parts.AIRotatablePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;

@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 
 /**
  * @Author Azazell
- *
+ * @Side Server -> Client
  * @Usage Send this packet, whenever you want to mark gui as "Gui of THIS machine", ex:
  * you want to send data to PartEnergyStorage gui, then you need to mark gui as gui of that host, to mark gui just send this packet.
  */

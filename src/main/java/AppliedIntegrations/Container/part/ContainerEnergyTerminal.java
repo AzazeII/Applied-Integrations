@@ -9,7 +9,7 @@ import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketTerminalUpdate;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketTerminalUpdate;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;

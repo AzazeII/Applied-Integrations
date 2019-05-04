@@ -10,14 +10,13 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.LinkedHashMap;
 
 import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
 import static net.minecraft.util.EnumFacing.*;
-import static net.minecraft.util.EnumFacing.Axis.*;
+import static net.minecraft.util.EnumFacing.Axis.Y;
+import static net.minecraft.util.EnumFacing.Axis.Z;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
@@ -50,22 +49,16 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
     };
 
     private ResourceLocation bindDirectionalTexture(TileServerRib te) {
-        // Check not null
-        if (te.getGridNode() == null)
-            return offDirectionalSide;
         // Check if node is not active
-        else if (!te.getGridNode().isActive())
+        if (!te.isActive)
             return offDirectionalSide;
         // Return active directional side
         return directionalSide;
     }
 
     private ResourceLocation bindNondirectionalTexture(TileServerRib te) {
-        // Check not null
-        if (te.getGridNode() == null)
-            return offSide;
-            // Check if node is not active
-        else if (!te.getGridNode().isActive())
+        // Check if node is not active
+        if (!te.isActive)
             return offSide;
         // Return active non-directional side
         return side;

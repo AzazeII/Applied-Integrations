@@ -3,7 +3,7 @@ package AppliedIntegrations.tile;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Network.Packets.PacketFilterServerToClient;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.*;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;

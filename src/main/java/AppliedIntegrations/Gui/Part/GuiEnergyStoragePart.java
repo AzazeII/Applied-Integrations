@@ -10,7 +10,7 @@ import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketAccessModeClientToServer;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketAccessModeClientToServer;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.AccessRestriction;

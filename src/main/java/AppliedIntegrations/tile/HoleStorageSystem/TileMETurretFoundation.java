@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile.HoleStorageSystem;
 
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketVectorSync;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.tile.AITile;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
