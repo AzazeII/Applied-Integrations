@@ -13,10 +13,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import org.lwjgl.opengl.GL11;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
 import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
 import static net.minecraft.util.EnumFacing.*;
+import static net.minecraft.util.EnumFacing.Axis.Y;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
@@ -36,10 +37,17 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
     };
 
     // Get tessellator instance
-    private Tessellator tessellator = Tessellator.getInstance();
+    private static Tessellator tessellator = Tessellator.getInstance();
 
     // Get buffered builder
-    private BufferBuilder builder = tessellator.getBuffer();
+    private static BufferBuilder builder = tessellator.getBuffer();
+
+    private static float[][] defaultUV = {
+            {1, 1},
+            {1, 0},
+            {0, 0},
+            {0, 1}
+    };
 
 
     private ResourceLocation bindDirectionalTexture(TileServerRib te) {
@@ -53,7 +61,7 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
         return directionalSide;
     }
 
-    private ResourceLocation bindNondirectionaTexture(TileServerRib te) {
+    private ResourceLocation bindNondirectionalTexture(TileServerRib te) {
         // Check not null
         if (te.getGridNode() == null)
             return offSide;
@@ -81,11 +89,11 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
                     break;
                 } else {
                     // Make rib non-directional
-                    Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionaTexture(te));
+                    Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionalTexture(te));
                 }
             } else {
                 // Make rib non-directional
-                Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionaTexture(te));
+                Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionalTexture(te));
             }
         }
     }
@@ -122,15 +130,58 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
 
 
     private void setAmbient(TileServerRib te) {
-        // Get combined light near block
-        int light = te.getWorld().getCombinedLight (te.getPos(), 0);
-
-        // Get UV light mapping
-        int lightU = light % 65536; // (1) U, left part from division by 65536
-        int lightV = light / 65536; // (2) V, actual division by 65536
-
         // Change light mapping to match current position of tile
-        OpenGlHelper.setLightmapTextureCoords (OpenGlHelper.lightmapTexUnit, (float) lightU, (float) lightV);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 210, 210);
+    }
+
+    private float[][] caesarShift(float[][] uvMap) {
+        // Derange array. Move element at n position to n+1 position
+        // {0,1},{2,3} -> {2,3},{0,1}
+        // Specially for UV map it will rotate UV face, if starting UV face was:
+        // A -> a B -> b C -> c D -> d
+        // Then shifted will be:
+        // A -> d B -> a C -> c D -> a
+        // Create copy of UV map
+        float[][] copy = uvMap.clone();
+
+        // Iterate until i < length
+        for (int i = 0; i < uvMap.length; i++){
+            // Avoid index out of bound exception
+            // Check if i = length - 1
+            if ( i == uvMap.length - 1) {
+                // Make first element equal to last
+                copy[0] = uvMap[uvMap.length - 1];
+            } else {
+                // Make i+1 element equal to i element
+                copy[i + 1] = uvMap[i];
+            }
+        }
+
+        return copy;
+    }
+
+    private float[][] translateAxisToUV(TileServerRib te, EnumFacing side) {
+        // Get tile line axis
+        Axis axis = tileAxisMap.get(te);
+
+        // Check not null
+        if (axis == null)
+            // Return basic UV state
+            return defaultUV;
+
+        // Switch for axis
+        switch (axis) {
+            case X:
+            case Y:
+            case Z:
+                // Check if side is on axis Y
+                if (side.getAxis() == Y)
+                    // Double shift default UV¡¡
+                    return caesarShift(defaultUV);
+
+        }
+
+        return defaultUV;
     }
 
     @Override
@@ -150,78 +201,53 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
         // Bind side texture 4 next 6 quads
         bindTileTexture(te);
 
-        // Quad #1 (x - static)
+        // Quad #1 (x - static) EAST
         drawQuadWithUV(new float[][] {
                 {0.5F, -0.5F, 0.5F},
                 {0.5F, 0.5F, 0.5F},
                 {0.5F, 0.5F, -0.5F},
                 {0.5F, -0.5F, -0.5F},
-        }, new float[][] {
-                {1, 1},
-                {1, 0},
-                {0, 0},
-                {0, 1}
-        });
-        // Quad #2 (x - static)
+        }, translateAxisToUV(te, EAST));
+
+        // Quad #2 (-x - static) WEST
         drawQuadWithUV(new float[][] {
                 {-0.5F, -0.5F, 0.5F},
                 {-0.5F, 0.5F, 0.5F},
                 {-0.5F, 0.5F, -0.5F},
                 {-0.5F, -0.5F, -0.5F},
-        }, new float[][] {
-                {1, 1},
-                {1, 0},
-                {0, 0},
-                {0, 1}
-        });
-        // Quad #3 (y - static)
+        }, translateAxisToUV(te, WEST));
+
+        // Quad #3 (y - static) UP
         drawQuadWithUV(new float[][] {
                 {0.5F, 0.5F, -0.5F},
                 {0.5F, 0.5F, 0.5F},
                 {-0.5F, 0.5F, 0.5F},
                 {-0.5F, 0.5F, -0.5F},
-        }, new float[][] {
-                {1, 1},
-                {1, 0},
-                {0, 0},
-                {0, 1}
-        });
-        // Quad #4 (y - static)
+        }, translateAxisToUV(te, UP));
+
+        // Quad #4 (-y - static) DOWN
         drawQuadWithUV(new float[][] {
                 {0.5F, -0.5F, -0.5F},
                 {0.5F, -0.5F, 0.5F},
                 {-0.5F, -0.5F, 0.5F},
                 {-0.5F, -0.5F, -0.5F},
-        }, new float[][] {
-                {1, 1},
-                {1, 0},
-                {0, 0},
-                {0, 1}
-        });
-        // Quad #5 (z - static)
+        }, translateAxisToUV(te, DOWN));
+
+        // Quad #5 (z - static) SOUTH
         drawQuadWithUV(new float[][] {
                 {0.5F, -0.5F, 0.5F},
                 {0.5F, 0.5F, 0.5F},
                 {-0.5F, 0.5F, 0.5F},
                 {-0.5F, -0.5F, 0.5F},
-        }, new float[][] {
-                {1, 1},
-                {1, 0},
-                {0, 0},
-                {0, 1}
-        });
-        // Quad #6 (z - static)
+        }, translateAxisToUV(te, SOUTH));
+
+        // Quad #6 (-z - static) NORTH
         drawQuadWithUV(new float[][] {
                 {0.5F, -0.5F, -0.5F},
                 {0.5F, 0.5F, -0.5F},
                 {-0.5F, 0.5F, -0.5F},
                 {-0.5F, -0.5F, -0.5F},
-        }, new float[][] {
-                {1, 1},
-                {1, 0},
-                {0, 0},
-                {0, 1}
-        });
+        }, translateAxisToUV(te, NORTH));
 
         pushMatrix(x, y, z);
     }
