@@ -4,17 +4,13 @@ import AppliedIntegrations.Blocks.AIMultiBlock;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerRib;
 import appeng.util.Platform;
-import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-
-import java.util.List;
 
 /**
  * @Author Azazell
@@ -33,23 +29,27 @@ public class BlockServerRib extends AIMultiBlock {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
+
+        // Check if item held is wrench
+        if (Platform.isWrench(p, p.getHeldItem(hand), pos))
+            return false;
+
+        // Check if player isn't sneaking
         if(!p.isSneaking()) {
             TileServerRib rib = (TileServerRib) world.getTileEntity(pos);
-            if (rib.hasMaster() && !world.isRemote) {
+            if (rib != null && rib.hasMaster() && !world.isRemote) {
                 try {
-                    ((TileServerCore)rib.getMaster()).getWorld().getBlockState(((TileServerCore)rib.getMaster()).getPos()).getBlock().onBlockActivated(world, pos,
+                    ((TileServerCore) rib.getMaster()).getWorld().getBlockState(((TileServerCore) rib.getMaster()).getPos()).getBlock().onBlockActivated(world, pos,
                             state, p, EnumHand.MAIN_HAND, facing, hitX, hitY, hitZ);
-                }catch(Exception e){
+                } catch (Exception ignored) {
+
                 }
 
                 return true;
             }
-        }else{
-            final List<ItemStack> list = Lists.newArrayList( appeng.util.Platform.getBlockDrops(world,new BlockPos(pos)) );
-            Platform.spawnDrops( world, pos,list);
-            world.setBlockToAir(pos);
-            return true;
         }
+
         return false;
     }
 

@@ -17,7 +17,7 @@ import java.util.*;
 
 import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
 import static net.minecraft.util.EnumFacing.*;
-import static net.minecraft.util.EnumFacing.Axis.Y;
+import static net.minecraft.util.EnumFacing.Axis.*;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
@@ -48,7 +48,6 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
             {0, 0},
             {0, 1}
     };
-
 
     private ResourceLocation bindDirectionalTexture(TileServerRib te) {
         // Check not null
@@ -169,17 +168,15 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
             // Return basic UV state
             return defaultUV;
 
-        // Switch for axis
-        switch (axis) {
-            case X:
-            case Y:
-            case Z:
-                // Check if side is on axis Y
-                if (side.getAxis() == Y)
-                    // Double shift default UV¡¡
-                    return caesarShift(defaultUV);
-
-        }
+        // Check if axis is Y
+        if (axis == Y)
+            // Shift default UV
+            return caesarShift(defaultUV);
+        else if (axis == Z)
+            // Check if side is placed on axis Y
+            if (side.getAxis() == Y)
+                // Shift default UV
+                return caesarShift(defaultUV);
 
         return defaultUV;
     }
