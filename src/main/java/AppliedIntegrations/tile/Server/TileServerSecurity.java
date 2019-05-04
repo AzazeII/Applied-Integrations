@@ -94,7 +94,7 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
         }
         if(hasMaster()){
             ((TileServerCore)getMaster()).slaves.remove(this);
-            master.MainNetwork = null;
+            master.mainNetwork = null;
         }
     }
 

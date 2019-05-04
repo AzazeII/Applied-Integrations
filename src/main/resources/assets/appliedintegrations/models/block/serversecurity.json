@@ -1,6 +1,41 @@
 {
-  "parent": "block/cube_all",
   "textures": {
-    "all": "appliedintegrations:blocks/MESecuritySide"
-  }
+    "sides": "appliedintegrations:blocks/me_server_security_side",
+    "bottom": "appliedintegrations:blocks/me_server_security_bottom",
+    "top": "appliedintegrations:blocks/me_server_security_top_off"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        16,
+        16
+      ],
+      "faces": {
+        "down": {
+          "texture": "#sides"
+        },
+        "up": {
+          "texture": "#sides"
+        },
+        "north": {
+          "texture": "#sides"
+        },
+        "east": {
+          "texture": "#sides"
+        },
+        "south": {
+          "texture": "#sides"
+        },
+        "west": {
+          "texture": "#bottom"
+        }
+      }
+    }
+  ]
 }

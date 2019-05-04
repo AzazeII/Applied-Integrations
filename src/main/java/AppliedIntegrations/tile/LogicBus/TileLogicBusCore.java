@@ -1,6 +1,6 @@
 package AppliedIntegrations.tile.LogicBus;
 
-import AppliedIntegrations.api.Multiblocks.BlockData;
+import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.tile.AITile;
@@ -13,16 +13,15 @@ import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.me.helpers.MachineSource;
 import appeng.util.item.AEItemStack;
-import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author Azazell
@@ -84,36 +83,24 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
             Vector<TileLogicBusRib> corners = new Vector<>();
 
             // Count all slaves
-            int count = 0;
-            // Iterate over logic bus pattern
-            for (int i = 0; i < AIPatterns.ME_LOGIC.length; i++) {
-                // Get pattern data
-                BlockData data = AIPatterns.ME_LOGIC[i];
+            AtomicInteger count = new AtomicInteger();
 
-                // Get block
-                Block block = world.getBlockState(new BlockPos(pos.getX() + data.x,
-                        pos.getY() + data.y,
-                        pos.getZ() + data.z)).getBlock();
+            MultiBlockUtils.fillListWithPattern(AIPatterns.ME_LOGIC, this, (data) -> {
+                // Increment count
+                count.getAndIncrement();
 
-                // check if block is correctly placed
-                if (block == data.b) {
-                    // Increase slave count
-                    count++;
-                    // Add slave candidate
-                    slaveCandidates.add((TileLogicBusSlave) world.getTileEntity(new BlockPos(pos.getX() + data.x,
-                            pos.getY() + data.y,
-                            pos.getZ() + data.z)));
+                // Add tile to candidate list
+                slaveCandidates.add( (TileLogicBusSlave)world.getTileEntity( pos.add(data.getPos())) );
 
-                    if(data.type == BlockType.Corner){
-                        corners.add((TileLogicBusRib) world.getTileEntity(new BlockPos(pos.getX() + data.x,
-                                pos.getY() + data.y,
-                                pos.getZ() + data.z)));
-                    }
-                }
-            }
+                // Check if block is corner
+                if (data.type == BlockType.Corner)
+                    // Add to corner list
+                    corners.add( (TileLogicBusRib) world.getTileEntity( pos.add(data.getPos())) );
+            });
+
 
             // Check if count is equal to pattern's block count
-            if (count == AIPatterns.ME_LOGIC.length) {
+            if (count.get() == AIPatterns.ME_LOGIC.length) {
 
                 // Count of ribs in layer two of structure ( should be 4)
                 int ribCounter = 0;
@@ -304,3 +291,33 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
         return this.gridNode;
     }
 }
+
+/* line 87:
+// Iterate over logic bus pattern
+// Iterate for i < len
+for (int i = 0; i < AIPatterns.ME_LOGIC.length; i++) {
+    // Get pattern data
+    BlockData data = AIPatterns.ME_LOGIC[i];
+
+    // Get block
+    Block block = world.getBlockState(new BlockPos(pos.getX() + data.x,
+            pos.getY() + data.y,
+            pos.getZ() + data.z)).getBlock();
+
+    // check if block is correctly placed
+    if (block == data.b) {
+        // Increase slave count
+        count++;
+        // Add slave candidate
+        slaveCandidates.add((TileLogicBusSlave) world.getTileEntity(new BlockPos(pos.getX() + data.x,
+                pos.getY() + data.y,
+                pos.getZ() + data.z)));
+
+        if(data.type == BlockType.Corner){
+            corners.add((TileLogicBusRib) world.getTileEntity(new BlockPos(pos.getX() + data.x,
+                    pos.getY() + data.y,
+                    pos.getZ() + data.z)));
+        }
+    }
+}
+*/

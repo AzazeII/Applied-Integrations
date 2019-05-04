@@ -38,7 +38,7 @@ public class TileServerPort  extends AIMultiBlockTile {
             TileServerCore core = (TileServerCore)getMaster();
 
             if(Network.getNodes().size() > 1 && !core.portNetworks.containsValue(Network)) {
-                if(Network != core.MainNetwork) {
+                if(Network != core.mainNetwork) {
                     core.portNetworks.put(side, Network);
                     core.ServerNetworkMap.put(Network, core.getNextNetID());
                 }

@@ -1,6 +1,7 @@
 package AppliedIntegrations.api.Multiblocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * @Author Azazell
@@ -28,5 +29,9 @@ public class BlockData {
     {
         this(x,y,z,b);
         this.meta = meta;
+    }
+
+    public BlockPos getPos() {
+        return new BlockPos(x, y, z);
     }
 }
