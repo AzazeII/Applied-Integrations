@@ -35,7 +35,6 @@ public class NetworkGui extends SubServerGui {
 
     public int linkedServerID;
     public EnumFacing dir;
-    public GuiServerTerminal root;
 
     public boolean isLinked;
     public float zoom;
@@ -48,11 +47,10 @@ public class NetworkGui extends SubServerGui {
     public LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions = new LinkedHashMap<>();
 
     public NetworkGui(int posX, int posY, GuiServerTerminal rootGUI, int ID, EnumFacing side, int linkedTo) {
-        super(ID, posX,posY,null);
+        super(ID, rootGUI, posX, posY,null);
 
         this.dir = side;
         this.linkedServerID = linkedTo;
-        this.root = rootGUI;
     }
 
     private void drawLine(ServerGui server) {
@@ -69,7 +67,7 @@ public class NetworkGui extends SubServerGui {
         builder.begin(GL_LINES, POSITION_TEX);
 
         // Draw straight line
-        builder.pos(server.x, server.y, 0).endVertex();
+        builder.pos(463 - server.x, 227 - server.y, 0).endVertex();
         builder.pos(this.x  , this.y  , 0).endVertex();
 
         // End drawing
@@ -89,14 +87,14 @@ public class NetworkGui extends SubServerGui {
         // Isolate changes from outer render
         GL11.glPushMatrix();
 
+        // Pass call to super-class function
+        renderOverlay(renderOverlay);
+
         // Bind our texture
         Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
         // Draw basic rect
         drawTexturedModalRect(x, y, 0, 0, 16,16);
-
-        // Pass call to super-class function
-        renderOverlay(renderOverlay);
 
         if(!isLinked) {
             // Bind texture with off marker
@@ -124,6 +122,7 @@ public class NetworkGui extends SubServerGui {
     public boolean isMouseOverButton( final int mouseX, final int mouseY ) {
         return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y, this.x, 16, 16, mouseX, mouseY, root.getLeft(), root.getTop() );
     }
+
     public void renderGui(float zoom) {
         this.zoom = zoom;
 

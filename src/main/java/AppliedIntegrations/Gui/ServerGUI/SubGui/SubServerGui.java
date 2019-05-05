@@ -1,6 +1,8 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
+import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
@@ -10,8 +12,11 @@ import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION
 import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 public abstract class SubServerGui extends AIGuiButton {
-    public SubServerGui(int ID, int xPosition, int yPosition, String text) {
+    protected final GuiServerTerminal root;
+
+    public SubServerGui(int ID, GuiServerTerminal rootGUI, int xPosition, int yPosition, String text) {
         super(ID, xPosition, yPosition, text);
+        this.root = rootGUI;
     }
 
     protected void renderOverlay(boolean renderOverlay) {
@@ -49,5 +54,10 @@ public abstract class SubServerGui extends AIGuiButton {
             GL11.glEnable(GL11.GL_TEXTURE_2D); // (1)
             GL11.glDisable(GL11.GL_BLEND); // (2)
         }
+    }
+
+    @Override
+    public boolean isMouseOverButton( final int mouseX, final int mouseY ) {
+        return AIGuiHelper.INSTANCE.isPointInGuiRegion( this.y, this.x, 16, 16, mouseX, mouseY, root.getLeft(), root.getTop() );
     }
 }

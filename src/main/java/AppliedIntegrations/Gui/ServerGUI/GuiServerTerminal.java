@@ -9,6 +9,7 @@ import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkGui;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.PortDirections;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.ServerGui;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
@@ -38,11 +39,11 @@ public class GuiServerTerminal extends AIBaseGui {
     private static final int GUI_WIDTH = 256;
     private static final int GUI_HEIGH = 246;
 
-    private static final int MASTER_Y = 163;
     private static final int MASTER_X = 274;
+    private static final int MASTER_Y = 163;
 
-    private final int MASTER_CENTER_Y = 113;
-    private final int MASTER_CENTER_X = 79;
+    private final int MASTER_CENTER_X = 113;
+    private final int MASTER_CENTER_Y = 79;
 
     // Offset from vector of port direction
     private static final int PORT_DIRECTION_OFFSET = 55;
@@ -122,6 +123,9 @@ public class GuiServerTerminal extends AIBaseGui {
 
         this.guiLeft = GUI_X;
         this.guiTop = GUI_Y;
+
+        for (AEPartLocation location : AEPartLocation.SIDE_LOCATIONS)
+            addNetwork(new NetworkData(false, location, 0));
     }
 
     @Override
@@ -130,6 +134,15 @@ public class GuiServerTerminal extends AIBaseGui {
 
         // Iterate for each network at each port
         for(NetworkGui g : serverPortMap.values()){
+            // Check if mouse is over this widget
+            if(g.isMouseOverButton(mX,mY)){
+                // Draw text
+                drawHoveringText(g.getTip(),mX,mY,fontRenderer);
+            }
+        }
+
+        // Iterate for each network at each port
+        for(ServerGui g : serverMap.values()){
             // Check if mouse is over this widget
             if(g.isMouseOverButton(mX,mY)){
                 // Draw text
@@ -153,32 +166,11 @@ public class GuiServerTerminal extends AIBaseGui {
                     for (NetworkGui network : server.linkedNetworks.values()) {
                         // Check not null
                         if (network != null) {
-
-                            // Get port direction from facing
-                            PortDirections portDirections = PortDirections.fromFacing(network.dir);
-
-                            // Add x and y to network
-                            network.x = (int) (MASTER_CENTER_X + portDirections.offsetX * PORT_DIRECTION_OFFSET * 1.5); // (1)
-                            network.y = MASTER_CENTER_Y + portDirections.offsetY * PORT_DIRECTION_OFFSET; // (2)
-
-                            // Make network linked, remove later
-                            network.isLinked = true;
-
-                            // Check if network is linked
-                            if (network.isLinked) {
-                                // Isolate changes from outer world
-                                GL11.glPushMatrix();
-
-                                // Isolate changes from outer world
-                                GL11.glPopMatrix();
-                            }
-
                             // Render network
                             network.renderGui(1F);
                         }
                     }
                 }
-
                 // Render server
                 server.renderGui(0.3F);
             }
@@ -198,7 +190,7 @@ public class GuiServerTerminal extends AIBaseGui {
             // Create new network gui
             // X: Center of master network_X + direction * offset..
             // Y: Center of master network_Y + direction * offset..
-            NetworkGui networkGui = new NetworkGui((int)(MASTER_CENTER_X + portDirections.offsetX* PORT_DIRECTION_OFFSET *1.5),
+            NetworkGui networkGui = new NetworkGui((int)(MASTER_CENTER_X + portDirections.offsetX* PORT_DIRECTION_OFFSET * 1.5),
                     MASTER_CENTER_Y +portDirections.offsetY * PORT_DIRECTION_OFFSET,this, id++, data.dir.getFacing(), data.id);
 
             // Make network linked to server

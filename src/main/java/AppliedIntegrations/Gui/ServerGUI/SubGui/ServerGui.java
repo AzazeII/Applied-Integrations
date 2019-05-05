@@ -31,14 +31,11 @@ public class ServerGui extends SubServerGui {
     private boolean renderOverlay;
     private float zoom;
 
-    public GuiServerTerminal rootGui;
     public boolean isMainServer;
 
-    public ServerGui(final int ID, int pX, int pY, boolean option, GuiServerTerminal rootGUI)
-    {
-        super(ID,pX,pY,null);
+    public ServerGui(final int ID, int pX, int pY, boolean option, GuiServerTerminal rootGUI) {
+        super(ID, rootGUI, pX, pY,null);
         this.isMainServer = option;
-        this.rootGui = rootGUI;
     }
 
     @Override
@@ -47,15 +44,20 @@ public class ServerGui extends SubServerGui {
     }
 
     public List<String> getTip(){
+        // Create empty list
         List<String> tip = new ArrayList<>();
+
+        // Fill list with tittle
         tip.add("ME Main Server");
+
+        // Fill list with actual information
         tip.add("Connected: "+ linkedNetworks.values().size() +" / 6 Users");
 
         return tip;
     }
 
-    //@Override
-    private void drawButton(final Minecraft minecraftInstance, final int x, final int y, int l) {
+    @Override
+    public void drawButton(final Minecraft minecraftInstance, final int x, final int y, float r) {
         // Full white
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
@@ -77,6 +79,7 @@ public class ServerGui extends SubServerGui {
         // Pop matrix. Isolate changes from outer gui world
         GL11.glPopMatrix();
     }
+
     public void renderGui(float zoom) {
         // Change zoom
         this.zoom = zoom;
