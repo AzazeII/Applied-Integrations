@@ -2,6 +2,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 import AppliedIntegrations.Gui.ServerGUI.NetworkData;
 import AppliedIntegrations.Network.Packets.AIPacket;
+import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.world.World;
 
@@ -26,11 +27,17 @@ public class PacketMEServer extends AIPacket {
 
     @Override
     public void fromBytes(ByteBuf buf) {
-
+        networkData = new NetworkData(
+                buf.readBoolean(),
+                AEPartLocation.values()[buf.readByte()],
+                buf.readInt()
+        );
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
-
+        buf.writeBoolean(networkData.isServerNetwork);
+        buf.writeByte(networkData.dir.ordinal());
+        buf.writeInt(networkData.id);
     }
 }

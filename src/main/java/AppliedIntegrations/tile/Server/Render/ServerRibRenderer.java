@@ -126,32 +126,6 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 210, 210);
     }
 
-    private float[][] caesarShift(float[][] uvMap) {
-        // Derange array. Move element at n position to n+1 position
-        // {0,1},{2,3} -> {2,3},{0,1}
-        // Specially for UV map it will rotate UV face, if starting UV face was:
-        // A -> a B -> b C -> c D -> d
-        // Then shifted will be:
-        // A -> d B -> a C -> c D -> a
-        // Create copy of UV map
-        float[][] copy = uvMap.clone();
-
-        // Iterate until i < length
-        for (int i = 0; i < uvMap.length; i++){
-            // Avoid index out of bound exception
-            // Check if i = length - 1
-            if ( i == uvMap.length - 1) {
-                // Make first element equal to last
-                copy[0] = uvMap[uvMap.length - 1];
-            } else {
-                // Make i+1 element equal to i element
-                copy[i + 1] = uvMap[i];
-            }
-        }
-
-        return copy;
-    }
-
     private float[][] translateAxisToUV(TileServerRib te, EnumFacing side) {
         // Get tile line axis
         Axis axis = tileAxisMap.get(te);

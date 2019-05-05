@@ -136,7 +136,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
     @Override
     public void readFromNBT(NBTTagCompound compound) {
        super.readFromNBT(compound);
-       //setMaster(getMaster().readMaster(compound));
+       //addMaster(getMaster().readMaster(compound));
     }
 
     @Override

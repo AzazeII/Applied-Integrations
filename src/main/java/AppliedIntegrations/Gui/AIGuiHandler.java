@@ -200,9 +200,7 @@ public class AIGuiHandler implements IGuiHandler {
 
             return new GuiPriorityAI(player.inventory, host);
         }else if(gui == GuiServerTerminal) {
-            TileServerSecurity terminal = (TileServerSecurity) Utils.getTileByParams(new BlockPos(x,y,z), world);
-
-            return new GuiServerTerminal((ContainerServerTerminal)getServerGuiElement(ID, player, world, x, y, z), (TileServerCore)terminal.getMaster(), player);
+            return new GuiServerTerminal((ContainerServerTerminal)getServerGuiElement(ID, player, world, x, y, z), player);
         }
 
         return null;

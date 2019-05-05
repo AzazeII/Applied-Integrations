@@ -20,9 +20,6 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
  * @Author Azazell
  */
 public class BlockServerSecurity extends BlockAIRegistrable implements ITileEntityProvider {
-
-    public boolean isActive;
-
     public BlockServerSecurity(String reg, String unloc) {
         super(reg, unloc);
     }

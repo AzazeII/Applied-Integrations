@@ -3,19 +3,29 @@ package AppliedIntegrations.Gui.ServerGUI.SubGui;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+
+import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 /**
  * @Author Azazell
  */
-public class ServerGui extends AIGuiButton {
+public class ServerGui extends SubServerGui {
 
-    public NetworkGui[] linkedNetworks = new NetworkGui[6];
+    public LinkedHashMap<AEPartLocation, NetworkGui> linkedNetworks = new LinkedHashMap<>();
+
     private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server.png");
 
     private boolean renderOverlay;
@@ -37,58 +47,42 @@ public class ServerGui extends AIGuiButton {
     }
 
     public List<String> getTip(){
-
-        int counter = 0;
-        for(NetworkGui g : linkedNetworks){
-            if(g != null)
-                counter+=1;
-        }
-
         List<String> tip = new ArrayList<>();
         tip.add("ME Main Server");
-        tip.add("Connected: "+counter+"/6 Users");
+        tip.add("Connected: "+ linkedNetworks.values().size() +" / 6 Users");
 
         return tip;
     }
 
     //@Override
-    public void drawButton( final Minecraft minecraftInstance, final int x, final int y, int l ) {
+    private void drawButton(final Minecraft minecraftInstance, final int x, final int y, int l) {
         // Full white
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
+        // Push matrix to GL, to isolate changes from main gui
         GL11.glPushMatrix();
 
+        // Scale size to zoom
         GL11.glScalef(this.zoom, this.zoom, this.zoom);
 
-        //if (renderOverlay) {
+        // Pass call to super-class function
+        renderOverlay(renderOverlay);
 
-            /*Tessellator tessellator = Tessellator.instance;
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-            OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-            GL11.glColor4f(1, 1, 0, 1);
-            tessellator.startDrawingQuads();
-
-            tessellator.addVertex(x,y,0);
-            tessellator.addVertex(x+width,y,0);
-            tessellator.addVertex(x+width,y+height,0);
-            tessellator.addVertex(x,y+height,0);
-
-
-            tessellator.draw();
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDisable(GL11.GL_BLEND);
-        }
-
+        // Bind our gui texture
         minecraftInstance.renderEngine.bindTexture(texture);
 
-        this.drawTexturedModalRect( x, y, 0, 0, 260,260 );
+        // Draw texture
+        drawTexturedModalRect( x, y, 0, 0, 260,260 );
 
-        GL11.glPopMatrix();*/
+        // Pop matrix. Isolate changes from outer gui world
+        GL11.glPopMatrix();
     }
     public void renderGui(float zoom) {
+        // Change zoom
         this.zoom = zoom;
-        drawButton(Minecraft.getMinecraft(),x,y, 0);
+
+        // Call draw method
+        drawButton(Minecraft.getMinecraft(), x, y, 0);
     }
 
     public int getCenterPointX(){
@@ -97,13 +91,5 @@ public class ServerGui extends AIGuiButton {
 
     public int getCenterPointY(){
         return y - height/2;
-    }
-
-    public void mouseClicked() {
-
-        if(renderOverlay == true)
-            renderOverlay = false;
-        else
-            renderOverlay = true;
     }
 }

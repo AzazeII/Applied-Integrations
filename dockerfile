@@ -21,9 +21,3 @@ RUN apt-get -y install unzip
 # Install git
 RUN apt-get -y install git-core
 #-- PRE LOAD --#
-
-# Copy repository
-COPY . AI
-
-# Select directory
-WORKDIR AI

@@ -1,6 +1,5 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.Blocks.MEServer.BlockServerSecurity;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
@@ -26,22 +25,34 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
     public void update() {
         super.update();
 
-        BlockServerSecurity block = null;
-        if(world.getBlockState(pos).getBlock() instanceof BlockServerSecurity)
-            block = (BlockServerSecurity)world.getBlockState(getPos()).getBlock();
-        if(gridNode != null && block != null)
-            block.isActive = gridNode.isActive();
+        // Check if tile has master
         if(!hasMaster()){
+            // Check not null
             if(gridNode == null)
                 return;
+
+            // Get our grid
             IGrid grid = gridNode.getGrid();
+
+            // Iterate for each node of this grid
             for(IGridNode node : grid.getNodes()){
+                // Check if node is server core
                 if(node.getMachine() instanceof TileServerCore ) {
+                    // Cast this node to core
                     TileServerCore master = ((TileServerCore)node.getMachine());
+
+                    // Check if multiblock is formed
                     if(master.isFormed) {
+                        // Add this to slave list
                         master.addSlave(this);
+
+                        // Set master
                         setMaster(master);
+
+                        // Query gui update
+                        master.updateGUI();
                     }
+
                     return;
                 }
             }
@@ -56,7 +67,7 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
 
     @Override
     public Object getClientGuiElement( final EntityPlayer player ) {
-        return new GuiServerTerminal((ContainerServerTerminal)this.getServerGuiElement(player),(TileServerCore)getMaster(),player);
+        return new GuiServerTerminal((ContainerServerTerminal)this.getServerGuiElement(player),player);
     }
 
     @Override

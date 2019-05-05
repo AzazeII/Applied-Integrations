@@ -1,5 +1,9 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
+import net.minecraft.util.EnumFacing;
+
+import javax.annotation.Nonnull;
+
 import static java.lang.Float.NaN;
 
 /**
@@ -20,5 +24,25 @@ public enum PortDirections {
     PortDirections(int x,int y){
         this.offsetX =x;
         this.offsetY =y;
+    }
+
+
+    @Nonnull
+    public static PortDirections fromFacing(EnumFacing dir) {
+        switch (dir){
+            case EAST:
+                return PortDirections.E;
+            case WEST:
+                return PortDirections.W;
+            case SOUTH:
+                return PortDirections.S;
+            case DOWN:
+                return PortDirections.D;
+            case NORTH:
+                return PortDirections.N;
+            case UP:
+                return PortDirections.U;
+        }
+        return PortDirections.NaD;
     }
 }

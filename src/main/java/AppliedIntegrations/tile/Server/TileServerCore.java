@@ -73,7 +73,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
      * Server network map
      * Map of ids of IGrids, which contains Server
      */
-    public LinkedHashMap<IGrid, Integer> ServerNetworkMap = new LinkedHashMap<>();
+    public LinkedHashMap<IGrid, Integer> networkIDMap = new LinkedHashMap<>();
 
     // Networks in ports
     public LinkedHashMap<EnumFacing,IGrid> portNetworks = new LinkedHashMap<>();
@@ -99,8 +99,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     public void update() {
         super.update();
         if (isFormed) {
-            if(!ServerNetworkMap.containsValue(RESERVED_MASTER_ID) && mainNetwork != null){
-                ServerNetworkMap.put(mainNetwork,RESERVED_MASTER_ID);
+            if(!networkIDMap.containsValue(RESERVED_MASTER_ID) && mainNetwork != null){
+                networkIDMap.put(mainNetwork,RESERVED_MASTER_ID);
             }
 
             if(updateRequested){
@@ -127,7 +127,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             // For 4d humans =)
             blocksToPlace = BLOCKS_IN_STRUCTURE - 1;
 
-            // Count of blocks matched the pattern. Atomic, because accessed by lambda function
+            // Count of blocks matched the pattern. Atomic, because it accessed by lambda function
             AtomicInteger count = new AtomicInteger();
 
             // Create list of blocks to update later
@@ -238,7 +238,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
 
         mainNetwork = null;
 
-        ServerNetworkMap = new LinkedHashMap<>();
+        networkIDMap = new LinkedHashMap<>();
 
         isFormed = false;
 
@@ -299,11 +299,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
                     .registries().cell()
                     .getCellInventory(stackInSlot, null, AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
             if (inventoryHandler == null)
-                inventoryHandler = AEApi
-                        .instance()
-                        .registries()
-                        .cell()
-                        .getCellInventory(stackInSlot, null,
+                inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null,
                                AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class));
 
             ICellHandler cellHandler = AEApi.instance().registries().cell()
@@ -369,16 +365,28 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         slaves.add(slave);
     }
 
-    public void updateGUI(TileServerSecurity sender) {
+    public void updateGUI() {
+        // Check if multiblock is formed
         if(isFormed) {
-            if (ServerNetworkMap.containsValue(RESERVED_MASTER_ID)) {
+            // Check if server network map has reserved master id
+            if (networkIDMap.containsValue(RESERVED_MASTER_ID)) {
+
+                // TODO Notify only listeners
+                // Notify everyone about GUI change
                 NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, AEPartLocation.INTERNAL, RESERVED_MASTER_ID),
                         getPos().getX(), getPos().getY(), getPos().getZ(),world));
+
+                // Iterate for each side
                 for (AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS) {
-                    IGrid grid = portNetworks.get(dir);
-                    if(ServerNetworkMap.get(grid) != null) {
-                        if (ServerNetworkMap.get(grid) != RESERVED_MASTER_ID) {
-                            NetworkHandler.sendToAll(new PacketMEServer(new NetworkData( isServerNetwork(grid), dir, ServerNetworkMap.get(grid)),
+                    // Get grid from this direction
+                    IGrid grid = portNetworks.get(dir.getFacing());
+
+                    // Check if this grid is contained in network -> id map
+                    if(networkIDMap.get(grid) != null) {
+                        // Check if id of this grid isn't reserved
+                        if (networkIDMap.get(grid) != RESERVED_MASTER_ID) {
+                            // Notify client about this network
+                            NetworkHandler.sendToAll(new PacketMEServer(new NetworkData( isServerNetwork(grid), dir, networkIDMap.get(grid)),
                                     getPos().getX(), getPos().getY(), getPos().getZ(),world));
                         }
                     }
@@ -404,37 +412,3 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         return null;
     }
 }
-/*
-at 133:
-
-            // Iterate for i >= pattern.len
-            for (int i = 0; i < AIPatterns.ME_SERVER.length; i++) {
-                // Call on server
-                if (!this.world.isRemote) {
-
-                    // Add x, y and z of block in pattern to our location
-                    int x = this.pos.getX() + AIPatterns.ME_SERVER[blocksToPlace - 1].x; // (1)
-                    int y = this.pos.getY() + AIPatterns.ME_SERVER[blocksToPlace - 1].y; // (2)
-                    int z = this.pos.getZ() + AIPatterns.ME_SERVER[blocksToPlace - 1].z; // (3)
-
-                    // Get block
-                    Block block = AIPatterns.ME_SERVER[blocksToPlace - 1].b;
-
-                    // Get block in world, and check if it's equal to block in pattern
-                    if (world.getBlockState(new BlockPos(x, y, z)).getBlock() == block) {
-                        // Add to count
-                        count++;
-
-                        // Get tile
-                        IAIMultiBlock multiBlock = (IAIMultiBlock) world.getTileEntity(new BlockPos(x, y, z));
-
-                        // Add to list
-                        toUpdate.add(multiBlock);
-
-                        // Remove one block to place
-                        blocksToPlace--;
-                    }
-                }
-            }
-
- */
