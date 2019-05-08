@@ -6,6 +6,7 @@ import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.TileEnergyInterface;
 
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import appeng.container.implementations.ContainerSecurityStation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.items.CapabilityItemHandler;
 
@@ -42,7 +43,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
         this.player = player;
 
         // Bind player's inventory
-        super.bindPlayerInventory(player.inventory,149,207);
+        super.bindPlayerInventory(player.inventory,149,287);
 
         // check if interface host or tile?
         if (energyInterface instanceof PartEnergyInterface) {

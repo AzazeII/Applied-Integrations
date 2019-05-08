@@ -28,7 +28,7 @@ import static org.lwjgl.opengl.GL11.GL_LINES;
 public class NetworkGui extends SubServerGui {
 
     // ME Controller texture
-    private ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID, "textures/blocks/controller.png");
+    private ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID, "textures/gui/controller.png");
 
     private ResourceLocation lightOff = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/network_adapter_off.png");
     private ResourceLocation lightOn = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/network_adapter_on.png");
@@ -80,37 +80,26 @@ public class NetworkGui extends SubServerGui {
     }
 
     @Override
-    public void drawButton(Minecraft minecraft, int mouseX, int mouseY, float partialTicks) {
+    public void drawButton(Minecraft minecraftInstance, int x, int y, float r) {
         // Full white
-        GL11.glColor4f( 1.0F, 1.0F, 1.0F, 1.0F );
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-        // Isolate changes from outer render
+        // Push matrix to GL, to isolate changes from main gui
         GL11.glPushMatrix();
+
+        // Scale size to zoom
+        GL11.glScalef(this.zoom, this.zoom, this.zoom);
 
         // Pass call to super-class function
         renderOverlay(renderOverlay);
 
-        // Bind our texture
-        Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+        // Bind our gui texture
+        minecraftInstance.renderEngine.bindTexture(texture);
 
-        // Draw basic rect
-        drawTexturedModalRect(x, y, 0, 0, 16,16);
+        // Draw texture
+        drawTexturedModalRect( x, y, 0, 0, 16,16 );
 
-        if(!isLinked) {
-            // Bind texture with off marker
-            Minecraft.getMinecraft().renderEngine.bindTexture(lightOff);
-        } else {
-            // Bind texture with on marker
-            Minecraft.getMinecraft().renderEngine.bindTexture(lightOn);
-        }
-
-        // Draw textured rect
-        drawTexturedModalRect(x, y - 14, 0, 0, 16, 16);
-
-        // Draw cable connection to server
-        drawLine(root.getServerFromID(linkedServerID));
-
-        // Isolate changes from outer render
+        // Pop matrix. Isolate changes from outer gui world
         GL11.glPopMatrix();
     }
 

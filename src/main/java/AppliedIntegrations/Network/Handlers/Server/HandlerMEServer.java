@@ -24,10 +24,10 @@ public class HandlerMEServer implements IMessageHandler<PacketMEServer, PacketME
             GuiServerTerminal SPT = (GuiServerTerminal)g;
 
             // If direction isn't internal, then just add network
-            if (message.networkData.dir != AEPartLocation.INTERNAL)
+            /*if (message.networkData.dir != AEPartLocation.INTERNAL)
                 SPT.addNetwork(message.networkData);
             else
-                SPT.addMaster(message.networkData);
+                SPT.addMaster(message.networkData);*/
         }
         return null;
     }
