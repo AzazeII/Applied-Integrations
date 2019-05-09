@@ -1,11 +1,18 @@
-package AppliedIntegrations.Gui.Widgets;
+package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
+import AppliedIntegrations.Gui.Widgets.AIWidget;
+import AppliedIntegrations.Gui.Widgets.EnergyWidget;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketClientToServerFilter;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.IChannelWidget;
+import AppliedIntegrations.grid.AEEnergyStack;
+import appeng.client.me.InternalFluidSlotME;
+import appeng.client.me.InternalSlotME;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -18,8 +25,7 @@ import javax.annotation.Nonnull;
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
-public class WidgetEnergySlot
-        extends EnergyWidget {
+public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAEEnergyStack> {
 
     public int id;
     public boolean shouldRender;
@@ -30,6 +36,16 @@ public class WidgetEnergySlot
         this.id = id;
 
         this.shouldRender = shouldRender;
+    }
+
+    @Override
+    public IAEEnergyStack getAEStack() {
+        return AEEnergyStack.fromStack(getCurrentStack());
+    }
+
+    @Override
+    public void setAEStack(IAEEnergyStack iaeEnergyStack) {
+        setCurrentStack(iaeEnergyStack.getStack());
     }
 
     @Override

@@ -27,7 +27,7 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
         super.bindPlayerInventory(player.inventory,119,177);
 
         // Add network card editor slot
-        super.addSlotToContainer(new SlotRestrictive(terminal.editorInv,0, 27, 53){
+        super.addSlotToContainer(new SlotRestrictive(terminal.editorInv,0, 37, 86){
             // Override icon getter for this slot
             @SideOnly(Side.CLIENT)
             public String getSlotTexture() {

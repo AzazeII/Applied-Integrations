@@ -1,13 +1,13 @@
 package AppliedIntegrations.api;
 
+import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import net.minecraft.util.ResourceLocation;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -45,7 +45,14 @@ public abstract class AIApi {
 	/**
 	 * Map new sprite to channel
 	 * @param channel map key
-	 * @param sprite map value
+	 * @param sprite map value #1
+	 * @param widgetConstructor map value #2
 	 */
-	public abstract void addChannelSprite(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite);
+	public abstract void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor);
+
+	/**
+	 * @param chan Key for widget
+	 * @return Widget for displaying filter for material of current channel
+	 */
+    public abstract Constructor<? extends IChannelWidget> getWidgetFromChannel(IStorageChannel<? extends IAEStack<?>> chan);
 }

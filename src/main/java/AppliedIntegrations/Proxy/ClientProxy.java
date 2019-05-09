@@ -4,6 +4,10 @@ import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Client.TextureEventManager;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
+import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetFluidSlot;
+import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetItemSlot;
+import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
@@ -27,6 +31,10 @@ import AppliedIntegrations.tile.Server.TileServerSecurity;
 import appeng.api.AEApi;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.client.me.InternalFluidSlotME;
+import appeng.client.me.InternalSlotME;
+import appeng.fluids.client.gui.GuiFluidIO;
+import appeng.fluids.util.IAEFluidTank;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +46,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import scala.App;
 
 import java.util.Objects;
 
@@ -50,19 +57,22 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register( this );
     }
 
-    private void registerChannelSprites() {
+    private void registerChannelSprites() throws NoSuchMethodException {
         // Get applied integrations api
         AIApi instance = Objects.requireNonNull(AIApi.instance());
 
         // Register channel'sprite pair
-        instance.addChannelSprite(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class),
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/channels/item_channel.png")); // (1) Item channel
+        instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class),
+                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/channels/item_channel.png"),
+                WidgetItemSlot.class.getConstructor(int.class, int.class)); // (1) Item channel
 
-        instance.addChannelSprite(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class),
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/channels/fluid_channel.png")); // (2) Fluid channel
+        instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class),
+                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/channels/fluid_channel.png"),
+                WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class)); // (2) Fluid channel
 
-        instance.addChannelSprite(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class),
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/channels/energy_channel.png")); // (3) Energy channel
+        instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class),
+                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/channels/energy_channel.png"),
+                WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class)); // (3) Energy channel
     }
 
     @Override
@@ -103,7 +113,9 @@ public class ClientProxy extends CommonProxy {
         BlocksEnum.registerModels();
         BlocksEnum.registerItemModels();
 
-        registerChannelSprites();
+        try {
+            registerChannelSprites();
+        } catch (NoSuchMethodException ignored) {}
 
         // Check if web server enabled
         if(AIConfig.enableWebServer)

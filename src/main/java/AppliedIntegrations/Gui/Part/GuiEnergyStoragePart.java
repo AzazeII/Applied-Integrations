@@ -8,7 +8,7 @@ import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
-import AppliedIntegrations.Gui.Widgets.WidgetEnergySlot;
+import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketAccessModeClientToServer;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;

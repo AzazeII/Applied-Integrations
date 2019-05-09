@@ -12,9 +12,7 @@ import java.util.List;
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
-public abstract class AIWidget
-        extends Gui
-{
+public abstract class AIWidget extends Gui {
     /**
      * The width and height of the energy slot!
      */
@@ -26,8 +24,7 @@ public abstract class AIWidget
 
     protected IWidgetHost hostGUI;
 
-    public AIWidget(final IWidgetHost hostGUI, final int xPos, final int yPos )
-    {
+    public AIWidget(final IWidgetHost hostGUI, final int xPos, final int yPos ) {
         this.hostGUI = hostGUI;
 
         this.xPosition = xPos;
@@ -35,8 +32,7 @@ public abstract class AIWidget
         this.yPosition = yPos;
     }
 
-    public void drawMouseHoverUnderlay()
-    {
+    public void drawMouseHoverUnderlay() {
         GL11.glDisable( GL11.GL_LIGHTING );
 
         GL11.glDisable( GL11.GL_DEPTH_TEST );
@@ -52,8 +48,7 @@ public abstract class AIWidget
 
     public abstract void getTooltip( List<String> tooltip );
 
-    public boolean isMouseOverWidget( final int mouseX, final int mouseY )
-    {
+    public boolean isMouseOverWidget( final int mouseX, final int mouseY ) {
         return AIGuiHelper.INSTANCE.isPointInGuiRegion(
                 this.yPosition, this.xPosition,
                 AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1,

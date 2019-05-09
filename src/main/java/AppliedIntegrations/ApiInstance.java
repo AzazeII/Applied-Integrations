@@ -2,14 +2,17 @@ package AppliedIntegrations;
 
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.EnergyRepo;
+import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
+import jdk.nashorn.internal.runtime.ScriptObject;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Constructor;
 import java.util.LinkedHashMap;
 
 /**
@@ -18,6 +21,7 @@ import java.util.LinkedHashMap;
 public class ApiInstance extends AIApi {
     private static AIApi instance;
     private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, ResourceLocation> channelSpriteMap = new LinkedHashMap<>();
+    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends IChannelWidget>> channelConstructorMap = new LinkedHashMap<>();
 
     @Override
     public void addHandlersForMEPylon(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, Class<? extends WhiteHoleSingularityInventoryHandler<?>> handlerClassB,
@@ -32,8 +36,14 @@ public class ApiInstance extends AIApi {
     }
 
     @Override
-    public void addChannelSprite(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite) {
+    public Constructor<? extends IChannelWidget> getWidgetFromChannel(IStorageChannel<? extends IAEStack<?>> chan) {
+        return channelConstructorMap.get(chan);
+    }
+
+    @Override
+    public void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor) {
         channelSpriteMap.put(channel, sprite);
+        channelConstructorMap.put(channel, widgetConstructor);
     }
 
     public static AIApi staticInstance() {

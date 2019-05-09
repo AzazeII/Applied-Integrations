@@ -62,10 +62,10 @@ public class GuiSecurityPermissionsButton extends AIGuiButton {
         Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation(AppEng.MOD_ID, "textures/guis/states.png" ) );
 
         // Draw background of button
-        drawTexturedModalRect( x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
+        drawTexturedModalRect( x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE - 2 );
 
         // Draw foreground of button
-        drawTexturedModalRect( x, y-2, getU(), getV() , AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
+        drawTexturedModalRect( x, y, getU(), getV() , AIWidget.WIDGET_SIZE - 2, AIWidget.WIDGET_SIZE - 2 );
 
         // Re-enable lighting
         GL11.glEnable( GL11.GL_LIGHTING );

@@ -17,10 +17,21 @@ public class GuiListTypeButton extends AIGuiButton{
         super(ID, xPosition, yPosition, width, height, text);
     }
 
+    private int getU() {
+        return 16 * (2 + mode.ordinal());
+    }
+
+    private int getV() {
+        return 16 * 8;
+    }
+
     @Override
     public void getTooltip(List<String> tip) {
+        // Add header
+        tip.add("List Mode");
+
         // Add state
-        tip.add("");
+        tip.add(mode.name());
     }
 
     public void toggleMode() {
@@ -43,10 +54,10 @@ public class GuiListTypeButton extends AIGuiButton{
         Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation(AppEng.MOD_ID, "textures/guis/states.png" ) );
 
         // Draw background of button
-        drawTexturedModalRect( x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
+        drawTexturedModalRect( x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE - 2 );
 
         // Draw foreground of button
-        drawTexturedModalRect( x, y-2, 16 * (2 + mode.ordinal()), 16 * 8 , AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE );
+        drawTexturedModalRect( x, y, getU(), getV() , AIWidget.WIDGET_SIZE - 2, AIWidget.WIDGET_SIZE - 2);
 
         // Re-enable lighting
         GL11.glEnable( GL11.GL_LIGHTING );
