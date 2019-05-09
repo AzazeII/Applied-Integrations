@@ -1,8 +1,11 @@
 package AppliedIntegrations.Gui.ServerGUI;
 
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.Buttons.GuiListTypeButton;
 import AppliedIntegrations.Gui.Buttons.GuiSecurityPermissionsButton;
+import AppliedIntegrations.Gui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.client.gui.implementations.GuiSecurityStation;
@@ -26,7 +29,10 @@ public class GuiServerTerminal extends AIBaseGui {
     private static final int GUI_HEIGH = 256;
 
     private GuiSecurityPermissionsButton securityPermissionButton;
-    private ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID , "textures/guis/security_station.png");
+    private GuiStorageChannelButton storageChannelButton;
+    private GuiListTypeButton listTypeButton;
+
+    private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server_terminal.png");
 
     public TileServerCore mInstance;
     public EntityPlayer player;
@@ -52,8 +58,14 @@ public class GuiServerTerminal extends AIBaseGui {
     public void initGui() {
         super.initGui();
 
-        // Add new toggle button to button list
+        // Add new security permissions button to button list
         buttonList.add(securityPermissionButton = new GuiSecurityPermissionsButton( 0, this.guiLeft - 18, this.guiTop + 8, 16, 16, ""));
+
+        // Add new storage channel button to button list
+        buttonList.add(storageChannelButton = new GuiStorageChannelButton( 0, this.guiLeft - 18, this.guiTop + 26, 16, 16, ""));
+
+        // Add new black/white list button to button list
+        buttonList.add(listTypeButton = new GuiListTypeButton( 0, this.guiLeft - 18, this.guiTop + 44, 16, 16, ""));
     }
 
     @Override
@@ -62,6 +74,16 @@ public class GuiServerTerminal extends AIBaseGui {
         if (btn == securityPermissionButton){
             // Cycle mode of button
             securityPermissionButton.cycleMode();
+
+        // Check if button is storage channel button
+        } else if (btn == storageChannelButton){
+            // Cycle channel of button
+            storageChannelButton.cycleChannel();
+
+        // Check if button is black/white list button
+        } else if (btn == listTypeButton){
+            // Toggle mode of button
+            listTypeButton.toggleMode();
         }
     }
 
@@ -86,7 +108,7 @@ public class GuiServerTerminal extends AIBaseGui {
 
         // Draw gui strings
         this.fontRenderer.drawString("Server Security Terminal", 8, 6, 4210752); // (Name)
-        this.fontRenderer.drawString("Network Card Editor", 8, this.ySize - 96 - 32, 4210752); // (Editor)
-        this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, 4210752); // (Player inv.)
+        this.fontRenderer.drawString("Network Card Editor", 8, this.ySize - 96 + 3, 4210752); // (Editor)
+        this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 36, 4210752); // (Player inv.)
     }
 }

@@ -46,8 +46,7 @@ public abstract class ContainerWithUpgradeSlots
         super(player);
     }
 
-    protected void addUpgradeSlots(final AIGridNodeInventory upgradeInventory, final int count, final int xPosition, final int yPosition )
-    {
+    protected void addUpgradeSlots(final AIGridNodeInventory upgradeInventory, final int count, final int xPosition, final int yPosition ) {
         Slot upgradeSlot = null;
 
         // Add the upgrade slots

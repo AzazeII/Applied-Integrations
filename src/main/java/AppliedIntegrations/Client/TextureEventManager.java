@@ -10,5 +10,6 @@ public class TextureEventManager {
     public void textureStich(TextureStitchEvent.Pre event) {
         // Register sprite atlas for texture of upgrade slot
         event.getMap().registerSprite(new ResourceLocation(AppliedIntegrations.modid + ":gui/slots/UpgradeSlotIcon"));
+        event.getMap().registerSprite(new ResourceLocation(AppliedIntegrations.modid + ":gui/slots/network_card_slot"));
     }
 }

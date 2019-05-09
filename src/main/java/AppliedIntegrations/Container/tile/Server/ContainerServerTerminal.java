@@ -2,11 +2,14 @@ package AppliedIntegrations.Container.tile.Server;
 
 
 
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
@@ -24,7 +27,13 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
         super.bindPlayerInventory(player.inventory,119,177);
 
         // Add network card editor slot
-        super.addSlotToContainer(new SlotRestrictive(terminal.editorInv, 0, 42, 119 + 66));
+        super.addSlotToContainer(new SlotRestrictive(terminal.editorInv,0, 27, 53){
+            // Override icon getter for this slot
+            @SideOnly(Side.CLIENT)
+            public String getSlotTexture() {
+                return AppliedIntegrations.modid + ":gui/slots/network_card_slot";
+            }
+        });
 
         // Write instance
         this.tile = instance;
@@ -34,6 +43,7 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
     public boolean canInteractWith(EntityPlayer p_75145_1_) {
         return true;
     }
+
     @Override
     public void onContainerClosed( @Nonnull final EntityPlayer player )
     {

@@ -15,6 +15,10 @@ import java.util.List;
  */
 @SideOnly(Side.CLIENT)
 public abstract class AIGuiButton extends GuiButton {
+
+    protected final static int backgroundU = 16 * 15;
+    protected final static int backgroundV = 16 * 15;
+
     public AIGuiButton(final int ID, final int xPosition, final int yPosition, final int width, final int height, final String text ) {
         super( ID, xPosition, yPosition, width, height, text );
     }
