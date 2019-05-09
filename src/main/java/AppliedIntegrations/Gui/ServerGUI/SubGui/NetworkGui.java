@@ -2,7 +2,6 @@ package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIGuiHelper;
-import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import appeng.api.config.SecurityPermissions;
 import appeng.core.AppEng;
@@ -18,7 +17,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static net.minecraft.client.renderer.GlStateManager.glLineWidth;
 import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
 import static org.lwjgl.opengl.GL11.GL_LINES;
 

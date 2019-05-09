@@ -1,8 +1,9 @@
-package AppliedIntegrations.Gui.ServerGUI;
+package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
 /**
  * @Author Azazell
  */
+@Deprecated
 public enum NetworkPermissions {
     Energy,
     Essentia,

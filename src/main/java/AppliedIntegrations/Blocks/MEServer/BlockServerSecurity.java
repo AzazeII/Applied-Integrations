@@ -38,17 +38,28 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         super.onBlockActivated(world,pos,state, p, hand, facing, hitX, hitY, hitZ);
-        if(!world.isRemote) {
-            if (!p.isSneaking()) {
-                AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerTerminal, p, INTERNAL, pos);
 
+        // Call only on server
+        if(!world.isRemote) {
+            // Check if player not sneaking
+            if (!p.isSneaking()) {
+                // Check if tile is null
                 if(world.getTileEntity(pos)!=null) {
+                    // Get tile
                     TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(pos);
 
-                    if(tile.hasMaster())
-                        ((TileServerCore)tile.getMaster()).requestUpdate();
+                    // Check if tile has no master
+                    if(! tile.hasMaster() )
+                        return false;
+
+                    // Request gui update
+                    ((TileServerCore)tile.getMaster()).requestUpdate();
+
+                    // Open gui
+                    AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerTerminal, p, INTERNAL, pos);
+
+                    return true;
                 }
-                return true;
             }
         }
         return false;

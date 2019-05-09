@@ -2,13 +2,14 @@ package AppliedIntegrations.Gui.ServerGUI;
 
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.Buttons.GuiSecurityPermissionsButton;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.Server.TileServerCore;
-import appeng.api.config.SecurityPermissions;
 import appeng.client.gui.implementations.GuiSecurityStation;
-import appeng.client.gui.widgets.GuiToggleButton;
 import appeng.core.AppEng;
+import appeng.core.localization.GuiText;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
@@ -22,22 +23,13 @@ import org.lwjgl.opengl.GL11;
 public class GuiServerTerminal extends AIBaseGui {
 
     private static final int GUI_WIDTH = 192;
+    private static final int GUI_HEIGH = 256;
 
-    // Height of bottom part(below network card slot) of this GUI
-    private static final int GUI_HEIGH_BOTTOM = 64;
-
-    // Height of top part(above network card slot) of this GUI
-    private static final int GUI_HEIGH_TOP = 192;
-    private static final int SLOT_BAR_HEIGH = 48;
-
-    private ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID , "textures/guis/terminal.png");
+    private GuiSecurityPermissionsButton securityPermissionButton;
+    private ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID , "textures/guis/security_station.png");
 
     public TileServerCore mInstance;
     public EntityPlayer player;
-
-    private GuiToggleButton inject;
-    private GuiToggleButton extract;
-    private GuiToggleButton craft;
 
     public GuiServerTerminal(ContainerServerTerminal container, EntityPlayer player) {
         super(container, player);
@@ -60,18 +52,17 @@ public class GuiServerTerminal extends AIBaseGui {
     public void initGui() {
         super.initGui();
 
-        // Calculate y position for buttons
-        final int top = this.guiTop + this.ySize - 116;
+        // Add new toggle button to button list
+        buttonList.add(securityPermissionButton = new GuiSecurityPermissionsButton( 0, this.guiLeft - 18, this.guiTop + 8, 16, 16, ""));
+    }
 
-        // Add buttons to list:
-        this.buttonList.add( this.inject = new GuiToggleButton( this.guiLeft + 56, top, 11 * 16, 12 * 16, SecurityPermissions.INJECT
-                .getUnlocalizedName(), SecurityPermissions.INJECT.getUnlocalizedTip() ) ); // (1) Write
-
-        this.buttonList.add( this.extract = new GuiToggleButton( this.guiLeft + 56 + 18, top, 11 * 16 + 1, 12 * 16 + 1, SecurityPermissions.EXTRACT
-                .getUnlocalizedName(), SecurityPermissions.EXTRACT.getUnlocalizedTip() ) ); // (2) Read
-
-        this.buttonList.add( this.craft = new GuiToggleButton( this.guiLeft + 56 + 18 * 2, top, 11 * 16 + 2, 12 * 16 + 2, SecurityPermissions.CRAFT
-                .getUnlocalizedName(), SecurityPermissions.CRAFT.getUnlocalizedTip() ) ); // (3) Craft
+    @Override
+    public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+        // Check if button is security permissions button
+        if (btn == securityPermissionButton){
+            // Cycle mode of button
+            securityPermissionButton.cycleMode();
+        }
     }
 
     @Override
@@ -86,12 +77,16 @@ public class GuiServerTerminal extends AIBaseGui {
         Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
         // Draw bottom(below cell bar) texture
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, GUI_WIDTH, GUI_HEIGH_BOTTOM);
+        drawTexturedModalRect(guiLeft, guiTop, 0, 0, GUI_WIDTH, GUI_HEIGH);
+    }
 
-        // Draw cell bar texture
-        drawTexturedModalRect(guiLeft, guiTop + SLOT_BAR_HEIGH, 0, SLOT_BAR_HEIGH, GUI_WIDTH, SLOT_BAR_HEIGH);
+    @Override
+    protected void drawGuiContainerForegroundLayer( final int mouseX, final int mouseY ) {
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
-        // Draw top(above cell bar) texture
-        drawTexturedModalRect(guiLeft, guiTop + GUI_HEIGH_BOTTOM + SLOT_BAR_HEIGH, 0, GUI_HEIGH_BOTTOM, GUI_WIDTH, GUI_HEIGH_TOP);
+        // Draw gui strings
+        this.fontRenderer.drawString("Server Security Terminal", 8, 6, 4210752); // (Name)
+        this.fontRenderer.drawString("Network Card Editor", 8, this.ySize - 96 - 32, 4210752); // (Editor)
+        this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 3, 4210752); // (Player inv.)
     }
 }

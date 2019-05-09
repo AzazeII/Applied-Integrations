@@ -158,7 +158,7 @@ public class AIGuiHandler implements IGuiHandler {
         }else if(gui == GuiServerTerminal) {
             TileServerSecurity terminal = (TileServerSecurity) Utils.getTileByParams(new BlockPos(x,y,z), world);
 
-            return new ContainerServerTerminal((TileServerCore)terminal.getMaster(), player);
+            return new ContainerServerTerminal((TileServerCore)terminal.getMaster(), terminal, player);
         }
 
         return null;

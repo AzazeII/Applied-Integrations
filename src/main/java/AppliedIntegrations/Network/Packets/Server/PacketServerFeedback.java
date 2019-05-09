@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.tile.Server.TileServerCore;
-import AppliedIntegrations.Gui.ServerGUI.NetworkPermissions;
+import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkPermissions;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;

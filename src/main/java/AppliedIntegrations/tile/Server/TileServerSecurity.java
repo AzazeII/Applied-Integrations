@@ -1,6 +1,8 @@
 package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
+import AppliedIntegrations.Items.NetworkCard;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import appeng.api.AEApi;
@@ -9,6 +11,8 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.IOrientable;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nonnull;
@@ -18,6 +22,13 @@ import java.util.EnumSet;
  * @Author Azazell
  */
 public class TileServerSecurity extends AIMultiBlockTile implements IOrientable {
+
+    public IInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1){
+        @Override
+        public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+            return itemstack.getItem() instanceof NetworkCard;
+        }
+    };
 
     private EnumFacing fw;
 
@@ -62,7 +73,7 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
 
     @Override
     public Object getServerGuiElement( final EntityPlayer player ) {
-        return new ContainerServerTerminal((TileServerCore)getMaster(),player);
+        return new ContainerServerTerminal((TileServerCore)getMaster(), this, player);
     }
 
     @Override

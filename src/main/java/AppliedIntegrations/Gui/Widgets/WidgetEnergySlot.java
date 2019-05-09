@@ -19,8 +19,7 @@ import javax.annotation.Nonnull;
  */
 @SideOnly(Side.CLIENT)
 public class WidgetEnergySlot
-        extends EnergyWidget
-{
+        extends EnergyWidget {
 
     public int id;
     public boolean shouldRender;

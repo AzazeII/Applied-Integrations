@@ -2,9 +2,10 @@ package AppliedIntegrations.Container.tile.Server;
 
 
 
-import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
+import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nonnull;
@@ -16,11 +17,14 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
     public TileServerCore tile;
 
-    public ContainerServerTerminal(TileServerCore instance, EntityPlayer player) {
+    public ContainerServerTerminal(TileServerCore instance, TileServerSecurity terminal, EntityPlayer player) {
         super(player);
 
         // Bind inventory of player
-        super.bindPlayerInventory(player.inventory,149,207);
+        super.bindPlayerInventory(player.inventory,119,177);
+
+        // Add network card editor slot
+        super.addSlotToContainer(new SlotRestrictive(terminal.editorInv, 0, 42, 119 + 66));
 
         // Write instance
         this.tile = instance;

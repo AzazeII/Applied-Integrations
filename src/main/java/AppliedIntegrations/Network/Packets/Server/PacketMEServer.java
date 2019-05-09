@@ -1,6 +1,6 @@
 package AppliedIntegrations.Network.Packets.Server;
 
-import AppliedIntegrations.Gui.ServerGUI.NetworkData;
+import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkData;
 import AppliedIntegrations.Network.Packets.AIPacket;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
