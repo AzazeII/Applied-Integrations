@@ -1,6 +1,7 @@
-package AppliedIntegrations.Gui.Buttons;
+package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
-import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Gui.Buttons.AIGuiButton;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.SecurityPermissions;
 import appeng.core.AppEng;
@@ -9,13 +10,24 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class GuiSecurityPermissionsButton extends AIGuiButton {
-    private SecurityPermissions currentPermissions = SecurityPermissions.INJECT;
+import static appeng.api.config.SecurityPermissions.*;
 
-    public GuiSecurityPermissionsButton(int ID, int xPosition, int yPosition, int width, int height, String text) {
-        super(ID, xPosition, yPosition, width, height, text);
+public class GuiSecurityPermissionsButton extends GuiServerButton {
+    private SecurityPermissions currentPermissions = INJECT;
+    private static final List<SecurityPermissions> allowedPermissions = new ArrayList<>();
+
+    static {
+        allowedPermissions.add(INJECT);
+        allowedPermissions.add(EXTRACT);
+        allowedPermissions.add(CRAFT);
+    }
+
+    public GuiSecurityPermissionsButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+        super(terminal, ID, xPosition, yPosition, width, height, text);
     }
 
     private int getV() {
@@ -23,8 +35,17 @@ public class GuiSecurityPermissionsButton extends AIGuiButton {
         return 11 * 16;
     }
 
+
     private int getU() {
         return 16 * currentPermissions.ordinal();
+    }
+
+    public List<SecurityPermissions> getPermissionList() {
+        return allowedPermissions;
+    }
+
+    public SecurityPermissions getCurrentPermissions() {
+        return currentPermissions;
     }
 
 
@@ -33,9 +54,9 @@ public class GuiSecurityPermissionsButton extends AIGuiButton {
     //     |<=========================
     public void cycleMode() {
         // Check for last mode in cycle
-        if (currentPermissions == SecurityPermissions.CRAFT)
+        if (currentPermissions == CRAFT)
             // Make first
-            currentPermissions = SecurityPermissions.INJECT;
+            currentPermissions = INJECT;
         else
             // Make next
             currentPermissions = SecurityPermissions.values()[currentPermissions.ordinal() + 1];
@@ -52,6 +73,10 @@ public class GuiSecurityPermissionsButton extends AIGuiButton {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+        // Check if host GUI has no card
+        if (!host.hasCard())
+            return;
+
         // Disable lighting
         GL11.glDisable( GL11.GL_LIGHTING );
 

@@ -8,9 +8,13 @@ import net.minecraft.client.gui.Gui;
  * @apiNote This interface represents filter for given AE stack
  */
 public interface IChannelWidget<T extends IAEStack<T>> {
-    T getAEStack();
+    IAEStack<T> getAEStack();
 
-    void setAEStack(T t);
+    String getStackTip();
+
+    void setAEStack(IAEStack<?> t);
 
     void drawWidget();
+
+    boolean isMouseOverWidget(int x, int y);
 }

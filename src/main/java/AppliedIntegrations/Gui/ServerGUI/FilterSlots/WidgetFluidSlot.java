@@ -1,5 +1,7 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
+import AppliedIntegrations.Gui.AIGuiHelper;
+import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
@@ -8,6 +10,7 @@ import appeng.client.me.SlotFluidME;
 import appeng.fluids.client.gui.widgets.GuiFluidSlot;
 import appeng.fluids.util.IAEFluidTank;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 
 /**
  * @Author Azazell
@@ -25,14 +28,28 @@ public class WidgetFluidSlot extends GuiFluidSlot implements IChannelWidget<IAEF
     }
 
     @Override
-    public void setAEStack(IAEFluidStack iaeFluidStack) {
+    public String getStackTip() {
+        // Check not null
+        if (getAEStack().getFluid() != null)
+            // Translate to local
+            return I18n.format(getAEStack().getFluid().getUnlocalizedName());
+        return "";
+    }
+
+    @Override
+    public void setAEStack(IAEStack<?> iaeFluidStack) {
         // Pass to parent class
-        setFluidStack(iaeFluidStack);
+        setFluidStack((IAEFluidStack)iaeFluidStack);
     }
 
     @Override
     public void drawWidget() {
         // Pass to parent class
         drawContent(Minecraft.getMinecraft(), xPos(), yPos(), 0);
+    }
+
+    @Override
+    public boolean isMouseOverWidget(int x, int y) {
+        return false;
     }
 }

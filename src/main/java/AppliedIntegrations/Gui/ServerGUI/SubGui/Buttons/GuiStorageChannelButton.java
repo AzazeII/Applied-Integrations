@@ -1,12 +1,15 @@
-package AppliedIntegrations.Gui.Buttons;
+package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Gui.Buttons.AIGuiButton;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.AIApi;
 import appeng.api.AEApi;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEStack;
+import appeng.client.gui.implementations.GuiStorageBus;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.core.AppEng;
 import net.minecraft.client.Minecraft;
@@ -16,13 +19,14 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author Azazell
  */
 
 // this one is special
-public class GuiStorageChannelButton extends AIGuiButton {
+public class GuiStorageChannelButton extends GuiServerButton {
 
     // Current storage channel of button
     private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
@@ -30,8 +34,8 @@ public class GuiStorageChannelButton extends AIGuiButton {
     // Array list of all storage channels registered
     private final List<IStorageChannel<? extends IAEStack<?>>> channelList = new ArrayList<>(AEApi.instance().storage().storageChannels());
 
-    public GuiStorageChannelButton(int ID, int xPosition, int yPosition, int width, int height, String text) {
-        super(ID, xPosition, yPosition, width, height, text);
+    public GuiStorageChannelButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+        super(terminal, ID, xPosition, yPosition, width, height, text);
     }
 
     public void cycleChannel() {
@@ -57,6 +61,10 @@ public class GuiStorageChannelButton extends AIGuiButton {
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+        // Check if host GUI has no card
+        if (!host.hasCard())
+            return;
+
         // ---Drawing #1---//
         // Isolate changes from drawing #2
         GlStateManager.pushMatrix();
@@ -73,11 +81,14 @@ public class GuiStorageChannelButton extends AIGuiButton {
         // Draw background of button
         drawTexturedModalRect( x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE - 2 );
 
+        // Re-enable lighting
+        GL11.glEnable( GL11.GL_LIGHTING );
+
         // Isolate changes from drawing #2
         GlStateManager.popMatrix();
         // ---Drawing #1---//
 
-
+        GuiStorageBus g;
 
         // ---Drawing #2---//
         // Isolate changes from drawing #1
@@ -90,10 +101,10 @@ public class GuiStorageChannelButton extends AIGuiButton {
         GL11.glColor3f( 1.0F, 1.0F, 1.0F );
 
         // Bind current sprite from channel
-        Minecraft.getMinecraft().renderEngine.bindTexture(AIApi.instance().getSpriteFromChannel(channel));
+        Minecraft.getMinecraft().renderEngine.bindTexture(Objects.requireNonNull(AIApi.instance()).getSpriteFromChannel(channel));
 
         // Draw foreground of button
-        drawTexturedModalRect( x, y, 0, 0, AIWidget.WIDGET_SIZE - 2, AIWidget.WIDGET_SIZE - 2);
+        drawTexturedModalRect( x, y, 0, 0, 16, 16);
 
         // Re-enable lighting
         GL11.glEnable( GL11.GL_LIGHTING );
@@ -108,7 +119,10 @@ public class GuiStorageChannelButton extends AIGuiButton {
         // Add header
         tip.add("Storage Channel");
 
+        // Split string to array
+        String[] splitted = channel.getClass().getCanonicalName().split("\\.");
+
         // Add current channel name
-        tip.add(channel.getClass().getCanonicalName());
+        tip.add(splitted[splitted.length - 1]);
     }
 }

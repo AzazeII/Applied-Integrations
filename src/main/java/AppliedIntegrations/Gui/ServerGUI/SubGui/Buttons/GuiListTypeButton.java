@@ -1,5 +1,7 @@
-package AppliedIntegrations.Gui.Buttons;
+package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
+import AppliedIntegrations.Gui.Buttons.AIGuiButton;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.IncludeExclude;
 import appeng.core.AppEng;
@@ -9,12 +11,12 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class GuiListTypeButton extends AIGuiButton{
+public class GuiListTypeButton extends GuiServerButton {
 
-    private IncludeExclude mode = IncludeExclude.BLACKLIST;
+    private IncludeExclude mode;
 
-    public GuiListTypeButton(int ID, int xPosition, int yPosition, int width, int height, String text) {
-        super(ID, xPosition, yPosition, width, height, text);
+    public GuiListTypeButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+        super(terminal, ID, xPosition, yPosition, width, height, text);
     }
 
     private int getU() {
@@ -36,14 +38,25 @@ public class GuiListTypeButton extends AIGuiButton{
 
     public void toggleMode() {
         // Simply check if mode is black list and change to **opposite**
-        if (mode == IncludeExclude.BLACKLIST) // **(1)
+        if (mode == IncludeExclude.BLACKLIST) { // **(1)
             mode = IncludeExclude.WHITELIST; // **(2)
-        else  // **(3)
+        } else { // **(3)
             mode = IncludeExclude.BLACKLIST; // **(4)
+        }
+
+        // Notify host
+        host.setIncludeExcludeMode(mode);
     }
 
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+        // Check if host GUI has no card
+        if (!host.hasCard())
+            return;
+
+        // Update current mode
+        mode = host.getIncludeExcludeMode();
+
         // Disable lighting
         GL11.glDisable( GL11.GL_LIGHTING );
 

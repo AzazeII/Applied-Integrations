@@ -1,5 +1,6 @@
 package AppliedIntegrations;
 
+import appeng.api.config.IncludeExclude;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.fml.common.Loader;
@@ -30,7 +31,10 @@ public class AIConfig {
     public static boolean enableLogicBus; // #7
 
     private static final String CATEGORY_PROPERTIES = "Properties";
+
     public static int interfaceMaxStorage; // #8
+    public static IncludeExclude defaultListMode; // #9
+
     public static int webUIPort;
     public static int maxPylonDistance;
     public static double pylonDrain;
@@ -159,8 +163,12 @@ public class AIConfig {
                 propertiesOrder);
 
         webUIPort = (Integer)addProperty(CATEGORY_PROPERTIES, "WebUI Port", 8000,
-                        "Default: 8000; Port for web UI of network topology",
+                "Default: 8000; Port for web UI of network topology",
                 propertiesOrder);
+
+        defaultListMode = (Boolean) addProperty(CATEGORY_PROPERTIES, "Default Security Terminal List Mode", false,
+                "Default: False (blacklist); If true, then default mode is server security terminal GUI will be white list",
+                propertiesOrder) ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST;
 
         // Set order
         config.setCategoryPropertyOrder(CATEGORY_FEATURES, featuresOrder);

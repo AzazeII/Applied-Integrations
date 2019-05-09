@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
  */
 public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
+    private final SlotRestrictive cardSlot;
     public TileServerCore tile;
 
     public ContainerServerTerminal(TileServerCore instance, TileServerSecurity terminal, EntityPlayer player) {
@@ -27,7 +28,7 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
         super.bindPlayerInventory(player.inventory,119,177);
 
         // Add network card editor slot
-        super.addSlotToContainer(new SlotRestrictive(terminal.editorInv,0, 37, 86){
+        super.addSlotToContainer(this.cardSlot = new SlotRestrictive(terminal.editorInv,0, 37, 86){
             // Override icon getter for this slot
             @SideOnly(Side.CLIENT)
             public String getSlotTexture() {
@@ -37,6 +38,10 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
         // Write instance
         this.tile = instance;
+    }
+
+    public boolean hasCard() {
+        return !cardSlot.getStack().isEmpty();
     }
 
     @Override

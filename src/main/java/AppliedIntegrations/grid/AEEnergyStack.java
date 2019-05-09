@@ -24,9 +24,11 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 
     private AEEnergyStack(LiquidAIEnergy Energy, long amount) {
         this.Energy = Energy;
+
         if (this.Energy == null) {
             throw new IllegalArgumentException("Energy is null");
         }
+
         this.setStackSize(amount);
         this.setCraftable(false);
         this.setCountRequestable(0);

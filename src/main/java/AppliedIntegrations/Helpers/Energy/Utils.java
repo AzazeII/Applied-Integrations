@@ -2,6 +2,8 @@ package AppliedIntegrations.Helpers.Energy;
 
 import AppliedIntegrations.api.AppliedCoord;
 import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
@@ -13,7 +15,11 @@ import appeng.api.AEApi;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartItem;
+import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
+import appeng.util.item.AEItemStack;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
@@ -46,6 +52,17 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
         @Optional.Interface(iface = "mekanism.api.energy.IEnergizedItem", modid = "mekanism", striprefs = true)
 })
 public class Utils {
+    public static IAEStack<IAEEnergyStack> getEnergyStackFromItemStack(ItemStack itemStack) {
+        // Get energy stack
+        EnergyStack stack = new EnergyStack(getEnergyFromItemStack(itemStack), 0);
+
+        // Check not null and meaningful
+        if (stack.getEnergy() == null)
+            return null;
+
+        return AEEnergyStack.fromStack(stack);
+    }
+
     public static LiquidAIEnergy getEnergyFromItemStack(ItemStack itemStack) {
         if (itemStack == null)
             return null;
@@ -196,5 +213,4 @@ public class Utils {
             return getPartByParams(pos, side.getFacing(), obj);
         return null;
     }
-
 }

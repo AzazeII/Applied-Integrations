@@ -11,6 +11,7 @@ import AppliedIntegrations.Network.Packets.PartGUI.PacketClientToServerFilter;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.grid.AEEnergyStack;
+import appeng.api.storage.data.IAEStack;
 import appeng.client.me.InternalFluidSlotME;
 import appeng.client.me.InternalSlotME;
 import net.minecraft.client.Minecraft;
@@ -44,8 +45,20 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
     }
 
     @Override
-    public void setAEStack(IAEEnergyStack iaeEnergyStack) {
-        setCurrentStack(iaeEnergyStack.getStack());
+    public String getStackTip() {
+        // Check not null
+        if (getAEStack().getEnergy() != null)
+            return getAEStack().getEnergy().getEnergyName();
+        return "";
+    }
+
+    @Override
+    public void setAEStack(IAEStack<?> iaeStack) {
+        // Check not null
+        if (iaeStack == null)
+            setCurrentStack(new EnergyStack(null, 0));
+        else
+            setCurrentStack(((IAEEnergyStack)iaeStack).getStack());
     }
 
     @Override
