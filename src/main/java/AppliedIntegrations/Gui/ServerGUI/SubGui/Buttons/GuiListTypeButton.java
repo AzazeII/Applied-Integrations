@@ -1,6 +1,5 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
-import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.IncludeExclude;
@@ -29,6 +28,10 @@ public class GuiListTypeButton extends GuiServerButton {
 
     @Override
     public void getTooltip(List<String> tip) {
+        // Check if container has no network tool in slot
+        if (!host.isCardValid())
+            return;
+
         // Add header
         tip.add("List Mode");
 
@@ -51,7 +54,7 @@ public class GuiListTypeButton extends GuiServerButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         // Check if host GUI has no card
-        if (!host.hasCard())
+        if (!host.isCardValid())
             return;
 
         // Update current mode

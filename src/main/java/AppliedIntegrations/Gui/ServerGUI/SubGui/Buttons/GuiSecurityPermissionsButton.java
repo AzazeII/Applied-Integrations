@@ -1,6 +1,5 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
-import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.SecurityPermissions;
@@ -11,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 import static appeng.api.config.SecurityPermissions.*;
@@ -40,7 +38,7 @@ public class GuiSecurityPermissionsButton extends GuiServerButton {
         return 16 * currentPermissions.ordinal();
     }
 
-    public List<SecurityPermissions> getPermissionList() {
+    public static List<SecurityPermissions> getPermissionList() {
         return allowedPermissions;
     }
 
@@ -64,6 +62,10 @@ public class GuiSecurityPermissionsButton extends GuiServerButton {
 
     @Override
     public void getTooltip(List<String> tip) {
+        // Check if container has no network tool in slot
+        if (!host.isCardValid())
+            return;
+
         // Add name
         tip.add("Security Permissions");
 
@@ -74,7 +76,7 @@ public class GuiSecurityPermissionsButton extends GuiServerButton {
     @Override
     public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
         // Check if host GUI has no card
-        if (!host.hasCard())
+        if (!host.isCardValid())
             return;
 
         // Disable lighting

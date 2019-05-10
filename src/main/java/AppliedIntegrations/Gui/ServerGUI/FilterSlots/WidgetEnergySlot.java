@@ -41,13 +41,16 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 
     @Override
     public IAEEnergyStack getAEStack() {
-        return AEEnergyStack.fromStack(getCurrentStack());
+        // Check not null
+        if (getCurrentStack() != null && getCurrentStack().getEnergy() != null)
+            return AEEnergyStack.fromStack(getCurrentStack());
+        return null;
     }
 
     @Override
     public String getStackTip() {
         // Check not null
-        if (getAEStack().getEnergy() != null)
+        if (getAEStack() != null)
             return getAEStack().getEnergy().getEnergyName();
         return "";
     }

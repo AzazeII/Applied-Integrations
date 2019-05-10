@@ -4,12 +4,14 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiListTypeButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiSecurityPermissionsButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
+import AppliedIntegrations.Items.NetworkCard;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.Server.PacketServerFeedback;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelWidget;
@@ -19,21 +21,24 @@ import appeng.api.config.IncludeExclude;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.config.SecurityPermissions;
+import appeng.client.gui.implementations.GuiSecurityStation;
+import appeng.container.implementations.ContainerSecurityStation;
 import appeng.core.localization.GuiText;
 import appeng.fluids.util.AEFluidInventory;
+import appeng.util.Platform;
+import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-
-import static appeng.api.config.SecurityPermissions.*;
 
 
 // TODO Rewrite this GUI, now it will be similar to normal security terminal.
@@ -80,8 +85,27 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         this.player = player;
     }
 
-    public boolean hasCard() {
-        return ((ContainerServerTerminal)inventorySlots).hasCard();
+    private ItemStack getCardStack() {
+        // Check if container has card
+        if (((ContainerServerTerminal)inventorySlots).hasCard()) {
+            // Get card stack from container
+            return ((ContainerServerTerminal) inventorySlots).getCard();
+        }
+
+        return null;
+    }
+
+    public boolean isCardValid() {
+        // Check if container has card
+        if (((ContainerServerTerminal)inventorySlots).hasCard()){
+            // Get card stack from container
+            ItemStack stack = getCardStack();
+
+            // Return true if stack has NBT tag with record of network
+            return Platform.openNbtData(stack).getBoolean(NetworkCard.NBT_KEY_HAS_NET);
+        }
+
+        return false;
     }
 
     public IncludeExclude getIncludeExcludeMode() {
@@ -90,6 +114,51 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
     public void setIncludeExcludeMode(IncludeExclude mode) {
         permissionChannelModeMap.get(securityPermissionButton.getCurrentPermissions()).put(storageChannelButton.getChannel(), mode);
+    }
+
+    private void syncWithServer(NBTTagCompound tag) {
+        NetworkHandler.sendToServer(new PacketServerFeedback(tag));
+    }
+
+    private void encodeCardTag() {
+        // Create/get existing tag of card stack
+        NBTTagCompound tag = Platform.openNbtData(getCardStack());
+
+        // Now the fun begins
+        // Iterate for each permission
+        GuiSecurityPermissionsButton.getPermissionList().forEach((securityPermissions -> {
+            // Iterate for each storage channel
+            GuiStorageChannelButton.getChannelList().forEach((chan) -> {
+                // Create channel sub-nbt
+                NBTTagCompound channelNBT = new NBTTagCompound();
+
+                // Serialize black/white list mode
+                channelNBT.setInteger("#SECURITY_ORDINAL", permissionChannelModeMap.get(securityPermissions).get(chan).ordinal());
+
+                // Write size of list
+                channelNBT.setInteger("#LIST_SIZE", permissionChannelWidgetMap.get(securityPermissions).get(chan).size());
+
+                // Iterate for each filter
+                permissionChannelWidgetMap.get(securityPermissions).get(chan).forEach((widget -> {
+                    try {
+                        // Check not null
+                        if (widget.getAEStack() != null)
+                            // Serialize stack with Api
+                            Objects.requireNonNull(AIApi.instance()).getStackEncoder(chan).encode(channelNBT, widget.getAEStack());
+                        else
+                            // Encode "NaN"
+                            channelNBT.setLong( "Cnt", -1);
+                    } catch (IOException e) {
+                        throw new IllegalStateException("Unexpected error");
+                    }
+                }));
+
+                // Encode sub-tag
+                tag.setTag("#SUB_TAG" + chan.hashCode() + securityPermissions.hashCode(), channelNBT);
+            });
+        }));
+
+        syncWithServer(tag);
     }
 
     @Override
@@ -121,12 +190,12 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
         // ************# Add Filter Slots #************ //
         // Iterate for each security permission
-        securityPermissionButton.getPermissionList().forEach( (permissions -> {
+        GuiSecurityPermissionsButton.getPermissionList().forEach( (permissions -> {
             // Temp map
             LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelWidget<?>>> tempMap = new LinkedHashMap<>();
 
             // Iterate for each storage channel is list
-            storageChannelButton.getChannelList().forEach( (chan) -> {
+            GuiStorageChannelButton.getChannelList().forEach( (chan) -> {
                 // Get widget from API
                 Constructor<? extends IChannelWidget> channelWidgetConstructor = Objects.requireNonNull(AIApi.instance()).getWidgetFromChannel(chan);
 
@@ -191,7 +260,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         // ************# Add Filter Slots #************ //
 
         // Iterate for each security permissions
-        securityPermissionButton.getPermissionList().forEach((securityPermissions -> {
+        GuiSecurityPermissionsButton.getPermissionList().forEach((securityPermissions -> {
             // Temp map
             LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude> tempMap = new LinkedHashMap<>();
 
@@ -217,6 +286,9 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
             if (widget.isMouseOverWidget(mouseX, mouseY)) {
                 // Update stack
                 widget.setAEStack(Objects.requireNonNull(AIApi.instance()).getAEStackFromItemStack(storageChannelButton.getChannel(), player.inventory.getItemStack()));
+
+                // Encode card tag
+                encodeCardTag();
             }
         });
     }
@@ -224,7 +296,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     @Override
     public void onButtonClicked(final GuiButton btn, final int mouseButton) {
         // Check if container has no network tool in slot
-        if (!hasCard())
+        if (!isCardValid())
             return;
 
         // Check if button is security permissions button
@@ -241,7 +313,14 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         } else if (btn == listTypeButton){
             // Toggle mode of button
             listTypeButton.toggleMode();
+
+            // Encode card tag
+            encodeCardTag();
         }
+
+        // Check not null
+        if (getCardStack() == null)
+            return;
     }
 
     @Override
@@ -260,15 +339,19 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     }
 
     @Override
-    public void drawScreen(int MouseX, int MouseY, float pOpacity) {
+    public void drawScreen(int mX, int mY, float pOpacity) {
         // Call parent class
-        super.drawScreen(MouseX, MouseY, pOpacity);
+        super.drawScreen(mX, mY, pOpacity);
+
+        // Check if container has no network tool in slot
+        if (!isCardValid())
+            return;
 
         // Iterate for each element of list from current channel from map from current permission
         // Draw widget
         permissionChannelWidgetMap.get(securityPermissionButton.getCurrentPermissions()).get(storageChannelButton.getChannel()).forEach((slot) -> {
             // Check if mouse over widget
-            if (slot.isMouseOverWidget(MouseX, MouseY)) {
+            if (slot.isMouseOverWidget(mX, mY)) {
                 // Create tooltip list
                 List<String> tip = new ArrayList<String>();
 
@@ -278,7 +361,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
                     tip.add(slot.getStackTip());
 
                     // Draw tooltip
-                    drawHoveringText(tip, MouseX, MouseY, fontRenderer);
+                    drawHoveringText(tip, mX, mY, fontRenderer);
                 }
             }
         });
@@ -293,9 +376,8 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         this.fontRenderer.drawString("Network Card Editor", 8, this.ySize - 96 + 3, 4210752); // (Editor)
         this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 36, 4210752); // (Player inv.
 
-
         // Check if container has no network tool in slot
-        if (!hasCard())
+        if (!isCardValid())
             return;
 
         // Iterate for each element of list from current channel from map from current permission

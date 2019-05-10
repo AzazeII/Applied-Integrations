@@ -8,6 +8,7 @@ import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerVectorSync;
 import AppliedIntegrations.Network.Handlers.PartGUI.*;
 import AppliedIntegrations.Network.Handlers.Server.HandlerMEServer;
 import AppliedIntegrations.Network.Handlers.Server.HandlerRibSync;
+import AppliedIntegrations.Network.Handlers.Server.HandlerServerFeedback;
 import AppliedIntegrations.Network.Packets.*;
 
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
@@ -16,6 +17,7 @@ import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.Network.Packets.PartGUI.*;
 import AppliedIntegrations.Network.Packets.Server.PacketMEServer;
 import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
+import AppliedIntegrations.Network.Packets.Server.PacketServerFeedback;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -65,6 +67,8 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.SERVER);
 
         Handler.registerMessage(HandlerSyncReturn.class, PacketSyncReturn.class, packetId++, Side.SERVER);
+
+        Handler.registerMessage(HandlerServerFeedback.class, PacketServerFeedback.class, packetId++, Side.SERVER);
     }
 
     // send packet info to player

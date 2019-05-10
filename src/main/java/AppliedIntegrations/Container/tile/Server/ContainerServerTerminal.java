@@ -8,6 +8,7 @@ import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -42,6 +43,10 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
     public boolean hasCard() {
         return !cardSlot.getStack().isEmpty();
+    }
+
+    public ItemStack getCard() {
+        return cardSlot.getStack();
     }
 
     @Override

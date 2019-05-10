@@ -5,17 +5,19 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Client.TextureEventManager;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
+import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetFluidSlot;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetItemSlot;
-import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Topology.WebServer.WebManager;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
 import AppliedIntegrations.tile.HoleStorageSystem.render.TileMEPylonRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.render.TileMETurretRenderer;
@@ -24,7 +26,6 @@ import AppliedIntegrations.tile.HoleStorageSystem.render.TileWhiteHoleRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
-import AppliedIntegrations.Topology.WebServer.WebManager;
 import AppliedIntegrations.tile.Server.Render.ServerRibRenderer;
 import AppliedIntegrations.tile.Server.Render.ServerSecurityRenderer;
 import AppliedIntegrations.tile.Server.TileServerRib;
@@ -32,13 +33,16 @@ import AppliedIntegrations.tile.Server.TileServerSecurity;
 import appeng.api.AEApi;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
 import appeng.fluids.client.gui.GuiFluidIO;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.IAEFluidTank;
 import appeng.util.item.AEItemStack;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
@@ -50,7 +54,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.tuple.Pair;
 
+import java.io.IOException;
 import java.util.Objects;
 
 /**
@@ -65,17 +71,28 @@ public class ClientProxy extends CommonProxy {
         // Get applied integrations api
         AIApi instance = Objects.requireNonNull(AIApi.instance());
 
-        GuiFluidIO d;
-
         // Register channel'sprite pair
         instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class),
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channels/item_channel.png"),
+                // Sprite
+                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+
+                // Constructor
                 WidgetItemSlot.class.getConstructor(IWidgetHost.class, int.class, int.class),
-                (AEItemStack::fromItemStack)); // (1) Item channel
+
+                // Converter and UV
+                (AEItemStack::fromItemStack), Pair.of(0, 0),
+
+                // Encoder and decoder
+                Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEItemStack::fromNBT)); // (1) Item channel
 
         instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class),
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channels/fluid_channel.png"),
+                // Sprite
+                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+
+                // Constructor
                 WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class),
+
+                // Converter and UV
                 (stack) -> {
                     // Get stack
                     FluidStack fluidStack = FluidUtil.getFluidContained(stack);
@@ -85,12 +102,23 @@ public class ClientProxy extends CommonProxy {
                         return null;
 
                     return AEFluidStack.fromFluidStack(fluidStack);
-                }); // (2) Fluid channel
+                }, Pair.of(16, 0),
+
+                // Encoder and decoder
+                Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEFluidStack::fromNBT)); // (2) Fluid channel
 
         instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class),
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channels/energy_channel.png"),
+                // Sprite
+                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+
+                // Constructor
                 WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class),
-                Utils::getEnergyStackFromItemStack); // (3) Energy channel
+
+                // Converter and UV
+                Utils::getEnergyStackFromItemStack, Pair.of(0, 16),
+
+                // Encoder and decoder
+                Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEEnergyStack::fromNBT)); // (3) Energy channel
     }
 
     @Override
