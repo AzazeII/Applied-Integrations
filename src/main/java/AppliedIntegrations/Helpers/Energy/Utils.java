@@ -54,7 +54,7 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 public class Utils {
     public static IAEStack<IAEEnergyStack> getEnergyStackFromItemStack(ItemStack itemStack) {
         // Get energy stack
-        EnergyStack stack = new EnergyStack(getEnergyFromItemStack(itemStack), 0);
+        EnergyStack stack = new EnergyStack(getEnergyFromItemStack(itemStack), 1);
 
         // Check not null and meaningful
         if (stack.getEnergy() == null)

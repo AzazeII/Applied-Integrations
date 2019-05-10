@@ -12,33 +12,33 @@ import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketServerFeedback;
+import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerSecurity;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.config.SecurityPermissions;
-import appeng.client.gui.implementations.GuiSecurityStation;
-import appeng.container.implementations.ContainerSecurityStation;
 import appeng.core.localization.GuiText;
 import appeng.fluids.util.AEFluidInventory;
 import appeng.util.Platform;
-import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
 import org.lwjgl.opengl.GL11;
 
-import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 // TODO Rewrite this GUI, now it will be similar to normal security terminal.
@@ -62,6 +62,8 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     private GuiListTypeButton listTypeButton;
 
     private final AEFluidInventory tank = new AEFluidInventory( null, 27 );
+    private TileServerSecurity terminal;
+    private ChangeHandler<ItemStack> cardChangeHandler = new ChangeHandler<>();
 
     /**
      * Contains maps of lists of 27 widgets linked to given storage channel from given security permission.
@@ -117,59 +119,71 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     }
 
     private void syncWithServer(NBTTagCompound tag) {
-        NetworkHandler.sendToServer(new PacketServerFeedback(tag));
+        NetworkHandler.sendToServer(new PacketServerFeedback(tag, terminal));
     }
 
     private void encodeCardTag() {
-        // Create/get existing tag of card stack
-        NBTTagCompound tag = Platform.openNbtData(getCardStack());
+        // Encode all GUI data into one tag
+        NBTTagCompound tag = NetworkCard.encodeDataInTag(permissionChannelWidgetMap,
+                                                         permissionChannelModeMap,
+                                                         getCardStack());
 
-        // Now the fun begins
-        // Iterate for each permission
-        GuiSecurityPermissionsButton.getPermissionList().forEach((securityPermissions -> {
-            // Iterate for each storage channel
-            GuiStorageChannelButton.getChannelList().forEach((chan) -> {
-                // Create channel sub-nbt
-                NBTTagCompound channelNBT = new NBTTagCompound();
-
-                // Serialize black/white list mode
-                channelNBT.setInteger("#SECURITY_ORDINAL", permissionChannelModeMap.get(securityPermissions).get(chan).ordinal());
-
-                // Write size of list
-                channelNBT.setInteger("#LIST_SIZE", permissionChannelWidgetMap.get(securityPermissions).get(chan).size());
-
-                // Iterate for each filter
-                permissionChannelWidgetMap.get(securityPermissions).get(chan).forEach((widget -> {
-                    try {
-                        // Check not null
-                        if (widget.getAEStack() != null)
-                            // Serialize stack with Api
-                            Objects.requireNonNull(AIApi.instance()).getStackEncoder(chan).encode(channelNBT, widget.getAEStack());
-                        else
-                            // Encode "NaN"
-                            channelNBT.setLong( "Cnt", -1);
-                    } catch (IOException e) {
-                        throw new IllegalStateException("Unexpected error");
-                    }
-                }));
-
-                // Encode sub-tag
-                tag.setTag("#SUB_TAG" + chan.hashCode() + securityPermissions.hashCode(), channelNBT);
-            });
-        }));
-
+        // Notify server
         syncWithServer(tag);
+
+        // Change NBT tag on client
+        getCardStack().setTagCompound(tag);
+    }
+
+    private void onCardChanged() {
+        // Check not null
+        if (getCardStack() != null) {
+            // Get stack tag
+            NBTTagCompound tag = Platform.openNbtData(getCardStack());
+
+            // Check if stack has valid tags
+            if (tag.hasKey(NetworkCard.KEY_SUB + "_INJECT")) {
+                // Decode map pair
+                Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>,
+                        LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> data = NetworkCard.decodeDataFromTag(tag);
+
+                // Update mode map
+                permissionChannelModeMap = data.getRight();
+
+                // Iterate for each security permissions
+                GuiSecurityPermissionsButton.getPermissionList().forEach((securityPermissions -> {
+                    // Iterate for each channel
+                    GuiStorageChannelButton.getChannelList().forEach((channel -> {
+                        // Create atomic integer
+                        AtomicInteger counter = new AtomicInteger();
+
+                        // Iterate for each widget in list
+                        permissionChannelWidgetMap.get(securityPermissions).get(channel).forEach((iChannelWidget -> {
+                            List<IAEStack<? extends IAEStack>> stackList = data.getLeft().get(securityPermissions).get(channel);
+
+                            // Check if list has enough elements
+                            if (stackList.size() >= counter.get() + 1)
+                                // Update stack in channel widget
+                                iChannelWidget.setAEStack(stackList.get(counter.get()));
+
+                            // Add to counter
+                            counter.incrementAndGet();
+                        }));
+                    }));
+                }));
+            }
+        }
     }
 
     @Override
     public ISyncHost getSyncHost() {
-        return mInstance;
+        return terminal;
     }
 
     @Override
     public void setSyncHost(ISyncHost host) {
-        if(host instanceof TileServerCore)
-            mInstance = (TileServerCore)host;
+        if(host instanceof TileServerSecurity)
+            terminal = (TileServerSecurity) host;
     }
 
     @Override
@@ -317,10 +331,6 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
             // Encode card tag
             encodeCardTag();
         }
-
-        // Check not null
-        if (getCardStack() == null)
-            return;
     }
 
     @Override
@@ -346,6 +356,9 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         // Check if container has no network tool in slot
         if (!isCardValid())
             return;
+
+        // Call change handler
+        cardChangeHandler.onChange(getCardStack(), (stack) -> onCardChanged());
 
         // Iterate for each element of list from current channel from map from current permission
         // Draw widget

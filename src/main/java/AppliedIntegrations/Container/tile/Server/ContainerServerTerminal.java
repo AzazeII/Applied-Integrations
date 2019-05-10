@@ -1,14 +1,16 @@
 package AppliedIntegrations.Container.tile.Server;
 
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
+import AppliedIntegrations.Items.NetworkCard;
+import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
+import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,7 +22,8 @@ import javax.annotation.Nonnull;
 public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
     private final SlotRestrictive cardSlot;
-    public TileServerCore tile;
+    private final TileServerSecurity terminal;
+    public final TileServerCore core;
 
     public ContainerServerTerminal(TileServerCore instance, TileServerSecurity terminal, EntityPlayer player) {
         super(player);
@@ -38,7 +41,13 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
         });
 
         // Write instance
-        this.tile = instance;
+        this.core = instance;
+
+        // Write terminal
+        this.terminal = terminal;
+
+        // Add listener
+        this.terminal.listeners.add(this);
     }
 
     public boolean hasCard() {
@@ -55,8 +64,10 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
     }
 
     @Override
-    public void onContainerClosed( @Nonnull final EntityPlayer player )
-    {
+    public void onContainerClosed( @Nonnull final EntityPlayer player ) {
        super.onContainerClosed(player);
+
+       // Remove listener
+       this.terminal.listeners.remove(this);
     }
 }

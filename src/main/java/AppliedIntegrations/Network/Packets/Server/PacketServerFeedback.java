@@ -1,27 +1,10 @@
 package AppliedIntegrations.Network.Packets.Server;
 
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiSecurityPermissionsButton;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.api.AIApi;
-import AppliedIntegrations.api.ISyncHost;
-import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.Server.TileServerCore;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkPermissions;
-import appeng.api.config.IncludeExclude;
-import appeng.api.config.SecurityPermissions;
-import appeng.api.storage.IStorageChannel;
-import appeng.api.storage.data.IAEStack;
-import appeng.api.util.AEPartLocation;
+import AppliedIntegrations.tile.Server.TileServerSecurity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
-
-import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * @Author Azazell
@@ -31,22 +14,24 @@ import java.util.Objects;
 public class PacketServerFeedback extends AIPacket {
 
     public NBTTagCompound tag;
+    public TileServerSecurity terminal;
 
-    public PacketServerFeedback() {
+    public PacketServerFeedback(){}
 
-    }
-
-    public PacketServerFeedback(NBTTagCompound tag){
+    public PacketServerFeedback(NBTTagCompound tag, TileServerSecurity terminal) {
         this.tag = tag;
+        this.terminal = terminal;
     }
 
     @Override
     public void fromBytes(ByteBuf buf) {
         tag = ByteBufUtils.readTag(buf);
+        terminal = (TileServerSecurity)readSyncHost(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         ByteBufUtils.writeTag(buf, tag);
+        writeSyncHost(terminal, buf);
     }
 }

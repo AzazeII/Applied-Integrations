@@ -14,6 +14,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
@@ -31,7 +33,7 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
     }
 
     @Override
-    public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+    public TileEntity createNewTileEntity(@Nullable World p_149915_1_, int p_149915_2_) {
         return new TileServerSecurity();
     }
 
@@ -49,14 +51,16 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
                     TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(pos);
 
                     // Check if tile has no master
-                    if(! tile.hasMaster() )
-                        return false;
+                    if (tile == null || !tile.hasMaster()) return false;
 
                     // Request gui update
                     ((TileServerCore)tile.getMaster()).requestUpdate();
 
                     // Open gui
                     AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerTerminal, p, INTERNAL, pos);
+
+                    // Request update
+                    tile.updateRequested = true;
 
                     return true;
                 }

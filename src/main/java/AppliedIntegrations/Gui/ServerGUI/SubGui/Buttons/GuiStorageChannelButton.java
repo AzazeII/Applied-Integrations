@@ -80,7 +80,7 @@ public class GuiStorageChannelButton extends GuiServerButton {
         Minecraft.getMinecraft().renderEngine.bindTexture(api.getSpriteFromChannel(channel));
 
         // Draw texture
-        drawTexturedModalRect(x, y, api.getSpriteU(channel), api.getSpriteV(channel), 16, 16);
+        drawTexturedModalRect(x + 2, y + 1, api.getSpriteU(channel), api.getSpriteV(channel), 16, 16);
 
         // Re-enable lighting
         GL11.glEnable( GL11.GL_LIGHTING );

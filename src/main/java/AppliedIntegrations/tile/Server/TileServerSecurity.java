@@ -1,7 +1,11 @@
 package AppliedIntegrations.tile.Server;
 
+import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
+import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Items.NetworkCard;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
@@ -10,27 +14,60 @@ import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.IOrientable;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @Author Azazell
  */
 public class TileServerSecurity extends AIMultiBlockTile implements IOrientable {
+    public List<ContainerServerTerminal> listeners = new LinkedList<>();
 
-    public IInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1){
+    public AIGridNodeInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1){
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemstack) {
             return itemstack.getItem() instanceof NetworkCard;
         }
     };
 
+    public boolean updateRequested;
     private EnumFacing fw;
+
+    public void updateCardData(NBTTagCompound tag) {
+        // Get inventory
+        AIGridNodeInventory inv = this.editorInv;
+
+        // Get stack
+        ItemStack stack = inv.getStackInSlot(0);
+
+        // Check if stack has network card item
+        if (stack != null && stack.getItem() instanceof NetworkCard){
+            // Change NBT tag
+            stack.setTagCompound(tag);
+        }
+    }
+
+    private void initGuiCoordinates() {
+        // Iterate for each listener
+        for( ContainerServerTerminal listener : listeners){
+            // Send update packet
+            NetworkHandler.sendTo(new PacketCoordinateInit(this),
+                    (EntityPlayerMP)listener.player);
+
+            // Trigger request
+            updateRequested = false;
+        }
+    }
 
     @Override
     public void update() {
@@ -69,6 +106,14 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
             }
         }
 
+        // Check if update requested
+        if (updateRequested){
+            // Check if we have gui to update
+            if (Minecraft.getMinecraft().currentScreen instanceof GuiServerTerminal) {
+                // Init gui coordinate set
+                initGuiCoordinates();
+            }
+        }
     }
 
     @Override

@@ -66,8 +66,8 @@ public class GuiSecurityPermissionsButton extends GuiServerButton {
         if (!host.isCardValid())
             return;
 
-        // Add name
-        tip.add("Security Permissions");
+        // Add name as header
+        tip.add(I18n.format(currentPermissions.getUnlocalizedName()));
 
         // Add current value
         tip.add(I18n.format(currentPermissions.getUnlocalizedTip()));

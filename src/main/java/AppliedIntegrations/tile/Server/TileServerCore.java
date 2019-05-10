@@ -1,23 +1,16 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.Utils.MultiBlockUtils;
-import AppliedIntegrations.api.IInventoryHost;
-import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
-import AppliedIntegrations.tile.AIMultiBlockTile;
-import AppliedIntegrations.tile.AITile;
-import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkData;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkPermissions;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkData;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.tile.IMaster;
+import AppliedIntegrations.Utils.MultiBlockUtils;
+import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.tile.*;
 import appeng.api.AEApi;
-import appeng.api.config.IncludeExclude;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
@@ -26,7 +19,6 @@ import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.storage.*;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
-import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.api.util.IReadOnlyCollection;
@@ -42,6 +34,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,7 +44,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, ICellContainer, INetworkToolAgent, IInventoryHost, ITickable {
 
-    public static final int BLOCKS_IN_STRUCTURE = AIPatterns.ME_SERVER.length+1;
+    private static final int BLOCKS_IN_STRUCTURE = AIPatterns.ME_SERVER.length+1;
 
     private static final int RESERVED_MASTER_ID = 1;
     private int AVAILABLE_ID = RESERVED_MASTER_ID+1;
@@ -89,7 +82,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     private byte[] cellStatuses = new byte[6];
 
     // Wait for updating
-    public int blocksToPlace = 0;
+    private int blocksToPlace = 0;
     private boolean updateRequested;
 
     public void requestUpdate(){
@@ -279,6 +272,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
 
     }
 
+    @Nonnull
     @Override
     public EnumSet<GridFlags> getFlags() {
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
@@ -316,15 +310,13 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         IGridNode node = getGridNode(AEPartLocation.INTERNAL);
         if (node != null) {
             IGrid grid = node.getGrid();
-            if (grid != null) {
-                grid.postEvent(new MENetworkCellArrayUpdate());
-            }
+            grid.postEvent(new MENetworkCellArrayUpdate());
         }
     }
 
     private List<IMEInventoryHandler> updateHandlers(IStorageChannel channel) {
         ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-        List<IMEInventoryHandler> handlers = new ArrayList<IMEInventoryHandler>();
+        List<IMEInventoryHandler> handlers = new ArrayList<>();
         for (int i = 0; i < this.inv.getSizeInventory(); i++) {
             ItemStack cell = this.inv.getStackInSlot(i);
             if (cellRegistry.isCellHandled(cell)) {
@@ -339,7 +331,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     @Override
     public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
         if (!gridNode.isActive())
-            return new ArrayList<IMEInventoryHandler>();
+            return new ArrayList<>();
         return channel == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class) ? this.items : this.fluids;
     }
 
@@ -396,8 +388,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             }
         }
     }
-
-    public void onFeedback(boolean Connected, int serverID, AEPartLocation port, LinkedHashMap<SecurityPermissions,NetworkPermissions> networkPermissions) { }
 
     @Override
     public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
