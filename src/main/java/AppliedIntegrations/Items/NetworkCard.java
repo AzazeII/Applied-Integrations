@@ -88,7 +88,7 @@ public class NetworkCard extends AIItemRegistrable {
             LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude> tempMap = new LinkedHashMap<>();
 
             // Iterate for each storage channel
-            AEApi.instance().storage().storageChannels().forEach((chan -> {
+            GuiStorageChannelButton.getChannelList().forEach((chan -> {
                 // Add default list mode to map
                 tempMap.put(chan, AIConfig.defaultListMode);
             }));

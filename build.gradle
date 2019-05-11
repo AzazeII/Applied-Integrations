@@ -17,9 +17,8 @@ plugins {
 
 apply plugin: 'net.minecraftforge.gradle.forge'
 
-// Just a pompous name for "getGitBranch"
-def getGitTimeField = { ->
-    // Create std output stream, to read command line ouput
+def getGitBranch = { ->
+    // Create std output stream, to read command line output
     def stdout = new ByteArrayOutputStream()
 
     // Execute next block:
@@ -35,16 +34,15 @@ def getGitTimeField = { ->
     return stdout.toString().trim()
 }
 
-// Just a pompous name for "getGitCommitHash"
-def getGitTimeLineHash = { ->
-    // Create std output stream, to read command line ouput
+def getGitCommitHash = { ->
+    // Create std output stream, to read command line output
     def stdout = new ByteArrayOutputStream()
 
     // Execute next block:
     exec {
         // Get commit hash
         commandLine 'git', 'rev-parse', '--short', 'HEAD'
-        
+
         // Write standart output
         standardOutput = stdout
     }
@@ -53,7 +51,7 @@ def getGitTimeLineHash = { ->
     return stdout.toString().trim()
 }
 
-version = getGitTimeField() + '-' + getGitTimeLineHash()
+version = getGitBranch() + '-' + getGitCommitHash()
 group = "com.azazell" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "AppliedIntegrations"
 

@@ -27,7 +27,7 @@ public class GuiStorageChannelButton extends GuiServerButton {
     private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 
     // Array list of all storage channels registered
-    private static final List<IStorageChannel<? extends IAEStack<?>>> channelList = new ArrayList<>(AEApi.instance().storage().storageChannels());
+    private static final List<IStorageChannel<? extends IAEStack<?>>> channelList = new ArrayList<>(Objects.requireNonNull(AEApi.instance().storage().storageChannels()));
 
     public GuiStorageChannelButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
         super(terminal, ID, xPosition, yPosition, width, height, text);

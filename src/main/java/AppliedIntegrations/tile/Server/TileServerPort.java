@@ -63,27 +63,6 @@ public class TileServerPort extends AIMultiBlockTile implements ICellContainer {
         return side;
     }
 
-    public IGrid getOuterGrid() {
-        // Check not null
-        if (getGridNode() == null)
-            return null;
-
-        // Get grid
-        return getGridNode().getGrid();
-    }
-
-    public IMEInventory<?> getOuterInventory(IStorageChannel<? extends IAEStack<?>> channel) {
-        // Check not null
-        if (getOuterGrid() == null)
-            return null;
-
-        // Get storage grid
-        IStorageGrid storageGrid = getOuterGrid().getCache(IStorageGrid.class);
-
-        // Return inventory of grid
-        return storageGrid.getInventory(channel);
-    }
-
     @Override
     public void validate(){
         this.onNeighborChange();

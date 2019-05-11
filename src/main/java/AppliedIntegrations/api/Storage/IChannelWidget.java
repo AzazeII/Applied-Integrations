@@ -1,7 +1,6 @@
 package AppliedIntegrations.api.Storage;
 
 import appeng.api.storage.data.IAEStack;
-import net.minecraft.client.gui.Gui;
 
 /**
  * @Author Azazell

@@ -12,8 +12,6 @@ import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.grid.AEEnergyStack;
 import appeng.api.storage.data.IAEStack;
-import appeng.client.me.InternalFluidSlotME;
-import appeng.client.me.InternalSlotME;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;

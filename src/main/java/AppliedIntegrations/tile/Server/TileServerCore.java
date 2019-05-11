@@ -48,7 +48,99 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @Author Azazell
  */
-public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, ICellContainer, INetworkToolAgent, IInventoryHost, ITickable {
+public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, ICellContainer, INetworkToolAgent, ITickable {
+    private class DriveInventoryManager implements IInventoryHost{
+        @Override
+        public void onInventoryChanged() {
+
+        }
+    }
+
+    private class CardInventoryManager implements IInventoryHost {
+
+        private void onCardRemove(ItemStack card) {
+            // Get tag
+            NBTTagCompound tag = Platform.openNbtData(card);
+
+            // Get side
+            AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
+
+            // Get port
+            TileServerPort port = getPortAtSide(side);
+
+            // Check not null
+            if (port == null)
+                // Skip
+                return;
+
+            // Nullify handlers for this port
+            handlers.put(side, null);
+
+            // Notify grid of current port
+            port.postCellEvent();
+
+            // Notify our grid also
+            postCellEvent();
+        }
+
+        @Override
+        public void onInventoryChanged() {
+            // Iterate for each stack in cards inventory
+            for (ItemStack stack : cardInv.slots){
+                // Check if item in stack is network card
+                if (stack.getItem() instanceof NetworkCard) {
+                    // Get tag
+                    NBTTagCompound tag = Platform.openNbtData(stack);
+
+                    // Get decoded pair from card
+                    Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>,
+                            LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> data = NetworkCard.decodeDataFromTag(tag);
+
+                    // Get side
+                    AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
+
+                    // Get port
+                    TileServerPort port = getPortAtSide(side);
+
+                    // Check not null
+                    if (port == null)
+                        // Skip
+                        continue;
+
+                    // Create list
+                    LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler> handlers = new LinkedHashMap<>();
+
+                    // Iterate for each channel
+                    GuiStorageChannelButton.getChannelList().forEach(channel -> {
+                        // Get inventory
+                        IMEInventory<?> inventory = ((IStorageGrid)mainNetwork.getCache(IStorageGrid.class)).getInventory(channel);
+
+                        try {
+                            // Encode new handler from channel into map
+                            handlers.put(channel, Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(
+                                    data.getLeft(),
+                                    data.getRight(),
+                                    inventory));
+                        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                            throw new IllegalStateException("Unexpected Error");
+                        }
+                    });
+
+                    // Encode new handler for side from card
+                    TileServerCore.this.handlers.put(side, handlers);
+
+                    // Notify grid of current port
+                    port.postCellEvent();
+                }
+            }
+
+            // Notify our grid also
+            postCellEvent();
+        }
+    }
+
+    private DriveInventoryManager driveManager = new DriveInventoryManager();
+    private CardInventoryManager cardManager = new CardInventoryManager();
 
     private static final int BLOCKS_IN_STRUCTURE = AIPatterns.ME_SERVER.length+1;
 
@@ -58,7 +150,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     // list of blocks in multiblock
     public Vector<IAIMultiBlock> slaves = new Vector<>();
 
-    public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 6, 1, this){
+    public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 6, 1, this.cardManager){
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemstack) {
             return itemstack.getItem() instanceof NetworkCard;
@@ -69,14 +161,14 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             // Check if slot decreasing is network card
             if (slots[slotId].getItem() instanceof NetworkCard) {
                 // Pass call to outer function
-                onCardRemove(slots[slotId]);
+                cardManager.onCardRemove(slots[slotId]);
             }
 
             return super.decrStackSize(slotId, amount);
         }
     };
 
-    public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1, this){
+    public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1, this.driveManager){
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemstack) {
             return AEApi.instance().registries().cell().isCellHandled(itemstack);
@@ -367,86 +459,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     @Override
     public int getPriority() {
         return 0;
-    }
-
-    private void onCardRemove(ItemStack card) {
-        // Get tag
-        NBTTagCompound tag = Platform.openNbtData(card);
-
-        // Get side
-        AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
-
-        // Get port
-        TileServerPort port = getPortAtSide(side);
-
-        // Check not null
-        if (port == null)
-            // Skip
-            return;
-
-        // Nullify handlers for this port
-        handlers.put(side, null);
-
-        // Notify grid of current port
-        port.postCellEvent();
-
-        // Notify our grid also
-        postCellEvent();
-    }
-
-    @Override
-    public void onInventoryChanged() {
-        // Iterate for each stack in cards inventory
-        for (ItemStack stack : cardInv.slots){
-            // Check if item in stack is network card
-            if (stack.getItem() instanceof NetworkCard) {
-                // Get tag
-                NBTTagCompound tag = Platform.openNbtData(stack);
-
-                // Get decoded pair from card
-                Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>,
-                        LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> data = NetworkCard.decodeDataFromTag(tag);
-
-                // Get side
-                AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
-
-                // Get port
-                TileServerPort port = getPortAtSide(side);
-
-                // Check not null
-                if (port == null)
-                    // Skip
-                    continue;
-
-                // Create list
-                LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler> handlers = new LinkedHashMap<>();
-
-                // Iterate for each channel
-                GuiStorageChannelButton.getChannelList().forEach(channel -> {
-                    // Get inventory
-                    IMEInventory<?> inventory = ((IStorageGrid)mainNetwork.getCache(IStorageGrid.class)).getInventory(channel);
-
-                    try {
-                        // Encode new handler from channel into map
-                        handlers.put(channel, Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(
-                                              data.getLeft(),
-                                              data.getRight(),
-                                              inventory));
-                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
-                        throw new IllegalStateException("Unexpected Error");
-                    }
-                });
-
-                // Encode new handler for side from card
-                this.handlers.put(side, handlers);
-
-                // Notify grid of current port
-                port.postCellEvent();
-            }
-        }
-
-        // Notify our grid also
-        postCellEvent();
     }
 
     @Override

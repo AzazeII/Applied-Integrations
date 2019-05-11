@@ -6,12 +6,9 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import appeng.api.storage.data.IAEFluidStack;
 import appeng.api.storage.data.IAEStack;
-import appeng.client.me.InternalFluidSlotME;
-import appeng.client.me.SlotFluidME;
 import appeng.fluids.client.gui.widgets.GuiFluidSlot;
 import appeng.fluids.util.IAEFluidTank;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
 
 /**
  * @Author Azazell

@@ -31,14 +31,14 @@ public class ContainerMEServer extends ContainerWithPlayerInventory {
         // Update master
         this.master = master;
 
-        // Bind player slots
-        super.bindPlayerInventory(player.inventory, 102,160 );
+        // Bind card slots
+        this.addCardSlots(master.cardInv);
 
         // Bind drive slots
         this.addDriveSlots(master.inv);
 
-        // Bind card slots
-        this.addCardSlots(master.cardInv);
+        // Bind player slots
+        super.bindPlayerInventory(player.inventory, 102,160 );
     }
 
     private void addCardSlots(AIGridNodeInventory cardInv) {
@@ -87,41 +87,5 @@ public class ContainerMEServer extends ContainerWithPlayerInventory {
     @Override
     public boolean canInteractWith(EntityPlayer p) {
         return true;
-    }
-
-    @Override
-    public ItemStack transferStackInSlot(EntityPlayer p, int i) {
-        // Create item stack null pointer
-        ItemStack itemstack = null;
-
-        // Get slot
-        Slot slot = inventorySlots.get(i);
-
-        // Check not null
-        if (slot != null && slot.getHasStack()) {
-            // Create other stack
-            ItemStack itemstack1 = slot.getStack();
-
-            // Copy stack
-            itemstack = itemstack1.copy();
-
-            // Check if cell in stack is handled
-            if (AEApi.instance().registries().cell().isCellHandled(itemstack)) {
-                if (i < 3) {
-                    if (!mergeItemStack(itemstack1, 3, 38, false)) {
-                        return new ItemStack(AIR);
-                    }
-                } else if (!mergeItemStack(itemstack1, 0, 3, false)) {
-                    return new ItemStack(AIR);
-                }
-
-                if (itemstack1.getCount() == 0) {
-                    slot.putStack(new ItemStack(AIR));
-                } else {
-                    slot.onSlotChanged();
-                }
-            }
-        }
-        return itemstack;
     }
 }

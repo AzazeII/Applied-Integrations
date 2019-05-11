@@ -1,25 +1,17 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
-import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
-import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.inventory.Slot;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
-
-import static appeng.api.config.Settings.STORAGE_FILTER;
-import static appeng.api.config.StorageFilter.EXTRACTABLE_ONLY;
 
 /**
  * @Author Azazell

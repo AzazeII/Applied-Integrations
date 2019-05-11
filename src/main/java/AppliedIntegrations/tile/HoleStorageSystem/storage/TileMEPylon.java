@@ -1,6 +1,7 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage;
 
 import AppliedIntegrations.AIConfig;
+import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.BlackHoleSystem.IPylon;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
@@ -118,7 +119,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
         activeBlackHoleHandlers = new LinkedHashMap<>();
 
         // Iterate over all channels
-        for(IStorageChannel chan : AEApi.instance().storage().storageChannels()){
+        for(IStorageChannel chan : GuiStorageChannelButton.getChannelList()){
             try {
                 // Get inv
                 WhiteHoleSingularityInventoryHandler<?> invWhiteHole = passiveWhiteHoleHandlers.get(chan).newInstance();
