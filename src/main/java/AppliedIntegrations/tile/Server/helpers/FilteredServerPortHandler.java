@@ -18,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
 import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
+import static appeng.api.config.IncludeExclude.BLACKLIST;
 import static appeng.api.config.SecurityPermissions.EXTRACT;
 import static appeng.api.config.SecurityPermissions.INJECT;
 
@@ -44,10 +45,11 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         for (SecurityPermissions securityPermissions : new SecurityPermissions[]{INJECT, EXTRACT}) {
             // Iterate for each channel
             getChannelList().forEach((channel -> {
-                // Iterate for each stack
-                filteredMatter.get(securityPermissions).get(channel).forEach(iaeStack -> {
-                    consumer.accept(iaeStack, securityPermissions);
-                });
+                // Check not null
+                if (filteredMatter.get(securityPermissions) != null && filteredMatter.get(securityPermissions).get(channel) != null) {
+                    // Iterate for each stack
+                    filteredMatter.get(securityPermissions).get(channel).forEach(iaeStack -> consumer.accept(iaeStack, securityPermissions));
+                }
             }));
         }
     }
@@ -95,23 +97,43 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         return rule.get();
     }
 
+    /**
+     * @param input stack to check
+     * @param permissions interaction type
+     * @return can requester interact with given stack?
+     */
     public boolean canInteract(T input, SecurityPermissions permissions) {
         // Atomic result
         AtomicBoolean canInteract = new AtomicBoolean(false);
+
+        // Check not null
+        if (input == null)
+            // Can't interact
+            return canInteract.get();
 
         // Iterate for each channel
         List<IStorageChannel<? extends IAEStack<?>>> channelList = getChannelList();
 
         // Iterate for each channel
         for (IStorageChannel<? extends IAEStack<?>> channel : channelList) {
-            // Iterate for each stack
-            for (IAEStack<? extends IAEStack> stack : filteredMatter.get(permissions).get(channel)) {
-                // Check if stack is equal (by stored matter type) to input
-                if (stack.equals(input)) {
-                    // Add result depending on filter type
-                    canInteract.set(filterMode.get(permissions).get(channel) == IncludeExclude.WHITELIST);
+            // Get mode
+            IncludeExclude mode = filterMode.get(permissions).get(channel);
 
-                    // Return value
+            // For blacklist:
+            // Make result true if list doesn't contain this stack
+            // For whitelist:
+            // Make result true if list contain this tack
+            // Set by default
+            canInteract.set(mode == BLACKLIST);
+
+            // Iterate for each stack in filter
+            for (IAEStack<? extends IAEStack> stack : filteredMatter.get(permissions).get(channel)) {
+                // Check if stack equal to input
+                if (input.equals(stack)){
+                    // Change value to opposite
+                    canInteract.set(!(mode == BLACKLIST));
+
+                    // Force-return
                     return canInteract.get();
                 }
             }
@@ -120,9 +142,8 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         return canInteract.get();
     }
 
-    @Override
-    public boolean isPrioritized(T input) {
-        return true;
+    private boolean canExtract(T input) {
+        return canInteract(input, EXTRACT);
     }
 
     @Override
@@ -130,8 +151,9 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         return canInteract(input, INJECT);
     }
 
-    private boolean canExtract(T input) {
-        return canInteract(input, EXTRACT);
+    @Override
+    public boolean isPrioritized(T input) {
+        return false;
     }
 
     @Override
@@ -155,6 +177,10 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         if (!canAccept(input))
             return input;
 
+        // Check if channel of inventory equal to channel of this handler
+        if (!getChannel().equals(outerInventory.getChannel()))
+            return input;
+
         // Pass to outer handler
         return outerInventory.injectItems(input, type, src);
     }
@@ -165,15 +191,23 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         if (!canExtract(request))
             return null;
 
-        // Pass to outer handler
+        // Check if channel of inventory equal to channel of this handler
+        if (!getChannel().equals(outerInventory.getChannel()))
+            return null;
+
+            // Pass to outer handler
         return outerInventory.extractItems(request, mode, src);
     }
 
     @Override
     public IItemList<T> getAvailableItems(IItemList<T> out) {
-        // Check if stack can be accepted
+        // Check if handler has at least read access
         if (getAccess() == AccessRestriction.READ || getAccess() == AccessRestriction.READ_WRITE)
-            return null;
+            return out;
+
+        // Check if channel of inventory equal to channel of this handler
+        if (!getChannel().equals(outerInventory.getChannel()))
+            return out;
 
         // Pass to outer handler
         return outerInventory.getAvailableItems(out);

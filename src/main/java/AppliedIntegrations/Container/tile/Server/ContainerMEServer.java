@@ -50,7 +50,7 @@ public class ContainerMEServer extends ContainerWithPlayerInventory {
             // Check not null
             if(cardInv != null) {
                 // Add ME server slot
-                this.addSlotToContainer( new SlotRestrictive(cardInv, i, 188, y * 18 + 6 ) {
+                this.addSlotToContainer( new SlotRestrictive(cardInv, i, 188, y * 18 - 7  ) {
                     // Override icon getter for this slot
                     @SideOnly(Side.CLIENT)
                     public String getSlotTexture() {

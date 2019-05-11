@@ -6,10 +6,10 @@ import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -18,27 +18,39 @@ import java.util.List;
  */
 public class TileServerPort extends AIMultiBlockTile implements ICellContainer {
 
-    private AEPartLocation side = null;
+    private AEPartLocation side = AEPartLocation.INTERNAL;
 
-    public void updateGrid() {
+    public void onNeighborChange() {
+        // Check if port has master
         if(hasMaster()){
+            // Check not null
             if(gridNode == null)
                 return;
-            gridNode.getGrid();
-            IGrid Network = gridNode.getGrid();
 
+            // Get grid
+            IGrid network = gridNode.getGrid();
+
+            // Get core
             TileServerCore core = (TileServerCore)getMaster();
 
-            if(Network.getNodes().size() > 1 && !core.portNetworks.containsValue(Network)) {
-                if(Network != core.mainNetwork) {
-                    core.portNetworks.put(side.getFacing(), Network);
-                    core.networkIDMap.put(Network, core.getNextNetID());
+            // Check if network has more than one node and core networks not contains this network
+            if(network.getNodes().size() > 1 && !core.portNetworks.containsValue(network)) {
+                // Check if network not equal to main network
+                if(network != core.mainNetwork) {
+                    // Map network by side
+                    core.portNetworks.put(side, network);
+
+                    // Map id by network
+                    core.networkIDMap.put(network, core.getNextNetID());
                 }
             }else{
-                core.portNetworks.remove(side.getFacing());
-                if(core.networkIDMap.get(Network) != null)
-                    core.networkIDMap.remove(core.networkIDMap.get(Network));
+                // Remove network from maps
+                core.portNetworks.remove(side); // (1)
+                core.networkIDMap.remove(network); // (2)/[
             }
+
+            // Notify all networks
+            core.postNetworkCellEvents();
         }
     }
 
@@ -74,7 +86,7 @@ public class TileServerPort extends AIMultiBlockTile implements ICellContainer {
 
     @Override
     public void validate(){
-        this.updateGrid();
+        this.onNeighborChange();
     }
 
     /* -----------------------------Drive Methods----------------------------- */
@@ -85,7 +97,13 @@ public class TileServerPort extends AIMultiBlockTile implements ICellContainer {
 
     @Override
     public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> channel) {
-        return ((TileServerCore)getMaster()).getSidedCellArray(side);
+        // Check not null
+        if (getMaster() == null)
+            // Empty list
+            return new ArrayList<>();
+
+        // Pass call to master
+        return ((TileServerCore)getMaster()).getSidedCellArray(side, channel);
     }
 
     @Override

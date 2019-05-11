@@ -97,9 +97,6 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
 
                         // Set master
                         setMaster(master);
-
-                        // Query gui update
-                        master.updateGUI();
                     }
 
                     return;

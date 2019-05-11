@@ -87,7 +87,7 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
     public IMEInventory<IAEItemStack> getOuterGridInventory() {
         if(getGridNode() == null)
             return null;
-        IGrid grid = getGridNode().getGrid(); // check grid node
+        IGrid grid = getGridNode().getGrid();
 
         IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
 

@@ -6,7 +6,6 @@ import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerMassChange;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerSingularitySync;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerVectorSync;
 import AppliedIntegrations.Network.Handlers.PartGUI.*;
-import AppliedIntegrations.Network.Handlers.Server.HandlerMEServer;
 import AppliedIntegrations.Network.Handlers.Server.HandlerRibSync;
 import AppliedIntegrations.Network.Handlers.Server.HandlerServerFeedback;
 import AppliedIntegrations.Network.Packets.*;
@@ -15,7 +14,6 @@ import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.Network.Packets.PartGUI.*;
-import AppliedIntegrations.Network.Packets.Server.PacketMEServer;
 import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
 import AppliedIntegrations.Network.Packets.Server.PacketServerFeedback;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -39,8 +37,6 @@ public class NetworkHandler {
         Handler.registerMessage(HandlerFullSync.class, PacketFullSync.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerServerToClient.class, PacketFilterServerToClient.class, packetId++, Side.CLIENT);
-
-        Handler.registerMessage(HandlerMEServer.class, PacketMEServer.class, packetId++, Side.CLIENT);
 
         Handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
 

@@ -27,7 +27,6 @@ public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, IT
     // Did activity of grid node changed?
     private ChangeHandler<Boolean> activityChangeHandler = new ChangeHandler<>();
 
-
     private void notifyListeners() {
         // Sync with client
         NetworkHandler.sendToAllInRange(new PacketRibSync(this, getGridNode().isActive()),
@@ -69,13 +68,6 @@ public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, IT
     @Override
     public EnumSet<GridFlags> getFlags() {
         return EnumSet.of(GridFlags.DENSE_CAPACITY);
-    }
-
-    public void changeAlt(Boolean alt){
-        Block rib = world.getBlockState(pos).getBlock();
-        if(rib != null && rib.getClass() == BlockServerRib.class) {
-            world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 0);
-        }
     }
 
 }

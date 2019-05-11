@@ -8,6 +8,7 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.*;
+import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.util.AECableType;
@@ -64,6 +65,26 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
 
     public Object getServerGuiElement( final EntityPlayer player ){ return null; }
     public Object getClientGuiElement( final EntityPlayer player ){ return null; }
+
+    public void postCellEvent(){
+        // Get node
+        IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+
+        // Check not null
+        if (node != null) {
+            // Get grid
+            IGrid grid = node.getGrid();
+
+            // Post update
+            postCellEvent(grid);
+        }
+    }
+
+
+    public void postCellEvent(IGrid iGrid) {
+        // Notify listeners of event change
+        iGrid.postEvent(new MENetworkCellArrayUpdate());
+    }
 
     @Override
     public double getIdlePowerUsage() {
