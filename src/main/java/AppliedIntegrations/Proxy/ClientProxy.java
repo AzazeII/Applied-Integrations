@@ -30,7 +30,13 @@ import AppliedIntegrations.tile.Server.Render.ServerRibRenderer;
 import AppliedIntegrations.tile.Server.Render.ServerSecurityRenderer;
 import AppliedIntegrations.tile.Server.TileServerRib;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortEnergyHandler;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortFluidHandler;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortItemHandler;
 import appeng.api.AEApi;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
@@ -57,6 +63,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.Objects;
 
 /**
@@ -79,6 +86,9 @@ public class ClientProxy extends CommonProxy {
                 // Constructor
                 WidgetItemSlot.class.getConstructor(IWidgetHost.class, int.class, int.class),
 
+                // Handler
+                FilteredServerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, IMEInventory.class),
+
                 // Converter and UV
                 (AEItemStack::fromItemStack), Pair.of(0, 0),
 
@@ -90,7 +100,10 @@ public class ClientProxy extends CommonProxy {
                 new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
 
                 // Constructor
-                WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class),
+                WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class, IWidgetHost.class),
+
+                // Handler
+                FilteredServerPortFluidHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, IMEInventory.class),
 
                 // Converter and UV
                 (stack) -> {
@@ -113,6 +126,9 @@ public class ClientProxy extends CommonProxy {
 
                 // Constructor
                 WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class),
+
+                // Handler
+                FilteredServerPortEnergyHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, IMEInventory.class),
 
                 // Converter and UV
                 Utils::getEnergyStackFromItemStack, Pair.of(0, 16),

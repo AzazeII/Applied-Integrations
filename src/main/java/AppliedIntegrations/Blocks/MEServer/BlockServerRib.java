@@ -37,14 +37,16 @@ public class BlockServerRib extends AIMultiBlock {
 
         // Check if player isn't sneaking
         if(!p.isSneaking()) {
+            // Get rib
             TileServerRib rib = (TileServerRib) world.getTileEntity(pos);
-            if (rib != null && rib.hasMaster() && !world.isRemote) {
-                try {
-                    ((TileServerCore) rib.getMaster()).getWorld().getBlockState(((TileServerCore) rib.getMaster()).getPos()).getBlock().onBlockActivated(world, pos,
-                            state, p, EnumHand.MAIN_HAND, facing, hitX, hitY, hitZ);
-                } catch (Exception ignored) {
 
-                }
+            // Check not null, has master and call only on server
+            if (rib != null && rib.hasMaster() && !world.isRemote) {
+                // Get master
+                TileServerCore core = (TileServerCore) rib.getMaster();
+
+                // Activate
+                core.activate(p);
 
                 return true;
             }

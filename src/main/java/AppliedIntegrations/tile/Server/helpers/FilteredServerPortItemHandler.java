@@ -1,0 +1,26 @@
+package AppliedIntegrations.tile.Server.helpers;
+
+import appeng.api.AEApi;
+import appeng.api.config.IncludeExclude;
+import appeng.api.config.SecurityPermissions;
+import appeng.api.storage.IMEInventory;
+import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IAEStack;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+
+public class FilteredServerPortItemHandler extends FilteredServerPortHandler<IAEItemStack> {
+    public FilteredServerPortItemHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
+                                         LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
+                                         IMEInventory<IAEItemStack> outerInventory) {
+        super(filteredMatter, filterMode, outerInventory);
+    }
+
+    @Override
+    public IStorageChannel<IAEItemStack> getChannel() {
+        return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
+    }
+}

@@ -5,6 +5,8 @@ import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortItemHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import net.minecraft.item.ItemStack;
@@ -25,6 +27,7 @@ public class ApiInstance extends AIApi {
     // ----# Channel Maps #---- //
     private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, ResourceLocation> channelSpriteMap = new LinkedHashMap<>();
     private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends IChannelWidget>> channelConstructorMap = new LinkedHashMap<>();
+    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends FilteredServerPortHandler>> channelHandlerMap = new LinkedHashMap<>();
     private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IStackConverter> channelStackConverterMap = new LinkedHashMap<>();
     private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Pair<Integer, Integer>> channelUVMap = new LinkedHashMap<>();
     private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Pair<IStackEncoder, IStackDecoder>> channelCoderMap = new LinkedHashMap<>();
@@ -78,13 +81,22 @@ public class ApiInstance extends AIApi {
     }
 
     @Override
-    public void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor,
-                                             IStackConverter lambda, Pair<Integer, Integer> pair, Pair<IStackEncoder, IStackDecoder> coderPair) {
+    public Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
+        return channelHandlerMap.get(channel);
+    }
+
+    @Override
+    public void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite,
+                                             Constructor<? extends IChannelWidget> widgetConstructor,
+                                             Constructor<? extends FilteredServerPortHandler> handler,
+                                             IStackConverter lambda, Pair<Integer, Integer> pair,
+                                             Pair<IStackEncoder, IStackDecoder> coderPair) {
         channelSpriteMap.put(channel, sprite);
         channelConstructorMap.put(channel, widgetConstructor);
         channelStackConverterMap.put(channel, lambda);
         channelUVMap.put(channel, pair);
         channelCoderMap.put(channel, coderPair);
+        channelHandlerMap.put(channel, handler);
     }
 
     public static AIApi staticInstance() {

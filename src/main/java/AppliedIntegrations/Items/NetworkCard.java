@@ -42,11 +42,14 @@ import java.util.Objects;
 import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiSecurityPermissionsButton.getPermissionList;
 import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
 
+/**
+ * @Author Azazell
+ */
 public class NetworkCard extends AIItemRegistrable {
     public static final String NBT_KEY_HAS_NET = "#HAS_NETWORK";
     public static final String KEY_SUB = "#SUB_TAG";
+    public static final String NBT_KEY_NET_SIDE = "#NET_SIDE";
 
-    private static final String NBT_KEY_NET_SIDE = "#NET_SIDE";
     private static final String NBT_KEY_PERMISSIONS = "#PERMISSIONS";
     private static final String NBT_KEY_LIST_SIZE = "#LIST_SIZE";
     private static final String NBT_KEY_LIST_MODE = "#LIST_MODE";

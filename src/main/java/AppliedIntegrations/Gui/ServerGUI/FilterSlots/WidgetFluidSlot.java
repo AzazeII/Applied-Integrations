@@ -1,6 +1,7 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
 import AppliedIntegrations.Gui.AIGuiHelper;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import appeng.api.storage.data.IAEFluidStack;
@@ -17,8 +18,11 @@ import net.minecraft.client.resources.I18n;
  * Implementation of IChannelWidget for fluid filtering. Pure slotFluidME, but implements interface channel widget
  */
 public class WidgetFluidSlot extends GuiFluidSlot implements IChannelWidget<IAEFluidStack> {
-    public WidgetFluidSlot(IAEFluidTank fluids, int slot, int id, int x, int y) {
+    private final IWidgetHost host;
+
+    public WidgetFluidSlot(IAEFluidTank fluids, int slot, int id, int x, int y, IWidgetHost host) {
         super(fluids, slot, id, x, y);
+        this.host = host;
     }
 
     @Override
@@ -32,7 +36,7 @@ public class WidgetFluidSlot extends GuiFluidSlot implements IChannelWidget<IAEF
         // Check not null
         if (getAEStack().getFluid() != null)
             // Translate to local
-            return I18n.format(getAEStack().getFluid().getUnlocalizedName());
+            return getAEStack().getFluidStack().getLocalizedName();
         return "";
     }
 
@@ -48,8 +52,8 @@ public class WidgetFluidSlot extends GuiFluidSlot implements IChannelWidget<IAEF
         drawContent(Minecraft.getMinecraft(), xPos(), yPos(), 0);
     }
 
-    @Override
-    public boolean isMouseOverWidget(int x, int y) {
-        return false;
+    public boolean isMouseOverWidget( final int mouseX, final int mouseY ) {
+        return AIGuiHelper.INSTANCE.isPointInGuiRegion(
+                this.yPos(), this.xPos(), AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1, mouseX, mouseY, this.host.getLeft(), this.host.getTop() );
     }
 }

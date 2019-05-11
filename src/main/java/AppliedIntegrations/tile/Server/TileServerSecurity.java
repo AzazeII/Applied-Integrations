@@ -21,6 +21,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
@@ -188,4 +189,19 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
     public void setOrientation(EnumFacing Forward, EnumFacing Up) {
 
     }
+
+    public void readFromNBT(NBTTagCompound compound) {
+        // Read inventory
+        editorInv.readFromNBT(compound.getTagList("#upgradeInventory", 10));
+
+        super.readFromNBT(compound);
+    }
+
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        // Write inventory
+        tag.setTag("#upgradeInventory", editorInv.writeToNBT());
+
+        return super.writeToNBT(tag);
+    }
+
 }

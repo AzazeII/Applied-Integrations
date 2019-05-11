@@ -1,6 +1,5 @@
 package AppliedIntegrations.Helpers.Energy;
 
-import AppliedIntegrations.api.AppliedCoord;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.grid.AEEnergyStack;
@@ -15,11 +14,8 @@ import appeng.api.AEApi;
 import appeng.api.parts.IPart;
 import appeng.api.parts.IPartHost;
 import appeng.api.parts.IPartItem;
-import appeng.api.storage.IStorageChannel;
-import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
-import appeng.util.item.AEItemStack;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
@@ -165,17 +161,11 @@ public class Utils {
     }
 
     @Deprecated
-    public static IAEEnergyStack ConvertToAEFluidStack(final LiquidAIEnergy Energy, final long fluidAmount )
-    {
+    public static IAEEnergyStack ConvertToAEFluidStack(final LiquidAIEnergy Energy, final long fluidAmount ) {
         IAEEnergyStack Stack;
         Stack = AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class).createStack( new FluidStack( Energy, 1 ) );
         Stack.setStackSize( fluidAmount );
         return Stack;
-    }
-
-    @Deprecated
-    public static AIPart getPartByParams(AppliedCoord coord){
-        return getPartByParams(new BlockPos(coord.x,coord.y,coord.z),coord.side,coord.getWorld());
     }
 
     private static World getClientOrServerWorld(World w){

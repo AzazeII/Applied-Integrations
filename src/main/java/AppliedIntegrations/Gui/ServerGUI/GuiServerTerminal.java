@@ -24,6 +24,7 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.config.SecurityPermissions;
 import appeng.core.localization.GuiText;
+import appeng.fluids.client.gui.GuiFluidIO;
 import appeng.fluids.util.AEFluidInventory;
 import appeng.util.Platform;
 import net.minecraft.client.Minecraft;
@@ -61,7 +62,6 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     private GuiStorageChannelButton storageChannelButton;
     private GuiListTypeButton listTypeButton;
 
-    private final AEFluidInventory tank = new AEFluidInventory( null, 27 );
     private TileServerSecurity terminal;
     private ChangeHandler<ItemStack> cardChangeHandler = new ChangeHandler<>();
 
@@ -75,6 +75,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
      * Contains maps of modes linked to given storage channel from given security permissions
      */
     private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> permissionChannelModeMap = new LinkedHashMap<>();
+    private LinkedHashMap<SecurityPermissions, AEFluidInventory> tanks = new LinkedHashMap<>();
 
     private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server_terminal.png");
 
@@ -85,6 +86,12 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         super(container, player);
 
         this.player = player;
+
+        // Iterate until i = size
+        for (int i = 0; i < GuiSecurityPermissionsButton.getPermissionList().size(); i ++)
+            // Put new inv in tanks
+            tanks.put(GuiSecurityPermissionsButton.getPermissionList().get(i), new AEFluidInventory(null, 27));
+
     }
 
     private ItemStack getCardStack() {
@@ -222,6 +229,9 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
                     for( int x = 0; x < SLOT_COLUMNS; x++ ) {
                         // Iterate for each column as Y
                         for (int y = 0; y < SLOT_ROWS; y++) {
+                            // Unique id of slot
+                            int slotID = y * SLOT_COLUMNS + x;
+
                             try {
                                 // Try to construct with item slot constructor:
                                 // I.E: public WidgetItemSlot(IWidgetHost host, int x, int y)
@@ -235,8 +245,8 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
                             try {
                                 // Try to construct with fluid slot constructor:
-                                // I.E: public WidgetFluidSlot(IAEFluidTank fluids, int slot, int id, int x, int y)
-                                widgetList.add(channelWidgetConstructor.newInstance(tank, x + y, x + y, SLOT_X + 18 * x, SLOT_Y + 18 * y));
+                                // I.E: public WidgetFluidSlot(IAEFluidTank fluids, int slot, int id, int x, int y, IWidgetHost host)
+                                widgetList.add(channelWidgetConstructor.newInstance(tanks.get(permissions), slotID, x + y, SLOT_X + 18 * x, SLOT_Y + 18 * y, this));
 
                                 // Skip
                                 continue;
@@ -247,12 +257,12 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
                             try {
                                 // Try to construct with AI constructor:
                                 // I.E: public WidgetEnergySlot(final IWidgetHost hostGui,final int id, final int posX, final int posY, final boolean shouldRender)
-                                IChannelWidget<?> widget = channelWidgetConstructor.newInstance(this, x + y + SLOT_ROWS, SLOT_X + 18 * x, SLOT_Y + 18 * y, true);
+                                IChannelWidget<?> widget = channelWidgetConstructor.newInstance(this, slotID, SLOT_X + 18 * x, SLOT_Y + 18 * y, true);
 
                                 // Check if widget is WidgetEnergySlot
                                 if (widget instanceof WidgetEnergySlot){
                                     // Add shifted widget
-                                    widgetList.add(channelWidgetConstructor.newInstance(this, x + y + SLOT_ROWS, SLOT_X - 1 + 18 * x, SLOT_Y - 1 + 18 * y, true));
+                                    widgetList.add(channelWidgetConstructor.newInstance(this, slotID, SLOT_X - 1 + 18 * x, SLOT_Y - 1 + 18 * y, true));
                                 } else {
                                     // Add original widget
                                     widgetList.add(widget);
@@ -387,7 +397,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         // Draw gui strings
         this.fontRenderer.drawString("Server Security Terminal", 8, 6, 4210752); // (Name)
         this.fontRenderer.drawString("Network Card Editor", 8, this.ySize - 96 + 3, 4210752); // (Editor)
-        this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 36, 4210752); // (Player inv.
+        this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 36, 4210752); // (Player inv.)
 
         // Check if container has no network tool in slot
         if (!isCardValid())

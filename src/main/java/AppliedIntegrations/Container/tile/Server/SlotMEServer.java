@@ -12,9 +12,9 @@ public class SlotMEServer extends Slot {
     public SlotMEServer(IInventory inv, int index, int x, int y) {
         super(inv, index, x, y);
     }
+
     @Override
-    public boolean isItemValid( final ItemStack stack )
-    {
+    public boolean isItemValid( final ItemStack stack ) {
         return AEApi.instance().registries().cell().isCellHandled(stack);
     }
 }

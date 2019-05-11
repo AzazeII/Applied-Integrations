@@ -1,43 +1,59 @@
 package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.NetworkData;
+import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.MultiBlockUtils;
+import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.api.Storage.EnergyRepo;
 import AppliedIntegrations.tile.*;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
 import appeng.api.AEApi;
+import appeng.api.config.IncludeExclude;
+import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
+import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.api.util.IReadOnlyCollection;
+import appeng.util.Platform;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.Collections.singletonList;
 
 /**
  * @Author Azazell
@@ -52,7 +68,14 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     // list of blocks in multiblock
     public Vector<IAIMultiBlock> slaves = new Vector<>();
 
-    public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1,this){
+    public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 6, 1, this){
+        @Override
+        public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+            return itemstack.getItem() instanceof NetworkCard;
+        }
+    };
+
+    public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1, this){
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemstack) {
             return AEApi.instance().registries().cell().isCellHandled(itemstack);
@@ -73,6 +96,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     // Networks in ports
     public LinkedHashMap<EnumFacing,IGrid> portNetworks = new LinkedHashMap<>();
 
+    private LinkedHashMap<AEPartLocation, List<IMEInventoryHandler>> handlers = new LinkedHashMap<>();
 
     // Network of owner
     public IGrid mainNetwork;
@@ -85,9 +109,101 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     private int blocksToPlace = 0;
     private boolean updateRequested;
 
+    public boolean isServerNetwork(IGrid grid){
+        if(grid != null){
+            IReadOnlyCollection<Class<? extends IGridHost>> collection = grid.getMachinesClasses();
+
+            return collection.contains(TileServerCore.class);
+        }
+        return false;
+    }
+
+    public void addSlave(AIMultiBlockTile slave) {
+        slaves.add(slave);
+    }
+
+    public void updateGUI() {
+        // Check if multiblock is formed
+        if(isFormed) {
+            // Check if server network map has reserved master id
+            if (networkIDMap.containsValue(RESERVED_MASTER_ID)) {
+
+                // TODO Notify only listeners
+                // Notify everyone about GUI change
+                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, AEPartLocation.INTERNAL, RESERVED_MASTER_ID),
+                        getPos().getX(), getPos().getY(), getPos().getZ(),world));
+
+                // Iterate for each side
+                for (AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS) {
+                    // Get grid from this direction
+                    IGrid grid = portNetworks.get(dir.getFacing());
+
+                    // Check if this grid is contained in network -> id map
+                    if(networkIDMap.get(grid) != null) {
+                        // Check if id of this grid isn't reserved
+                        if (networkIDMap.get(grid) != RESERVED_MASTER_ID) {
+                            // Notify client about this network
+                            NetworkHandler.sendToAll(new PacketMEServer(new NetworkData( isServerNetwork(grid), dir, networkIDMap.get(grid)),
+                                    getPos().getX(), getPos().getY(), getPos().getZ(),world));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void activate(EntityPlayer p) {
+        // Open GUI
+        AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerStorage, p, AEPartLocation.INTERNAL, pos);
+    }
+
     public void requestUpdate(){
 
         updateRequested = true;
+    }
+
+    int getNextNetID(){
+        return this.AVAILABLE_ID++;
+    }
+
+    public void destoryMultiBlock(){
+        for(IAIMultiBlock tile : slaves){
+            if(tile instanceof TileServerRib){
+                TileServerRib rib = (TileServerRib)tile;
+                rib.changeAlt(false);
+            }
+
+            if(tile instanceof TileServerPort){
+                TileServerPort port = (TileServerPort)tile;
+            }
+            tile.setMaster(null);
+            ((AIMultiBlockTile)tile).destroyAENode();
+        }
+        for(EnumFacing dir : EnumFacing.values()){
+            portNetworks.remove(dir);
+        }
+
+        mainNetwork = null;
+
+        networkIDMap = new LinkedHashMap<>();
+
+        isFormed = false;
+
+    }
+
+    private TileServerPort getPortAtSide(AEPartLocation side) {
+        // Iterate for each slave
+        for (IAIMultiBlock slave : slaves){
+            // Check if slave is port
+            if (slave instanceof TileServerPort){
+                TileServerPort port = (TileServerPort) slave;
+
+                if (port.getSideVector() == side)
+                    return port;
+            }
+        }
+
+        return null;
     }
 
     @Override
@@ -115,6 +231,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     public void notifyBlock(){
 
     }
+
     @Override
     public void tryConstruct(EntityPlayer p) {
         // Check if multi block isn't formed yet
@@ -210,35 +327,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         }
     }
 
-    int getNextNetID(){
-        return this.AVAILABLE_ID++;
-    }
-
-    public void destoryMultiBlock(){
-        for(IAIMultiBlock tile : slaves){
-            if(tile instanceof TileServerRib){
-                TileServerRib rib = (TileServerRib)tile;
-                rib.changeAlt(false);
-            }
-
-            if(tile instanceof TileServerPort){
-                TileServerPort port = (TileServerPort)tile;
-            }
-            tile.setMaster(null);
-            ((AIMultiBlockTile)tile).destroyAENode();
-        }
-        for(EnumFacing dir : EnumFacing.values()){
-            portNetworks.remove(dir);
-        }
-
-        mainNetwork = null;
-
-        networkIDMap = new LinkedHashMap<>();
-
-        isFormed = false;
-
-    }
-
 
     @Override
     public boolean hasMaster() {
@@ -257,6 +345,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     public Object getServerGuiElement( final EntityPlayer player ) {
         return new ContainerMEServer(player,this);
     }
+
     @Override
     public Object getClientGuiElement( final EntityPlayer player ) {
         return new GuiMEServer((ContainerMEServer)this.getServerGuiElement(player), player);
@@ -272,69 +361,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
 
     }
 
-    @Nonnull
-    @Override
-    public EnumSet<GridFlags> getFlags() {
-        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-    }
-
-
-    // Drive
-    @Override
-    public int getPriority() {
-        return 0;
-    }
-
-    @Override
-    public void onInventoryChanged() {
-        this.items = updateHandlers(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-        this.fluids = updateHandlers(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class));
-        for (int i = 0; i < this.cellStatuses.length; i++) {
-            ItemStack stackInSlot = this.inv.getStackInSlot(i);
-            IMEInventoryHandler inventoryHandler = AEApi.instance()
-                    .registries().cell()
-                    .getCellInventory(stackInSlot, null, AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-            if (inventoryHandler == null)
-                inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stackInSlot, null,
-                               AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class));
-
-            ICellHandler cellHandler = AEApi.instance().registries().cell()
-                    .getHandler(stackInSlot);
-            if (cellHandler == null || inventoryHandler == null) {
-                this.cellStatuses[i] = 0;
-            } else {
-                //this.cellStatuses[i] = (byte) cellHandler.getStatusForCell(
-                 ///       stackInSlot, new BasicCellInventoryHandler<T>(inventoryHandler, AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class)));
-            }
-        }
-        IGridNode node = getGridNode(AEPartLocation.INTERNAL);
-        if (node != null) {
-            IGrid grid = node.getGrid();
-            grid.postEvent(new MENetworkCellArrayUpdate());
-        }
-    }
-
-    private List<IMEInventoryHandler> updateHandlers(IStorageChannel channel) {
-        ICellRegistry cellRegistry = AEApi.instance().registries().cell();
-        List<IMEInventoryHandler> handlers = new ArrayList<>();
-        for (int i = 0; i < this.inv.getSizeInventory(); i++) {
-            ItemStack cell = this.inv.getStackInSlot(i);
-            if (cellRegistry.isCellHandled(cell)) {
-                IMEInventoryHandler cellInventory = cellRegistry
-                        .getCellInventory(cell, null, channel);
-                if (cellInventory != null)
-                    handlers.add(cellInventory);
-            }
-        }
-        return handlers;
-    }
-    @Override
-    public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
-        if (!gridNode.isActive())
-            return new ArrayList<>();
-        return channel == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class) ? this.items : this.fluids;
-    }
-
     @Override
     public void invalidate() {
         super.invalidate();
@@ -343,56 +369,120 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         }
         if(isFormed)
             this.destoryMultiBlock();
-
     }
 
-    public boolean isServerNetwork(IGrid grid){
-        if(grid != null){
-            IReadOnlyCollection<Class<? extends IGridHost>> collection = grid.getMachinesClasses();
+    @Nonnull
+    @Override
+    public EnumSet<GridFlags> getFlags() {
+        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+    }
 
-            return collection.contains(TileServerCore.class);
+    private void postCellEvent(){
+        // Get node
+        IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+
+        // Check not null
+        if (node != null) {
+            // Get grid
+            IGrid grid = node.getGrid();
+
+            // Post update
+            grid.postEvent(new MENetworkCellArrayUpdate());
         }
-        return false;
+    }
+    // -----------------------------Drive Methods-----------------------------//
+
+    @Override
+    public int getPriority() {
+        return 0;
     }
 
-    public void addSlave(AIMultiBlockTile slave) {
-        slaves.add(slave);
-    }
+    @Override
+    public void onInventoryChanged() {
+        // Iterate for each stack in cards inventory
+        for (ItemStack stack : cardInv.slots){
+            // Check if item in stack is network card
+            if (stack.getItem() instanceof NetworkCard) {
+                // Get tag
+                NBTTagCompound tag = Platform.openNbtData(stack);
 
-    public void updateGUI() {
-        // Check if multiblock is formed
-        if(isFormed) {
-            // Check if server network map has reserved master id
-            if (networkIDMap.containsValue(RESERVED_MASTER_ID)) {
+                // Get decoded pair from card
+                Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>,
+                        LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> data = NetworkCard.decodeDataFromTag(tag);
 
-                // TODO Notify only listeners
-                // Notify everyone about GUI change
-                NetworkHandler.sendToAll(new PacketMEServer(new NetworkData(true, AEPartLocation.INTERNAL, RESERVED_MASTER_ID),
-                        getPos().getX(), getPos().getY(), getPos().getZ(),world));
+                // Get side
+                AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
 
-                // Iterate for each side
-                for (AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS) {
-                    // Get grid from this direction
-                    IGrid grid = portNetworks.get(dir.getFacing());
+                // Get port
+                TileServerPort port = getPortAtSide(side);
 
-                    // Check if this grid is contained in network -> id map
-                    if(networkIDMap.get(grid) != null) {
-                        // Check if id of this grid isn't reserved
-                        if (networkIDMap.get(grid) != RESERVED_MASTER_ID) {
-                            // Notify client about this network
-                            NetworkHandler.sendToAll(new PacketMEServer(new NetworkData( isServerNetwork(grid), dir, networkIDMap.get(grid)),
-                                    getPos().getX(), getPos().getY(), getPos().getZ(),world));
-                        }
+                // Check not null
+                if (port == null)
+                    // Skip
+                    continue;
+
+                // Create list
+                List<IMEInventoryHandler> handlers = new LinkedList<>();
+
+                // Iterate for each channel
+                GuiStorageChannelButton.getChannelList().forEach(channel -> {
+                    // Encode new handler from channel into list
+                    try {
+                        Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(
+                                data.getLeft(),
+                                data.getRight(),
+                                port.getOuterInventory(channel));
+
+                    } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+                        throw new IllegalStateException("Unexpected Error");
                     }
-                }
+                });
+
+                // Encode new handler for side from card
+                this.handlers.put(side, handlers);
+
             }
         }
+
+        // No matter what element changed in inventory, cell event should be posted
+        postCellEvent();
+    }
+
+    @Override
+    public List<IMEInventoryHandler> getCellArray(IStorageChannel channel) {
+        if (!gridNode.isActive())
+            return new ArrayList<>();
+        return channel == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class) ? this.items : this.fluids;
     }
 
     @Override
     public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
 
     }
+
+    public List<IMEInventoryHandler> getSidedCellArray(AEPartLocation side) {
+        // Check if handler not null
+        if (handlers.get(side) == null)
+            return new LinkedList<>();
+
+        // Return only one handler for tile
+        return handlers.get(side);
+    }
+
+
+    public void saveSidedChanges(ICellInventory<?> iCellInventory, AEPartLocation side) {
+        // Check if inventory not null
+        if (iCellInventory != null)
+            // Persist inventory
+            iCellInventory.persist();
+
+        // Get port
+        TileServerPort port = getPortAtSide(side);
+
+        // Mark dirty
+        getWorld().markChunkDirty(this.getPos(), port);
+    }
+    // -----------------------------Drive Methods-----------------------------//
 
     @Override
     public boolean showNetworkInfo(RayTraceResult rayTraceResult) {

@@ -1,6 +1,7 @@
 package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,6 +15,8 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
+
+import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
@@ -51,18 +54,5 @@ public class BlockServerCore extends AIMultiBlock {
         {
             spawnAsEntity(world, pos, drops.get(i));
         }
-    }
-
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
-        if (!p.isSneaking()) {
-            if (!world.isRemote) {
-                // TODO: 2019-04-06 GUI
-
-                return true;
-            }
-        }
-        return false;
     }
 }

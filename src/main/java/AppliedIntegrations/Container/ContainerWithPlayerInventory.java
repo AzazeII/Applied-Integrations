@@ -79,11 +79,10 @@ public abstract class ContainerWithPlayerInventory extends AIContainer {
      * @param hotbarPositionY
      * The Y position offset for hotbar slots
      */
-    public final void bindPlayerInventory(final IInventory playerInventory, final int inventoryOffsetY, final int hotbarPositionY )
-    {
-        // Hot-bar ID's 0-8
-        for( int column = 0; column < ContainerWithPlayerInventory.COLUMNS; column++ )
-        {
+    public final void bindPlayerInventory(final IInventory playerInventory, final int inventoryOffsetY, final int hotbarPositionY ) {
+        // Hot bar
+        // Iterate until column = count
+        for( int column = 0; column < ContainerWithPlayerInventory.COLUMNS; column++ ) {
             // Create the slot
             this.hotbarSlots[column] = new Slot( playerInventory, column,
                     ContainerWithPlayerInventory.INVENTORY_X_OFFSET + ( column * ContainerWithPlayerInventory.SLOT_SIZE ), hotbarPositionY );
@@ -92,11 +91,11 @@ public abstract class ContainerWithPlayerInventory extends AIContainer {
             this.addSlotToContainer( this.hotbarSlots[column] );
         }
 
-        // Main inventory ID's 9-36
-        for( int row = 0; row < ContainerWithPlayerInventory.ROWS; row++ )
-        {
-            for( int column = 0; column < ContainerWithPlayerInventory.COLUMNS; column++ )
-            {
+        // Main inventory
+        // Iterate until row = count
+        for( int row = 0; row < ContainerWithPlayerInventory.ROWS; row++ ) {
+            // Iterate until column = count
+            for( int column = 0; column < ContainerWithPlayerInventory.COLUMNS; column++ ) {
                 // Calculate index
                 int index = column + ( row * ContainerWithPlayerInventory.COLUMNS );
 
