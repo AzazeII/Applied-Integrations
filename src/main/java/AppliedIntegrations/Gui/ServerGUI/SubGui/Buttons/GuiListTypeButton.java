@@ -5,6 +5,7 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.IncludeExclude;
 import appeng.core.AppEng;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ChestRenderer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 

@@ -1,6 +1,12 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube",
   "textures": {
-    "all": "appliedintegrations:blocks/me_server_security_side"
+    "particle": "blocks/crafting_table_front",
+    "down": "appliedintegrations:blocks/me_server_security_bottom",
+    "up": "appliedintegrations:blocks/me_server_security_top_off",
+    "north": "appliedintegrations:blocks/me_server_security_side",
+    "east": "appliedintegrations:blocks/me_server_security_side",
+    "south": "appliedintegrations:blocks/me_server_security_side",
+    "west": "appliedintegrations:blocks/me_server_security_side"
   }
 }

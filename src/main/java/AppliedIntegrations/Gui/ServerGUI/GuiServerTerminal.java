@@ -11,25 +11,31 @@ import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.Server.PacketContainerWidgetSync;
 import AppliedIntegrations.Network.Packets.Server.PacketServerFeedback;
 import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
-import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.config.SecurityPermissions;
+import appeng.client.gui.AEBaseGui;
+import appeng.container.slot.SlotFake;
 import appeng.core.localization.GuiText;
-import appeng.fluids.client.gui.GuiFluidIO;
+import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.fluids.util.AEFluidInventory;
 import appeng.util.Platform;
+import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.ClickType;
+import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -40,6 +46,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static AppliedIntegrations.tile.Server.TileServerSecurity.*;
 
 
 // TODO Rewrite this GUI, now it will be similar to normal security terminal.
@@ -52,18 +60,13 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     private static final int GUI_WIDTH = 192;
     private static final int GUI_HEIGH = 256;
 
-    private static final int SLOT_Y = 18;
-    private static final int SLOT_X = 9;
-
-    private static final int SLOT_ROWS = 3;
-    private static final int SLOT_COLUMNS = 9;
-
     private GuiSecurityPermissionsButton securityPermissionButton;
     private GuiStorageChannelButton storageChannelButton;
     private GuiListTypeButton listTypeButton;
 
     private TileServerSecurity terminal;
     private ChangeHandler<ItemStack> cardChangeHandler = new ChangeHandler<>();
+    private ChangeHandler<IStorageChannel<? extends IAEStack<?>>> channelChangeHandler = new ChangeHandler<>();
 
     /**
      * Contains maps of lists of 27 widgets linked to given storage channel from given security permission.
@@ -232,9 +235,13 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
                             // Unique id of slot
                             int slotID = y * SLOT_COLUMNS + x;
 
+                            // Check if slots is container-sided
+                            if (channelWidgetConstructor.getDeclaringClass() == IChannelContainerWidget.class)
+                                continue;
+
                             try {
-                                // Try to construct with item slot constructor:
-                                // I.E: public WidgetItemSlot(IWidgetHost host, int x, int y)
+                                // Try to construct with old item slot constructor:
+                                // I.E: IWidgetHost host, int x, int y
                                 widgetList.add(channelWidgetConstructor.newInstance(this, SLOT_X + 18 * x, SLOT_Y + 18 * y));
 
                                 // Skip
@@ -297,6 +304,33 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
             // Put temp map in permission channel map
             permissionChannelModeMap.put(securityPermissions, tempMap);
         }));
+    }
+
+    @Override
+    protected void handleMouseClick(final Slot slot, final int slotIdx, final int mouseButton, final ClickType action ) {
+        // Check if is fake slot
+        if (slot instanceof SlotFake) {
+            // Cast container to higher class
+            ContainerServerTerminal containerServerTerminal = (ContainerServerTerminal) inventorySlots;
+
+            // Get client player
+            EntityPlayer player = mc.player;
+
+            // Iterate for each widget in inner-inner list
+            containerServerTerminal.forEachWidget((widget) -> {
+                // Check if slot wrapper of widget is given slot
+                if (slot == widget.getSlotWrapper()) {
+                    // Get stack in player hand and update widget stack
+                    widget.setAEStack(AEItemStack.fromItemStack(player.inventory.getItemStack()));
+
+                    // Sync with server
+                    NetworkHandler.sendToServer(new PacketContainerWidgetSync(player.inventory.getItemStack(), terminal, slot.xPos, slot.yPos));
+                }
+            });
+        }
+
+        // Call super
+        super.handleMouseClick(slot, slotIdx, mouseButton, action);
     }
 
     @Override
@@ -367,8 +401,26 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         if (!isCardValid())
             return;
 
-        // Call change handler
+        // Call card change handler
         cardChangeHandler.onChange(getCardStack(), (stack) -> onCardChanged());
+
+        // Call channel change handler
+        channelChangeHandler.onChange(storageChannelButton.getChannel(), (chan) -> {
+            // Cast container to server terminal container
+            ContainerServerTerminal containerServerTerminal = (ContainerServerTerminal) inventorySlots;
+
+            // Iterate for each map in outer map
+            containerServerTerminal.getOuterMap().forEach(((permissions, innerMap) -> {
+                // Iterate for each list in inner map
+                innerMap.forEach(((channel, widgetList) -> {
+                    // Make slot invisible if channel of slot isn't equal to chan
+                    boolean visible = channel == chan;
+
+                    // Iterate for each widget in list make it visible depending on current channel
+                    widgetList.forEach((widget) -> widget.visible(visible));
+                }));
+            }));
+        });
 
         // Iterate for each element of list from current channel from map from current permission
         // Draw widget
@@ -376,7 +428,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
             // Check if mouse over widget
             if (slot.isMouseOverWidget(mX, mY)) {
                 // Create tooltip list
-                List<String> tip = new ArrayList<String>();
+                List<String> tip = new ArrayList<>();
 
                 // Check if slot has energy stack
                 if (slot.getAEStack() != null) {

@@ -1,94 +1,76 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
-import AppliedIntegrations.Gui.Hosts.IWidgetHost;
-import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.api.Storage.IChannelWidget;
+import AppliedIntegrations.Utils.AIGridNodeItemHandler;
+import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
+import appeng.container.slot.SlotFakeTypeOnly;
+import appeng.util.item.AEItemStack;
 import net.minecraft.inventory.Slot;
-import org.lwjgl.opengl.GL11;
-
-import java.util.List;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * @Author Azazell
  * Implementation of IChannelWidget for item filtering
  */
-public class WidgetItemSlot extends AIWidget implements IChannelWidget<IAEItemStack> {
+public class WidgetItemSlot implements IChannelContainerWidget<IAEItemStack> {
+    private AIGridNodeInventory inv;
+    private boolean visible;
 
-    private IAEItemStack stack;
+    private SlotFakeTypeOnly innerSlot;
 
-    private AIGridNodeInventory inv = new AIGridNodeInventory("Inner Slot Inventory", 1, 1);
+    public WidgetItemSlot(int x, int y) {
+        this.inv = new AIGridNodeInventory("Inner Slot Inventory", 1, 1);
+        this.innerSlot = new SlotFakeTypeOnly(new AIGridNodeItemHandler(inv), 0, x, y) {
 
-    private Slot innerSlot = new Slot(inv, 0, 0, 0);
-
-    public WidgetItemSlot(IWidgetHost host, int x, int y) {
-        super(host, x, y);
-    }
-
-    private void drawStack() {
-        // Get resource location of item in stack and bind
-        Minecraft.getMinecraft().renderEngine.bindTexture(innerSlot.getBackgroundLocation());
-
-        // Draw item
-        drawTexturedModalRect(xPosition, yPosition, 0, 0, 16, 16);
-    }
-
-    @Override
-    public String getStackTip() {
-        // Check not null
-        if (getAEStack().getItem() != null)
-            // Translate name to local
-            return I18n.format(getAEStack().getItem().getUnlocalizedName());
-        return "";
+            @SideOnly(Side.CLIENT)
+            public boolean isEnabled() {
+                return WidgetItemSlot.this.visible;
+            }
+        };
     }
 
     @Override
     public IAEItemStack getAEStack() {
-        return this.stack;
+        return AEItemStack.fromItemStack(innerSlot.getStack());
     }
 
     @Override
     public void setAEStack(IAEStack<?> iaeItemStack) {
-        this.stack = (IAEItemStack)iaeItemStack;
-    }
+        // Check if stack is empty
+        if (iaeItemStack == null){
+            // Nullify existing stack
+            innerSlot.putStack(ItemStack.EMPTY);
 
-    @Override
-    public void drawWidget() {
-        // Disable lighting
-        GL11.glDisable( GL11.GL_LIGHTING );
-
-        // Full white
-        GL11.glColor3f( 1.0F, 1.0F, 1.0F );
-
-        // Check not null
-        if( stack != null && stack.getItem() != null && stack.getStackSize() > 0) {
-            // Set item in inner slot
-            innerSlot.putStack(stack.createItemStack());
-
-            // Draw item
-            drawStack();
+            // Skip further function code
+            return;
         }
 
-        // Re-enable lighting
-        GL11.glEnable( GL11.GL_LIGHTING );
+        // Put stack from AE stack in slot
+        innerSlot.putStack(((IAEItemStack)iaeItemStack).createItemStack());
     }
 
     @Override
-    public void getTooltip(List<String> tooltip) {
-
+    public Slot getSlotWrapper() {
+        return innerSlot;
     }
 
     @Override
-    public boolean isMouseOverWidget(int x, int y) {
-        return false;
+    public void visible(boolean newState) {
+        this.visible = newState;
     }
+
+    // ------- Ignored Methods ------- //
+    @Override
+    public void drawWidget() { }
 
     @Override
-    public void onMouseClicked() {
+    public String getStackTip() { return ""; }
+    // ------- Ignored Methods ------- //
 
-    }
+    @Override
+    public boolean isMouseOverWidget(int x, int y) { return this.innerSlot.xPos == x && this.innerSlot.yPos == y; }
 }

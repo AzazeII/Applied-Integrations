@@ -135,13 +135,13 @@ public class NetworkCard extends AIItemRegistrable {
                     } catch (IOException e) {
                         throw new IllegalStateException("Unexpected error");
                     }
-
-                    // Get Include/Exclude mode
-                    IncludeExclude mode = IncludeExclude.values()[channelTag.getInteger(NBT_KEY_LIST_MODE)];
-
-                    // Put mode in map
-                    typeMap.put(getChannelList().get(j), mode);
                 }
+
+                // Get Include/Exclude mode
+                IncludeExclude mode = IncludeExclude.values()[channelTag.getInteger(NBT_KEY_LIST_MODE)];
+
+                // Put mode in map
+                typeMap.put(getChannelList().get(j), mode);
 
                 // Put list in map
                 stackMap.put(getChannelList().get(j), list);

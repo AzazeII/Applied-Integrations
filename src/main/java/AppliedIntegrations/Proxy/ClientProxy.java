@@ -32,23 +32,16 @@ import AppliedIntegrations.tile.Server.TileServerRib;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
 import AppliedIntegrations.tile.Server.helpers.FilteredServerPortEnergyHandler;
 import AppliedIntegrations.tile.Server.helpers.FilteredServerPortFluidHandler;
-import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
 import AppliedIntegrations.tile.Server.helpers.FilteredServerPortItemHandler;
 import appeng.api.AEApi;
 import appeng.api.storage.IMEInventory;
-import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
-import appeng.api.storage.data.IAEItemStack;
-import appeng.api.storage.data.IAEStack;
-import appeng.fluids.client.gui.GuiFluidIO;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.IAEFluidTank;
 import appeng.util.item.AEItemStack;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fluids.FluidStack;
@@ -62,7 +55,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Objects;
 
@@ -84,7 +76,7 @@ public class ClientProxy extends CommonProxy {
                 new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
 
                 // Constructor
-                WidgetItemSlot.class.getConstructor(IWidgetHost.class, int.class, int.class),
+                WidgetItemSlot.class.getConstructor(int.class, int.class),
 
                 // Handler
                 FilteredServerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, IMEInventory.class),

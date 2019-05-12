@@ -139,7 +139,7 @@ public abstract class AIBaseGui
         try {
             // Pass to super
             super.mouseClicked(mouseX, mouseY, mouseButton);
-        }catch(IOException e){
+        }catch(IOException ignored){
 
         }
     }

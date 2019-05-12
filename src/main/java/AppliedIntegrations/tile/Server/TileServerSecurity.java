@@ -7,6 +7,9 @@ import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.api.Storage.IChannelContainerWidget;
+import AppliedIntegrations.api.Storage.IChannelWidget;
+import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import appeng.api.AEApi;
@@ -14,6 +17,7 @@ import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.IOrientable;
+import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -32,6 +36,12 @@ import java.util.List;
  * @Author Azazell
  */
 public class TileServerSecurity extends AIMultiBlockTile implements IOrientable {
+    // Used by both container and gui
+    public static final int SLOT_Y = 18; // (1)
+    public static final int SLOT_X = 9; // (2)
+    public static final int SLOT_ROWS = 3; // (3)
+    public static final int SLOT_COLUMNS = 9; // (4)
+
     public List<ContainerServerTerminal> listeners = new LinkedList<>();
 
     public AIGridNodeInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1){
@@ -42,7 +52,9 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
     };
 
     public boolean updateRequested;
+
     private EnumFacing fw;
+    private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
 
     public void updateCardData(NBTTagCompound tag) {
         // Get inventory
@@ -201,4 +213,20 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
         return super.writeToNBT(tag);
     }
 
+    // ------# Used by packets to sync slots by identifier #------ //
+    public void addWidgetSlotLink(IChannelWidget<?> widget) {
+        this.filterSlots.add(widget);
+    }
+
+    public void updateWidgetSlotLink(int x, int y, ItemStack stack) {
+        // Iterate for each widget
+        this.filterSlots.forEach((widget -> {
+            // Check if widget is under mouse
+            if (widget.isMouseOverWidget(x, y)) {
+                // Update stack
+                widget.setAEStack(AEItemStack.fromItemStack(stack));
+            }
+        }));
+    }
+    // ------# Used by packets to sync slots by identifier #------ //
 }
