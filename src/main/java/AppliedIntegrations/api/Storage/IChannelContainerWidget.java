@@ -6,5 +6,5 @@ import net.minecraft.inventory.Slot;
 public interface IChannelContainerWidget<T extends IAEStack<T>> extends IChannelWidget<T> {
     Slot getSlotWrapper();
 
-    void visible(boolean b);
+    void setVisible(boolean b);
 }

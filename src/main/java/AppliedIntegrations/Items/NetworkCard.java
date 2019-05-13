@@ -181,7 +181,7 @@ public class NetworkCard extends AIItemRegistrable {
                 channelNBT.setInteger(NBT_KEY_LIST_MODE, permissionChannelModeMap.get(securityPermissions).get(chan).ordinal());
 
                 // Get current list
-                List<IChannelWidget<?>> list = permissionChannelWidgetMap.get(securityPermissions).get(chan);
+                List<? extends IChannelWidget<?>> list = permissionChannelWidgetMap.get(securityPermissions).get(chan);
 
                 // Write size of list
                 channelNBT.setInteger(NBT_KEY_LIST_SIZE, list.size());

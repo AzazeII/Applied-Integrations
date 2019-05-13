@@ -24,10 +24,8 @@ import appeng.api.config.IncludeExclude;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.config.SecurityPermissions;
-import appeng.client.gui.AEBaseGui;
 import appeng.container.slot.SlotFake;
 import appeng.core.localization.GuiText;
-import appeng.core.sync.packets.PacketInventoryAction;
 import appeng.fluids.util.AEFluidInventory;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
@@ -65,8 +63,8 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     private GuiListTypeButton listTypeButton;
 
     private TileServerSecurity terminal;
-    private ChangeHandler<ItemStack> cardChangeHandler = new ChangeHandler<>();
-    private ChangeHandler<IStorageChannel<? extends IAEStack<?>>> channelChangeHandler = new ChangeHandler<>();
+
+    private ChangeHandler<ItemStack> cardChangeUpdateHandler = new ChangeHandler<>();
 
     /**
      * Contains maps of lists of 27 widgets linked to given storage channel from given security permission.
@@ -185,6 +183,31 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         }
     }
 
+    /*
+    This method concatenates our map with map from client-sided container.
+    Simply: This method do this:
+    in.    out.
+    1 0    1
+    0 1 -> 1
+    1 0    1
+     */
+    public void initWidgetLinkage(ContainerServerTerminal containerServerTerminal) {
+        // Iterate for each map in outer map
+        containerServerTerminal.getOuterMap().forEach((securityPermissions, innerMap) -> {
+            // Get inner gui map
+            LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelWidget<?>>> chanListMap = permissionChannelWidgetMap.get(securityPermissions);
+
+            // Iterate for each list in inner map
+            innerMap.forEach((chan, list) -> {
+                // Add all elements of given list to already existing list
+                chanListMap.get(chan).addAll(list);
+            });
+
+            // Put map in existing map
+            permissionChannelWidgetMap.put(securityPermissions, chanListMap);
+        });
+    }
+
     @Override
     public ISyncHost getSyncHost() {
         return terminal;
@@ -288,6 +311,10 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
             // Add temp map to main map
             permissionChannelWidgetMap.put(permissions, tempMap);
         }));
+
+        // Link widgets from container to widgets in GUI
+        initWidgetLinkage((ContainerServerTerminal) inventorySlots);
+
         // ************# Add Filter Slots #************ //
 
         // Iterate for each security permissions
@@ -325,6 +352,9 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
                     // Sync with server
                     NetworkHandler.sendToServer(new PacketContainerWidgetSync(player.inventory.getItemStack(), terminal, slot.xPos, slot.yPos));
+
+                    // Encode data
+                    encodeCardTag();
                 }
             });
         }
@@ -397,30 +427,21 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
         // Call parent class
         super.drawScreen(mX, mY, pOpacity);
 
-        // Check if container has no network tool in slot
+        // Cast container to server terminal container
+        ContainerServerTerminal containerServerTerminal = (ContainerServerTerminal) inventorySlots;
+
+        // Iterate for each list in each inner map in outer map of container
+        containerServerTerminal.getOuterMap().forEach((perm, map) -> map.forEach((chan, list) -> list.forEach((widget) -> {
+            // Make slot (in)visible depending on card state
+            widget.setVisible(isCardValid() && chan == storageChannelButton.getChannel() && perm == securityPermissionButton.getCurrentPermissions());
+        })));
+
+        // Check if container has no network card in slot
         if (!isCardValid())
             return;
 
-        // Call card change handler
-        cardChangeHandler.onChange(getCardStack(), (stack) -> onCardChanged());
-
-        // Call channel change handler
-        channelChangeHandler.onChange(storageChannelButton.getChannel(), (chan) -> {
-            // Cast container to server terminal container
-            ContainerServerTerminal containerServerTerminal = (ContainerServerTerminal) inventorySlots;
-
-            // Iterate for each map in outer map
-            containerServerTerminal.getOuterMap().forEach(((permissions, innerMap) -> {
-                // Iterate for each list in inner map
-                innerMap.forEach(((channel, widgetList) -> {
-                    // Make slot invisible if channel of slot isn't equal to chan
-                    boolean visible = channel == chan;
-
-                    // Iterate for each widget in list make it visible depending on current channel
-                    widgetList.forEach((widget) -> widget.visible(visible));
-                }));
-            }));
-        });
+        // Call card update change handler
+        cardChangeUpdateHandler.onChange(getCardStack(), (stack) -> onCardChanged());
 
         // Iterate for each element of list from current channel from map from current permission
         // Draw widget

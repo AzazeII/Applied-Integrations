@@ -4,6 +4,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetItemSlot;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiSecurityPermissionsButton;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
@@ -15,6 +16,8 @@ import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.util.item.AEItemStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.Slot;
@@ -31,7 +34,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
+import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.tile.Server.TileServerSecurity.*;
+import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell

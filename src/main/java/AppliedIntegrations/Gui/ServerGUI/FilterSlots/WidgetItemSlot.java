@@ -59,7 +59,7 @@ public class WidgetItemSlot implements IChannelContainerWidget<IAEItemStack> {
     }
 
     @Override
-    public void visible(boolean newState) {
+    public void setVisible(boolean newState) {
         this.visible = newState;
     }
 
