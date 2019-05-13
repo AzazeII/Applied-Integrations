@@ -2,7 +2,7 @@ package AppliedIntegrations.Gui.ServerGUI;
 
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
+import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import appeng.core.localization.GuiText;
 import net.minecraft.client.Minecraft;
@@ -16,7 +16,7 @@ import org.lwjgl.opengl.GL11;
 public class GuiMEServer extends AIBaseGui {
     private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server_storage.png");
 
-    public GuiMEServer(ContainerMEServer container, EntityPlayer p) {
+    public GuiMEServer(ContainerServerCore container, EntityPlayer p) {
         super(container, p);
     }
 
@@ -32,7 +32,7 @@ public class GuiMEServer extends AIBaseGui {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
         // Draw string
-        this.fontRenderer.drawString("ME Server Drive", 9, -12, 4210752); // (Server drive inv)
+        this.fontRenderer.drawString("ME Network Card Drive", 9, -12, 4210752); // (Server drive inv)
         this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 18, 4210752); // (Player inv.)
 
     }

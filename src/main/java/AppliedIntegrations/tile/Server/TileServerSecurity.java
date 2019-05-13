@@ -7,7 +7,6 @@ import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
-import AppliedIntegrations.tile.AIServerMultiBlockTile;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
@@ -49,7 +48,8 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
     public boolean updateRequested;
 
-    private EnumFacing fw = EnumFacing.UP;
+    private EnumFacing forward = EnumFacing.UP;
+
     private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
 
     public void updateCardData(NBTTagCompound tag) {
@@ -76,6 +76,14 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
             // Trigger request
             updateRequested = false;
         }
+    }
+
+    public void rotateForward(EnumFacing facing) {
+        // Get facing axis
+        EnumFacing.Axis axis = facing.getAxis();
+
+        // Rotate current direction around given axis
+        forward.rotateAround(axis);
     }
 
     @Override
@@ -155,10 +163,9 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
     @Nonnull
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
-        // TODO Auto-generated method stub
         EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
         for(EnumFacing side : EnumFacing.values()){
-            if(side != fw){
+            if(side != forward){
                 set.add(side);
             }
         }
@@ -175,8 +182,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
         if(hasMaster()){
             // Remove this as slave from master
             ((TileServerCore)getMaster()).slaves.remove(this);
-
-            master.mainNetwork = null;
         }
 
         // Drop items from editor inventory
@@ -194,7 +199,7 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
     @Override
     public EnumFacing getForward() {
-        return null;
+        return forward;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package AppliedIntegrations.Gui;
 
-import AppliedIntegrations.Container.tile.Server.ContainerMEServer;
+import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
@@ -164,7 +164,7 @@ public class AIGuiHandler implements IGuiHandler {
         }else if(gui == GuiServerStorage) {
             TileServerCore core = (TileServerCore) Utils.getTileByParams(new BlockPos(x,y,z), world);
 
-            return new ContainerMEServer(player, core);
+            return new ContainerServerCore(player, core);
         }
 
         return null;
@@ -208,7 +208,7 @@ public class AIGuiHandler implements IGuiHandler {
         }else if(gui == GuiServerTerminal) {
             return new GuiServerTerminal((ContainerServerTerminal)getServerGuiElement(ID, player, world, x, y, z), player);
         }else if(gui == GuiServerStorage) {
-            return new GuiMEServer((ContainerMEServer)getServerGuiElement(ID, player, world, x, y, z), player);
+            return new GuiMEServer((ContainerServerCore)getServerGuiElement(ID, player, world, x, y, z), player);
         }
 
         return null;

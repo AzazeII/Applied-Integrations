@@ -144,7 +144,7 @@ public abstract class AIPacket implements IMessage {
     protected ISyncHost readSyncHost(ByteBuf buf) {
         boolean isPart = buf.readBoolean();
 
-        ISyncHost host = null;
+        ISyncHost host;
 
         if(isPart)
             host = readPart(buf);

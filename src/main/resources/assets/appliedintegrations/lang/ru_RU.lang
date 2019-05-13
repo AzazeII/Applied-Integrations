@@ -10,8 +10,7 @@ tile.ME Server Housing.name=МЭ Обшивка Сервера
 tile.ME Server Rib.name=МЭ Ребро Сервера
 tile.ME Server Port.name=МЭ Порт Сервера
 tile.ME Server Security Terminal.name=МЭ Терминал Безопасности Сервера
-
-# TODO Russian localization
+tile.ME Server Drive.name=МЭ Накопитель Сервера
 
 item.graph_tool.name=МЭ Топологический Инструмент
 item.network_card.name=МЭ Карта Сети
@@ -85,7 +84,6 @@ item.encorium6.name=Линкорьевый Кристалл
 item.encorium7.name=Линкорьевый Кристалл
 item.encorium8.name=Линкорьевый Кристалл
 item.encorium9.name=Линкорьевый Кристалл
-
 
 Used=Использовано
 of=Из

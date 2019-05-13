@@ -26,12 +26,16 @@ public class PacketMasterSync extends AIPacket {
     @Override
     public void fromBytes(ByteBuf buf) {
         slave = (IAIMultiBlock) readSyncHost(buf);
-        master = (IMaster) readSyncHost(buf);
+
+        master = buf.readBoolean() ? null : (IMaster) readSyncHost(buf);
     }
 
     @Override
     public void toBytes(ByteBuf buf) {
         writeSyncHost(slave, buf);
+
+        buf.writeBoolean(master == null);
+
         writeSyncHost(master, buf);
     }
 }

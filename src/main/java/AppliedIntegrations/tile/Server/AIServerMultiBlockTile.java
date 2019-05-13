@@ -1,7 +1,11 @@
-package AppliedIntegrations.tile;
+package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketMasterSync;
+import AppliedIntegrations.Utils.ChangeHandler;
+import AppliedIntegrations.tile.AITile;
+import AppliedIntegrations.tile.IAIMultiBlock;
+import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
@@ -18,11 +22,9 @@ import java.util.Objects;
  * @Author Azazell
  */
 public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
-
-    private static final String KEY_FORMED = "#HasMaster";
-    private static final String KEY_MASTER = "#Master";
-
     protected TileServerCore master;
+
+    private ChangeHandler<TileServerCore> masterChangeHandler = new ChangeHandler<>();
 
     @Override
     public void tryConstruct(EntityPlayer p) {
@@ -35,6 +37,17 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
                 break;
             }
         }
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        // Call master change handler
+        masterChangeHandler.onChange(master, (master) -> {
+            // Notify server
+            NetworkHandler.sendToDimension(new PacketMasterSync(this, master), world.provider.getDimension());
+        });
     }
 
     @Override
@@ -79,9 +92,6 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
     public void setMaster(IMaster tileServerCore) {
         // Update master
         master = (TileServerCore)tileServerCore;
-
-        // Notify server
-        NetworkHandler.sendToDimension(new PacketMasterSync(this, master), world.provider.getDimension());
     }
 
     @Override

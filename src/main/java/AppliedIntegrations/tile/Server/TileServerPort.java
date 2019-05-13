@@ -1,6 +1,5 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.tile.AIServerMultiBlockTile;
 import appeng.api.networking.IGrid;
 import appeng.api.storage.*;
 import appeng.api.util.AEPartLocation;
@@ -37,14 +36,10 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
                 if(network != core.mainNetwork) {
                     // Map network by side
                     core.portNetworks.put(side, network);
-
-                    // Map id by network
-                    core.networkIDMap.put(network, core.getNextNetID());
                 }
             }else{
                 // Remove network from maps
                 core.portNetworks.remove(side); // (1)
-                core.networkIDMap.remove(network); // (2)/[
             }
 
             // Notify all networks

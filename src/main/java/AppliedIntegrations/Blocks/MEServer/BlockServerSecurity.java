@@ -4,9 +4,11 @@ import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
+import appeng.util.Platform;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -41,20 +43,28 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         super.onBlockActivated(world,pos,state, p, hand, facing, hitX, hitY, hitZ);
 
-        // Call only on server
-        if(!world.isRemote) {
-            // Check if player not sneaking
-            if (!p.isSneaking()) {
-                // Check if tile is null
-                if(world.getTileEntity(pos)!=null) {
-                    // Get tile
-                    TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(pos);
+        // Check if player not sneaking
+        if (!p.isSneaking()) {
+            // Get stack
+            ItemStack stack = p.getHeldItem(hand);
 
+            // Get tile
+            TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(pos);
+
+            // Check if stack is wrench
+            if (Platform.isWrench(p, stack, pos)){
+                // Rotate up of tile around
+                tile.rotateForward(facing);
+            } else {
+                // Call only on server
+                if (world.isRemote)
+                    // Skip client
+                    return false;
+
+                // Check if tile is null
+                if (world.getTileEntity(pos) != null) {
                     // Check if tile has no master
                     if (tile == null || !tile.hasMaster()) return false;
-
-                    // Request gui update
-                    ((TileServerCore)tile.getMaster()).requestUpdate();
 
                     // Open gui
                     AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerTerminal, p, INTERNAL, pos);

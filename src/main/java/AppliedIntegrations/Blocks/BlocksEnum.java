@@ -32,6 +32,7 @@ public enum BlocksEnum {
     BSRib(new BlockServerRib("ServerFrame", "ME Server Rib"),TileEnum.TSRib, AIConfig.enableMEServer),
     BSPort(new BlockServerPort("ServerPort", "ME Server Port"),TileEnum.TSPort, AIConfig.enableMEServer),
     BSHousing(new BlockServerHousing("ServerHousing", "ME Server Housing"),TileEnum.TSHousing, AIConfig.enableMEServer),
+    BSDrive(new BlockServerDrive("ServerDrive", "ME Server Drive"),TileEnum.TSDrive, AIConfig.enableMEServer),
     BSSecurity(new BlockServerSecurity("ServerSecurity", "ME Server Security Terminal"),TileEnum.TSSecurity, AIConfig.enableMEServer),
 
     BLBRibs(new BlockLogicBusRibs("BlockLogicBusRibs", "ME Logic Bus Rib"),TileEnum.TLBRib, AIConfig.enableLogicBus),

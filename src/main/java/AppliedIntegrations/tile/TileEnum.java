@@ -8,11 +8,7 @@ import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusPort;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusRib;
-import AppliedIntegrations.tile.Server.TileServerCore;
-import AppliedIntegrations.tile.Server.TileServerHousing;
-import AppliedIntegrations.tile.Server.TileServerPort;
-import AppliedIntegrations.tile.Server.TileServerRib;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.Server.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -28,6 +24,7 @@ public enum TileEnum {
     TSPort( TileServerPort.class, AIConfig.enableMEServer),
     TSRib(TileServerRib.class, AIConfig.enableMEServer),
     TSHousing(TileServerHousing.class, AIConfig.enableMEServer),
+    TSDrive(TileServerDrive.class, AIConfig.enableMEServer),
     TSSecurity(TileServerSecurity.class, AIConfig.enableMEServer),
 
     EnergyInterface ( TileEnergyInterface.class, AIConfig.enableEnergyFeatures),
