@@ -1,31 +1,27 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
-import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.grid.AEEnergyStack;
-import AppliedIntegrations.tile.AIMultiBlockTile;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import AppliedIntegrations.tile.AIServerMultiBlockTile;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.IOrientable;
+import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
+import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
@@ -35,7 +31,7 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class TileServerSecurity extends AIMultiBlockTile implements IOrientable {
+public class TileServerSecurity extends AIServerMultiBlockTile implements IOrientable {
     // Used by both container and gui
     public static final int SLOT_Y = 18; // (1)
     public static final int SLOT_X = 9; // (2)
@@ -53,7 +49,7 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
 
     public boolean updateRequested;
 
-    private EnumFacing fw;
+    private EnumFacing fw = EnumFacing.UP;
     private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
 
     public void updateCardData(NBTTagCompound tag) {
@@ -97,19 +93,24 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
 
             // Iterate for each node of this grid
             for(IGridNode node : grid.getNodes()){
-                // Check if node is server core
-                if(node.getMachine() instanceof TileServerCore ) {
-                    // Cast this node to core
-                    TileServerCore master = ((TileServerCore)node.getMachine());
+                // Check if node is server part
+                if(node.getMachine() instanceof AIServerMultiBlockTile) {
+                    // Cast this node to server tile
+                    AIServerMultiBlockTile tile = (AIServerMultiBlockTile) node.getMachine();
 
-                    // Check if multiblock is formed
-                    if(master.isFormed) {
-                        // Add this to slave list
-                        master.addSlave(this);
+                    // Check if tile has master
+                    if (!tile.hasMaster())
+                        // Skip this tile
+                        continue;
 
-                        // Set master
-                        setMaster(master);
-                    }
+                    // Get tile master
+                    TileServerCore master = (TileServerCore) tile.getMaster();
+
+                    // Add this to slave list
+                    master.addSlave(this);
+
+                    // Set master
+                    setMaster(master);
 
                     return;
                 }
@@ -164,15 +165,22 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
         return set;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void invalidate() {
         if (world != null && !world.isRemote) {
             destroyAENode();
         }
+
         if(hasMaster()){
+            // Remove this as slave from master
             ((TileServerCore)getMaster()).slaves.remove(this);
+
             master.mainNetwork = null;
         }
+
+        // Drop items from editor inventory
+        Platform.spawnDrops(world, pos, Arrays.asList(editorInv.slots));
     }
 
     public void notifyBlock(){
@@ -199,13 +207,15 @@ public class TileServerSecurity extends AIMultiBlockTile implements IOrientable 
 
     }
 
-    public void readFromNBT(NBTTagCompound compound) {
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
         // Read inventory
-        editorInv.readFromNBT(compound.getTagList("#upgradeInventory", 10));
+        editorInv.readFromNBT(tag.getTagList("#upgradeInventory", 10));
 
-        super.readFromNBT(compound);
+        super.readFromNBT(tag);
     }
 
+    @Override
     public NBTTagCompound writeToNBT(NBTTagCompound tag) {
         // Write inventory
         tag.setTag("#upgradeInventory", editorInv.writeToNBT());

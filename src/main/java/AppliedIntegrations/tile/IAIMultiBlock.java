@@ -1,11 +1,12 @@
 package AppliedIntegrations.tile;
 
+import AppliedIntegrations.api.ISyncHost;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * @Author Azazell
  */
-public interface IAIMultiBlock {
+public interface IAIMultiBlock extends ISyncHost {
 
     void tryConstruct(EntityPlayer player);
 

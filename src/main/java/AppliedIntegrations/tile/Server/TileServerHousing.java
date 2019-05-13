@@ -1,6 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.tile.AIMultiBlockTile;
+import AppliedIntegrations.tile.AIServerMultiBlockTile;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -9,7 +9,7 @@ import java.util.EnumSet;
 /**
  * @Author Azazell
  */
-public class TileServerHousing extends AIMultiBlockTile {
+public class TileServerHousing extends AIServerMultiBlockTile {
 
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {

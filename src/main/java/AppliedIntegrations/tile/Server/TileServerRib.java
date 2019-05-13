@@ -1,15 +1,13 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.Blocks.MEServer.BlockServerRib;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
 import AppliedIntegrations.Utils.ChangeHandler;
-import AppliedIntegrations.tile.AIMultiBlockTile;
+import AppliedIntegrations.tile.AIServerMultiBlockTile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
-import net.minecraft.block.Block;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
@@ -19,7 +17,7 @@ import java.util.EnumSet;
 /**
  * @Author Azazell
  */
-public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, ITickable {
+public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlock, ITickable {
 
     // Used only client
     public boolean isActive;
@@ -56,7 +54,7 @@ public class TileServerRib extends AIMultiBlockTile implements IAIMultiBlock, IT
                 // Iterate for each node
                 for (IGridNode node : grid.getNodes()) {
                     // Check if machine of node isn't equal to mutliblock tile?? WTF, TODO review code here later
-                    if (!(node.getMachine() instanceof AIMultiBlockTile)) {
+                    if (!(node.getMachine() instanceof AIServerMultiBlockTile)) {
                         // Initialize main network of core
                         ((TileServerCore)getMaster()).mainNetwork = grid;
                     }

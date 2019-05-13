@@ -1,10 +1,8 @@
 package AppliedIntegrations.tile.Server;
 
-import AppliedIntegrations.tile.AIMultiBlockTile;
+import AppliedIntegrations.tile.AIServerMultiBlockTile;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
-import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.util.EnumFacing;
 
@@ -16,7 +14,7 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class TileServerPort extends AIMultiBlockTile implements ICellContainer {
+public class TileServerPort extends AIServerMultiBlockTile implements ICellContainer {
 
     private AEPartLocation side = AEPartLocation.INTERNAL;
 

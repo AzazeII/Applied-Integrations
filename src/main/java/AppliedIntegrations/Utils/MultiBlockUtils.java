@@ -14,13 +14,13 @@ import java.util.function.Consumer;
 public class MultiBlockUtils {
     /**
      * This static method will iterate over given pattern and
-     * will add blocks at their place in pattern to given list
+     * will add blocks at their place from pattern to given list
      * @param pattern pattern to validate
      * @param pivot Check blocks relatively to given pivot. Pivot must be tile
      * @param extra What to do, after validating block
      * @return List filled with blocks that matched pattern
      */
-    public static List<IAIMultiBlock> fillListWithPattern(BlockData[] pattern, IMaster pivot, Consumer<BlockData> extra){
+    public static List<? extends IAIMultiBlock> fillListWithPattern(BlockData[] pattern, IMaster pivot, Consumer<BlockData> extra){
         List<IAIMultiBlock> blockList = new ArrayList<>();
 
         // Check if pivot is tile

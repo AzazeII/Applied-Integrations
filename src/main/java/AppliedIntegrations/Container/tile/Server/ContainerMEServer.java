@@ -5,14 +5,9 @@ import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.Server.TileServerCore;
-import appeng.api.AEApi;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import static net.minecraft.init.Items.AIR;
 
 /**
  * @Author Azazell
@@ -35,7 +30,7 @@ public class ContainerMEServer extends ContainerWithPlayerInventory {
         this.addCardSlots(master.cardInv);
 
         // Bind drive slots
-        this.addDriveSlots(master.inv);
+        this.addDriveSlots(master.driveInv);
 
         // Bind player slots
         super.bindPlayerInventory(player.inventory, 102,160 );

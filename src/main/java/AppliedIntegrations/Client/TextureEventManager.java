@@ -5,6 +5,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
+/**
+ * @Author Azazell
+ */
 public class TextureEventManager {
     @SubscribeEvent
     public void textureStich(TextureStitchEvent.Pre event) {

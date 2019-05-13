@@ -9,6 +9,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
+/**
+ * @Author Azazell
+ */
 public class PacketContainerWidgetSync extends AIPacket {
 
     public int slotY;

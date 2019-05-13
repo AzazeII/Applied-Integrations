@@ -18,6 +18,7 @@ import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.channels.IItemStorageChannel;
@@ -25,6 +26,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.api.util.IReadOnlyCollection;
+import appeng.me.cache.CraftingGridCache;
 import appeng.util.Platform;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -38,6 +40,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.lang3.tuple.Pair;
+import scala.actors.threadpool.Arrays;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,6 +52,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Author Azazell
  */
 public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, ICellContainer, INetworkToolAgent, ITickable {
+    private static final String KEY_FORMED = "#FORMED";
+    private boolean constructionRequested;
+
     private class DriveInventoryManager implements IInventoryHost{
         @Override
         public void onInventoryChanged() {
@@ -148,7 +154,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     private int AVAILABLE_ID = RESERVED_MASTER_ID+1;
 
     // list of blocks in multiblock
-    public Vector<IAIMultiBlock> slaves = new Vector<>();
+    public Vector<AIServerMultiBlockTile> slaves = new Vector<>();
 
     public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 6, 1, this.cardManager){
         @Override
@@ -168,7 +174,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         }
     };
 
-    public AIGridNodeInventory inv = new AIGridNodeInventory("ME Server",30,1, this.driveManager){
+    public AIGridNodeInventory driveInv = new AIGridNodeInventory("ME Server",30,1, this.driveManager){
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemstack) {
             return AEApi.instance().registries().cell().isCellHandled(itemstack);
@@ -211,7 +217,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         return false;
     }
 
-    public void addSlave(AIMultiBlockTile slave) {
+    public void addSlave(AIServerMultiBlockTile slave) {
         slaves.add(slave);
     }
 
@@ -221,7 +227,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     }
 
     public void requestUpdate(){
-
         updateRequested = true;
     }
 
@@ -236,7 +241,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             tile.setMaster(null);
 
             // Destroy node of slave
-            ((AIMultiBlockTile)tile).destroyAENode();
+            ((AIServerMultiBlockTile)tile).destroyAENode();
         }
 
         // Iterate fore each side
@@ -288,6 +293,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
     @Override
     public void update() {
         super.update();
+
         if (isFormed) {
             if(!networkIDMap.containsValue(RESERVED_MASTER_ID) && mainNetwork != null){
                 networkIDMap.put(mainNetwork,RESERVED_MASTER_ID);
@@ -304,6 +310,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             }
 
         }
+
+        // Check if construction was requested from read nbt method
+        if (constructionRequested){
+            // Try construct server
+            tryConstruct(null);
+
+            // Toggle
+            constructionRequested = true;
+        }
     }
 
     @Override
@@ -311,6 +326,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void tryConstruct(EntityPlayer p) {
         // Check if multi block isn't formed yet
@@ -321,89 +337,93 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
             // Count of blocks matched the pattern. Atomic, because it accessed by lambda function
             AtomicInteger count = new AtomicInteger();
 
-            // Create list of blocks to update later
-            List<IAIMultiBlock> toUpdate;
+            // Get list of blocks matched the pattern
+            formServer((List<AIServerMultiBlockTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_SERVER, this, (block) -> count.getAndIncrement()), count, p);
+        }
+    }
 
-            // Call method of utils
-            toUpdate = MultiBlockUtils.fillListWithPattern(AIPatterns.ME_SERVER, this, (block) -> count.getAndIncrement());
+    private void formServer(List<AIServerMultiBlockTile> toUpdate, AtomicInteger count, EntityPlayer p) {
+        // Create blocks to place counter
+        int blocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
 
-            // Count blocks in pattern
-            int counter = 0;
+        // Check if length equal to count
+        if (AIPatterns.ME_SERVER.length == count.get()) {
+            // Iterate until i = len
+            for (int i = 0; i < AIPatterns.ME_SERVER_FILL.length; i++) {
+                // Create x, y, z
+                int x, y, z;
 
-            // Iterate for length of pattern
-            for (int i = 0; i < AIPatterns.ME_SERVER.length; i++)
-                // Check not null
-                if (AIPatterns.ME_SERVER[i] != null)
-                    // Add to counter
-                    counter++;
+                // Create block
+                Block block = AIPatterns.ME_SERVER_FILL[blocksToPlace].b;
 
+                // Initialize x, y, z
+                x = this.pos.getX() + AIPatterns.ME_SERVER_FILL[blocksToPlace].x;
+                y = this.pos.getY() + AIPatterns.ME_SERVER_FILL[blocksToPlace].y;
+                z = this.pos.getZ() + AIPatterns.ME_SERVER_FILL[blocksToPlace].z;
 
-            int blocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
-            if (counter == count.get()) {
-                for (int i = 0; i < AIPatterns.ME_SERVER_FILL.length; i++) {
-                    int x, y, z;
-                    Block block = AIPatterns.ME_SERVER_FILL[blocksToPlace].b;
+                // Set block state to our state
+                world.setBlockState(new BlockPos(x, y, z), block.getDefaultState());
 
-                    x = this.pos.getX() + AIPatterns.ME_SERVER_FILL[blocksToPlace].x;
-                    y = this.pos.getY() + AIPatterns.ME_SERVER_FILL[blocksToPlace].y;
-                    z = this.pos.getZ() + AIPatterns.ME_SERVER_FILL[blocksToPlace].z;
+                // Add block to update
+                toUpdate.add((TileServerRib) world.getTileEntity(new BlockPos(x,y,z)));
 
-                    world.setBlockToAir(new BlockPos(x, y, z));
-                    world.setBlockState(new BlockPos(x, y, z), block.getDefaultState());
-                    toUpdate.add((TileServerRib) world.getTileEntity(new BlockPos(x,y,z)));
-                    blocksToPlace--;
-                }
-
-                // Iterate for each block to update
-                for (IAIMultiBlock slave : toUpdate) {
-                    // Set slave master
-                    slave.setMaster(this);
-
-                    // Check for instance of port
-                    if (slave instanceof TileServerPort) {
-                        // Get port
-                        TileServerPort port = (TileServerPort) slave;
-                        // Create node
-                        port.createAENode();
-
-                    // Check for instance of rib
-                    } else if (slave instanceof TileServerRib) {
-                        // Get rib
-                        TileServerRib rib = (TileServerRib) slave;
-
-                        // Create node
-                        rib.createAENode();
-
-                        //rib.getWorld().setBlockState(rib.getPos(), rib.getWorld().getBlockState().withProperty());
-                    }
-
-                    // Add to salve list
-                    slaves.add(slave);
-                }
-
-                // Iterate for each side
-                for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){
-                    // get tile with double offset from this side
-                    TileEntity tile = world.getTileEntity(new BlockPos(getPos().getX()+side.xOffset*2,getPos().getY()+side.yOffset*2,getPos().getZ()+side.zOffset*2));
-
-                    // Check for instanceof port
-                    if(tile instanceof TileServerPort){
-                        // Get port
-                        TileServerPort port = (TileServerPort)tile;
-
-                        // Set proper direction
-                        port.setDir(side.getFacing());
-
-                        // Update grid of port
-                        port.onNeighborChange();
-                    }
-                }
+                // Decrease counter
+                blocksToPlace--;
             }
 
-            isFormed = true;
-            if(p!=null)
-                p.sendMessage(new TextComponentTranslation("ME Server Formed!"));
+            // Iterate for each block to update
+            for (AIServerMultiBlockTile slave : toUpdate) {
+                // Set slave master
+                slave.setMaster(this);
+
+                // Check for instance of port
+                if (slave instanceof TileServerPort) {
+                    // Get port
+                    TileServerPort port = (TileServerPort) slave;
+                    // Create node
+                    port.createAENode();
+
+                    // Check for instance of rib
+                } else if (slave instanceof TileServerRib) {
+                    // Get rib
+                    TileServerRib rib = (TileServerRib) slave;
+
+                    // Create node
+                    rib.createAENode();
+
+                    //rib.getWorld().setBlockState(rib.getPos(), rib.getWorld().getBlockState().withProperty());
+                }
+
+                // Add to slave list
+                slaves.add(slave);
+            }
+
+            // Iterate for each side
+            for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){
+                // get tile with double offset from this side
+                TileEntity tile = world.getTileEntity(new BlockPos(getPos().getX()+side.xOffset*2,getPos().getY()+side.yOffset*2,getPos().getZ()+side.zOffset*2));
+
+                // Check for instanceof port
+                if(tile instanceof TileServerPort){
+                    // Get port
+                    TileServerPort port = (TileServerPort)tile;
+
+                    // Set proper direction
+                    port.setDir(side.getFacing());
+
+                    // Update grid of port
+                    port.onNeighborChange();
+                }
+            }
         }
+
+        // Toggle formed
+        isFormed = true;
+
+        // Check not null
+        if(p != null)
+            // Send message
+            p.sendMessage(new TextComponentTranslation("ME Server Formed!"));
     }
 
 
@@ -440,13 +460,20 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
 
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void invalidate() {
         super.invalidate();
-        if (world != null && !world.isRemote) {
+        if (world != null && !world.isRemote)
             destroyAENode();
-        } if(isFormed)
+
+        if(isFormed)
             this.destroyMultiBlock();
+
+        // Drop items from drive and card inventory
+        Platform.spawnDrops(world, pos, Arrays.asList(cardInv.slots)); // Card inv
+        Platform.spawnDrops(world, pos, Arrays.asList(driveInv.slots)); // Drive inv
+
     }
 
     @Nonnull
@@ -506,6 +533,37 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IC
         getWorld().markChunkDirty(port.getPos(), port);
     }
     // -----------------------------Drive Methods-----------------------------//
+
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        // Read inventories
+        cardInv.readFromNBT(tag.getTagList("#cardInv", 10)); // Card inventory
+        driveInv.readFromNBT(tag.getTagList("#driveInv", 10)); // Drive inventory
+
+        // Check if tile is formed
+        if (tag.getBoolean(KEY_FORMED)) {
+            // When world is loaded this chain fires forI tile -> readFromNBT -> ... -> ..........
+            // And then forI: tile.update.
+            // So, at moment when tile.update is called all tiles are already loaded. So, construction
+            // Should be performed from update method
+            // Request construction
+            constructionRequested = true;
+        }
+
+        super.readFromNBT(tag);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        // Write inventories
+        tag.setTag("#cardInv", cardInv.writeToNBT()); // Card inventory
+        tag.setTag("#driveInv", driveInv.writeToNBT()); // Drive inventory
+
+        // Write is formed
+        tag.setBoolean(KEY_FORMED, isFormed);
+
+        return super.writeToNBT(tag);
+    }
 
     @Override
     public boolean showNetworkInfo(RayTraceResult rayTraceResult) {

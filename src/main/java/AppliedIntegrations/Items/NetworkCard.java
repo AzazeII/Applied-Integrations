@@ -313,6 +313,12 @@ public class NetworkCard extends AIItemRegistrable {
             return EnumActionResult.SUCCESS;
         }
 
+        // Check if player is sneaking
+        if (player.isSneaking()) {
+            // Clear tag
+            player.getHeldItem(hand).setTagCompound(new NBTTagCompound());
+        }
+
         return EnumActionResult.FAIL;
     }
 }

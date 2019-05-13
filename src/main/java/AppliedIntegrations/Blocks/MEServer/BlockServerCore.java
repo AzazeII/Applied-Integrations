@@ -1,22 +1,17 @@
 package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Random;
-
-import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
@@ -42,9 +37,9 @@ public class BlockServerCore extends AIMultiBlock {
         {
             TileServerCore te = (TileServerCore) teRaw;
 
-            for (int i = 0; i < te.inv.getSizeInventory(); i++)
+            for (int i = 0; i < te.driveInv.getSizeInventory(); i++)
             {
-                ItemStack istack = te.inv.getStackInSlot(i);
+                ItemStack istack = te.driveInv.getStackInSlot(i);
 
                 if (istack != null) drops.add(istack.copy());
             }

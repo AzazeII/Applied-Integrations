@@ -5,6 +5,9 @@ import AppliedIntegrations.tile.Server.TileServerSecurity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerContainerWidgetSync implements IMessageHandler<PacketContainerWidgetSync, PacketContainerWidgetSync> {
 
     public HandlerContainerWidgetSync(){}

@@ -1,25 +1,20 @@
 package AppliedIntegrations.tile.Server.Render;
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Client.AITileRenderer;
+import AppliedIntegrations.Client.AITileFullRenderer;
 import AppliedIntegrations.tile.Server.TileServerRib;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import java.util.LinkedHashMap;
 
-import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
 import static net.minecraft.util.EnumFacing.*;
 import static net.minecraft.util.EnumFacing.Axis.Y;
 import static net.minecraft.util.EnumFacing.Axis.Z;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
 
-public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
+public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 
     // Initialize side variables
     private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame.png"); // (1)
@@ -33,19 +28,6 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
 
     private static final EnumFacing[] axisDirections = {
             SOUTH, WEST, UP
-    };
-
-    // Get tessellator instance
-    private static Tessellator tessellator = Tessellator.getInstance();
-
-    // Get buffered builder
-    private static BufferBuilder builder = tessellator.getBuffer();
-
-    private static float[][] defaultUV = {
-            {1, 1},
-            {1, 0},
-            {0, 0},
-            {0, 1}
     };
 
     private ResourceLocation bindDirectionalTexture(TileServerRib te) {
@@ -90,42 +72,6 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
         }
     }
 
-
-    /**
-     * Create a quad with given positions and texels
-     * @param posTex array of all world positions. Inner array MUST have 3 float variables. x, y, z. Array must have 4 inner arrays
-     * @param uvTex array of all texture positions. Inner array MUST have 2 float variables. U, V. Array must have 4 inner arrays
-     */
-    private void drawQuadWithUV(float[][] posTex, float[][] uvTex) {
-        // Start drawing quads
-        builder.begin(GL_QUADS, POSITION_TEX);
-
-        // Assert length != 4
-        if (posTex.length != 4 || uvTex.length != 4)
-            // Quit program
-            throw new IllegalStateException("Position and UV vertices array length must be 4");
-
-        // Iterate for each pos array in posTex
-        for (int i = 0; i < posTex.length; i++){
-            // Get current position
-            float[] pos = posTex[i];
-
-            // Get current tex
-            float[] tex = uvTex[i];
-
-            // Add position
-            builder.pos(pos[0], pos[1], pos[2]).tex(tex[0], tex[1]).endVertex();
-        }
-
-        tessellator.draw();
-    }
-
-
-    private void setAmbient(TileServerRib te) {
-        // Change light mapping to match current position of tile
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 210, 210);
-    }
-
     private float[][] translateAxisToUV(TileServerRib te, EnumFacing side) {
         // Get tile line axis
         Axis axis = tileAxisMap.get(te);
@@ -150,14 +96,11 @@ public class ServerRibRenderer extends AITileRenderer<TileServerRib> {
 
     @Override
     public void render(TileServerRib te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        super.render(te, x, y, z, partialTicks, destroyStage, alpha);
-
         // Save matrix to stack
         prepareMatrix(x, y, z);
-        GlStateManager.enableTexture2D();
 
-        // Change ambient color (lighting)
-        setAmbient(te);
+        // Configure light blend
+        setLightAmbient();
 
         // Rescale render
         GlStateManager.scale(1,1,1);

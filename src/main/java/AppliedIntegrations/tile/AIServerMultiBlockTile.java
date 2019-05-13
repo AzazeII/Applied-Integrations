@@ -1,18 +1,26 @@
 package AppliedIntegrations.tile;
 
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.Server.PacketMasterSync;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 /**
  * @Author Azazell
  */
-public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
+public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
+
+    private static final String KEY_FORMED = "#HasMaster";
+    private static final String KEY_MASTER = "#Master";
 
     protected TileServerCore master;
 
@@ -28,6 +36,7 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
             }
         }
     }
+
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
         if(hasMaster())
@@ -68,7 +77,11 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
 
     @Override
     public void setMaster(IMaster tileServerCore) {
+        // Update master
         master = (TileServerCore)tileServerCore;
+
+        // Notify server
+        NetworkHandler.sendToDimension(new PacketMasterSync(this, master), world.provider.getDimension());
     }
 
     @Override
@@ -76,4 +89,13 @@ public class AIMultiBlockTile extends AITile implements IAIMultiBlock {
 
     }
 
+    @Override
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        return super.writeToNBT(tag);
+    }
 }
