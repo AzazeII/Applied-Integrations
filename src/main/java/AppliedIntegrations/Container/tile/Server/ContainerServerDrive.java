@@ -1,15 +1,23 @@
 package AppliedIntegrations.Container.tile.Server;
 
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
+import AppliedIntegrations.Container.slot.SlotMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.tile.Server.TileServerDrive;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerServerDrive extends ContainerWithPlayerInventory {
     private static final int DRIVE_SLOT_ROWS = 3;
     private static final int DRIVE_SLOT_COLUMNS = 2;
 
-    public ContainerServerDrive(EntityPlayer player) {
+    public ContainerServerDrive(EntityPlayer player, TileServerDrive drive) {
         super(player);
+
+        // Bind card slots
+        this.addDriveSlots(drive.driveInv);
+
+        // Bind player slots
+        super.bindPlayerInventory(player.inventory, 63,121 );
     }
 
     private void addDriveSlots(AIGridNodeInventory driveInv) {
@@ -23,7 +31,7 @@ public class ContainerServerDrive extends ContainerWithPlayerInventory {
                 // Check not null
                 if(driveInv != null) {
                     // Add ME server slot
-                    this.addSlotToContainer( new SlotMEServer(driveInv, i, 35 + x * 18, y * 18 - 1 ) );
+                    this.addSlotToContainer( new SlotMEServer(driveInv, i, 71 + x * 18, y * 18 - 1) );
 
                     // Add to counter
                     i++;

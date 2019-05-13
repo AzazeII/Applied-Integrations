@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.IInventoryHost;
 import appeng.api.AEApi;
@@ -8,7 +9,9 @@ import appeng.api.storage.ICellInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
+import appeng.api.util.AEPartLocation;
 import appeng.util.Platform;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import scala.actors.threadpool.Arrays;
@@ -28,6 +31,7 @@ public class TileServerDrive extends TileServerHousing implements ICellContainer
     }
 
     private LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IMEInventoryHandler>> driveHandlers = new LinkedHashMap<>();
+
     private DriveInventoryManager driveManager = new DriveInventoryManager();
 
     {
@@ -41,6 +45,11 @@ public class TileServerDrive extends TileServerHousing implements ICellContainer
             return AEApi.instance().registries().cell().isCellHandled(itemstack);
         }
     };
+
+    public void activate(EntityPlayer p) {
+        // Open GUI
+        AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerDrive, p, AEPartLocation.INTERNAL, pos);
+    }
 
     public void nullifyMap () {
         // Iterate for each channel

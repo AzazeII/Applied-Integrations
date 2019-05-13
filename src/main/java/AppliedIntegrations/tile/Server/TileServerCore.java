@@ -2,7 +2,7 @@ package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerCore;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -409,7 +409,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
     @Override
     public Object getClientGuiElement( final EntityPlayer player ) {
-        return new GuiMEServer((ContainerServerCore)this.getServerGuiElement(player), player);
+        return new GuiServerCore((ContainerServerCore)this.getServerGuiElement(player), player);
     }
 
     @Override

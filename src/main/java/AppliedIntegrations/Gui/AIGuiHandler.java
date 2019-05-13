@@ -1,9 +1,11 @@
 package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
+import AppliedIntegrations.Container.tile.Server.ContainerServerDrive;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
-import AppliedIntegrations.Gui.ServerGUI.GuiMEServer;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerCore;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerDrive;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.AppliedIntegrations;
@@ -23,6 +25,7 @@ import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.TileServerDrive;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,6 +47,7 @@ public class AIGuiHandler implements IGuiHandler {
         GuiInterfaceTile,
         GuiStoragePart,
         GuiServerStorage,
+        GuiServerDrive,
         GuiTerminalPart,
         GuiServerTerminal,
         GuiLogicBus,
@@ -165,6 +169,10 @@ public class AIGuiHandler implements IGuiHandler {
             TileServerCore core = (TileServerCore) Utils.getTileByParams(new BlockPos(x,y,z), world);
 
             return new ContainerServerCore(player, core);
+        }else if(gui == GuiServerDrive) {
+            TileServerDrive drive = (TileServerDrive) Utils.getTileByParams(new BlockPos(x,y,z), world);
+
+            return new ContainerServerDrive(player, drive);
         }
 
         return null;
@@ -207,8 +215,12 @@ public class AIGuiHandler implements IGuiHandler {
             return new GuiPriorityAI(player.inventory, host);
         }else if(gui == GuiServerTerminal) {
             return new GuiServerTerminal((ContainerServerTerminal)getServerGuiElement(ID, player, world, x, y, z), player);
+
         }else if(gui == GuiServerStorage) {
-            return new GuiMEServer((ContainerServerCore)getServerGuiElement(ID, player, world, x, y, z), player);
+            return new GuiServerCore((ContainerServerCore)getServerGuiElement(ID, player, world, x, y, z), player);
+
+        } else if(gui == GuiServerDrive) {
+            return new GuiServerDrive((ContainerServerDrive)getServerGuiElement(ID, player, world, x, y, z), player);
         }
 
         return null;

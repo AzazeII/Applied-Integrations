@@ -14,5 +14,6 @@ public class TextureEventManager {
         // Register sprite atlas for texture of upgrade slot
         event.getMap().registerSprite(new ResourceLocation(AppliedIntegrations.modid + ":gui/slots/UpgradeSlotIcon"));
         event.getMap().registerSprite(new ResourceLocation(AppliedIntegrations.modid + ":gui/slots/network_card_slot"));
+        event.getMap().registerSprite(new ResourceLocation(AppliedIntegrations.modid + ":gui/slots/server_cell_slot"));
     }
 }
