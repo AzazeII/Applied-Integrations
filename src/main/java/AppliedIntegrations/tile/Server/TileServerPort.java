@@ -20,27 +20,8 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
     public void onNeighborChange() {
         // Check if port has master
         if(hasMaster()){
-            // Check not null
-            if(gridNode == null)
-                return;
-
-            // Get grid
-            IGrid network = gridNode.getGrid();
-
             // Get core
             TileServerCore core = (TileServerCore)getMaster();
-
-            // Check if network has more than one node and core networks not contains this network
-            if(network.getNodes().size() > 1 && !core.portNetworks.containsValue(network)) {
-                // Check if network not equal to main network
-                if(network != core.getMainNetwork()) {
-                    // Map network by side
-                    core.portNetworks.put(side, network);
-                }
-            }else{
-                // Remove network from maps
-                core.portNetworks.remove(side); // (1)
-            }
 
             // Notify all networks
             core.postNetworkCellEvents();
@@ -54,6 +35,36 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 
     public AEPartLocation getSideVector() {
         return side;
+    }
+
+
+    private IGrid requestNetwork() {
+        // Check not null
+        if(gridNode == null)
+            return null;
+
+        // Get grid and return it
+        return gridNode.getGrid();
+    }
+
+    @Override
+    public void update() {
+        super.update();
+
+        // Check if port has master
+        if(hasMaster()) {
+            // Get core
+            TileServerCore core = (TileServerCore) getMaster();
+
+            // Get network at side of this port
+            IGrid grid = core.getPortNetworks().get(side);
+
+            // Check if grid is null
+            if (grid == null) {
+                // Update grid
+                core.getPortNetworks().put(side, requestNetwork());
+            }
+        }
     }
 
     @Override

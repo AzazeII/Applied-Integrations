@@ -13,6 +13,8 @@ import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
+import AppliedIntegrations.tile.Server.Networking.MEServerMonitorHandlerReceiver;
+import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.GridFlags;
@@ -23,6 +25,7 @@ import appeng.api.storage.*;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
+import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +37,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.lang3.tuple.Pair;
-import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
@@ -67,9 +69,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
             // Notify grid of current port
             port.postCellEvent();
-
-            // Notify our grid also
-            postCellEvent();
         }
 
         @Override
@@ -102,11 +101,14 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                     // Iterate for each channel
                     GuiStorageChannelButton.getChannelList().forEach(channel -> {
                         try {
-                            // Encode new handler from channel into map
-                            handlers.put(channel, Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(
+                            // Get new handler from API
+                            FilteredServerPortHandler handler = Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(
                                     data.getLeft(),
-                                             data.getRight(),
-                                             TileServerCore.this));
+                                    data.getRight(),
+                                    TileServerCore.this);
+
+                            // Map handler with channel
+                            handlers.put(channel, handler);
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             throw new IllegalStateException("Unexpected Error");
                         }
@@ -151,8 +153,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     };
 
     // Networks in ports
-    public LinkedHashMap<AEPartLocation,IGrid> portNetworks = new LinkedHashMap<>();
 
+    public LinkedHashMap<AEPartLocation,IGrid> portNetworks = new LinkedHashMap<>();
     private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(
             TileServerHousing.class,
             TileServerSecurity.class,
@@ -161,7 +163,10 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
             TileServerRib.class
     );
 
+    // List of all "mediums" for providing cell inventory from main network into adjacent networks
+
     private LinkedHashMap<AEPartLocation, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>> portHandlers = new LinkedHashMap<>();
+    private List<MEServerMonitorHandlerReceiver> receiverList = new ArrayList<>();
 
     private boolean isFormed;
 
@@ -179,7 +184,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         return rib.getMainNetwork();
     }
 
-    public <T extends IAEStack<T>> IMEInventory<T> getMainNetworkInventory(IStorageChannel<T> channel) {
+    public <T extends IAEStack<T>> IMEMonitor<T> getMainNetworkInventory(IStorageChannel<T> channel) {
         return ((IStorageMonitorable)getMainNetwork().getCache(IStorageGrid.class)).getInventory(channel);
     }
 
@@ -203,6 +208,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerStorage, p, AEPartLocation.INTERNAL, pos);
     }
 
+    @SuppressWarnings("unchecked")
     public void destroyMultiBlock(){
         // Iterate for each slave
         for(IAIMultiBlock tile : slaves){
@@ -227,6 +233,16 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
         // Make server not formed
         isFormed = false;
+
+        // Remove receivers from listeners of each channel from main server grid
+        // Iterate for each channel
+        GuiStorageChannelButton.getChannelList().forEach(channel -> {
+            // Iterate for each ME server listnere in list
+            receiverList.forEach((meServerMonitorHandlerReceiver -> {
+                // Remove from listeners
+                getMainNetworkInventory(channel).removeListener(meServerMonitorHandlerReceiver);
+            }));
+        });
     }
 
     private TileServerPort getPortAtSide(AEPartLocation side) {
@@ -257,6 +273,25 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
         // Notify server-networks
         postCellEvent();
+    }
+
+    public void postNetworkAlterationsEvents(IStorageChannel<? extends IAEStack<?>> channel, Iterable change, MachineSource machineSource) {
+        // Iterate for each side
+        for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
+            // Check not null
+            if (portNetworks.get(side) == null)
+                continue;
+
+            // Get storage grid of network
+            IStorageGrid grid = portNetworks.get(side).getCache(IStorageGrid.class);
+
+            // Post alteration
+            grid.postAlterationOfStoredItems(channel, change, machineSource);
+        }
+    }
+
+    public LinkedHashMap<AEPartLocation, IGrid> getPortNetworks() {
+        return portNetworks;
     }
 
     @Override
@@ -291,6 +326,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void formServer(List<AIServerMultiBlockTile> toUpdate, AtomicInteger count, EntityPlayer p) {
         // Create blocks to place counter
         int blocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
@@ -369,6 +405,19 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
         // Toggle formed
         isFormed = true;
+
+        // Add receivers to listeners of each channel of main server grid
+        // Iterate for each channel
+        GuiStorageChannelButton.getChannelList().forEach(channel -> {
+            // Create receiver
+            MEServerMonitorHandlerReceiver receiver = new MEServerMonitorHandlerReceiver<>(this, channel);
+
+            // Add to receiver list
+            receiverList.add(receiver);
+
+            // Add to listeners
+            getMainNetworkInventory(channel).addListener(receiver, null);
+        });
 
         // Check not null
         if(p != null)
@@ -484,9 +533,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     }
 
     @Override
-    public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
-        return false;
-    }
+    public boolean showNetworkInfo(RayTraceResult rayTraceResult) { return false; }
 
     @Override
     public Iterator<IGridNode> getMultiblockNodes() {
