@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 public class GuiServerDrive extends AIBaseGui {
-    private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server_cell_storage-2.png");
+    private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_cell_storage.png");
 
     public GuiServerDrive(Container container, EntityPlayer player) {
         super(container, player);

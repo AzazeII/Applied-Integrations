@@ -14,7 +14,7 @@ import org.lwjgl.opengl.GL11;
  * @Author Azazell
  */
 public class GuiServerCore extends AIBaseGui {
-    private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server_card_storage.png");
+    private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_card_storage.png");
 
     public GuiServerCore(ContainerServerCore container, EntityPlayer p) {
         super(container, p);

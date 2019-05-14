@@ -78,7 +78,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
     private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> permissionChannelModeMap = new LinkedHashMap<>();
     private LinkedHashMap<SecurityPermissions, AEFluidInventory> tanks = new LinkedHashMap<>();
 
-    private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server/server_terminal.png");
+    private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_terminal.png");
 
     public TileServerCore mInstance;
     public EntityPlayer player;
