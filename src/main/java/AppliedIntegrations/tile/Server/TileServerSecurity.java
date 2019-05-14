@@ -165,16 +165,20 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
     @Nonnull
     @Override
     public EnumSet<EnumFacing> getConnectableSides() {
+        // Create empty set
         EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
+
+        // Iterate for each side
         for(EnumFacing side : EnumFacing.values()){
+            // Check if side isn't forward
             if(side != forward){
+                // Add side to set
                 set.add(side);
             }
         }
         return set;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void invalidate() {
         if (world != null && !world.isRemote) {

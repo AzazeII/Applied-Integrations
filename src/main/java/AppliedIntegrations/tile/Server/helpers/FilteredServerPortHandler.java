@@ -195,7 +195,7 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         if (!getChannel().equals(outerInventory.getChannel()))
             return null;
 
-            // Pass to outer handler
+        // Pass to outer handler
         return outerInventory.extractItems(request, mode, src);
     }
 
@@ -209,7 +209,18 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
         if (!getChannel().equals(outerInventory.getChannel()))
             return out;
 
-        // Pass to outer handler
-        return outerInventory.getAvailableItems(out);
+        // Next iteration will fill up our list with available and
+        // accessible(from this network) stacks from storage grid of main server network.
+        // Iterate for each stack of list from outer inventory(inventory of main network)
+        outerInventory.getAvailableItems(getChannel().createList()).forEach((stack) -> {
+            // Check if stack can be operated
+            if (canAccept(stack) || canExtract(stack)) {
+                // Add stack since it can be operated
+                out.add(stack);
+            }
+        });
+
+        // Return filled list
+        return out;
     }
 }

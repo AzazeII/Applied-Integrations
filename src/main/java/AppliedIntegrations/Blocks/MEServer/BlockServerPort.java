@@ -17,7 +17,13 @@ public class BlockServerPort extends AIMultiBlock {
 
     @Override
     public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+        // Get port
         TileServerPort port = (TileServerPort)worldIn.getTileEntity(pos);
-        port.onNeighborChange();
+
+        // Check not null
+        if (port != null) {
+            // Pass call to tile
+            port.onNeighborChange();
+        }
     }
 }
