@@ -4,6 +4,7 @@ import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.AITile;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 /**
@@ -14,22 +15,14 @@ import net.minecraft.world.World;
  */
 public class PacketCoordinateInit extends AIPacket {
 
-    public final boolean isOwnerPart;
-
     public ISyncHost host;
 
     public PacketCoordinateInit(){
-        isOwnerPart = false;
-    }
 
-    public PacketCoordinateInit(int x, int y, int z, World w){
-        super(x,y,z,null,w);
-        isOwnerPart = false;
     }
 
     public PacketCoordinateInit(ISyncHost host){
         super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
-        this.isOwnerPart = true;
         this.host = host;
     }
 
