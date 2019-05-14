@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "IFI",
+    "DDD",
+    "IFI"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "D": {
+      "item": "appliedenergistics2:part",
+      "data": 76
+    },
+    "F": {
+      "item": "appliedenergistics2:material",
+      "data": 2
+    }
+  },
+  "result": {
+    "item": "appliedintegrations:serverframe"
+  }
+}

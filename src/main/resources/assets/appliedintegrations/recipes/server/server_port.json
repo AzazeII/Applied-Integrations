@@ -1,0 +1,33 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "CIC",
+    "APF",
+    "CIC"
+  ],
+  "key": {
+    "C": {
+      "item": "appliedenergistics2:part",
+      "data": 16
+    },
+    "P": {
+      "item": "appliedenergistics2:part",
+      "data": 460
+    },
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "A": {
+      "item": "appliedenergistics2:part",
+      "data": 440
+    },
+    "F": {
+      "item": "appliedenergistics2:part",
+      "data": 220
+    }
+  },
+  "result": {
+    "item": "appliedintegrations:serverport"
+  }
+}

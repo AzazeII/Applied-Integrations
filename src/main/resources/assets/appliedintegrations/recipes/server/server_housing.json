@@ -1,0 +1,25 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "III",
+    "CLC",
+    "III"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "L": {
+      "item": "appliedenergistics2:material",
+      "data": 22
+    },
+    "C": {
+      "item": "appliedenergistics2:part",
+      "data": 16
+    }
+  },
+  "result": {
+    "item": "appliedintegrations:serverhousing"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "IGI",
+    "LSL",
+    "IGI"
+  ],
+  "key": {
+    "I": {
+      "type": "forge:ore_dict",
+      "ore": "ingotIron"
+    },
+    "G": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "L": {
+      "item": "appliedenergistics2:material",
+      "data": 22
+    },
+    "S": {
+      "item": "appliedenergistics2:security_station"
+    }
+  },
+  "result": {
+    "item": "appliedintegrations:serversecurity"
+  }
+}

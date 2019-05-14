@@ -1,0 +1,23 @@
+{
+  "type": "forge:ore_shaped",
+  "pattern": [
+    "GDG",
+    "DCD",
+    "GDG"
+  ],
+  "key": {
+    "G": {
+      "item": "appliedenergistics2:quartz_glass"
+    },
+    "D": {
+      "item": "appliedenergistics2:part",
+      "data": 76
+    },
+    "C": {
+      "item": "appliedenergistics2:controller"
+    }
+  },
+  "result": {
+    "item": "appliedintegrations:servercore"
+  }
+}
