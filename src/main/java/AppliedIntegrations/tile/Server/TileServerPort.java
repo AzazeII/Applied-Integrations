@@ -33,7 +33,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
             // Check if network has more than one node and core networks not contains this network
             if(network.getNodes().size() > 1 && !core.portNetworks.containsValue(network)) {
                 // Check if network not equal to main network
-                if(network != core.mainNetwork) {
+                if(network != core.getMainNetwork()) {
                     // Map network by side
                     core.portNetworks.put(side, network);
                 }

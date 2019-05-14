@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.helpers;
 
+import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -15,8 +16,8 @@ import java.util.List;
 public class FilteredServerPortFluidHandler extends FilteredServerPortHandler<IAEFluidStack> {
     public FilteredServerPortFluidHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
                                           LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
-                                          IMEInventory<IAEFluidStack> outerInventory) {
-        super(filteredMatter, filterMode, outerInventory);
+                                          TileServerCore host) {
+        super(filteredMatter, filterMode, host);
     }
 
     @Override

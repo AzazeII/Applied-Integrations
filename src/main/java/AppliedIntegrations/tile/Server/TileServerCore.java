@@ -19,10 +19,7 @@ import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
-import appeng.api.storage.ICellInventory;
-import appeng.api.storage.IMEInventory;
-import appeng.api.storage.IMEInventoryHandler;
-import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.*;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
@@ -48,15 +45,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Author Azazell
  */
 public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable {
-    private enum TileTypes {
-        HOUSING,
-        PORT,
-        RIB,
-        CORE,
-        DRIVE,
-        TERMINAL
-    }
-
     private class CardInventoryManager implements IInventoryHost {
 
         private void onCardRemove(ItemStack card) {
@@ -83,6 +71,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
             // Notify our grid also
             postCellEvent();
         }
+
         @Override
         public void onInventoryChanged() {
             // Iterate for each stack in cards inventory
@@ -112,15 +101,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
                     // Iterate for each channel
                     GuiStorageChannelButton.getChannelList().forEach(channel -> {
-                        // Get inventory
-                        IMEInventory<?> inventory = ((IStorageGrid)mainNetwork.getCache(IStorageGrid.class)).getInventory(channel);
-
                         try {
                             // Encode new handler from channel into map
                             handlers.put(channel, Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(
                                     data.getLeft(),
-                                    data.getRight(),
-                                    inventory));
+                                             data.getRight(),
+                                             TileServerCore.this));
                         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
                             throw new IllegalStateException("Unexpected Error");
                         }
@@ -133,22 +119,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                     port.postCellEvent();
                 }
             }
-
-            // Notify our grid also
-            postCellEvent();
         }
     }
 
     private static final String KEY_FORMED = "#FORMED";
     private boolean constructionRequested;
 
-    private LinkedHashMap<TileTypes, List<AIServerMultiBlockTile>> slaveMap = new LinkedHashMap<>();
+    private LinkedHashMap<Class<? extends AIServerMultiBlockTile>, List<AIServerMultiBlockTile>> slaveMap = new LinkedHashMap<>();
 
     private CardInventoryManager cardManager = new CardInventoryManager();
-
-    private static final int BLOCKS_IN_STRUCTURE = AIPatterns.ME_SERVER.length+1;
-
-    private static final int RESERVED_MASTER_ID = 1;
 
     // list of blocks in multiblock
     public List<AIServerMultiBlockTile> slaves = new ArrayList<>();
@@ -170,17 +149,38 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
             return super.decrStackSize(slotId, amount);
         }
     };
+
     // Networks in ports
-
     public LinkedHashMap<AEPartLocation,IGrid> portNetworks = new LinkedHashMap<>();
+
+    private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(
+            TileServerHousing.class,
+            TileServerSecurity.class,
+            TileServerDrive.class,
+            TileServerPort.class,
+            TileServerRib.class
+    );
+
     private LinkedHashMap<AEPartLocation, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>> portHandlers = new LinkedHashMap<>();
-    // Network of owner
 
-    public IGrid mainNetwork;
-    public boolean isFormed;
+    private boolean isFormed;
 
-    {
-       nullifyMap();
+    { nullifyMap(); }
+
+    public IGrid getMainNetwork() {
+        // Check if mutli-block isn't formed
+        if (!isFormed)
+            return null;
+
+        // Get first rib in list in map
+        TileServerRib rib = (TileServerRib) slaveMap.get(TileServerRib.class).get(0);
+
+        // Pass call to rib
+        return rib.getMainNetwork();
+    }
+
+    public <T extends IAEStack<T>> IMEInventory<T> getMainNetworkInventory(IStorageChannel<T> channel) {
+        return ((IStorageMonitorable)getMainNetwork().getCache(IStorageGrid.class)).getInventory(channel);
     }
 
     void nullifyMap() {
@@ -188,7 +188,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         slaveMap = new LinkedHashMap<>();
 
         // Iterate for each tile type
-        for (TileTypes type : TileTypes.values()) {
+        for (Class<? extends AIServerMultiBlockTile> type : serverClasses) {
             // Add list to map
             slaveMap.put(type, new ArrayList<>());
         }
@@ -224,9 +224,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
         // Nullify slave list
         slaves = new ArrayList<>();
-
-        // Nullify network
-        mainNetwork = null;
 
         // Make server not formed
         isFormed = false;
@@ -342,19 +339,10 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
                     // Create node
                     rib.createAENode();
-
-                    // Put in category map
-                    slaveMap.get(TileTypes.HOUSING).add(rib);
-
-                    //rib.getWorld().setBlockState(rib.getPos(), rib.getWorld().getBlockState().withProperty());
-                } else if (slave instanceof TileServerHousing) {
-                    // Get housing
-                    TileServerHousing housing = (TileServerHousing) slave;
-
-                    // Put in category map
-                    slaveMap.get(TileTypes.HOUSING).add(housing);
-
                 }
+
+                // Put in category map
+                slaveMap.get(slave.getClass()).add(slave);
 
                 // Add to slave list
                 slaves.add(slave);

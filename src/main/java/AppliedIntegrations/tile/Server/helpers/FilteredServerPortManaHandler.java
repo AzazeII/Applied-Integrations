@@ -2,6 +2,7 @@ package AppliedIntegrations.tile.Server.helpers;
 
 import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -14,8 +15,9 @@ import java.util.List;
 
 public class FilteredServerPortManaHandler extends FilteredServerPortHandler<IAEManaStack> {
     public FilteredServerPortManaHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
-                                         LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, IMEInventory<IAEManaStack> outerInventory) {
-        super(filteredMatter, filterMode, outerInventory);
+                                         LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
+                                         TileServerCore host) {
+        super(filteredMatter, filterMode, host);
     }
 
     @Override

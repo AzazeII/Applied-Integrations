@@ -2,6 +2,7 @@ package AppliedIntegrations.tile.Server.helpers;
 
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -15,8 +16,8 @@ import java.util.List;
 public class FilteredServerPortEnergyHandler extends FilteredServerPortHandler<IAEEnergyStack> {
     public FilteredServerPortEnergyHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
                                            LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
-                                           IMEInventory<IAEEnergyStack> outerInventory) {
-        super(filteredMatter, filterMode, outerInventory);
+                                           TileServerCore host) {
+        super(filteredMatter, filterMode, host);
     }
 
     @Override

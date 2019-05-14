@@ -29,6 +29,14 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
         NetworkHandler.sendToDimension(new PacketRibSync(this, getGridNode().isActive()), world.provider.getDimension());
     }
 
+    public IGrid getMainNetwork() {
+        // Check not null
+        if (getGridNode() == null)
+            return null;
+
+        return getNetwork();
+    }
+
     @Override
     public void update() {
         super.update();
@@ -40,24 +48,6 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
                 // Pass call to function
                 notifyListeners();
             }));
-
-            // Check if structure is formed
-            if (hasMaster()) {
-                // Check if main network is null
-                if (((TileServerCore) getMaster()).mainNetwork == null) {
-                    // Get grid of current node
-                    IGrid grid = getNetwork();
-
-                    // Iterate for each node
-                    for (IGridNode node : grid.getNodes()) {
-                        // Check if machine of node isn't equal to mutliblock tile?? WTF, TODO review code here later
-                        if (!(node.getMachine() instanceof AIServerMultiBlockTile)) {
-                            // Initialize main network of core
-                            ((TileServerCore) getMaster()).mainNetwork = grid;
-                        }
-                    }
-                }
-            }
         }
     }
 
@@ -65,5 +55,4 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
     public EnumSet<GridFlags> getFlags() {
         return EnumSet.of(GridFlags.DENSE_CAPACITY);
     }
-
 }

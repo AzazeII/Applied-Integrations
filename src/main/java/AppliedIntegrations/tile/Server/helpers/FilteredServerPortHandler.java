@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.helpers;
 
+import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.IncludeExclude;
@@ -29,15 +30,19 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
 
     private final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter;
     private final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode;
-    private final IMEInventory<T> outerInventory;
+    private final TileServerCore host;
 
     public FilteredServerPortHandler(
             LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
             LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
-            IMEInventory<T> outerInventory) {
+            TileServerCore host) {
         this.filteredMatter = filteredMatter;
         this.filterMode = filterMode;
-        this.outerInventory = outerInventory;
+        this.host = host;
+    }
+
+    private IMEInventory<T> getOuterInventory() {
+        return host.getMainNetworkInventory(getChannel());
     }
 
     private void forStackInList(BiConsumer<IAEStack<? extends IAEStack>, SecurityPermissions> consumer) {
@@ -178,11 +183,11 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
             return input;
 
         // Check if channel of inventory equal to channel of this handler
-        if (!getChannel().equals(outerInventory.getChannel()))
+        if (!getChannel().equals(getOuterInventory().getChannel()))
             return input;
 
         // Pass to outer handler
-        return outerInventory.injectItems(input, type, src);
+        return getOuterInventory().injectItems(input, type, src);
     }
 
     @Override
@@ -192,11 +197,11 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
             return null;
 
         // Check if channel of inventory equal to channel of this handler
-        if (!getChannel().equals(outerInventory.getChannel()))
+        if (!getChannel().equals(getOuterInventory().getChannel()))
             return null;
 
         // Pass to outer handler
-        return outerInventory.extractItems(request, mode, src);
+        return getOuterInventory().extractItems(request, mode, src);
     }
 
     @Override
@@ -206,13 +211,13 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> implement
             return out;
 
         // Check if channel of inventory equal to channel of this handler
-        if (!getChannel().equals(outerInventory.getChannel()))
+        if (!getChannel().equals(getOuterInventory().getChannel()))
             return out;
 
         // Next iteration will fill up our list with available and
         // accessible(from this network) stacks from storage grid of main server network.
         // Iterate for each stack of list from outer inventory(inventory of main network)
-        outerInventory.getAvailableItems(getChannel().createList()).forEach((stack) -> {
+        getOuterInventory().getAvailableItems(getChannel().createList()).forEach((stack) -> {
             // Check if stack can be operated
             if (canAccept(stack) || canExtract(stack)) {
                 // Add stack since it can be operated
