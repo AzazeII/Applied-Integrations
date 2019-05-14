@@ -37,34 +37,13 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
         return side;
     }
 
-
-    private IGrid requestNetwork() {
+    public IGrid requestNetwork() {
         // Check not null
         if(gridNode == null)
             return null;
 
         // Get grid and return it
         return gridNode.getGrid();
-    }
-
-    @Override
-    public void update() {
-        super.update();
-
-        // Check if port has master
-        if(hasMaster()) {
-            // Get core
-            TileServerCore core = (TileServerCore) getMaster();
-
-            // Get network at side of this port
-            IGrid grid = core.getPortNetworks().get(side);
-
-            // Check if grid is null
-            if (grid == null) {
-                // Update grid
-                core.getPortNetworks().put(side, requestNetwork());
-            }
-        }
     }
 
     @Override

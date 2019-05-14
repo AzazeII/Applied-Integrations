@@ -27,6 +27,7 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
+import jdk.nashorn.internal.runtime.ScriptObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -128,6 +129,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     private boolean constructionRequested;
 
     private LinkedHashMap<Class<? extends AIServerMultiBlockTile>, List<AIServerMultiBlockTile>> slaveMap = new LinkedHashMap<>();
+    private LinkedHashMap<AEPartLocation, TileServerPort> portMap = new LinkedHashMap<>();
 
     private CardInventoryManager cardManager = new CardInventoryManager();
 
@@ -153,8 +155,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     };
 
     // Networks in ports
-
-    public LinkedHashMap<AEPartLocation,IGrid> portNetworks = new LinkedHashMap<>();
     private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(
             TileServerHousing.class,
             TileServerSecurity.class,
@@ -219,17 +219,16 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
             ((AIServerMultiBlockTile)tile).destroyAENode();
         }
 
-        // Iterate fore each side
-        for(AEPartLocation side : AEPartLocation.SIDE_LOCATIONS){
-            // Remove each side networks
-            portNetworks.remove(side);
-        }
-
         // Nullify slave map
         nullifyMap();
 
         // Nullify slave list
         slaves = new ArrayList<>();
+
+        // Nullify maps
+        portMap = new LinkedHashMap<>(); // (1)
+        slaveMap = new LinkedHashMap<>(); // (2)
+        portHandlers = new LinkedHashMap<>(); // (3)
 
         // Make server not formed
         isFormed = false;
@@ -237,12 +236,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         // Remove receivers from listeners of each channel from main server grid
         // Iterate for each channel
         GuiStorageChannelButton.getChannelList().forEach(channel -> {
-            // Iterate for each ME server listnere in list
+            // Iterate for each ME server listeners in list
             receiverList.forEach((meServerMonitorHandlerReceiver -> {
                 // Remove from listeners
                 getMainNetworkInventory(channel).removeListener(meServerMonitorHandlerReceiver);
             }));
         });
+
+        // Nullify receivers list
+        receiverList = new ArrayList<>(); // (2)
     }
 
     private TileServerPort getPortAtSide(AEPartLocation side) {
@@ -264,11 +266,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         // Iterate for each side
         for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
             // Check not null
-            if (portNetworks.get(side) == null)
+            if (portMap.get(side) == null || portMap.get(side).requestNetwork() == null)
                 continue;
 
             // Post cell event for network at this side
-            postCellEvent(portNetworks.get(side));
+            postCellEvent(portMap.get(side).requestNetwork());
         }
 
         // Notify server-networks
@@ -279,19 +281,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         // Iterate for each side
         for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
             // Check not null
-            if (portNetworks.get(side) == null)
+            if (portMap.get(side) == null || portMap.get(side).requestNetwork() == null)
                 continue;
 
             // Get storage grid of network
-            IStorageGrid grid = portNetworks.get(side).getCache(IStorageGrid.class);
+            IStorageGrid grid = portMap.get(side).requestNetwork().getCache(IStorageGrid.class);
 
             // Post alteration
             grid.postAlterationOfStoredItems(channel, change, machineSource);
         }
-    }
-
-    public LinkedHashMap<AEPartLocation, IGrid> getPortNetworks() {
-        return portNetworks;
     }
 
     @Override
@@ -365,6 +363,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                 if (slave instanceof TileServerPort) {
                     // Get port
                     TileServerPort port = (TileServerPort) slave;
+
                     // Create node
                     port.createAENode();
 
@@ -396,6 +395,9 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
                     // Set proper direction
                     port.setDir(side.getFacing());
+
+                    // Add port
+                    portMap.put(side, port);
 
                     // Update grid of port
                     port.onNeighborChange();
