@@ -37,7 +37,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.lang3.tuple.Pair;
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;

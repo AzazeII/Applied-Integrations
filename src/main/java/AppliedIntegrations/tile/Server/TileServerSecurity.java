@@ -20,7 +20,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
 
 import javax.annotation.Nonnull;
 import java.util.EnumSet;

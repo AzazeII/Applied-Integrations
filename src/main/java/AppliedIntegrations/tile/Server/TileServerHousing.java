@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
-import scala.actors.threadpool.Arrays;
+import java.util.Arrays;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
