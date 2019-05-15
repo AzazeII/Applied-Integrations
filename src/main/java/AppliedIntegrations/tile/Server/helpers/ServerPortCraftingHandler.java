@@ -49,16 +49,27 @@ public class ServerPortCraftingHandler extends ServerPortHandler<IAEItemStack> i
         // Get crafting grid
         CraftingGridCache craftingGrid = getOuterCraftingGrid();
 
+        // 1.
         // Get craft filter map. Get item stack list. Iterate for each stack in list
         filteredMatter.get(CRAFT).get(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class)).forEach((stack) -> {
-            // Try to explicitly get crafting for this stack. Explicitly, means that we'll just try to get non-null element from
-            // CraftingGridCache map: craftableItems
-            ImmutableCollection<ICraftingPatternDetails> patterns = craftingGrid.getCraftingFor((IAEItemStack) stack, null, 0, null);
+            // 2.
+            // Check not null
+            if (stack != null) {
+                // Copy stack
+                IAEItemStack copy = (IAEItemStack) stack.copy();
 
-            // Iterate for each pattern in collection
-            for (ICraftingPatternDetails pattern : patterns) {
-                // Provide crafting pattern into crafting tracker
-                craftingTracker.addCraftingOption(this, pattern);
+                // Remove any stack size from copy, to match CraftingGridCache map
+                copy.setStackSize(0);
+
+                // Try to explicitly get crafting for this stack. Explicitly, means that we'll just try to get non-null element from
+                // CraftingGridCache map: craftableItems
+                ImmutableCollection<ICraftingPatternDetails> patterns = craftingGrid.getCraftingFor(copy, null, 0, null);
+
+                // Iterate for each pattern in collection
+                for (ICraftingPatternDetails pattern : patterns) {
+                    // Provide crafting pattern into crafting tracker
+                    craftingTracker.addCraftingOption(this, pattern);
+                }
             }
         });
     }

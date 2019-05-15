@@ -17,7 +17,7 @@ public class ContainerServerDrive extends ContainerWithPlayerInventory {
         this.addDriveSlots(drive.driveInv);
 
         // Bind player slots
-        super.bindPlayerInventory(player.inventory, 65,124 );
+        super.bindPlayerInventory(player.inventory, 66,124 );
     }
 
     private void addDriveSlots(AIGridNodeInventory driveInv) {
