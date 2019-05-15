@@ -41,7 +41,6 @@ public class ServerPortCraftingHandler extends ServerPortHandler<IAEItemStack> i
     }
 
     /*
-        Based on method: getCraftingFor(...) from ICraftingGrid
         1. Get pattern collection for current stack in iteration for list of stacks in filter of CRAFT map in filteredMatterMap
         2. If pattern isn't null, then push it into crafting tracker
      */

@@ -25,6 +25,7 @@ import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
+import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEStack;
@@ -78,6 +79,9 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
             // Notify grid of current port
             port.postCellInventoryEvent();
+
+            // Notify grid of current port about crafting update
+            port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side), getGridNode()));
         }
 
         @Override
@@ -129,8 +133,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                     // Encode new crafting handler for side from card
                     TileServerCore.this.portCraftingHandlers.put(side, new ServerPortCraftingHandler(data.getLeft(), data.getRight(), TileServerCore.this));
 
-                    // Notify grid of current port
+                    // Notify grid of current port about inventory update
                     port.postCellInventoryEvent();
+
+                    // Notify grid of current port about crafting update
+                    port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side), getGridNode()));
                 }
             }
         }
@@ -301,9 +308,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
             // Post cell event for network at this side
             postCellInventoryEvent(portMap.get(side).requestNetwork());
+
+            // Notify grid of current port about crafting update
+            postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side), getGridNode()));
         }
 
-        // Notify server-networks
+        // Notify main server network
         postCellInventoryEvent();
     }
 

@@ -5,6 +5,5 @@ public interface IPylon {
 
     void setDrain(boolean b);
 
-    void postCellEvent();
-
+    void postCellInventoryEvent();
 }

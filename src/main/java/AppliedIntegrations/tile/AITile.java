@@ -86,7 +86,7 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
         }
     }
 
-    private void postCellEvent(IGrid iGrid, MENetworkEvent event) {
+    public void postCellEvent(IGrid iGrid, MENetworkEvent event) {
         // Notify listeners of event change
         iGrid.postEvent(event);
     }

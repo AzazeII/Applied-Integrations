@@ -8,7 +8,6 @@ import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.grid.EnergyList;
 import AppliedIntegrations.grid.Mana.ManaList;
-import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.storage.IStorageChannel;
@@ -127,7 +126,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 
             // Update cell array
             for(IPylon pylon : listeners)
-                pylon.postCellEvent();
+                pylon.postCellInventoryEvent();
 
             // Return stack
             return Return;
@@ -181,7 +180,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 
         // Update cell array
         for(IPylon pylon : listeners)
-            pylon.postCellEvent();
+            pylon.postCellInventoryEvent();
     }
 
     @Override
