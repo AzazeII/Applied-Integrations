@@ -11,6 +11,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
 import static appeng.api.config.IncludeExclude.BLACKLIST;
+import static appeng.api.config.IncludeExclude.WHITELIST;
 
 /**
  * @Author Azazell
@@ -50,24 +51,19 @@ public class ServerPortHandler<T extends IAEStack<T>> {
             // Get mode
             IncludeExclude mode = filterMode.get(permissions).get(channel);
 
-            // For blacklist:
-            //  Make result true if list doesn't contain this stack
-            // For whitelist:
-            //  Make result true if list contain this tack
             // Set by default
             canInteract.set(mode == BLACKLIST);
 
-            // Iterate for each stack in filter
-            for (IAEStack<? extends IAEStack> stack : filteredMatter.get(permissions).get(channel)) {
-                // Check if stack equal to input
-                if (input.equals(stack)){
-                    // Change value to opposite
-                    canInteract.set(!(mode == BLACKLIST));
+            // For blacklist: make result true if list doesn't contain this stack
+            // For whitelist: make result true if list contain this stack
+            // Create input copy
+            T copy = input.copy();
 
-                    // Force-return
-                    return canInteract.get();
-                }
-            }
+            // Set stack size to one, since filter stack size is always one
+            copy.setStackSize(1);
+
+            // Return value depending on list mode
+            return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).contains(copy);
         }
 
         return canInteract.get();
