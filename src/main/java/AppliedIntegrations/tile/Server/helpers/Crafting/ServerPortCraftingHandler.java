@@ -1,16 +1,18 @@
-package AppliedIntegrations.tile.Server.helpers;
+package AppliedIntegrations.tile.Server.helpers.Crafting;
 
 import AppliedIntegrations.tile.Server.ServerPortHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
-import appeng.api.networking.crafting.*;
+import appeng.api.networking.crafting.ICraftingMedium;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.networking.crafting.ICraftingProvider;
+import appeng.api.networking.crafting.ICraftingProviderHelper;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
-import appeng.me.Grid;
 import appeng.me.cache.CraftingGridCache;
 import com.google.common.collect.ImmutableCollection;
 import net.minecraft.inventory.InventoryCrafting;

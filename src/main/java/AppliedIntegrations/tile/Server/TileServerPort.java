@@ -6,6 +6,8 @@ import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
 import appeng.api.storage.*;
 import appeng.api.util.AEPartLocation;
+import appeng.me.cache.CraftingGridCache;
+import appeng.me.cluster.implementations.CraftingCPUCluster;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.util.EnumFacing;
 
@@ -23,9 +25,9 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 
     public void onNeighborChange() {
         // Check if port has master
-        if(hasMaster()){
+        if(hasMaster()) {
             // Get core
-            TileServerCore core = (TileServerCore)getMaster();
+            TileServerCore core = (TileServerCore) getMaster();
 
             // Notify all networks
             core.postNetworkCellEvents();

@@ -5,7 +5,7 @@ import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
-import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
+import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import net.minecraft.item.ItemStack;
@@ -15,9 +15,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 
 /**
  * @Author Azazell

@@ -14,8 +14,9 @@ import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Server.Networking.MEServerMonitorHandlerReceiver;
-import AppliedIntegrations.tile.Server.helpers.ServerPortCraftingHandler;
-import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
+import AppliedIntegrations.tile.Server.helpers.Crafting.ServerPortCPUHandler;
+import AppliedIntegrations.tile.Server.helpers.Crafting.ServerPortCraftingHandler;
+import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortHandler;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.GridFlags;
@@ -187,6 +188,9 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
     // List of all crafting "mediums" for providing craft grid from main network into adjacent networks
     private LinkedHashMap<AEPartLocation, ICraftingProvider> portCraftingHandlers = new LinkedHashMap<>();
+
+    // List of all crafting CPU simulators
+    private LinkedHashMap<AEPartLocation, ServerPortCPUHandler> portCPUHandlers = new LinkedHashMap<>();
 
     private List<MEServerMonitorHandlerReceiver> receiverList = new ArrayList<>();
     private boolean isFormed;

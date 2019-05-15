@@ -1,4 +1,4 @@
-package AppliedIntegrations.tile.Server.helpers;
+package AppliedIntegrations.tile.Server.helpers.Matter;
 
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
@@ -6,7 +6,6 @@ import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
-import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 
