@@ -293,7 +293,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
                             pylon.singularity = this;
 
                             // Update cell array
-                            pylon.postCellEvent();
+                            pylon.postCellInventoryEvent();
 
                             // Add pylon to listener, to make now invalidate() method should delete #this# from listener
                             listeners.add(pylon);

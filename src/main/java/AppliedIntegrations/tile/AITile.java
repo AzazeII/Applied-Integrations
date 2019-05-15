@@ -9,6 +9,7 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.*;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.events.MENetworkEvent;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.util.AECableType;
@@ -66,7 +67,12 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
     public Object getServerGuiElement( final EntityPlayer player ){ return null; }
     public Object getClientGuiElement( final EntityPlayer player ){ return null; }
 
-    public void postCellEvent(){
+    public void postCellInventoryEvent(){
+        // Pass call to overridden function
+        postCellEvent(new MENetworkCellArrayUpdate());
+    }
+
+    public void postCellEvent(MENetworkEvent event){
         // Get node
         IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 
@@ -76,14 +82,18 @@ public abstract class AITile extends TileEntity implements IActionHost,IGridHost
             IGrid grid = node.getGrid();
 
             // Post update
-            postCellEvent(grid);
+            postCellEvent(grid, event);
         }
     }
 
-
-    public void postCellEvent(IGrid iGrid) {
+    private void postCellEvent(IGrid iGrid, MENetworkEvent event) {
         // Notify listeners of event change
-        iGrid.postEvent(new MENetworkCellArrayUpdate());
+        iGrid.postEvent(event);
+    }
+
+    public void postCellInventoryEvent(IGrid iGrid) {
+        // Pass call to overridden function
+        postCellEvent(iGrid, new MENetworkCellArrayUpdate());
     }
 
     @Override

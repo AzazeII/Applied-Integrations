@@ -145,7 +145,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
         return operatedTile != null;
     }
 
-    public void postCellEvent(){
+    public void postCellInventoryEvent(){
         // Get node
         IGridNode node = getGridNode(AEPartLocation.INTERNAL);
         // Check notNull
@@ -216,13 +216,13 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
             if (!syncActive && getGridNode().isActive()) {
                 // Node wasn't active, but now it is active
                 // Fire new cell array update event!
-                postCellEvent();
+                postCellInventoryEvent();
                 // Update sync
                 syncActive = true;
             } else if (syncActive && !getGridNode().isActive()) {
                 // Node was active, but now it not
                 // Fire new cell array update event!
-                postCellEvent();
+                postCellInventoryEvent();
                 // Update sync
                 syncActive = false;
             }
@@ -274,7 +274,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
             operatedTile.addListener(this);
 
         // Post cell array update
-        postCellEvent();
+        postCellInventoryEvent();
     }
 
     @Override
@@ -294,7 +294,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
                 gridNode.updateState();
 
                 // Fire new cell array update event!
-                postCellEvent();
+                postCellInventoryEvent();
             }
         }
     }

@@ -30,11 +30,18 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
     @Override
     public void tryConstruct(EntityPlayer p) {
         for (EnumFacing side : EnumFacing.values()) {
+            // Check if tile from two block from this block to direction of side
             if (world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2,
                     getPos().getZ() + side.getFrontOffsetZ() * 2)) instanceof TileServerCore) {
+                // Get tile
                 TileServerCore tile = (TileServerCore) world.getTileEntity(
                         new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2));
-                tile.tryConstruct(p);
+
+                // Check not null
+                if (tile != null) {
+                    // Pass call to core
+                    tile.tryConstruct(p);
+                }
                 break;
             }
         }
@@ -60,9 +67,13 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
     @Override
     public void createAENode() {
+        // Run code only on server and check if tile has master
         if (!world.isRemote && hasMaster()) {
+            // Check if node is null
             if (gridNode == null)
+                // Initialized node
                 gridNode = AEApi.instance().grid().createGridNode(this);
+            // Update node status
             gridNode.updateState();
         }
     }

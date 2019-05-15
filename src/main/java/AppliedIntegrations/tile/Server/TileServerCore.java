@@ -14,12 +14,17 @@ import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Server.Networking.MEServerMonitorHandlerReceiver;
+import AppliedIntegrations.tile.Server.helpers.ServerPortCraftingHandler;
 import AppliedIntegrations.tile.Server.helpers.FilteredServerPortHandler;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingGrid;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.networking.crafting.ICraftingProvider;
+import appeng.api.networking.crafting.ICraftingProviderHelper;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEStack;
@@ -27,9 +32,9 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
-import jdk.nashorn.internal.runtime.ScriptObject;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -68,8 +73,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
             // Nullify portHandlers for this port
             portHandlers.put(side, null);
 
+            // Nullify portHandlers for this port
+            portCraftingHandlers.put(side, null);
+
             // Notify grid of current port
-            port.postCellEvent();
+            port.postCellInventoryEvent();
         }
 
         @Override
@@ -118,24 +126,27 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                     // Encode new handler for side from card
                     TileServerCore.this.portHandlers.put(side, handlers);
 
+                    // Encode new crafting handler for side from card
+                    TileServerCore.this.portCraftingHandlers.put(side, new ServerPortCraftingHandler(data.getLeft(), data.getRight(), TileServerCore.this));
+
                     // Notify grid of current port
-                    port.postCellEvent();
+                    port.postCellInventoryEvent();
                 }
             }
         }
+
     }
-
     private static final String KEY_FORMED = "#FORMED";
+
     private boolean constructionRequested;
-
     private LinkedHashMap<Class<? extends AIServerMultiBlockTile>, List<AIServerMultiBlockTile>> slaveMap = new LinkedHashMap<>();
-    private LinkedHashMap<AEPartLocation, TileServerPort> portMap = new LinkedHashMap<>();
 
+    private LinkedHashMap<AEPartLocation, TileServerPort> portMap = new LinkedHashMap<>();
     private CardInventoryManager cardManager = new CardInventoryManager();
 
     // list of blocks in multiblock
-    public List<AIServerMultiBlockTile> slaves = new ArrayList<>();
 
+    public List<AIServerMultiBlockTile> slaves = new ArrayList<>();
     public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 30, 1, this.cardManager){
         @Override
         public boolean isItemValidForSlot(int i, ItemStack itemstack) {
@@ -155,6 +166,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     };
 
     // Networks in ports
+
     private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(
             TileServerHousing.class,
             TileServerSecurity.class,
@@ -164,17 +176,23 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     );
 
     // List of all "mediums" for providing cell inventory from main network into adjacent networks
-
     private LinkedHashMap<AEPartLocation, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>> portHandlers = new LinkedHashMap<>();
-    private List<MEServerMonitorHandlerReceiver> receiverList = new ArrayList<>();
 
+    // List of all crafting "mediums" for providing craft grid from main network into adjacent networks
+    private LinkedHashMap<AEPartLocation, ICraftingProvider> portCraftingHandlers = new LinkedHashMap<>();
+
+    private List<MEServerMonitorHandlerReceiver> receiverList = new ArrayList<>();
     private boolean isFormed;
 
     { nullifyMap(); }
 
-    public IGrid getMainNetwork() {
+    private IGrid getMainNetwork() {
         // Check if mutli-block isn't formed
         if (!isFormed)
+            return null;
+
+        // Check if list is empty
+        if (slaveMap.get(TileServerRib.class).isEmpty())
             return null;
 
         // Get first rib in list in map
@@ -185,7 +203,19 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     }
 
     public <T extends IAEStack<T>> IMEMonitor<T> getMainNetworkInventory(IStorageChannel<T> channel) {
+        // Check not null
+        if (getMainNetwork() == null)
+            return null;
+
         return ((IStorageMonitorable)getMainNetwork().getCache(IStorageGrid.class)).getInventory(channel);
+    }
+
+    public ICraftingGrid getMainNetworkCraftingGrid() {
+        // Check not null
+        if (getMainNetwork() == null)
+            return null;
+
+        return getMainNetwork().getCache(ICraftingGrid.class);
     }
 
     void nullifyMap() {
@@ -229,6 +259,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         portMap = new LinkedHashMap<>(); // (1)
         slaveMap = new LinkedHashMap<>(); // (2)
         portHandlers = new LinkedHashMap<>(); // (3)
+        portCraftingHandlers = new LinkedHashMap<>(); // (4)
 
         // Make server not formed
         isFormed = false;
@@ -249,14 +280,13 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
     private TileServerPort getPortAtSide(AEPartLocation side) {
         // Iterate for each slave
-        for (IAIMultiBlock slave : slaves){
-            // Check if slave is port
-            if (slave instanceof TileServerPort){
-                TileServerPort port = (TileServerPort) slave;
+        for (IAIMultiBlock slave : slaveMap.get(TileServerPort.class)){
+            // Get port
+            TileServerPort port = (TileServerPort) slave;
 
-                if (port.getSideVector() == side)
-                    return port;
-            }
+            // Check if port side is given side
+            if (port.getSideVector() == side)
+                return port;
         }
 
         return null;
@@ -270,11 +300,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                 continue;
 
             // Post cell event for network at this side
-            postCellEvent(portMap.get(side).requestNetwork());
+            postCellInventoryEvent(portMap.get(side).requestNetwork());
         }
 
         // Notify server-networks
-        postCellEvent();
+        postCellInventoryEvent();
     }
 
     public void postNetworkAlterationsEvents(IStorageChannel<? extends IAEStack<?>> channel, Iterable change, MachineSource machineSource) {
@@ -298,8 +328,24 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
         // Check if construction was requested from read nbt method
         if (constructionRequested){
+            // Don't call on client
+            if (world.isRemote)
+                // Skip client call
+                return;
+
+            // Check if grid node is already initialized
+            if (getGridNode() != null) {
+
+            }
+
             // Try construct server
             tryConstruct(null);
+
+            // Check if server was constructed successfully
+            if (isFormed) {
+                // Update inventory
+                cardManager.onInventoryChanged();
+            }
 
             // Toggle
             constructionRequested = true;
@@ -329,7 +375,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         // Create blocks to place counter
         int blocksToPlace = AIPatterns.ME_SERVER_FILL.length - 1;
 
-        // Check if length equal to count
+        // Check if length equal to count, so all block has matched the pattern
         if (AIPatterns.ME_SERVER.length == count.get()) {
             // Iterate until i = len
             for (int i = 0; i < AIPatterns.ME_SERVER_FILL.length; i++) {
@@ -359,22 +405,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                 // Set slave master
                 slave.setMaster(this);
 
-                // Check for instance of port
-                if (slave instanceof TileServerPort) {
-                    // Get port
-                    TileServerPort port = (TileServerPort) slave;
-
-                    // Create node
-                    port.createAENode();
-
-                    // Check for instance of rib
-                } else if (slave instanceof TileServerRib) {
-                    // Get rib
-                    TileServerRib rib = (TileServerRib) slave;
-
-                    // Create node
-                    rib.createAENode();
-                }
+                // Create slave node
+                slave.createAENode();
 
                 // Put in category map
                 slaveMap.get(slave.getClass()).add(slave);
@@ -403,28 +435,31 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
                     port.onNeighborChange();
                 }
             }
+
+            // Toggle formed
+            isFormed = true;
+
+            // Add receivers to listeners of each channel of main server grid
+            // Iterate for each channel
+            GuiStorageChannelButton.getChannelList().forEach(channel -> {
+                // Get inventory
+                IMEMonitor<? extends IAEStack<?>> inventory = getMainNetworkInventory(channel);
+
+                // Create receiver
+                MEServerMonitorHandlerReceiver receiver = new MEServerMonitorHandlerReceiver<>(this, channel);
+
+                // Add to receiver list
+                receiverList.add(receiver);
+
+                // Add to listeners of main network inventory
+                inventory.addListener(receiver, null);
+            });
+
+            // Check not null
+            if(p != null)
+                // Send message
+                p.sendMessage(new TextComponentTranslation("ME Server Formed!"));
         }
-
-        // Toggle formed
-        isFormed = true;
-
-        // Add receivers to listeners of each channel of main server grid
-        // Iterate for each channel
-        GuiStorageChannelButton.getChannelList().forEach(channel -> {
-            // Create receiver
-            MEServerMonitorHandlerReceiver receiver = new MEServerMonitorHandlerReceiver<>(this, channel);
-
-            // Add to receiver list
-            receiverList.add(receiver);
-
-            // Add to listeners
-            getMainNetworkInventory(channel).addListener(receiver, null);
-        });
-
-        // Check not null
-        if(p != null)
-            // Send message
-            p.sendMessage(new TextComponentTranslation("ME Server Formed!"));
     }
 
 
@@ -476,18 +511,47 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
     }
 
+    // -----------------------------Crafting Methods-----------------------------//
+    public void providePortCrafting(ICraftingProviderHelper craftingTracker, AEPartLocation side) {
+        // Check if handler not null
+        if (portCraftingHandlers.get(side) == null)
+            return;
+
+        // Pass call to handler
+        portCraftingHandlers.get(side).provideCrafting(craftingTracker);
+    }
+
+    public boolean pushPortPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table, AEPartLocation side) {
+        // Check if handler not null
+        if (portCraftingHandlers.get(side) == null)
+            return false;
+
+        // Pass call to handler
+        return portCraftingHandlers.get(side).pushPattern(patternDetails, table);
+    }
+
+    public boolean isPortBusy(AEPartLocation side) {
+        // Check if handler not null
+        if (portCraftingHandlers.get(side) == null)
+            return false;
+
+        // Pass call to handler
+        return portCraftingHandlers.get(side).isBusy();
+    }
+    // -----------------------------Crafting Methods-----------------------------//
+
     // -----------------------------Drive Methods-----------------------------//
-    public List<IMEInventoryHandler> getSidedCellArray(AEPartLocation side, IStorageChannel<?> channel) {
+    public List<IMEInventoryHandler> getPortCellArray(AEPartLocation side, IStorageChannel<?> channel) {
         // Check if handler not null
         if (portHandlers.get(side) == null)
-            return new LinkedList<>();
+            return new ArrayList<>();
 
         // Return only one handler for tile
         return Collections.singletonList(portHandlers.get(side).get(channel));
     }
 
 
-    public void saveSidedChanges(ICellInventory<?> iCellInventory, AEPartLocation side) {
+    public void savePortChanges(ICellInventory<?> iCellInventory, AEPartLocation side) {
         // Check if inventory not null
         if (iCellInventory != null)
             // Persist inventory

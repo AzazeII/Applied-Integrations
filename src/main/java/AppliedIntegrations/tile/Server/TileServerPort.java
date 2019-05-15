@@ -1,8 +1,12 @@
 package AppliedIntegrations.tile.Server;
 
 import appeng.api.networking.IGrid;
+import appeng.api.networking.crafting.ICraftingPatternDetails;
+import appeng.api.networking.crafting.ICraftingProvider;
+import appeng.api.networking.crafting.ICraftingProviderHelper;
 import appeng.api.storage.*;
 import appeng.api.util.AEPartLocation;
+import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nullable;
@@ -13,7 +17,7 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class TileServerPort extends AIServerMultiBlockTile implements ICellContainer {
+public class TileServerPort extends AIServerMultiBlockTile implements ICellContainer, ICraftingProvider {
 
     private AEPartLocation side = AEPartLocation.INTERNAL;
 
@@ -65,7 +69,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
             return new ArrayList<>();
 
         // Pass call to master
-        return ((TileServerCore)getMaster()).getSidedCellArray(side, channel);
+        return ((TileServerCore)getMaster()).getPortCellArray(side, channel);
     }
 
     @Override
@@ -76,7 +80,48 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 
     @Override
     public void saveChanges(@Nullable ICellInventory<?> cellInventory) {
-        ((TileServerCore)getMaster()).saveSidedChanges(cellInventory, side);
+        // Check not null
+        if (getMaster() == null)
+            // Skip
+            return;
+
+        // Pass call to master
+        ((TileServerCore)getMaster()).savePortChanges(cellInventory, side);
     }
     /* -----------------------------Drive Methods----------------------------- */
+
+    /* -----------------------------Crafting Methods----------------------------- */
+    @Override
+    public void provideCrafting(ICraftingProviderHelper craftingTracker) {
+        // Check not null
+        if (getMaster() == null)
+            // Skip
+            return;
+
+        // Pass call to master
+        ((TileServerCore)getMaster()).providePortCrafting(craftingTracker, side);
+    }
+
+    @Override
+    public boolean pushPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table) {
+        // Check not null
+        if (getMaster() == null)
+            // Skip
+            return false;
+
+        // Pass call to master
+        return ((TileServerCore)getMaster()).pushPortPattern(patternDetails, table, side);
+    }
+
+    @Override
+    public boolean isBusy() {
+        // Check not null
+        if (getMaster() == null)
+            // Skip
+            return false;
+
+        // Pass call to master
+        return ((TileServerCore)getMaster()).isPortBusy(side);
+    }
+    /* -----------------------------Crafting Methods----------------------------- */
 }
