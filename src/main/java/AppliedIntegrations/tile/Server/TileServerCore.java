@@ -174,7 +174,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
     };
 
     // Networks in ports
-
     private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(
             TileServerHousing.class,
             TileServerSecurity.class,
@@ -229,7 +228,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         return getMainNetwork().getCache(ICraftingGrid.class);
     }
 
-    void nullifyMap() {
+    private void nullifyMap() {
         // Nullify map
         slaveMap = new LinkedHashMap<>();
 

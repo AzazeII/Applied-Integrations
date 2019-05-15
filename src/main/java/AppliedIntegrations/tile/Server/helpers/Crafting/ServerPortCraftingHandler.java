@@ -64,7 +64,7 @@ public class ServerPortCraftingHandler extends ServerPortHandler<IAEItemStack> i
                 copy.setStackSize(0);
 
                 // Try to explicitly get crafting for this stack. Explicitly, means that we'll just try to get non-null element from
-                // CraftingGridCache map: craftableItems
+                // CraftingGridCache map: craftable items
                 ImmutableCollection<ICraftingPatternDetails> patterns = craftingGrid.getCraftingFor(copy, null, 0, null);
 
                 // Iterate for each pattern in collection

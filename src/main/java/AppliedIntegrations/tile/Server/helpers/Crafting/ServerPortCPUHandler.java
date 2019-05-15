@@ -7,6 +7,9 @@ import appeng.me.cluster.IAECluster;
 import appeng.tile.crafting.TileCraftingStorageTile;
 import com.google.common.collect.ImmutableList;
 
+/**
+ * @Author Azazell
+ */
 public class ServerPortCPUHandler extends TileCraftingStorageTile {
     private final TileServerCore host;
 
@@ -25,6 +28,15 @@ public class ServerPortCPUHandler extends TileCraftingStorageTile {
 
         // Get list of all CPU in grid
         ImmutableList<ICraftingCPU> cpuList = craftingGrid.getCpus().asList();
+
+        // Iterate for each CPU in list
+        for (ICraftingCPU cpu : cpuList) {
+            // Check if CPU is cluster
+            if (cpu instanceof IAECluster) {
+                // Use this CPU
+                return (IAECluster) cpu;
+            }
+        }
 
         return null;
     }
