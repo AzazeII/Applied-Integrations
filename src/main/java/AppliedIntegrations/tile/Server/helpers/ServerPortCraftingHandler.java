@@ -35,7 +35,7 @@ public class ServerPortCraftingHandler extends ServerPortHandler<IAEItemStack> i
             return (CraftingGridCache) host.getMainNetworkCraftingGrid();
         }catch (ClassCastException classCast) {
             throw new IllegalStateException("Applied integrations tried to cast ICraftingGrid into CraftingGridCache, this message indicates that AI" +
-                    "didn't successfully casted it. It means some mod has overrode crafting grid cache. If you'll discover one, you can submit issue on github:" +
+                    "didn't successfully casted it. It means some mod has overrode crafting grid cache. If you'll get this message, you can submit issue on github:" +
                     " https://github.com/AzazeII/Applied-Integrations/issues");
         }
     }

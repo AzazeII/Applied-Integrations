@@ -264,9 +264,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
         // Nullify maps
         portMap = new LinkedHashMap<>(); // (1)
-        slaveMap = new LinkedHashMap<>(); // (2)
-        portHandlers = new LinkedHashMap<>(); // (3)
-        portCraftingHandlers = new LinkedHashMap<>(); // (4)
+        portHandlers = new LinkedHashMap<>(); // (2)
+        portCraftingHandlers = new LinkedHashMap<>(); // (3)
 
         // Make server not formed
         isFormed = false;
@@ -276,8 +275,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
         GuiStorageChannelButton.getChannelList().forEach(channel -> {
             // Iterate for each ME server listeners in list
             receiverList.forEach((meServerMonitorHandlerReceiver -> {
-                // Remove from listeners
-                getMainNetworkInventory(channel).removeListener(meServerMonitorHandlerReceiver);
+                // Check not null
+                if (getMainNetworkInventory(channel) != null) {
+                    // Remove from listeners
+                    getMainNetworkInventory(channel).removeListener(meServerMonitorHandlerReceiver);
+                }
             }));
         });
 
