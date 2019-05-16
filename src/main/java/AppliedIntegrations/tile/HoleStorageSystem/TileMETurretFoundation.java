@@ -18,18 +18,17 @@ import appeng.api.storage.data.IItemList;
 import appeng.util.item.ItemList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.of;
 import static net.minecraft.util.EnumFacing.DOWN;
 
 /**
@@ -50,16 +49,16 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		}
 	}
 
+	public TileMETurretFoundation(){
+		super();
+
+		this.getProxy().setValidSides(of(DOWN));
+	}
+
 	// Direction for rendering turret tower
 	public BlockPos renderingDirection = new BlockPos(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 
 	private ItemList storedAmmo = new ItemList();
-
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
-
-		return EnumSet.of(DOWN);
-	}
 
 	public boolean activate(EnumHand hand, EntityPlayer p) {
 		// Only call when player clicking with right hand

@@ -7,8 +7,6 @@ import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import appeng.api.AEApi;
-import appeng.api.networking.IGridMultiblock;
-import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
@@ -22,16 +20,14 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.Iterator;
 import java.util.List;
 
 /**
  * @Author Azazell
  */
-public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock, IGridMultiblock {
+public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock {
 	public boolean isCorner = false;
 
 	private TileLogicBusCore master;
@@ -104,20 +100,12 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 		this.master = (TileLogicBusCore) master;
 	}
 
-	@Nonnull
 	@Override
-	public Iterator<IGridNode> getMultiblockNodes() {
-
-		if (hasMaster()) {
-			return getLogicMaster().getMultiblockNodes();
-		}
-		return new ArrayList<IGridNode>().listIterator();
-	}	@Override
 	public void createAENode() {
 
 		if (!world.isRemote && hasMaster()) {
 			if (gridNode == null) {
-				gridNode = AEApi.instance().grid().createGridNode(this);
+				gridNode = AEApi.instance().grid().createGridNode(getProxy());
 			}
 			gridNode.updateState();
 		}

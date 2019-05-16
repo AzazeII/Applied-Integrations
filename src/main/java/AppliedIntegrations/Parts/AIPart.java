@@ -310,7 +310,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 			return;
 		}
 
-		this.node = AEApi.instance().grid().createGridNode(this.proxy);
+		this.node = AEApi.instance().grid().createGridNode(getProxy());
 
 		// Set the player id
 		this.node.setPlayerID(this.ownerID);

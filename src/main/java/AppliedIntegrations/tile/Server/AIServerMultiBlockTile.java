@@ -8,9 +8,7 @@ import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import appeng.api.AEApi;
-import appeng.api.networking.GridFlags;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -19,14 +17,23 @@ import java.util.EnumSet;
 /**
  * @Author Azazell
  */
-public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
+public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 	protected TileServerCore master;
 
 	private ChangeHandler<TileServerCore> masterChangeHandler = new ChangeHandler<>();
 
+	public AIServerMultiBlockTile(){
+		super();
+
+		// Change proxy settings
+		this.getProxy().setFlags();
+		this.getProxy().setValidSides(getValidSides());
+	}
+
+	protected abstract EnumSet<EnumFacing> getValidSides();
+
 	@Override
 	public void tryConstruct(EntityPlayer p) {
-
 		for (EnumFacing side : EnumFacing.values()) {
 			// Check if tile from two block from this block to direction of side
 			if (world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2)) instanceof TileServerCore) {
@@ -45,13 +52,11 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public boolean hasMaster() {
-
 		return master != null;
 	}
 
 	@Override
 	public IMaster getMaster() {
-
 		return master;
 	}
 
@@ -59,6 +64,9 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 	public void setMaster(IMaster tileServerCore) {
 		// Update master
 		master = (TileServerCore) tileServerCore;
+
+		// Update proxy settings
+		this.getProxy().setValidSides(getValidSides());
 	}
 
 	@Override
@@ -66,34 +74,18 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 		// Run code only on server and check if tile has master
 		if (!world.isRemote && hasMaster()) {
 			// Check if node is null
-			if (gridNode == null)
-			// Initialized node
-			{
-				gridNode = AEApi.instance().grid().createGridNode(this);
+			if (gridNode == null) {
+				// Initialized node
+				gridNode = AEApi.instance().grid().createGridNode(getProxy());
 			}
+
 			// Update node status
 			gridNode.updateState();
 		}
 	}
 
 	@Override
-	public EnumSet<GridFlags> getFlags() {
-
-		return EnumSet.noneOf(GridFlags.class);
-	}
-
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
-
-		if (hasMaster()) {
-			return EnumSet.allOf(EnumFacing.class);
-		}
-		return EnumSet.noneOf(EnumFacing.class);
-	}
-
-	@Override
 	public void invalidate() {
-
 		super.invalidate();
 		if (hasMaster()) {
 			master.destroyMultiBlock();
@@ -102,7 +94,6 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public void update() {
-
 		super.update();
 
 		// Call master change handler
@@ -115,17 +106,5 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 	@Override
 	public void notifyBlock() {
 
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound tag) {
-
-		super.readFromNBT(tag);
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-
-		return super.writeToNBT(tag);
 	}
 }

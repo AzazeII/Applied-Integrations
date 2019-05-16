@@ -28,6 +28,12 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 	// Did activity of grid node changed?
 	private ChangeHandler<Boolean> activityChangeHandler = new ChangeHandler<>();
 
+	public TileServerRib(){
+		super();
+
+		getProxy().setFlags(GridFlags.DENSE_CAPACITY);
+	}
+
 	public IGrid getMainNetwork() {
 		// Check not null
 		if (getGridNode() == null) {
@@ -38,14 +44,12 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 	}
 
 	@Override
-	public EnumSet<GridFlags> getFlags() {
-
-		return EnumSet.of(GridFlags.DENSE_CAPACITY);
+	protected EnumSet<EnumFacing> getValidSides() {
+		return EnumSet.allOf(EnumFacing.class);
 	}
 
 	@Override
 	public void update() {
-
 		super.update();
 
 		// Check if grid node is not null

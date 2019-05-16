@@ -3,9 +3,7 @@ package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.tile.IAIMultiBlock;
 import appeng.api.AEApi;
-import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridMultiblock;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.channels.IItemStorageChannel;
@@ -25,21 +23,20 @@ import static net.minecraft.util.EnumFacing.UP;
 /**
  * @Author Azazell
  */
-public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock, IGridMultiblock {
+public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock {
+
+	public TileLogicBusRib(){
+		super();
+
+		this.getProxy().setValidSides(getValidSides());
+	}
 
 	@Override
 	public void tryConstruct(EntityPlayer p) {
 
 	}
 
-	@Override
-	public EnumSet<GridFlags> getFlags() {
-
-		return EnumSet.of(GridFlags.MULTIBLOCK);
-	}
-
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
+	public EnumSet<EnumFacing> getValidSides() {
 		// list of sides
 		List<EnumFacing> sides = new ArrayList<>();
 		// Iterate over all sides

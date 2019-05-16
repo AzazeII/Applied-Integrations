@@ -2,7 +2,6 @@ package AppliedIntegrations.tile.LogicBus;
 
 
 import AppliedIntegrations.tile.IAIMultiBlock;
-import appeng.api.networking.GridFlags;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 
@@ -18,14 +17,13 @@ public class TileLogicBusPort extends TileLogicBusSlave implements IAIMultiBlock
 
 	private boolean isCorner;
 
-	@Override
-	public EnumSet<GridFlags> getFlags() {
+	public TileLogicBusPort(){
+		super();
 
-		return EnumSet.of(GridFlags.REQUIRE_CHANNEL, GridFlags.MULTIBLOCK);
+		this.getProxy().setValidSides(getValidSides());
 	}
 
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
+	private EnumSet<EnumFacing> getValidSides() {
 		// list of sides
 		List<EnumFacing> sides = new ArrayList<>();
 		// Iterate only over horizontal sides, as only these sides can be connected to cable
@@ -38,8 +36,10 @@ public class TileLogicBusPort extends TileLogicBusSlave implements IAIMultiBlock
 
 		// Temp set
 		EnumSet<EnumFacing> temp = EnumSet.noneOf(EnumFacing.class);
+
 		// Add sides
 		temp.addAll(sides);
+
 		return temp;
 	}
 

@@ -9,7 +9,6 @@ import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import appeng.api.AEApi;
-import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.IOrientable;
@@ -21,7 +20,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 
-import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedList;
@@ -57,11 +55,17 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 	private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
 
 	public TileServerSecurity() {
-
 		super();
 
 		// Update proxy setting
-		getProxy().getConnectableSides().remove(forward); // Remove forward side
+		getProxy().setValidSides(EnumSet.allOf(EnumFacing.class));
+		getProxy().getConnectableSides().remove(forward);
+	}
+
+	@Override
+	protected EnumSet<EnumFacing> getValidSides() {
+		// Constant sides
+		return getProxy().getConnectableSides();
 	}
 
 	public void updateCardData(NBTTagCompound tag) {
@@ -95,20 +99,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 			}
 			gridNode.updateState();
 		}
-	}
-
-	@Nonnull
-	@Override
-	public EnumSet<GridFlags> getFlags() {
-
-		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-	}
-
-	@Nonnull
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
-
-		return getProxy().getConnectableSides();
 	}
 
 	@Override

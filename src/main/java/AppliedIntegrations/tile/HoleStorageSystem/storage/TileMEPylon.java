@@ -46,12 +46,12 @@ import net.minecraftforge.fml.common.network.NetworkRegistry;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 
 import static AppliedIntegrations.Blocks.Additions.BlockMEPylon.FACING;
 import static java.util.Collections.singletonList;
+import static java.util.EnumSet.of;
 
 /**
  * @Author Azazell
@@ -86,6 +86,8 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 
 	private boolean activeHandlersLoaded = false;
 
+	private boolean configured = false;
+
 	// Adds new handler for black hole storage
 	public static void addBlackHoleHandler(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, IStorageChannel chan) {
 		// Add handler class
@@ -106,7 +108,6 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 	@Nonnull
 	@Override
 	public TickingRequest getTickingRequest(@Nonnull IGridNode node) {
-
 		return new TickingRequest(1, 1, false, false);
 	}
 
@@ -115,6 +116,15 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
 		// Call only on server
 		if (!world.isRemote) {
+			// Check if proxy isn't configured yet
+			if (!configured) {
+				// Configure proxy
+				getProxy().setValidSides(of(getFw().getOpposite()));
+
+				// Toggle configuration
+				configured = true;
+			}
+
 			// Check if handlers not exist yet
 			if (!activeHandlersLoaded) {
 				// Init handlers
@@ -362,7 +372,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 
 		if (world != null) {
 			if (!world.isRemote) {
-				gridNode = AEApi.instance().grid().createGridNode(this);
+				gridNode = AEApi.instance().grid().createGridNode(getProxy());
 				gridNode.updateState();
 
 				// Fire new cell array update event!
@@ -371,18 +381,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 		}
 	}
 
-
-
-
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
-		// Return opposite of facing side
-		return EnumSet.of(getFw().getOpposite());
-	}
-
-
 	private EnumFacing getFw() {
-
 		return world.getBlockState(pos).getValue(FACING).rotateY();
 	}
 }

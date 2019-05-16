@@ -18,7 +18,6 @@ import AppliedIntegrations.tile.Server.helpers.Crafting.ServerPortCraftingHandle
 import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortHandler;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
-import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -44,7 +43,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import org.apache.commons.lang3.tuple.Pair;
 
-import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -104,9 +102,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 					TileServerPort port = getPortAtSide(side);
 
 					// Check not null
-					if (port == null)
-					// Skip
-					{
+					if (port == null) {
+						// Skip
 						continue;
 					}
 
@@ -295,6 +292,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		// Pass call to handler
 		return portCraftingHandlers.get(side).isBusy();
 	}
+	// -----------------------------Crafting Methods-----------------------------//
 
 	// -----------------------------Drive Methods-----------------------------//
 	public List<IMEInventoryHandler> getPortCellArray(AEPartLocation side, IStorageChannel<?> channel) {
@@ -326,8 +324,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		// Mark dirty
 		getWorld().markChunkDirty(port.getPos(), port);
 	}
-	// -----------------------------Crafting Methods-----------------------------//
-
+	// -----------------------------Drive Methods-----------------------------//
 	private TileServerPort getPortAtSide(AEPartLocation side) {
 		// Iterate for each slave
 		for (IAIMultiBlock slave : slaveMap.get(TileServerPort.class)) {
@@ -360,7 +357,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 		super.readFromNBT(tag);
 	}
-	// -----------------------------Drive Methods-----------------------------//
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
@@ -381,20 +377,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 	@Override
 	public Iterator<IGridNode> getMultiblockNodes() {
-
 		return null;
 	}
 
 	@Override
 	public void securityBreak() {
 
-	}
-
-	@Nonnull
-	@Override
-	public EnumSet<GridFlags> getFlags() {
-
-		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -417,12 +405,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	@SuppressWarnings("unchecked")
 	public void destroyMultiBlock() {
 		// Iterate for each slave
-		for (IAIMultiBlock tile : slaves) {
+		for (AIServerMultiBlockTile tile : slaves) {
 			// Nullify master
 			tile.setMaster(null);
 
 			// Destroy node of slave
-			((AIServerMultiBlockTile) tile).destroyAENode();
+			tile.destroyAENode();
 		}
 
 		// Nullify slave map
@@ -524,6 +512,10 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		if (AIPatterns.ME_SERVER.length == count.get()) {
 			// Iterate for each block to update
 			for (AIServerMultiBlockTile slave : toUpdate) {
+				// Check if slave is null
+				if (slave == null)
+					continue;
+
 				// Set slave master
 				slave.setMaster(this);
 

@@ -8,7 +8,9 @@ import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.networking.*;
+import appeng.api.networking.GridFlags;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkEvent;
 import appeng.api.networking.security.IActionHost;
@@ -21,10 +23,10 @@ import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
@@ -34,8 +36,19 @@ import java.util.EnumSet;
  * @Author Azazell
  */
 @Optional.InterfaceList(value = { // ()____()
-		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IKineticSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.EnergyStorage", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Interfaces.Transducerable", modid = "RotaryCraft", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Power.AdvancedShaftPowerReceiver", modid = "RotaryCraft", striprefs = true)})
-public abstract class AITile extends TileEntity implements IActionHost, IGridHost, IGridBlock, ITickable, IGridProxyable, ISyncHost {
+		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent", modid = "IC2", striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2", striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IKineticSource", modid = "IC2", striprefs = true),
+		@Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource", modid = "IC2", striprefs = true),
+		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "Mekanism", striprefs = true),
+		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "Mekanism", striprefs = true),
+		@Optional.Interface(iface = "cofh.api.energy.EnergyStorage", modid = "CoFHAPI", striprefs = true),
+		@Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI", striprefs = true),
+		@Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHAPI", striprefs = true),
+		@Optional.Interface(iface = "Reika.RotaryCraft.api.Interfaces.Transducerable", modid = "RotaryCraft", striprefs = true),
+		@Optional.Interface(iface = "Reika.RotaryCraft.api.Power.AdvancedShaftPowerReceiver", modid = "RotaryCraft", striprefs = true)})
+public abstract class AITile extends TileEntity implements IActionHost, ITickable, IGridProxyable, ISyncHost {
 	protected IGridNode gridNode = null;
 
 	protected IGridNode node = null;
@@ -47,13 +60,11 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	public AITile() {
 		for (BlocksEnum blocksEnum : BlocksEnum.values()) {
 			if (blocksEnum.tileEnum.clazz == this.getClass()) {
-				this.proxy = new AENetworkProxy(this, "AITileProxy", new ItemStack(blocksEnum.b), true) {
-					@Nonnull
-					@Override
-					public EnumSet<GridFlags> getFlags() {
-						return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-					}
-				};
+				this.proxy = new AENetworkProxy(this, "AITileProxy", new ItemStack(blocksEnum.b), true);
+				this.proxy.setFlags(GridFlags.REQUIRE_CHANNEL);
+				this.proxy.setValidSides(EnumSet.allOf(EnumFacing.class));
+				this.proxy.setColor(AEColor.TRANSPARENT);
+				this.proxy.setIdlePowerUsage(1);
 			}
 		}
 	}
@@ -77,15 +88,6 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 		}
 	}
 
-	@Override
-	public IGridNode getGridNode(AEPartLocation dir) {
-
-		if (gridNode == null) {
-			createAENode();
-		}
-		return gridNode;
-	}
-
 	public void postCellEvent(IGrid iGrid, MENetworkEvent event) {
 		// Check not null
 		if (iGrid == null) {
@@ -97,24 +99,12 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	}
 
 	public void createAENode() {
-
 		if (world != null) {
 			if (!world.isRemote) {
-				gridNode = AEApi.instance().grid().createGridNode(this);
+				gridNode = AEApi.instance().grid().createGridNode(proxy);
 				gridNode.updateState();
 			}
 		}
-	}
-
-	@Nonnull
-	@Override
-	public AECableType getCableConnectionType(AEPartLocation dir) {
-		return AECableType.DENSE_SMART;
-	}
-
-	@Override
-	public void securityBreak() {
-
 	}
 
 	public void postCellInventoryEvent(IGrid iGrid) {
@@ -128,60 +118,48 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	}
 
 	@Override
-	public double getIdlePowerUsage() {
+	public IGridNode getGridNode(AEPartLocation dir) {
 
-		return 1;
+		if (gridNode == null) {
+			createAENode();
+		}
+		return gridNode;
 	}
 
 	@Nonnull
 	@Override
-	public EnumSet<GridFlags> getFlags() {
-		return proxy.getFlags();
+	public AECableType getCableConnectionType(AEPartLocation dir) {
+		return AECableType.DENSE_SMART;
 	}
 
 	@Override
-	public boolean isWorldAccessible() {
+	public void securityBreak() {
 
-		return true;
 	}
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		// Write proxy
+		this.getProxy().writeToNBT(compound);
+
+		return super.writeToNBT(compound);
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+
+		// Read proxy
+		this.getProxy().readFromNBT(compound);
+	}
+
 
 	@Nonnull
 	@Override
 	public DimensionalCoord getLocation() {
-
 		return new DimensionalCoord(this);
 	}
 
-	@Nonnull
-	@Override
-	public AEColor getGridColor() {
-
-		return AEColor.TRANSPARENT;
-	}
-
-	@Override
-	public void onGridNotification(GridNotification notification) {
-
-	}
-
-	@Override
-	public void setNetworkStatus(IGrid grid, int channelsInUse) {
-
-	}
-
-	@Nonnull
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
-
-		return proxy.getConnectableSides();
-	}
-
-	@Nonnull
-	@Override
-	public IGridHost getMachine() {
-
-		return this;
-	}
 
 	@Override
 	public void gridChanged() {
@@ -189,15 +167,7 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	}
 
 	@Override
-	public ItemStack getMachineRepresentation() {
-
-		DimensionalCoord location = this.getLocation();
-		return new ItemStack(location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock(), 1, location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock().getMetaFromState((location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)))));
-	}
-
-	@Override
 	public AENetworkProxy getProxy() {
-
 		return proxy;
 	}
 
@@ -228,7 +198,7 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	@Nonnull
 	@Override
 	public IGridNode getActionableNode() {
-
+		// Check not null
 		if (this.gridNode == null) {
 			createAENode();
 		}
@@ -249,12 +219,10 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	}
 
 	protected IGrid getNetwork() {
-
 		return getGridNode().getGrid();
 	}
 
 	public IGridNode getGridNode() {
-
 		return getGridNode(AEPartLocation.INTERNAL);
 	}
 
@@ -264,7 +232,6 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	 * @return amount extracted
 	 */
 	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
-
 		if (node == null) {
 			return 0;
 		}
@@ -281,7 +248,6 @@ public abstract class AITile extends TileEntity implements IActionHost, IGridHos
 	}
 
 	private IEnergyStorageChannel getEnergyChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 

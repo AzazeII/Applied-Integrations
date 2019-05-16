@@ -8,7 +8,6 @@ import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import appeng.api.config.Actionable;
-import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridNode;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEItemStack;
@@ -21,8 +20,13 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import static java.util.EnumSet.noneOf;
 
 /**
  * @Author Azazell
@@ -36,16 +40,10 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 	private Vector<TileLogicBusSlave> slaves = new Vector<>();
 
-	@Override
-	public EnumSet<GridFlags> getFlags() {
+	public TileLogicBusCore(){
+		super();
 
-		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-	}
-
-	@Override
-	public EnumSet<EnumFacing> getConnectableSides() {
-
-		return EnumSet.noneOf(EnumFacing.class);
+		this.getProxy().setValidSides(noneOf(EnumFacing.class));
 	}
 
 	@Override
