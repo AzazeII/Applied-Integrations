@@ -51,8 +51,6 @@ import java.util.EnumSet;
 public abstract class AITile extends TileEntity implements IActionHost, ITickable, IGridProxyable, ISyncHost {
 	protected IGridNode gridNode = null;
 
-	protected IGridNode node = null;
-
 	protected boolean loaded = false;
 
 	private AENetworkProxy proxy;
@@ -119,10 +117,10 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 	@Override
 	public IGridNode getGridNode(AEPartLocation dir) {
-
 		if (gridNode == null) {
 			createAENode();
 		}
+
 		return gridNode;
 	}
 
@@ -172,16 +170,23 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	}
 
 	@Override
-	public void invalidate() {
+	public void validate() {
+		super.validate();
+		getProxy().onReady();
+	}
 
+	@Override
+	public void invalidate() {
 		super.invalidate();
 		if (world != null && !world.isRemote) {
 			destroyAENode();
 		}
+
+		getProxy().invalidate();
+
 	}
 
 	public void destroyAENode() {
-
 		if (gridNode != null) {
 			gridNode.destroy();
 		}
@@ -189,10 +194,11 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 	@Override
 	public void onChunkUnload() {
-
 		if (world != null && !world.isRemote) {
 			destroyAENode();
 		}
+
+		getProxy().onChunkUnload();
 	}
 
 	@Nonnull
@@ -232,10 +238,11 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	 * @return amount extracted
 	 */
 	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
-		if (node == null) {
+		if (gridNode == null) {
 			return 0;
 		}
-		IGrid grid = node.getGrid();
+
+		IGrid grid = gridNode.getGrid();
 
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 
@@ -257,11 +264,11 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	 * @return amount injected
 	 */
 	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
-
-		if (node == null) {
+		if (gridNode == null) {
 			return 0;
 		}
-		IGrid grid = node.getGrid();
+
+		IGrid grid = gridNode.getGrid();
 
 		IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
 

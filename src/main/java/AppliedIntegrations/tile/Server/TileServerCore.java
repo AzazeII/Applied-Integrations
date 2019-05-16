@@ -570,9 +570,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 			});
 
 			// Check not null
-			if (p != null)
-			// Send message
-			{
+			if (p != null) {
+				// Send message
 				p.sendMessage(new TextComponentTranslation("ME Server Formed!"));
 			}
 		}

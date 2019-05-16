@@ -68,14 +68,28 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 
 	@Override
 	public void validate() {
-
+		super.validate();
 		this.onNeighborChange();
+		this.outerProxy.onReady();
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		this.outerProxy.invalidate();
+
+	}
+
+	@Override
+	public void onChunkUnload() {
+		super.onChunkUnload();
+		this.outerProxy.onChunkUnload();
 	}
 
 	@Override
 	protected EnumSet<EnumFacing> getValidSides() {
 		// Check if tile has master
-		if (hasMaster())
+		if (hasMaster() && getSideVector() != AEPartLocation.INTERNAL)
 			// Return vector of side
 			return of(getSideVector().getFacing());
 		// Empty
@@ -102,9 +116,8 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 	@Override
 	public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> channel) {
 		// Check not null
-		if (getMaster() == null)
-		// Empty list
-		{
+		if (getMaster() == null) {
+			// Empty list
 			return new ArrayList<>();
 		}
 
@@ -121,9 +134,8 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 	@Override
 	public void saveChanges(@Nullable ICellInventory<?> cellInventory) {
 		// Check not null
-		if (getMaster() == null)
-		// Skip
-		{
+		if (getMaster() == null) {
+			// Skip
 			return;
 		}
 

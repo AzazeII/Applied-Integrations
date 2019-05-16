@@ -1,7 +1,7 @@
 {
   "textures": {
     "particle": "appliedenergistics2:blocks/dense_energy_cell",
-    "sides": "appliedenergistics2:blocks/smooth_sky_stone_block",
+    "sides": "appliedintegrations:blocks/pylon_bottom",
     "bottom": "appliedintegrations:blocks/pylon_bottom",
     "cell": "appliedintegrations:blocks/pylon_cell",
     "top": "appliedintegrations:blocks/pylon_top"
