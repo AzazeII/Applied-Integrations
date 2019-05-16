@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.slot;
 
+
 import appeng.api.implementations.guiobjects.INetworkTool;
 import appeng.api.implementations.items.IUpgradeModule;
 import net.minecraft.inventory.Slot;
@@ -21,7 +22,6 @@ public class SlotNetworkTool extends Slot {
 	public SlotNetworkTool(final INetworkTool inventory, final int slotIndex, final int xDisplayPosition, final int yDisplayPosition) {
 		// Pass to super
 		super(null, slotIndex, xDisplayPosition, yDisplayPosition);
-
 	}
 
 	/**
@@ -44,5 +44,4 @@ public class SlotNetworkTool extends Slot {
 		// Not an upgrade or invalid itemstack
 		return false;
 	}
-
 }

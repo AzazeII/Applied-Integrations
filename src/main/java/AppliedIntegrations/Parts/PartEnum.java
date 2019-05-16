@@ -47,6 +47,7 @@ public enum PartEnum {
 
 	P2PEmber(AIStrings.Part_P2PEmber, PartEmberP2PTunnel.class, ItemEnum.ITEMP2PEMBER),
 	P2PStarlight(AIStrings.Part_P2PStarlight, PartStarlightP2PTunnel.class, ItemEnum.ITEMP2PStarlight);
+
 	/**
 	 * Cached enum values
 	 */
@@ -63,6 +64,7 @@ public enum PartEnum {
 	private Map<Upgrades, Integer> upgrades = new HashMap<Upgrades, Integer>();
 
 	PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass, ItemEnum parent) {
+
 		this(unlocalizedName, partClass, null, parent);
 	}
 
@@ -81,16 +83,17 @@ public enum PartEnum {
 	}
 
 	PartEnum(final AIStrings unlocalizedName, final Class<? extends AIPart> partClass, ItemEnum parent, final String groupName, final Pair<Upgrades, Integer>... upgrades) {
+
 		this(unlocalizedName, partClass, groupName, parent);
 
 		for (Pair<Upgrades, Integer> pair : upgrades) {
 			// Add the upgrade to the map
 			this.upgrades.put(pair.getKey(), pair.getValue());
 		}
-
 	}
 
 	private static Pair<Upgrades, Integer> generatePair(final Upgrades upgrade, final int maximum) {
+
 		return new ImmutablePair<Upgrades, Integer>(upgrade, Integer.valueOf(maximum));
 	}
 
@@ -112,7 +115,6 @@ public enum PartEnum {
 
 		// Return the newly created host
 		return part;
-
 	}
 
 	/**
@@ -121,15 +123,18 @@ public enum PartEnum {
 	 * @return
 	 */
 	public String getGroupName() {
+
 		return this.groupName;
 	}
 
 	public String getLocalizedName() {
+
 		return this.unlocalizedName.getLocalized();
 	}
 
 
 	public ItemStack getStack() {
+
 		return parentItem.getDamagedStack(ordinal());
 	}
 
@@ -139,10 +144,12 @@ public enum PartEnum {
 	 * @return
 	 */
 	public String getUnlocalizedName() {
+
 		return this.unlocalizedName.getUnlocalized();
 	}
 
 	public Map<Upgrades, Integer> getUpgrades() {
+
 		return this.upgrades;
 	}
 }

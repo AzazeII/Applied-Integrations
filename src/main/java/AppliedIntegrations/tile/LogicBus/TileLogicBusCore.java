@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.LogicBus;
 
+
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.tile.AIPatterns;
@@ -30,21 +31,26 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	private boolean isFormed = false;
 
 	private TileLogicBusPort mainNetworkPort;
+
 	private Vector<TileLogicBusPort> subNetworkPorts = new Vector<>();
+
 	private Vector<TileLogicBusSlave> slaves = new Vector<>();
 
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 	}
 
 	@Override
 	public EnumSet<EnumFacing> getConnectableSides() {
+
 		return EnumSet.noneOf(EnumFacing.class);
 	}
 
 	@Override
 	public void invalidate() {
+
 		super.invalidate();
 		if (isFormed && !world.isRemote) {
 			destroyMultiBlock();
@@ -83,11 +89,13 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	@Nonnull
 	@Override
 	public IGridNode getActionableNode() {
+
 		return this.gridNode;
 	}
 
 	@Override
 	public void update() {
+
 		super.update();
 
 		if (slaves.size() > 0) {
@@ -101,6 +109,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 	// Return IMEInventory of network which belongs to ribs of multiblock
 	private IMEInventory<IAEItemStack> getOuterGridInventory() {
+
 		for (TileLogicBusSlave slave : slaves) {
 			if (slave instanceof TileLogicBusRib) {
 				return ((TileLogicBusRib) slave).getOuterGridInventory();
@@ -111,10 +120,12 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 	@Override
 	public void notifyBlock() {
+
 	}
 
 	@Override
 	public void tryConstruct(EntityPlayer p) {
+
 		if (!isFormed() && !world.isRemote) {
 			// Create list of tiles which may be slaves
 			Vector<TileLogicBusSlave> slaveCandidates = new Vector<>();
@@ -255,21 +266,25 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	}
 
 	public boolean isFormed() {
+
 		return isFormed;
 	}
 
 	@Override
 	public boolean hasMaster() {
+
 		return true;
 	}
 
 	@Override
 	public IMaster getMaster() {
+
 		return this;
 	}
 
 	@Override
 	public void setMaster(IMaster tileServerCore) {
+
 	}
 
 	@Override

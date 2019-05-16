@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.BlackHoleSystem.IPylon;
@@ -38,11 +39,13 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 public class TileWhiteHole extends TileEntity implements ISingularity {
 
 	public long mass;
+
 	private TileBlackHole entangledHole = null;
 
 	private List<IPylon> listeners = new ArrayList<>();
 
 	public TileWhiteHole() {
+
 		mass = (long) (Math.random() * 2048);
 	}
 
@@ -53,11 +56,13 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 	}
 
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
+
 		return false;
 	}
 
 	@Override
 	public void invalidate() {
+
 		super.invalidate();
 
 		// Iterate over listeners
@@ -69,6 +74,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 
 	@Override
 	public void addMass(long l) {
+
 		mass -= l;
 	}
 
@@ -175,21 +181,25 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 	@Override
 	@SideOnly(CLIENT)
 	public void setMassFromServer(long mass) {
+
 		this.mass = mass;
 	}
 
 	@Override
 	public long getMass() {
+
 		return mass;
 	}
 
 	@Override
 	public boolean isEntangled() {
+
 		return entangledHole != null;
 	}
 
 	@Override
 	public void setEntangledHole(ISingularity t) {
+
 		AILog.chatLog("Setting entangled singularity to " + t.toString());
 		entangledHole = (TileBlackHole) t;
 
@@ -200,6 +210,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 
 	@Override
 	public void addListener(IPylon pylon) {
+
 		listeners.add(pylon);
 	}
 }

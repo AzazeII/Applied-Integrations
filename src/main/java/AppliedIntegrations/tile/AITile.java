@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile;
 
+
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -38,12 +39,15 @@ import java.util.EnumSet;
  */ public abstract class AITile extends TileEntity implements IActionHost, IGridHost, IGridBlock, ITickable, IGridProxyable, ISyncHost {
 
 	protected IGridNode gridNode = null;
+
 	protected IGridNode node = null;
 
 	protected boolean loaded = false;
+
 	private AENetworkProxy proxy;
 
 	public AITile() {
+
 		for (BlocksEnum blocksEnum : BlocksEnum.values()) {
 			if (blocksEnum.tileEnum.clazz == this.getClass()) {
 				this.proxy = new AENetworkProxy(this, "AITileProxy", new ItemStack(blocksEnum.b), true);
@@ -52,10 +56,12 @@ import java.util.EnumSet;
 	}
 
 	public Object getServerGuiElement(final EntityPlayer player) {
+
 		return null;
 	}
 
 	public Object getClientGuiElement(final EntityPlayer player) {
+
 		return null;
 	}
 
@@ -80,6 +86,7 @@ import java.util.EnumSet;
 
 	@Override
 	public IGridNode getGridNode(AEPartLocation dir) {
+
 		if (gridNode == null) {
 			createAENode();
 		}
@@ -97,6 +104,7 @@ import java.util.EnumSet;
 	}
 
 	public void createAENode() {
+
 		if (world != null) {
 			if (!world.isRemote) {
 				gridNode = AEApi.instance().grid().createGridNode(this);
@@ -108,6 +116,7 @@ import java.util.EnumSet;
 	@Nonnull
 	@Override
 	public AECableType getCableConnectionType(AEPartLocation dir) {
+
 		return AECableType.DENSE_SMART;
 	}
 
@@ -128,29 +137,34 @@ import java.util.EnumSet;
 
 	@Override
 	public double getIdlePowerUsage() {
+
 		return 1;
 	}
 
 	@Nonnull
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 	}
 
 	@Override
 	public boolean isWorldAccessible() {
+
 		return true;
 	}
 
 	@Nonnull
 	@Override
 	public DimensionalCoord getLocation() {
+
 		return new DimensionalCoord(this);
 	}
 
 	@Nonnull
 	@Override
 	public AEColor getGridColor() {
+
 		return AEColor.TRANSPARENT;
 	}
 
@@ -167,12 +181,14 @@ import java.util.EnumSet;
 	@Nonnull
 	@Override
 	public EnumSet<EnumFacing> getConnectableSides() {
+
 		return EnumSet.of(EnumFacing.SOUTH, EnumFacing.DOWN, EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.WEST);
 	}
 
 	@Nonnull
 	@Override
 	public IGridHost getMachine() {
+
 		return this;
 	}
 
@@ -183,18 +199,20 @@ import java.util.EnumSet;
 
 	@Override
 	public ItemStack getMachineRepresentation() {
+
 		DimensionalCoord location = this.getLocation();
 		return new ItemStack(location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock(), 1, location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock().getMetaFromState((location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)))));
-
 	}
 
 	@Override
 	public AENetworkProxy getProxy() {
+
 		return proxy;
 	}
 
 	@Override
 	public void invalidate() {
+
 		super.invalidate();
 		if (world != null && !world.isRemote) {
 			destroyAENode();
@@ -202,6 +220,7 @@ import java.util.EnumSet;
 	}
 
 	public void destroyAENode() {
+
 		if (gridNode != null) {
 			gridNode.destroy();
 		}
@@ -209,6 +228,7 @@ import java.util.EnumSet;
 
 	@Override
 	public void onChunkUnload() {
+
 		if (world != null && !world.isRemote) {
 			destroyAENode();
 		}
@@ -217,6 +237,7 @@ import java.util.EnumSet;
 	@Nonnull
 	@Override
 	public IGridNode getActionableNode() {
+
 		if (this.gridNode == null) {
 			createAENode();
 		}
@@ -233,13 +254,16 @@ import java.util.EnumSet;
 	}
 
 	public void notifyBlock() {
+
 	}
 
 	protected IGrid getNetwork() {
+
 		return getGridNode().getGrid();
 	}
 
 	public IGridNode getGridNode() {
+
 		return getGridNode(AEPartLocation.INTERNAL);
 	}
 
@@ -249,6 +273,7 @@ import java.util.EnumSet;
 	 * @return amount extracted
 	 */
 	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
+
 		if (node == null) {
 			return 0;
 		}
@@ -265,6 +290,7 @@ import java.util.EnumSet;
 	}
 
 	private IEnergyStorageChannel getEnergyChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 
@@ -274,6 +300,7 @@ import java.util.EnumSet;
 	 * @return amount injected
 	 */
 	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
+
 		if (node == null) {
 			return 0;
 		}
@@ -291,6 +318,7 @@ import java.util.EnumSet;
 
 	@Override
 	public AEPartLocation getSide() {
+
 		return AEPartLocation.INTERNAL;
 	}
 }

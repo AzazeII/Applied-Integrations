@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.StorageCells;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Items.AIItemRegistrable;
 
@@ -8,6 +9,7 @@ import AppliedIntegrations.Items.AIItemRegistrable;
  */
 public class EnergyStorageComponent extends AIItemRegistrable {
 	public EnergyStorageComponent(String regName) {
+
 		super(regName);
 		// No damage
 		this.setMaxDamage(0);

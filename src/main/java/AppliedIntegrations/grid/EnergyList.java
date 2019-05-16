@@ -1,5 +1,6 @@
 package AppliedIntegrations.grid;
 
+
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import appeng.api.config.FuzzyMode;
 import appeng.api.storage.data.IItemList;
@@ -16,6 +17,7 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
 
 	@Override
 	public void addStorage(IAEEnergyStack option) {
+
 		if (option == null) {
 			return;
 		}
@@ -32,6 +34,7 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
 
 	@Override
 	public void addCrafting(IAEEnergyStack option) {
+
 		if (option == null) {
 			return;
 		}
@@ -50,6 +53,7 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
 
 	@Override
 	public void addRequestable(IAEEnergyStack option) {
+
 		if (option == null) {
 			return;
 		}
@@ -69,36 +73,43 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
 
 	@Override
 	public IAEEnergyStack getFirstItem() {
+
 		return iterator().hasNext() ? iterator().next() : null;
 	}
 
 	@Override
 	public int size() {
+
 		return this.records.values().size();
 	}
 
 	@Nonnull
 	@Override
 	public Iterator<IAEEnergyStack> iterator() {
+
 		return new EnergyIterator<>(this.records.values().iterator());
 	}
 
 	@Override
 	public void resetStatus() {
+
 		for (IAEEnergyStack s : this)
 			s.reset();
 	}
 
 	private IAEEnergyStack getEnergyRecord(IAEEnergyStack stack) {
+
 		return this.records.get(stack);
 	}
 
 	private IAEEnergyStack putEnergyRecord(IAEEnergyStack stack) {
+
 		return this.records.put(stack, stack);
 	}
 
 	@Override
 	public void add(IAEEnergyStack option) {
+
 		if (option == null) {
 			return;
 		}
@@ -115,16 +126,19 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
 
 	@Override
 	public IAEEnergyStack findPrecise(IAEEnergyStack stack) {
+
 		return stack == null ? null : this.getEnergyRecord(stack);
 	}
 
 	@Override
 	public Collection<IAEEnergyStack> findFuzzy(IAEEnergyStack stack, FuzzyMode mode) {
+
 		return stack == null ? Collections.emptyList() : Collections.singletonList(this.findPrecise(stack));
 	}
 
 	@Override
 	public boolean isEmpty() {
+
 		return !this.iterator().hasNext();
 	}
 }

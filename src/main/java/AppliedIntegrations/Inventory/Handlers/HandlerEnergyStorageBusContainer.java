@@ -1,5 +1,6 @@
 package AppliedIntegrations.Inventory.Handlers;
 
+
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -22,10 +23,13 @@ import net.minecraft.tileentity.TileEntity;
 public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAEEnergyStack> {
 
 	private TileEntity storage;
+
 	private EnumCapabilityType type;
+
 	private PartEnergyStorage owner;
 
 	public HandlerEnergyStorageBusContainer(PartEnergyStorage owner, TileEntity operand, EnumCapabilityType type) {
+
 		this.storage = operand;
 		this.type = type;
 		this.owner = owner;
@@ -164,6 +168,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 
@@ -181,6 +186,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 
 	@Override
 	public boolean canAccept(IAEEnergyStack input) {
+
 		if (this.storage == null) {
 			return false;
 		}
@@ -195,11 +201,13 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 
 	@Override
 	public int getSlot() {
+
 		return 0;
 	}
 
 	@Override
 	public boolean validForPass(int i) {
+
 		return true;
 	}
 }

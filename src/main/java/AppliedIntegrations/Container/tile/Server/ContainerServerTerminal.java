@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.tile.Server;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
@@ -35,11 +36,15 @@ import static AppliedIntegrations.tile.Server.TileServerSecurity.*;
 public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
 	public final TileServerCore core;
+
 	private final SlotRestrictive cardSlot;
+
 	private final TileServerSecurity terminal;
+
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> permissionChannelWidgetMap = new LinkedHashMap<>();
 
 	public ContainerServerTerminal(TileServerCore instance, TileServerSecurity terminal, EntityPlayer player) {
+
 		super(player);
 
 		// Bind inventory of player
@@ -50,6 +55,7 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 			// Override icon getter for this slot
 			@SideOnly(Side.CLIENT)
 			public String getSlotTexture() {
+
 				return AppliedIntegrations.modid + ":gui/slots/network_card_slot";
 			}
 		});
@@ -103,7 +109,6 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
 								// Add to slot list
 								addSlotToContainer(((IChannelContainerWidget<?>) widget).getSlotWrapper());
-
 							} catch (InstantiationException | IllegalAccessException | InvocationTargetException | IllegalArgumentException ignore) {
 
 							}
@@ -133,19 +138,23 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 	}
 
 	public boolean hasCard() {
+
 		return !cardSlot.getStack().isEmpty();
 	}
 
 	public ItemStack getCard() {
+
 		return cardSlot.getStack();
 	}
 
 	public LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> getOuterMap() {
+
 		return this.permissionChannelWidgetMap;
 	}
 
 	@Override
 	public void onContainerClosed(@Nonnull final EntityPlayer player) {
+
 		super.onContainerClosed(player);
 
 		// Remove listener
@@ -154,12 +163,14 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer p_75145_1_) {
+
 		return true;
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber) {
+
 		return ItemStack.EMPTY;
 	}
 }

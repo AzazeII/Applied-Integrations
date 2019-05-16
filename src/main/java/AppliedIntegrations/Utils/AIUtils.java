@@ -1,5 +1,6 @@
 package AppliedIntegrations.Utils;
 
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 
@@ -20,6 +21,7 @@ public final class AIUtils {
 	 * @return
 	 */
 	public static final boolean canPlayerInteractWith(@Nonnull final EntityPlayer player, @Nonnull final TileEntity tile) {
+
 		TileEntity tileAtCoords = tile.getWorld().getTileEntity(tile.getPos());
 
 		// Null check
@@ -29,6 +31,5 @@ public final class AIUtils {
 
 		// Range check
 		return (player.getDistanceSq(tile.getPos().getX() + 0.5D, tile.getPos().getY() + 0.5D, tile.getPos().getZ() + 0.5D) <= AIUtils.SQUARED_REACH);
-
 	}
 }

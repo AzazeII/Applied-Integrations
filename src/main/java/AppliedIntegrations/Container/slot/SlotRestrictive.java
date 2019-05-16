@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.slot;
 
+
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
@@ -31,6 +32,7 @@ public class SlotRestrictive extends Slot {
 	 */
 	@Override
 	public boolean isItemValid(final ItemStack itemstack) {
+
 		return this.inventory.isItemValidForSlot(this.myIndex, itemstack);
 	}
 }

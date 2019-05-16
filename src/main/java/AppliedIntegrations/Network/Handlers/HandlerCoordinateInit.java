@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers;
 
+
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ public class HandlerCoordinateInit implements IMessageHandler<PacketCoordinateIn
 
 	@Override
 	public PacketCoordinateInit onMessage(PacketCoordinateInit message, MessageContext ctx) {
+
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Gui g = Minecraft.getMinecraft().currentScreen;
 

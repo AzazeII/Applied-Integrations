@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
@@ -25,10 +26,12 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 	private AEPartLocation side = AEPartLocation.INTERNAL;
 
 	public void setDir(EnumFacing side) {
+
 		this.side = AEPartLocation.fromFacing(side);
 	}
 
 	public AEPartLocation getSideVector() {
+
 		return side;
 	}
 
@@ -44,6 +47,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 
 	@Override
 	public void validate() {
+
 		this.onNeighborChange();
 	}
 

@@ -1,5 +1,6 @@
 package AppliedIntegrations.grid;
 
+
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
@@ -18,12 +19,14 @@ public class EnergyStorageChannel implements IEnergyStorageChannel {
 	@Nonnull
 	@Override
 	public IItemList<IAEEnergyStack> createList() {
+
 		return new EnergyList();
 	}
 
 	@Nullable
 	@Override
 	public IAEEnergyStack createStack(@Nonnull Object o) {
+
 		if (o instanceof LiquidAIEnergy) {
 			return this.createStack(new EnergyStack((LiquidAIEnergy) o, Integer.MAX_VALUE));
 		} else if (o instanceof EnergyStack) {
@@ -37,12 +40,14 @@ public class EnergyStorageChannel implements IEnergyStorageChannel {
 	@Nullable
 	@Override
 	public IAEEnergyStack readFromPacket(@Nonnull ByteBuf buf) {
+
 		return AEEnergyStack.fromPacket(buf);
 	}
 
 	@Nullable
 	@Override
 	public IAEEnergyStack createFromNBT(@Nonnull NBTTagCompound tag) {
+
 		return AEEnergyStack.fromNBT(tag);
 	}
 }

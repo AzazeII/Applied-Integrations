@@ -1,5 +1,6 @@
 package AppliedIntegrations.api;
 
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.EnergyStorage;
 
@@ -12,6 +13,7 @@ public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceS
 	private IEnergyInterface energyInterface;
 
 	public EnergyInterfaceStorage(IEnergyInterface iEnergyInterface, int capacity, int maxTransfer) {
+
 		super(capacity, maxTransfer);
 		this.energyInterface = iEnergyInterface;
 	}
@@ -34,36 +36,43 @@ public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceS
 
 	@Override
 	public Class<Integer> getTypeClass() {
+
 		return Integer.class;
 	}
 
 	@Override
 	public Integer getStored() {
+
 		return getEnergyStored();
 	}
 
 	@Override
 	public Integer getMaxStored() {
+
 		return getMaxEnergyStored();
 	}
 
 	@Override
 	public Integer receive(Integer value, boolean simulate) {
+
 		return receiveEnergy((int) value, simulate);
 	}
 
 	@Override
 	public Integer extract(Integer value, boolean simulate) {
+
 		return extractEnergy((int) value, simulate);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
+
 		tag.setInteger("#ENERGY_TAG", getEnergyStored());
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
+
 		this.setEnergyStored(tag.getInteger("#ENERGY_TAG"));
 	}
 

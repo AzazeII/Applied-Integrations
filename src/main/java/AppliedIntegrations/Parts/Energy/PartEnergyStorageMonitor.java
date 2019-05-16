@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.Parts.AIRotatablePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -38,16 +39,19 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	private LiquidAIEnergy energy = null;
 
 	public PartEnergyStorageMonitor() {
+
 		super(PartEnum.EnergyStorageMonitor);
 	}
 
 	@Override
 	protected AIGridNodeInventory getUpgradeInventory() {
+
 		return null;
 	}
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
+
 		bch.addBox(2, 2, 14, 14, 14, 16);
 		bch.addBox(4, 4, 13, 12, 12, 14);
 		bch.addBox(5, 5, 12, 11, 11, 13);
@@ -55,6 +59,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	@Override
 	public void writeToNBT(NBTTagCompound data) {
+
 		super.writeToNBT(data);
 		// TODO See line at class start
 	}
@@ -78,6 +83,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
+
 		return 2;
 	}
 
@@ -93,6 +99,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	@Override
 	public void writeToStream(ByteBuf data) throws IOException {
+
 		super.writeToStream(data);
 		// TODO See line at class start
 	}

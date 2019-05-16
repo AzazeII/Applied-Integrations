@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.LogicBus;
 
+
 import AppliedIntegrations.tile.IAIMultiBlock;
 import appeng.api.networking.GridFlags;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,10 +15,12 @@ import java.util.List;
  */
 public class TileLogicBusPort extends TileLogicBusSlave implements IAIMultiBlock {
 	public boolean isSubPort = false;
+
 	private boolean isCorner;
 
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.of(GridFlags.REQUIRE_CHANNEL, GridFlags.MULTIBLOCK);
 	}
 

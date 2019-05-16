@@ -1,5 +1,6 @@
 package AppliedIntegrations.Blocks;
 
+
 import AppliedIntegrations.tile.IAIMultiBlock;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
@@ -21,12 +22,14 @@ import java.util.List;
 public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEntityProvider {
 
 	protected AIMultiBlock(String registry, String unlocalizedName) {
+
 		super(registry, unlocalizedName);
 		this.setHardness(5F);
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
 		if (!world.isRemote) {
 			if (Platform.isWrench(p, p.inventory.getCurrentItem(), pos)) {
 				if (!p.isSneaking()) {
@@ -51,6 +54,7 @@ public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEn
 
 	@Override
 	public TileEntity createNewTileEntity(World w, int p_149915_2_) {
+
 		for (BlocksEnum b : BlocksEnum.values()) {
 			if (b.b == this) {
 				try {

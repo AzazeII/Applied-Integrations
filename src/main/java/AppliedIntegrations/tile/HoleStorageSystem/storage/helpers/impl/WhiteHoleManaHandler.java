@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage.helpers.impl;
 
+
 import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
@@ -39,6 +40,7 @@ public class WhiteHoleManaHandler extends WhiteHoleSingularityInventoryHandler<I
 
 	@Override
 	public IStorageChannel<IAEManaStack> getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
 	}
 }

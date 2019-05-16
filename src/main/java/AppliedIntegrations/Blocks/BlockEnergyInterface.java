@@ -24,6 +24,7 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 	private boolean isThirdClick = false;
 
 	public BlockEnergyInterface(String reg, String unloc) {
+
 		super(reg, unloc);
 		this.setCreativeTab(AppliedIntegrations.AI);
 		this.setHardness(5F);
@@ -31,11 +32,13 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 
 	@Override
 	public TileEnergyInterface createNewTileEntity(World world, int metadata) {
+
 		return new TileEnergyInterface();
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
 		TileEntity entity = world.getTileEntity(pos);
 
 		if (!p.isSneaking()) {
@@ -61,6 +64,7 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 
 	@Override
 	public boolean hasTileEntity(IBlockState blockState) {
+
 		return true;
 	}
 }

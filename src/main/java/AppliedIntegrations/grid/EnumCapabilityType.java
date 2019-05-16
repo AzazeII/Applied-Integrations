@@ -1,5 +1,6 @@
 package AppliedIntegrations.grid;
 
+
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.Implementation.AIEnergy;
@@ -18,13 +19,19 @@ import java.util.Vector;
  * @Author Azazell
  */ public class EnumCapabilityType {
 	public static EnumCapabilityType FE;
+
 	public static EnumCapabilityType Joules;
+
 	public static EnumCapabilityType EU;
+
 	public static EnumCapabilityType Ember;
+
 	public static EnumCapabilityType Tesla;
 
 	public static Vector<EnumCapabilityType> values = new Vector<>();
+
 	public LiquidAIEnergy energy;
+
 	public Vector<Capability> capabilities = new Vector<>();
 
 	static {
@@ -44,6 +51,7 @@ import java.util.Vector;
 	}
 
 	EnumCapabilityType(LiquidAIEnergy energy, @Nullable Capability... capability) {
+
 		this.energy = energy;
 
 		// Check not null
@@ -59,6 +67,7 @@ import java.util.Vector;
 	}
 
 	public static EnumCapabilityType fromEnergy(LiquidAIEnergy energy) {
+
 		for (EnumCapabilityType type : values) {
 			if (type.energy == energy) {
 				return type;
@@ -90,6 +99,7 @@ import java.util.Vector;
 	 * @return null or capabilities of this type
 	 */
 	public Vector<Capability> getCapabilityWithModCheck() {
+
 		if (IntegrationsHelper.instance.isLoaded(this.energy))
 		// Check not null and not empty
 		{

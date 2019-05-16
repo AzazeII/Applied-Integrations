@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
 
+
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -19,13 +20,17 @@ import javax.annotation.Nonnull;
  */
 public class PacketTerminalUpdate extends AIPacket {
 	public AIPart part;
+
 	public IItemList<IAEEnergyStack> list;
+
 	public SortOrder order;
 
 	public PacketTerminalUpdate() {
+
 	}
 
 	public PacketTerminalUpdate(IItemList<IAEEnergyStack> monitor, @Nonnull SortOrder order, AIPart partToken) {
+
 		super(partToken.getX(), partToken.getY(), partToken.getZ(), partToken.getSide().getFacing(), partToken.getWorld());
 		this.list = monitor;
 		this.part = partToken;

@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
 import AppliedIntegrations.Utils.ChangeHandler;
@@ -38,11 +39,13 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.of(GridFlags.DENSE_CAPACITY);
 	}
 
 	@Override
 	public void update() {
+
 		super.update();
 
 		// Check if grid node is not null
@@ -82,6 +85,4 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 		}
 		return super.getCapability(capability, facing);
 	}
-
-
 }

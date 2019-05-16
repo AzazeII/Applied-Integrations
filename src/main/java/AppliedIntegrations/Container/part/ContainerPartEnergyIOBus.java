@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.part;
 
+
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.AIOPart;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +23,7 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots {
 	private final AIOPart part;
 
 	public ContainerPartEnergyIOBus(final AIOPart part, final EntityPlayer player) {
+
 		super(part, player);
 
 		// Set the host
@@ -48,6 +50,7 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer p_75145_1_) {
+
 		return true;
 	}
 }

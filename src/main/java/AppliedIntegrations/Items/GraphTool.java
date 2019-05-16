@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Topology.GraphToolMode;
 import AppliedIntegrations.Topology.TopologyUtils;
@@ -35,6 +36,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 	private GraphToolMode mode = GraphToolMode.ALL;
 
 	public GraphTool(String registry) {
+
 		super(registry);
 
 		// Change stack size
@@ -122,6 +124,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 	}
 
 	private void cycleMode(boolean up) {
+
 		try {
 			// Check for up scroll
 			if (up) {

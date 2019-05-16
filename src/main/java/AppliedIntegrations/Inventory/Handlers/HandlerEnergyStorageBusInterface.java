@@ -1,5 +1,6 @@
 package AppliedIntegrations.Inventory.Handlers;
 
+
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
@@ -18,9 +19,11 @@ import appeng.api.storage.data.IItemList;
 public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAEEnergyStack> {
 
 	private final IEnergyInterface iEnergyInterface;
+
 	private final PartEnergyStorage owner;
 
 	public HandlerEnergyStorageBusInterface(IEnergyInterface iEnergyInterface, PartEnergyStorage owner) {
+
 		this.iEnergyInterface = iEnergyInterface;
 		this.owner = owner;
 	}
@@ -37,16 +40,19 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public AccessRestriction getAccess() {
+
 		return owner.access;
 	}
 
 	@Override
 	public boolean isPrioritized(IAEEnergyStack iaeEnergyStack) {
+
 		return false;
 	}
 
 	@Override
 	public boolean canAccept(IAEEnergyStack iaeEnergyStack) {
+
 		return true;
 	}
 
@@ -58,11 +64,13 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public int getSlot() {
+
 		return 0;
 	}
 
 	@Override
 	public boolean validForPass(int i) {
+
 		return true;
 	}
 
@@ -88,6 +96,7 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 }

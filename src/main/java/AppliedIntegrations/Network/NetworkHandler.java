@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Network.Handlers.HandlerCoordinateInit;
 import AppliedIntegrations.Network.Handlers.HandlerGuiShift;
@@ -34,9 +35,11 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public class NetworkHandler {
 	private static final SimpleNetworkWrapper Handler = NetworkRegistry.INSTANCE.newSimpleChannel(AppliedIntegrations.modid);
+
 	private static byte packetId = 0;
 
 	public static final void registerClientPackets() {
+
 		Handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
 		Handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
 
@@ -64,6 +67,7 @@ public class NetworkHandler {
 	}
 
 	public static final void registerServerPackets() {
+
 		Handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
 
 		Handler.registerMessage(HandlerAccessModeClientToServer.class, PacketAccessModeClientToServer.class, packetId++, Side.SERVER);
@@ -79,22 +83,27 @@ public class NetworkHandler {
 
 	// send packet info to player
 	public static final void sendTo(IMessage message, EntityPlayerMP player) {
+
 		NetworkHandler.Handler.sendTo(message, player);
 	}
 
 	public static final void sendToDimension(IMessage message, int dimensionId) {
+
 		NetworkHandler.Handler.sendToDimension(message, dimensionId);
 	}
 
 	public static final void sendToAllInRange(IMessage message, NetworkRegistry.TargetPoint range) {
+
 		NetworkHandler.Handler.sendToAllAround(message, range);
 	}
 
 	public static final void sendToServer(IMessage message) {
+
 		NetworkHandler.Handler.sendToServer(message);
 	}
 
 	public static final void sendToAll(IMessage message) {
+
 		NetworkHandler.Handler.sendToAll(message);
 	}
 }

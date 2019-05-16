@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.helpers.Matter;
 
+
 import AppliedIntegrations.tile.Server.ServerPortHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.config.AccessRestriction;
@@ -27,6 +28,7 @@ import static appeng.api.config.SecurityPermissions.INJECT;
  */
 public abstract class FilteredServerPortHandler<T extends IAEStack<T>> extends ServerPortHandler<T> implements IMEInventoryHandler<T> {
 	public FilteredServerPortHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore host) {
+
 		super(filteredMatter, filterMode, host);
 	}
 
@@ -47,6 +49,7 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> extends S
 	}
 
 	private IMEInventory<T> getOuterInventory() {
+
 		return host.getMainNetworkInventory(getChannel());
 	}
 
@@ -67,6 +70,7 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> extends S
 	}
 
 	private boolean canExtract(T input) {
+
 		return canInteract(input, EXTRACT);
 	}
 
@@ -164,26 +168,31 @@ public abstract class FilteredServerPortHandler<T extends IAEStack<T>> extends S
 
 	@Override
 	public boolean isPrioritized(T input) {
+
 		return false;
 	}
 
 	@Override
 	public boolean canAccept(T input) {
+
 		return canInteract(input, INJECT);
 	}
 
 	@Override
 	public int getPriority() {
+
 		return 0;
 	}
 
 	@Override
 	public int getSlot() {
+
 		return 0;
 	}
 
 	@Override
 	public boolean validForPass(int i) {
+
 		return true;
 	}
 }

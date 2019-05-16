@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage.helpers.impl;
 
+
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -39,6 +40,7 @@ public class WhiteHoleItemHandler extends WhiteHoleSingularityInventoryHandler<I
 
 	@Override
 	public IStorageChannel<IAEItemStack> getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 	}
 }

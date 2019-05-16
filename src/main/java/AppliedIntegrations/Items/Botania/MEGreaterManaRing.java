@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.Botania;
 
+
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.ItemEnum;
 import net.minecraft.item.ItemStack;
@@ -10,16 +11,19 @@ import net.minecraftforge.fml.common.Optional;
  * @Author Azazell
  */ public class MEGreaterManaRing extends MEManaRing implements IBotaniaIntegrated {
 	public MEGreaterManaRing(String registry) {
+
 		super(registry);
 	}
 
 	@Override
 	public int getMaxMana(ItemStack stack) {
+
 		return 2000000;
 	}
 
 	@Override
 	public boolean canHandle(ItemStack itemStack) {
+
 		return itemStack.getItem() == ItemEnum.ITEMMANAWIRELESSGREATRING.getItem();
 	}
 }

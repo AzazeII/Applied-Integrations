@@ -1,5 +1,6 @@
 package AppliedIntegrations.api;
 
+
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyOutputter;
 import mekanism.api.energy.IStrictEnergyStorage;
@@ -13,16 +14,20 @@ import net.minecraftforge.fml.common.Optional;
  */ public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, InbtStorage, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
 
 	private final double capacity;
+
 	private IEnergyInterface energyInterface;
+
 	private double storage;
 
 	public JouleInterfaceStorage(IEnergyInterface iEnergyInterface, int capacity) {
+
 		this.energyInterface = iEnergyInterface;
 		this.capacity = capacity;
 	}
 
 	@Override
 	public void modifyEnergyStored(int i) {
+
 		if (storage + i < capacity) {
 			storage += i;
 		}
@@ -30,21 +35,25 @@ import net.minecraftforge.fml.common.Optional;
 
 	@Override
 	public Class<Double> getTypeClass() {
+
 		return Double.class;
 	}
 
 	@Override
 	public Double getStored() {
+
 		return storage;
 	}
 
 	@Override
 	public Double getMaxStored() {
+
 		return capacity;
 	}
 
 	@Override
 	public Double receive(Double value, boolean simulate) {
+
 		double energyReceived = Math.min(capacity - storage, value);
 		if (!simulate) {
 			storage += energyReceived;
@@ -54,6 +63,7 @@ import net.minecraftforge.fml.common.Optional;
 
 	@Override
 	public Double extract(Double value, boolean simulate) {
+
 		double energyExtracted = Math.min(storage, value);
 		if (!simulate) {
 			storage -= energyExtracted;
@@ -63,46 +73,55 @@ import net.minecraftforge.fml.common.Optional;
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
+
 		tag.setDouble("#Joules", storage);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
+
 		storage = tag.getDouble("#Joules");
 	}
 
 	@Override
 	public double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
+
 		return receive(v, b);
 	}
 
 	@Override
 	public boolean canReceiveEnergy(EnumFacing enumFacing) {
+
 		return true;
 	}
 
 	@Override
 	public double pullEnergy(EnumFacing enumFacing, double v, boolean b) {
+
 		return extract(v, b);
 	}
 
 	@Override
 	public boolean canOutputEnergy(EnumFacing enumFacing) {
+
 		return true;
 	}
 
 	@Override
 	public double getEnergy() {
+
 		return getStored();
 	}
 
 	@Override
 	public void setEnergy(double v) {
+
 		storage = Math.min(v, capacity);
 	}
 
 	@Override
 	public double getMaxEnergy() {
+
 		return getMaxStored();
 	}
 }

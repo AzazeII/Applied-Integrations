@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
@@ -26,9 +27,11 @@ import javax.annotation.Nonnull;
 public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAEEnergyStack> {
 
 	public int id;
+
 	public boolean shouldRender;
 
 	public WidgetEnergySlot(final IWidgetHost hostGui, final int id, final int posX, final int posY, final boolean shouldRender) {
+
 		super(hostGui, posX, posY);
 		this.id = id;
 
@@ -58,6 +61,7 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 
 	@Override
 	public void drawWidget() {
+
 		if (shouldRender) {
 			// Disable lighting
 			GL11.glDisable(GL11.GL_LIGHTING);
@@ -80,8 +84,9 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 			// Re-enable lighting
 			GL11.glEnable(GL11.GL_LIGHTING);
 		}
+	}
 
-	}	@Override
+	@Override
 	public IAEEnergyStack getAEStack() {
 		// Check not null
 		if (getCurrentStack() != null && getCurrentStack().getEnergy() != null) {
@@ -89,7 +94,6 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 		}
 		return null;
 	}
-
 
 
 	@Override
@@ -110,6 +114,4 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 		}
 		return "";
 	}
-
-
 }

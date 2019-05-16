@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets.HoleStorage;
 
+
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
 import io.netty.buffer.ByteBuf;
@@ -13,14 +14,19 @@ import net.minecraft.util.math.BlockPos;
 public class PacketSingularitySync extends AIPacket {
 
 	public boolean shouldDrain;
+
 	public ISingularity operatedTile;
+
 	public BlockPos pos;
+
 	public float beamState;
 
 	public PacketSingularitySync() {
+
 	}
 
 	public PacketSingularitySync(ISingularity operatedTile, float beamState, boolean shouldDrain, BlockPos pos) {
+
 		this.pos = pos;
 		this.operatedTile = operatedTile;
 		this.beamState = beamState;
@@ -29,6 +35,7 @@ public class PacketSingularitySync extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+
 		pos = readPos(buf);
 		beamState = buf.readFloat();
 		shouldDrain = buf.readBoolean();
@@ -42,6 +49,7 @@ public class PacketSingularitySync extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
+
 		writePos(pos, buf);
 		buf.writeFloat(beamState);
 		buf.writeBoolean(shouldDrain);

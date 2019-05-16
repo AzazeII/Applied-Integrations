@@ -1,5 +1,6 @@
 package AppliedIntegrations.Utils;
 
+
 import AppliedIntegrations.api.Multiblocks.BlockData;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
@@ -22,6 +23,7 @@ public class MultiBlockUtils {
 	 * @return List filled with blocks that matched pattern
 	 */
 	public static List<? extends IAIMultiBlock> fillListWithPattern(BlockData[] pattern, IMaster pivot, Consumer<BlockData> extra) {
+
 		List<IAIMultiBlock> blockList = new ArrayList<>();
 
 		// Check if pivot is tile

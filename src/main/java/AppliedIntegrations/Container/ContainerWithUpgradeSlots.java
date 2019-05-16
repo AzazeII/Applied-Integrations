@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Parts.AIOPart;
@@ -23,29 +24,38 @@ import static net.minecraft.init.Items.AIR;
 public abstract class ContainerWithUpgradeSlots extends ContainerWithPlayerInventory {
 	// Distance between Y point, of each upgrade slot
 	private static int UPGRADE_Y_POSITION_MULTIPLIER = 18;
+
 	protected boolean hasNetworkTool = false;
+
 	// First tool slot
 	private int firstToolSlotNumber = -1;
+
 	// Last tool slot
 	private int lastToolSlotNumber = -1;
+
 	// First upgrade slot
 	private int firstUpgradeSlot = -1;
+
 	// Last upgrade slot
 	private int lastUpgradeSlot = -1;
 
 	public ContainerWithUpgradeSlots(IEnergyInterface Einterface, EntityPlayer player) {
+
 		super(player);
 	}
 
 	public ContainerWithUpgradeSlots(PartEnergyStorage EStorage, EntityPlayer player) {
+
 		super(player);
 	}
 
 	public ContainerWithUpgradeSlots(AIOPart part, final EntityPlayer player) {
+
 		super(player);
 	}
 
 	protected void addUpgradeSlots(final AIGridNodeInventory upgradeInventory, final int count, final int xPosition, final int yPosition) {
+
 		Slot upgradeSlot = null;
 
 		// Add the upgrade slots
@@ -56,6 +66,7 @@ public abstract class ContainerWithUpgradeSlots extends ContainerWithPlayerInven
 				// Override icon getter for this slot
 				@SideOnly(Side.CLIENT)
 				public String getSlotTexture() {
+
 					return AppliedIntegrations.modid + ":gui/slots/upgradesloticon";
 				}
 			};
@@ -76,6 +87,7 @@ public abstract class ContainerWithUpgradeSlots extends ContainerWithPlayerInven
 	}
 
 	public boolean hasNetworkTool() {
+
 		return this.hasNetworkTool;
 	}
 
@@ -202,6 +214,7 @@ public abstract class ContainerWithUpgradeSlots extends ContainerWithPlayerInven
 
 	// @Return true, if slots was merged successfully
 	protected boolean mergeSlotWithNetworkTool(final ItemStack slotStack) {
+
 		if (this.hasNetworkTool) {
 			// Is the item an upgrade card?
 			if (!(slotStack.getItem() instanceof IUpgradeModule)) {
@@ -216,11 +229,13 @@ public abstract class ContainerWithUpgradeSlots extends ContainerWithPlayerInven
 	}
 
 	protected boolean slotClickedWasInUpgrades(final int slotNumber) {
+
 		return (slotNumber >= this.firstUpgradeSlot) && (slotNumber <= this.lastUpgradeSlot);
 	}
 
 	// Check if slot clicked from network tool inventory
 	protected boolean slotClickedWasInNetworkTool(final int slotNumber) {
+
 		return this.hasNetworkTool && (slotNumber >= this.firstToolSlotNumber) && (slotNumber <= this.lastToolSlotNumber);
 	}
 }

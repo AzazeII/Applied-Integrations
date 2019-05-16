@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.Widgets;
 
+
 import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import net.minecraft.client.gui.Gui;
@@ -26,6 +27,7 @@ public abstract class AIWidget extends Gui {
 	protected IWidgetHost hostGUI;
 
 	public AIWidget(final IWidgetHost hostGUI, final int xPos, final int yPos) {
+
 		this.hostGUI = hostGUI;
 
 		this.xPosition = xPos;
@@ -34,6 +36,7 @@ public abstract class AIWidget extends Gui {
 	}
 
 	public void drawMouseHoverUnderlay() {
+
 		GL11.glDisable(GL11.GL_LIGHTING);
 
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
@@ -50,6 +53,7 @@ public abstract class AIWidget extends Gui {
 	public abstract void getTooltip(List<String> tooltip);
 
 	public boolean isMouseOverWidget(final int mouseX, final int mouseY) {
+
 		return AIGuiHelper.INSTANCE.isPointInGuiRegion(this.yPosition, this.xPosition, AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1, mouseX, mouseY, this.hostGUI.getLeft(), this.hostGUI.getTop());
 	}
 

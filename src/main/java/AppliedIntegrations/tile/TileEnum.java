@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
@@ -33,16 +34,20 @@ public enum TileEnum {
 	BlackHole(TileBlackHole.class, AIConfig.enableBlackHoleStorage),
 	MEPylon(TileMEPylon.class, AIConfig.enableBlackHoleStorage),
 	WhiteHole(TileWhiteHole.class, AIConfig.enableBlackHoleStorage);
+
 	public final boolean enabled;
+
 	// tile entities's class
 	public Class clazz;
 
 	TileEnum(final Class clazz, boolean enabled) {
+
 		this.clazz = clazz;
 		this.enabled = enabled;
 	}
 
 	public void register(ResourceLocation reg) {
+
 		if (enabled) {
 			GameRegistry.registerTileEntity(clazz, reg);
 		}

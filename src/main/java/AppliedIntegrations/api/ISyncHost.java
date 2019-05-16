@@ -1,5 +1,6 @@
 package AppliedIntegrations.api;
 
+
 import appeng.api.util.AEPartLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -12,6 +13,7 @@ import net.minecraft.world.World;
 public interface ISyncHost {
 	// Compare this to any other sync host; True if objects equal
 	default boolean compareTo(ISyncHost host, boolean ignoreWorld) {
+
 		if (!ignoreWorld) {
 			// Check if all three components of sync host are equal
 			return host.getPos().equals(host.getPos()) && getWorld().equals(host.getWorld()) && getSide().equals(host.getSide());

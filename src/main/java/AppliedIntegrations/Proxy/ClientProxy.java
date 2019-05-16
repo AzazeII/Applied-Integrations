@@ -1,5 +1,6 @@
 package AppliedIntegrations.Proxy;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlocksEnum;
@@ -63,12 +64,14 @@ import java.util.Objects;
  */
 public class ClientProxy extends CommonProxy {
 	public ClientProxy() {
+
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void SidedPreInit() {
+
 		super.SidedPreInit();
 
 		NetworkHandler.registerClientPackets();
@@ -94,6 +97,7 @@ public class ClientProxy extends CommonProxy {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void SidedInit(FMLInitializationEvent init) {
+
 		ItemEnum.registerModels();
 
 		BlocksEnum.registerModels();
@@ -193,6 +197,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+
 		return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
 	}
 }

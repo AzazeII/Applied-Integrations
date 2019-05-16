@@ -1,5 +1,6 @@
 package AppliedIntegrations.Blocks.Additions;
 
+
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import net.minecraft.block.BlockHorizontal;
@@ -27,12 +28,14 @@ public class BlockMEPylon extends BlockAIRegistrable {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public BlockMEPylon(String registryName, String unlocalizedName) {
+
 		super(registryName, unlocalizedName);
 	}
 
 	@Nullable
 	@Override
 	public TileEntity createNewTileEntity(World worldIn, int meta) {
+
 		return new TileMEPylon();
 	}
 
@@ -58,21 +61,23 @@ public class BlockMEPylon extends BlockAIRegistrable {
 		int meta = (state.getValue(FACING)).getIndex();
 
 		return meta;
-
 	}
 
 	@Override
 	public boolean isFullCube(IBlockState iBlockState) {
+
 		return false;
 	}
 
 	@Override
 	public boolean isOpaqueCube(IBlockState iBlockState) {
+
 		return false;
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
 		TileEntity tile = world.getTileEntity(pos);
 		// Pass activated to tile entity ( nothing new :) )
 		if (tile instanceof TileMEPylon) {

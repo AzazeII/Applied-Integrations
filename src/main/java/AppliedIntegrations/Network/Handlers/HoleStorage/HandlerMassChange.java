@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.HoleStorage;
 
+
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
 import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
 import net.minecraft.client.Minecraft;

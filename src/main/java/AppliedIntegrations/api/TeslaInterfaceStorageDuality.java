@@ -1,5 +1,6 @@
 package AppliedIntegrations.api;
 
+
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 
 /**
@@ -13,6 +14,7 @@ public class TeslaInterfaceStorageDuality extends BaseTeslaContainer implements 
 
 	@Override
 	public void modifyEnergyStored(int i) {
+
 		super.givePower(i, false);
 		if (getStored() > getMaxStored()) {
 			takePower(getStored() - getMaxStored(), false);
@@ -24,26 +26,31 @@ public class TeslaInterfaceStorageDuality extends BaseTeslaContainer implements 
 
 	@Override
 	public Class<Long> getTypeClass() {
+
 		return Long.class;
 	}
 
 	@Override
 	public Long getStored() {
+
 		return super.getStoredPower();
 	}
 
 	@Override
 	public Long getMaxStored() {
+
 		return super.getCapacity();
 	}
 
 	@Override
 	public Long receive(Long value, boolean simulate) {
+
 		return super.givePower(value, simulate);
 	}
 
 	@Override
 	public Long extract(Long value, boolean simulate) {
+
 		return super.takePower(value, simulate);
 	}
 }

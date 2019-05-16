@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.part;
 
+
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,6 +25,7 @@ public class ContainerEnergyStorage extends ContainerWithUpgradeSlots {
 	private final PartEnergyStorage storageBus;
 
 	public ContainerEnergyStorage(final PartEnergyStorage part, final EntityPlayer player) {
+
 		super(part, player);
 		// Call super
 
@@ -38,12 +40,11 @@ public class ContainerEnergyStorage extends ContainerWithUpgradeSlots {
 
 		// Bind to the player's inventory
 		this.bindPlayerInventory(player.inventory, PLAYER_INV_POSITION_Y + 67, HOTBAR_INV_POSITION_Y + 67);
-
-
 	}
 
 	@Override
 	public boolean canInteractWith(final EntityPlayer player) {
+
 		return true;
 	}
 }

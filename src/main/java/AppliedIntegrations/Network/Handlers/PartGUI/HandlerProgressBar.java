@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 
+
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketProgressBar;
 import net.minecraft.client.Minecraft;

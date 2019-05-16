@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.render;
 
+
 import AppliedIntegrations.Client.AITileRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import net.minecraft.client.renderer.GlStateManager;

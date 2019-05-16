@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 
+
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketBarChange;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ public class HandlerBarChange implements IMessageHandler<PacketBarChange, Packet
 
 	@Override
 	public PacketBarChange onMessage(PacketBarChange message, MessageContext ctx) {
+
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiEnergyInterface) {

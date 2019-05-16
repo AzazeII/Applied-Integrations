@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.Widgets;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -14,6 +15,7 @@ public class WidgetEnergySelector extends EnergyWidget {
 	private boolean shouldRender = true;
 
 	public WidgetEnergySelector(IEnergySelectorGui hostGUI, int xPos, int yPos) {
+
 		super(hostGUI, xPos, yPos);
 	}
 
@@ -31,6 +33,7 @@ public class WidgetEnergySelector extends EnergyWidget {
 
 	@Override
 	public void drawWidget() {
+
 		if (shouldRender) {
 			// Disable lighting
 			GL11.glDisable(GL11.GL_LIGHTING);
@@ -68,6 +71,5 @@ public class WidgetEnergySelector extends EnergyWidget {
 			// Re-enable lighting
 			GL11.glEnable(GL11.GL_LIGHTING);
 		}
-
 	}
 }

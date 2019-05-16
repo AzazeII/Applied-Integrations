@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.LogicBus;
 
+
 import AppliedIntegrations.tile.IAIMultiBlock;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
@@ -33,6 +34,7 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
 
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.of(GridFlags.MULTIBLOCK);
 	}
 
@@ -83,6 +85,7 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
 	 * inject autocrafting items to outer grid
 	 */
 	public IMEInventory<IAEItemStack> getOuterGridInventory() {
+
 		if (getGridNode() == null) {
 			return null;
 		}
@@ -94,6 +97,7 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock,
 	}
 
 	private IItemStorageChannel getItemChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 	}
 }

@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Botania;
 
+
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
@@ -18,6 +19,7 @@ import javax.annotation.Nonnull;
  */
 public class PartManaStorageBus extends PartEnergyStorage {
 	public PartManaStorageBus() {
+
 		super(PartEnum.ManaStorage, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
 	}
 
@@ -29,12 +31,14 @@ public class PartManaStorageBus extends PartEnergyStorage {
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
+
 		return false;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.MANA_STORAGE_BUS_HAS_CHANNEL;

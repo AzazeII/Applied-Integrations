@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
+
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.SecurityPermissions;
@@ -16,6 +17,7 @@ import static appeng.api.config.SecurityPermissions.*;
 
 public class GuiSecurityPermissionsButton extends GuiServerButton {
 	private static final List<SecurityPermissions> allowedPermissions = new ArrayList<>();
+
 	private SecurityPermissions currentPermissions = INJECT;
 
 	static {
@@ -25,14 +27,17 @@ public class GuiSecurityPermissionsButton extends GuiServerButton {
 	}
 
 	public GuiSecurityPermissionsButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+
 		super(terminal, ID, xPosition, yPosition, width, height, text);
 	}
 
 	public static List<SecurityPermissions> getPermissionList() {
+
 		return allowedPermissions;
 	}
 
 	public SecurityPermissions getCurrentPermissions() {
+
 		return currentPermissions;
 	}
 
@@ -93,6 +98,7 @@ public class GuiSecurityPermissionsButton extends GuiServerButton {
 	}
 
 	private int getU() {
+
 		return 16 * currentPermissions.ordinal();
 	}
 

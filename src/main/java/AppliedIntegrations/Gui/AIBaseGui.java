@@ -29,16 +29,23 @@ import java.util.Optional;
 public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 
 	protected static final int GUI_MAIN_WIDTH = 176;
+
 	protected static final int GUI_UPGRADES_WIDTH = 35;
+
 	protected static final int GUI_UPGRADES_HEIGHT = 35;
+
 	// Relative x position of priority button
 	private static final int BUTTON_PRIORITY_X_POSITION = 154;
+
 	// Used when "AIBaseGui::drawTooltip" is called
 	protected final List<String> tooltip = new ArrayList<String>();
+
 	protected GuiTabButton priorityButton;
+
 	private EntityPlayer player;
 
 	public AIBaseGui(final Container container, EntityPlayer player) {
+
 		super(container);
 
 		// Update player
@@ -46,6 +53,7 @@ public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 	}
 
 	protected void addPriorityButton() {
+
 		priorityButton = new GuiTabButton(this.guiLeft + BUTTON_PRIORITY_X_POSITION, this.guiTop, 2 + 4 * 16, GuiText.Priority.getLocal(), this.itemRender);
 		this.buttonList.add(priorityButton);
 	}
@@ -53,11 +61,13 @@ public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 	// Called when LMB is clicked
 	@Override
 	public final void actionPerformed(final GuiButton button) {
+
 		this.onButtonClicked(button, AIGuiHelper.MOUSE_BUTTON_LEFT);
 	}
 
 	// Called when any button is clicked
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+
 	}
 
 	@Override
@@ -108,6 +118,7 @@ public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(final int mouseX, final int mouseY) {
+
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		// Check not null
@@ -176,6 +187,7 @@ public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 
 	// Check if specified
 	private final boolean isPointWithinSlot(final Slot slot, final int x, final int y) {
+
 		return AIGuiHelper.INSTANCE.isPointInGuiRegion(slot.yPos, slot.xPos, 16, 16, x, y, this.guiLeft, this.guiTop);
 	}
 
@@ -184,6 +196,7 @@ public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 	 */
 	@Override
 	public final int getLeft() {
+
 		return this.guiLeft;
 	}
 
@@ -192,6 +205,7 @@ public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 	 */
 	@Override
 	public final int getTop() {
+
 		return this.guiTop;
 	}
 }

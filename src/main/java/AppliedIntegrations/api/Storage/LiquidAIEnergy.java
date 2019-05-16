@@ -1,5 +1,6 @@
 package AppliedIntegrations.api.Storage;
 
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.Fluid;
@@ -14,12 +15,18 @@ public class LiquidAIEnergy extends Fluid {
 
 	// Energies mapped by tag
 	public static LinkedHashMap<String, LiquidAIEnergy> energies = new LinkedHashMap<String, LiquidAIEnergy>();
+
 	// Energies mapped by index
 	public static LinkedHashMap<Integer, LiquidAIEnergy> linkedIndexMap = new LinkedHashMap<Integer, LiquidAIEnergy>();
+
 	private String tag;
+
 	private int index;
+
 	private ResourceLocation image;
+
 	private LiquidAIEnergy lastEnergy;
+
 	private String modid;
 
 	static {
@@ -34,6 +41,7 @@ public class LiquidAIEnergy extends Fluid {
      */
 
 	public LiquidAIEnergy(String modid, Integer index, String tag, ResourceLocation image) {
+
 		super(tag, image, image);
 
 		// Check if energy is already registered
@@ -62,10 +70,12 @@ public class LiquidAIEnergy extends Fluid {
 
 	// Get energy from it's tag
 	public static LiquidAIEnergy getEnergy(String tag) {
+
 		return energies.get(tag);
 	}
 
 	public static LiquidAIEnergy readFromNBT(NBTTagCompound tag) {
+
 		return linkedIndexMap.get(tag.getInteger("#AIEnergy"));
 	}
 
@@ -81,35 +91,42 @@ public class LiquidAIEnergy extends Fluid {
 	}
 
 	public String getEnergyName() {
+
 		return tag;
 	}
 
 	// #Getter for mod id
 	public String getModid() {
+
 		return modid;
 	}
 
 	// #Getter for tag
 	public String getTag() {
+
 		return tag;
 	}
 
 	// #Setter for tag
 	public void setTag(String tag) {
+
 		this.tag = tag;
 	}
 
 	// #Getter for image
 	public ResourceLocation getImage() {
+
 		return image;
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
+
 		tag.setInteger("#AIEnergy", this.getIndex());
 	}
 
 	// #Getter for index
 	public int getIndex() {
+
 		return this.index;
 	}
 }

@@ -1,5 +1,6 @@
 package AppliedIntegrations.Blocks.MEServer;
 
+
 import AppliedIntegrations.Blocks.AIMultiBlock;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerRib;
@@ -18,6 +19,7 @@ import net.minecraft.world.World;
 public class BlockServerRib extends AIMultiBlock {
 
 	public BlockServerRib(String reg, String unloc) {
+
 		super(reg, unloc);
 	}
 
@@ -29,6 +31,7 @@ public class BlockServerRib extends AIMultiBlock {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
 		super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
 
 		// Check if item held is wrench

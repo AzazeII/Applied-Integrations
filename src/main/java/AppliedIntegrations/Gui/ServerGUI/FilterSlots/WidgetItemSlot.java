@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
+
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AIGridNodeItemHandler;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
@@ -18,16 +19,19 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class WidgetItemSlot implements IChannelContainerWidget<IAEItemStack> {
 	private AIGridNodeInventory inv;
+
 	private boolean visible;
 
 	private SlotFakeTypeOnly innerSlot;
 
 	public WidgetItemSlot(int x, int y) {
+
 		this.inv = new AIGridNodeInventory("Inner Slot Inventory", 1, 1);
 		this.innerSlot = new SlotFakeTypeOnly(new AIGridNodeItemHandler(inv), 0, x, y) {
 
 			@SideOnly(Side.CLIENT)
 			public boolean isEnabled() {
+
 				return WidgetItemSlot.this.visible;
 			}
 		};
@@ -35,6 +39,7 @@ public class WidgetItemSlot implements IChannelContainerWidget<IAEItemStack> {
 
 	@Override
 	public IAEItemStack getAEStack() {
+
 		return AEItemStack.fromItemStack(innerSlot.getStack());
 	}
 
@@ -55,27 +60,32 @@ public class WidgetItemSlot implements IChannelContainerWidget<IAEItemStack> {
 
 	@Override
 	public String getStackTip() {
+
 		return "";
 	}
 
 	// ------- Ignored Methods ------- //
 	@Override
 	public void drawWidget() {
+
 	}
 
 	@Override
 	public boolean isMouseOverWidget(int x, int y) {
+
 		return this.innerSlot.xPos == x && this.innerSlot.yPos == y;
 	}
 
 	@Override
 	public Slot getSlotWrapper() {
+
 		return innerSlot;
 	}
 	// ------- Ignored Methods ------- //
 
 	@Override
 	public void setVisible(boolean newState) {
+
 		this.visible = newState;
 	}
 }

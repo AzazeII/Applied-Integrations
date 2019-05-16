@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.AdvancedNetworkTool;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import appeng.api.config.AccessRestriction;
@@ -29,6 +30,7 @@ public class AdvancedNetworkTool extends AIItemRegistrable implements IMouseWhee
 	private AdvancedToolModes currentMode = AdvancedToolModes.WRENCH;
 
 	public AdvancedNetworkTool(String reg) {
+
 		super(reg);
 
 		this.setCreativeTab(AppliedIntegrations.AI);
@@ -47,6 +49,7 @@ public class AdvancedNetworkTool extends AIItemRegistrable implements IMouseWhee
 
 	@Override
 	public boolean canWrench(ItemStack wrench, EntityPlayer player, BlockPos pos) {
+
 		return currentMode == AdvancedToolModes.WRENCH;
 	}
 

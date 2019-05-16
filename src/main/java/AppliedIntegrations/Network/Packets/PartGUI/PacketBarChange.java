@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
 
+
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -12,6 +13,7 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketBarChange extends AIPacket {
 	public LiquidAIEnergy energy;
+
 	public ISyncHost host;
 
 	public PacketBarChange() {
@@ -19,6 +21,7 @@ public class PacketBarChange extends AIPacket {
 	}
 
 	public PacketBarChange(LiquidAIEnergy energy, ISyncHost host) {
+
 		super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
 		this.energy = energy;
 		this.host = host;
@@ -26,6 +29,7 @@ public class PacketBarChange extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+
 		this.energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
 
 		host = readSyncHost(buf);
@@ -33,6 +37,7 @@ public class PacketBarChange extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
+
 		buf.writeInt(this.energy.getIndex());
 
 		writeSyncHost(host, buf);

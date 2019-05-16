@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -50,11 +51,15 @@ import static appeng.api.networking.ticking.TickRateModulation.SAME;
 public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost, IConfigManagerHost, IGridTickable, IMEMonitorHandlerReceiver<IAEEnergyStack> {
 
 	public List<ContainerEnergyTerminal> listeners = new ArrayList<>();
+
 	private IConfigManager configManager = new ConfigManager(this);
+
 	private boolean updateRequsted;
+
 	private SortOrder sortingOrder = SortOrder.NAME;
 
 	public PartEnergyTerminal() {
+
 		super(PartEnum.EnergyTerminal, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT, SecurityPermissions.CRAFT);
 
 		// Register setting for terminal
@@ -86,11 +91,13 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	protected AIGridNodeInventory getUpgradeInventory() {
+
 		return null;
 	}
 
 	@Override
 	public void getBoxes(final IPartCollisionHelper helper) {
+
 		helper.addBox(2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D);
 		helper.addBox(4.0D, 4.0D, 13.0D, 12.0D, 12.0D, 14.0D);
 		helper.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 13.0D);
@@ -107,21 +114,25 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	public double getIdlePowerUsage() {
+
 		return 0.5D;
 	}
 
 	@Override
 	public void onEntityCollision(Entity entity) {
+
 	}
 
 	@Override
 	public float getCableConnectionLength(AECableType cable) {
+
 		return 2;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.TERMINAL_HAS_CHANNEL;
@@ -135,6 +146,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	@Nonnull
 	@Override
 	public TickingRequest getTickingRequest(@Nonnull IGridNode node) {
+
 		return new TickingRequest(1, 1, false, false);
 	}
 
@@ -202,16 +214,19 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	public IConfigManager getConfigManager() {
+
 		return this.configManager;
 	}
 
 	@Override
 	public boolean isValid(Object verificationToken) {
+
 		return true;
 	}
 
 	@Override
 	public void postChange(IBaseMonitor<IAEEnergyStack> monitor, Iterable<IAEEnergyStack> change, IActionSource actionSource) {
+
 		for (ContainerEnergyTerminal listener : listeners) {
 			NetworkHandler.sendTo(new PacketTerminalUpdate(((IMEMonitor<IAEEnergyStack>) monitor).getStorageList(), sortingOrder, this), (EntityPlayerMP) listener.player);
 		}
@@ -223,10 +238,12 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	}
 
 	public void setSortMode(SortOrder mode) {
+
 		this.sortingOrder = mode;
 	}
 
 	public SortOrder getSortOrder() {
+
 		return this.sortingOrder;
 	}
 }

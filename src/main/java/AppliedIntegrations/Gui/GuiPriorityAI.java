@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui;
 
+
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
@@ -16,9 +17,11 @@ import java.lang.reflect.Field;
 
 public class GuiPriorityAI extends GuiPriority {
 	private IPriorityHostExtended host;
+
 	private GuiButton originalTab;
 
 	public GuiPriorityAI(InventoryPlayer inventory, IPriorityHostExtended priorityHost) {
+
 		super(inventory, priorityHost);
 
 		// Owner of original gui
@@ -34,6 +37,7 @@ public class GuiPriorityAI extends GuiPriority {
 
 	@Override
 	protected void keyTyped(final char character, final int key) throws IOException {
+
 		super.keyTyped(character, key);
 
 		try {
@@ -54,6 +58,7 @@ public class GuiPriorityAI extends GuiPriority {
 
 	@Override
 	protected void actionPerformed(final GuiButton btn) throws IOException {
+
 		super.actionPerformed(btn);
 
 		// Check if button is original tab

@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.helpers.Crafting;
 
+
 import AppliedIntegrations.tile.Server.ServerPortHandler;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.AEApi;
@@ -27,6 +28,7 @@ import static appeng.api.config.SecurityPermissions.CRAFT;
  */
 public class ServerPortCraftingHandler extends ServerPortHandler<IAEItemStack> implements ICraftingProvider {
 	public ServerPortCraftingHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> left, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> right, TileServerCore tileServerCore) {
+
 		super(left, right, tileServerCore);
 	}
 
@@ -70,6 +72,7 @@ public class ServerPortCraftingHandler extends ServerPortHandler<IAEItemStack> i
 	}
 
 	private CraftingGridCache getOuterCraftingGrid() {
+
 		try {
 			return (CraftingGridCache) host.getMainNetworkCraftingGrid();
 		} catch (ClassCastException classCast) {

@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+
 import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerCore;
@@ -141,22 +142,30 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 				}
 			}
 		}
-
 	}
 
 	private static final String KEY_FORMED = "#FORMED";
+
 	public List<AIServerMultiBlockTile> slaves = new ArrayList<>();
+
 	private boolean constructionRequested;
+
 	private LinkedHashMap<Class<? extends AIServerMultiBlockTile>, List<AIServerMultiBlockTile>> slaveMap = new LinkedHashMap<>();
+
 	private LinkedHashMap<AEPartLocation, TileServerPort> portMap = new LinkedHashMap<>();
+
 	private CardInventoryManager cardManager = new CardInventoryManager();
+
 	// list of blocks in multiblock
 	// Networks in ports
 	private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(TileServerHousing.class, TileServerSecurity.class, TileServerPort.class, TileServerRib.class);
+
 	// List of all "mediums" for providing cell inventory from main network into adjacent networks
 	private LinkedHashMap<AEPartLocation, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>> portHandlers = new LinkedHashMap<>();
+
 	// List of all crafting "mediums" for providing craft grid from main network into adjacent networks
 	private LinkedHashMap<AEPartLocation, ICraftingProvider> portCraftingHandlers = new LinkedHashMap<>();
+
 	public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 30, 1, this.cardManager) {
 		@Override
 		public ItemStack decrStackSize(int slotId, int amount) {
@@ -171,12 +180,16 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+
 			return itemstack.getItem() instanceof NetworkCard;
 		}
 	};
+
 	// List of all crafting CPU simulators
 	private LinkedHashMap<AEPartLocation, ServerPortCPUHandler> portCPUHandlers = new LinkedHashMap<>();
+
 	private List<MEServerMonitorHandlerReceiver> receiverList = new ArrayList<>();
+
 	private boolean isFormed;
 
 	{
@@ -208,6 +221,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 		// Pass call to rib
 		return rib.getMainNetwork();
+	}
+
+	public void addSlave(AIServerMultiBlockTile slave) {
+
+		slaves.add(slave);
 	}	public <T extends IAEStack<T>> IMEMonitor<T> getMainNetworkInventory(IStorageChannel<T> channel) {
 		// Check not null
 		if (getMainNetwork() == null) {
@@ -215,10 +233,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 
 		return ((IStorageMonitorable) getMainNetwork().getCache(IStorageGrid.class)).getInventory(channel);
-	}
-
-	public void addSlave(AIServerMultiBlockTile slave) {
-		slaves.add(slave);
 	}
 
 	public void activate(EntityPlayer p) {
@@ -243,15 +257,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 		// Notify main server network
 		postCellInventoryEvent();
-	}	private void nullifyMap() {
-		// Nullify map
-		slaveMap = new LinkedHashMap<>();
-
-		// Iterate for each tile type
-		for (Class<? extends AIServerMultiBlockTile> type : serverClasses) {
-			// Add list to map
-			slaveMap.put(type, new ArrayList<>());
-		}
 	}
 
 	public void postNetworkAlterationsEvents(IStorageChannel<? extends IAEStack<?>> channel, Iterable change, MachineSource machineSource) {
@@ -279,6 +284,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 		// Pass call to handler
 		portCraftingHandlers.get(side).provideCrafting(craftingTracker);
+	}	private void nullifyMap() {
+		// Nullify map
+		slaveMap = new LinkedHashMap<>();
+
+		// Iterate for each tile type
+		for (Class<? extends AIServerMultiBlockTile> type : serverClasses) {
+			// Add list to map
+			slaveMap.put(type, new ArrayList<>());
+		}
 	}
 
 	public boolean pushPortPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table, AEPartLocation side) {
@@ -299,46 +313,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 		// Pass call to handler
 		return portCraftingHandlers.get(side).isBusy();
-	}	@SuppressWarnings("unchecked")
-	public void destroyMultiBlock() {
-		// Iterate for each slave
-		for (IAIMultiBlock tile : slaves) {
-			// Nullify master
-			tile.setMaster(null);
-
-			// Destroy node of slave
-			((AIServerMultiBlockTile) tile).destroyAENode();
-		}
-
-		// Nullify slave map
-		nullifyMap();
-
-		// Nullify slave list
-		slaves = new ArrayList<>();
-
-		// Nullify maps
-		portMap = new LinkedHashMap<>(); // (1)
-		portHandlers = new LinkedHashMap<>(); // (2)
-		portCraftingHandlers = new LinkedHashMap<>(); // (3)
-
-		// Make server not formed
-		isFormed = false;
-
-		// Remove receivers from listeners of each channel from main server grid
-		// Iterate for each channel
-		GuiStorageChannelButton.getChannelList().forEach(channel -> {
-			// Iterate for each ME server listeners in list
-			receiverList.forEach((meServerMonitorHandlerReceiver -> {
-				// Check not null
-				if (getMainNetworkInventory(channel) != null) {
-					// Remove from listeners
-					getMainNetworkInventory(channel).removeListener(meServerMonitorHandlerReceiver);
-				}
-			}));
-		});
-
-		// Nullify receivers list
-		receiverList = new ArrayList<>(); // (2)
 	}
 
 	// -----------------------------Drive Methods-----------------------------//
@@ -385,6 +359,46 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 
 		return null;
+	}	@SuppressWarnings("unchecked")
+	public void destroyMultiBlock() {
+		// Iterate for each slave
+		for (IAIMultiBlock tile : slaves) {
+			// Nullify master
+			tile.setMaster(null);
+
+			// Destroy node of slave
+			((AIServerMultiBlockTile) tile).destroyAENode();
+		}
+
+		// Nullify slave map
+		nullifyMap();
+
+		// Nullify slave list
+		slaves = new ArrayList<>();
+
+		// Nullify maps
+		portMap = new LinkedHashMap<>(); // (1)
+		portHandlers = new LinkedHashMap<>(); // (2)
+		portCraftingHandlers = new LinkedHashMap<>(); // (3)
+
+		// Make server not formed
+		isFormed = false;
+
+		// Remove receivers from listeners of each channel from main server grid
+		// Iterate for each channel
+		GuiStorageChannelButton.getChannelList().forEach(channel -> {
+			// Iterate for each ME server listeners in list
+			receiverList.forEach((meServerMonitorHandlerReceiver -> {
+				// Check not null
+				if (getMainNetworkInventory(channel) != null) {
+					// Remove from listeners
+					getMainNetworkInventory(channel).removeListener(meServerMonitorHandlerReceiver);
+				}
+			}));
+		});
+
+		// Nullify receivers list
+		receiverList = new ArrayList<>(); // (2)
 	}
 
 	@Override
@@ -414,8 +428,25 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		tag.setBoolean(KEY_FORMED, isFormed);
 
 		return super.writeToNBT(tag);
-	}	@Override
+	}
+
+	@Override
+	public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
+
+		return false;
+	}
+
+	@Override
+	public Iterator<IGridNode> getMultiblockNodes() {
+
+		return null;
+	}
+
+
+
+	@Override
 	public void update() {
+
 		super.update();
 
 		// Check if construction was requested from read nbt method
@@ -446,19 +477,14 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 	}
 
-	@Override
-	public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
-		return false;
-	}
+
+
+
 
 	@Override
-	public Iterator<IGridNode> getMultiblockNodes() {
-		return null;
-	}	@Override
 	public void notifyBlock() {
 
 	}
-
 
 
 	@SuppressWarnings("unchecked")
@@ -473,7 +499,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 			formServer((List<AIServerMultiBlockTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_SERVER, this, (block) -> count.getAndIncrement()), count, p);
 		}
 	}
-
 
 
 	@SuppressWarnings("unchecked")
@@ -545,29 +570,33 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	}
 
 
-
 	@Override
 	public boolean hasMaster() {
+
 		return true;
 	}
 
 	@Override
 	public IMaster getMaster() {
+
 		return this;
 	}
 
 
 	@Override
 	public void setMaster(IMaster tileServerCore) {
+
 	}
 
 	@Override
 	public Object getServerGuiElement(final EntityPlayer player) {
+
 		return new ContainerServerCore(player, this);
 	}
 
 	@Override
 	public Object getClientGuiElement(final EntityPlayer player) {
+
 		return new GuiServerCore((ContainerServerCore) this.getServerGuiElement(player), player);
 	}
 
@@ -579,6 +608,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	@SuppressWarnings("unchecked")
 	@Override
 	public void invalidate() {
+
 		super.invalidate();
 		if (world != null && !world.isRemote) {
 			destroyAENode();
@@ -595,6 +625,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	@Nonnull
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 	}
 }

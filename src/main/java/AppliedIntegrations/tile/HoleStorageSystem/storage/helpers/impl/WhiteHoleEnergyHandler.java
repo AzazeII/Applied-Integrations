@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage.helpers.impl;
 
+
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
@@ -39,6 +40,7 @@ public class WhiteHoleEnergyHandler extends WhiteHoleSingularityInventoryHandler
 
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 }

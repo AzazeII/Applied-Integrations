@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem;
 
+
 import net.minecraft.world.World;
 
 /**
@@ -34,6 +35,7 @@ public class TimeHandler {
 	}
 
 	public void updateData(World w) {
+
 		lastTime = w.getTotalWorldTime();
 	}
 }

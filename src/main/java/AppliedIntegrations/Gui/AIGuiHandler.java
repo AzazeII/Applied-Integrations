@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerAIPriority;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
@@ -53,6 +54,7 @@ public class AIGuiHandler implements IGuiHandler {
 	}
 
 	public static void open(GuiEnum gui, EntityPlayer player, AEPartLocation side, BlockPos pos) {
+
 		if (player == null) {
 			throw new IllegalStateException("Null player. Is it server side?");
 		}
@@ -92,6 +94,7 @@ public class AIGuiHandler implements IGuiHandler {
 	 * returns 10111 or 23
 	 */
 	public static int concat(GuiEnum gui, AEPartLocation side) {
+
 		return (gui.ordinal() << 3) | side.ordinal();
 	}
 
@@ -106,6 +109,7 @@ public class AIGuiHandler implements IGuiHandler {
 	 * return GuiEnum.values()[1];
 	 */
 	public static GuiEnum getGui(int value) {
+
 		return GuiEnum.values()[value >> 3];
 	}
 
@@ -125,12 +129,14 @@ public class AIGuiHandler implements IGuiHandler {
 	 * return AEPartLocation.values()[7];
 	 */
 	public static AEPartLocation getSide(int value) {
+
 		return AEPartLocation.fromOrdinal(value & 7);
 	}
 
 	@Nullable
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+
 		AEPartLocation side = getSide(ID);
 		GuiEnum gui = getGui(ID);
 
@@ -178,6 +184,7 @@ public class AIGuiHandler implements IGuiHandler {
 	@Nullable
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+
 		AEPartLocation side = getSide(ID);
 		GuiEnum gui = getGui(ID);
 
@@ -209,13 +216,9 @@ public class AIGuiHandler implements IGuiHandler {
 			return new GuiPriorityAI(player.inventory, host);
 		} else if (gui == GuiServerTerminal) {
 			return new GuiServerTerminal((ContainerServerTerminal) getServerGuiElement(ID, player, world, x, y, z), player);
-
 		} else if (gui == GuiServerStorage) {
 			return new GuiServerCore((ContainerServerCore) getServerGuiElement(ID, player, world, x, y, z), player);
-
 		}
 		return null;
 	}
-
-
 }

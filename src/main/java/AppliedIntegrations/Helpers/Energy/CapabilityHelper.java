@@ -1,5 +1,6 @@
 package AppliedIntegrations.Helpers.Energy;
 
+
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -32,10 +33,13 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 public class CapabilityHelper {
 
 	private final AEPartLocation side;
+
 	private TileEntity capabilityHandler;
+
 	private Vector<Capability> capabilities = new Vector<>();
 
 	public CapabilityHelper(TileEntity capabilityHandler, AEPartLocation side) {
+
 		this.capabilityHandler = capabilityHandler;
 		this.side = side;
 
@@ -60,6 +64,7 @@ public class CapabilityHelper {
 	 * Allowed types: integer, double, long
 	 */
 	public int getMaxStored(LiquidAIEnergy energy) {
+
 		for (Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
 			if (capabilities.contains(capability)) {
 				if (capability == CapabilityEnergy.ENERGY) {
@@ -90,28 +95,25 @@ public class CapabilityHelper {
 	}
 
 	public int receiveEnergy(Number val, boolean simulate, LiquidAIEnergy energy) {
+
 		for (Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
 			if (capabilities.contains(capability)) {
 				if (capability == CapabilityEnergy.ENERGY) {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 
 					return energyStorageCapability.receiveEnergy(val.intValue(), simulate);
-
 				} else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
 					IEmberCapability emberCapability = (IEmberCapability) capabilityHandler.getCapability(capability, side.getFacing());
 					;
 					return (int) emberCapability.addAmount(val.doubleValue(), simulate);
-
 				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
 					IStrictEnergyAcceptor storage = (IStrictEnergyAcceptor) capabilityHandler.getCapability(capability, side.getFacing());
 					;
 					return (int) storage.acceptEnergy(side.getFacing(), val.doubleValue(), !simulate);
-
 				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && (capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
 					ITeslaConsumer teslaHolderCapability = (ITeslaConsumer) capabilityHandler.getCapability(capability, side.getFacing());
 					;
 					return (int) teslaHolderCapability.givePower(val.longValue(), simulate);
-
 				}
 			}
 		}

@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.Render;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Client.AITileFullRenderer;
 import AppliedIntegrations.tile.Server.TileServerRib;
@@ -18,11 +19,15 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 
 	// Initialize side variables
 	private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame.png"); // (1)
+
 	private static final ResourceLocation directionalSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_alt_b.png"); // (2)
 
 	private static final ResourceLocation offSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off.png"); // (3)
+
 	private static final ResourceLocation offDirectionalSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off_a.png"); // (4)
+
 	private static final EnumFacing[] axisDirections = {SOUTH, WEST, UP};
+
 	// Tile ---> Axis Map
 	private static LinkedHashMap<TileServerRib, Axis> tileAxisMap = new LinkedHashMap<>();
 

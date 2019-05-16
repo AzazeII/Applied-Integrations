@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 
+
 import AppliedIntegrations.Gui.Part.GuiEnergyIO;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import net.minecraft.client.Minecraft;

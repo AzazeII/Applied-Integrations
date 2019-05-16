@@ -1,5 +1,6 @@
 package AppliedIntegrations.Utils;
 
+
 import java.util.function.Consumer;
 
 /**
@@ -9,6 +10,7 @@ public class ChangeHandler<T> {
 	private T lastT;
 
 	public void onChange(T t, Consumer<T> action) {
+
 		if (t != lastT) {
 			action.accept(t);
 

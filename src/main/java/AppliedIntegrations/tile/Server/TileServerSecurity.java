@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Items.NetworkCard;
@@ -33,8 +34,11 @@ import java.util.List;
 public class TileServerSecurity extends AIServerMultiBlockTile implements IOrientable {
 	// Used by both container and gui
 	public static final int SLOT_Y = 18; // (1)
+
 	public static final int SLOT_X = 9; // (2)
+
 	public static final int SLOT_ROWS = 3; // (3)
+
 	public static final int SLOT_COLUMNS = 9; // (4)
 
 	public List<ContainerServerTerminal> listeners = new LinkedList<>();
@@ -42,6 +46,7 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 	public AIGridNodeInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1) {
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+
 			return itemstack.getItem() instanceof NetworkCard;
 		}
 	};
@@ -53,6 +58,7 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 	private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
 
 	public TileServerSecurity() {
+
 		super();
 
 		// Update proxy setting
@@ -83,6 +89,7 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
 	@Override
 	public void createAENode() {
+
 		if (!world.isRemote) {
 			if (gridNode == null) {
 				gridNode = AEApi.instance().grid().createGridNode(getProxy());
@@ -94,17 +101,20 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 	@Nonnull
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 	}
 
 	@Nonnull
 	@Override
 	public EnumSet<EnumFacing> getConnectableSides() {
+
 		return getProxy().getConnectableSides();
 	}
 
 	@Override
 	public void invalidate() {
+
 		if (world != null && !world.isRemote) {
 			destroyAENode();
 		}
@@ -116,13 +126,11 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
 		// Drop items from editor inventory
 		Platform.spawnDrops(world, pos, Arrays.asList(editorInv.slots));
-	}	@Override
-	public Object getServerGuiElement(final EntityPlayer player) {
-		return new ContainerServerTerminal((TileServerCore) getMaster(), this, player);
 	}
 
 	@Override
 	public void update() {
+
 		super.update();
 
 		// Check if tile has master
@@ -171,6 +179,10 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 				initGuiCoordinates();
 			}
 		}
+	}	@Override
+	public Object getServerGuiElement(final EntityPlayer player) {
+
+		return new ContainerServerTerminal((TileServerCore) getMaster(), this, player);
 	}
 
 	private void initGuiCoordinates() {
@@ -182,9 +194,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 			// Trigger request
 			updateRequested = false;
 		}
-	}	@Override
-	public Object getClientGuiElement(final EntityPlayer player) {
-		return new GuiServerTerminal((ContainerServerTerminal) this.getServerGuiElement(player), player);
 	}
 
 	public void notifyBlock() {
@@ -197,6 +206,10 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 		editorInv.readFromNBT(tag.getTagList("#upgradeInventory", 10));
 
 		super.readFromNBT(tag);
+	}	@Override
+	public Object getClientGuiElement(final EntityPlayer player) {
+
+		return new GuiServerTerminal((ContainerServerTerminal) this.getServerGuiElement(player), player);
 	}
 
 	@Override
@@ -209,16 +222,19 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
 	@Override
 	public boolean canBeRotated() {
+
 		return true;
 	}
 
 	@Override
 	public EnumFacing getForward() {
+
 		return forward;
 	}
 
 	@Override
 	public EnumFacing getUp() {
+
 		return null;
 	}
 
@@ -229,6 +245,7 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
 	// ------# Used by packets to sync slots by identifier #------ //
 	public void addWidgetSlotLink(IChannelWidget<?> widget) {
+
 		this.filterSlots.add(widget);
 	}
 

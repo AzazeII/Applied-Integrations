@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
 
+
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -14,7 +15,9 @@ import io.netty.buffer.ByteBuf;
 public class PacketProgressBar extends AIPacket {
 
 	public IEnergyInterface sender;
+
 	public LiquidAIEnergy energy;
+
 	public AEPartLocation energySide;
 
 	public PacketProgressBar() {
@@ -22,6 +25,7 @@ public class PacketProgressBar extends AIPacket {
 	}
 
 	public PacketProgressBar(IEnergyInterface sender, LiquidAIEnergy energy, AEPartLocation energySide) {
+
 		super(sender.getPos().getX(), sender.getPos().getY(), sender.getPos().getZ(), sender.getSide().getFacing(), sender.getWorld());
 		this.sender = sender;
 		this.energy = energy;
@@ -30,6 +34,7 @@ public class PacketProgressBar extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+
 		sender = (IEnergyInterface) readSyncHost(buf);
 		energy = readEnergy(buf);
 		energySide = AEPartLocation.values()[buf.readByte()];
@@ -37,6 +42,7 @@ public class PacketProgressBar extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
+
 		writeSyncHost(sender, buf);
 		writeEnergy(energy, buf);
 		buf.writeByte(energySide.ordinal());

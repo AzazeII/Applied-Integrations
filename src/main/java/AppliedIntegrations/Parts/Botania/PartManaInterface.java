@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Botania;
 
+
 import AppliedIntegrations.Helpers.ManaInterfaceDuality;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Parts.PartEnum;
@@ -36,28 +37,31 @@ import java.util.List;
 
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
-@Optional.InterfaceList(value = {@Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkAttachable", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkEntity", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),
-
-})
+@Optional.InterfaceList(value = {@Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkAttachable", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkEntity", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),})
 /**
  * @Author Azazell
  */ public class PartManaInterface extends PartEnergyInterface implements IManaReceiver, ISparkAttachable, IManaInterface {
 
 	private final int capacity = 100000;
+
 	private int currentMana = 0;
+
 	private boolean isManaFiltered = false;
 
 	public PartManaInterface() {
+
 		super(PartEnum.ManaInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
 	}
 
 	@Override
 	public boolean isFull() {
+
 		return currentMana == capacity;
 	}
 
 	@Override
 	public void recieveMana(int mana) {
+
 		currentMana += mana;
 		if (currentMana > capacity) {
 			currentMana = capacity;
@@ -69,11 +73,13 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
 	@Override
 	public boolean canRecieveManaFromBursts() {
+
 		return true;
 	}
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+
 		if (!getWorld().isRemote) {
 
 		}
@@ -83,6 +89,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.STORAGE_INTERFACE_MANA_HAS_CHANNEL;
@@ -96,6 +103,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall) {
+
 		if (!getWorld().isRemote) {
 			try {
 				if (isManaFiltered) {
@@ -112,30 +120,36 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
 	@Override
 	public IEnergyInterfaceDuality getDuality() {
+
 		return new ManaInterfaceDuality(this);
 	}
 
 	@Override
 	public boolean canAttachSpark(ItemStack itemStack) {
+
 		return true;
 	}
 
 	@Override
 	public void attachSpark(ISparkEntity iSparkEntity) {
+
 	}
 
 	@Override
 	public int getAvailableSpaceForMana() {
+
 		return Math.max(0, capacity - getCurrentMana());
 	}
 
 	@Override
 	public int getCurrentMana() {
+
 		return currentMana;
 	}
 
 	@Override
 	public ISparkEntity getAttachedSpark() {
+
 		List<Entity> sparks = getHostTile().getWorld().getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getHostTile().getPos().up(), getHostTile().getPos().up().add(1, 1, 1)), Predicates.instanceOf(ISparkEntity.class));
 		if (sparks.size() == 1) {
 			Entity e = sparks.get(0);
@@ -147,6 +161,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
 	@Override
 	public boolean areIncomingTranfersDone() {
+
 		return false;
 	}
 
@@ -156,6 +171,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	 * @return amount extracted
 	 */
 	public int ExtractMana(int resource, Actionable actionable) {
+
 		if (node == null) {
 			return 0;
 		}
@@ -177,6 +193,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	 * @return amount injected
 	 */
 	public int InjectMana(int resource, Actionable actionable) {
+
 		if (node == null) {
 			return 0;
 		}
@@ -194,11 +211,13 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
 	@Override
 	public int getManaStored() {
+
 		return currentMana;
 	}
 
 	@Override
 	public void modifyManaStorage(int mana) {
+
 		this.currentMana += mana;
 
 		if (currentMana > capacity) {
@@ -209,6 +228,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	}
 
 	private IManaStorageChannel getManaChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
 	}
 }

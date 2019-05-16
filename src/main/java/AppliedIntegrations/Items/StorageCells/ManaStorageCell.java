@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.StorageCells;
 
+
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import AppliedIntegrations.api.Botania.IAEManaStack;
@@ -33,6 +34,7 @@ public class ManaStorageCell extends AIItemRegistrable implements IStorageCell<I
 	private int maxBytes;
 
 	public ManaStorageCell(String registry, int maxBytes) {
+
 		super(registry);
 		this.maxBytes = maxBytes;
 		this.setMaxStackSize(1);
@@ -41,6 +43,7 @@ public class ManaStorageCell extends AIItemRegistrable implements IStorageCell<I
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
+
 		ICellInventoryHandler<IAEManaStack> inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stack, null, this.getChannel());
 		if (inventoryHandler != null) {
 			final ICellInventory<?> cellInventory = inventoryHandler.getCellInv();
@@ -68,62 +71,74 @@ public class ManaStorageCell extends AIItemRegistrable implements IStorageCell<I
 
 	@Override
 	public int getBytes(@Nonnull ItemStack itemStack) {
+
 		return maxBytes;
 	}
 
 	@Override
 	public int getBytesPerType(@Nonnull ItemStack itemStack) {
+
 		return 1;
 	}
 
 	@Override
 	public int getTotalTypes(@Nonnull ItemStack itemStack) {
+
 		return 1;
 	}
 
 	@Override
 	public boolean isBlackListed(@Nonnull ItemStack itemStack, @Nonnull IAEManaStack iaeManaStack) {
+
 		return false;
 	}
 
 	@Override
 	public boolean storableInStorageCell() {
+
 		return false;
 	}
 
 	@Override
 	public boolean isStorageCell(@Nonnull ItemStack itemStack) {
+
 		return true;
 	}
 
 	@Override
 	public double getIdleDrain() {
+
 		return 1;
 	}
 
 	@Nonnull
 	@Override
 	public IStorageChannel<IAEManaStack> getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
 	}
 
 	@Override
 	public boolean isEditable(ItemStack itemStack) {
+
 		return true;
 	}
 
 	@Override
 	public IItemHandler getUpgradesInventory(ItemStack itemStack) {
+
 		return new CellUpgrades(itemStack, 2);
 	}
 
 	@Override
 	public IItemHandler getConfigInventory(ItemStack itemStack) {
+
 		return new CellConfig(itemStack);
 	}
 
 	@Override
 	public FuzzyMode getFuzzyMode(ItemStack itemStack) {
+
 		return FuzzyMode.IGNORE_ALL;
 	}
 

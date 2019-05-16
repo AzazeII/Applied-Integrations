@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
 
+
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.AccessRestriction;
@@ -12,6 +13,7 @@ import io.netty.buffer.ByteBuf;
 public class PacketAccessModeServerToClient extends AIPacket {
 
 	public AccessRestriction access;
+
 	public PartEnergyStorage partEnergyStorage;
 
 	public PacketAccessModeServerToClient() {
@@ -19,12 +21,14 @@ public class PacketAccessModeServerToClient extends AIPacket {
 	}
 
 	public PacketAccessModeServerToClient(AccessRestriction accessRestriction, PartEnergyStorage part) {
+
 		super(part.getX(), part.getY(), part.getZ(), part.getSide().getFacing(), part.getWorld());
 		access = accessRestriction;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+
 		partEnergyStorage = (PartEnergyStorage) readPart(buf);
 
 		access = AccessRestriction.values()[buf.readInt()];
@@ -32,6 +36,7 @@ public class PacketAccessModeServerToClient extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
+
 		writePart(buf);
 
 		int i = 0;

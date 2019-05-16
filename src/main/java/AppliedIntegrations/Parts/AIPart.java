@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts;
 
+
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.ISyncHost;
@@ -99,6 +100,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public int getX() {
+
 		if (this.getHost() != null) {
 			return this.getHost().getLocation().x;
 		}
@@ -106,10 +108,12 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public final IPartHost getHost() {
+
 		return this.host;
 	}
 
 	public int getY() {
+
 		if (this.getHost() != null) {
 			return this.getHost().getLocation().y;
 		}
@@ -117,6 +121,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public int getZ() {
+
 		if (this.getHost() != null) {
 			return this.getHost().getLocation().z;
 		}
@@ -126,6 +131,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	protected abstract AIGridNodeInventory getUpgradeInventory();
 
 	protected TileEntity getFacingTile() {
+
 		if (this.hostTile == null) {
 			return null;
 		}
@@ -144,6 +150,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public IGridNode getActionableNode() {
+
 		return this.node;
 	}
 
@@ -152,16 +159,19 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public IGridNode getGridNode(final AEPartLocation direction) {
+
 		return getGridNode();
 	}
 
 	@Override
 	public AECableType getCableConnectionType(final AEPartLocation dir) {
+
 		return AECableType.SMART;
 	}
 
 	@Override
 	public void securityBreak() {
+
 		List<ItemStack> drops = new ArrayList<ItemStack>();
 
 		// Get this item
@@ -173,7 +183,6 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 		// Remove the host
 		this.host.removePart(this.cableSide, false);
-
 	}
 
 	@Override
@@ -200,16 +209,19 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public boolean requireDynamicRender() {
+
 		return false;
 	}
 
 	@Override
 	public boolean isSolid() {
+
 		return false;
 	}
 
 	@Override
 	public boolean canConnectRedstone() {
+
 		return false;
 	}
 
@@ -232,6 +244,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public boolean isLadder(final EntityLivingBase entity) {
+
 		return false;
 	}
 
@@ -242,11 +255,13 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public int isProvidingStrongPower() {
+
 		return 0;
 	}
 
 	@Override
 	public int isProvidingWeakPower() {
+
 		return 0;
 	}
 
@@ -276,11 +291,13 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public IGridNode getGridNode() {
+
 		return this.node;
 	}
 
 	@Override
 	public void removeFromWorld() {
+
 		if (this.node != null) {
 			this.node.destroy();
 		}
@@ -337,20 +354,22 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public final TileEntity getHostTile() {
+
 		return this.hostTile;
 	}
 
 	@Override
 	public final IGridNode getExternalFacingNode() {
+
 		return null;
 	}
 
 	@Override
 	public final void setPartHostInfo(final AEPartLocation side, final IPartHost host, final TileEntity tile) {
+
 		this.cableSide = side;
 		this.host = host;
 		this.hostTile = tile;
-
 	}
 
 	@Override
@@ -365,11 +384,13 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public boolean onShiftActivate(EntityPlayer entityPlayer, EnumHand enumHand, Vec3d vec3d) {
+
 		return false;
 	}
 
 	@Override
 	public void getDrops(final List<ItemStack> drops, final boolean wrenched) {
+
 	}
 
 	@Override
@@ -390,21 +411,23 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public void writeToNBT(final NBTTagCompound data, final PartItemStack saveType) {
+
 		if (saveType == PartItemStack.WORLD) {
 			// Set the owner ID
 			data.setInteger(AIPart.NBT_KEY_OWNER, this.ownerID);
 		}
-
 	}
 
 	public abstract double getIdlePowerUsage();
 
 	@Override
 	public AENetworkProxy getProxy() {
+
 		return proxy;
 	}
 
 	public final DimensionalCoord getLocation() {
+
 		return new DimensionalCoord(this.hostTile.getWorld(), this.hostTile.getPos().getX(), this.hostTile.getPos().getY(), this.hostTile.getPos().getZ());
 	}
 
@@ -415,6 +438,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public boolean isPowered() {
+
 		try {
 			// Server side?
 			if (!getWorld().isRemote && (this.proxy != null)) {
@@ -469,6 +493,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public final void markForUpdate() {
+
 		if (this.host != null) {
 			this.host.markForUpdate();
 		}
@@ -476,10 +501,12 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@MENetworkEventSubscribe
 	public final void setPower(final MENetworkPowerStatusChange event) {
+
 		this.updateStatus();
 	}
 
 	public void setupPartFromItem(final ItemStack itemPart) {
+
 		if (itemPart.hasTagCompound()) {
 			this.readFromNBT(itemPart.getTagCompound());
 		}
@@ -487,21 +514,25 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@MENetworkEventSubscribe
 	public void updateChannels(final MENetworkChannelsChanged event) {
+
 		this.updateStatus();
 	}
 
 	@Override
 	public BlockPos getPos() {
+
 		return getHostTile().getPos();
 	}
 
 	@Override
 	public World getWorld() {
+
 		return getHostTile().getWorld();
 	}
 
 	@Override
 	public AEPartLocation getSide() {
+
 		return cableSide;
 	}
 
@@ -521,6 +552,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public IMEMonitor<IAEEnergyStack> getEnergyInventory() {
+
 		IGridNode n = getGridNode();
 		if (n == null) {
 			return null;
@@ -538,6 +570,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	//*---------*Storage features*---------*//
 	public IEnergyStorageChannel getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 

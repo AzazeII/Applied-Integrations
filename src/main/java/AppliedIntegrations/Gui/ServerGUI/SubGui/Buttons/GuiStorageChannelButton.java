@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
+
 import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.AIApi;
@@ -25,14 +26,17 @@ public class GuiStorageChannelButton extends GuiServerButton {
 
 	// Array list of all storage channels registered
 	private static final List<IStorageChannel<? extends IAEStack<?>>> channelList = new ArrayList<>(Objects.requireNonNull(AEApi.instance().storage().storageChannels()));
+
 	// Current storage channel of button
 	private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 
 	public GuiStorageChannelButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+
 		super(terminal, ID, xPosition, yPosition, width, height, text);
 	}
 
 	public static List<IStorageChannel<? extends IAEStack<?>>> getChannelList() {
+
 		return channelList;
 	}
 
@@ -46,10 +50,10 @@ public class GuiStorageChannelButton extends GuiServerButton {
 			// Make channel next in list
 			channel = channelList.get(channelList.indexOf(channel) + 1);
 		}
-
 	}
 
 	public IStorageChannel<? extends IAEStack<?>> getChannel() {
+
 		return channel;
 	}
 

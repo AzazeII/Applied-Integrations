@@ -1,5 +1,6 @@
 package AppliedIntegrations.api;
 
+
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
@@ -49,6 +50,7 @@ public abstract class AIApi {
 	}
 
 	public static AIApi instance() {
+
 		try {
 			// Create reflection of our api
 			Class apiReflection = Class.forName("AppliedIntegrations.ApiInstance");

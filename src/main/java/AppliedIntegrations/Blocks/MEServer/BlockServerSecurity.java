@@ -1,5 +1,6 @@
 package AppliedIntegrations.Blocks.MEServer;
 
+
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
@@ -24,6 +25,7 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
  */
 public class BlockServerSecurity extends BlockAIRegistrable implements ITileEntityProvider {
 	public BlockServerSecurity(String reg, String unloc) {
+
 		super(reg, unloc);
 	}
 
@@ -35,11 +37,13 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
 
 	@Override
 	public TileEntity createNewTileEntity(@Nullable World p_149915_1_, int p_149915_2_) {
+
 		return new TileServerSecurity();
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
 		super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
 
 		// Check if player not sneaking
@@ -81,5 +85,4 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
 		}
 		return false;
 	}
-
 }

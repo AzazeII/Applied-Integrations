@@ -1,5 +1,6 @@
 package AppliedIntegrations.Blocks;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
@@ -41,24 +42,32 @@ public enum BlocksEnum {
 	BlackHole(new BlockBlackHole("BlockSingularity", "Black Hole"), TileEnum.BlackHole, AIConfig.enableBlackHoleStorage),
 	WhiteHole(new BlockWhiteHole("BlockWhiteHole", "White Hole"), TileEnum.WhiteHole, AIConfig.enableBlackHoleStorage),
 	BlockMEPylon(new BlockMEPylon("BlockMEPylon", "ME Pylon"), TileEnum.MEPylon, AIConfig.enableBlackHoleStorage);
+
 	private static LinkedHashMap<Block, ItemBlock> itemBlocks = new LinkedHashMap<>();
+
 	public BlockAIRegistrable b;
+
 	public TileEnum tileEnum;
+
 	public ItemBlock itemBlock;
+
 	public boolean enabled;
 
 	BlocksEnum(BlockAIRegistrable b, TileEnum t, boolean enabled) {
+
 		this(b);
 		this.tileEnum = t;
 		this.enabled = enabled;
 	}
 
 	BlocksEnum(BlockAIRegistrable block) {
+
 		this.b = block;
 		this.b.setCreativeTab(AppliedIntegrations.AI);
 	}
 
 	public static void register() {
+
 		for (BlocksEnum blocksEnum : values()) {
 			// Check if feature enabled
 			if (!blocksEnum.enabled) {
@@ -81,10 +90,12 @@ public enum BlocksEnum {
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels() {
+
 	}
 
 	@SideOnly(Side.CLIENT)
 	public static void registerItemModels() {
+
 		for (ItemBlock itemBlk : itemBlocks.values()) {
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk, 0, new ModelResourceLocation(itemBlk.getRegistryName(), "inventory"));
 		}
@@ -92,6 +103,7 @@ public enum BlocksEnum {
 
 	// Do not call until Common.preInit:37
 	public ItemBlock getItemBlock() {
+
 		return this.itemBlock;
 	}
 }

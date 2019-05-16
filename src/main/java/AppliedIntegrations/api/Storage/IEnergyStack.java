@@ -1,5 +1,6 @@
 package AppliedIntegrations.api.Storage;
 
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -125,5 +126,4 @@ public interface IEnergyStack {
 	 * @param stream
 	 */
 	void writeToStream(@Nonnull ByteBuf stream);
-
 }

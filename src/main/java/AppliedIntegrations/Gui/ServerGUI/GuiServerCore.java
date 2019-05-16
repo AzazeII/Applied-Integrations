@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
@@ -17,6 +18,7 @@ public class GuiServerCore extends AIBaseGui {
 	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_card_storage.png");
 
 	public GuiServerCore(ContainerServerCore container, EntityPlayer p) {
+
 		super(container, p);
 	}
 
@@ -37,6 +39,7 @@ public class GuiServerCore extends AIBaseGui {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		// Draw string
@@ -47,6 +50,7 @@ public class GuiServerCore extends AIBaseGui {
 
 	@Override
 	public ISyncHost getSyncHost() {
+
 		return null;
 	}
 

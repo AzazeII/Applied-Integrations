@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 
+
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketAccessModeClientToServer;
@@ -16,6 +17,7 @@ public class HandlerAccessModeServerToClient implements IMessageHandler<PacketAc
 
 	@Override
 	public PacketAccessModeClientToServer onMessage(PacketAccessModeServerToClient message, MessageContext ctx) {
+
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiEnergyStoragePart) {

@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
+
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Parts.AIPart;
@@ -14,13 +15,17 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class PacketGuiShift extends AIPacket {
 	public EntityPlayer player;
+
 	public AIGuiHandler.GuiEnum gui;
+
 	public AIPart part;
 
 	public PacketGuiShift() {
+
 	}
 
 	public PacketGuiShift(AIGuiHandler.GuiEnum newGui, IPriorityHostExtended part) {
+
 		super(part.getPos().getX(), part.getPos().getY(), part.getPos().getZ(), part.getSide().getFacing(), part.getWorld());
 
 		gui = newGui;

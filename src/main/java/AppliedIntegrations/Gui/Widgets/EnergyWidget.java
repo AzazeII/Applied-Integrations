@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.Widgets;
 
+
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import net.minecraft.client.Minecraft;
@@ -14,14 +15,17 @@ public abstract class EnergyWidget extends AIWidget {
 	private EnergyStack currentStack;
 
 	public EnergyWidget(IWidgetHost hostGUI, int xPos, int yPos) {
+
 		super(hostGUI, xPos, yPos);
 	}
 
 	public EnergyStack getCurrentStack() {
+
 		return currentStack;
 	}
 
 	public void setCurrentStack(@Nonnull EnergyStack currentStack) {
+
 		this.currentStack = currentStack;
 	}
 

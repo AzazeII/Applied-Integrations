@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.LogicBus;
 
+
 import AppliedIntegrations.Blocks.LogicBus.modeling.ModeledLogicBus;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.AITile;
@@ -36,6 +37,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 	private TileLogicBusCore master;
 
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
+
 		if (!world.isRemote) {
 			// Check if it's wrench
 			if (Platform.isWrench(p, p.getHeldItem(hand), pos)) {
@@ -80,19 +82,29 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 
 	@Override
 	public boolean hasMaster() {
+
 		return master != null;
 	}
 
 	// "Logic master" you get ;)
 	protected TileLogicBusCore getLogicMaster() {
+
 		return (TileLogicBusCore) getMaster();
 	}
 
 	@Override
 	public IMaster getMaster() {
+
 		return master;
+	}
+
+	@Override
+	public void setMaster(IMaster master) {
+
+		this.master = (TileLogicBusCore) master;
 	}	@Override
 	public void createAENode() {
+
 		if (!world.isRemote && hasMaster()) {
 			if (gridNode == null) {
 				gridNode = AEApi.instance().grid().createGridNode(this);
@@ -101,14 +113,10 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 		}
 	}
 
-	@Override
-	public void setMaster(IMaster master) {
-		this.master = (TileLogicBusCore) master;
-	}
-
 	@Nonnull
 	@Override
 	public Iterator<IGridNode> getMultiblockNodes() {
+
 		if (hasMaster()) {
 			return getLogicMaster().getMultiblockNodes();
 		}
@@ -117,12 +125,14 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
+
 		super.readFromNBT(compound);
 		//addMaster(getMaster().readMaster(compound));
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+
 		super.writeToNBT(compound);
 
 		//getMaster().writeMaster(compound);
@@ -148,6 +158,8 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 		return temp;
 	}
 
+
+
 	@Override
 	public void update() {
 		//create grid node on add to world
@@ -158,15 +170,14 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 	}
 
 
-
 	@Override
 	public void notifyBlock() {
+
 		world.setBlockState(pos, world.getBlockState(pos).withProperty(ModeledLogicBus.valid, hasMaster() && !isCorner()));
 	}
 
 	public boolean isCorner() {
+
 		return isCorner;
 	}
-
-
 }

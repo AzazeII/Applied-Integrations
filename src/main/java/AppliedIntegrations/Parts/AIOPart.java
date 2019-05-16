@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts;
 
+
 import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
@@ -68,44 +69,67 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	// Mininmum transfer per second
 	private final static int MINIMUM_TRANSFER_PER_SECOND = 4000;
+
 	// Size of filter
 	private final static int MAX_FILTER_SIZE = 9;
+
 	private final static int BASE_SLOT_INDEX = 4;
+
 	private final static int[] TIER2_INDEXS = {0, 2, 6, 8};
+
 	private final static int[] TIER1_INDEXS = {1, 3, 5, 7};
+
 	// Passive ae drain
 	private static final double IDLE_POWER_DRAIN = 0.7;
+
 	private static final RedstoneMode DEFAULT_REDSTONE_MODE = IGNORE;
+
 	private static final String NBT_KEY_REDSTONE_MODE = "redstoneMode";
+
 	private static final String NBT_KEY_FILTER_NUMBER = "EnergyFilter#";
+
 	// Current max transfer
 	protected int maxTransfer;
+
 	protected List<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>(AIOPart.MAX_FILTER_SIZE);
+
 	protected TileEntity adjacentEnergyStorage;
+
 	private EntityPlayer player;
+
 	private boolean lastRedstone;
+
 	private int[] availableFilterSlots = {AIOPart.BASE_SLOT_INDEX};
+
 	// list of all container listeners
 	private List<ContainerPartEnergyIOBus> listeners = new ArrayList<ContainerPartEnergyIOBus>();
+
 	// Current mode
 	private RedstoneMode redstoneMode = AIOPart.DEFAULT_REDSTONE_MODE;
+
 	private byte filterSize;
+
 	private byte upgradeSpeedCount = 0;
 
 	private boolean redstoneControlled;
+
 	private boolean updateRequested;
+
 	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
 
 	private int priority = 0;
+
 	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("ME Energy Export/Import Bus", 4, 1, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+
 			return validateStack(itemStack);
 		}
 	};
 
 	public AIOPart(final PartEnum associatedPart) {
+
 		super(associatedPart);
 
 		// Change transfer
@@ -167,12 +191,14 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	}
 
 	private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled) {
+
 		if (player != null) {
 			NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneMode, redstoneControlled, this), (EntityPlayerMP) this.player);
 		}
 	}
 
 	public void addListener(final ContainerPartEnergyIOBus container) {
+
 		if (!this.listeners.contains(container)) {
 			this.listeners.add(container);
 		}
@@ -180,6 +206,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	@Override
 	public AIGridNodeInventory getUpgradeInventory() {
+
 		return this.upgradeInventory;
 	}
 
@@ -210,6 +237,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	 */
 	@Override
 	public int getLightLevel() {
+
 		return (this.isActive() ? 4 : 0);
 	}
 
@@ -254,6 +282,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	@Override
 	public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position) {
+
 		super.onActivate(player, hand, position);
 		// Activation logic is server sided
 		if (getLogicalSide() == SERVER) {
@@ -275,6 +304,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
+
 		for (ItemStack stack : upgradeInventory.slots) {
 			if (stack == null) {
 				continue;
@@ -308,7 +338,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 				}
 
 				data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
-
 			}
 		}
 	}
@@ -319,11 +348,13 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	 */
 	@Override
 	public double getIdlePowerUsage() {
+
 		return AIOPart.IDLE_POWER_DRAIN;
 	}
 
 	@Override
 	public TickingRequest getTickingRequest(final IGridNode node) {
+
 		return new TickingRequest(MINIMUM_TICKS_PER_OPERATION, MAXIMUM_TICKS_PER_OPERATION, false, false);
 	}
 
@@ -381,7 +412,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 				// Notify listeners
 				notifyListenersOfStateUpdate(filterSize, redstoneControlled);
-
 			}
 		}
 
@@ -394,6 +424,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	}
 
 	private boolean canDoWork() {
+
 		boolean canWork = true;
 
 		if (redstoneMode == RedstoneMode.HIGH_SIGNAL) {
@@ -409,22 +440,24 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		}
 
 		return canWork;
-
 	}
 
 	protected int getTransferAmountPerSecond() {
+
 		return BASE_ENERGY_TRANSFER + (this.upgradeSpeedCount * TRANSFER_PER_UPGRADE);
 	}
 
 	public abstract TickRateModulation doWork(int toTransfer, IGridNode node);
 
 	private void notifyListenersOfFilterEnergyChange(int i, LiquidAIEnergy energy) {
+
 		if (player != null) {
 			NetworkHandler.sendTo(new PacketFilterServerToClient(energy, i, this), (EntityPlayerMP) this.player);
 		}
 	}
 
 	public void removeListener(final ContainerPartEnergyIOBus container) {
+
 		this.listeners.remove(container);
 	}
 
@@ -438,31 +471,37 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	@Override
 	public int getPriority() {
+
 		return this.priority;
 	}
 
 	@Override
 	public void setPriority(int newValue) {
+
 		this.priority = newValue;
 	}
 
 	@Override
 	public ItemStack getItemStackRepresentation() {
+
 		return getItemStack(PartItemStack.BREAK);
 	}
 
 	@Override
 	public GuiBridge getGuiBridge() {
+
 		return null;
 	}
 
 	@Nonnull
 	@Override
 	public AIGuiHandler.GuiEnum getGui() {
+
 		return AIGuiHandler.GuiEnum.GuiIOPart;
 	}
 
 	public void setRedstoneMode(RedstoneMode mode) {
+
 		this.redstoneMode = mode;
 
 		this.redstoneControlled = mode != IGNORE;

@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.ContainerLogicBus;
 import AppliedIntegrations.api.ISyncHost;
@@ -19,6 +20,7 @@ public class GuiLogicBus extends AIBaseGui {
 	public final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/logic_bus.png");
 
 	public GuiLogicBus(EntityPlayer player, TileLogicBusCore maybeCore, ContainerLogicBus container) {
+
 		super(container, player);
 	}
 
@@ -44,6 +46,7 @@ public class GuiLogicBus extends AIBaseGui {
 
 	@Override
 	public ISyncHost getSyncHost() {
+
 		return null;
 	}
 

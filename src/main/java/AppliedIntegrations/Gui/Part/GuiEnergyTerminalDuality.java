@@ -43,18 +43,29 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelectorGui {
 	private static final int WIDGETS_PER_ROW = 9;
+
 	private static final int WIDGET_ROWS_PER_PAGE = 4;
+
 	@Nonnull
 	private static ContainerEnergyTerminal LinkedContainer;
+
 	private final List<WidgetEnergySelector> widgetEnergySelectors = new ArrayList<>();
+
 	public IItemList<IAEEnergyStack> list = new EnergyList();
+
 	public SortOrder sortMode = SortOrder.NAME;
+
 	public GuiImgButton sortButton;
+
 	private ResourceLocation mainTexture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.terminal.png");
+
 	private EntityPlayer player;
+
 	@Nonnull
 	private EnergyStack selectedStack = new EnergyStack(null, 0);
+
 	private PartEnergyTerminal part;
+
 	// Create comparator for list
 	private Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {
 		@Override
@@ -106,6 +117,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 	};
 
 	public GuiEnergyTerminalDuality(ContainerEnergyTerminal container, PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
+
 		super(container, player);
 
 		LinkedContainer = container;
@@ -122,13 +134,13 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 			for (int x = 0; x < WIDGETS_PER_ROW; x++) {
 				// Update widget in array
 				this.widgetEnergySelectors.add(new WidgetEnergySelector(this, 7 + (x * 18), 17 + (y * 18)));
-
 			}
 		}
 	}
 
 	@Override
 	public void initGui() {
+
 		super.initGui();
 		this.buttonList.add(this.sortButton = new GuiImgButton(this.guiLeft - 18, this.guiTop, Settings.SORT_BY, sortMode));
 	}
@@ -148,32 +160,38 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 	@Nonnull
 	@Override
 	public IEnergySelectorContainer getContainer() {
+
 		return LinkedContainer;
 	}
 
 	@Nullable
 	@Override
 	public LiquidAIEnergy getSelectedEnergy() {
+
 		return selectedStack.getEnergy();
 	}
 
 	@Override
 	public void setSelectedEnergy(@Nullable LiquidAIEnergy energy) {
+
 		selectedStack.setEnergy(energy);
 	}
 
 	@Override
 	public void setAmount(long stackSize) {
+
 		selectedStack.amount = stackSize;
 	}
 
 	@Override
 	public ISyncHost getSyncHost() {
+
 		return part;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
+
 		if (host instanceof PartEnergyTerminal) {
 			part = (PartEnergyTerminal) host;
 		}
@@ -210,6 +228,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+
 		super.onButtonClicked(btn, mouseButton);
 
 		// Check if click was performed on sort mode button

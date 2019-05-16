@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
+
 import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
@@ -18,6 +19,7 @@ public class WidgetFluidSlot extends GuiFluidSlot implements IChannelWidget<IAEF
 	private final IWidgetHost host;
 
 	public WidgetFluidSlot(IAEFluidTank fluids, int slot, int id, int x, int y, IWidgetHost host) {
+
 		super(fluids, slot, id, x, y);
 		this.host = host;
 	}
@@ -52,6 +54,7 @@ public class WidgetFluidSlot extends GuiFluidSlot implements IChannelWidget<IAEF
 	}
 
 	public boolean isMouseOverWidget(final int mouseX, final int mouseY) {
+
 		return AIGuiHelper.INSTANCE.isPointInGuiRegion(this.yPos(), this.xPos(), AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1, mouseX, mouseY, this.host.getLeft(), this.host.getTop());
 	}
 }

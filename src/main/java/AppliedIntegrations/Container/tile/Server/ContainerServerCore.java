@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.tile.Server;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
@@ -17,11 +18,13 @@ import javax.annotation.Nonnull;
  */
 public class ContainerServerCore extends ContainerWithPlayerInventory {
 	private static final int CARD_SLOT_ROWS = 5;
+
 	private static final int CARD_SLOT_COLUMNS = 6;
 
 	private TileServerCore master;
 
 	public ContainerServerCore(EntityPlayer player, TileServerCore master) {
+
 		super(player);
 
 		// Update master
@@ -49,6 +52,7 @@ public class ContainerServerCore extends ContainerWithPlayerInventory {
 						// Override icon getter for this slot
 						@SideOnly(Side.CLIENT)
 						public String getSlotTexture() {
+
 							return AppliedIntegrations.modid + ":gui/slots/network_card_slot";
 						}
 					});
@@ -62,12 +66,14 @@ public class ContainerServerCore extends ContainerWithPlayerInventory {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer p) {
+
 		return true;
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber) {
+
 		return ItemStack.EMPTY;
 	}
 }

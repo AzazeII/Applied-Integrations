@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.ServerGUI;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
@@ -57,27 +58,40 @@ import static AppliedIntegrations.tile.Server.TileServerSecurity.*;
 public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
 	private static final int GUI_WIDTH = 192;
+
 	private static final int GUI_HEIGH = 256;
+
 	public TileServerCore mInstance;
+
 	public EntityPlayer player;
+
 	private GuiSecurityPermissionsButton securityPermissionButton;
+
 	private GuiStorageChannelButton storageChannelButton;
+
 	private GuiListTypeButton listTypeButton;
+
 	private TileServerSecurity terminal;
+
 	private ChangeHandler<ItemStack> cardChangeUpdateHandler = new ChangeHandler<>();
+
 	/**
 	 * Contains maps of lists of 27 widgets linked to given storage channel from given security permission.
 	 * Each widget represent filter for material in given storage channel.
 	 */
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelWidget<?>>>> permissionChannelWidgetMap = new LinkedHashMap<>();
+
 	/**
 	 * Contains maps of modes linked to given storage channel from given security permissions
 	 */
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> permissionChannelModeMap = new LinkedHashMap<>();
+
 	private LinkedHashMap<SecurityPermissions, AEFluidInventory> tanks = new LinkedHashMap<>();
+
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_terminal.png");
 
 	public GuiServerTerminal(ContainerServerTerminal container, EntityPlayer player) {
+
 		super(container, player);
 
 		this.player = player;
@@ -86,24 +100,27 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 		for (int i = 0; i < GuiSecurityPermissionsButton.getPermissionList().size(); i++)
 			// Put new inv in tanks
 			tanks.put(GuiSecurityPermissionsButton.getPermissionList().get(i), new AEFluidInventory(null, 27));
-
 	}
 
 	public IncludeExclude getIncludeExcludeMode() {
+
 		return permissionChannelModeMap.get(securityPermissionButton.getCurrentPermissions()).get(storageChannelButton.getChannel());
 	}
 
 	public void setIncludeExcludeMode(IncludeExclude mode) {
+
 		permissionChannelModeMap.get(securityPermissionButton.getCurrentPermissions()).put(storageChannelButton.getChannel(), mode);
 	}
 
 	@Override
 	public ISyncHost getSyncHost() {
+
 		return terminal;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
+
 		if (host instanceof TileServerSecurity) {
 			terminal = (TileServerSecurity) host;
 		}
@@ -111,6 +128,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
 	@Override
 	public void initGui() {
+
 		super.initGui();
 
 		// Add new security permissions button to button list
@@ -313,6 +331,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 	}
 
 	private void syncWithServer(NBTTagCompound tag) {
+
 		NetworkHandler.sendToServer(new PacketServerFeedback(tag, terminal));
 	}
 
@@ -441,6 +460,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(final int mouseX, final int mouseY) {
+
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		// Draw gui strings

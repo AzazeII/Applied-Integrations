@@ -18,6 +18,7 @@ public abstract class AIContainer extends Container {
 	 * The player interacting with this container.
 	 */
 	public final EntityPlayer player;
+
 	private final List<Slot> slotMap = new ArrayList<>();
 
 	public AIContainer(final EntityPlayer player) {
@@ -47,11 +48,13 @@ public abstract class AIContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
+
 		return true;
 	}
 
 	@Nullable
 	public Slot getSlotOrNull(final int slotNumber) {
+
 		return this.slotMap.get(slotNumber);
 	}
 }

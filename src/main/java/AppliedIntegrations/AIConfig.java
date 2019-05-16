@@ -1,5 +1,6 @@
 package AppliedIntegrations;
 
+
 import appeng.api.config.IncludeExclude;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -14,21 +15,37 @@ import java.util.List;
  */
 public class AIConfig {
 	private static final String CATEGORY_FEATURES = "Features";
+
 	private static final String CATEGORY_TILES = "tile entities";
+
 	private static final String CATEGORY_PROPERTIES = "Properties";
+
 	public static boolean enableWebServer;
+
 	public static boolean enableEnergyFeatures; // #1
+
 	public static boolean enableManaFeatures; // #2
+
 	public static boolean enableEmberFeatures; // #3
+
 	public static boolean enableStarlightFeatures; // #4
+
 	public static boolean enableBlackHoleStorage; // #5
+
 	public static boolean enableMEServer; // #6
+
 	public static boolean enableLogicBus; // #7
+
 	public static int interfaceMaxStorage; // #8
+
 	public static IncludeExclude defaultListMode; // #9
+
 	public static int webUIPort;
+
 	public static int maxPylonDistance;
+
 	public static double pylonDrain;
+
 	private static Configuration config = null;
 
 	// Called only on server
@@ -149,6 +166,7 @@ public class AIConfig {
 	}
 
 	public static Configuration getConfig() {
+
 		return config;
 	}
 }

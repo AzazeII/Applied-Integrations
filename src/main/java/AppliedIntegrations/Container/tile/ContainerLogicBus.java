@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.tile;
 
+
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class ContainerLogicBus extends ContainerWithPlayerInventory {
 	public ContainerLogicBus(EntityPlayer player, TileLogicBusCore core) {
+
 		super(player);
 
 		this.bindPlayerInventory(player.inventory, 134, 182);
@@ -25,5 +27,4 @@ public class ContainerLogicBus extends ContainerWithPlayerInventory {
             }
         }*/
 	}
-
 }

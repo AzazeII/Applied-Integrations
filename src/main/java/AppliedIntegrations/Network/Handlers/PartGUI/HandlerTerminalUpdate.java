@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 
+
 import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketTerminalUpdate;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ public class HandlerTerminalUpdate implements IMessageHandler<PacketTerminalUpda
 
 	@Override
 	public PacketTerminalUpdate onMessage(PacketTerminalUpdate message, MessageContext ctx) {
+
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof GuiEnergyTerminalDuality) {

@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import appeng.api.AEApi;
 import appeng.api.parts.IPartModel;
@@ -65,6 +66,7 @@ public enum PartModelEnum implements IPartModel {
 	List<ResourceLocation> locations;
 
 	PartModelEnum(Object... modelNames) {
+
 		ImmutableList.Builder builder = new ImmutableList.Builder();
 		for (Object o : modelNames) {
 			if (o instanceof IPartModel) {
@@ -77,6 +79,7 @@ public enum PartModelEnum implements IPartModel {
 	}
 
 	public static void registerModels() {
+
 		IPartModels partModels = AEApi.instance().registries().partModels();
 		for (PartModelEnum model : values()) {
 			partModels.registerModels(model.getModels());
@@ -85,12 +88,14 @@ public enum PartModelEnum implements IPartModel {
 
 	@Override
 	public boolean requireCableConnection() {
+
 		return true;
 	}
 
 	@Nonnull
 	@Override
 	public List<ResourceLocation> getModels() {
+
 		return locations;
 	}
 }

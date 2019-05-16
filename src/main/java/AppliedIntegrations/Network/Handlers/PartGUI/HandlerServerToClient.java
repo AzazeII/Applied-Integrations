@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 
+
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
@@ -19,6 +20,7 @@ public class HandlerServerToClient implements IMessageHandler<PacketFilterServer
 
 	@Override
 	public PacketFilterServerToClient onMessage(PacketFilterServerToClient message, MessageContext ctx) {
+
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Gui gui = Minecraft.getMinecraft().currentScreen;
 			if (gui instanceof IFilterGUI) {

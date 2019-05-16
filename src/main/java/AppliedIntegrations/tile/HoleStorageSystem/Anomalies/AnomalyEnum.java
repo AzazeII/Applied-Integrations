@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.Anomalies;
 
+
 import AppliedIntegrations.Blocks.Additions.BlockWhiteHole;
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Utils.AILog;
@@ -152,7 +153,7 @@ public enum AnomalyEnum {
 
 	// Action method
 	AnomalyEnum(Consumer<TileBlackHole> action) {
+
 		this.action = action;
 	}
-
 }

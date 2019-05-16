@@ -1,5 +1,6 @@
 package AppliedIntegrations.Utils;
 
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
@@ -9,6 +10,7 @@ public class AIGridNodeItemHandler implements IItemHandler {
 	private final AIGridNodeInventory inner;
 
 	public AIGridNodeItemHandler(AIGridNodeInventory inv) {
+
 		this.inner = inv;
 	}
 

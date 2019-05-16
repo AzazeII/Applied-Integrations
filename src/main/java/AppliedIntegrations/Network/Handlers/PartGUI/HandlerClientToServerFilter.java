@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 
+
 import AppliedIntegrations.Network.Packets.PartGUI.PacketClientToServerFilter;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -16,6 +17,7 @@ public class HandlerClientToServerFilter implements IMessageHandler<PacketClient
 
 	@Override
 	public PacketClientToServerFilter onMessage(PacketClientToServerFilter message, MessageContext ctx) {
+
 		if (message.host instanceof IEnergyMachine) {
 			((IEnergyMachine) message.host).updateFilter(message.energy, message.index);
 		}

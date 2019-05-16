@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
 
+
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.AIPart;
@@ -14,14 +15,19 @@ import io.netty.buffer.ByteBuf;
 public class PacketFullSync extends AIPacket {
 
 	public RedstoneMode redstoneMode;
+
 	public AIPart part;
+
 	public byte filterSize;
+
 	public boolean redstoneControl;
 
 	public PacketFullSync() {
+
 	}
 
 	public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, boolean redstoneControlled, AIOPart aioPart) {
+
 		super(aioPart.getX(), aioPart.getY(), aioPart.getZ(), aioPart.getSide().getFacing(), aioPart.getWorld());
 
 		this.filterSize = filterSize;

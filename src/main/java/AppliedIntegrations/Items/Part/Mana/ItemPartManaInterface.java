@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.Part.Mana;
 
+
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.ItemPartAIBase;
 import AppliedIntegrations.Parts.Botania.PartManaInterface;
@@ -12,12 +13,14 @@ import javax.annotation.Nullable;
  */
 public class ItemPartManaInterface extends ItemPartAIBase<PartManaInterface> implements IBotaniaIntegrated {
 	public ItemPartManaInterface(String id) {
+
 		super(id);
 	}
 
 	@Nullable
 	@Override
 	public PartManaInterface createPartFromItemStack(ItemStack itemStack) {
+
 		return new PartManaInterface();
 	}
 }

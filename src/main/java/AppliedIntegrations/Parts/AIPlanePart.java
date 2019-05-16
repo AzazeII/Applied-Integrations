@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts;
 
+
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;
 import appeng.api.config.SecurityPermissions;
@@ -28,46 +29,56 @@ import java.util.List;
 public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
 	protected static final int ENERGY_TRANSFER = 800;
+
 	protected List<Entity> currentEntities = new ArrayList<>();
+
 	private TimeHandler lightningHandler = new TimeHandler();
 
 	public AIPlanePart(PartEnum associatedPart, SecurityPermissions... interactionPermissions) {
+
 		super(associatedPart);
 	}
 
 	@Override
 	public final void onEntityCollision(Entity entity) {
+
 	}
 
 	@Override
 	public float getCableConnectionLength(AECableType cable) {
+
 		return 2.0F;
 	}
 
 	@Override
 	protected AIGridNodeInventory getUpgradeInventory() {
+
 		return null;
 	}
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
+
 		bch.addBox(5, 5, 14, 11, 11, 15);
 		bch.addBox(1, 1, 15, 15, 15, 16);
 	}
 
 	@Override
 	public int getLightLevel() {
+
 		return 0;
 	}
 
 	@Override
 	public double getIdlePowerUsage() {
+
 		return 1;
 	}
 
 	@Nonnull
 	@Override
 	public TickingRequest getTickingRequest(IGridNode iGridNode) {
+
 		return new TickingRequest(1, 1, false, false);
 	}
 

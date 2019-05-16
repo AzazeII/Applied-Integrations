@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
+
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.ISyncHost;
@@ -22,14 +23,18 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 public abstract class AIPacket implements IMessage {
 	public World w;
+
 	public EnumFacing side;
+
 	public int x, y, z;
 
 	public AIPacket() {
+
 		this(0, 0, 0, null, null);
 	}
 
 	public AIPacket(int x, int y, int z, EnumFacing side, World w) {
+
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -38,6 +43,7 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected LiquidAIEnergy readEnergy(ByteBuf buf) {
+
 		int buffed = buf.readInt();
 
 		if (buffed != -1) {
@@ -47,6 +53,7 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writeEnergy(LiquidAIEnergy energy, ByteBuf buf) {
+
 		if (energy != null) {
 			buf.writeInt(energy.getIndex());
 		} else {
@@ -55,28 +62,32 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writeVec(Vec3d vecA, ByteBuf buf) {
+
 		writePos(new BlockPos(vecA), buf);
 	}
 
 	protected void writePos(BlockPos pos, ByteBuf buf) {
+
 		buf.writeLong(pos.toLong());
 	}
 
 	protected Vec3d readVec(ByteBuf buf) {
+
 		return new Vec3d(readPos(buf));
 	}
 
 	protected BlockPos readPos(ByteBuf buf) {
+
 		return BlockPos.fromLong(buf.readLong());
 	}
 
 	protected void writeSyncHost(ISyncHost host, ByteBuf buf) {
+
 		if (host instanceof AIPart) {
 			// Write state to buf
 			buf.writeBoolean(true);
 
 			writePart(buf);
-
 		} else if (host instanceof AITile) {
 			// Write state to buf
 			buf.writeBoolean(false);
@@ -86,6 +97,7 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writePart(ByteBuf buf) {
+
 		buf.writeLong(new BlockPos(x, y, z).toLong());
 
 		writeWorld(buf, w);
@@ -93,15 +105,18 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writeTile(TileEntity tile, ByteBuf buf) {
+
 		writePos(tile.getPos(), buf);
 		writeWorld(buf, tile.getWorld());
 	}
 
 	protected void writeWorld(ByteBuf buf, World world) {
+
 		buf.writeInt(world.provider.getDimension());
 	}
 
 	protected ISyncHost readSyncHost(ByteBuf buf) {
+
 		boolean isPart = buf.readBoolean();
 
 		ISyncHost host;
@@ -116,6 +131,7 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected AIPart readPart(ByteBuf buf) {
+
 		BlockPos pos = BlockPos.fromLong(buf.readLong());
 		World w = readWorld(buf);
 
@@ -132,11 +148,13 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected TileEntity readTile(ByteBuf buf) {
+
 		BlockPos pos = readPos(buf);
 		return readWorld(buf).getTileEntity(pos);
 	}
 
 	public World readWorld(ByteBuf buf) {
+
 		World world = DimensionManager.getWorld(buf.readInt());
 
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
@@ -149,6 +167,7 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	private EnumFacing readSide(ByteBuf buf) {
+
 		return EnumFacing.getFront(buf.readInt());
 	}
 }

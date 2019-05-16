@@ -1,5 +1,6 @@
 package AppliedIntegrations.Inventory;
 
+
 import appeng.api.storage.data.IAEStack;
 
 /**

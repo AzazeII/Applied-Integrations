@@ -1,5 +1,6 @@
 package AppliedIntegrations.Integration.Botania;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import net.minecraft.util.ResourceLocation;
 import vazkii.botania.api.BotaniaAPI;
@@ -16,12 +17,15 @@ public class BotaniaEntryHelper {
 
 	// Botania and ae2 cross
 	private LexiconEntry crossover;
+
 	// Alfheim recipes
 	private LexiconEntry crystals;
+
 	// Machines
 	private LexiconEntry manaManipulation;
 
 	public void createPages() {
+
 		BotaniaAPI.addCategory(appliedIntegrations = new BLexiconCategory("Applied Integrations", 4));
 		appliedIntegrations.setIcon(new ResourceLocation(AppliedIntegrations.modid, "textures/items/manastoragecell_1k.png"));
 

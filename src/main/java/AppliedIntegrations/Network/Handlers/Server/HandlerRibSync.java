@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers.Server;
 
+
 import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
 import AppliedIntegrations.tile.Server.TileServerRib;
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ public class HandlerRibSync implements IMessageHandler<PacketRibSync, PacketRibS
 
 	@Override
 	public PacketRibSync onMessage(PacketRibSync message, MessageContext ctx) {
+
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			// Get client minecraft world, then get position of recorded tile entity and get tile with client world
 			TileServerRib rib = (TileServerRib) Minecraft.getMinecraft().world.getTileEntity(message.rib.getPos());

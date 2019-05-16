@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.helpers.Crafting;
 
+
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -14,6 +15,7 @@ public class ServerPortCPUHandler extends TileCraftingStorageTile {
 	private final TileServerCore host;
 
 	public ServerPortCPUHandler(TileServerCore core) {
+
 		this.host = core;
 	}
 

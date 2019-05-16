@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container;
 
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -11,12 +12,16 @@ import net.minecraft.item.ItemStack;
 public abstract class ContainerWithPlayerInventory extends AIContainer {
 	// Size(height and width) of each slot
 	protected static final int SLOT_SIZE = 18;
+
 	// X offset of inventory
 	private static final int INVENTORY_X_OFFSET = 8;
+
 	// Number of slot rows
 	private static int ROWS = 3;
+
 	// Number of slot columns
 	private static int COLUMNS = 9;
+
 	// Player's hotbar slots
 	private final Slot[] hotbarSlots = new Slot[ContainerWithPlayerInventory.COLUMNS];
 
@@ -24,11 +29,13 @@ public abstract class ContainerWithPlayerInventory extends AIContainer {
 	private final Slot[] playerSlots = new Slot[ContainerWithPlayerInventory.COLUMNS * ContainerWithPlayerInventory.ROWS];
 
 	public ContainerWithPlayerInventory(final EntityPlayer player) {
+
 		super(player);
 	}
 
 	// Attempt to move items from hotbar to main inventory. Returns: true, if operation was successful
 	protected final boolean swapSlotInventoryHotbar(final int slotNumber, final ItemStack slotStack) {
+
 		if (this.slotClickedWasInHotbarInventory(slotNumber)) {
 			return this.mergeSlotWithPlayerInventory(slotStack);
 		} else if (this.slotClickedWasInPlayerInventory(slotNumber)) {
@@ -40,21 +47,25 @@ public abstract class ContainerWithPlayerInventory extends AIContainer {
 
 	// @return True, if slot is from hotbar inv
 	protected final boolean slotClickedWasInHotbarInventory(final int slotNumber) {
+
 		return (slotNumber >= this.hotbarSlots[0].slotNumber) && (slotNumber <= this.hotbarSlots[ContainerWithPlayerInventory.COLUMNS - 1].slotNumber);
 	}
 
 	// Try to merge stack with player slots
 	protected final boolean mergeSlotWithPlayerInventory(final ItemStack slotStack) {
+
 		return this.mergeItemStack(slotStack, this.playerSlots[0].slotNumber, this.playerSlots[(ContainerWithPlayerInventory.COLUMNS * ContainerWithPlayerInventory.ROWS) - 1].slotNumber + 1, false);
 	}
 
 	// Check if slot clicked is slot from player's inventory
 	protected final boolean slotClickedWasInPlayerInventory(final int slotNumber) {
+
 		return (slotNumber >= this.playerSlots[0].slotNumber) && (slotNumber <= this.playerSlots[(ContainerWithPlayerInventory.COLUMNS * ContainerWithPlayerInventory.ROWS) - 1].slotNumber);
 	}
 
 	// Try to merge stack with player slots
 	protected final boolean mergeSlotWithHotbarInventory(final ItemStack slotStack) {
+
 		return this.mergeItemStack(slotStack, this.hotbarSlots[0].slotNumber, this.hotbarSlots[ContainerWithPlayerInventory.COLUMNS - 1].slotNumber + 1, false);
 	}
 

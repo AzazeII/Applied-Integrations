@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.Part;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIBaseGui;
@@ -40,29 +41,39 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 
 	// Widget constants
 	private static final int WIDGET_COLUMNS = 2; // (1)
+
 	private static final int WIDGET_ROWS = 9; // (2)
+
 	private static final int WIDGET_X_POS = 13; // (3)
+
 	private static final int WIDGET_Y_POS = 29; // (4)
 
 	// Network tool constants
 	private static final int GUI_WIDTH_NETWORK_TOOL = 246; // (1)
+
 	private static final int GUI_WIDTH_NO_TOOL = 210; // (2)
 
 	// Tittle constants
 	private static final int TITLE_X_POS = 6; // (1)
+
 	private static final int TITLE_Y_POS = 5; // (2)
+
 	// Current access mode
 	public GuiImgButton accessMode;
+
 	/**
 	 * Player viewing this gui.
 	 */
 	private EntityPlayer player;
+
 	/**
 	 * Filter widget list
 	 */
 	private List<WidgetEnergySlot> energyWidgetList = new ArrayList<WidgetEnergySlot>();
+
 	// Should gui render network tool slots?
 	private boolean hasNetworkTool;
+
 	// Owner of this GUI
 	private PartEnergyStorage storageBus;
 
@@ -87,12 +98,11 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 
 		this.xSize = (this.hasNetworkTool ? GuiEnergyStoragePart.GUI_WIDTH_NETWORK_TOOL : GuiEnergyStoragePart.GUI_WIDTH_NO_TOOL);
 		this.ySize = 251;
-
-
 	}
 
 	@Override
 	public void initGui() {
+
 		super.initGui();
 
 		// Add priority button
@@ -138,21 +148,23 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 		if (this.hasNetworkTool) {
 			this.drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
 		}
-
 	}
 
 	@Override
 	public void updateEnergy(final LiquidAIEnergy energy, int index) {
+
 		this.energyWidgetList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 
 	@Override
 	public ISyncHost getSyncHost() {
+
 		return storageBus;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
+
 		if (host instanceof PartEnergyStorage) {
 			storageBus = (PartEnergyStorage) host;
 		}
@@ -160,6 +172,7 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+
 		super.onButtonClicked(btn, mouseButton);
 
 		// Check if action performed on access mode button

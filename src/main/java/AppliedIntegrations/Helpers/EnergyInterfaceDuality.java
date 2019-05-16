@@ -1,5 +1,6 @@
 package AppliedIntegrations.Helpers;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
@@ -41,10 +42,13 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 	public boolean debug;
+
 	private IEnergyInterface owner;
+
 	private List<LiquidAIEnergy> initializedStorages = new LinkedList<>();
 
 	public EnergyInterfaceDuality(IEnergyInterface owner) {
+
 		this.owner = owner;
 
 		// RF always Initialized, as FE
@@ -61,6 +65,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	public <T> T getCapability(Capability<T> capability, AEPartLocation side) {
+
 		if (capability == Capabilities.FORGE_ENERGY) {
 			// FE (RF) Capability
 			return (T) this.getEnergyStorage(RF, side);
@@ -99,17 +104,19 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 				owner.initEnergyStorage(energy, side);
 			}
 		}
-	}	@Override
-	public double getMaxTransfer(AEPartLocation side) {
-		return owner.getMaxTransfer(side);
 	}
 
 	public void notifyListenersOfFilterEnergyChange(LiquidAIEnergy energy) {
+
 		for (ContainerEnergyInterface listener : owner.getListeners()) {
 			if (listener != null) {
 				NetworkHandler.sendTo(new PacketFilterServerToClient(energy, 0, owner), (EntityPlayerMP) listener.player);
 			}
 		}
+	}	@Override
+	public double getMaxTransfer(AEPartLocation side) {
+
+		return owner.getMaxTransfer(side);
 	}
 
 	// Synchronize data with all listeners
@@ -131,28 +138,33 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	public void notifyListenersOfBarFilterChange(LiquidAIEnergy bar) {
+
 		for (ContainerEnergyInterface listener : owner.getListeners()) {
 			if (listener != null) {
 				NetworkHandler.sendTo(new PacketBarChange(bar, owner), (EntityPlayerMP) listener.player);
 			}
 		}
-	}	@Override
-	public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
-		return owner.getFilteredEnergy(side);
 	}
 
 
 
+	@Override
+	public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
+
+		return owner.getFilteredEnergy(side);
+	}
 
 
 	@Override
 	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+
 		return owner.getEnergyStorage(energy, side);
 	}
 
 
 	@Override
 	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
+
 		IGridNode node = owner.getGridNode();
 		if (node == null) {
 			throw new NullNodeConnectionException();
@@ -184,7 +196,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 							owner.getEnergyStorage(energy, side).modifyEnergyStored(-InjectedAmount);
 						}
 					}
-
 				}
 			}
 			if (!(owner instanceof TileEnergyInterface)) {
@@ -202,12 +213,14 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	 * @return
 	 */
 	private boolean isStorageInitialized(LiquidAIEnergy energy) {
+
 		return initializedStorages.contains(energy);
 	}
 
 
 	@Override
 	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+
 		IGridNode node = owner.getGridNode();
 		if (node == null) {
 			throw new NullNodeConnectionException();
@@ -256,6 +269,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount, EnumFacing side) {
+
 		TileEntity tile = owner.getFacingTile(side);
 
 		if (tile == null) {
@@ -273,6 +287,4 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 			}
 		}
 	}
-
-
 }

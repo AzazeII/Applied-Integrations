@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.render;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.tile.entities.EntityBlackHole;
 import net.minecraft.client.renderer.GlStateManager;
@@ -15,6 +16,7 @@ import javax.annotation.Nullable;
  */
 public class EntityBlackHoleRenderer extends Render<EntityBlackHole> {
 	public EntityBlackHoleRenderer(RenderManager renderManager) {
+
 		super(renderManager);
 	}
 
@@ -57,7 +59,7 @@ public class EntityBlackHoleRenderer extends Render<EntityBlackHole> {
 	@Nullable
 	@Override
 	protected ResourceLocation getEntityTexture(EntityBlackHole entity) {
+
 		return new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/black.png");
 	}
-
 }

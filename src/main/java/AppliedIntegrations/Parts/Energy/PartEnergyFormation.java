@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.Helpers.Energy.StackCapabilityHelper;
 import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.PartEnum;
@@ -37,11 +38,13 @@ import static java.util.Collections.singletonList;
  */
 public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 	public PartEnergyFormation() {
+
 		super(PartEnum.EnergyFormation, SecurityPermissions.EXTRACT);
 	}
 
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (isPowered()) {
 			if (isActive()) {
 				return PartModelEnum.FORMATION_HAS_CHANNEL;
@@ -54,6 +57,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 
 	@Override
 	protected void doWork(int ticksSinceLastCall) {
+
 	}
 
 	@Override
@@ -72,6 +76,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 		return singletonList(new IMEInventoryHandler() {
 			@Override
 			public AccessRestriction getAccess() {
+
 				return AccessRestriction.WRITE;
 			}
 
@@ -83,6 +88,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 
 			@Override
 			public boolean canAccept(IAEStack input) {
+
 				return input instanceof IAEEnergyStack;
 			}
 
@@ -100,6 +106,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 
 			@Override
 			public boolean validForPass(int i) {
+
 				return true;
 			}
 
@@ -203,6 +210,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 
 			@Override
 			public IStorageChannel getChannel() {
+
 				return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 			}
 		});

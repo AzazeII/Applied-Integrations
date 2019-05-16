@@ -1,5 +1,6 @@
 package AppliedIntegrations.Integration.Botania;
 
+
 import appeng.api.parts.IPart;
 import appeng.api.parts.LayerBase;
 import appeng.api.util.AEPartLocation;
@@ -15,6 +16,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public boolean isFull() {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof IManaReceiver) {
@@ -27,6 +29,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public void recieveMana(int i) {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof IManaReceiver) {
@@ -37,6 +40,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public boolean canRecieveManaFromBursts() {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof IManaReceiver) {
@@ -49,6 +53,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public int getCurrentMana() {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof IManaReceiver) {
@@ -61,6 +66,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public boolean canAttachSpark(ItemStack itemStack) {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof ISparkAttachable) {
@@ -73,6 +79,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public void attachSpark(ISparkEntity iSparkEntity) {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof ISparkAttachable) {
@@ -83,6 +90,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public int getAvailableSpaceForMana() {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof ISparkAttachable) {
@@ -95,6 +103,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public ISparkEntity getAttachedSpark() {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof ISparkAttachable) {
@@ -107,6 +116,7 @@ public class ManaLayer extends LayerBase implements IManaReceiver, ISparkAttacha
 
 	@Override
 	public boolean areIncomingTranfersDone() {
+
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			IPart part = this.getPart(side);
 			if (part instanceof ISparkAttachable) {

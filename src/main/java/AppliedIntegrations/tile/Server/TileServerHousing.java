@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -11,6 +12,7 @@ import java.util.EnumSet;
 public class TileServerHousing extends AIServerMultiBlockTile {
 	@Override
 	public EnumSet<EnumFacing> getConnectableSides() {
+
 		if (hasMaster()) {
 			EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
 

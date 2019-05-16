@@ -1,5 +1,6 @@
 package AppliedIntegrations.grid;
 
+
 import appeng.api.storage.data.IAEStack;
 
 import java.util.Iterator;
@@ -10,14 +11,17 @@ import java.util.NoSuchElementException;
  */
 public class EnergyIterator<T extends IAEStack> implements Iterator<T> {
 	private Iterator<T> parent;
+
 	private T next;
 
 	public EnergyIterator(Iterator<T> iterator) {
+
 		this.parent = iterator;
 	}
 
 	@Override
 	public boolean hasNext() {
+
 		while (this.parent.hasNext()) {
 			this.next = this.parent.next();
 			if (this.next.isMeaningful()) {
@@ -33,6 +37,7 @@ public class EnergyIterator<T extends IAEStack> implements Iterator<T> {
 
 	@Override
 	public T next() {
+
 		if (this.next == null) {
 			throw new NoSuchElementException();
 		}
@@ -42,6 +47,7 @@ public class EnergyIterator<T extends IAEStack> implements Iterator<T> {
 
 	@Override
 	public void remove() {
+
 		this.parent.remove();
 	}
 }

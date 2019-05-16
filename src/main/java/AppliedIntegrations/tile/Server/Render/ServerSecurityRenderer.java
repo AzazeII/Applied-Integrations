@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.Render;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Client.AITileFullRenderer;
 import AppliedIntegrations.tile.Server.TileServerSecurity;
@@ -16,29 +17,20 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 
 	// Init textures
 	private static final ResourceLocation top = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_top.png"); // (1)
+
 	private static final ResourceLocation topOff = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_top_off.png"); // (2)
+
 	private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_side.png"); // (3)
+
 	private static final ResourceLocation bottom = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_bottom.png"); // (4)
 
 	private static final float[][][] texturePositionMap = new float[][][]{{ // (-y - static) DOWN
-			{0.5F, -0.5F, -0.5F}, {0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, -0.5F},
-
-	}, { // (y - static) UP
-			{0.5F, 0.5F, -0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F},
-
-	}, { // (-z - static) NORTH
-			{0.5F, -0.5F, -0.5F}, {0.5F, 0.5F, -0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},
-
-	}, { //  z - static) SOUTH
-			{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F},
-
-	}, { // (-x - static) WEST
-			{-0.5F, -0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},
-
-	}, { // (x - static) EAST
-			{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {0.5F, 0.5F, -0.5F}, {0.5F, -0.5F, -0.5F},
-
-	}};
+			{0.5F, -0.5F, -0.5F}, {0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, -0.5F},}, { // (y - static) UP
+			{0.5F, 0.5F, -0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F},}, { // (-z - static) NORTH
+			{0.5F, -0.5F, -0.5F}, {0.5F, 0.5F, -0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},}, { //  z - static) SOUTH
+			{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F},}, { // (-x - static) WEST
+			{-0.5F, -0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},}, { // (x - static) EAST
+			{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {0.5F, 0.5F, -0.5F}, {0.5F, -0.5F, -0.5F},}};
 
 	@Override
 	public void render(TileServerSecurity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {

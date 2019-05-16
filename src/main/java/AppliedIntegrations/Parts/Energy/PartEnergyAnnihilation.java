@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.Helpers.Energy.StackCapabilityHelper;
 import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.PartEnum;
@@ -21,11 +22,13 @@ import static appeng.api.config.Actionable.SIMULATE;
 public class PartEnergyAnnihilation extends AIPlanePart {
 
 	public PartEnergyAnnihilation() {
+
 		super(PartEnum.EnergyAnnihilation, SecurityPermissions.INJECT);
 	}
 
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (isPowered()) {
 			if (isActive()) {
 				return PartModelEnum.ANNIHILATION_HAS_CHANNEL;

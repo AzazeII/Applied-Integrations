@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem;
 
+
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.tile.AITile;
@@ -44,15 +45,19 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		int cooldown;
 
 		Ammo(int cooldown) {
+
 			this.cooldown = cooldown;
 		}
 	}
+
 	// Direction for rendering turret tower
 	public BlockPos renderingDirection = new BlockPos(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+
 	private ItemList storedAmmo = new ItemList();
 
 	@Override
 	public EnumSet<EnumFacing> getConnectableSides() {
+
 		return EnumSet.of(DOWN);
 	}
 
@@ -81,6 +86,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 	@Override
 	public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> iStorageChannel) {
+
 		if (!getGridNode().isActive()) {
 			return new ArrayList<>();
 		}
@@ -116,26 +122,31 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 				@Override
 				public IAEItemStack extractItems(IAEItemStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
+
 					return null;
 				}
 
 				@Override
 				public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> iItemList) {
+
 					return null;
 				}
 
 				@Override
 				public IStorageChannel<IAEItemStack> getChannel() {
+
 					return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 				}
 
 				@Override
 				public AccessRestriction getAccess() {
+
 					return AccessRestriction.READ_WRITE;
 				}
 
 				@Override
 				public boolean isPrioritized(IAEItemStack iaeItemStack) {
+
 					return false;
 				}
 
@@ -179,6 +190,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 	@Override
 	public int getPriority() {
+
 		return 0;
 	}
 

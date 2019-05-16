@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
@@ -18,10 +19,13 @@ import static appeng.api.config.IncludeExclude.WHITELIST;
  */
 public class ServerPortHandler<T extends IAEStack<T>> {
 	protected final TileServerCore host;
+
 	protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter;
+
 	protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode;
 
 	public ServerPortHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore tileServerCore) {
+
 		this.filteredMatter = filteredMatter;
 		this.filterMode = filterMode;
 		this.host = tileServerCore;

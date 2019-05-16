@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.Hosts;
 
+
 import AppliedIntegrations.api.ISyncHost;
 
 /**
@@ -14,5 +15,4 @@ public interface IWidgetHost {
 	ISyncHost getSyncHost();
 
 	void setSyncHost(ISyncHost host);
-
 }

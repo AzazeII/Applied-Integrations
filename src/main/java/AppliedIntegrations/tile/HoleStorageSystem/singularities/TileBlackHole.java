@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
@@ -55,25 +56,39 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 public class TileBlackHole extends TileEntity implements ITickable, ISingularity {
 	// list of size factor
 	public static LinkedHashMap<Long, Float> sizeFactor = new LinkedHashMap<>();
+
 	// list of type factor
 	private static LinkedHashMap<Short, Byte> typeFactor = new LinkedHashMap<>();
+
 	private final double gravitationalConst = 6.7;
+
 	public long mass = (int) Math.ceil(Math.random() * 16384);
+
 	// Count of mass added per any operation
 	public int MASS_ADDED = 10;
+
 	// list of all ae items stored in this singularity
 	public ItemList storedItems = new ItemList();
+
 	// list of all ae fluids stored in this singularity
 	public FluidList storedFluids = new FluidList();
+
 	// list of all ae energies stored in this singularity
 	public EnergyList storedEnergies = new EnergyList();
+
 	// list of all ae mana stored in this singularity
 	public ManaList storedMana = new ManaList();
+
 	private TimeHandler blockDestroyHandler = new TimeHandler();
+
 	private TimeHandler anomalyTriggerHandler = new TimeHandler();
+
 	private Random randomAnomaly = new Random();
+
 	private float lastGrowth = 1;
+
 	private List<IPylon> listeners = new ArrayList<>();
+
 	private TileWhiteHole entangledHole = null;
 
 	static {
@@ -105,6 +120,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	@Override
 	public void invalidate() {
+
 		super.invalidate();
 
 		// Iterate over listeners
@@ -116,6 +132,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	@Override
 	public void update() {
+
 		if (!world.isRemote)
 		// Modulate gravity
 		{
@@ -173,6 +190,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	   8. 2048 - *10
    */
 	private Float getGrowthFactor() {
+
 		Float sizeFactorVal = 1F;
 		Byte typeFactorVal = 1;
 
@@ -215,6 +233,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	}
 
 	public double getMaxDestructionRange() {
+
 		return Math.cbrt(Math.cbrt(mass)) * getGrowthFactor();
 	}
 
@@ -381,27 +400,32 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	@Override
 	@SideOnly(CLIENT)
 	public void setMassFromServer(long mass) {
+
 		this.mass = mass;
 	}
 
 	@Override
 	public long getMass() {
+
 		return mass;
 	}
 
 	@Override
 	public boolean isEntangled() {
+
 		return entangledHole != null;
 	}
 
 	@Override
 	public void setEntangledHole(ISingularity t) {
+
 		AILog.chatLog("Setting entangled singularity to " + t.toString());
 		entangledHole = (TileWhiteHole) t;
 	}
 
 	@Override
 	public void addListener(IPylon pylon) {
+
 		listeners.add(pylon);
 	}
 
@@ -435,6 +459,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	// Returns gravity force between two vectors, assuming posB mass is 1
 	private double getGravityForceBetween(Vec3d posA, Vec3d posB) {
+
 		double radiusSquare = Math.pow(posA.squareDistanceTo(posB), 2);
 
 		return (gravitationalConst * mass * 0.1 / radiusSquare);
@@ -447,6 +472,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	}
 
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
+
 		if (hand == EnumHand.MAIN_HAND) {
 			if (!world.isRemote) {
 				if (!p.isSneaking()) {

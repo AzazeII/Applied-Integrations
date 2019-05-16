@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 
+
 import AppliedIntegrations.api.ISyncHost;
 import io.netty.buffer.ByteBuf;
 
@@ -18,12 +19,14 @@ public class PacketCoordinateInit extends AIPacket {
 	}
 
 	public PacketCoordinateInit(ISyncHost host) {
+
 		super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
 		this.host = host;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
+
 		boolean isPart = buf.readBoolean();
 
 		if (isPart) {
@@ -35,6 +38,7 @@ public class PacketCoordinateInit extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
+
 		writeSyncHost(host, buf);
 	}
 }

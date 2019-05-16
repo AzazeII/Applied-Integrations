@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -88,20 +89,28 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	// Current access restrictions of handler
 	public AccessRestriction access = AccessRestriction.READ_WRITE;
+
 	// list of all container - listeners
 	public List<ContainerEnergyStorage> linkedListeners = new ArrayList<>();
+
 	// Handler for tile/interface
 	private IMEInventoryHandler<IAEEnergyStack> handler;
+
 	// Was active?
 	private boolean lastActive = false;
+
 	// current priority of host
 	private int priority = 0;
+
 	private boolean updateRequested;
+
 	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
+
 	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("ME Energy Export/Import Bus", 4, 1, this) {
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+
 			if (itemStack == null) {
 				return false;
 			}
@@ -128,10 +137,12 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	// Called to allow mana storage bus extend from this bus
 	protected PartEnergyStorage(PartEnum manaStorage, SecurityPermissions inject, SecurityPermissions extract) {
+
 		super(manaStorage);
 	}
 
 	public void setAccess(AccessRestriction access) {
+
 		this.access = access;
 
 		// Notify grid
@@ -204,11 +215,13 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public AIGridNodeInventory getUpgradeInventory() {
+
 		return upgradeInventory;
 	}
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
+
 		bch.addBox(3, 3, 15, 13, 13, 16);
 		bch.addBox(2, 2, 14, 14, 14, 15);
 		bch.addBox(5, 5, 12, 11, 11, 14);
@@ -253,6 +266,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public int getLightLevel() {
+
 		return 0;
 	}
 
@@ -318,11 +332,13 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public double getIdlePowerUsage() {
+
 		return 0;
 	}
 
 	@MENetworkEventSubscribe
 	public void updateChannels(final MENetworkChannelsChanged changedChannels) {
+
 		final boolean currentActive = this.getGridNode().isActive();
 		if (this.lastActive != currentActive) {
 			this.lastActive = currentActive;
@@ -339,12 +355,14 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
+
 		return 2;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.STORAGE_BUS_HAS_CHANNEL;
@@ -373,16 +391,19 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public int getPriority() {
+
 		return this.priority;
 	}
 
 	@Override
 	public void setPriority(int newValue) {
+
 		this.priority = newValue;
 	}
 
 	@Override
 	public ItemStack getItemStackRepresentation() {
+
 		return getItemStack(PartItemStack.BREAK);
 	}
 
@@ -425,11 +446,13 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 	}
 
 	public boolean extractPowerForEnergyTransfer(int drained, Actionable simulate) {
+
 		return false;
 	}
 
 	@Override
 	public void updateFilter(LiquidAIEnergy energy, int index) {
+
 		filteredEnergies.set(index, energy);
 	}
 
@@ -441,6 +464,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 	@Nonnull
 	@Override
 	public AIGuiHandler.GuiEnum getGui() {
+
 		return GuiStoragePart;
 	}
 }

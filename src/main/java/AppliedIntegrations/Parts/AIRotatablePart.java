@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts;
 
+
 import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.PartItemStack;
 import appeng.util.Platform;
@@ -23,6 +24,7 @@ public abstract class AIRotatablePart extends AIPart {
 	private byte renderRotation = 0;
 
 	public AIRotatablePart(final PartEnum associatedPart, final SecurityPermissions... interactionPermissions) {
+
 		super(associatedPart);
 	}
 
@@ -48,6 +50,7 @@ public abstract class AIRotatablePart extends AIPart {
 
 	@Override
 	public boolean readFromStream(final ByteBuf stream) throws IOException {
+
 		boolean redraw = false;
 
 		// Call super

@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
@@ -24,6 +25,7 @@ import javax.annotation.Nonnull;
 public class PartEnergyExport extends AIOPart {
 
 	public PartEnergyExport() {
+
 		super(PartEnum.EnergyExportBus);
 	}
 
@@ -38,6 +40,7 @@ public class PartEnergyExport extends AIOPart {
 
 	@Override
 	public int getLightLevel() {
+
 		return 0;
 	}
 
@@ -57,7 +60,6 @@ public class PartEnergyExport extends AIOPart {
 				}
 			}
 		}
-
 	}
 
 	@Override
@@ -103,12 +105,14 @@ public class PartEnergyExport extends AIOPart {
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
+
 		return 0;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.EXPORT_HAS_CHANNEL;

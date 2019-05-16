@@ -1,5 +1,6 @@
 package AppliedIntegrations.api;
 
+
 import net.minecraftforge.fml.common.Optional;
 import teamroots.embers.power.DefaultEmberCapability;
 
@@ -11,6 +12,7 @@ import teamroots.embers.power.DefaultEmberCapability;
 public class EmberInterfaceStorageDuality extends DefaultEmberCapability implements IInterfaceStorageDuality<Double>, InbtStorage {
 	@Override
 	public void modifyEnergyStored(int i) {
+
 		if (i == 0) {
 			return;
 		}
@@ -19,26 +21,31 @@ public class EmberInterfaceStorageDuality extends DefaultEmberCapability impleme
 
 	@Override
 	public Class<Double> getTypeClass() {
+
 		return Double.class;
 	}
 
 	@Override
 	public Double getStored() {
+
 		return getEmber();
 	}
 
 	@Override
 	public Double getMaxStored() {
+
 		return getEmberCapacity();
 	}
 
 	@Override
 	public Double receive(Double value, boolean simulate) {
+
 		return addAmount(value, !simulate);
 	}
 
 	@Override
 	public Double extract(Double value, boolean simulate) {
+
 		return removeAmount(value, !simulate);
 	}
 }

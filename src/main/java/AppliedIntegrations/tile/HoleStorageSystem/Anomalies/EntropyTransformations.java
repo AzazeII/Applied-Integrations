@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.Anomalies;
 
+
 import net.minecraft.block.state.IBlockState;
 
 import java.util.LinkedHashMap;
@@ -81,6 +82,5 @@ public class EntropyTransformations {
 		// (Red) Chiseled sandstone -> (Red) sandstone
 		entropyMap.put(SANDSTONE.getStateFromMeta(1), SANDSTONE.getDefaultState());
 		entropyMap.put(RED_SANDSTONE.getStateFromMeta(1), RED_SANDSTONE.getDefaultState());
-
 	}
 }

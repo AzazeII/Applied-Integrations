@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.part;
 
+
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -21,14 +22,18 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
 
 	// Y of upgrades
 	private static int UPGRADE_Y_POS = 8;
+
 	public final IEnergyInterface EnergyInterface;
+
 	public String realContainer;
+
 	public PartEnergyInterface part;
 
 	public EntityPlayer player;
 
 
 	public ContainerEnergyInterface(final EntityPlayer player, final IEnergyInterface energyInterface) {
+
 		super(energyInterface, player);
 
 		// Set interface
@@ -73,6 +78,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
 
 	@Override
 	public void onContainerClosed(@Nonnull final EntityPlayer player) {
+
 		super.onContainerClosed(player);
 
 		if (part != null) {
@@ -84,6 +90,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
+
 		return true;
 	}
 }

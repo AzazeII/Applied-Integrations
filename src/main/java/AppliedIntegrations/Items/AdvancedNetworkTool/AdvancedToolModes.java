@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.AdvancedNetworkTool;
 
+
 /**
  * @Author Azazell
  */
@@ -8,6 +9,7 @@ public enum AdvancedToolModes {
 	ENTROPY_MANIPULATOR;
 
 	public AdvancedToolModes cycleMode(boolean up) {
+
 		try {
 			// Check for up scroll
 			if (up) {

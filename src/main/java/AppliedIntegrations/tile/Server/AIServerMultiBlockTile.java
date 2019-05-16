@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
+
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketMasterSync;
 import AppliedIntegrations.Utils.ChangeHandler;
@@ -25,6 +26,7 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public void tryConstruct(EntityPlayer p) {
+
 		for (EnumFacing side : EnumFacing.values()) {
 			// Check if tile from two block from this block to direction of side
 			if (world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2)) instanceof TileServerCore) {
@@ -43,11 +45,13 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public boolean hasMaster() {
+
 		return master != null;
 	}
 
 	@Override
 	public IMaster getMaster() {
+
 		return master;
 	}
 
@@ -74,11 +78,13 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public EnumSet<GridFlags> getFlags() {
+
 		return EnumSet.noneOf(GridFlags.class);
 	}
 
 	@Override
 	public EnumSet<EnumFacing> getConnectableSides() {
+
 		if (hasMaster()) {
 			return EnumSet.allOf(EnumFacing.class);
 		}
@@ -87,6 +93,7 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public void invalidate() {
+
 		super.invalidate();
 		if (hasMaster()) {
 			master.destroyMultiBlock();
@@ -95,6 +102,7 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public void update() {
+
 		super.update();
 
 		// Call master change handler
@@ -111,11 +119,13 @@ public class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
+
 		super.readFromNBT(tag);
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+
 		return super.writeToNBT(tag);
 	}
 }

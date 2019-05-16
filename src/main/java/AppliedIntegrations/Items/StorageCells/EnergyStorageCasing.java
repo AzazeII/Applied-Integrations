@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.StorageCells;
 
+
 import AppliedIntegrations.Items.AIItemRegistrable;
 
 /**
@@ -7,6 +8,7 @@ import AppliedIntegrations.Items.AIItemRegistrable;
  */
 public class EnergyStorageCasing extends AIItemRegistrable {
 	public EnergyStorageCasing() {
+
 		super("EnergyStorageCasing");
 	}
 }

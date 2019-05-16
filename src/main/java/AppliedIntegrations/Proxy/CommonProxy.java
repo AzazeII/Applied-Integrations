@@ -1,5 +1,6 @@
 package AppliedIntegrations.Proxy;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
@@ -31,6 +32,7 @@ public class CommonProxy {
 
 		@Override
 		public BufferedReader getFile(String path) throws Exception {
+
 			InputStream resourceAsStream = getClass().getResourceAsStream("/assets/appliedintegrations/recipes/" + path);
 			InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
 			return new BufferedReader(reader);
@@ -38,6 +40,7 @@ public class CommonProxy {
 	}
 
 	public void SidedPreInit() {
+
 		ItemEnum.register();
 		BlocksEnum.register();
 		//EntityEnum.register();
@@ -74,6 +77,7 @@ public class CommonProxy {
 	 * Adds tile entities to the AE2 SpatialIO whitelist
 	 */
 	public void registerSpatialIOMovables() {
+
 		IMovableRegistry movableRegistry = AEApi.instance().registries().movable();
 		for (TileEnum tile : TileEnum.values()) {
 			if (tile.enabled) {
@@ -83,6 +87,7 @@ public class CommonProxy {
 	}
 
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+
 		return ctx.getServerHandler().player;
 	}
 }

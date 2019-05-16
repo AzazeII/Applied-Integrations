@@ -1,5 +1,6 @@
 package AppliedIntegrations.grid.Mana;
 
+
 import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import appeng.api.storage.data.IItemList;
@@ -18,12 +19,14 @@ public class ManaStorageChannel implements IManaStorageChannel {
 	@Nonnull
 	@Override
 	public IItemList<IAEManaStack> createList() {
+
 		return new ManaList();
 	}
 
 	@Nullable
 	@Override
 	public IAEManaStack createStack(@Nonnull Object o) {
+
 		if (o instanceof Integer) {
 			return new AEManaStack(((Integer) o).intValue());
 		} else if (o instanceof AEManaStack) {
@@ -35,12 +38,14 @@ public class ManaStorageChannel implements IManaStorageChannel {
 	@Nullable
 	@Override
 	public IAEManaStack readFromPacket(@Nonnull ByteBuf byteBuf) throws IOException {
+
 		return AEManaStack.fromPacket(byteBuf);
 	}
 
 	@Nullable
 	@Override
 	public IAEManaStack createFromNBT(@Nonnull NBTTagCompound nbtTagCompound) {
+
 		return AEManaStack.fromNBT(nbtTagCompound);
 	}
 }

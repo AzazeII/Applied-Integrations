@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items.Botania;
 
+
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.ItemEnum;
 import baubles.api.BaubleType;
@@ -19,31 +20,37 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
  */ public class MEManaRing extends MEManaMirror implements IBotaniaIntegrated, IManaItem, IManaTooltipDisplay, IBauble, ICosmeticAttachable {
 
 	public MEManaRing(String registry) {
+
 		super(registry);
 	}
 
 	@Override
 	public int getMaxMana(ItemStack stack) {
+
 		return 500000;
 	}
 
 	@Override
 	public boolean canReceiveManaFromPool(ItemStack itemStack, TileEntity tileEntity) {
+
 		return true;
 	}
 
 	@Override
 	public boolean canHandle(ItemStack itemStack) {
+
 		return itemStack.getItem() == ItemEnum.ITEMMANAWIRELESSRING.getItem();
 	}
 
 	@Override
 	public BaubleType getBaubleType(ItemStack itemStack) {
+
 		return BaubleType.RING;
 	}
 
 	@Override
 	public ItemStack getCosmeticItem(ItemStack stack) {
+
 		NBTTagCompound cmp = ItemNBTHelper.getCompound(stack, "#cosmeticItem", true);
 		if (cmp == null) {
 			return ItemStack.EMPTY;
@@ -53,6 +60,7 @@ import vazkii.botania.common.core.helper.ItemNBTHelper;
 
 	@Override
 	public void setCosmeticItem(ItemStack stack, ItemStack cosmetic) {
+
 		NBTTagCompound cmp = new NBTTagCompound();
 		if (!cosmetic.isEmpty()) {
 			cmp = cosmetic.writeToNBT(cmp);

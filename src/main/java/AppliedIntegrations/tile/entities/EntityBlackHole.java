@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.entities;
 
+
 import AppliedIntegrations.Blocks.BlocksEnum;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntitySnowball;
@@ -13,18 +14,22 @@ import net.minecraft.world.World;
 public class EntityBlackHole extends EntitySnowball {
 
 	public EntityBlackHole(World world) {
+
 		super(world);
 	}
 
 	public EntityBlackHole(World world, EntityLivingBase entity) {
+
 		super(world, entity);
 	}
 
 	public EntityBlackHole(World world, BlockPos pos) {
+
 		super(world, pos.getX(), pos.getY(), pos.getZ());
 	}
 
 	public EntityBlackHole(World world, double x, double y, double z) {
+
 		super(world, x, y, z);
 	}
 

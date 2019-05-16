@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Handlers;
 
+
 import AppliedIntegrations.Network.Packets.PacketPriorityChange;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

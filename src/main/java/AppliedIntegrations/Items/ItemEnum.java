@@ -1,5 +1,6 @@
 package AppliedIntegrations.Items;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Helpers.IntegrationsHelper;
@@ -102,19 +103,23 @@ public enum ItemEnum {
 	public static LinkedList<MaterialEncorium> encoriumVariants = new LinkedList<>();
 
 	private boolean enabled;
+
 	private Item item;
 
 	ItemEnum(AIItemRegistrable _item, boolean enabled) {
+
 		this(_item, AppliedIntegrations.AI, enabled);
 	}
 
 	ItemEnum(AIItemRegistrable _item, CreativeTabs creativeTab, boolean enabled) {
+
 		this.item = _item;
 		this.item.setCreativeTab(creativeTab);
 		this.enabled = enabled;
 	}
 
 	public static void register() {
+
 		for (ItemEnum itemEnum : values()) {
 			// Register only that items, which not **require botania or ember or AS as dependency**
 			if (!IntegrationsHelper.instance.isObjectIntegrated(itemEnum.item) && itemEnum.enabled) {
@@ -125,6 +130,7 @@ public enum ItemEnum {
 
 	@Optional.Method(modid = "astralsorcery")
 	public static void registerAstralItems() {
+
 		for (ItemEnum itemEnum : values()) {
 			// Register only that items, which **require AS as dependency**
 			if (itemEnum.item instanceof IAstralIntegrated && itemEnum.enabled) {
@@ -135,6 +141,7 @@ public enum ItemEnum {
 
 	@Optional.Method(modid = "botania")
 	public static void registerBotaniaItems() {
+
 		for (ItemEnum itemEnum : values()) {
 			if (itemEnum.item instanceof MaterialEncorium) {
 				return;
@@ -161,6 +168,7 @@ public enum ItemEnum {
 
 	@Optional.Method(modid = "embers")
 	public static void registerEmbersItems() {
+
 		for (ItemEnum itemEnum : values()) {
 			// Register only that items, which **require embers as dependency**
 			if (itemEnum.item instanceof IEmberIntegrated && itemEnum.enabled) {
@@ -171,6 +179,7 @@ public enum ItemEnum {
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels() {
+
 		for (ItemEnum item : values()) {
 			if (!(item.item instanceof IBotaniaIntegrated) && item.enabled) {
 				if (item.item instanceof AIItemRegistrable) {
@@ -184,6 +193,7 @@ public enum ItemEnum {
 	@Optional.Method(modid = "botania")
 	@SideOnly(Side.CLIENT)
 	public static void registerManaItemsModels() {
+
 		for (ItemEnum item : values()) {
 			if (item.item instanceof IBotaniaIntegrated && item.enabled) {
 				if (item.item instanceof AIItemRegistrable) {
@@ -202,6 +212,7 @@ public enum ItemEnum {
 
 	@SideOnly(Side.CLIENT)
 	public static void registerAstralItemModels() {
+
 		for (ItemEnum item : values()) {
 			if (item.item instanceof IAstralIntegrated && item.enabled) {
 				if (item.item instanceof AIItemRegistrable) {
@@ -215,6 +226,7 @@ public enum ItemEnum {
 	@Optional.Method(modid = "embers")
 	@SideOnly(Side.CLIENT)
 	public static void registerEmbersItemModels() {
+
 		for (ItemEnum item : values()) {
 			if (item.item instanceof IEmberIntegrated && item.enabled) {
 				if (item.item instanceof AIItemRegistrable) {
@@ -226,14 +238,17 @@ public enum ItemEnum {
 	}
 
 	public ItemStack getDamagedStack(int damage) {
+
 		return this.getDMGStack(damage, 1);
 	}
 
 	public ItemStack getDMGStack(final int damageValue, final int size) {
+
 		return new ItemStack(this.item, size, damageValue);
 	}
 
 	public Item getItem() {
+
 		return this.item;
 	}
 }

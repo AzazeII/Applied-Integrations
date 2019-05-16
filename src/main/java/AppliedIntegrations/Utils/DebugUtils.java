@@ -1,5 +1,6 @@
 package AppliedIntegrations.Utils;
 
+
 import net.minecraft.client.Minecraft;
 
 /**
@@ -8,6 +9,7 @@ import net.minecraft.client.Minecraft;
  */
 public class DebugUtils {
 	public static void dropGuiFrame() {
+
 		Minecraft.getMinecraft().player.closeScreen();
 	}
 }

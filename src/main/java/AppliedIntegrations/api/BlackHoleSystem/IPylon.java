@@ -1,5 +1,6 @@
 package AppliedIntegrations.api.BlackHoleSystem;
 
+
 public interface IPylon {
 	void setSingularity(ISingularity o);
 

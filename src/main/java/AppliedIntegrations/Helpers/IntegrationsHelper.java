@@ -1,5 +1,6 @@
 package AppliedIntegrations.Helpers;
 
+
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
@@ -15,6 +16,7 @@ public class IntegrationsHelper {
 	public static IntegrationsHelper instance = new IntegrationsHelper();
 
 	public boolean isLoaded(LiquidAIEnergy energy) {
+
 		if (energy == RF)
 		// always true, since RF initialized as FE
 		{
@@ -36,6 +38,7 @@ public class IntegrationsHelper {
 	}
 
 	public boolean isObjectIntegrated(Object obj) {
+
 		return obj instanceof IBotaniaIntegrated || obj instanceof IEmberIntegrated || obj instanceof IAstralIntegrated;
 	}
 }

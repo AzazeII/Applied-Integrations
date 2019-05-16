@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile;
 
+
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -48,26 +49,37 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
 public class TileEnergyInterface extends AITile implements IEnergyMachine, INetworkToolAgent, IEnergyInterface, IStorageMonitorable, IInventoryHost {
 
 	public static int capacity = 100000;
+
 	private Boolean energyStates[] = new Boolean[6];
+
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> RFStorage = new LinkedHashMap<>();
+
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> EUStorage = new LinkedHashMap<>();
+
 	private LinkedHashMap<AEPartLocation, JouleInterfaceStorage> JOStorage = new LinkedHashMap<>();
+
 	private LinkedHashMap<AEPartLocation, EmberInterfaceStorageDuality> EmberStorage = new LinkedHashMap<>();
+
 	private LinkedHashMap<AEPartLocation, LiquidAIEnergy> barMap = new LinkedHashMap<>();
+
 	private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
+
 	private List<ContainerEnergyInterface> linkedListeners = new ArrayList<ContainerEnergyInterface>();
 
 	private byte outputTracker;
 
 	private boolean updateRequested;
+
 	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("", 1, 1, this) {
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
+
 			return validateStack(itemStack);
 		}
 	};
 
 	public TileEnergyInterface() {
+
 		this.energyStates[1] = true;
 		for (AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS) {
 			duality.initStorage(dir);
@@ -75,18 +87,22 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	}
 
 	public int x() {
+
 		return super.pos.getX();
 	}
 
 	public int y() {
+
 		return super.pos.getY();
 	}
 
 	public int z() {
+
 		return super.pos.getZ();
 	}
 
 	public void addListener(final ContainerEnergyInterface container) {
+
 		if (!this.linkedListeners.contains(container)) {
 			this.linkedListeners.add(container);
 		}
@@ -101,23 +117,25 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 				// Request gui update
 				updateRequested = true;
-
 			}
 		}
 	}
 
 	public AIGridNodeInventory getUpgradeInventory() {
+
 		return this.upgradeInventory;
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
+
 		super.readFromNBT(nbt);
 		outputTracker = nbt.getByte("Tracker");
 	}
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
+
 		super.writeToNBT(nbt);
 		nbt.setByte("Tracker", outputTracker);
 		return nbt;
@@ -125,14 +143,22 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+
 		return duality.hasCapability(capability);
 	}
 
 	@Nullable
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+
 		return duality.getCapability(capability, AEPartLocation.fromFacing(facing));
+	}
+
+	@Override
+	public void onInventoryChanged() {
+
 	}	private void notifyListenersOfFilterEnergyChange() {
+
 		for (ContainerEnergyInterface listener : this.linkedListeners) {
 			if (listener != null) {
 				// Iterate for each side
@@ -147,33 +173,19 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	}
 
 	@Override
-	public void onInventoryChanged() {
-
-	}
-
-	@Override
 	public double getMaxTransfer(AEPartLocation side) {
+
 		return capacity / (double) 2;
 	}
 
 	@Override
 	public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
-		return null;
-	}	private void initGuiCoordinates() {
-		// Iterate for each listener
-		for (ContainerEnergyInterface listener : this.linkedListeners) {
-			// Check not null
-			if (listener != null) {
-				// Send packet init
-				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
 
-				// Toggle request
-				updateRequested = false;
-			}
-		}
+		return null;
 	}
 
 	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+
 		if (energy == RF) {
 			return this.RFStorage.get(side);
 		} else if (energy == EU) {
@@ -188,14 +200,71 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
+
 		duality.doInjectDualityWork(action);
+	}	private void initGuiCoordinates() {
+		// Iterate for each listener
+		for (ContainerEnergyInterface listener : this.linkedListeners) {
+			// Check not null
+			if (listener != null) {
+				// Send packet init
+				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
+
+				// Toggle request
+				updateRequested = false;
+			}
+		}
 	}
 
 	@Override
 	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+
 		duality.doExtractDualityWork(action);
+	}
+
+	@Override
+	public void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+
+		if (energy == RF) {
+			RFStorage.put(side, new EnergyInterfaceStorage(this, capacity, capacity / 2));
+		}
+		if (energy == EU) {
+			EUStorage.put(side, new EnergyInterfaceStorage(this, (int) (capacity * 0.25), capacity * 2));
+		}
+		if (energy == J) {
+			JOStorage.put(side, new JouleInterfaceStorage(this, capacity * 2));
+		}
+		if (energy == Ember) {
+			EmberStorage.put(side, new EmberInterfaceStorageDuality());
+		}
+	}
+
+	@Override
+	public int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric) {
+		// Check not null
+		if (getEnergyStorage(linkedMetric, side) == null) {
+			return 0;
+		}
+
+		// Get max energy stored number
+		Number num = (Number) getEnergyStorage(linkedMetric, side).getMaxStored();
+
+		// Check not null
+		if (num == null) {
+			return 0;
+		}
+
+		// Extract int value
+		return num.intValue();
+	}
+
+	@Override
+	public TileEntity getFacingTile(EnumFacing side) {
+
+		return null;
 	}	@Override
 	public void update() {
+
 		super.update();
 
 		if (updateRequested) {
@@ -262,56 +331,14 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	}
 
 	@Override
-	public void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
-		if (energy == RF) {
-			RFStorage.put(side, new EnergyInterfaceStorage(this, capacity, capacity / 2));
-		}
-		if (energy == EU) {
-			EUStorage.put(side, new EnergyInterfaceStorage(this, (int) (capacity * 0.25), capacity * 2));
-		}
-		if (energy == J) {
-			JOStorage.put(side, new JouleInterfaceStorage(this, capacity * 2));
-		}
-		if (energy == Ember) {
-			EmberStorage.put(side, new EmberInterfaceStorageDuality());
-		}
-	}
-
-	@Override
-	public int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric) {
-		// Check not null
-		if (getEnergyStorage(linkedMetric, side) == null) {
-			return 0;
-		}
-
-		// Get max energy stored number
-		Number num = (Number) getEnergyStorage(linkedMetric, side).getMaxStored();
-
-		// Check not null
-		if (num == null) {
-			return 0;
-		}
-
-		// Extract int value
-		return num.intValue();
-	}
-
-	@Override
-	public TileEntity getFacingTile(EnumFacing side) {
-		return null;
-	}
-
-	@Override
 	public List<ContainerEnergyInterface> getListeners() {
+
 		return linkedListeners;
 	}
 
 	@Override
 	public void updateFilter(LiquidAIEnergy energyInArray, int index) {
 
-	}	@Override
-	public Object getServerGuiElement(final EntityPlayer player) {
-		return new ContainerEnergyInterface(player, this);
 	}
 
 	@Override
@@ -330,21 +357,25 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
+
 		return false;
 	}
 
+
+
 	@Override
-	public Object getClientGuiElement(final EntityPlayer player) {
-		return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player), this, player);
+	public Object getServerGuiElement(final EntityPlayer player) {
+
+		return new ContainerEnergyInterface(player, this);
 	}
 
 
 
 
 
+	@Override
+	public Object getClientGuiElement(final EntityPlayer player) {
 
-
-
-
-
+		return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player), this, player);
+	}
 }

@@ -1,5 +1,6 @@
 package AppliedIntegrations.api.Storage;
 
+
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
@@ -24,16 +25,19 @@ public class EnergyRepo implements IEnergyRepo {
 
 	@Override
 	public Set<LiquidAIEnergy> energySet() {
+
 		return this.cache.keySet();
 	}
 
 	@Override
 	public void clear() {
+
 		this.cache.clear();
 	}
 
 	@Override
 	public boolean containsEnergy(final LiquidAIEnergy Energy) {
+
 		return this.cache.containsKey(Energy);
 	}
 
@@ -55,21 +59,25 @@ public class EnergyRepo implements IEnergyRepo {
 
 	@Override
 	public IEnergyStack get(final LiquidAIEnergy Energy) {
+
 		return null;
 	}
 
 	@Override
 	public Collection<IEnergyStack> getAll() {
+
 		return this.cache.values();
 	}
 
 	@Override
 	public IEnergyStack getOrDefault(final LiquidAIEnergy Energy, final IEnergyStack defaultValue) {
+
 		return null;
 	}
 
 	@Override
 	public boolean isEmpty() {
+
 		return this.cache.isEmpty();
 	}
 
@@ -140,18 +148,19 @@ public class EnergyRepo implements IEnergyRepo {
 
 	@Override
 	public IEnergyStack remove(final LiquidAIEnergy energy) {
+
 		return this.cache.remove(energy);
 	}
 
 	@Override
 	public IEnergyStack setEnergy(final LiquidAIEnergy energy, final long amount) {
+
 		if (energy == null) {
 			return null;
 		}
 
 		// Set the stack, and return the old one.
 		return this.cache.put(energy, new EnergyStack(energy, amount));
-
 	}
 
 	@Override
@@ -166,6 +175,7 @@ public class EnergyRepo implements IEnergyRepo {
 
 	@Override
 	public int size() {
+
 		return this.cache.size();
 	}
 }

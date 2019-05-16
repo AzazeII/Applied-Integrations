@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui.Part;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IFilterGUI;
@@ -43,27 +44,40 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 
 
 	private static final int FILTER_GRID_SIZE = 3;
+
 	private static final int WIDGET_X_POSITION = 61;
+
 	private static final int WIDGET_Y_POSITION = 21;
+
 	private static final int GUI_MAIN_WIDTH = 176;
+
 	private static final int GUI_UPGRADES_WIDTH = 35;
+
 	private static final int GUI_UPGRADES_HEIGHT = 86;
+
 	public AIOPart part;
+
 	public EntityPlayer player;
+
 	String stringName;
+
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.io.bus.png");
+
 	private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
+
 	private boolean[] configMatrix = {false, false, false, false, true, false, false, false, false};
+
 	private GuiImgButton redstoneControlBtn;
 
 	public GuiEnergyIO(Container container, EntityPlayer player) {
+
 		super(container, player);
 		this.player = player;
-
 	}
 
 	@Override
 	public void initGui() {
+
 		super.initGui();
 
 		// Add priority button
@@ -94,11 +108,11 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 				index++;
 			}
 		}
-
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
+
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
@@ -110,16 +124,19 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 
 	@Override
 	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
+
 		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 
 	@Override
 	public ISyncHost getSyncHost() {
+
 		return part;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
+
 		if (host instanceof AIOPart) {
 			part = (AIOPart) host;
 		}
@@ -173,6 +190,7 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 
 	@Override
 	public void drawScreen(int MouseX, int MouseY, float pOpacity) {
+
 		super.drawScreen(MouseX, MouseY, pOpacity);
 
 		renderHoveredToolTip(MouseX, MouseY);

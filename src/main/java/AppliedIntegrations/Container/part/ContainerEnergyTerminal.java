@@ -1,5 +1,6 @@
 package AppliedIntegrations.Container.part;
 
+
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
@@ -25,23 +26,32 @@ import javax.annotation.Nonnull;
 public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implements IEnergySelectorContainer {
 	// X of output
 	private static final int OUTPUT_POSITION_X = 26;
+
 	// Y of output
 	private static final int OUTPUT_POSITION_Y = 92;
+
 	// X of input
 	private static final int INPUT_POSITION_X = 8;
+
 	// Y of input
 	private static final int INPUT_POSITION_Y = OUTPUT_POSITION_Y;
+
 	private static int OUTPUT_INV_INDEX = 1, INPUT_INV_INDEX = 0;
+
 	public EntityPlayer player;
+
 	private PartEnergyTerminal terminal;
+
 	private AIGridNodeInventory privateInventory = new AIGridNodeInventory(AppliedIntegrations.modid + ".item.energy.cell.inventory", 2, 64) {
 		@Override
 		public boolean isItemValidForSlot(final int slotID, final ItemStack itemStack) {
+
 			return Utils.getEnergyFromItemStack(itemStack) != null;
 		}
 	};
 
 	public ContainerEnergyTerminal(PartEnergyTerminal terminal, EntityPlayer player) {
+
 		super(player);
 		this.bindPlayerInventory(player.inventory, 122, 180);
 		this.terminal = terminal;
@@ -101,6 +111,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
+
 		return true;
 	}
 }

@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage.helpers.impl;
 
+
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -32,6 +33,7 @@ public class BlackHoleFluidHandler extends BlackHoleSingularityInventoryHandler<
 
 	@Override
 	public IStorageChannel<IAEFluidStack> getChannel() {
+
 		return AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class);
 	}
 }

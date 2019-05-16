@@ -1,5 +1,6 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
 
+
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -14,6 +15,7 @@ import javax.annotation.Nonnull;
 public class PacketClientToServerFilter extends AIPacket {
 
 	public LiquidAIEnergy energy;
+
 	public int index;
 
 	public ISyncHost host;
@@ -23,6 +25,7 @@ public class PacketClientToServerFilter extends AIPacket {
 	}
 
 	public PacketClientToServerFilter(@Nonnull ISyncHost host, LiquidAIEnergy energy, int index) {
+
 		super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
 		this.energy = energy;
 		this.index = index;
@@ -32,6 +35,7 @@ public class PacketClientToServerFilter extends AIPacket {
 	// Decode serialized data
 	@Override
 	public void fromBytes(ByteBuf buf) {
+
 		host = readSyncHost(buf);
 		energy = readEnergy(buf);
 		index = buf.readInt();
@@ -41,6 +45,7 @@ public class PacketClientToServerFilter extends AIPacket {
 	// Encode data from client to server
 	@Override
 	public void toBytes(ByteBuf buf) {
+
 		writeSyncHost(host, buf);
 		writeEnergy(energy, buf);
 		buf.writeInt(index);

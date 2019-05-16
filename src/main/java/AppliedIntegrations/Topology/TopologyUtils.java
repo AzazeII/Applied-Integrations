@@ -1,5 +1,6 @@
 package AppliedIntegrations.Topology;
 
+
 import AppliedIntegrations.AIConfig;
 import appeng.api.networking.*;
 import appeng.api.networking.energy.IEnergyGrid;
@@ -129,6 +130,7 @@ public class TopologyUtils {
 			Pair<IGridNode, IGridNode> pair = new Pair<IGridNode, IGridNode>() {
 				@Override
 				public IGridNode getLeft() {
+
 					return grid.getPivot();
 				}
 
@@ -146,6 +148,7 @@ public class TopologyUtils {
 
 				@Override
 				public IGridNode setValue(IGridNode value) {
+
 					return null;
 				}
 			};
@@ -204,16 +207,19 @@ public class TopologyUtils {
 				connections.add(new Pair<IGridNode, IGridNode>() {
 					@Override
 					public IGridNode getLeft() {
+
 						return partP2PTunnel.getGridNode();
 					}
 
 					@Override
 					public IGridNode getRight() {
+
 						return tunnelRight.getGridNode();
 					}
 
 					@Override
 					public IGridNode setValue(IGridNode value) {
+
 						return null;
 					}
 				});
@@ -228,7 +234,6 @@ public class TopologyUtils {
 
 		// Create json object
 		innerObject = createJSONFromConnections(nodeList, connections);
-
 	}
 
 	private static String toHumanReadableString(String toString) {
@@ -293,16 +298,19 @@ public class TopologyUtils {
 				connections.add(new Pair<IGridNode, IGridNode>() {
 					@Override
 					public IGridNode getLeft() {
+
 						return iGridConnection.a();
 					}
 
 					@Override
 					public IGridNode getRight() {
+
 						return iGridConnection.b();
 					}
 
 					@Override
 					public IGridNode setValue(IGridNode value) {
+
 						return null;
 					}
 				});

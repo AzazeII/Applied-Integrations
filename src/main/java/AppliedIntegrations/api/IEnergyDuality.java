@@ -18,36 +18,43 @@ import net.minecraftforge.fml.common.Optional;
 
 	@Override
 	default double injectAEPower(double amt, Actionable mode) {
+
 		return 0;
 	}
 
 	@Override
 	default double getAEMaxPower() {
+
 		return 0;
 	}
 
 	@Override
 	default double getAECurrentPower() {
+
 		return 0;
 	}
 
 	@Override
 	default boolean isAEPublicPowerStorage() {
+
 		return false;
 	}
 
 	@Override
 	default AccessRestriction getPowerFlow() {
+
 		return null;
 	}
 
 	@Override
 	default double extractAEPower(double amt, Actionable mode, PowerMultiplier usePowerMultiplier) {
+
 		return 0;
 	}
 
 	@Override
 	default int getSinkTier() {
+
 		return 4;
 	}
 
@@ -56,6 +63,7 @@ import net.minecraftforge.fml.common.Optional;
 	 */
 	@Override
 	default double injectEnergy(EnumFacing enumFacing, double v, double v1) {
+
 		return 0;
 	}
 }

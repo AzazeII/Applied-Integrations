@@ -1,5 +1,6 @@
 package AppliedIntegrations.Integration.Botania;
 
+
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import AppliedIntegrations.grid.Mana.ManaStorageChannel;
@@ -14,13 +15,12 @@ import java.util.Optional;
  */
 public class BotaniaLoader {
 	public static void preInit() {
+
 		AEApi.instance().storage().registerStorageChannel(IManaStorageChannel.class, new ManaStorageChannel());
 		ItemEnum.registerBotaniaItems();
 
 		BotaniaEntryHelper helper = new BotaniaEntryHelper();
 		helper.createPages();
-
-
 	}
 
 	public static void init() {
@@ -36,6 +36,7 @@ public class BotaniaLoader {
 	}
 
 	public static void initRecipes() {
+
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_1k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_1k.getItem(), 1, 0), 100000);
 
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_4k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_4k.getItem(), 1, 0), 100000);
@@ -78,6 +79,5 @@ public class BotaniaLoader {
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(7), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(6), 1, 0), 1000);
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(8), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(7), 1, 0), 1000);
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(9), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(8), 1, 0), 1000);
-
 	}
 }

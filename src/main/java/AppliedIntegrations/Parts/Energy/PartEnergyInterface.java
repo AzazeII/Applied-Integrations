@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIBaseGui;
@@ -84,28 +85,45 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
 )
 public class PartEnergyInterface extends AIPart implements IInventory, IEnergyInterface, IInventoryHost, IEnergyMachine, IPriorityHostExtended, IGridTickable, IStorageMonitorable, ICraftingProvider, IPowerChannelState, IEnergySink {
 	private final ChangeHandler<LiquidAIEnergy> energyChangeHandler = new ChangeHandler<>();
+
 	public LiquidAIEnergy bar;
+
 	public double IDLE_POWER_DRAIN = 0.5D;
+
 	public LiquidAIEnergy filteredEnergy = null;
+
 	private int priority;
+
 	private int capacity = AIConfig.interfaceMaxStorage;
+
 	private int maxTransfer = 500000;
+
 	private EnergyInterfaceStorage RFStorage;
+
 	private InterfaceSinkSource EUStorage;
+
 	private JouleInterfaceStorage JStorage;
+
 	private EmberInterfaceStorageDuality EmberStorage;
+
 	private TeslaInterfaceStorageDuality TESLAStorage;
+
 	// Interface duality, or interface host
 	private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
+
 	// Gui Units
 	private boolean redstoneControlled;
+
 	private boolean updateRequested;
+
 	//Linked array of containers, that syncing this Machine with server
 	private List<ContainerEnergyInterface> linkedListeners = new ArrayList<ContainerEnergyInterface>();
+
 	// Registring Inventory for slots of upgrades
 	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("", 1, 1, this) {
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+
 			if (!(itemstack == null)) {
 				if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(itemstack)) {
 					return true;
@@ -118,10 +136,12 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	// Make host available as "extendant(class to extend)S"
 	// ** IMPORTANT FOR MANA INTERFACE **
 	public PartEnergyInterface(PartEnum corespondingEnumPart, SecurityPermissions... permissions) {
+
 		super(corespondingEnumPart);
 	}
 
 	public PartEnergyInterface() {
+
 		super(PartEnum.EnergyInterface);
 
 		// Pass init to duality
@@ -130,18 +150,21 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public AIGridNodeInventory getUpgradeInventory() {
+
 		return upgradeInventory;
 	}
 
 	// hit boxes
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
+
 		bch.addBox(2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D);
 		bch.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 14.0D);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
+
 		if (IntegrationsHelper.instance.isLoaded(Ember)) {
 			EmberStorage.writeToNBT(tag);
 		}
@@ -167,6 +190,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
+
 		if (IntegrationsHelper.instance.isLoaded(Ember)) {
 			EmberStorage.readFromNBT(tag);
 		}
@@ -189,11 +213,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public int getLightLevel() {
+
 		return 0;
 	}
 
 	@Override
 	public void removeFromWorld() {
+
 		super.removeFromWorld();
 		if (IntegrationsHelper.instance.isLoaded(EU)) {
 			this.invalidateSinkSource();
@@ -202,6 +228,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public void addToWorld() {
+
 		super.addToWorld();
 		if (IntegrationsHelper.instance.isLoaded(EU)) {
 			this.updateSinkSource();
@@ -218,7 +245,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getSide(), getHostTile().getPos());
 				// Request gui update
 				updateRequested = true;
-
 			}
 		}
 		return true;
@@ -227,6 +253,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	// drops, when wrenched
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
+
 		for (ItemStack stack : upgradeInventory.slots) {
 			if (stack != null) {
 				drops.add(stack);
@@ -236,10 +263,12 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public double getIdlePowerUsage() {
+
 		return IDLE_POWER_DRAIN;
 	}
 
 	private void updateSinkSource() {
+
 		if (getEnergyStorage(EU, INTERNAL) == null) {
 			EUStorage = new InterfaceSinkSource(this.getHost().getTile().getWorld(), this.getHost().getLocation().getPos(), getMaxEnergyStored(null, EU), 4, 4);
 		}
@@ -248,6 +277,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	}
 
 	private void invalidateSinkSource() {
+
 		if (getEnergyStorage(EU, INTERNAL) != null) {
 			((InterfaceSinkSource) getEnergyStorage(EU, INTERNAL)).invalidate();
 		}
@@ -260,12 +290,14 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
+
 		return 2;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.STORAGE_INTERFACE_HAS_CHANNEL;
@@ -278,17 +310,20 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability) {
+
 		return duality.hasCapability(capability);
 	}
 
 	@Nullable
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability) {
+
 		return duality.getCapability(capability, INTERNAL);
 	}
 
 	@Override
 	public void onInventoryChanged() {
+
 		for (int i = 0; i < this.upgradeInventory.getSizeInventory(); i++) {
 			ItemStack currentStack = this.upgradeInventory.getStackInSlot(i);
 			if (currentStack != null) {
@@ -301,29 +336,35 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public int getPriority() {
+
 		return this.priority;
 	}
 
 	@Override
 	public void setPriority(int newValue) {
+
 		this.priority = newValue;
 	}
 
 	@Override
 	public ItemStack getItemStackRepresentation() {
+
 		return getItemStack(BREAK);
 	}
 
 	@Override
 	public GuiBridge getGuiBridge() {
+
 		return null;
 	}
 
 	public void removeListener(final ContainerEnergyInterface container) {
+
 		this.linkedListeners.remove(container);
 	}
 
 	public void addListener(final ContainerEnergyInterface container) {
+
 		if (!this.linkedListeners.contains(container)) {
 			this.linkedListeners.add(container);
 		}
@@ -343,11 +384,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	 */
 	@Override
 	public TickingRequest getTickingRequest(final IGridNode node) {
+
 		return new TickingRequest(1, 1, false, false);
 	}
 
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall) {
+
 		if (!getHostTile().getWorld().isRemote) {
 			if (updateRequested) {
 				// Check if we have gui to update
@@ -445,6 +488,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	 * marks GUI, as gui of THIS machine
 	 */
 	private void initGuiCoordinates() {
+
 		for (ContainerEnergyInterface listener : this.linkedListeners) {
 			if (listener != null) {
 				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
@@ -462,16 +506,19 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	}
 
 	public IEnergyInterfaceDuality getDuality() {
+
 		return this.duality;
 	}
 
 	@Override
 	public double getMaxTransfer(AEPartLocation side) {
+
 		return maxTransfer;
 	}
 
 	@Override
 	public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
+
 		return filteredEnergy;
 	}
 
@@ -479,6 +526,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	 * Cooperate:
 	 */
 	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+
 		if (energy == RF) {
 			return RFStorage;
 		}
@@ -505,15 +553,18 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	 */
 	@Override
 	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
+
 		getDuality().doInjectDualityWork(action);
 	}
 
 	@Override
 	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+
 		getDuality().doExtractDualityWork(action);
 	}
 
 	public boolean isRedstoneControlled() {
+
 		return this.redstoneControlled;
 	}
 
@@ -524,11 +575,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public boolean pushPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table) {
+
 		return false;
 	}
 
 	@Override
 	public boolean isBusy() {
+
 		return false;
 	}
 
@@ -551,26 +604,31 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	 */
 	@Override
 	public int getSizeInventory() {
+
 		return 9;
 	}
 
 	@Override
 	public boolean isEmpty() {
+
 		return false;
 	}
 
 	@Override
 	public ItemStack getStackInSlot(int id) {
+
 		return null;
 	}
 
 	@Override
 	public ItemStack decrStackSize(int p_70298_1_, int p_70298_2_) {
+
 		return null;
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index) {
+
 		return null;
 	}
 
@@ -581,6 +639,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public int getInventoryStackLimit() {
+
 		return 0;
 	}
 
@@ -591,6 +650,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public boolean isUsableByPlayer(EntityPlayer player) {
+
 		return false;
 	}
 
@@ -606,11 +666,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public boolean isItemValidForSlot(int p_94041_1_, ItemStack p_94041_2_) {
+
 		return false;
 	}
 
 	@Override
 	public int getField(int id) {
+
 		return 0;
 	}
 
@@ -621,6 +683,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public int getFieldCount() {
+
 		return 0;
 	}
 
@@ -630,10 +693,12 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	}
 
 	public void setRealContainer(String realContainer) {
+
 	}
 
 	@Override
 	public void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+
 		if (energy == RF) {
 			initRFStorage();
 		}
@@ -652,6 +717,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	}
 
 	private void initRFStorage() {
+
 		RFStorage = new EnergyInterfaceStorage(this, capacity, maxTransfer);
 	}
 
@@ -662,11 +728,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Optional.Method(modid = "mekanism")
 	private void initJStorage() {
+
 		JStorage = new JouleInterfaceStorage(this, (int) (capacity * 2.5));
 	}
 
 	@Optional.Method(modid = "embers")
 	private void initEmberStorage() {
+
 		EmberStorage = new EmberInterfaceStorageDuality();
 		EmberStorage.setEmberCapacity(capacity * 0.05); // Ember is really rich energy
 		EmberStorage.setEmber(0.0D);
@@ -674,11 +742,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Optional.Method(modid = "tesla")
 	private void initTESLAStorage() {
+
 		TESLAStorage = new TeslaInterfaceStorageDuality(this, (long) capacity, (long) maxTransfer);
 	}
 
 	@Override
 	public int getMaxEnergyStored(AEPartLocation unknown, @Nullable LiquidAIEnergy linkedMetric) {
+
 		if (linkedMetric == RF) {
 			return this.capacity;
 		}
@@ -708,56 +778,66 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public TileEntity getFacingTile(EnumFacing side) {
+
 		return getFacingTile();
 	}
 
 	@Override
 	public List<ContainerEnergyInterface> getListeners() {
+
 		return this.linkedListeners;
 	}
 
 	@Override
 	public String getName() {
+
 		return null;
 	}
 
 	@Override
 	public boolean hasCustomName() {
+
 		return false;
 	}
 
 	@Override
 	public ITextComponent getDisplayName() {
+
 		return null;
 	}
 
 	@Optional.Method(modid = "ic2")
 	@Override
 	public double getDemandedEnergy() {
+
 		return (Double) getEnergyStorage(EU, INTERNAL).getMaxStored() - (Double) getEnergyStorage(EU, INTERNAL).getStored();
 	}
 
 	@Optional.Method(modid = "ic2")
 	@Override
 	public int getSinkTier() {
+
 		return 4;
 	}
 
 	@Optional.Method(modid = "ic2")
 	@Override
 	public double injectEnergy(EnumFacing enumFacing, double v, double v1) {
+
 		return (Double) getEnergyStorage(EU, INTERNAL).receive(v, false);
 	}
 
 	@Optional.Method(modid = "ic2")
 	@Override
 	public boolean acceptsEnergyFrom(IEnergyEmitter iEnergyEmitter, EnumFacing enumFacing) {
+
 		return true;
 	}
 
 	@Nonnull
 	@Override
 	public AIGuiHandler.GuiEnum getGui() {
+
 		return AIGuiHandler.GuiEnum.GuiInterfacePart;
 	}
 }

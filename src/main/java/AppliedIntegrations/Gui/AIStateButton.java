@@ -1,5 +1,6 @@
 package AppliedIntegrations.Gui;
 
+
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.relauncher.Side;
@@ -14,14 +15,17 @@ public abstract class AIStateButton extends AIGuiButton {
 	 * Icon to draw on the button
 	 */
 	protected IStateIconTexture stateIcon;
+
 	/**
 	 * Button background
 	 */
 	private IStateIconTexture backgroundIcon;
+
 	/**
 	 * Offset from the top-left corner of the button to draw the icon.
 	 */
 	private int iconXOffset;
+
 	/**
 	 * Offset from the top-left corner of the button to draw the icon.
 	 */
@@ -93,5 +97,4 @@ public abstract class AIStateButton extends AIGuiButton {
         // Draw
         tessellator.draw();*/
 	}
-
 }

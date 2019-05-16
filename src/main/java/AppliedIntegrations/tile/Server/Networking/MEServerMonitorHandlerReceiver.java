@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.Server.Networking;
 
+
 import AppliedIntegrations.tile.Server.TileServerCore;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
@@ -10,9 +11,11 @@ import appeng.me.helpers.MachineSource;
 
 public class MEServerMonitorHandlerReceiver<T extends IAEStack<T>> implements IMEMonitorHandlerReceiver<T> {
 	private final TileServerCore host;
+
 	private final IStorageChannel<? extends IAEStack<?>> channel;
 
 	public MEServerMonitorHandlerReceiver(TileServerCore tileServerCore, IStorageChannel<? extends IAEStack<?>> channel) {
+
 		this.host = tileServerCore;
 		this.channel = channel;
 	}

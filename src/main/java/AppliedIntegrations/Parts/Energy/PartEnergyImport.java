@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 
+
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
@@ -27,11 +28,13 @@ import java.util.Random;
 public class PartEnergyImport extends AIOPart {
 
 	public PartEnergyImport() {
+
 		super(PartEnum.EnergyImportBus);
 	}
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
+
 		bch.addBox(6, 6, 11, 10, 10, 13);
 		bch.addBox(5, 5, 13, 11, 11, 14);
 		bch.addBox(4, 4, 14, 12, 12, 16);
@@ -40,10 +43,12 @@ public class PartEnergyImport extends AIOPart {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void randomDisplayTick(World world, BlockPos pos, Random r) {
+
 	}
 
 	@Override
 	public int getLightLevel() {
+
 		return 0;
 	}
 
@@ -89,16 +94,19 @@ public class PartEnergyImport extends AIOPart {
 
 	@Override
 	public void onEntityCollision(Entity entity) {
+
 	}
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
+
 		return 0;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
+
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.IMPORT_HAS_CHANNEL;
@@ -110,10 +118,12 @@ public class PartEnergyImport extends AIOPart {
 	}
 
 	private int getMaxTransfer() {
+
 		return 500;
 	}
 
 	private LiquidAIEnergy getFilteredEnergy() {
+
 		return null;
 	}
 }

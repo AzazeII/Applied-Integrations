@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.P2P;
 
+
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -24,6 +25,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 	private class EmberInputCapability implements IEmberCapability {
 		@Override
 		public double getEmber() {
+
 			int capacity = 0;
 
 			for (PartEmberP2PTunnel tunnel : PartEmberP2PTunnel.this.getOutputs()) {
@@ -42,6 +44,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 		@Override
 		public double getEmberCapacity() {
+
 			int capacity = 0;
 
 			for (PartEmberP2PTunnel tunnel : PartEmberP2PTunnel.this.getOutputs()) {
@@ -60,11 +63,13 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 		@Override
 		public double addAmount(double v, boolean b) {
+
 			return 0;
 		}
 
 		@Override
 		public double removeAmount(double v, boolean b) {
+
 			return 0;
 		}
 
@@ -87,6 +92,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 	private class EmberOutputCapability implements IEmberCapability {
 		@Override
 		public double getEmber() {
+
 			return PartEmberP2PTunnel.this.getOperatedTile(TileEntityEmitter.class).getCapability(EmberCapabilityProvider.emberCapability, null).getEmber();
 		}
 
@@ -97,6 +103,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 		@Override
 		public double getEmberCapacity() {
+
 			return 0;
 		}
 
@@ -107,11 +114,13 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 		@Override
 		public double addAmount(double v, boolean b) {
+
 			return 0;
 		}
 
 		@Override
 		public double removeAmount(double v, boolean b) {
+
 			return 0;
 		}
 
@@ -134,6 +143,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 	private class EmberNullCapability implements IEmberCapability {
 		@Override
 		public double getEmber() {
+
 			return 0;
 		}
 
@@ -144,6 +154,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 		@Override
 		public double getEmberCapacity() {
+
 			return 0;
 		}
 
@@ -154,11 +165,13 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 		@Override
 		public double addAmount(double v, boolean b) {
+
 			return 0;
 		}
 
 		@Override
 		public double removeAmount(double v, boolean b) {
+
 			return 0;
 		}
 
@@ -177,26 +190,33 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 		}
 	}
+
 	private IEmberCapability outputHandler = new EmberOutputCapability();
+
 	private IEmberCapability inputHandler = new EmberInputCapability();
+
 	private IEmberCapability NULLHandler = new EmberNullCapability();
 
 	public PartEmberP2PTunnel() {
+
 		super(PartEnum.P2PEmber);
 	}
 
 	@Override
 	protected AIGridNodeInventory getUpgradeInventory() {
+
 		return null;
 	}
 
 	@Override
 	public int getLightLevel() {
+
 		return 0;
 	}
 
 	@Override
 	public double getIdlePowerUsage() {
+
 		return 0;
 	}
 
@@ -207,6 +227,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 
 	@Override
 	public boolean hasCapability(@Nonnull Capability<?> capability) {
+
 		if (capability == EmberCapabilityProvider.emberCapability) {
 			return true;
 		}
@@ -216,6 +237,7 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 	@Nullable
 	@Override
 	public <T> T getCapability(@Nonnull Capability<T> capability) {
+
 		if (capability == EmberCapabilityProvider.emberCapability) {
 			if (this.isOutput()) {
 				return (T) this.outputHandler;

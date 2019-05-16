@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile;
 
+
 import AppliedIntegrations.api.Multiblocks.BlockData;
 import AppliedIntegrations.api.Multiblocks.BlockType;
 
@@ -65,7 +66,5 @@ public class AIPatterns {
 			// Up
 			new BlockData(1, 2, 0, BSHousing.b, BSPort.b), new BlockData(-1, 2, 0, BSHousing.b, BSPort.b), new BlockData(0, 2, 1, BSHousing.b, BSPort.b), new BlockData(0, 2, -1, BSHousing.b, BSPort.b), new BlockData(1, 2, 1, BSHousing.b, BSPort.b), new BlockData(1, 2, -1, BSHousing.b, BSPort.b), new BlockData(-1, 2, 1, BSHousing.b, BSPort.b), new BlockData(-1, 2, -1, BSHousing.b, BSPort.b),
 			// Down
-			new BlockData(1, -2, 0, BSHousing.b, BSPort.b), new BlockData(-1, -2, 0, BSHousing.b, BSPort.b), new BlockData(0, -2, 1, BSHousing.b, BSPort.b), new BlockData(0, -2, -1, BSHousing.b, BSPort.b), new BlockData(1, -2, 1, BSHousing.b, BSPort.b), new BlockData(1, -2, -1, BSHousing.b, BSPort.b), new BlockData(-1, -2, 1, BSHousing.b, BSPort.b), new BlockData(-1, -2, -1, BSHousing.b, BSPort.b),
-
-	};
+			new BlockData(1, -2, 0, BSHousing.b, BSPort.b), new BlockData(-1, -2, 0, BSHousing.b, BSPort.b), new BlockData(0, -2, 1, BSHousing.b, BSPort.b), new BlockData(0, -2, -1, BSHousing.b, BSPort.b), new BlockData(1, -2, 1, BSHousing.b, BSPort.b), new BlockData(1, -2, -1, BSHousing.b, BSPort.b), new BlockData(-1, -2, 1, BSHousing.b, BSPort.b), new BlockData(-1, -2, -1, BSHousing.b, BSPort.b),};
 }

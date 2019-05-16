@@ -1,5 +1,6 @@
 package AppliedIntegrations.Helpers.Energy;
 
+
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.ISyncHost;
@@ -57,6 +58,7 @@ public class Utils {
 	}
 
 	public static LiquidAIEnergy getEnergyFromItemStack(ItemStack itemStack) {
+
 		if (itemStack == null) {
 			return null;
 		}
@@ -168,6 +170,7 @@ public class Utils {
 
 	@Deprecated
 	public static IAEEnergyStack ConvertToAEFluidStack(final LiquidAIEnergy Energy, final long fluidAmount) {
+
 		IAEEnergyStack Stack;
 		Stack = AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class).createStack(new FluidStack(Energy, 1));
 		Stack.setStackSize(fluidAmount);
@@ -175,6 +178,7 @@ public class Utils {
 	}
 
 	public static ISyncHost getSyncHostByParams(BlockPos pos, AEPartLocation side, World obj) {
+
 		if (side == AEPartLocation.INTERNAL) {
 			return getTileByParams(pos, obj);
 		} else if (side != null) {
@@ -184,6 +188,7 @@ public class Utils {
 	}
 
 	public static AITile getTileByParams(BlockPos pos, World worldObj) {
+
 		World world = getClientOrServerWorld(worldObj);
 
 		// Check if tile instance of AIpart, depending on it return null or part
@@ -191,6 +196,7 @@ public class Utils {
 	}
 
 	public static AIPart getPartByParams(BlockPos pos, EnumFacing side, World worldObj) {
+
 		World world = getClientOrServerWorld(worldObj);
 
 		TileEntity entity = world.getTileEntity(pos);
@@ -199,6 +205,7 @@ public class Utils {
 	}
 
 	private static World getClientOrServerWorld(World w) {
+
 		World world = w;
 
 		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
