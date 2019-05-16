@@ -216,6 +216,15 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 
 		// Post cell array update
 		postCellInventoryEvent();
+	}
+
+	@Override
+	public void setDrain(boolean b) {
+		// Make tile consume energy
+		this.shouldDrain = b;
+
+		// Update time handler
+		this.drainHandler.updateData(this.getWorld());
 	}	public void postCellInventoryEvent() {
 		// Get node
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
@@ -229,15 +238,6 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 				grid.postEvent(new MENetworkCellArrayUpdate());
 			}
 		}
-	}
-
-	@Override
-	public void setDrain(boolean b) {
-		// Make tile consume energy
-		this.shouldDrain = b;
-
-		// Update time handler
-		this.drainHandler.updateData(this.getWorld());
 	}
 
 	@Override
@@ -350,7 +350,14 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 	public float getBeamState() {
 
 		return beamDrain;
-	}	@Override
+	}
+
+	public boolean drainsEnergy() {
+
+		return shouldDrain;
+	}
+
+	@Override
 	public void createAENode() {
 
 		if (world != null) {
@@ -363,12 +370,6 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 			}
 		}
 	}
-
-	public boolean drainsEnergy() {
-
-		return shouldDrain;
-	}
-
 
 
 

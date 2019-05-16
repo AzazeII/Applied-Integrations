@@ -113,10 +113,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 				NetworkHandler.sendTo(new PacketFilterServerToClient(energy, 0, owner), (EntityPlayerMP) listener.player);
 			}
 		}
-	}	@Override
-	public double getMaxTransfer(AEPartLocation side) {
-
-		return owner.getMaxTransfer(side);
 	}
 
 	// Synchronize data with all listeners
@@ -135,6 +131,10 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 				}
 			}
 		}
+	}	@Override
+	public double getMaxTransfer(AEPartLocation side) {
+
+		return owner.getMaxTransfer(side);
 	}
 
 	public void notifyListenersOfBarFilterChange(LiquidAIEnergy bar) {
@@ -145,6 +145,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 			}
 		}
 	}
+
 
 
 

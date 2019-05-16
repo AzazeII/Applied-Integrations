@@ -102,15 +102,6 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 	public void setMaster(IMaster master) {
 
 		this.master = (TileLogicBusCore) master;
-	}	@Override
-	public void createAENode() {
-
-		if (!world.isRemote && hasMaster()) {
-			if (gridNode == null) {
-				gridNode = AEApi.instance().grid().createGridNode(this);
-			}
-			gridNode.updateState();
-		}
 	}
 
 	@Nonnull
@@ -121,6 +112,15 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 			return getLogicMaster().getMultiblockNodes();
 		}
 		return new ArrayList<IGridNode>().listIterator();
+	}	@Override
+	public void createAENode() {
+
+		if (!world.isRemote && hasMaster()) {
+			if (gridNode == null) {
+				gridNode = AEApi.instance().grid().createGridNode(this);
+			}
+			gridNode.updateState();
+		}
 	}
 
 	@Override
@@ -157,6 +157,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock,
 		temp.addAll(sides);
 		return temp;
 	}
+
 
 
 

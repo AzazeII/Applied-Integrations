@@ -1,9 +1,7 @@
 package AppliedIntegrations.tile.Server;
 
 
-import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Gui.ServerGUI.GuiServerCore;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
@@ -152,12 +150,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 	private LinkedHashMap<Class<? extends AIServerMultiBlockTile>, List<AIServerMultiBlockTile>> slaveMap = new LinkedHashMap<>();
 
+	// Port-side map
 	private LinkedHashMap<AEPartLocation, TileServerPort> portMap = new LinkedHashMap<>();
 
 	private CardInventoryManager cardManager = new CardInventoryManager();
 
 	// list of blocks in multiblock
-	// Networks in ports
 	private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(TileServerHousing.class, TileServerSecurity.class, TileServerPort.class, TileServerRib.class);
 
 	// List of all "mediums" for providing cell inventory from main network into adjacent networks
@@ -224,15 +222,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	}
 
 	public void addSlave(AIServerMultiBlockTile slave) {
-
 		slaves.add(slave);
-	}	public <T extends IAEStack<T>> IMEMonitor<T> getMainNetworkInventory(IStorageChannel<T> channel) {
-		// Check not null
-		if (getMainNetwork() == null) {
-			return null;
-		}
-
-		return ((IStorageMonitorable) getMainNetwork().getCache(IStorageGrid.class)).getInventory(channel);
 	}
 
 	public void activate(EntityPlayer p) {
@@ -284,15 +274,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 		// Pass call to handler
 		portCraftingHandlers.get(side).provideCrafting(craftingTracker);
-	}	private void nullifyMap() {
-		// Nullify map
-		slaveMap = new LinkedHashMap<>();
-
-		// Iterate for each tile type
-		for (Class<? extends AIServerMultiBlockTile> type : serverClasses) {
-			// Add list to map
-			slaveMap.put(type, new ArrayList<>());
-		}
 	}
 
 	public boolean pushPortPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table, AEPartLocation side) {
@@ -345,6 +326,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		// Mark dirty
 		getWorld().markChunkDirty(port.getPos(), port);
 	}
+	// -----------------------------Crafting Methods-----------------------------//
 
 	private TileServerPort getPortAtSide(AEPartLocation side) {
 		// Iterate for each slave
@@ -359,7 +341,80 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 
 		return null;
-	}	@SuppressWarnings("unchecked")
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		// Read inventories
+		cardInv.readFromNBT(tag.getTagList("#cardInv", 10)); // Card inventory
+
+		// Check if tile is formed
+		if (tag.getBoolean(KEY_FORMED)) {
+			// When world is loaded this chain fires forI tile -> readFromNBT -> ... -> ..........
+			// And then forI: tile.update.
+			// So, at moment when tile.update is called all tiles are already loaded. So, construction
+			// Should be performed from update method
+			// Request construction
+			constructionRequested = true;
+		}
+
+		super.readFromNBT(tag);
+	}
+	// -----------------------------Drive Methods-----------------------------//
+
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+		// Write inventories
+		tag.setTag("#cardInv", cardInv.writeToNBT()); // Card inventory
+
+		// Write is formed
+		tag.setBoolean(KEY_FORMED, isFormed);
+
+		return super.writeToNBT(tag);
+	}
+
+	@Override
+	public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
+
+		return false;
+	}
+
+	@Override
+	public Iterator<IGridNode> getMultiblockNodes() {
+
+		return null;
+	}
+
+	@Override
+	public void securityBreak() {
+
+	}
+
+	@Nonnull
+	@Override
+	public EnumSet<GridFlags> getFlags() {
+
+		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void invalidate() {
+
+		super.invalidate();
+		if (world != null && !world.isRemote) {
+			destroyAENode();
+		}
+
+		if (isFormed) {
+			this.destroyMultiBlock();
+		}
+
+		// Drop items from drive and card inventory
+		Platform.spawnDrops(world, pos, Arrays.asList(cardInv.slots)); // Card inv
+	}
+
+	@SuppressWarnings("unchecked")
 	public void destroyMultiBlock() {
 		// Iterate for each slave
 		for (IAIMultiBlock tile : slaves) {
@@ -401,48 +456,16 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		receiverList = new ArrayList<>(); // (2)
 	}
 
-	@Override
-	public void readFromNBT(NBTTagCompound tag) {
-		// Read inventories
-		cardInv.readFromNBT(tag.getTagList("#cardInv", 10)); // Card inventory
+	private void nullifyMap() {
+		// Nullify map
+		slaveMap = new LinkedHashMap<>();
 
-		// Check if tile is formed
-		if (tag.getBoolean(KEY_FORMED)) {
-			// When world is loaded this chain fires forI tile -> readFromNBT -> ... -> ..........
-			// And then forI: tile.update.
-			// So, at moment when tile.update is called all tiles are already loaded. So, construction
-			// Should be performed from update method
-			// Request construction
-			constructionRequested = true;
+		// Iterate for each tile type
+		for (Class<? extends AIServerMultiBlockTile> type : serverClasses) {
+			// Add list to map
+			slaveMap.put(type, new ArrayList<>());
 		}
-
-		super.readFromNBT(tag);
 	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-		// Write inventories
-		tag.setTag("#cardInv", cardInv.writeToNBT()); // Card inventory
-
-		// Write is formed
-		tag.setBoolean(KEY_FORMED, isFormed);
-
-		return super.writeToNBT(tag);
-	}
-
-	@Override
-	public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
-
-		return false;
-	}
-
-	@Override
-	public Iterator<IGridNode> getMultiblockNodes() {
-
-		return null;
-	}
-
-
 
 	@Override
 	public void update() {
@@ -477,15 +500,10 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 	}
 
-
-
-
-
 	@Override
 	public void notifyBlock() {
 
 	}
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -499,7 +517,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 			formServer((List<AIServerMultiBlockTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_SERVER, this, (block) -> count.getAndIncrement()), count, p);
 		}
 	}
-
 
 	@SuppressWarnings("unchecked")
 	private void formServer(List<AIServerMultiBlockTile> toUpdate, AtomicInteger count, EntityPlayer p) {
@@ -569,6 +586,14 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 	}
 
+	public <T extends IAEStack<T>> IMEMonitor<T> getMainNetworkInventory(IStorageChannel<T> channel) {
+		// Check not null
+		if (getMainNetwork() == null) {
+			return null;
+		}
+
+		return ((IStorageMonitorable) getMainNetwork().getCache(IStorageGrid.class)).getInventory(channel);
+	}
 
 	@Override
 	public boolean hasMaster() {
@@ -582,50 +607,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		return this;
 	}
 
-
 	@Override
 	public void setMaster(IMaster tileServerCore) {
 
-	}
-
-	@Override
-	public Object getServerGuiElement(final EntityPlayer player) {
-
-		return new ContainerServerCore(player, this);
-	}
-
-	@Override
-	public Object getClientGuiElement(final EntityPlayer player) {
-
-		return new GuiServerCore((ContainerServerCore) this.getServerGuiElement(player), player);
-	}
-
-	@Override
-	public void securityBreak() {
-
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public void invalidate() {
-
-		super.invalidate();
-		if (world != null && !world.isRemote) {
-			destroyAENode();
-		}
-
-		if (isFormed) {
-			this.destroyMultiBlock();
-		}
-
-		// Drop items from drive and card inventory
-		Platform.spawnDrops(world, pos, Arrays.asList(cardInv.slots)); // Card inv
-	}
-
-	@Nonnull
-	@Override
-	public EnumSet<GridFlags> getFlags() {
-
-		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
 	}
 }

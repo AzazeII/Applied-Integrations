@@ -20,7 +20,6 @@ import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -31,13 +30,12 @@ import net.minecraftforge.fml.common.Optional;
 import javax.annotation.Nonnull;
 import java.util.EnumSet;
 
-@Optional.InterfaceList(value = { // ()____()
-		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IKineticSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.EnergyStorage", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Interfaces.Transducerable", modid = "RotaryCraft", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Power.AdvancedShaftPowerReceiver", modid = "RotaryCraft", striprefs = true)})
-
 /**
  * @Author Azazell
- */ public abstract class AITile extends TileEntity implements IActionHost, IGridHost, IGridBlock, ITickable, IGridProxyable, ISyncHost {
-
+ */
+@Optional.InterfaceList(value = { // ()____()
+		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IKineticSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.EnergyStorage", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Interfaces.Transducerable", modid = "RotaryCraft", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Power.AdvancedShaftPowerReceiver", modid = "RotaryCraft", striprefs = true)})
+public abstract class AITile extends TileEntity implements IActionHost, IGridHost, IGridBlock, ITickable, IGridProxyable, ISyncHost {
 	protected IGridNode gridNode = null;
 
 	protected IGridNode node = null;
@@ -47,22 +45,17 @@ import java.util.EnumSet;
 	private AENetworkProxy proxy;
 
 	public AITile() {
-
 		for (BlocksEnum blocksEnum : BlocksEnum.values()) {
 			if (blocksEnum.tileEnum.clazz == this.getClass()) {
-				this.proxy = new AENetworkProxy(this, "AITileProxy", new ItemStack(blocksEnum.b), true);
+				this.proxy = new AENetworkProxy(this, "AITileProxy", new ItemStack(blocksEnum.b), true) {
+					@Nonnull
+					@Override
+					public EnumSet<GridFlags> getFlags() {
+						return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+					}
+				};
 			}
 		}
-	}
-
-	public Object getServerGuiElement(final EntityPlayer player) {
-
-		return null;
-	}
-
-	public Object getClientGuiElement(final EntityPlayer player) {
-
-		return null;
 	}
 
 	public void postCellInventoryEvent() {
@@ -116,7 +109,6 @@ import java.util.EnumSet;
 	@Nonnull
 	@Override
 	public AECableType getCableConnectionType(AEPartLocation dir) {
-
 		return AECableType.DENSE_SMART;
 	}
 
@@ -144,8 +136,7 @@ import java.util.EnumSet;
 	@Nonnull
 	@Override
 	public EnumSet<GridFlags> getFlags() {
-
-		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+		return proxy.getFlags();
 	}
 
 	@Override
@@ -182,7 +173,7 @@ import java.util.EnumSet;
 	@Override
 	public EnumSet<EnumFacing> getConnectableSides() {
 
-		return EnumSet.of(EnumFacing.SOUTH, EnumFacing.DOWN, EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.WEST);
+		return proxy.getConnectableSides();
 	}
 
 	@Nonnull

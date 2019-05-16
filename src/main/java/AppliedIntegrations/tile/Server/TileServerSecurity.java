@@ -16,7 +16,6 @@ import appeng.api.util.IOrientable;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -179,10 +178,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 				initGuiCoordinates();
 			}
 		}
-	}	@Override
-	public Object getServerGuiElement(final EntityPlayer player) {
-
-		return new ContainerServerTerminal((TileServerCore) getMaster(), this, player);
 	}
 
 	private void initGuiCoordinates() {
@@ -206,10 +201,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 		editorInv.readFromNBT(tag.getTagList("#upgradeInventory", 10));
 
 		super.readFromNBT(tag);
-	}	@Override
-	public Object getClientGuiElement(final EntityPlayer player) {
-
-		return new GuiServerTerminal((ContainerServerTerminal) this.getServerGuiElement(player), player);
 	}
 
 	@Override
@@ -259,10 +250,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 			}
 		}));
 	}
-
-
-
-
 
 
 	// ------# Used by packets to sync slots by identifier #------ //

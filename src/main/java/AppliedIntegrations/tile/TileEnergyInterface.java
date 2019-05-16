@@ -4,7 +4,6 @@ package AppliedIntegrations.tile;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
@@ -157,19 +156,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	@Override
 	public void onInventoryChanged() {
 
-	}	private void notifyListenersOfFilterEnergyChange() {
-
-		for (ContainerEnergyInterface listener : this.linkedListeners) {
-			if (listener != null) {
-				// Iterate for each side
-				for (AEPartLocation side : AEPartLocation.values()) {
-					// Iterate for each energy
-					LiquidAIEnergy.energies.values().forEach((liquidAIEnergy -> {
-						NetworkHandler.sendTo(new PacketFilterServerToClient(getFilteredEnergy(side), side.ordinal(), this), (EntityPlayerMP) listener.player);
-					}));
-				}
-			}
-		}
 	}
 
 	@Override
@@ -202,18 +188,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
 
 		duality.doInjectDualityWork(action);
-	}	private void initGuiCoordinates() {
-		// Iterate for each listener
-		for (ContainerEnergyInterface listener : this.linkedListeners) {
-			// Check not null
-			if (listener != null) {
-				// Send packet init
-				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
-
-				// Toggle request
-				updateRequested = false;
-			}
-		}
 	}
 
 	@Override
@@ -262,7 +236,15 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	public TileEntity getFacingTile(EnumFacing side) {
 
 		return null;
-	}	@Override
+	}
+
+	@Override
+	public List<ContainerEnergyInterface> getListeners() {
+
+		return linkedListeners;
+	}
+
+	@Override
 	public void update() {
 
 		super.update();
@@ -330,10 +312,33 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 		}
 	}
 
-	@Override
-	public List<ContainerEnergyInterface> getListeners() {
+	private void initGuiCoordinates() {
+		// Iterate for each listener
+		for (ContainerEnergyInterface listener : this.linkedListeners) {
+			// Check not null
+			if (listener != null) {
+				// Send packet init
+				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
 
-		return linkedListeners;
+				// Toggle request
+				updateRequested = false;
+			}
+		}
+	}
+
+	private void notifyListenersOfFilterEnergyChange() {
+
+		for (ContainerEnergyInterface listener : this.linkedListeners) {
+			if (listener != null) {
+				// Iterate for each side
+				for (AEPartLocation side : AEPartLocation.values()) {
+					// Iterate for each energy
+					LiquidAIEnergy.energies.values().forEach((liquidAIEnergy -> {
+						NetworkHandler.sendTo(new PacketFilterServerToClient(getFilteredEnergy(side), side.ordinal(), this), (EntityPlayerMP) listener.player);
+					}));
+				}
+			}
+		}
 	}
 
 	@Override
@@ -359,23 +364,5 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
 
 		return false;
-	}
-
-
-
-	@Override
-	public Object getServerGuiElement(final EntityPlayer player) {
-
-		return new ContainerEnergyInterface(player, this);
-	}
-
-
-
-
-
-	@Override
-	public Object getClientGuiElement(final EntityPlayer player) {
-
-		return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(player), this, player);
 	}
 }
