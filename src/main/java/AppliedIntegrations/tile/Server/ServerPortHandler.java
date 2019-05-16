@@ -56,14 +56,9 @@ public class ServerPortHandler<T extends IAEStack<T>> {
 
             // For blacklist: make result true if list doesn't contain this stack
             // For whitelist: make result true if list contain this stack
-            // Create input copy
-            T copy = input.copy();
 
-            // Set stack size to one, since filter stack size is always one
-            copy.setStackSize(1);
-
-            // Return value depending on list mode
-            return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).contains(copy);
+            // Convert list into stream and check if any stack matches given lambda
+            return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).stream().anyMatch(input::equals);
         }
 
         return canInteract.get();

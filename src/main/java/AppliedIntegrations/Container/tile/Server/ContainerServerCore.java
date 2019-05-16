@@ -6,8 +6,11 @@ import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nonnull;
 
 /**
  * @Author Azazell
@@ -60,5 +63,11 @@ public class ContainerServerCore extends ContainerWithPlayerInventory {
     @Override
     public boolean canInteractWith(EntityPlayer p) {
         return true;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber ) {
+        return ItemStack.EMPTY;
     }
 }

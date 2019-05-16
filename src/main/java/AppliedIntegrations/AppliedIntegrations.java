@@ -1,18 +1,15 @@
 package AppliedIntegrations;
-import AppliedIntegrations.api.Storage.LiquidAIEnergy;
+
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
-import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Blocks.BlocksEnum;
+import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Proxy.CommonProxy;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.*;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -40,9 +37,8 @@ public class AppliedIntegrations {
 
     public static CreativeTabs AI = new CreativeTabs(I18n.translateToLocal(modid)) {
         @Override
-        public ItemStack getTabIconItem()
-        {
-            return new ItemStack(Item.getItemFromBlock(BlocksEnum.BEI.b), 1);
+        public ItemStack getTabIconItem() {
+            return new ItemStack(ItemEnum.CHAOSMANIPULATOR.getItem(), 1);
         }
     };
 

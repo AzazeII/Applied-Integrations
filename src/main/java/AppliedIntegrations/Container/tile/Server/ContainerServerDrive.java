@@ -5,6 +5,9 @@ import AppliedIntegrations.Container.slot.SlotMEServer;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.Server.TileServerDrive;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+
+import javax.annotation.Nonnull;
 
 public class ContainerServerDrive extends ContainerWithPlayerInventory {
     private static final int DRIVE_SLOT_ROWS = 3;
@@ -38,5 +41,12 @@ public class ContainerServerDrive extends ContainerWithPlayerInventory {
                 }
             }
         }
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber ) {
+        // Ignored
+        return ItemStack.EMPTY;
     }
 }
