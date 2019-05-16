@@ -6,18 +6,18 @@ import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
 /**
  * @Author Azazell
  */
-public interface IEnergyStack
-{
+public interface IEnergyStack {
 	/**
 	 * Changes the stack size by the delta amount and returns the new stack size.
 	 *
 	 * @param delta
 	 * @return Adjusted stack size.
 	 */
-	long adjustStackSize( long delta );
+	long adjustStackSize(long delta);
 
 	/**
 	 * Creates a copy of this stack and returns it.
@@ -33,8 +33,14 @@ public interface IEnergyStack
 	 * @return
 	 */
 	@Nullable
-    LiquidAIEnergy getEnergy();
+	LiquidAIEnergy getEnergy();
 
+	/**
+	 * Sets the energy for the stack.
+	 *
+	 * @param energy
+	 */
+	void setEnergy(@Nullable LiquidAIEnergy energy);
 
 	String getEnergyName();
 
@@ -45,11 +51,10 @@ public interface IEnergyStack
 	 * @return
 	 */
 	@Nonnull
-	String getEnergyName( @Nullable EntityPlayer player );
+	String getEnergyName(@Nullable EntityPlayer player);
 
 	/**
 	 * The chat color associated with this energy.
-	 *
 	 */
 	@Nonnull
 	String getChatColor();
@@ -60,6 +65,13 @@ public interface IEnergyStack
 	 * @return
 	 */
 	long getStackSize();
+
+	/**
+	 * Sets the size of the stack.
+	 *
+	 * @param size
+	 */
+	void setStackSize(long size);
 
 	/**
 	 * Returns true if the stack has a non-null energy set.
@@ -80,7 +92,7 @@ public interface IEnergyStack
 	 *
 	 * @param stream
 	 */
-	void readFromStream( @Nonnull ByteBuf stream );
+	void readFromStream(@Nonnull ByteBuf stream);
 
 	/**
 	 * Sets everything.
@@ -88,7 +100,7 @@ public interface IEnergyStack
 	 * @param energy
 	 * @param size
 	 */
-	void setAll(@Nullable LiquidAIEnergy energy, long size );
+	void setAll(@Nullable LiquidAIEnergy energy, long size);
 
 	/**
 	 * Sets the values of this stack to match the passed stack.<br>
@@ -96,38 +108,22 @@ public interface IEnergyStack
 	 *
 	 * @param stack
 	 */
-	void setAll( @Nullable IEnergyStack stack );
-
-	/**
-	 * Sets the energy for the stack.
-	 *
-	 * @param energy
-	 */
-	void setEnergy( @Nullable LiquidAIEnergy energy );
-
-
-	/**
-	 * Sets the size of the stack.
-	 *
-	 * @param size
-	 */
-	void setStackSize( long size );
+	void setAll(@Nullable IEnergyStack stack);
 
 	/**
 	 * Writes this energy stack to the specified NBT tag
 	 *
-	 * @param data
-	 * The tag to write to
+	 * @param data The tag to write to
 	 * @return The nbt tag passed in.
 	 */
 	@Nonnull
-	NBTTagCompound writeToNBT(@Nonnull NBTTagCompound data );
+	NBTTagCompound writeToNBT(@Nonnull NBTTagCompound data);
 
 	/**
 	 * Writes the stack to a bytebuf stream.
 	 *
 	 * @param stream
 	 */
-	void writeToStream( @Nonnull ByteBuf stream );
+	void writeToStream(@Nonnull ByteBuf stream);
 
 }

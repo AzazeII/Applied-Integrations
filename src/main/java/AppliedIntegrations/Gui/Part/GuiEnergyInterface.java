@@ -1,19 +1,21 @@
 package AppliedIntegrations.Gui.Part;
 
-import AppliedIntegrations.Gui.Hosts.IWidgetHost;
-import AppliedIntegrations.api.IEnergyInterface;
-import AppliedIntegrations.api.ISyncHost;
-import AppliedIntegrations.api.Storage.EnergyStack;
-import AppliedIntegrations.api.Storage.LiquidAIEnergy;
-import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.*;
+import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGuiHelper;
+import AppliedIntegrations.Gui.Hosts.IWidgetHost;
+import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
+import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.api.IEnergyInterface;
+import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.util.AEPartLocation;
 import appeng.client.gui.widgets.GuiTabButton;
@@ -36,28 +38,20 @@ import static appeng.api.util.AEPartLocation.*;
  * @Author Azazell
  */
 public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidgetHost {
+	protected final List<String> tooltip = new ArrayList<String>();
+	public PartEnergyInterface part;
+	public int id;
+	public LiquidAIEnergy linkedMetric = RF;
+	public int storage;
 	private IEnergyInterface energyInterface;
-
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
 	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
 	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
-
-	public PartEnergyInterface part;
 	private TileEnergyInterface tile;
-
-	protected final List<String> tooltip = new ArrayList<String>();
 	private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
-
 	private GuiTabButton priority;
-
 	private EntityPlayer player;
-
 	private List<String> buttonTooltip = new ArrayList<String>();
-
-	public int id;
-	public LiquidAIEnergy linkedMetric = RF;
-
-	public int storage;
 
 	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part, EntityPlayer player) {
 		super(CEI, player);
@@ -82,6 +76,33 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	}
 
 	@Override
+	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
+		// Change widget's energy
+		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+
+		if (energyInterface instanceof PartEnergyInterface) {
+			this.energySlotList.add(new WidgetEnergySlot(this, 0, 79, 111, true));
+		} else if (energyInterface instanceof TileEnergyInterface) {
+			byte id = 0;
+
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 34, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 52, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 70, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 88, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id++, 106, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, id, 124, 111, true));
+		}
+
+		// Add priority button
+		addPriorityButton();
+	}
+
+	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -94,9 +115,34 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		}
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize + 75);
 		// Draw upgrade slots
-		this.drawTexturedModalRect(this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0,
-				GUI_UPGRADES_WIDTH, GUI_UPGRADES_HEIGHT);
+		this.drawTexturedModalRect(this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0, GUI_UPGRADES_WIDTH, GUI_UPGRADES_HEIGHT);
 
+	}
+
+	@Override
+	public ISyncHost getSyncHost() {
+		return energyInterface;
+	}
+
+	@Override
+	public void setSyncHost(ISyncHost host) {
+		if (host instanceof IEnergyInterface) {
+			energyInterface = (IEnergyInterface) host;
+		}
+	}
+
+	@Override
+	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+		// Avoid null pointer exception in packet
+		if (part == null) {
+			return;
+		}
+
+		// Check if click was performed on priority button
+		if (btn == priorityButton) {
+			// Send packet to client
+			NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, part));
+		}
 	}
 
 	@Override
@@ -104,8 +150,9 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		tooltip.clear();
 		super.drawScreen(MouseX, MouseY, pOpacity);
 		drawHoveringText(this.tooltip, MouseX, MouseY, fontRenderer);
-		if (AIGuiHelper.INSTANCE.isPointInGuiRegion(this.guiLeft - 18, this.guiTop + 8, 16, 16, MouseX, MouseY, this.guiLeft, this.guiTop))
+		if (AIGuiHelper.INSTANCE.isPointInGuiRegion(this.guiLeft - 18, this.guiTop + 8, 16, 16, MouseX, MouseY, this.guiLeft, this.guiTop)) {
 			drawHoveringText(this.buttonTooltip, MouseX, MouseY, fontRenderer);
+		}
 
 		// Iterate over all energy widgets
 		for (WidgetEnergySlot slot : energySlotList) {
@@ -127,35 +174,13 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	}
 
 	@Override
-	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
-		// Call super
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-		/*if (this.priority.isMouseOverButton(mouseX, mouseY)) {
-			NetworkHandler.sendToServer(new PacketGuiChange(new GuiPriority(this.player.inventory, this.host),
-					getX(),getY(),getZ(),player));
-		}*/
-
-		energySlotList.forEach((energySlot) -> {
-			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
-				LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
-
-				try {
-					energySlot.onMouseClicked(new EnergyStack(EnergyItem, 1));
-
-				} catch (Exception e) {
-					AILog.debug(e + "");
-				}
-			}
-		});
-	}
-
-	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		//binding correct Gui
-		if (linkedMetric == RF || linkedMetric == J || linkedMetric == EU)
+		if (linkedMetric == RF || linkedMetric == J || linkedMetric == EU) {
 			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + linkedMetric.getTag() + ".bar.png");
+		}
 		Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
 
 		// Drawing Name
@@ -183,45 +208,26 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	}
 
 	@Override
-	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
-		// Change widget's energy
-		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
-	}
+	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
+		// Call super
+		super.mouseClicked(mouseX, mouseY, mouseButton);
+		/*if (this.priority.isMouseOverButton(mouseX, mouseY)) {
+			NetworkHandler.sendToServer(new PacketGuiChange(new GuiPriority(this.player.inventory, this.host),
+					getX(),getY(),getZ(),player));
+		}*/
 
-	@Override
-	public void initGui() {
-		super.initGui();
+		energySlotList.forEach((energySlot) -> {
+			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
+				LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
 
-		if (energyInterface instanceof PartEnergyInterface) {
-			this.energySlotList.add(new WidgetEnergySlot(this, 0, 79, 111, true));
-		}else if (energyInterface instanceof TileEnergyInterface){
-			byte id = 0;
+				try {
+					energySlot.onMouseClicked(new EnergyStack(EnergyItem, 1));
 
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 34, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 52, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++,70, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 88, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 106, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id, 124, 111, true));
-		}
-
-		// Add priority button
-		addPriorityButton();
-	}
-
-
-	// Adds tooltip on hover to bar
-	private void addBarTooltip(AEPartLocation side, boolean hover) {
-		if (hover) {
-			String str = String.format(
-					"%s: %,d %s/%,d %s",
-					I18n.translateToLocal("Energy Stored"),
-					this.getStorage(linkedMetric, side),
-					this.linkedMetric.getEnergyName(),
-					this.energyInterface.getMaxEnergyStored(side, linkedMetric),
-					this.linkedMetric.getEnergyName());
-			drawMouseOver(str);
-		}
+				} catch (Exception e) {
+					AILog.debug(e + "");
+				}
+			}
+		});
 	}
 
 	private void drawPower(int pLeft, int pTop, int pMouseX, int pMouseY, int width, AEPartLocation side) {
@@ -255,6 +261,10 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		}
 	}
 
+	public int getStorage(LiquidAIEnergy energy, AEPartLocation side) {
+		return storage;
+	}
+
 	private boolean drawPowerBar(int pLeft, int pTop, int pMouseX, int pMouseY, int width, int height, int v, int u) {
 		// Draw power bar
 		drawTexturedModalRect(pLeft, pTop + (83 - height), v, u, width, height);
@@ -263,38 +273,18 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		return AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
 	}
 
+	// Adds tooltip on hover to bar
+	private void addBarTooltip(AEPartLocation side, boolean hover) {
+		if (hover) {
+			String str = String.format("%s: %,d %s/%,d %s", I18n.translateToLocal("Energy Stored"), this.getStorage(linkedMetric, side), this.linkedMetric.getEnergyName(), this.energyInterface.getMaxEnergyStored(side, linkedMetric), this.linkedMetric.getEnergyName());
+			drawMouseOver(str);
+		}
+	}
+
 	public void drawMouseOver(String pText) {
 		if (pText != null) {
 			tooltip.clear();
 			tooltip.add(pText + "");
-		}
-	}
-
-	public int getStorage(LiquidAIEnergy energy, AEPartLocation side) {
-		return storage;
-	}
-
-	@Override
-	public ISyncHost getSyncHost() {
-		return energyInterface;
-	}
-
-	@Override
-	public void setSyncHost(ISyncHost host) {
-		if(host instanceof IEnergyInterface)
-			energyInterface = (IEnergyInterface)host;
-	}
-
-	@Override
-	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
-		// Avoid null pointer exception in packet
-		if(part == null)
-			return;
-
-		// Check if click was performed on priority button
-		if (btn == priorityButton){
-			// Send packet to client
-			NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, part));
 		}
 	}
 }

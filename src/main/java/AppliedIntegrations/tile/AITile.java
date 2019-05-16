@@ -1,10 +1,10 @@
 package AppliedIntegrations.tile;
 
+import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
-import AppliedIntegrations.Blocks.BlocksEnum;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.*;
@@ -31,262 +31,266 @@ import javax.annotation.Nonnull;
 import java.util.EnumSet;
 
 @Optional.InterfaceList(value = { // ()____()
-        @Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent",modid = "IC2",striprefs = true),
-        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink",modid = "IC2",striprefs = true),
-        @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource",modid = "IC2",striprefs = true),
-        @Optional.Interface(iface = "ic2.api.energy.tile.IKineticSource",modid = "IC2",striprefs = true),
-        @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource",modid = "IC2",striprefs = true),
-        @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage",modid = "Mekanism",striprefs = true),
-        @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor",modid = "Mekanism",striprefs = true),
-        @Optional.Interface(iface = "cofh.api.energy.EnergyStorage",modid = "CoFHAPI",striprefs = true),
-        @Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver",modid = "CoFHAPI",striprefs = true),
-        @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler",modid = "CoFHAPI",striprefs = true),
-        @Optional.Interface(iface = "Reika.RotaryCraft.api.Interfaces.Transducerable",modid = "RotaryCraft",striprefs = true),
-        @Optional.Interface(iface = "Reika.RotaryCraft.api.Power.AdvancedShaftPowerReceiver",modid = "RotaryCraft",striprefs = true)})
+		@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IKineticSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IHeatSource", modid = "IC2", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.EnergyStorage", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyReceiver", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "cofh.api.energy.IEnergyHandler", modid = "CoFHAPI", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Interfaces.Transducerable", modid = "RotaryCraft", striprefs = true), @Optional.Interface(iface = "Reika.RotaryCraft.api.Power.AdvancedShaftPowerReceiver", modid = "RotaryCraft", striprefs = true)})
 
 /**
  * @Author Azazell
- */
-public abstract class AITile extends TileEntity implements IActionHost,IGridHost,IGridBlock, ITickable, IGridProxyable, ISyncHost {
+ */ public abstract class AITile extends TileEntity implements IActionHost, IGridHost, IGridBlock, ITickable, IGridProxyable, ISyncHost {
 
-    protected IGridNode gridNode = null;
-    protected IGridNode node = null;
+	protected IGridNode gridNode = null;
+	protected IGridNode node = null;
 
-    protected boolean loaded = false;
-    private AENetworkProxy proxy;
+	protected boolean loaded = false;
+	private AENetworkProxy proxy;
 
-    public AITile(){
-        for (BlocksEnum blocksEnum : BlocksEnum.values()) {
-            if(blocksEnum.tileEnum.clazz == this.getClass()) {
-                this.proxy = new AENetworkProxy(this, "AITile",
-                        new ItemStack(blocksEnum.b), true);
-            }
-        }
-    }
+	public AITile() {
+		for (BlocksEnum blocksEnum : BlocksEnum.values()) {
+			if (blocksEnum.tileEnum.clazz == this.getClass()) {
+				this.proxy = new AENetworkProxy(this, "AITileProxy", new ItemStack(blocksEnum.b), true);
+			}
+		}
+	}
 
-    public Object getServerGuiElement( final EntityPlayer player ){ return null; }
-    public Object getClientGuiElement( final EntityPlayer player ){ return null; }
+	public Object getServerGuiElement(final EntityPlayer player) {
+		return null;
+	}
 
-    public void postCellInventoryEvent(){
-        // Pass call to overridden function
-        postCellEvent(new MENetworkCellArrayUpdate());
-    }
+	public Object getClientGuiElement(final EntityPlayer player) {
+		return null;
+	}
 
-    public void postCellEvent(MENetworkEvent event){
-        // Get node
-        IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+	public void postCellInventoryEvent() {
+		// Pass call to overridden function
+		postCellEvent(new MENetworkCellArrayUpdate());
+	}
 
-        // Check not null
-        if (node != null) {
-            // Get grid
-            IGrid grid = node.getGrid();
+	public void postCellEvent(MENetworkEvent event) {
+		// Get node
+		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 
-            // Post update
-            postCellEvent(grid, event);
-        }
-    }
+		// Check not null
+		if (node != null) {
+			// Get grid
+			IGrid grid = node.getGrid();
 
-    public void postCellEvent(IGrid iGrid, MENetworkEvent event) {
-        // Notify listeners of event change
-        iGrid.postEvent(event);
-    }
+			// Post update
+			postCellEvent(grid, event);
+		}
+	}
 
-    public void postCellInventoryEvent(IGrid iGrid) {
-        // Pass call to overridden function
-        postCellEvent(iGrid, new MENetworkCellArrayUpdate());
-    }
+	@Override
+	public IGridNode getGridNode(AEPartLocation dir) {
+		if (gridNode == null) {
+			createAENode();
+		}
+		return gridNode;
+	}
 
-    @Override
-    public double getIdlePowerUsage() {
-        return 1;
-    }
+	public void postCellEvent(IGrid iGrid, MENetworkEvent event) {
+		// Check not null
+		if (iGrid == null) {
+			return;
+		}
 
-    @Nonnull
-    @Override
-    public EnumSet<GridFlags> getFlags() {
-        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-    }
+		// Notify listeners of event change
+		iGrid.postEvent(event);
+	}
 
-    @Override
-    public boolean isWorldAccessible() {
-        return true;
-    }
+	public void createAENode() {
+		if (world != null) {
+			if (!world.isRemote) {
+				gridNode = AEApi.instance().grid().createGridNode(this);
+				gridNode.updateState();
+			}
+		}
+	}
 
-    @Nonnull
-    @Override
-    public DimensionalCoord getLocation() {
-        return new DimensionalCoord(this);
-    }
+	@Nonnull
+	@Override
+	public AECableType getCableConnectionType(AEPartLocation dir) {
+		return AECableType.DENSE_SMART;
+	}
 
-    @Nonnull
-    @Override
-    public AEColor getGridColor() {
-        return AEColor.TRANSPARENT;
-    }
+	@Override
+	public void securityBreak() {
 
-    @Override
-    public void onGridNotification(GridNotification notification) {
+	}
 
-    }
-    @Override
-    public void setNetworkStatus(IGrid grid, int channelsInUse) {
+	public void postCellInventoryEvent(IGrid iGrid) {
+		// Check not null
+		if (iGrid == null) {
+			return;
+		}
 
-    }
+		// Pass call to overridden function
+		postCellEvent(iGrid, new MENetworkCellArrayUpdate());
+	}
 
-    @Override
-    public AENetworkProxy getProxy() {
-        return proxy;
-    }
+	@Override
+	public double getIdlePowerUsage() {
+		return 1;
+	}
 
-    @Nonnull
-    @Override
-    public EnumSet<EnumFacing> getConnectableSides() {
-        return EnumSet.of(EnumFacing.SOUTH,EnumFacing.DOWN,EnumFacing.EAST,EnumFacing.UP,EnumFacing.NORTH,EnumFacing.WEST);
-    }
-    public void createAENode() {
-        if(world != null) {
-            if (!world.isRemote) {
-                gridNode = AEApi.instance().grid().createGridNode(this);
-                gridNode.updateState();
-            }
-        }
-    }
+	@Nonnull
+	@Override
+	public EnumSet<GridFlags> getFlags() {
+		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+	}
 
-    public void destroyAENode() {
-        if (gridNode != null) gridNode.destroy();
-    }
+	@Override
+	public boolean isWorldAccessible() {
+		return true;
+	}
 
-    @Nonnull
-    @Override
-    public IGridHost getMachine() {
-        return this;
-    }
+	@Nonnull
+	@Override
+	public DimensionalCoord getLocation() {
+		return new DimensionalCoord(this);
+	}
 
-    @Override
-    public void gridChanged() {
+	@Nonnull
+	@Override
+	public AEColor getGridColor() {
+		return AEColor.TRANSPARENT;
+	}
 
-    }
+	@Override
+	public void onGridNotification(GridNotification notification) {
 
-    @Override
-    public ItemStack getMachineRepresentation() {
-        DimensionalCoord location = this.getLocation();
-        return new ItemStack(location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock(), 1,
-                location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock().getMetaFromState((location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)))));
+	}
 
-    }
+	@Override
+	public void setNetworkStatus(IGrid grid, int channelsInUse) {
 
-    @Override
-    public void invalidate() {
-        super.invalidate();
-        if (world != null && !world.isRemote) {
-            destroyAENode();
-        }
-    }
+	}
 
-    @Override
-    public void onChunkUnload() {
-        if (world != null && !world.isRemote) {
-            destroyAENode();
-        }
-    }
+	@Nonnull
+	@Override
+	public EnumSet<EnumFacing> getConnectableSides() {
+		return EnumSet.of(EnumFacing.SOUTH, EnumFacing.DOWN, EnumFacing.EAST, EnumFacing.UP, EnumFacing.NORTH, EnumFacing.WEST);
+	}
 
-    public IGridNode getGridNode() {
-        return getGridNode(AEPartLocation.INTERNAL);
-    }
+	@Nonnull
+	@Override
+	public IGridHost getMachine() {
+		return this;
+	}
 
-    @Override
-    public IGridNode getGridNode(AEPartLocation dir) {
-        if(gridNode == null)
-            createAENode();
-        return gridNode;
-    }
+	@Override
+	public void gridChanged() {
 
-    @Nonnull
-    @Override
-    public AECableType getCableConnectionType(AEPartLocation dir) {
-        return AECableType.DENSE_SMART;
-    }
+	}
 
-    @Override
-    public void securityBreak() {
+	@Override
+	public ItemStack getMachineRepresentation() {
+		DimensionalCoord location = this.getLocation();
+		return new ItemStack(location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock(), 1, location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)).getBlock().getMetaFromState((location.getWorld().getBlockState(new BlockPos(location.x, location.y, location.z)))));
 
-    }
+	}
 
-    @Nonnull
-    @Override
-    public IGridNode getActionableNode() {
-        if (this.gridNode == null)
-            createAENode();
-        return gridNode;
-    }
+	@Override
+	public AENetworkProxy getProxy() {
+		return proxy;
+	}
 
-    @Override
-    public void update() {
-        //create grid node on add to world
-        if (!loaded && hasWorld() && !world.isRemote) {
-            loaded = true;
-            createAENode();
-        }
-    }
-    public void notifyBlock(){
-    }
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if (world != null && !world.isRemote) {
+			destroyAENode();
+		}
+	}
 
-    protected IGrid getNetwork(){
-        return getGridNode().getGrid();
-    }
+	public void destroyAENode() {
+		if (gridNode != null) {
+			gridNode.destroy();
+		}
+	}
 
-    /**
-     * @param resource
-     * 	Resource to be extracted
-     * @param actionable
-     * 	Simulate of Modulate?
-     * @return
-     * 	amount extracted
-     */
-    public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
-        if(node == null)
-            return 0;
-        IGrid grid = node.getGrid();
+	@Override
+	public void onChunkUnload() {
+		if (world != null && !world.isRemote) {
+			destroyAENode();
+		}
+	}
 
-        IStorageGrid storage = grid.getCache(IStorageGrid.class);
+	@Nonnull
+	@Override
+	public IGridNode getActionableNode() {
+		if (this.gridNode == null) {
+			createAENode();
+		}
+		return gridNode;
+	}
 
-        IAEEnergyStack notRemoved = storage.getInventory(getEnergyChannel()).extractItems(
-                getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
+	@Override
+	public void update() {
+		//create grid node on add to world
+		if (!loaded && hasWorld() && !world.isRemote) {
+			loaded = true;
+			createAENode();
+		}
+	}
 
-        if (notRemoved == null)
-            return (int)resource.amount;
-        return (int)(resource.amount - notRemoved.getStackSize());
-    }
+	public void notifyBlock() {
+	}
 
-    private IEnergyStorageChannel getEnergyChannel(){
-        return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
-    }
+	protected IGrid getNetwork() {
+		return getGridNode().getGrid();
+	}
 
-    /**
-     * @param resource
-     * 	Resource to be injected
-     * @param actionable
-     * 	Simulate or modulate?
-     * @return
-     *  amount injected
-     */
-    public int InjectEnergy(EnergyStack resource, Actionable actionable) {
-        if(node == null)
-            return 0;
-        IGrid grid = node.getGrid();
+	public IGridNode getGridNode() {
+		return getGridNode(AEPartLocation.INTERNAL);
+	}
 
-        IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
+	/**
+	 * @param resource   Resource to be extracted
+	 * @param actionable Simulate of Modulate?
+	 * @return amount extracted
+	 */
+	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
+		if (node == null) {
+			return 0;
+		}
+		IGrid grid = node.getGrid();
 
-        IAEEnergyStack returnAmount = storage.getInventory(this.getEnergyChannel()).injectItems(
-                getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
+		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 
-        if (returnAmount == null)
-            return (int)resource.amount;
-        return (int) (resource.amount - returnAmount.getStackSize());
-    }
+		IAEEnergyStack notRemoved = storage.getInventory(getEnergyChannel()).extractItems(getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
 
-    @Override
-    public AEPartLocation getSide() {
-        return AEPartLocation.INTERNAL;
-    }
+		if (notRemoved == null) {
+			return (int) resource.amount;
+		}
+		return (int) (resource.amount - notRemoved.getStackSize());
+	}
+
+	private IEnergyStorageChannel getEnergyChannel() {
+		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
+	}
+
+	/**
+	 * @param resource   Resource to be injected
+	 * @param actionable Simulate or modulate?
+	 * @return amount injected
+	 */
+	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
+		if (node == null) {
+			return 0;
+		}
+		IGrid grid = node.getGrid();
+
+		IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
+
+		IAEEnergyStack returnAmount = storage.getInventory(this.getEnergyChannel()).injectItems(getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
+
+		if (returnAmount == null) {
+			return (int) resource.amount;
+		}
+		return (int) (resource.amount - returnAmount.getStackSize());
+	}
+
+	@Override
+	public AEPartLocation getSide() {
+		return AEPartLocation.INTERNAL;
+	}
 }

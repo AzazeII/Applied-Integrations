@@ -6,5 +6,5 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
  * @Author Azazell
  */
 public interface IEnergyMachine {
-    void updateFilter(LiquidAIEnergy energy, int index);
+	void updateFilter(LiquidAIEnergy energy, int index);
 }

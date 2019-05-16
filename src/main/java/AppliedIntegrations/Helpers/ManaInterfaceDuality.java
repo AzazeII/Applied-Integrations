@@ -15,45 +15,46 @@ import static appeng.api.config.Actionable.MODULATE;
  */
 public class ManaInterfaceDuality implements IEnergyInterfaceDuality {
 
-    private IManaInterface owner;
-    public ManaInterfaceDuality(IManaInterface manaInterface) {
-        owner = manaInterface;
-    }
+	private IManaInterface owner;
 
-    @Override
-    public double getMaxTransfer(AEPartLocation side) {
-        return 100; // Only 100 max transfer, as mana is rich material
-    }
+	public ManaInterfaceDuality(IManaInterface manaInterface) {
+		owner = manaInterface;
+	}
 
-    @Override
-    public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
-        return null;
-    }
+	@Override
+	public double getMaxTransfer(AEPartLocation side) {
+		return 100; // Only 100 max transfer, as mana is rich material
+	}
 
-    @Override
-    public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
-        return null;
-    }
+	@Override
+	public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
+		return null;
+	}
 
-    @Override
-    public void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException {
-        int ValuedReceive = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
+	@Override
+	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
+		return null;
+	}
 
-        if(owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null) == 0){
-            int injectedAmount = owner.InjectMana(ValuedReceive, MODULATE);
-            // Remove only amount injected
-            owner.modifyManaStorage(-injectedAmount);
-        }
-    }
+	@Override
+	public void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException {
+		int ValuedReceive = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
 
-    @Override
-    public void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException {
-        int ValuedExtract = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
-        if(owner.InjectMana(ValuedExtract, Actionable.SIMULATE) - getMaxTransfer(null) == 0){
-            int extractedAmount = owner.ExtractMana(ValuedExtract, MODULATE);
+		if (owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null) == 0) {
+			int injectedAmount = owner.InjectMana(ValuedReceive, MODULATE);
+			// Remove only amount injected
+			owner.modifyManaStorage(-injectedAmount);
+		}
+	}
 
-            // Add only amount extracted
-            owner.modifyManaStorage(extractedAmount);
-        }
-    }
+	@Override
+	public void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException {
+		int ValuedExtract = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
+		if (owner.InjectMana(ValuedExtract, Actionable.SIMULATE) - getMaxTransfer(null) == 0) {
+			int extractedAmount = owner.ExtractMana(ValuedExtract, MODULATE);
+
+			// Add only amount extracted
+			owner.modifyManaStorage(extractedAmount);
+		}
+	}
 }

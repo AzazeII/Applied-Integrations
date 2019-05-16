@@ -8,7 +8,7 @@ import net.minecraft.item.ItemStack;
  * @Author Azazell
  */
 public class PartManaP2PTunnel extends PartP2PTunnel<PartManaP2PTunnel> implements IBotaniaIntegrated {
-    public PartManaP2PTunnel(ItemStack is) {
-        super(is);
-    }
+	public PartManaP2PTunnel(ItemStack is) {
+		super(is);
+	}
 }

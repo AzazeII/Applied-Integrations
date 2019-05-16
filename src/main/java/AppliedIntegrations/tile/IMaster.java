@@ -9,5 +9,5 @@ import java.util.Iterator;
  * @Author Azazell
  */
 public interface IMaster extends ISyncHost {
-    Iterator<IGridNode> getMultiblockNodes();
+	Iterator<IGridNode> getMultiblockNodes();
 }

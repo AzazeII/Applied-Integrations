@@ -15,23 +15,23 @@ import static appeng.api.config.Actionable.MODULATE;
  */
 public class BlackHoleFluidHandler extends BlackHoleSingularityInventoryHandler<IAEFluidStack> {
 
-    @Override
-    public IAEFluidStack injectItems(IAEFluidStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
-        // Check if there is singularity
-        if(singularity != null){
-            // Modulate extraction
-            if(actionable == MODULATE){
-                // Add data to storage list
-                singularity.addStack(iaeItemStack, actionable);
-            }
-            // Return null, as all items was injected
-            return null;
-        }
-        return iaeItemStack;
-    }
+	@Override
+	public IAEFluidStack injectItems(IAEFluidStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
+		// Check if there is singularity
+		if (singularity != null) {
+			// Modulate extraction
+			if (actionable == MODULATE) {
+				// Add data to storage list
+				singularity.addStack(iaeItemStack, actionable);
+			}
+			// Return null, as all items was injected
+			return null;
+		}
+		return iaeItemStack;
+	}
 
-    @Override
-    public IStorageChannel<IAEFluidStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class);
-    }
+	@Override
+	public IStorageChannel<IAEFluidStack> getChannel() {
+		return AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class);
+	}
 }

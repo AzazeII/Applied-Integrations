@@ -2,9 +2,11 @@
   "variants": {
     "valid=false": {
       "model": "appliedintegrations:logic_bus/logic_port"
-    }, "valid=true": {
+    },
+    "valid=true": {
       "model": "appliedintegrations:logic_bus/formed_port"
-    }, "inventory": {
+    },
+    "inventory": {
       "model": "appliedintegrations:logic_bus/logic_port",
       "transform": "forge:default-block"
     }

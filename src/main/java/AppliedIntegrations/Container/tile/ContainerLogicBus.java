@@ -8,10 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
  * @Author Azazell
  */
 public class ContainerLogicBus extends ContainerWithPlayerInventory {
-    public ContainerLogicBus(EntityPlayer player, TileLogicBusCore core) {
-        super(player);
+	public ContainerLogicBus(EntityPlayer player, TileLogicBusCore core) {
+		super(player);
 
-        this.bindPlayerInventory(player.inventory, 134, 182);
+		this.bindPlayerInventory(player.inventory, 134, 182);
 
         /*int counter = 0;
         // Add 6 columns
@@ -24,6 +24,6 @@ public class ContainerLogicBus extends ContainerWithPlayerInventory {
                 counter++;
             }
         }*/
-    }
+	}
 
 }

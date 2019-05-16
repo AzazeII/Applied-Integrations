@@ -6,10 +6,13 @@ import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
+import javax.annotation.Nullable;
 import java.util.EnumSet;
 
 
@@ -18,41 +21,67 @@ import java.util.EnumSet;
  */
 public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlock, ITickable {
 
-    // Used only client
-    public boolean isActive;
+	// Used only client
+	public boolean isActive;
 
-    // Did activity of grid node changed?
-    private ChangeHandler<Boolean> activityChangeHandler = new ChangeHandler<>();
+	// Did activity of grid node changed?
+	private ChangeHandler<Boolean> activityChangeHandler = new ChangeHandler<>();
 
-    private void notifyListeners() {
-        // Sync with client
-        NetworkHandler.sendToDimension(new PacketRibSync(this, getGridNode().isActive()), world.provider.getDimension());
-    }
+	public IGrid getMainNetwork() {
+		// Check not null
+		if (getGridNode() == null) {
+			return null;
+		}
 
-    public IGrid getMainNetwork() {
-        // Check not null
-        if (getGridNode() == null)
-            return null;
+		return getNetwork();
+	}
 
-        return getNetwork();
-    }
+	@Override
+	public EnumSet<GridFlags> getFlags() {
+		return EnumSet.of(GridFlags.DENSE_CAPACITY);
+	}
 
-    @Override
-    public void update() {
-        super.update();
+	@Override
+	public void update() {
+		super.update();
 
-        // Check if grid node is not null
-        if (getGridNode() != null) {
-            // Call onchange of handler
-            activityChangeHandler.onChange(getGridNode().isActive(), (activity -> {
-                // Pass call to function
-                notifyListeners();
-            }));
-        }
-    }
+		// Check if grid node is not null
+		if (getGridNode() != null) {
+			// Call onchange of handler
+			activityChangeHandler.onChange(getGridNode().isActive(), (activity -> {
+				// Pass call to function
+				notifyListeners();
+			}));
+		}
+	}
 
-    @Override
-    public EnumSet<GridFlags> getFlags() {
-        return EnumSet.of(GridFlags.DENSE_CAPACITY);
-    }
+	private void notifyListeners() {
+		// Sync with client
+		NetworkHandler.sendToDimension(new PacketRibSync(this, getGridNode().isActive()), world.provider.getDimension());
+	}
+
+	@Override
+	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+		// Check if capability is item handler capability and rib has master
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && hasMaster()) {
+			return true;
+		}
+		return super.hasCapability(capability, facing);
+	}
+
+	@Nullable
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+		// Check if capability is item handler capability and rib has master
+		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && hasMaster())
+		// Wrapper for card inventory of server core. Now subnetwork(ad-hoc network) with storage bus and
+		// ME terminal can access card storage of server core
+		{
+			return (T) new InvWrapper(((TileServerCore) getMaster()).cardInv);
+		}
+		return super.getCapability(capability, facing);
+	}
+
+
 }

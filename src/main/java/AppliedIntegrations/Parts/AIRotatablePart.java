@@ -11,109 +11,109 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
 import java.io.IOException;
+
 /**
  * @Author Azazell
  */
 public abstract class AIRotatablePart extends AIPart {
 
-    private static final String NBT_KEY_ROT_DIR = "partRotation";
+	private static final String NBT_KEY_ROT_DIR = "partRotation";
 
-    // Rotation value. Each byte gives +90 degree to rotation
-    private byte renderRotation = 0;
+	// Rotation value. Each byte gives +90 degree to rotation
+	private byte renderRotation = 0;
 
-    public AIRotatablePart(final PartEnum associatedPart, final SecurityPermissions ... interactionPermissions ) {
-        super( associatedPart, interactionPermissions );
-    }
+	public AIRotatablePart(final PartEnum associatedPart, final SecurityPermissions... interactionPermissions) {
+		super(associatedPart);
+	}
 
+	@Override
+	public void readFromNBT(final NBTTagCompound data) {
+		// Call super
+		super.readFromNBT(data);
 
-    @Override
-    public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position ) {
-        // Get the host tile entity
-        TileEntity hte = this.getHostTile();
+		// Read rotation
+		if (data.hasKey(this.NBT_KEY_ROT_DIR)) {
+			this.renderRotation = data.getByte(this.NBT_KEY_ROT_DIR);
+		}
+	}
 
-        // Is the player not sneaking and using a wrench
-        if( !player.isSneaking() && Platform.isWrench(player, player.getHeldItem(hand), hte.getPos()) ) {
-            // Call only on server
-            if( !getWorld().isRemote ) {
-                // Bounds check the rotation
-                if( ( this.renderRotation > 3 ) || ( this.renderRotation < 0 ) ) {
-                    // Move to first rotation value
-                    this.renderRotation = 0;
-                }
+	@Override
+	public void writeToStream(final ByteBuf stream) throws IOException {
+		// Call super
+		super.writeToStream(stream);
 
-                // Switch for current rotation
-                switch ( this.renderRotation ) {
-                    case 0:
-                        this.renderRotation = 1;
-                        break;
-                    case 1:
-                        this.renderRotation = 3;
-                        break;
-                    case 2:
-                        this.renderRotation = 0;
-                        break;
-                    case 3:
-                        this.renderRotation = 2;
-                        break;
-                }
+		// Write the rotation
+		stream.writeByte(this.renderRotation);
+	}
 
-                // Mark for sync & save
-                this.markForUpdate(); // Sync
-                this.markForSave(); // Save
-            }
-            return true;
-        }
+	@Override
+	public boolean readFromStream(final ByteBuf stream) throws IOException {
+		boolean redraw = false;
 
-        return super.onActivate( player, hand, position );
-    }
+		// Call super
+		redraw |= super.readFromStream(stream);
 
-    @Override
-    public void readFromNBT( final NBTTagCompound data ) {
-        // Call super
-        super.readFromNBT( data );
+		// Read the rotation
+		byte streamRot = stream.readByte();
 
-        // Read rotation
-        if( data.hasKey( this.NBT_KEY_ROT_DIR ) ) {
-            this.renderRotation = data.getByte( this.NBT_KEY_ROT_DIR );
-        }
-    }
+		// Did the rotaion change?
+		if (this.renderRotation != streamRot) {
+			this.renderRotation = streamRot;
+			redraw |= true;
+		}
 
-    @Override
-    public boolean readFromStream( final ByteBuf stream ) throws IOException {
-        boolean redraw = false;
+		return redraw;
+	}
 
-        // Call super
-        redraw |= super.readFromStream( stream );
+	@Override
+	public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position) {
+		// Get the host tile entity
+		TileEntity hte = this.getHostTile();
 
-        // Read the rotation
-        byte streamRot = stream.readByte();
+		// Is the player not sneaking and using a wrench
+		if (!player.isSneaking() && Platform.isWrench(player, player.getHeldItem(hand), hte.getPos())) {
+			// Call only on server
+			if (!getWorld().isRemote) {
+				// Bounds check the rotation
+				if ((this.renderRotation > 3) || (this.renderRotation < 0)) {
+					// Move to first rotation value
+					this.renderRotation = 0;
+				}
 
-        // Did the rotaion change?
-        if( this.renderRotation != streamRot ) {
-            this.renderRotation = streamRot;
-            redraw |= true;
-        }
+				// Switch for current rotation
+				switch (this.renderRotation) {
+					case 0:
+						this.renderRotation = 1;
+						break;
+					case 1:
+						this.renderRotation = 3;
+						break;
+					case 2:
+						this.renderRotation = 0;
+						break;
+					case 3:
+						this.renderRotation = 2;
+						break;
+				}
 
-        return redraw;
-    }
+				// Mark for sync & save
+				this.markForUpdate(); // Sync
+				this.markForSave(); // Save
+			}
+			return true;
+		}
 
-    @Override
-    public void writeToNBT( final NBTTagCompound data, final PartItemStack saveType ) {
-        // Call super
-        super.writeToNBT( data, saveType );
+		return super.onActivate(player, hand, position);
+	}
 
-        // Write the rotation
-        if( ( saveType == PartItemStack.WORLD ) && ( this.renderRotation != 0 ) ) {
-            data.setByte( this.NBT_KEY_ROT_DIR, this.renderRotation );
-        }
-    }
+	@Override
+	public void writeToNBT(final NBTTagCompound data, final PartItemStack saveType) {
+		// Call super
+		super.writeToNBT(data, saveType);
 
-    @Override
-    public void writeToStream( final ByteBuf stream ) throws IOException {
-        // Call super
-        super.writeToStream( stream );
-
-        // Write the rotation
-        stream.writeByte( this.renderRotation );
-    }
+		// Write the rotation
+		if ((saveType == PartItemStack.WORLD) && (this.renderRotation != 0)) {
+			data.setByte(this.NBT_KEY_ROT_DIR, this.renderRotation);
+		}
+	}
 }

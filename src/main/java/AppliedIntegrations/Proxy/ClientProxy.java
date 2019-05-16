@@ -62,131 +62,138 @@ import java.util.Objects;
  * @Author Azazell
  */
 public class ClientProxy extends CommonProxy {
-    public ClientProxy() {
-        MinecraftForge.EVENT_BUS.register( this );
-    }
+	public ClientProxy() {
+		MinecraftForge.EVENT_BUS.register(this);
+	}
 
-    private void registerChannelSprites() throws NoSuchMethodException {
-        // Get applied integrations api
-        AIApi instance = Objects.requireNonNull(AIApi.instance());
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void SidedPreInit() {
+		super.SidedPreInit();
 
-        // Register channel'sprite pair
-        instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class),
-                // Sprite
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+		NetworkHandler.registerClientPackets();
 
-                // Constructor
-                WidgetItemSlot.class.getConstructor(int.class, int.class),
+		// Register texture manager to event bus
+		FMLCommonHandler.instance().bus().register(new TextureEventManager());
 
-                // Handler
-                FilteredServerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+		if (AIConfig.enableMEServer) {
+			// Register custom renderers
+			ClientRegistry.bindTileEntitySpecialRenderer(TileServerRib.class, new ServerRibRenderer()); // (1)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileServerSecurity.class, new ServerSecurityRenderer()); // (2)
+		}
 
-                // Converter and UV
-                (AEItemStack::fromItemStack), Pair.of(0, 0),
+		if (AIConfig.enableBlackHoleStorage) {
+			// Register custom renderers
+			ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer()); // (1)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer()); // (2)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer()); // (3)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer()); // (4)
+		}
+	}
 
-                // Encoder and decoder
-                Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEItemStack::fromNBT)); // (1) Item channel
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void SidedInit(FMLInitializationEvent init) {
+		ItemEnum.registerModels();
 
-        instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class),
-                // Sprite
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+		BlocksEnum.registerModels();
+		BlocksEnum.registerItemModels();
 
-                // Constructor
-                WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class, IWidgetHost.class),
+		try {
+			registerChannelSprites();
+		} catch (NoSuchMethodException ignored) {
+		}
 
-                // Handler
-                FilteredServerPortFluidHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+		// Check if web server enabled
+		if (AIConfig.enableWebServer)
+		// Init web server
+		{
+			WebManager.init();
+		}
 
-                // Converter and UV
-                (stack) -> {
-                    // Get stack
-                    FluidStack fluidStack = FluidUtil.getFluidContained(stack);
+		if (Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
+			BotaniaLoader.init();
+		}
+		if (Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures) {
+			EmberLoader.init();
+		}
+		if (Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures) {
+			AstralLoader.init();
+		}
+	}
 
-                    // Check not null and meaningful
-                    if (fluidStack == null || fluidStack.amount == 0 || fluidStack.getFluid() == null)
-                        return null;
+	private void registerChannelSprites() throws NoSuchMethodException {
+		// Get applied integrations api
+		AIApi instance = Objects.requireNonNull(AIApi.instance());
 
-                    return AEFluidStack.fromFluidStack(fluidStack);
-                }, Pair.of(16, 0),
+		// Register channel'sprite pair
+		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class),
+				// Sprite
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
 
-                // Encoder and decoder
-                Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEFluidStack::fromNBT)); // (2) Fluid channel
+				// Constructor
+				WidgetItemSlot.class.getConstructor(int.class, int.class),
 
-        instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class),
-                // Sprite
-                new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+				// Handler
+				FilteredServerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
 
-                // Constructor
-                WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class),
+				// Converter and UV
+				(AEItemStack::fromItemStack), Pair.of(0, 0),
 
-                // Handler
-                FilteredServerPortEnergyHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+				// Encoder and decoder
+				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEItemStack::fromNBT)); // (1) Item channel
 
-                // Converter and UV
-                Utils::getEnergyStackFromItemStack, Pair.of(0, 16),
+		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class),
+				// Sprite
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
 
-                // Encoder and decoder
-                Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEEnergyStack::fromNBT)); // (3) Energy channel
-    }
+				// Constructor
+				WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class, IWidgetHost.class),
 
-    @Override
-    public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
-    }
+				// Handler
+				FilteredServerPortFluidHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void SidedPreInit(){
-        super.SidedPreInit();
+				// Converter and UV
+				(stack) -> {
+					// Get stack
+					FluidStack fluidStack = FluidUtil.getFluidContained(stack);
 
-        NetworkHandler.registerClientPackets();
+					// Check not null and meaningful
+					if (fluidStack == null || fluidStack.amount == 0 || fluidStack.getFluid() == null) {
+						return null;
+					}
 
-        // Register texture manager to event bus
-        FMLCommonHandler.instance().bus().register(new TextureEventManager());
+					return AEFluidStack.fromFluidStack(fluidStack);
+				}, Pair.of(16, 0),
 
-        if (AIConfig.enableMEServer){
-            // Register custom renderers
-            ClientRegistry.bindTileEntitySpecialRenderer(TileServerRib.class, new ServerRibRenderer()); // (1)
-            ClientRegistry.bindTileEntitySpecialRenderer(TileServerSecurity.class, new ServerSecurityRenderer()); // (2)
-        }
+				// Encoder and decoder
+				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEFluidStack::fromNBT)); // (2) Fluid channel
 
-        if (AIConfig.enableBlackHoleStorage) {
-            // Register custom renderers
-            ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer()); // (1)
-            ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer()); // (2)
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer()); // (3)
-            ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer()); // (4)
-        }
-    }
+		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class),
+				// Sprite
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void SidedInit(FMLInitializationEvent init) {
-        ItemEnum.registerModels();
+				// Constructor
+				WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class),
 
-        BlocksEnum.registerModels();
-        BlocksEnum.registerItemModels();
+				// Handler
+				FilteredServerPortEnergyHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
 
-        try {
-            registerChannelSprites();
-        } catch (NoSuchMethodException ignored) {}
+				// Converter and UV
+				Utils::getEnergyStackFromItemStack, Pair.of(0, 16),
 
-        // Check if web server enabled
-        if(AIConfig.enableWebServer)
-            // Init web server
-            WebManager.init();
+				// Encoder and decoder
+				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEEnergyStack::fromNBT)); // (3) Energy channel
+	}
 
-        if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
-            BotaniaLoader.init();
-        if(Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures)
-            EmberLoader.init();
-        if(Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures)
-            AstralLoader.init();
-    }
+	@Override
+	public void SidedPostInit() {
 
-    @Override
-    public void SidedPostInit(){
+	}
 
-    }
+	@Override
+	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+		return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
+	}
 }
 

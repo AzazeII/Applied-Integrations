@@ -5,7 +5,6 @@ import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.AIPart;
 import appeng.api.config.RedstoneMode;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * @Author Azazell
@@ -14,40 +13,41 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
  */
 public class PacketFullSync extends AIPacket {
 
-    public RedstoneMode redstoneMode;
-    public AIPart part;
-    public byte filterSize;
-    public boolean redstoneControl;
+	public RedstoneMode redstoneMode;
+	public AIPart part;
+	public byte filterSize;
+	public boolean redstoneControl;
 
-    public PacketFullSync() {}
+	public PacketFullSync() {
+	}
 
-    public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, boolean redstoneControlled, AIOPart aioPart) {
-        super(aioPart.getX(), aioPart.getY(), aioPart.getZ(), aioPart.getSide().getFacing(), aioPart.getWorld());
+	public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, boolean redstoneControlled, AIOPart aioPart) {
+		super(aioPart.getX(), aioPart.getY(), aioPart.getZ(), aioPart.getSide().getFacing(), aioPart.getWorld());
 
-        this.filterSize = filterSize;
-        this.redstoneControl = redstoneControlled;
-        this.redstoneMode = redstoneMode;
+		this.filterSize = filterSize;
+		this.redstoneControl = redstoneControlled;
+		this.redstoneMode = redstoneMode;
 
-        this.part = aioPart;
-    }
+		this.part = aioPart;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        // Read everything
-        part = readPart(buf);
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		// Read everything
+		part = readPart(buf);
 
-        filterSize = buf.readByte();
-        redstoneControl = buf.readBoolean();
-        redstoneMode = RedstoneMode.values()[buf.readByte()];
-    }
+		filterSize = buf.readByte();
+		redstoneControl = buf.readBoolean();
+		redstoneMode = RedstoneMode.values()[buf.readByte()];
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        // Write everything
-        writePart(buf);
+	@Override
+	public void toBytes(ByteBuf buf) {
+		// Write everything
+		writePart(buf);
 
-        buf.writeByte(filterSize);
-        buf.writeBoolean(redstoneControl);
-        buf.writeByte(redstoneMode.ordinal());
-    }
+		buf.writeByte(filterSize);
+		buf.writeBoolean(redstoneControl);
+		buf.writeByte(redstoneMode.ordinal());
+	}
 }

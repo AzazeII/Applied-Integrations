@@ -11,33 +11,34 @@ import com.google.common.collect.ImmutableList;
  * @Author Azazell
  */
 public class ServerPortCPUHandler extends TileCraftingStorageTile {
-    private final TileServerCore host;
+	private final TileServerCore host;
 
-    public ServerPortCPUHandler(TileServerCore core) {
-        this.host = core;
-    }
+	public ServerPortCPUHandler(TileServerCore core) {
+		this.host = core;
+	}
 
-    @Override
-    public IAECluster getCluster() {
-        // Get crafting grid from host
-        ICraftingGrid craftingGrid = host.getMainNetworkCraftingGrid();
+	@Override
+	public IAECluster getCluster() {
+		// Get crafting grid from host
+		ICraftingGrid craftingGrid = host.getMainNetworkCraftingGrid();
 
-        // Check not null
-        if (craftingGrid == null)
-            return null;
+		// Check not null
+		if (craftingGrid == null) {
+			return null;
+		}
 
-        // Get list of all CPU in grid
-        ImmutableList<ICraftingCPU> cpuList = craftingGrid.getCpus().asList();
+		// Get list of all CPU in grid
+		ImmutableList<ICraftingCPU> cpuList = craftingGrid.getCpus().asList();
 
-        // Iterate for each CPU in list
-        for (ICraftingCPU cpu : cpuList) {
-            // Check if CPU is cluster
-            if (cpu instanceof IAECluster) {
-                // Use this CPU
-                return (IAECluster) cpu;
-            }
-        }
+		// Iterate for each CPU in list
+		for (ICraftingCPU cpu : cpuList) {
+			// Check if CPU is cluster
+			if (cpu instanceof IAECluster) {
+				// Use this CPU
+				return (IAECluster) cpu;
+			}
+		}
 
-        return null;
-    }
+		return null;
+	}
 }

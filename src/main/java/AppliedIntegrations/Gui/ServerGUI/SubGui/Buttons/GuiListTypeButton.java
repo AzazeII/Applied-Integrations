@@ -5,7 +5,6 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.IncludeExclude;
 import appeng.core.AppEng;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ChestRenderer;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -13,70 +12,72 @@ import java.util.List;
 
 public class GuiListTypeButton extends GuiServerButton {
 
-    private IncludeExclude mode;
+	private IncludeExclude mode;
 
-    public GuiListTypeButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
-        super(terminal, ID, xPosition, yPosition, width, height, text);
-    }
+	public GuiListTypeButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+		super(terminal, ID, xPosition, yPosition, width, height, text);
+	}
 
-    private int getU() {
-        return 16 * (2 + mode.ordinal());
-    }
+	@Override
+	public void getTooltip(List<String> tip) {
+		// Check if container has no network tool in slot
+		if (!host.isCardValid()) {
+			return;
+		}
 
-    private int getV() {
-        return 16 * 8;
-    }
+		// Add header
+		tip.add("List Mode");
 
-    @Override
-    public void getTooltip(List<String> tip) {
-        // Check if container has no network tool in slot
-        if (!host.isCardValid())
-            return;
+		// Add state
+		tip.add(mode.name());
+	}
 
-        // Add header
-        tip.add("List Mode");
+	public void toggleMode() {
+		// Simply check if mode is black list and change to **opposite**
+		if (mode == IncludeExclude.BLACKLIST) { // **(1)
+			mode = IncludeExclude.WHITELIST; // **(2)
+		} else { // **(3)
+			mode = IncludeExclude.BLACKLIST; // **(4)
+		}
 
-        // Add state
-        tip.add(mode.name());
-    }
+		// Notify host
+		host.setIncludeExcludeMode(mode);
+	}
 
-    public void toggleMode() {
-        // Simply check if mode is black list and change to **opposite**
-        if (mode == IncludeExclude.BLACKLIST) { // **(1)
-            mode = IncludeExclude.WHITELIST; // **(2)
-        } else { // **(3)
-            mode = IncludeExclude.BLACKLIST; // **(4)
-        }
+	@Override
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		// Check if host GUI has no card
+		if (!host.isCardValid()) {
+			return;
+		}
 
-        // Notify host
-        host.setIncludeExcludeMode(mode);
-    }
+		// Update current mode
+		mode = host.getIncludeExcludeMode();
 
-    @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        // Check if host GUI has no card
-        if (!host.isCardValid())
-            return;
+		// Disable lighting
+		GL11.glDisable(GL11.GL_LIGHTING);
 
-        // Update current mode
-        mode = host.getIncludeExcludeMode();
+		// Full white
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 
-        // Disable lighting
-        GL11.glDisable( GL11.GL_LIGHTING );
+		// Bind to the gui texture
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(AppEng.MOD_ID, "textures/guis/states.png"));
 
-        // Full white
-        GL11.glColor3f( 1.0F, 1.0F, 1.0F );
+		// Draw background of button
+		drawTexturedModalRect(x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE - 2);
 
-        // Bind to the gui texture
-        Minecraft.getMinecraft().renderEngine.bindTexture( new ResourceLocation(AppEng.MOD_ID, "textures/guis/states.png" ) );
+		// Draw foreground of button
+		drawTexturedModalRect(x, y, getU(), getV(), AIWidget.WIDGET_SIZE - 2, AIWidget.WIDGET_SIZE - 2);
 
-        // Draw background of button
-        drawTexturedModalRect( x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE - 2 );
+		// Re-enable lighting
+		GL11.glEnable(GL11.GL_LIGHTING);
+	}
 
-        // Draw foreground of button
-        drawTexturedModalRect( x, y, getU(), getV() , AIWidget.WIDGET_SIZE - 2, AIWidget.WIDGET_SIZE - 2);
+	private int getU() {
+		return 16 * (2 + mode.ordinal());
+	}
 
-        // Re-enable lighting
-        GL11.glEnable( GL11.GL_LIGHTING );
-    }
+	private int getV() {
+		return 16 * 8;
+	}
 }

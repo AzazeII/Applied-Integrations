@@ -17,60 +17,65 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Implementation of IChannelWidget for item filtering
  */
 public class WidgetItemSlot implements IChannelContainerWidget<IAEItemStack> {
-    private AIGridNodeInventory inv;
-    private boolean visible;
+	private AIGridNodeInventory inv;
+	private boolean visible;
 
-    private SlotFakeTypeOnly innerSlot;
+	private SlotFakeTypeOnly innerSlot;
 
-    public WidgetItemSlot(int x, int y) {
-        this.inv = new AIGridNodeInventory("Inner Slot Inventory", 1, 1);
-        this.innerSlot = new SlotFakeTypeOnly(new AIGridNodeItemHandler(inv), 0, x, y) {
+	public WidgetItemSlot(int x, int y) {
+		this.inv = new AIGridNodeInventory("Inner Slot Inventory", 1, 1);
+		this.innerSlot = new SlotFakeTypeOnly(new AIGridNodeItemHandler(inv), 0, x, y) {
 
-            @SideOnly(Side.CLIENT)
-            public boolean isEnabled() {
-                return WidgetItemSlot.this.visible;
-            }
-        };
-    }
+			@SideOnly(Side.CLIENT)
+			public boolean isEnabled() {
+				return WidgetItemSlot.this.visible;
+			}
+		};
+	}
 
-    @Override
-    public IAEItemStack getAEStack() {
-        return AEItemStack.fromItemStack(innerSlot.getStack());
-    }
+	@Override
+	public IAEItemStack getAEStack() {
+		return AEItemStack.fromItemStack(innerSlot.getStack());
+	}
 
-    @Override
-    public void setAEStack(IAEStack<?> iaeItemStack) {
-        // Check if stack is empty
-        if (iaeItemStack == null){
-            // Nullify existing stack
-            innerSlot.putStack(ItemStack.EMPTY);
+	@Override
+	public void setAEStack(IAEStack<?> iaeItemStack) {
+		// Check if stack is empty
+		if (iaeItemStack == null) {
+			// Nullify existing stack
+			innerSlot.putStack(ItemStack.EMPTY);
 
-            // Skip further function code
-            return;
-        }
+			// Skip further function code
+			return;
+		}
 
-        // Put stack from AE stack in slot
-        innerSlot.putStack(((IAEItemStack)iaeItemStack).createItemStack());
-    }
+		// Put stack from AE stack in slot
+		innerSlot.putStack(((IAEItemStack) iaeItemStack).createItemStack());
+	}
 
-    @Override
-    public Slot getSlotWrapper() {
-        return innerSlot;
-    }
+	@Override
+	public String getStackTip() {
+		return "";
+	}
 
-    @Override
-    public void setVisible(boolean newState) {
-        this.visible = newState;
-    }
+	// ------- Ignored Methods ------- //
+	@Override
+	public void drawWidget() {
+	}
 
-    // ------- Ignored Methods ------- //
-    @Override
-    public void drawWidget() { }
+	@Override
+	public boolean isMouseOverWidget(int x, int y) {
+		return this.innerSlot.xPos == x && this.innerSlot.yPos == y;
+	}
 
-    @Override
-    public String getStackTip() { return ""; }
-    // ------- Ignored Methods ------- //
+	@Override
+	public Slot getSlotWrapper() {
+		return innerSlot;
+	}
+	// ------- Ignored Methods ------- //
 
-    @Override
-    public boolean isMouseOverWidget(int x, int y) { return this.innerSlot.xPos == x && this.innerSlot.yPos == y; }
+	@Override
+	public void setVisible(boolean newState) {
+		this.visible = newState;
+	}
 }

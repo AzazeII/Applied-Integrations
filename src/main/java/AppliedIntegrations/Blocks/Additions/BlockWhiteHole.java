@@ -15,26 +15,26 @@ import javax.annotation.Nullable;
  * @Author Azazell
  */
 public class BlockWhiteHole extends BlockBlackHole {
-    public BlockWhiteHole(String blockWhiteHole, String white_hole) {
-        super(blockWhiteHole, white_hole);
-    }
+	public BlockWhiteHole(String blockWhiteHole, String white_hole) {
+		super(blockWhiteHole, white_hole);
+	}
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileWhiteHole();
-    }
+	@Nullable
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileWhiteHole();
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileEntity tile = world.getTileEntity(pos);
-        if (!p.isSneaking()) {
-            // Pass activated to tile entity ( nothing new :) )
-            if (tile instanceof TileWhiteHole) {
-                // Pass activate to tile
-                return ((TileWhiteHole) tile).activate(world, pos, state, p, hand);
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (!p.isSneaking()) {
+			// Pass activated to tile entity ( nothing new :) )
+			if (tile instanceof TileWhiteHole) {
+				// Pass activate to tile
+				return ((TileWhiteHole) tile).activate(world, pos, state, p, hand);
+			}
+		}
+		return false;
+	}
 }

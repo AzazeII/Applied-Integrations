@@ -11,21 +11,21 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class HandlerSingularitySync implements IMessageHandler<PacketSingularitySync, PacketSingularitySync> {
 
-    public HandlerSingularitySync() {
+	public HandlerSingularitySync() {
 
-    }
+	}
 
-    @Override
-    public PacketSingularitySync onMessage(PacketSingularitySync message, MessageContext ctx) {
-        // Update client sided tile
-        Minecraft.getMinecraft().addScheduledTask(() -> {
-            TileMEPylon te = (TileMEPylon)Minecraft.getMinecraft().world.getTileEntity(message.pos);
-            te.operatedTile = message.operatedTile;
-            te.beamDrain = message.beamState;
-            te.shouldDrain = message.shouldDrain;
-        });
+	@Override
+	public PacketSingularitySync onMessage(PacketSingularitySync message, MessageContext ctx) {
+		// Update client sided tile
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			TileMEPylon te = (TileMEPylon) Minecraft.getMinecraft().world.getTileEntity(message.pos);
+			te.operatedTile = message.operatedTile;
+			te.beamDrain = message.beamState;
+			te.shouldDrain = message.shouldDrain;
+		});
 
-        return null;
-    }
+		return null;
+	}
 }
 

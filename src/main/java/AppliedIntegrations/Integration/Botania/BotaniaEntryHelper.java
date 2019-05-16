@@ -12,21 +12,21 @@ import vazkii.botania.common.lexicon.BasicLexiconEntry;
  * @Author Azazell
  */
 public class BotaniaEntryHelper {
-    private LexiconCategory appliedIntegrations;
+	private LexiconCategory appliedIntegrations;
 
-    // Botania and ae2 cross
-    private LexiconEntry crossover;
-    // Alfheim recipes
-    private LexiconEntry crystals;
-    // Machines
-    private LexiconEntry manaManipulation;
+	// Botania and ae2 cross
+	private LexiconEntry crossover;
+	// Alfheim recipes
+	private LexiconEntry crystals;
+	// Machines
+	private LexiconEntry manaManipulation;
 
-    public void createPages() {
-        BotaniaAPI.addCategory(appliedIntegrations = new BLexiconCategory("Applied Integrations", 4));
-        appliedIntegrations.setIcon(new ResourceLocation(AppliedIntegrations.modid, "textures/items/manastoragecell_1k.png"));
+	public void createPages() {
+		BotaniaAPI.addCategory(appliedIntegrations = new BLexiconCategory("Applied Integrations", 4));
+		appliedIntegrations.setIcon(new ResourceLocation(AppliedIntegrations.modid, "textures/items/manastoragecell_1k.png"));
 
-        crystals = new BasicLexiconEntry("MaterialEncorium", appliedIntegrations);
-        crossover = new BasicLexiconEntry("Crossover", appliedIntegrations);
-        manaManipulation = new BasicLexiconEntry("ManaDevices", appliedIntegrations);
-    }
+		crystals = new BasicLexiconEntry("MaterialEncorium", appliedIntegrations);
+		crossover = new BasicLexiconEntry("Crossover", appliedIntegrations);
+		manaManipulation = new BasicLexiconEntry("ManaDevices", appliedIntegrations);
+	}
 }

@@ -9,32 +9,38 @@
         "appliedintegrations:bit": 0.1
       },
       "model": "appliedintegrations:item/network_card/up"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:bit": 0.2
       },
       "model": "appliedintegrations:item/network_card/down"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:bit": 0.3
       },
       "model": "appliedintegrations:item/network_card/north"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:bit": 0.4
       },
       "model": "appliedintegrations:item/network_card/south"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:bit": 0.5
       },
       "model": "appliedintegrations:item/network_card/east"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:bit": 0.6
       },
       "model": "appliedintegrations:item/network_card/west"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:bit": 0.7
       },

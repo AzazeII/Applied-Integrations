@@ -11,23 +11,23 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class HandlerRibSync implements IMessageHandler<PacketRibSync, PacketRibSync> {
 
-    public HandlerRibSync(){
+	public HandlerRibSync() {
 
-    }
+	}
 
-    @Override
-    public PacketRibSync onMessage(PacketRibSync message, MessageContext ctx) {
-        Minecraft.getMinecraft().addScheduledTask(() -> {
-            // Get client minecraft world, then get position of recorded tile entity and get tile with client world
-            TileServerRib rib = (TileServerRib) Minecraft.getMinecraft().world.getTileEntity(message.rib.getPos());
+	@Override
+	public PacketRibSync onMessage(PacketRibSync message, MessageContext ctx) {
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			// Get client minecraft world, then get position of recorded tile entity and get tile with client world
+			TileServerRib rib = (TileServerRib) Minecraft.getMinecraft().world.getTileEntity(message.rib.getPos());
 
-            // Check not null
-            if (rib != null) {
-                // Update activity of rib
-                rib.isActive = message.nodeActivity;
-            }
-        });
+			// Check not null
+			if (rib != null) {
+				// Update activity of rib
+				rib.isActive = message.nodeActivity;
+			}
+		});
 
-        return null;
-    }
+		return null;
+	}
 }

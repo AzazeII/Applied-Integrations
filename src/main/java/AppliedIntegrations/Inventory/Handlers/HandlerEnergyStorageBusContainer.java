@@ -1,8 +1,10 @@
 package AppliedIntegrations.Inventory.Handlers;
 
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
-import AppliedIntegrations.api.Storage.*;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import appeng.api.AEApi;
@@ -12,182 +14,192 @@ import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IItemList;
-
-
 import net.minecraft.tileentity.TileEntity;
 
 /**
  * @Author Azazell
  */
-public class HandlerEnergyStorageBusContainer
-        implements IMEInventoryHandler<IAEEnergyStack>
-{
+public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAEEnergyStack> {
 
-    private TileEntity storage;
-    private EnumCapabilityType type;
-    private PartEnergyStorage owner;
+	private TileEntity storage;
+	private EnumCapabilityType type;
+	private PartEnergyStorage owner;
 
-    public HandlerEnergyStorageBusContainer(PartEnergyStorage owner, TileEntity operand, EnumCapabilityType type) {
-        this.storage = operand;
-        this.type = type;
-        this.owner = owner;
-    }
-    /**
-     * Store new items, or simulate the addition of new items into the ME Inventory.
-     *
-     * @param input item to add.
-     * @param type action type
-     * @param src action source
-     *
-     * @return returns the number of items not added.
-     */
-    @Override
-    public IAEEnergyStack injectItems(IAEEnergyStack input, Actionable type, IActionSource src) {
+	public HandlerEnergyStorageBusContainer(PartEnergyStorage owner, TileEntity operand, EnumCapabilityType type) {
+		this.storage = operand;
+		this.type = type;
+		this.owner = owner;
+	}
 
-        // Check for permission to write data
-        if(getAccess() == AccessRestriction.READ)
-            return input;
+	/**
+	 * Store new items, or simulate the addition of new items into the ME Inventory.
+	 *
+	 * @param input item to add.
+	 * @param type  action type
+	 * @param src   action source
+	 * @return returns the number of items not added.
+	 */
+	@Override
+	public IAEEnergyStack injectItems(IAEEnergyStack input, Actionable type, IActionSource src) {
 
-        // Check not null
-        if(input == null)
-            return input;
+		// Check for permission to write data
+		if (getAccess() == AccessRestriction.READ) {
+			return input;
+		}
 
-        // Check meaningful
-        if(!input.isMeaningful())
-            return input;
+		// Check not null
+		if (input == null) {
+			return input;
+		}
 
-        // Check if filtered energies has any energies
-        if(!owner.filteredEnergies.isEmpty()){
-            // Check if one of filtered energies is equal to input energy
-            if(!owner.filteredEnergies.contains(input.getEnergy()))
-                // Ignore
-                return input;
-        }
+		// Check meaningful
+		if (!input.isMeaningful()) {
+			return input;
+		}
 
-        // Create helper
-        CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide().getOpposite());
+		// Check if filtered energies has any energies
+		if (!owner.filteredEnergies.isEmpty()) {
+			// Check if one of filtered energies is equal to input energy
+			if (!owner.filteredEnergies.contains(input.getEnergy()))
+			// Ignore
+			{
+				return input;
+			}
+		}
 
-        // Get number injected
-        int added = helper.receiveEnergy(input.getStackSize(), type == Actionable.SIMULATE, this.type.energy);
+		// Create helper
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide().getOpposite());
 
-        // Calculate not added
-        int notAdded = (int)input.getStackSize() - added;
+		// Get number injected
+		int added = helper.receiveEnergy(input.getStackSize(), type == Actionable.SIMULATE, this.type.energy);
 
-        // Check greater than 0
-        if(notAdded > 0)
-            // Return value not added
-            return input.copy().setStackSize(notAdded);
+		// Calculate not added
+		int notAdded = (int) input.getStackSize() - added;
 
-        // Don't return value at all
-        return null;
-    }
+		// Check greater than 0
+		if (notAdded > 0)
+		// Return value not added
+		{
+			return input.copy().setStackSize(notAdded);
+		}
 
-    /**
-     * Extract the specified item from the ME Inventory
-     *
-     * @param request item to request ( with stack size. )
-     * @param mode simulate, or perform action?
-     *
-     * @return returns the number of items extracted, null
-     */
-    @Override
-    public IAEEnergyStack extractItems(IAEEnergyStack request, Actionable mode, IActionSource src) {
-        // Check for permission to read data
-        if(getAccess() == AccessRestriction.WRITE)
-            return null;
+		// Don't return value at all
+		return null;
+	}
 
-        // Check not null
-        if(request == null)
-            return null;
+	/**
+	 * Extract the specified item from the ME Inventory
+	 *
+	 * @param request item to request ( with stack size. )
+	 * @param mode    simulate, or perform action?
+	 * @return returns the number of items extracted, null
+	 */
+	@Override
+	public IAEEnergyStack extractItems(IAEEnergyStack request, Actionable mode, IActionSource src) {
+		// Check for permission to read data
+		if (getAccess() == AccessRestriction.WRITE) {
+			return null;
+		}
 
-        // Check meaningful
-        if(!request.isMeaningful())
-            return null;
+		// Check not null
+		if (request == null) {
+			return null;
+		}
 
-        // Check if filtered energies has any energies
-        if(!owner.filteredEnergies.isEmpty()){
-            // Check if one of filtered energies is equal to input energy
-            if(!owner.filteredEnergies.contains(request.getEnergy()))
-                // Ignore
-                return null;
-        }
+		// Check meaningful
+		if (!request.isMeaningful()) {
+			return null;
+		}
 
-        // Create capability helper
-        CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
+		// Check if filtered energies has any energies
+		if (!owner.filteredEnergies.isEmpty()) {
+			// Check if one of filtered energies is equal to input energy
+			if (!owner.filteredEnergies.contains(request.getEnergy()))
+			// Ignore
+			{
+				return null;
+			}
+		}
 
-        // Get extracted value
-        int extracted = helper.extractEnergy(request.getStackSize(), mode == Actionable.SIMULATE, this.type.energy);
+		// Create capability helper
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
 
-        // Check greater than 0
-        if(extracted > 0)
-            // Return extracted amount
-            return request.copy().setStackSize(extracted);
-        return null;
-    }
+		// Get extracted value
+		int extracted = helper.extractEnergy(request.getStackSize(), mode == Actionable.SIMULATE, this.type.energy);
 
-    /**
-     * request a full report of all available items, storage.
-     *
-     * @param out the IItemList the results will be written too
-     *
-     * @return returns same list that was passed in, is passed out
-     */
-    @Override
-    public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> out) {
-        // Check for permission to read data
-        if(getAccess() == AccessRestriction.WRITE)
-            return null;
+		// Check greater than 0
+		if (extracted > 0)
+		// Return extracted amount
+		{
+			return request.copy().setStackSize(extracted);
+		}
+		return null;
+	}
 
-        // Create capability helper
-        CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
+	/**
+	 * request a full report of all available items, storage.
+	 *
+	 * @param out the IItemList the results will be written too
+	 * @return returns same list that was passed in, is passed out
+	 */
+	@Override
+	public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> out) {
+		// Check for permission to read data
+		if (getAccess() == AccessRestriction.WRITE) {
+			return null;
+		}
 
-        // Get stored energy
-        int stored = helper.getStored(type.energy);
+		// Create capability helper
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
 
-        // Add stored energy to output
-        out.add(AEEnergyStack.fromStack(new EnergyStack(type.energy, stored)));
+		// Get stored energy
+		int stored = helper.getStored(type.energy);
 
-        // Return given list
-        return out;
-    }
+		// Add stored energy to output
+		out.add(AEEnergyStack.fromStack(new EnergyStack(type.energy, stored)));
 
-    @Override
-    public AccessRestriction getAccess() {
-        // TODO: 2019-03-27 Sync with gui
-        return owner.access;
-    }
+		// Return given list
+		return out;
+	}
 
-    @Override
-    public boolean isPrioritized(IAEEnergyStack input) {
-        // TODO: check line 147
-        return false;
-    }
+	@Override
+	public IStorageChannel<IAEEnergyStack> getChannel() {
+		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
+	}
 
-    @Override
-    public boolean canAccept(IAEEnergyStack input) {
-        if (this.storage == null)
-            return false;
-        return true;
-    }
+	@Override
+	public AccessRestriction getAccess() {
+		// TODO: 2019-03-27 Sync with gui
+		return owner.access;
+	}
 
-    @Override
-    public int getPriority() {
-        // TODO: 2019-02-27 Priority
-        return 0;
-    }
+	@Override
+	public boolean isPrioritized(IAEEnergyStack input) {
+		// TODO: check line 147
+		return false;
+	}
 
-    @Override
-    public int getSlot() {
-        return 0;
-    }
+	@Override
+	public boolean canAccept(IAEEnergyStack input) {
+		if (this.storage == null) {
+			return false;
+		}
+		return true;
+	}
 
-    @Override
-    public boolean validForPass(int i) {
-        return true;
-    }
+	@Override
+	public int getPriority() {
+		// TODO: 2019-02-27 Priority
+		return 0;
+	}
 
-    @Override
-    public IStorageChannel<IAEEnergyStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
-    }
+	@Override
+	public int getSlot() {
+		return 0;
+	}
+
+	@Override
+	public boolean validForPass(int i) {
+		return true;
+	}
 }

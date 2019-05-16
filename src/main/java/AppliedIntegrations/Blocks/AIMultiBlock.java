@@ -20,44 +20,46 @@ import java.util.List;
  */
 public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEntityProvider {
 
-    protected AIMultiBlock(String registry, String unlocalizedName) {
-        super(registry, unlocalizedName);
-        this.setHardness(5F);
-    }
+	protected AIMultiBlock(String registry, String unlocalizedName) {
+		super(registry, unlocalizedName);
+		this.setHardness(5F);
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if(!world.isRemote) {
-            if (Platform.isWrench(p, p.inventory.getCurrentItem(), pos)) {
-                if (!p.isSneaking()) {
-                    ((IAIMultiBlock) world.getTileEntity(pos)).tryConstruct(p);
-                    return true;
-                } else {
-                    final List<ItemStack> list = Lists.newArrayList(Platform.getBlockDrops(world, pos));
-                    Platform.spawnDrops(world, pos, list);
-                    world.setBlockToAir(pos);
-                    return true;
-                }
-            }
-        }
-        return false;
-    }
-    @Override
-    public boolean hasTileEntity(IBlockState blockState) {
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		if (!world.isRemote) {
+			if (Platform.isWrench(p, p.inventory.getCurrentItem(), pos)) {
+				if (!p.isSneaking()) {
+					((IAIMultiBlock) world.getTileEntity(pos)).tryConstruct(p);
+					return true;
+				} else {
+					final List<ItemStack> list = Lists.newArrayList(Platform.getBlockDrops(world, pos));
+					Platform.spawnDrops(world, pos, list);
+					world.setBlockToAir(pos);
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
-        return true;
-    }
-    @Override
-    public TileEntity createNewTileEntity(World w, int p_149915_2_) {
-        for(BlocksEnum b : BlocksEnum.values()){
-            if(b.b == this){
-                try {
-                    return (TileEntity) b.tileEnum.clazz.newInstance();
-                }catch(Exception e){
+	@Override
+	public boolean hasTileEntity(IBlockState blockState) {
 
-                }
-            }
-        }
-        return null;
-    }
+		return true;
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World w, int p_149915_2_) {
+		for (BlocksEnum b : BlocksEnum.values()) {
+			if (b.b == this) {
+				try {
+					return (TileEntity) b.tileEnum.clazz.newInstance();
+				} catch (Exception e) {
+
+				}
+			}
+		}
+		return null;
+	}
 }

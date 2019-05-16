@@ -16,146 +16,121 @@ import static net.minecraft.util.EnumFacing.Axis.Z;
 
 public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 
-    // Initialize side variables
-    private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame.png"); // (1)
-    private static final ResourceLocation directionalSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_alt_b.png"); // (2)
+	// Initialize side variables
+	private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame.png"); // (1)
+	private static final ResourceLocation directionalSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_alt_b.png"); // (2)
 
-    private static final ResourceLocation offSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off.png"); // (3)
-    private static final ResourceLocation offDirectionalSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off_a.png"); // (4)
+	private static final ResourceLocation offSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off.png"); // (3)
+	private static final ResourceLocation offDirectionalSide = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame_off_a.png"); // (4)
+	private static final EnumFacing[] axisDirections = {SOUTH, WEST, UP};
+	// Tile ---> Axis Map
+	private static LinkedHashMap<TileServerRib, Axis> tileAxisMap = new LinkedHashMap<>();
 
-    // Tile ---> Axis Map
-    private static LinkedHashMap<TileServerRib, Axis> tileAxisMap = new LinkedHashMap<>();
+	@Override
+	public void render(TileServerRib te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+		// Save matrix to stack
+		prepareMatrix(x, y, z);
 
-    private static final EnumFacing[] axisDirections = {
-            SOUTH, WEST, UP
-    };
+		// Configure light blend
+		setLightAmbient();
 
-    private ResourceLocation bindDirectionalTexture(TileServerRib te) {
-        // Check if node is not active
-        if (!te.isActive)
-            return offDirectionalSide;
-        // Return active directional side
-        return directionalSide;
-    }
+		// Rescale render
+		GlStateManager.scale(1, 1, 1);
 
-    private ResourceLocation bindNondirectionalTexture(TileServerRib te) {
-        // Check if node is not active
-        if (!te.isActive)
-            return offSide;
-        // Return active non-directional side
-        return side;
-    }
+		// Bind side texture 4 next 6 quads
+		bindTileTexture(te);
 
-    private void bindTileTexture(TileServerRib te) {
-        // Iterate for each axis direction
-        for (EnumFacing side : axisDirections){
-            // Check if rib has same block at current side
-            if (te.getWorld().getTileEntity(te.getPos().offset(side)) instanceof TileServerRib) {
-                // Check if rib has same block at opposite side
-                if (te.getWorld().getTileEntity(te.getPos().offset(side.getOpposite())) instanceof TileServerRib) {
-                    // Make rib directional
-                    Minecraft.getMinecraft().renderEngine.bindTexture(bindDirectionalTexture(te));
+		// Quad #1 (x - static) EAST
+		drawQuadWithUV(new float[][]{{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {0.5F, 0.5F, -0.5F}, {0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, EAST));
 
-                    // Bind tile to current axis
-                    tileAxisMap.put(te, side.getAxis());
+		// Quad #2 (-x - static) WEST
+		drawQuadWithUV(new float[][]{{-0.5F, -0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, WEST));
 
-                    // Break loop
-                    break;
-                } else {
-                    // Make rib non-directional
-                    Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionalTexture(te));
-                }
-            } else {
-                // Make rib non-directional
-                Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionalTexture(te));
-            }
-        }
-    }
+		// Quad #3 (y - static) UP
+		drawQuadWithUV(new float[][]{{0.5F, 0.5F, -0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F},}, translateAxisToUV(te, UP));
 
-    private float[][] translateAxisToUV(TileServerRib te, EnumFacing side) {
-        // Get tile line axis
-        Axis axis = tileAxisMap.get(te);
+		// Quad #4 (-y - static) DOWN
+		drawQuadWithUV(new float[][]{{0.5F, -0.5F, -0.5F}, {0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, DOWN));
 
-        // Check not null
-        if (axis == null)
-            // Return basic UV state
-            return defaultUV;
+		// Quad #5 (z - static) SOUTH
+		drawQuadWithUV(new float[][]{{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F},}, translateAxisToUV(te, SOUTH));
 
-        // Check if axis is Y
-        if (axis == Y)
-            // Shift default UV
-            return caesarShift(defaultUV);
-        else if (axis == Z)
-            // Check if side is placed on axis Y
-            if (side.getAxis() == Y)
-                // Shift default UV
-                return caesarShift(defaultUV);
+		// Quad #6 (-z - static) NORTH
+		drawQuadWithUV(new float[][]{{0.5F, -0.5F, -0.5F}, {0.5F, 0.5F, -0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, NORTH));
 
-        return defaultUV;
-    }
+		pushMatrix(x, y, z);
+	}
 
-    @Override
-    public void render(TileServerRib te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-        // Save matrix to stack
-        prepareMatrix(x, y, z);
+	private void bindTileTexture(TileServerRib te) {
+		// Iterate for each axis direction
+		for (EnumFacing side : axisDirections) {
+			// Check if rib has same block at current side
+			if (te.getWorld().getTileEntity(te.getPos().offset(side)) instanceof TileServerRib) {
+				// Check if rib has same block at opposite side
+				if (te.getWorld().getTileEntity(te.getPos().offset(side.getOpposite())) instanceof TileServerRib) {
+					// Make rib directional
+					Minecraft.getMinecraft().renderEngine.bindTexture(bindDirectionalTexture(te));
 
-        // Configure light blend
-        setLightAmbient();
+					// Bind tile to current axis
+					tileAxisMap.put(te, side.getAxis());
 
-        // Rescale render
-        GlStateManager.scale(1,1,1);
+					// Break loop
+					break;
+				} else {
+					// Make rib non-directional
+					Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionalTexture(te));
+				}
+			} else {
+				// Make rib non-directional
+				Minecraft.getMinecraft().renderEngine.bindTexture(bindNondirectionalTexture(te));
+			}
+		}
+	}
 
-        // Bind side texture 4 next 6 quads
-        bindTileTexture(te);
+	private float[][] translateAxisToUV(TileServerRib te, EnumFacing side) {
+		// Get tile line axis
+		Axis axis = tileAxisMap.get(te);
 
-        // Quad #1 (x - static) EAST
-        drawQuadWithUV(new float[][] {
-                {0.5F, -0.5F, 0.5F},
-                {0.5F, 0.5F, 0.5F},
-                {0.5F, 0.5F, -0.5F},
-                {0.5F, -0.5F, -0.5F},
-        }, translateAxisToUV(te, EAST));
+		// Check not null
+		if (axis == null)
+		// Return basic UV state
+		{
+			return defaultUV;
+		}
 
-        // Quad #2 (-x - static) WEST
-        drawQuadWithUV(new float[][] {
-                {-0.5F, -0.5F, 0.5F},
-                {-0.5F, 0.5F, 0.5F},
-                {-0.5F, 0.5F, -0.5F},
-                {-0.5F, -0.5F, -0.5F},
-        }, translateAxisToUV(te, WEST));
+		// Check if axis is Y
+		if (axis == Y)
+		// Shift default UV
+		{
+			return caesarShift(defaultUV);
+		} else if (axis == Z)
+		// Check if side is placed on axis Y
+		{
+			if (side.getAxis() == Y)
+			// Shift default UV
+			{
+				return caesarShift(defaultUV);
+			}
+		}
 
-        // Quad #3 (y - static) UP
-        drawQuadWithUV(new float[][] {
-                {0.5F, 0.5F, -0.5F},
-                {0.5F, 0.5F, 0.5F},
-                {-0.5F, 0.5F, 0.5F},
-                {-0.5F, 0.5F, -0.5F},
-        }, translateAxisToUV(te, UP));
+		return defaultUV;
+	}
 
-        // Quad #4 (-y - static) DOWN
-        drawQuadWithUV(new float[][] {
-                {0.5F, -0.5F, -0.5F},
-                {0.5F, -0.5F, 0.5F},
-                {-0.5F, -0.5F, 0.5F},
-                {-0.5F, -0.5F, -0.5F},
-        }, translateAxisToUV(te, DOWN));
+	private ResourceLocation bindDirectionalTexture(TileServerRib te) {
+		// Check if node is not active
+		if (!te.isActive) {
+			return offDirectionalSide;
+		}
+		// Return active directional side
+		return directionalSide;
+	}
 
-        // Quad #5 (z - static) SOUTH
-        drawQuadWithUV(new float[][] {
-                {0.5F, -0.5F, 0.5F},
-                {0.5F, 0.5F, 0.5F},
-                {-0.5F, 0.5F, 0.5F},
-                {-0.5F, -0.5F, 0.5F},
-        }, translateAxisToUV(te, SOUTH));
-
-        // Quad #6 (-z - static) NORTH
-        drawQuadWithUV(new float[][] {
-                {0.5F, -0.5F, -0.5F},
-                {0.5F, 0.5F, -0.5F},
-                {-0.5F, 0.5F, -0.5F},
-                {-0.5F, -0.5F, -0.5F},
-        }, translateAxisToUV(te, NORTH));
-
-        pushMatrix(x, y, z);
-    }
+	private ResourceLocation bindNondirectionalTexture(TileServerRib te) {
+		// Check if node is not active
+		if (!te.isActive) {
+			return offSide;
+		}
+		// Return active non-directional side
+		return side;
+	}
 }

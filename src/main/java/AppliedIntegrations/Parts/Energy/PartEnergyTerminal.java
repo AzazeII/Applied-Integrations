@@ -1,6 +1,5 @@
 package AppliedIntegrations.Parts.Energy;
 
-import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -10,6 +9,7 @@ import AppliedIntegrations.Parts.AIRotatablePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import appeng.api.config.*;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -39,7 +39,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nonnull;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,8 +49,8 @@ import static appeng.api.networking.ticking.TickRateModulation.SAME;
  */
 public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost, IConfigManagerHost, IGridTickable, IMEMonitorHandlerReceiver<IAEEnergyStack> {
 
-	private IConfigManager configManager = new ConfigManager(this);
 	public List<ContainerEnergyTerminal> listeners = new ArrayList<>();
+	private IConfigManager configManager = new ConfigManager(this);
 	private boolean updateRequsted;
 	private SortOrder sortingOrder = SortOrder.NAME;
 
@@ -60,19 +59,19 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 		// Register setting for terminal
 		// Sort mode (default: name)
-		configManager.registerSetting( Settings.SORT_BY, SortOrder.NAME );
+		configManager.registerSetting(Settings.SORT_BY, SortOrder.NAME);
 
 		// View mode (default: all)
-		configManager.registerSetting( Settings.VIEW_MODE, ViewItems.ALL );
+		configManager.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
 
 		// Sort direction (default: ascending)
-		configManager.registerSetting( Settings.SORT_DIRECTION, SortDir.ASCENDING );
+		configManager.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
 	}
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
 		// Check if terminal is active
-		if(isActive()) {
+		if (isActive()) {
 			// Open gui
 			AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiTerminalPart, player, getSide(), getPos());
 
@@ -91,10 +90,19 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	}
 
 	@Override
-	public void getBoxes( final IPartCollisionHelper helper ) {
-		helper.addBox( 2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D );
-		helper.addBox( 4.0D, 4.0D, 13.0D, 12.0D, 12.0D, 14.0D );
-		helper.addBox( 5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 13.0D );
+	public void getBoxes(final IPartCollisionHelper helper) {
+		helper.addBox(2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D);
+		helper.addBox(4.0D, 4.0D, 13.0D, 12.0D, 12.0D, 14.0D);
+		helper.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 13.0D);
+	}
+
+	@Override
+	public int getLightLevel() {
+		// Check if active
+		if (isActive()) {
+			return ACTIVE_TERMINAL_LIGHT_LEVEL;
+		}
+		return 0;
 	}
 
 	@Override
@@ -103,15 +111,8 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	}
 
 	@Override
-	public int getLightLevel(){
-		// Check if active
-		if(isActive())
-			return ACTIVE_TERMINAL_LIGHT_LEVEL;
-		return 0;
+	public void onEntityCollision(Entity entity) {
 	}
-
-	@Override
-	public void onEntityCollision(Entity entity) {}
 
 	@Override
 	public float getCableConnectionLength(AECableType cable) {
@@ -120,8 +121,21 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Nonnull
 	@Override
+	public IPartModel getStaticModels() {
+		if (this.isPowered()) {
+			if (this.isActive()) {
+				return PartModelEnum.TERMINAL_HAS_CHANNEL;
+			} else {
+				return PartModelEnum.TERMINAL_ON;
+			}
+		}
+		return PartModelEnum.TERMINAL_OFF;
+	}
+
+	@Nonnull
+	@Override
 	public TickingRequest getTickingRequest(@Nonnull IGridNode node) {
-		return new TickingRequest(1,1,false,false);
+		return new TickingRequest(1, 1, false, false);
 	}
 
 	@Nonnull
@@ -129,7 +143,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
 
 		// Check if update was requested
-		if(updateRequsted) {
+		if (updateRequsted) {
 			// Check if we have gui to update
 			if (!(Minecraft.getMinecraft().currentScreen instanceof AIBaseGui)) {
 				// Break function
@@ -137,7 +151,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 			}
 
 			// Do all AE2 mechanics only on server
-			if(!this.getWorld().isRemote) {
+			if (!this.getWorld().isRemote) {
 
 				// Get energy inventory
 				IMEMonitor<IAEEnergyStack> inv = this.getEnergyInventory();
@@ -147,7 +161,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 					// Notify GUI first time about list, to make it show current list of all energies
 					for (ContainerEnergyTerminal listener : this.listeners) {
 						// Send packet over network
-						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(),sortingOrder, this), (EntityPlayerMP) listener.player);
+						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), sortingOrder, this), (EntityPlayerMP) listener.player);
 
 						// Trigger request
 						updateRequsted = false;
@@ -166,8 +180,10 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 		// Getting Node
 		if (node == null)
-			// No inventory provided
+		// No inventory provided
+		{
 			return null;
+		}
 
 		// Getting net of node
 		IGrid grid = node.getGrid();
@@ -177,17 +193,6 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 		// Get inventory of cache
 		return storage.getInventory(channel);
-	}
-
-	@Nonnull
-	@Override
-	public IPartModel getStaticModels() {
-		if (this.isPowered())
-			if (this.isActive())
-				return PartModelEnum.TERMINAL_HAS_CHANNEL;
-			else
-				return PartModelEnum.TERMINAL_ON;
-		return PartModelEnum.TERMINAL_OFF;
 	}
 
 	@Override
@@ -208,7 +213,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	@Override
 	public void postChange(IBaseMonitor<IAEEnergyStack> monitor, Iterable<IAEEnergyStack> change, IActionSource actionSource) {
 		for (ContainerEnergyTerminal listener : listeners) {
-			NetworkHandler.sendTo(new PacketTerminalUpdate(((IMEMonitor<IAEEnergyStack>)monitor).getStorageList(), sortingOrder, this), (EntityPlayerMP) listener.player);
+			NetworkHandler.sendTo(new PacketTerminalUpdate(((IMEMonitor<IAEEnergyStack>) monitor).getStorageList(), sortingOrder, this), (EntityPlayerMP) listener.player);
 		}
 	}
 

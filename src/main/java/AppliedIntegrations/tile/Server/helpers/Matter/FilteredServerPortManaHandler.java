@@ -16,14 +16,12 @@ import java.util.List;
  * @Author Azazell
  */
 public class FilteredServerPortManaHandler extends FilteredServerPortHandler<IAEManaStack> {
-    public FilteredServerPortManaHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
-                                         LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
-                                         TileServerCore host) {
-        super(filteredMatter, filterMode, host);
-    }
+	public FilteredServerPortManaHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore host) {
+		super(filteredMatter, filterMode, host);
+	}
 
-    @Override
-    public IStorageChannel<IAEManaStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
-    }
+	@Override
+	public IStorageChannel<IAEManaStack> getChannel() {
+		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
+	}
 }

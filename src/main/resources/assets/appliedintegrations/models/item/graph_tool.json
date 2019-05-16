@@ -9,17 +9,20 @@
         "appliedintegrations:mode": 0.25
       },
       "model": "appliedintegrations:item/graph_tool/mode_all"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:mode": 0.5
       },
       "model": "appliedintegrations:item/graph_tool/mode_clicked"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:mode": 0.75
       },
       "model": "appliedintegrations:item/graph_tool/mode_subnetwork"
-    }, {
+    },
+    {
       "predicate": {
         "appliedintegrations:mode": 1
       },

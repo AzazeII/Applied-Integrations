@@ -12,126 +12,130 @@ import net.minecraftforge.fml.common.Optional;
 
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 
-@Optional.InterfaceList(value = {
-        @Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux", striprefs = true),
-        @Optional.Interface(iface = "mekanism.api.energy.IEnergizedItem", modid = "mekanism", striprefs = true),
-        @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2", striprefs = true)
-})
+@Optional.InterfaceList(value = {@Optional.Interface(iface = "cofh.redstoneflux.api.IEnergyContainerItem", modid = "redstoneflux", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IEnergizedItem", modid = "mekanism", striprefs = true), @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2", striprefs = true)})
 
 /**
  * @Author Azazell
- */
-public class StackCapabilityHelper {
+ */ public class StackCapabilityHelper {
 
-    private ItemStack operatedStack;
+	private ItemStack operatedStack;
 
-    public StackCapabilityHelper(ItemStack stack) {
-        // Set operated stack
-        operatedStack = stack;
-    }
+	public StackCapabilityHelper(ItemStack stack) {
+		// Set operated stack
+		operatedStack = stack;
+	}
 
-    public boolean hasCapability(LiquidAIEnergy energy) {
-        // Get item
-        Item item = operatedStack.getItem();
+	public boolean hasCapability(LiquidAIEnergy energy) {
+		// Get item
+		Item item = operatedStack.getItem();
 
-        if(!IntegrationsHelper.instance.isLoaded(energy))
-            return false;
+		if (!IntegrationsHelper.instance.isLoaded(energy)) {
+			return false;
+		}
 
-        if(energy == RF && item instanceof IEnergyContainerItem)
-            return true;
-        if(energy == EU && item instanceof IElectricItem)
-            return true;
-        if(energy == J && item instanceof IEnergyContainerItem)
-            return true;
-        return false;
-    }
+		if (energy == RF && item instanceof IEnergyContainerItem) {
+			return true;
+		}
+		if (energy == EU && item instanceof IElectricItem) {
+			return true;
+		}
+		if (energy == J && item instanceof IEnergyContainerItem) {
+			return true;
+		}
+		return false;
+	}
 
-    /**
-     * Extract energy from operated stack
-     * @param energy type
-     * @param energyTransfer energy to extract
-     * @param action
-     * @return How many energy was extracted
-     */
-    public int extractEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
-        // Get item
-        Item item = operatedStack.getItem();
+	/**
+	 * Extract energy from operated stack
+	 *
+	 * @param energy         type
+	 * @param energyTransfer energy to extract
+	 * @param action
+	 * @return How many energy was extracted
+	 */
+	public int extractEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
+		// Get item
+		Item item = operatedStack.getItem();
 
-        if(!IntegrationsHelper.instance.isLoaded(energy))
-            return 0;
+		if (!IntegrationsHelper.instance.isLoaded(energy)) {
+			return 0;
+		}
 
-        // RF Capability
-        if (item instanceof IEnergyContainerItem && energy == RF){
-            IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
+		// RF Capability
+		if (item instanceof IEnergyContainerItem && energy == RF) {
+			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
 
-            return rfContainer.extractEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
-        }
+			return rfContainer.extractEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
+		}
 
-        // EU Capability
-        if (item instanceof IElectricItem && energy == EU){
-            IElectricItem euContainer = (IElectricItem) item;
+		// EU Capability
+		if (item instanceof IElectricItem && energy == EU) {
+			IElectricItem euContainer = (IElectricItem) item;
 
-            ;
-        }
+			;
+		}
 
-        // Joule Capability
-        if (item instanceof IEnergizedItem && energy == J){
-            IEnergizedItem jouleContainer = (IEnergizedItem) item;
+		// Joule Capability
+		if (item instanceof IEnergizedItem && energy == J) {
+			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
-            int before = (int)jouleContainer.getEnergy(operatedStack);
+			int before = (int) jouleContainer.getEnergy(operatedStack);
 
-            jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) + energyTransfer);
+			jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) + energyTransfer);
 
-            int current = (int)jouleContainer.getEnergy(operatedStack);
+			int current = (int) jouleContainer.getEnergy(operatedStack);
 
-            if(action == Actionable.SIMULATE)
-                jouleContainer.setEnergy(operatedStack, before);
+			if (action == Actionable.SIMULATE) {
+				jouleContainer.setEnergy(operatedStack, before);
+			}
 
-            return (int)jouleContainer.getEnergy(operatedStack) - current;
-        }
+			return (int) jouleContainer.getEnergy(operatedStack) - current;
+		}
 
-        // Nothing extracted
-        return 0;
-    }
+		// Nothing extracted
+		return 0;
+	}
 
-    public int injectEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
-        // Get item
-        Item item = operatedStack.getItem();
+	public int injectEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
+		// Get item
+		Item item = operatedStack.getItem();
 
-        if(!IntegrationsHelper.instance.isLoaded(energy))
-            return 0;
+		if (!IntegrationsHelper.instance.isLoaded(energy)) {
+			return 0;
+		}
 
-        // RF Capability
-        if (item instanceof IEnergyContainerItem && energy == RF){
-            IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
+		// RF Capability
+		if (item instanceof IEnergyContainerItem && energy == RF) {
+			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
 
-            return rfContainer.receiveEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
-        }
+			return rfContainer.receiveEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
+		}
 
-        // EU Capability
-        if (item instanceof IElectricItem && energy == EU){
-            IElectricItem euContainer = (IElectricItem) item;
+		// EU Capability
+		if (item instanceof IElectricItem && energy == EU) {
+			IElectricItem euContainer = (IElectricItem) item;
 
-            ;
-        }
+			;
+		}
 
-        // Joule Capability
-        if (item instanceof IEnergizedItem && energy == J){
-            IEnergizedItem jouleContainer = (IEnergizedItem) item;
+		// Joule Capability
+		if (item instanceof IEnergizedItem && energy == J) {
+			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
-            int before = (int)jouleContainer.getEnergy(operatedStack);
+			int before = (int) jouleContainer.getEnergy(operatedStack);
 
-            jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) - energyTransfer);
+			jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) - energyTransfer);
 
-            int current = (int)jouleContainer.getEnergy(operatedStack);
+			int current = (int) jouleContainer.getEnergy(operatedStack);
 
-            if(action == Actionable.SIMULATE)
-                jouleContainer.setEnergy(operatedStack, before);
+			if (action == Actionable.SIMULATE) {
+				jouleContainer.setEnergy(operatedStack, before);
+			}
 
-            return (int)jouleContainer.getEnergy(operatedStack) - current;
-        }
+			return (int) jouleContainer.getEnergy(operatedStack) - current;
+		}
 
-        // Nothing injected
-        return 0;
-    }
+		// Nothing injected
+		return 0;
+	}
 }

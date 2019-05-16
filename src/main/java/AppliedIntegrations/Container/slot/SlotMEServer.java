@@ -12,18 +12,18 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @Author Azazell
  */
 public class SlotMEServer extends Slot {
-    public SlotMEServer(IInventory inv, int index, int x, int y) {
-        super(inv, index, x, y);
-    }
+	public SlotMEServer(IInventory inv, int index, int x, int y) {
+		super(inv, index, x, y);
+	}
 
-    @Override
-    public boolean isItemValid( final ItemStack stack ) {
-        return AEApi.instance().registries().cell().isCellHandled(stack);
-    }
+	@Override
+	public boolean isItemValid(final ItemStack stack) {
+		return AEApi.instance().registries().cell().isCellHandled(stack);
+	}
 
-    // Override icon getter for this slot
-    @SideOnly(Side.CLIENT)
-    public String getSlotTexture() {
-        return AppliedIntegrations.modid + ":gui/slots/server_cell_slot";
-    }
+	// Override icon getter for this slot
+	@SideOnly(Side.CLIENT)
+	public String getSlotTexture() {
+		return AppliedIntegrations.modid + ":gui/slots/server_cell_slot";
+	}
 }

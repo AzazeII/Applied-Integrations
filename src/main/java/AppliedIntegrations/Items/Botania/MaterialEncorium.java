@@ -17,19 +17,21 @@ import java.util.List;
  */
 public class MaterialEncorium extends AIItemRegistrable implements IBotaniaIntegrated {
 
-    private String percent;
-    public MaterialEncorium(String registry, String damage) {
-        super(registry);
-        this.percent = damage;
-    }
+	private String percent;
 
-    @SideOnly( Side.CLIENT )
-    @Override
-    public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips ) {
-        if(!percent.equals("100%"))
-            lines.add(percent);
+	public MaterialEncorium(String registry, String damage) {
+		super(registry);
+		this.percent = damage;
+	}
 
-        lines.add("");
-        lines.add(TextFormatting.DARK_BLUE + "Design by MegaTech");
-    }
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
+		if (!percent.equals("100%")) {
+			lines.add(percent);
+		}
+
+		lines.add("");
+		lines.add(TextFormatting.DARK_BLUE + "Design by MegaTech");
+	}
 }

@@ -8,14 +8,14 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public interface IAIMultiBlock extends ISyncHost {
 
-    void tryConstruct(EntityPlayer player);
+	void tryConstruct(EntityPlayer player);
 
-    boolean hasMaster();
+	boolean hasMaster();
 
-    IMaster getMaster();
+	IMaster getMaster();
 
-    void setMaster(IMaster tileServerCore);
+	void setMaster(IMaster tileServerCore);
 
 
-    void notifyBlock();
+	void notifyBlock();
 }

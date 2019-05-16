@@ -10,25 +10,26 @@ import net.minecraft.util.math.BlockPos;
  */
 public class PacketVectorSync extends AIPacket {
 
-    public BlockPos vecA;
-    public BlockPos tile;
+	public BlockPos vecA;
+	public BlockPos tile;
 
-    public PacketVectorSync(){}
+	public PacketVectorSync() {
+	}
 
-    public PacketVectorSync(BlockPos playerPos, BlockPos tile) {
-        this.vecA = playerPos;
-        this.tile = tile;
-    }
+	public PacketVectorSync(BlockPos playerPos, BlockPos tile) {
+		this.vecA = playerPos;
+		this.tile = tile;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        vecA = readPos(buf);
-        tile = readPos(buf);
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		vecA = readPos(buf);
+		tile = readPos(buf);
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        writePos(vecA, buf);
-        writePos(tile, buf);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		writePos(vecA, buf);
+		writePos(tile, buf);
+	}
 }

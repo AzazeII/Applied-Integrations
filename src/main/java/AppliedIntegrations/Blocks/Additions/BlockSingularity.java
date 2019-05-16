@@ -20,55 +20,55 @@ import javax.annotation.Nullable;
  * @Author Azazell
  */
 public class BlockSingularity extends BlockAIRegistrable {
-    public BlockSingularity(String registryName, String unlocalizedName) {
-        super(registryName, unlocalizedName);
-        super.setBlockUnbreakable();
-    }
+	public BlockSingularity(String registryName, String unlocalizedName) {
+		super(registryName, unlocalizedName);
+		super.setBlockUnbreakable();
+	}
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileBlackHole();
-    }
+	@Nullable
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileBlackHole();
+	}
 
-    @Override
-    public EnumBlockRenderType getRenderType(IBlockState state) {
-        // Make block invisible, and give all render handling to TESR
-        return EnumBlockRenderType.INVISIBLE;
-    }
+	@Override
+	public EnumBlockRenderType getRenderType(IBlockState state) {
+		// Make block invisible, and give all render handling to TESR
+		return EnumBlockRenderType.INVISIBLE;
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState iBlockState) {
-        return false;
-    }
+	@Override
+	public boolean isFullCube(IBlockState iBlockState) {
+		return false;
+	}
 
-    @Override
-    public boolean isFullCube(IBlockState iBlockState) {
-        return false;
-    }
+	@Override
+	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+		final float shave = 4.0f / 16.0f;
+		// cut out 4 first and 4 final pixels at x, y and z
+		return new AxisAlignedBB(shave, shave, shave, 1.0f - shave, 1.0f - shave, 1.0f - shave);
+	}
 
-    @Override
-    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos){
-        final float shave = 4.0f / 16.0f;
-        // cut out 4 first and 4 final pixels at x, y and z
-        return new AxisAlignedBB( shave, shave, shave, 1.0f - shave, 1.0f - shave, 1.0f - shave );
-    }
+	@Nullable
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
+		// Make singularity not collide with player
+		return Block.NULL_AABB;
+	}
 
-    @Nullable
-    @Override
-    public AxisAlignedBB getCollisionBoundingBox(IBlockState blockState, IBlockAccess worldIn, BlockPos pos) {
-        // Make singularity not collide with player
-        return Block.NULL_AABB;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState iBlockState) {
+		return false;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileEntity tile = world.getTileEntity(pos);
-        // Pass activated to tile entity ( nothing new :) )
-        if (tile instanceof TileBlackHole) {
-            // Pass activate to tile
-            return ((TileBlackHole) tile).activate(world, pos, state, p, hand);
-        }
-        return false;
-    }
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		TileEntity tile = world.getTileEntity(pos);
+		// Pass activated to tile entity ( nothing new :) )
+		if (tile instanceof TileBlackHole) {
+			// Pass activate to tile
+			return ((TileBlackHole) tile).activate(world, pos, state, p, hand);
+		}
+		return false;
+	}
 }

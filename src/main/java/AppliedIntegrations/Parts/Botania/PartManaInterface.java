@@ -1,13 +1,13 @@
 package AppliedIntegrations.Parts.Botania;
 
-import AppliedIntegrations.api.Botania.IAEManaStack;
-import AppliedIntegrations.api.Botania.IManaStorageChannel;
-import AppliedIntegrations.api.Botania.IManaInterface;
-import AppliedIntegrations.api.IEnergyInterfaceDuality;
 import AppliedIntegrations.Helpers.ManaInterfaceDuality;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.api.Botania.IAEManaStack;
+import AppliedIntegrations.api.Botania.IManaInterface;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.IEnergyInterfaceDuality;
 import AppliedIntegrations.grid.Mana.AEManaStack;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -36,184 +36,179 @@ import java.util.List;
 
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
-@Optional.InterfaceList(value = {
-        @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkAttachable", modid = "botania", striprefs = true),
-        @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkEntity", modid = "botania", striprefs = true),
-        @Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),
+@Optional.InterfaceList(value = {@Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkAttachable", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkEntity", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),
 
 })
 /**
  * @Author Azazell
- */
-public class PartManaInterface extends PartEnergyInterface implements IManaReceiver, ISparkAttachable, IManaInterface {
+ */ public class PartManaInterface extends PartEnergyInterface implements IManaReceiver, ISparkAttachable, IManaInterface {
 
-    private int currentMana = 0;
-    private final int capacity = 100000;
+	private final int capacity = 100000;
+	private int currentMana = 0;
+	private boolean isManaFiltered = false;
 
-    private boolean isManaFiltered = false;
+	public PartManaInterface() {
+		super(PartEnum.ManaInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
+	}
 
-    public PartManaInterface() {
-        super(PartEnum.ManaInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
-    }
+	@Override
+	public boolean isFull() {
+		return currentMana == capacity;
+	}
 
-    @Override
-    public boolean isFull() {
-        return currentMana == capacity;
-    }
+	@Override
+	public void recieveMana(int mana) {
+		currentMana += mana;
+		if (currentMana > capacity) {
+			currentMana = capacity;
+		}
+		if (currentMana < 0) {
+			currentMana = 0;
+		}
+	}
 
-    @Override
-    public void recieveMana(int mana) {
-        currentMana += mana;
-        if(currentMana > capacity)
-            currentMana = capacity;
-        if(currentMana < 0)
-            currentMana = 0;
-    }
+	@Override
+	public boolean canRecieveManaFromBursts() {
+		return true;
+	}
 
-    @Nonnull
-    @Override
-    public IPartModel getStaticModels() {
-        if (this.isPowered())
-            if (this.isActive())
-                return PartModelEnum.STORAGE_INTERFACE_MANA_HAS_CHANNEL;
-            else
-                return PartModelEnum.STORAGE_INTERFACE_MANA_ON;
-        return PartModelEnum.STORAGE_INTERFACE_MANA_OFF;
-    }
+	@Override
+	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+		if (!getWorld().isRemote) {
 
-    @Override
-    public IEnergyInterfaceDuality getDuality(){
-        return new ManaInterfaceDuality(this);
-    }
+		}
+		return true;
+	}
 
-    @Nonnull
-    @Override
-    public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall )
-    {
-        if(!getWorld().isRemote){
-            try {
-                if (isManaFiltered) {
-                    doExtractDualityWork(Actionable.MODULATE);
-                } else {
-                    doInjectDualityWork(Actionable.MODULATE);
-                }
-            }catch (NullNodeConnectionException e){
+	@Nonnull
+	@Override
+	public IPartModel getStaticModels() {
+		if (this.isPowered()) {
+			if (this.isActive()) {
+				return PartModelEnum.STORAGE_INTERFACE_MANA_HAS_CHANNEL;
+			} else {
+				return PartModelEnum.STORAGE_INTERFACE_MANA_ON;
+			}
+		}
+		return PartModelEnum.STORAGE_INTERFACE_MANA_OFF;
+	}
 
-            }
-        }
-        return IDLE;
-    }
+	@Nonnull
+	@Override
+	public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall) {
+		if (!getWorld().isRemote) {
+			try {
+				if (isManaFiltered) {
+					doExtractDualityWork(Actionable.MODULATE);
+				} else {
+					doInjectDualityWork(Actionable.MODULATE);
+				}
+			} catch (NullNodeConnectionException e) {
 
-    @Override
-    public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
-        if(!getWorld().isRemote) {
+			}
+		}
+		return IDLE;
+	}
 
-        }
-        return true;
-    }
+	@Override
+	public IEnergyInterfaceDuality getDuality() {
+		return new ManaInterfaceDuality(this);
+	}
 
-    @Override
-    public boolean canRecieveManaFromBursts() {
-        return true;
-    }
+	@Override
+	public boolean canAttachSpark(ItemStack itemStack) {
+		return true;
+	}
 
-    @Override
-    public int getCurrentMana() {
-        return currentMana;
-    }
+	@Override
+	public void attachSpark(ISparkEntity iSparkEntity) {
+	}
 
-    @Override
-    public boolean canAttachSpark(ItemStack itemStack) {
-        return true;
-    }
+	@Override
+	public int getAvailableSpaceForMana() {
+		return Math.max(0, capacity - getCurrentMana());
+	}
 
-    @Override
-    public void attachSpark(ISparkEntity iSparkEntity) { }
+	@Override
+	public int getCurrentMana() {
+		return currentMana;
+	}
 
-    @Override
-    public int getAvailableSpaceForMana() {
-        return Math.max(0, capacity - getCurrentMana());
-    }
+	@Override
+	public ISparkEntity getAttachedSpark() {
+		List<Entity> sparks = getHostTile().getWorld().getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getHostTile().getPos().up(), getHostTile().getPos().up().add(1, 1, 1)), Predicates.instanceOf(ISparkEntity.class));
+		if (sparks.size() == 1) {
+			Entity e = sparks.get(0);
+			return (ISparkEntity) e;
+		}
 
-    @Override
-    public ISparkEntity getAttachedSpark() {
-        List<Entity> sparks = getHostTile().getWorld().getEntitiesWithinAABB(Entity.class, new AxisAlignedBB(getHostTile().getPos().up()
-                , getHostTile().getPos().up().add(1, 1, 1)), Predicates.instanceOf(ISparkEntity.class));
-        if(sparks.size() == 1) {
-            Entity e = sparks.get(0);
-            return (ISparkEntity) e;
-        }
+		return null;
+	}
 
-        return null;
-    }
+	@Override
+	public boolean areIncomingTranfersDone() {
+		return false;
+	}
 
-    @Override
-    public boolean areIncomingTranfersDone() {
-        return false;
-    }
-    /**
-     * @param resource
-     * 	Resource to be extracted
-     * @param actionable
-     * 	Simulate of Modulate?
-     * @return
-     * 	amount extracted
-     */
-    public int ExtractMana(int resource, Actionable actionable) {
-        if(node == null)
-            return 0;
-        IGrid grid = node.getGrid();
+	/**
+	 * @param resource   Resource to be extracted
+	 * @param actionable Simulate of Modulate?
+	 * @return amount extracted
+	 */
+	public int ExtractMana(int resource, Actionable actionable) {
+		if (node == null) {
+			return 0;
+		}
+		IGrid grid = node.getGrid();
 
-        IStorageGrid storage = (IStorageGrid)grid.getCache(IStorageGrid.class);
+		IStorageGrid storage = (IStorageGrid) grid.getCache(IStorageGrid.class);
 
-        IAEManaStack notRemoved = (IAEManaStack)storage.getInventory(getManaChannel()).extractItems(
-                new AEManaStack(resource), actionable, new MachineSource(this));
+		IAEManaStack notRemoved = (IAEManaStack) storage.getInventory(getManaChannel()).extractItems(new AEManaStack(resource), actionable, new MachineSource(this));
 
-        if (notRemoved == null)
-            return (int)resource;
-        return (int)(resource - notRemoved.getStackSize());
-    }
+		if (notRemoved == null) {
+			return (int) resource;
+		}
+		return (int) (resource - notRemoved.getStackSize());
+	}
 
-    /**
-     * @param resource
-     * 	Resource to be injected
-     * @param actionable
-     * 	Simulate or modulate?
-     * @return
-     *  amount injected
-     */
-    public int InjectMana(int resource, Actionable actionable) {
-        if(node == null)
-            return 0;
-        IGrid grid = node.getGrid(); // check grid node
+	/**
+	 * @param resource   Resource to be injected
+	 * @param actionable Simulate or modulate?
+	 * @return amount injected
+	 */
+	public int InjectMana(int resource, Actionable actionable) {
+		if (node == null) {
+			return 0;
+		}
+		IGrid grid = node.getGrid(); // check grid node
 
-        IStorageGrid storage = grid.getCache(IStorageGrid.class);
+		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 
-        IAEManaStack returnAmount = storage.getInventory(this.getManaChannel()).injectItems(
-                new AEManaStack(resource), actionable, new MachineSource(this));
+		IAEManaStack returnAmount = storage.getInventory(this.getManaChannel()).injectItems(new AEManaStack(resource), actionable, new MachineSource(this));
 
-        if (returnAmount == null)
-            return (int) resource;
-        return (int) (resource - returnAmount.getStackSize());
-    }
+		if (returnAmount == null) {
+			return (int) resource;
+		}
+		return (int) (resource - returnAmount.getStackSize());
+	}
 
-    @Override
-    public int getManaStored() {
-        return currentMana;
-    }
+	@Override
+	public int getManaStored() {
+		return currentMana;
+	}
 
-    @Override
-    public void modifyManaStorage(int mana) {
-        this.currentMana += mana;
+	@Override
+	public void modifyManaStorage(int mana) {
+		this.currentMana += mana;
 
-        if (currentMana > capacity) {
-            currentMana = capacity;
-        } else if (currentMana < 0) {
-            currentMana = 0;
-        }
-    }
+		if (currentMana > capacity) {
+			currentMana = capacity;
+		} else if (currentMana < 0) {
+			currentMana = 0;
+		}
+	}
 
-    private IManaStorageChannel getManaChannel() {
-        return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
-    }
+	private IManaStorageChannel getManaChannel() {
+		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
+	}
 }

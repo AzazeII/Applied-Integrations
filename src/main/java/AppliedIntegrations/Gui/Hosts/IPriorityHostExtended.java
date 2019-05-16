@@ -11,6 +11,6 @@ import javax.annotation.Nonnull;
  * Extended version of normal IPriorityHost, pay attention to implemented ISyncHost interface
  */
 public interface IPriorityHostExtended extends IPriorityHost, ISyncHost {
-    @Nonnull
-    AIGuiHandler.GuiEnum getGui();
+	@Nonnull
+	AIGuiHandler.GuiEnum getGui();
 }

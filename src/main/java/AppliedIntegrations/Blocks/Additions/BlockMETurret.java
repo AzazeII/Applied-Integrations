@@ -18,39 +18,39 @@ import javax.annotation.Nullable;
  */
 public class BlockMETurret extends BlockAIRegistrable {
 
-    // Does this block enabled in config?
-    public static boolean METurret_Enabled = AIConfig.enableBlackHoleStorage;
+	// Does this block enabled in config?
+	public static boolean METurret_Enabled = AIConfig.enableBlackHoleStorage;
 
-    public BlockMETurret(String registryName, String unloc) {
-        super(registryName, unloc);
-    }
+	public BlockMETurret(String registryName, String unloc) {
+		super(registryName, unloc);
+	}
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileMETurretFoundation();
-    }
+	@Nullable
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileMETurretFoundation();
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState iBlockState) {
-        return false;
-    }
+	@Override
+	public boolean isFullCube(IBlockState iBlockState) {
+		return false;
+	}
 
-    @Override
-    public boolean isFullCube(IBlockState iBlockState) {
-        return false;
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState iBlockState) {
+		return false;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileEntity tile = world.getTileEntity(pos);
-        if (!p.isSneaking()) {
-            // Pass activated to tile entity ( nothing new :) )
-            if (tile instanceof TileMETurretFoundation) {
-                // Pass activate to tile
-                return ((TileMETurretFoundation) tile).activate(hand, p);
-            }
-        }
-        return false;
-    }
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		TileEntity tile = world.getTileEntity(pos);
+		if (!p.isSneaking()) {
+			// Pass activated to tile entity ( nothing new :) )
+			if (tile instanceof TileMETurretFoundation) {
+				// Pass activate to tile
+				return ((TileMETurretFoundation) tile).activate(hand, p);
+			}
+		}
+		return false;
+	}
 }

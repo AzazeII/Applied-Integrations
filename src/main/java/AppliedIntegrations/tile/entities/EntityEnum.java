@@ -16,39 +16,38 @@ import java.lang.reflect.InvocationTargetException;
  * @Author Azazell
  */
 public enum EntityEnum {
-    BlackHole(EntityBlackHole.class, EntityBlackHoleRenderer.class);
+	BlackHole(EntityBlackHole.class, EntityBlackHoleRenderer.class);
 
-    private Class<? extends Entity> clazz;
-    private Class<? extends Render> renderClazz;
+	private Class<? extends Entity> clazz;
+	private Class<? extends Render> renderClazz;
 
-    @SuppressWarnings("unchecked")
-    EntityEnum(Class<? extends Entity> entity, Class<? extends Render> renderer){
-        clazz = entity;
-        renderClazz = renderer;
-    }
+	@SuppressWarnings("unchecked")
+	EntityEnum(Class<? extends Entity> entity, Class<? extends Render> renderer) {
+		clazz = entity;
+		renderClazz = renderer;
+	}
 
-    public static void register(){
-        int counter = 0;
-        for(EntityEnum entityEnum : values()){
-            EntityRegistry.registerModEntity(new ResourceLocation(AppliedIntegrations.modid, entityEnum.name()), entityEnum.clazz, entityEnum.name(), counter,
-                    AppliedIntegrations.instance, 0, 0, false);
-            counter++;
-        }
-    }
+	public static void register() {
+		int counter = 0;
+		for (EntityEnum entityEnum : values()) {
+			EntityRegistry.registerModEntity(new ResourceLocation(AppliedIntegrations.modid, entityEnum.name()), entityEnum.clazz, entityEnum.name(), counter, AppliedIntegrations.instance, 0, 0, false);
+			counter++;
+		}
+	}
 
-    public static void registerRenderer(){
-        for(EntityEnum entityEnum : values()) {
-            RenderingRegistry.registerEntityRenderingHandler(entityEnum.clazz, new IRenderFactory<Entity>() {
-                @Override
-                public Render<? super Entity> createRenderFor(RenderManager manager) {
-                    try {
-                        return entityEnum.renderClazz.getDeclaredConstructor(manager.getClass()).newInstance(manager);
-                    }catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e){
-                        e.printStackTrace();
-                    }
-                    return null;
-                }
-            });
-        }
-    }
+	public static void registerRenderer() {
+		for (EntityEnum entityEnum : values()) {
+			RenderingRegistry.registerEntityRenderingHandler(entityEnum.clazz, new IRenderFactory<Entity>() {
+				@Override
+				public Render<? super Entity> createRenderFor(RenderManager manager) {
+					try {
+						return entityEnum.renderClazz.getDeclaredConstructor(manager.getClass()).newInstance(manager);
+					} catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException | InstantiationException e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+			});
+		}
+	}
 }

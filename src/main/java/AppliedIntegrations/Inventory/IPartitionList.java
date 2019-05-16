@@ -5,11 +5,10 @@ import appeng.api.storage.data.IAEStack;
 /**
  * @Author Azazell
  */
-public interface IPartitionList<T extends IAEStack<T>>
-{
-    boolean isListed( T input );
+public interface IPartitionList<T extends IAEStack<T>> {
+	boolean isListed(T input);
 
-    boolean isEmpty();
+	boolean isEmpty();
 
-    Iterable<T> getItems();
+	Iterable<T> getItems();
 }

@@ -1,11 +1,7 @@
 package AppliedIntegrations.Network.Packets;
 
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.ISyncHost;
-import AppliedIntegrations.tile.AITile;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.world.World;
 
 /**
  * @Author Azazell
@@ -15,29 +11,30 @@ import net.minecraft.world.World;
  */
 public class PacketCoordinateInit extends AIPacket {
 
-    public ISyncHost host;
+	public ISyncHost host;
 
-    public PacketCoordinateInit(){
+	public PacketCoordinateInit() {
 
-    }
+	}
 
-    public PacketCoordinateInit(ISyncHost host){
-        super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
-        this.host = host;
-    }
+	public PacketCoordinateInit(ISyncHost host) {
+		super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
+		this.host = host;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        boolean isPart = buf.readBoolean();
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		boolean isPart = buf.readBoolean();
 
-        if(isPart)
-            host = readPart(buf);
-        else
-            host = (ISyncHost) readTile(buf);
-    }
+		if (isPart) {
+			host = readPart(buf);
+		} else {
+			host = (ISyncHost) readTile(buf);
+		}
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        writeSyncHost(host, buf);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		writeSyncHost(host, buf);
+	}
 }

@@ -7,19 +7,24 @@
     {
       "item": "appliedenergistics2:material",
       "data": 43
-    }, {
+    },
+    {
       "type": "forge:ore_dict",
       "ore": "itemIlluminatedPanel"
-    }, {
+    },
+    {
       "type": "appliedenergistics2:part",
       "part": "material.logic_processor"
-    }, {
+    },
+    {
       "item": "appliedenergistics2:material",
       "data": 44
-    }, {
+    },
+    {
       "type": "forge:ore_dict",
       "ore": "dustRedstone"
-    }, {
+    },
+    {
       "type": "forge:ore_dict",
       "ore": "dustRedstone"
     }

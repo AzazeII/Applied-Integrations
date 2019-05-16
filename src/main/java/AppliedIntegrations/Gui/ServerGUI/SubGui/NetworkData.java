@@ -2,21 +2,19 @@ package AppliedIntegrations.Gui.ServerGUI.SubGui;
 
 import appeng.api.util.AEPartLocation;
 
-import java.util.EnumSet;
-
 /**
  * @Author Azazell
  */
 public class NetworkData {
 
-    public boolean isServerNetwork;
-    public AEPartLocation dir;
-    public int id;
+	public boolean isServerNetwork;
+	public AEPartLocation dir;
+	public int id;
 
-    public NetworkData(boolean isServerNetwork, AEPartLocation networkDirection, int network){
+	public NetworkData(boolean isServerNetwork, AEPartLocation networkDirection, int network) {
 
-        this.id = network;
-        this.isServerNetwork = isServerNetwork;
-        this.dir = networkDirection;
-    }
+		this.id = network;
+		this.isServerNetwork = isServerNetwork;
+		this.dir = networkDirection;
+	}
 }

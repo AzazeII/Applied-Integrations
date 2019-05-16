@@ -1,13 +1,12 @@
 package AppliedIntegrations.Parts.Energy;
 
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
-import AppliedIntegrations.api.Storage.EnergyStack;
-import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.api.Storage.EnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPartCollisionHelper;
@@ -25,40 +24,26 @@ import java.util.Random;
 /**
  * @Author Azazell
  */
-public class PartEnergyImport extends AIOPart
-{
+public class PartEnergyImport extends AIOPart {
 
-	public PartEnergyImport()
-	{
-		super( PartEnum.EnergyImportBus, SecurityPermissions.INJECT );
+	public PartEnergyImport() {
+		super(PartEnum.EnergyImportBus);
 	}
 
 	@Override
-	public boolean energyTransferAllowed(LiquidAIEnergy energy) {
-		return true;
+	public void getBoxes(IPartCollisionHelper bch) {
+		bch.addBox(6, 6, 11, 10, 10, 13);
+		bch.addBox(5, 5, 13, 11, 11, 14);
+		bch.addBox(4, 4, 14, 12, 12, 16);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@Override
-	public void randomDisplayTick(World world, BlockPos pos, Random r) {}
-
-	@Override
-	public void getBoxes(IPartCollisionHelper bch) {
-		bch.addBox( 6, 6, 11, 10, 10, 13 );
-		bch.addBox( 5, 5, 13, 11, 11, 14 );
-		bch.addBox( 4, 4, 14, 12, 12, 16 );
+	public void randomDisplayTick(World world, BlockPos pos, Random r) {
 	}
 
 	@Override
 	public int getLightLevel() {
-		return 0;
-	}
-
-	@Override
-	public void onEntityCollision(Entity entity) {}
-
-	@Override
-	public float getCableConnectionLength(AECableType aeCableType) {
 		return 0;
 	}
 
@@ -68,15 +53,18 @@ public class PartEnergyImport extends AIOPart
 		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getSide().getOpposite());
 
 		// Iterate over all energies
-		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()){
+		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 			// Check if filter contains any values
-			if(filteredEnergies.size() > 0)
-				// Check if filter not contains current energy
-				if(!filteredEnergies.contains(energy))
+			if (filteredEnergies.size() > 0)
+			// Check if filter not contains current energy
+			{
+				if (!filteredEnergies.contains(energy)) {
 					continue;
+				}
+			}
 
 			// Check if tile can operate given energy
-			if(helper.operatesEnergy(energy)) {
+			if (helper.operatesEnergy(energy)) {
 
 				// Simulate injection
 				int injected = InjectEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
@@ -88,13 +76,37 @@ public class PartEnergyImport extends AIOPart
 				InjectEnergy(new EnergyStack(energy, injected), Actionable.MODULATE);
 
 				// Check if energy was actually injected
-				if(injected > 0)
-					// Tick faster
+				if (injected > 0)
+				// Tick faster
+				{
 					return TickRateModulation.FASTER;
+				}
 			}
 		}
 
 		return TickRateModulation.SLOWER;
+	}
+
+	@Override
+	public void onEntityCollision(Entity entity) {
+	}
+
+	@Override
+	public float getCableConnectionLength(AECableType aeCableType) {
+		return 0;
+	}
+
+	@Nonnull
+	@Override
+	public IPartModel getStaticModels() {
+		if (this.isPowered()) {
+			if (this.isActive()) {
+				return PartModelEnum.IMPORT_HAS_CHANNEL;
+			} else {
+				return PartModelEnum.IMPORT_ON;
+			}
+		}
+		return PartModelEnum.IMPORT_OFF;
 	}
 
 	private int getMaxTransfer() {
@@ -103,16 +115,5 @@ public class PartEnergyImport extends AIOPart
 
 	private LiquidAIEnergy getFilteredEnergy() {
 		return null;
-	}
-
-	@Nonnull
-	@Override
-	public IPartModel getStaticModels() {
-		if (this.isPowered())
-			if (this.isActive())
-				return PartModelEnum.IMPORT_HAS_CHANNEL;
-			else
-				return PartModelEnum.IMPORT_ON;
-		return PartModelEnum.IMPORT_OFF;
 	}
 }

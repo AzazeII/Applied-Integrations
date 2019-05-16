@@ -3,16 +3,11 @@ package AppliedIntegrations.Container.part;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
-import net.minecraft.item.ItemStack;
-
-import static net.minecraft.init.Items.AIR;
 
 /**
  * @Author Azazell
  */
-public class ContainerEnergyStorage
-		extends ContainerWithUpgradeSlots {
+public class ContainerEnergyStorage extends ContainerWithUpgradeSlots {
 	// X position of upgrade cluster
 	private static final int UPGRADE_SLOT_X = 187;
 
@@ -28,8 +23,8 @@ public class ContainerEnergyStorage
 	// Storage bus operated
 	private final PartEnergyStorage storageBus;
 
-	public ContainerEnergyStorage(final PartEnergyStorage part, final EntityPlayer player ) {
-		super(part,player);
+	public ContainerEnergyStorage(final PartEnergyStorage part, final EntityPlayer player) {
+		super(part, player);
 		// Call super
 
 		// Add listener
@@ -39,18 +34,16 @@ public class ContainerEnergyStorage
 		this.storageBus = part;
 
 		// Add the upgrade slot
-		this.addUpgradeSlots( part.getUpgradeInventory(), 1, UPGRADE_SLOT_X,
-				UPGRADE_SLOT_Y );
+		this.addUpgradeSlots(part.getUpgradeInventory(), 1, UPGRADE_SLOT_X, UPGRADE_SLOT_Y);
 
 		// Bind to the player's inventory
-		this.bindPlayerInventory( player.inventory, PLAYER_INV_POSITION_Y+67,
-				HOTBAR_INV_POSITION_Y+67 );
+		this.bindPlayerInventory(player.inventory, PLAYER_INV_POSITION_Y + 67, HOTBAR_INV_POSITION_Y + 67);
 
 
 	}
 
 	@Override
-	public boolean canInteractWith( final EntityPlayer player ) {
+	public boolean canInteractWith(final EntityPlayer player) {
 		return true;
 	}
 }

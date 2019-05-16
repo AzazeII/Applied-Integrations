@@ -1,6 +1,6 @@
 {
   "result": {
-      "item": "appliedintegrations:energystoragepartitem"
+    "item": "appliedintegrations:energystoragepartitem"
   },
   "type": "forge:ore_shapeless",
   "ingredients": [

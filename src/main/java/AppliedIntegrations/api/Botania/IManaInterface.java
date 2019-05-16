@@ -7,10 +7,11 @@ import appeng.api.config.Actionable;
  * @Author Azazell
  */
 public interface IManaInterface extends IEnergyInterface {
-    int ExtractMana(int resource, Actionable actionable);
-    int InjectMana(int resource, Actionable actionable);
+	int ExtractMana(int resource, Actionable actionable);
 
-    int getManaStored();
+	int InjectMana(int resource, Actionable actionable);
 
-    void modifyManaStorage(int i);
+	int getManaStored();
+
+	void modifyManaStorage(int i);
 }

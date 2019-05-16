@@ -23,82 +23,82 @@ import java.util.Objects;
 // this one is special
 public class GuiStorageChannelButton extends GuiServerButton {
 
-    // Current storage channel of button
-    private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
+	// Array list of all storage channels registered
+	private static final List<IStorageChannel<? extends IAEStack<?>>> channelList = new ArrayList<>(Objects.requireNonNull(AEApi.instance().storage().storageChannels()));
+	// Current storage channel of button
+	private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 
-    // Array list of all storage channels registered
-    private static final List<IStorageChannel<? extends IAEStack<?>>> channelList = new ArrayList<>(Objects.requireNonNull(AEApi.instance().storage().storageChannels()));
+	public GuiStorageChannelButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+		super(terminal, ID, xPosition, yPosition, width, height, text);
+	}
 
-    public GuiStorageChannelButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
-        super(terminal, ID, xPosition, yPosition, width, height, text);
-    }
+	public static List<IStorageChannel<? extends IAEStack<?>>> getChannelList() {
+		return channelList;
+	}
 
-    public void cycleChannel() {
-        // Check if channel is last channel in list
-        if (channel == channelList.get(channelList.size() - 1)){
+	public void cycleChannel() {
+		// Check if channel is last channel in list
+		if (channel == channelList.get(channelList.size() - 1)) {
 
-            // Make channel first in list
-            channel = channelList.get(0);
-        } else {
-            // Make channel next in list
-            channel = channelList.get(channelList.indexOf(channel) + 1);
-        }
+			// Make channel first in list
+			channel = channelList.get(0);
+		} else {
+			// Make channel next in list
+			channel = channelList.get(channelList.indexOf(channel) + 1);
+		}
 
-    }
+	}
 
-    public IStorageChannel<? extends IAEStack<?>> getChannel() {
-        return channel;
-    }
+	public IStorageChannel<? extends IAEStack<?>> getChannel() {
+		return channel;
+	}
 
-    public static List<IStorageChannel<? extends IAEStack<?>>> getChannelList() {
-        return channelList;
-    }
+	@Override
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		// Check if host GUI has no card
+		if (!host.isCardValid()) {
+			return;
+		}
 
-    @Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        // Check if host GUI has no card
-        if (!host.isCardValid()) {
-            return;
-        }
+		// Get Api
+		AIApi api = Objects.requireNonNull(AIApi.instance());
 
-        // Get Api
-        AIApi api = Objects.requireNonNull(AIApi.instance());
+		// Disable lighting
+		GL11.glDisable(GL11.GL_LIGHTING);
 
-        // Disable lighting
-        GL11.glDisable( GL11.GL_LIGHTING );
+		// Full white
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 
-        // Full white
-        GL11.glColor3f( 1.0F, 1.0F, 1.0F );
+		// Bind background sprite
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(AppEng.MOD_ID, "textures/guis/states.png"));
 
-        // Bind background sprite
-        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(AppEng.MOD_ID, "textures/guis/states.png"));
+		// Draw texture
+		drawTexturedModalRect(x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE - 2);
 
-        // Draw texture
-        drawTexturedModalRect(x, y, backgroundU, backgroundV, AIWidget.WIDGET_SIZE, AIWidget.WIDGET_SIZE - 2);
+		// Bind current sprite from channel
+		Minecraft.getMinecraft().renderEngine.bindTexture(api.getSpriteFromChannel(channel));
 
-        // Bind current sprite from channel
-        Minecraft.getMinecraft().renderEngine.bindTexture(api.getSpriteFromChannel(channel));
+		// Draw texture
+		drawTexturedModalRect(x + 2, y + 1, api.getSpriteU(channel), api.getSpriteV(channel), 16, 16);
 
-        // Draw texture
-        drawTexturedModalRect(x + 2, y + 1, api.getSpriteU(channel), api.getSpriteV(channel), 16, 16);
+		// Re-enable lighting
+		GL11.glEnable(GL11.GL_LIGHTING);
+	}
 
-        // Re-enable lighting
-        GL11.glEnable( GL11.GL_LIGHTING );
-    }
+	@Override
+	public void getTooltip(List<String> tip) {
+		// Check if container has no network tool in slot
+		if (!host.isCardValid()) {
+			return;
+		}
 
-    @Override
-    public void getTooltip(List<String> tip) {
-        // Check if container has no network tool in slot
-        if (!host.isCardValid())
-            return;
+		// Add header
+		tip.add("Storage Channel");
 
-        // Add header
-        tip.add("Storage Channel");
+		// Split string to array
+		String[] splitted = channel.getClass().getCanonicalName().split("\\.");
 
-        // Split string to array
-        String[] splitted = channel.getClass().getCanonicalName().split("\\.");
-
-        // Add current channel name
-        tip.add(splitted[splitted.length - 1]);
-    }
+		// Add current channel name
+		tip.add(splitted[splitted.length - 1]);
+	}
 }

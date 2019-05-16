@@ -1,11 +1,11 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.api.BlackHoleSystem.IPylon;
-import AppliedIntegrations.api.Botania.IManaStorageChannel;
-import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
-import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Utils.AILog;
+import AppliedIntegrations.api.BlackHoleSystem.IPylon;
+import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
+import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.grid.EnergyList;
 import AppliedIntegrations.grid.Mana.ManaList;
 import appeng.api.AEApi;
@@ -37,154 +37,169 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
  */
 public class TileWhiteHole extends TileEntity implements ISingularity {
 
-    public long mass;
-    private TileBlackHole entangledHole = null;
+	public long mass;
+	private TileBlackHole entangledHole = null;
 
-    private List<IPylon> listeners = new ArrayList<>();
+	private List<IPylon> listeners = new ArrayList<>();
 
-    public TileWhiteHole(){
-        mass = (long)(Math.random() * 2048);
-    }
+	public TileWhiteHole() {
+		mass = (long) (Math.random() * 2048);
+	}
 
-    public double getHoleRadius() {
-        // White hole's mass is opposite of black hole's mass, so when black hole grow, then white hole shrink
-        double lightSpeed = 3;
-        return Math.max(Math.cbrt(Math.cbrt(2 * 6.7 * mass / Math.pow(lightSpeed, 2))), 0.3);
-    }
+	public double getHoleRadius() {
+		// White hole's mass is opposite of black hole's mass, so when black hole grow, then white hole shrink
+		double lightSpeed = 3;
+		return Math.max(Math.cbrt(Math.cbrt(2 * 6.7 * mass / Math.pow(lightSpeed, 2))), 0.3);
+	}
 
-    public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
-        return false;
-    }
+	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
+		return false;
+	}
 
-    @Override
-    public void invalidate(){
-        super.invalidate();
+	@Override
+	public void invalidate() {
+		super.invalidate();
 
-        // Iterate over listeners
-        for(IPylon pylon : listeners){
-            // Invalidate singularity
-            pylon.setSingularity(null);
-        }
-    }
+		// Iterate over listeners
+		for (IPylon pylon : listeners) {
+			// Invalidate singularity
+			pylon.setSingularity(null);
+		}
+	}
 
-    @Override
-    public void addMass(long l) {
-        mass -= l;
-    }
+	@Override
+	public void addMass(long l) {
+		mass -= l;
+	}
 
-    @Override
-    public IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable) {
-        // Check not null
-        if(stack == null)
-            return null;
+	@Override
+	public IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable) {
+		// Check not null
+		if (stack == null) {
+			return null;
+		}
 
-        // Check not null
-        if(entangledHole == null)
-            return null;
+		// Check not null
+		if (entangledHole == null) {
+			return null;
+		}
 
-        // Check stack size
-        if(stack.getStackSize() <= 0)
-            return null;
+		// Check stack size
+		if (stack.getStackSize() <= 0) {
+			return null;
+		}
 
-        // Item branch
-        if(stack instanceof IAEItemStack){
-            // Get pointer value of this stack
-            IAEItemStack pStack = entangledHole.storedItems.findPrecise((IAEItemStack)stack);
+		// Item branch
+		if (stack instanceof IAEItemStack) {
+			// Get pointer value of this stack
+			IAEItemStack pStack = entangledHole.storedItems.findPrecise((IAEItemStack) stack);
 
-            // Create copy
-            IAEItemStack Return = pStack.copy();
+			// Create copy
+			IAEItemStack Return = pStack.copy();
 
-            // Check if stack exists in list
-            if(pStack != null){
-                // get stack size
-                long size = pStack.getStackSize();
+			// Check if stack exists in list
+			if (pStack != null) {
+				// get stack size
+				long size = pStack.getStackSize();
 
-                // Check size greater than 0
-                if(size <= 0){
-                    return null;
-                }
+				// Check size greater than 0
+				if (size <= 0) {
+					return null;
+				}
 
-                // Check if size greater then requested
-                if( pStack.getStackSize() <= size ) {
-                    // Set stack size to current stack size
-                    Return.setStackSize( pStack.getStackSize() );
+				// Check if size greater then requested
+				if (pStack.getStackSize() <= size) {
+					// Set stack size to current stack size
+					Return.setStackSize(pStack.getStackSize());
 
-                    // Modulate extraction
-                    if(actionable == Actionable.MODULATE)
-                        // Decrease current stack size
-                        pStack.setStackSize( 0 );
-                } else {
-                    // Set stack size to #Var: size
-                    Return.setStackSize( size );
+					// Modulate extraction
+					if (actionable == Actionable.MODULATE)
+					// Decrease current stack size
+					{
+						pStack.setStackSize(0);
+					}
+				} else {
+					// Set stack size to #Var: size
+					Return.setStackSize(size);
 
-                    // Modulate extraction
-                    if(actionable == Actionable.MODULATE)
-                        // Set current stack size to current stack size - #Var: size
-                        pStack.setStackSize( pStack.getStackSize() - size );
-                }
-            }
+					// Modulate extraction
+					if (actionable == Actionable.MODULATE)
+					// Set current stack size to current stack size - #Var: size
+					{
+						pStack.setStackSize(pStack.getStackSize() - size);
+					}
+				}
+			}
 
-            // Update cell array
-            for(IPylon pylon : listeners)
-                pylon.postCellInventoryEvent();
+			// Update cell array
+			for (IPylon pylon : listeners)
+				pylon.postCellInventoryEvent();
 
-            // Return stack
-            return Return;
-        }
+			// Return stack
+			return Return;
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    public IItemList<?> getList(IStorageChannel chan) {
-        // Check channel
-        if(chan == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class))
-            // If not entangled -> return empty list, else return entangled hole's list
-            return !isEntangled() ? new ItemList() : entangledHole.getList(chan);
+	@Override
+	public IItemList<?> getList(IStorageChannel chan) {
+		// Check channel
+		if (chan == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class))
+		// If not entangled -> return empty list, else return entangled hole's list
+		{
+			return !isEntangled() ? new ItemList() : entangledHole.getList(chan);
+		}
 
-        if(chan == AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class))
-            // If not entangled -> return empty list, else return entangled hole's list
-            return !isEntangled() ? new FluidList() : entangledHole.getList(chan);
+		if (chan == AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class))
+		// If not entangled -> return empty list, else return entangled hole's list
+		{
+			return !isEntangled() ? new FluidList() : entangledHole.getList(chan);
+		}
 
-        if(AIConfig.enableEnergyFeatures && chan == AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class))
-            // If not entangled -> return empty list, else return entangled hole's list
-            return !isEntangled() ? new EnergyList() : entangledHole.getList(chan);
+		if (AIConfig.enableEnergyFeatures && chan == AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class))
+		// If not entangled -> return empty list, else return entangled hole's list
+		{
+			return !isEntangled() ? new EnergyList() : entangledHole.getList(chan);
+		}
 
-        if(AIConfig.enableManaFeatures && Loader.isModLoaded("botania") && chan == AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class))
-            // If not entangled -> return empty list, else return entangled hole's list
-            return !isEntangled() ? new ManaList() : entangledHole.getList(chan);
+		if (AIConfig.enableManaFeatures && Loader.isModLoaded("botania") && chan == AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class))
+		// If not entangled -> return empty list, else return entangled hole's list
+		{
+			return !isEntangled() ? new ManaList() : entangledHole.getList(chan);
+		}
 
-        return null;
-    }
+		return null;
+	}
 
-    @Override
-    @SideOnly(CLIENT)
-    public void setMassFromServer(long mass) {
-        this.mass = mass;
-    }
+	@Override
+	@SideOnly(CLIENT)
+	public void setMassFromServer(long mass) {
+		this.mass = mass;
+	}
 
-    @Override
-    public long getMass() {
-        return mass;
-    }
+	@Override
+	public long getMass() {
+		return mass;
+	}
 
-    @Override
-    public boolean isEntangled() {
-        return entangledHole != null;
-    }
+	@Override
+	public boolean isEntangled() {
+		return entangledHole != null;
+	}
 
-    @Override
-    public void setEntangledHole(ISingularity t) {
-        AILog.chatLog("Setting entangled singularity to " + t.toString());
-        entangledHole = (TileBlackHole)t;
+	@Override
+	public void setEntangledHole(ISingularity t) {
+		AILog.chatLog("Setting entangled singularity to " + t.toString());
+		entangledHole = (TileBlackHole) t;
 
-        // Update cell array
-        for(IPylon pylon : listeners)
-            pylon.postCellInventoryEvent();
-    }
+		// Update cell array
+		for (IPylon pylon : listeners)
+			pylon.postCellInventoryEvent();
+	}
 
-    @Override
-    public void addListener(IPylon pylon) {
-        listeners.add(pylon);
-    }
+	@Override
+	public void addListener(IPylon pylon) {
+		listeners.add(pylon);
+	}
 }

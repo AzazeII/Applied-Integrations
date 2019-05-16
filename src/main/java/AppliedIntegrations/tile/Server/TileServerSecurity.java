@@ -1,12 +1,12 @@
 package AppliedIntegrations.tile.Server;
 
 import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
+import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
 import appeng.api.AEApi;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
@@ -20,11 +20,9 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.math.BlockPos;
-
-import java.util.Arrays;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -33,221 +31,222 @@ import java.util.List;
  * @Author Azazell
  */
 public class TileServerSecurity extends AIServerMultiBlockTile implements IOrientable {
-    // Used by both container and gui
-    public static final int SLOT_Y = 18; // (1)
-    public static final int SLOT_X = 9; // (2)
-    public static final int SLOT_ROWS = 3; // (3)
-    public static final int SLOT_COLUMNS = 9; // (4)
+	// Used by both container and gui
+	public static final int SLOT_Y = 18; // (1)
+	public static final int SLOT_X = 9; // (2)
+	public static final int SLOT_ROWS = 3; // (3)
+	public static final int SLOT_COLUMNS = 9; // (4)
 
-    public List<ContainerServerTerminal> listeners = new LinkedList<>();
+	public List<ContainerServerTerminal> listeners = new LinkedList<>();
 
-    public AIGridNodeInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1){
-        @Override
-        public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-            return itemstack.getItem() instanceof NetworkCard;
-        }
-    };
+	public AIGridNodeInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1) {
+		@Override
+		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
+			return itemstack.getItem() instanceof NetworkCard;
+		}
+	};
 
-    public boolean updateRequested;
+	public boolean updateRequested;
 
-    private EnumFacing forward = EnumFacing.UP;
+	private EnumFacing forward = EnumFacing.UP;
 
-    private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
+	private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
 
-    public void updateCardData(NBTTagCompound tag) {
-        // Get inventory
-        AIGridNodeInventory inv = this.editorInv;
+	public TileServerSecurity() {
+		super();
 
-        // Get stack
-        ItemStack stack = inv.getStackInSlot(0);
+		// Update proxy setting
+		getProxy().getConnectableSides().remove(forward); // Remove forward side
+	}
 
-        // Check if stack has network card item
-        if (stack != null && stack.getItem() instanceof NetworkCard){
-            // Change NBT tag
-            stack.setTagCompound(tag);
-        }
-    }
+	public void updateCardData(NBTTagCompound tag) {
+		// Get inventory
+		AIGridNodeInventory inv = this.editorInv;
 
-    private void initGuiCoordinates() {
-        // Iterate for each listener
-        for( ContainerServerTerminal listener : listeners){
-            // Send update packet
-            NetworkHandler.sendTo(new PacketCoordinateInit(this),
-                    (EntityPlayerMP)listener.player);
+		// Get stack
+		ItemStack stack = inv.getStackInSlot(0);
 
-            // Trigger request
-            updateRequested = false;
-        }
-    }
+		// Check if stack has network card item
+		if (stack != null && stack.getItem() instanceof NetworkCard) {
+			// Change NBT tag
+			stack.setTagCompound(tag);
+		}
+	}
 
-    public void rotateForward(EnumFacing facing) {
-        // Get facing axis
-        EnumFacing.Axis axis = facing.getAxis();
+	public void rotateForward(EnumFacing facing) {
+		// Get facing axis
+		EnumFacing.Axis axis = facing.getAxis();
 
-        // Rotate current direction around given axis
-        forward.rotateAround(axis);
-    }
+		// Rotate current direction around given axis
+		forward.rotateAround(axis);
+	}
 
-    @Override
-    public void update() {
-        super.update();
+	@Override
+	public void createAENode() {
+		if (!world.isRemote) {
+			if (gridNode == null) {
+				gridNode = AEApi.instance().grid().createGridNode(getProxy());
+			}
+			gridNode.updateState();
+		}
+	}
 
-        // Check if tile has master
-        if(!hasMaster()){
-            // Check not null
-            if(gridNode == null)
-                return;
+	@Nonnull
+	@Override
+	public EnumSet<GridFlags> getFlags() {
+		return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
+	}
 
-            // Get our grid
-            IGrid grid = gridNode.getGrid();
+	@Nonnull
+	@Override
+	public EnumSet<EnumFacing> getConnectableSides() {
+		return getProxy().getConnectableSides();
+	}
 
-            // Iterate for each node of this grid
-            for(IGridNode node : grid.getNodes()){
-                // Check if node is server part
-                if(node.getMachine() instanceof AIServerMultiBlockTile) {
-                    // Cast this node to server tile
-                    AIServerMultiBlockTile tile = (AIServerMultiBlockTile) node.getMachine();
+	@Override
+	public void invalidate() {
+		if (world != null && !world.isRemote) {
+			destroyAENode();
+		}
 
-                    // Check if tile has master
-                    if (!tile.hasMaster())
-                        // Skip this tile
-                        continue;
+		if (hasMaster()) {
+			// Remove this as slave from master
+			((TileServerCore) getMaster()).slaves.remove(this);
+		}
 
-                    // Get tile master
-                    TileServerCore master = (TileServerCore) tile.getMaster();
+		// Drop items from editor inventory
+		Platform.spawnDrops(world, pos, Arrays.asList(editorInv.slots));
+	}	@Override
+	public Object getServerGuiElement(final EntityPlayer player) {
+		return new ContainerServerTerminal((TileServerCore) getMaster(), this, player);
+	}
 
-                    // Add this to slave list
-                    master.addSlave(this);
+	@Override
+	public void update() {
+		super.update();
 
-                    // Set master
-                    setMaster(master);
+		// Check if tile has master
+		if (!hasMaster()) {
+			// Check not null
+			if (gridNode == null) {
+				return;
+			}
 
-                    return;
-                }
-            }
-        }
+			// Get our grid
+			IGrid grid = gridNode.getGrid();
 
-        // Check if update requested
-        if (updateRequested){
-            // Check if we have gui to update
-            if (Minecraft.getMinecraft().currentScreen instanceof GuiServerTerminal) {
-                // Init gui coordinate set
-                initGuiCoordinates();
-            }
-        }
-    }
+			// Iterate for each node of this grid
+			for (IGridNode node : grid.getNodes()) {
+				// Check if node is server part
+				if (node.getMachine() instanceof AIServerMultiBlockTile) {
+					// Cast this node to server tile
+					AIServerMultiBlockTile tile = (AIServerMultiBlockTile) node.getMachine();
 
-    @Override
-    public Object getServerGuiElement( final EntityPlayer player ) {
-        return new ContainerServerTerminal((TileServerCore)getMaster(), this, player);
-    }
+					// Check if tile has master
+					if (!tile.hasMaster())
+					// Skip this tile
+					{
+						continue;
+					}
 
-    @Override
-    public Object getClientGuiElement( final EntityPlayer player ) {
-        return new GuiServerTerminal((ContainerServerTerminal)this.getServerGuiElement(player),player);
-    }
+					// Get tile master
+					TileServerCore master = (TileServerCore) tile.getMaster();
 
-    @Override
-    public void createAENode() {
-        if (!world.isRemote) {
-            if (gridNode == null)
-                gridNode = AEApi.instance().grid().createGridNode(this);
-                gridNode.updateState();
-        }
-    }
+					// Add this to slave list
+					master.addSlave(this);
 
-    @Nonnull
-    @Override
-    public EnumSet<GridFlags> getFlags() {
-        return EnumSet.of(GridFlags.REQUIRE_CHANNEL);
-    }
+					// Set master
+					setMaster(master);
 
-    @Nonnull
-    @Override
-    public EnumSet<EnumFacing> getConnectableSides() {
-        // Create empty set
-        EnumSet<EnumFacing> set = EnumSet.noneOf(EnumFacing.class);
+					return;
+				}
+			}
+		}
 
-        // Iterate for each side
-        for(EnumFacing side : EnumFacing.values()){
-            // Check if side isn't forward
-            if(side != forward){
-                // Add side to set
-                set.add(side);
-            }
-        }
-        return set;
-    }
+		// Check if update requested
+		if (updateRequested) {
+			// Check if we have gui to update
+			if (Minecraft.getMinecraft().currentScreen instanceof GuiServerTerminal) {
+				// Init gui coordinate set
+				initGuiCoordinates();
+			}
+		}
+	}
 
-    @Override
-    public void invalidate() {
-        if (world != null && !world.isRemote) {
-            destroyAENode();
-        }
+	private void initGuiCoordinates() {
+		// Iterate for each listener
+		for (ContainerServerTerminal listener : listeners) {
+			// Send update packet
+			NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
 
-        if(hasMaster()){
-            // Remove this as slave from master
-            ((TileServerCore)getMaster()).slaves.remove(this);
-        }
+			// Trigger request
+			updateRequested = false;
+		}
+	}	@Override
+	public Object getClientGuiElement(final EntityPlayer player) {
+		return new GuiServerTerminal((ContainerServerTerminal) this.getServerGuiElement(player), player);
+	}
 
-        // Drop items from editor inventory
-        Platform.spawnDrops(world, pos, Arrays.asList(editorInv.slots));
-    }
+	public void notifyBlock() {
 
-    public void notifyBlock(){
+	}
 
-    }
+	@Override
+	public void readFromNBT(NBTTagCompound tag) {
+		// Read inventory
+		editorInv.readFromNBT(tag.getTagList("#upgradeInventory", 10));
 
-    @Override
-    public boolean canBeRotated() {
-        return true;
-    }
+		super.readFromNBT(tag);
+	}
 
-    @Override
-    public EnumFacing getForward() {
-        return forward;
-    }
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+		// Write inventory
+		tag.setTag("#upgradeInventory", editorInv.writeToNBT());
 
-    @Override
-    public EnumFacing getUp() {
-        return null;
-    }
+		return super.writeToNBT(tag);
+	}
 
-    @Override
-    public void setOrientation(EnumFacing Forward, EnumFacing Up) {
+	@Override
+	public boolean canBeRotated() {
+		return true;
+	}
 
-    }
+	@Override
+	public EnumFacing getForward() {
+		return forward;
+	}
 
-    @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        // Read inventory
-        editorInv.readFromNBT(tag.getTagList("#upgradeInventory", 10));
+	@Override
+	public EnumFacing getUp() {
+		return null;
+	}
 
-        super.readFromNBT(tag);
-    }
+	@Override
+	public void setOrientation(EnumFacing Forward, EnumFacing Up) {
 
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        // Write inventory
-        tag.setTag("#upgradeInventory", editorInv.writeToNBT());
+	}
 
-        return super.writeToNBT(tag);
-    }
+	// ------# Used by packets to sync slots by identifier #------ //
+	public void addWidgetSlotLink(IChannelWidget<?> widget) {
+		this.filterSlots.add(widget);
+	}
 
-    // ------# Used by packets to sync slots by identifier #------ //
-    public void addWidgetSlotLink(IChannelWidget<?> widget) {
-        this.filterSlots.add(widget);
-    }
+	public void updateWidgetSlotLink(int x, int y, ItemStack stack) {
+		// Iterate for each widget
+		this.filterSlots.forEach((widget -> {
+			// Check if widget is under mouse
+			if (widget.isMouseOverWidget(x, y)) {
+				// Update stack
+				widget.setAEStack(AEItemStack.fromItemStack(stack));
+			}
+		}));
+	}
 
-    public void updateWidgetSlotLink(int x, int y, ItemStack stack) {
-        // Iterate for each widget
-        this.filterSlots.forEach((widget -> {
-            // Check if widget is under mouse
-            if (widget.isMouseOverWidget(x, y)) {
-                // Update stack
-                widget.setAEStack(AEItemStack.fromItemStack(stack));
-            }
-        }));
-    }
-    // ------# Used by packets to sync slots by identifier #------ //
+
+
+
+
+
+	// ------# Used by packets to sync slots by identifier #------ //
 }

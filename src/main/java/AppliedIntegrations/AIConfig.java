@@ -13,170 +13,142 @@ import java.util.List;
  * @Author Azazell
  */
 public class AIConfig {
-    private static Configuration config = null;
+	private static final String CATEGORY_FEATURES = "Features";
+	private static final String CATEGORY_TILES = "tile entities";
+	private static final String CATEGORY_PROPERTIES = "Properties";
+	public static boolean enableWebServer;
+	public static boolean enableEnergyFeatures; // #1
+	public static boolean enableManaFeatures; // #2
+	public static boolean enableEmberFeatures; // #3
+	public static boolean enableStarlightFeatures; // #4
+	public static boolean enableBlackHoleStorage; // #5
+	public static boolean enableMEServer; // #6
+	public static boolean enableLogicBus; // #7
+	public static int interfaceMaxStorage; // #8
+	public static IncludeExclude defaultListMode; // #9
+	public static int webUIPort;
+	public static int maxPylonDistance;
+	public static double pylonDrain;
+	private static Configuration config = null;
 
+	// Called only on server
+	public static void preInit() {
+		// Get config file
+		File config = new File(Loader.instance().getConfigDir(), AppliedIntegrations.modid + ".cfg");
 
-    private static final String CATEGORY_FEATURES = "Features";
+		// Update configurations
+		AIConfig.config = new Configuration(config);
 
-    public static boolean enableWebServer;
-    public static boolean enableEnergyFeatures; // #1
-    public static boolean enableManaFeatures; // #2
-    public static boolean enableEmberFeatures; // #3
-    public static boolean enableStarlightFeatures; // #4
+		// Sync config
+		syncFromFiles();
+	}
 
-    private static final String CATEGORY_TILES = "tile entities";
+	public static void syncFromFiles() {
+		// Sync
+		config.load();
 
-    public static boolean enableBlackHoleStorage; // #5
-    public static boolean enableMEServer; // #6
-    public static boolean enableLogicBus; // #7
+		// Create order list #1
+		List<String> featuresOrder = new ArrayList<>();
 
-    private static final String CATEGORY_PROPERTIES = "Properties";
+		// Create order list #2
+		List<String> tileOrder = new ArrayList<>();
 
-    public static int interfaceMaxStorage; // #8
-    public static IncludeExclude defaultListMode; // #9
+		// Create order list #3
+		List<String> propertiesOrder = new ArrayList<>();
 
-    public static int webUIPort;
-    public static int maxPylonDistance;
-    public static double pylonDrain;
+		// Add every property
+		// Web server
+		enableWebServer = (Boolean) addProperty(CATEGORY_FEATURES, "EnableWebServer", false, "Default: false; If set to true, then all web UI features will be enabled; Used only on client side", featuresOrder);
 
+		// Energy parts/tiles/items
+		enableEnergyFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableEnergyFeatures", true, "Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature", featuresOrder);
 
-    // Called only on server
-    public static void preInit(){
-        // Get config file
-        File config = new File(Loader.instance().getConfigDir(), AppliedIntegrations.modid+".cfg");
+		// Mana parts/tile/items
+		enableManaFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false, "Default: true; If set to true, then all mana features will be enabled.", featuresOrder);
 
-        // Update configurations
-        AIConfig.config = new Configuration(config);
+		// Ember capability for energy parts and p2p tunnel
+		enableEmberFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", false, "Default: false; If set to true, then all ember features will be enabled.", featuresOrder);
 
-        // Sync config
-        syncFromFiles();
-    }
+		// p2p tunnel starlight
+		enableStarlightFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableStarlightTunnel", true, "Default: true; If set to true, then starlight p2p tunnel will be available.", featuresOrder);
 
-    // Called only on client
-    public static void preInitClient(){
+		// Black/white hole storage
+		enableBlackHoleStorage = (Boolean) addProperty(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true, "Default: true (only in alpha); If set to true, then all black/white hole storage system blocks will be available in game.", tileOrder);
 
-    }
+		// ME Server
+		enableMEServer = (Boolean) addProperty(CATEGORY_TILES, "EnableMEServer", true, "Default: true; If set to true, then ME Server blocks will be available in game.", tileOrder);
 
-    public static Configuration getConfig(){
-        return config;
-    }
+		// Logic bus
+		enableLogicBus = (Boolean) addProperty(CATEGORY_TILES, "EnableLogicBus", true, "Default: true; If set to true, then Logic bus blocks will be available in game.", tileOrder);
 
-    private static Object addProperty(String category, String key, Object defaultVal, String comment, List<String> order){
-        // Init variable
-        Property property = null;
+		// Max storage of ME energy interface
+		interfaceMaxStorage = (Integer) addProperty(CATEGORY_PROPERTIES, "InterfaceStorage", 1000000, "Default: 1 000 000 RF; Max capacity of ME Energy interface in RF units (all other units is depend on RF capacity).", propertiesOrder);
 
-        // Check for def. val signature
-        if (defaultVal instanceof Boolean)
-            property = config.get(category, key, (Boolean)defaultVal);
-        if (defaultVal instanceof Integer)
-            property = config.get(category, key, (Integer)defaultVal);
-        if (defaultVal instanceof Double)
-            property = config.get(category, key, (Double)defaultVal);
+		// Max distance of pylon
+		maxPylonDistance = (Integer) addProperty(CATEGORY_PROPERTIES, "PylonDistance", 97, "Default: 97; Max range of ME Pylon's beam", propertiesOrder);
 
-        if (property == null)
-            return new Property(null, (String) null, Property.Type.STRING);
+		// Energy drain per block of pylon
+		pylonDrain = (Double) addProperty(CATEGORY_PROPERTIES, "PylonDrainPerBlock", 20.0D, "Default: 20.0D; Active(used only when matter transmitted) energy drain per block of ME pylon's beam. Limit is: " + "10000", propertiesOrder);
 
-        // Set comment
-        property.setComment(comment);
-        // Add to oder
-        order.add(property.getName());
+		webUIPort = (Integer) addProperty(CATEGORY_PROPERTIES, "WebUI Port", 8000, "Default: 8000; Port for web UI of network topology", propertiesOrder);
 
-        // Check for def. val signature
-        if (defaultVal instanceof Boolean)
-            return property.getBoolean();
-        if (defaultVal instanceof Integer)
-            return property.getInt();
-        if (defaultVal instanceof Double)
-            return property.getDouble();
+		defaultListMode = (Boolean) addProperty(CATEGORY_PROPERTIES, "Default Security Terminal List Mode", false, "Default: False (blacklist); If true, then default mode is server security terminal GUI will be white list", propertiesOrder) ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST;
 
-        return 0;
-    }
+		// Set order
+		config.setCategoryPropertyOrder(CATEGORY_FEATURES, featuresOrder);
+		config.setCategoryPropertyOrder(CATEGORY_TILES, tileOrder);
+		config.setCategoryPropertyOrder(CATEGORY_PROPERTIES, propertiesOrder);
 
-    public static void syncFromFiles(){
-        // Sync
-        config.load();
+		// Save if changed
+		if (config.hasChanged()) {
+			config.save();
+		}
+	}
 
-        // Create order list #1
-        List<String> featuresOrder = new ArrayList<>();
+	private static Object addProperty(String category, String key, Object defaultVal, String comment, List<String> order) {
+		// Init variable
+		Property property = null;
 
-        // Create order list #2
-        List<String> tileOrder = new ArrayList<>();
+		// Check for def. val signature
+		if (defaultVal instanceof Boolean) {
+			property = config.get(category, key, (Boolean) defaultVal);
+		}
+		if (defaultVal instanceof Integer) {
+			property = config.get(category, key, (Integer) defaultVal);
+		}
+		if (defaultVal instanceof Double) {
+			property = config.get(category, key, (Double) defaultVal);
+		}
 
-        // Create order list #3
-        List<String> propertiesOrder = new ArrayList<>();
+		if (property == null) {
+			return new Property(null, (String) null, Property.Type.STRING);
+		}
 
-        // Add every property
-        // Web server
-        enableWebServer = (Boolean)addProperty(CATEGORY_FEATURES, "EnableWebServer", false,
-                "Default: false; If set to true, then all web UI features will be enabled; Used only on client side",
-                featuresOrder);
+		// Set comment
+		property.setComment(comment);
+		// Add to oder
+		order.add(property.getName());
 
-        // Energy parts/tiles/items
-        enableEnergyFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEnergyFeatures", true,
-                "Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature",
-                featuresOrder);
+		// Check for def. val signature
+		if (defaultVal instanceof Boolean) {
+			return property.getBoolean();
+		}
+		if (defaultVal instanceof Integer) {
+			return property.getInt();
+		}
+		if (defaultVal instanceof Double) {
+			return property.getDouble();
+		}
 
-        // Mana parts/tile/items
-        enableManaFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false,
-                "Default: true; If set to true, then all mana features will be enabled.",
-                featuresOrder);
+		return 0;
+	}
 
-        // Ember capability for energy parts and p2p tunnel
-        enableEmberFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", false,
-                "Default: false; If set to true, then all ember features will be enabled.",
-                featuresOrder);
+	// Called only on client
+	public static void preInitClient() {
 
-        // p2p tunnel starlight
-        enableStarlightFeatures = (Boolean)addProperty(CATEGORY_FEATURES, "EnableStarlightTunnel", true,
-                "Default: true; If set to true, then starlight p2p tunnel will be available.",
-                featuresOrder);
+	}
 
-        // Black/white hole storage
-        enableBlackHoleStorage = (Boolean)addProperty(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true,
-                "Default: true (only in alpha); If set to true, then all black/white hole storage system blocks will be available in game.",
-                tileOrder);
-
-        // ME Server
-        enableMEServer = (Boolean)addProperty(CATEGORY_TILES, "EnableMEServer", true,
-                "Default: true; If set to true, then ME Server blocks will be available in game.",
-                tileOrder);
-
-        // Logic bus
-        enableLogicBus = (Boolean)addProperty(CATEGORY_TILES, "EnableLogicBus", true,
-                "Default: true; If set to true, then Logic bus blocks will be available in game.",
-                tileOrder);
-
-        // Max storage of ME energy interface
-        interfaceMaxStorage = (Integer)addProperty(CATEGORY_PROPERTIES, "InterfaceStorage", 1000000,
-                "Default: 1 000 000 RF; Max capacity of ME Energy interface in RF units (all other units is depend on RF capacity).",
-                propertiesOrder);
-
-        // Max distance of pylon
-        maxPylonDistance = (Integer)addProperty(CATEGORY_PROPERTIES, "PylonDistance", 97,
-                "Default: 97; Max range of ME Pylon's beam",
-                propertiesOrder);
-
-        // Energy drain per block of pylon
-        pylonDrain = (Double)addProperty(CATEGORY_PROPERTIES, "PylonDrainPerBlock", 20.0D,
-                "Default: 20.0D; Active(used only when matter transmitted) energy drain per block of ME pylon's beam. Limit is: " +
-                        "10000",
-                propertiesOrder);
-
-        webUIPort = (Integer)addProperty(CATEGORY_PROPERTIES, "WebUI Port", 8000,
-                "Default: 8000; Port for web UI of network topology",
-                propertiesOrder);
-
-        defaultListMode = (Boolean) addProperty(CATEGORY_PROPERTIES, "Default Security Terminal List Mode", false,
-                "Default: False (blacklist); If true, then default mode is server security terminal GUI will be white list",
-                propertiesOrder) ? IncludeExclude.BLACKLIST : IncludeExclude.WHITELIST;
-
-        // Set order
-        config.setCategoryPropertyOrder(CATEGORY_FEATURES, featuresOrder);
-        config.setCategoryPropertyOrder(CATEGORY_TILES, tileOrder);
-        config.setCategoryPropertyOrder(CATEGORY_PROPERTIES, propertiesOrder);
-
-        // Save if changed
-        if(config.hasChanged())
-            config.save();
-    }
+	public static Configuration getConfig() {
+		return config;
+	}
 }

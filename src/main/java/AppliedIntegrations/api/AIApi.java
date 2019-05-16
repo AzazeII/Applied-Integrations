@@ -29,6 +29,7 @@ public abstract class AIApi {
 
 		IAEStack<?> convert(ItemStack stack) throws IOException;
 	}
+
 	/**
 	 * Functional interface for encoding ae stack to buf
 	 */
@@ -37,6 +38,7 @@ public abstract class AIApi {
 
 		void encode(NBTTagCompound tag, IAEStack<?> stack) throws IOException;
 	}
+
 	/**
 	 * Functional interface for decoding ae stack from buf
 	 */
@@ -45,6 +47,7 @@ public abstract class AIApi {
 
 		IAEStack<?> decode(NBTTagCompound tag) throws IOException;
 	}
+
 	public static AIApi instance() {
 		try {
 			// Create reflection of our api
@@ -62,51 +65,52 @@ public abstract class AIApi {
 		return null;
 	}
 
-    public abstract void addHandlersForMEPylon(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, Class<? extends WhiteHoleSingularityInventoryHandler<?>> handlerClassB,
-											   IStorageChannel chan);
+	public abstract void addHandlersForMEPylon(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, Class<? extends WhiteHoleSingularityInventoryHandler<?>> handlerClassB, IStorageChannel chan);
 
 	/**
 	 * Map new sprite to channel
-	 * @param channel map key
-	 * @param sprite map value #1
+	 *
+	 * @param channel           map key
+	 * @param sprite            map value #1
 	 * @param widgetConstructor map value #2
-	 * @param UV map value #3 U, V for sprite
-	 * @param coderPair map value #4
+	 * @param UV                map value #3 U, V for sprite
+	 * @param coderPair         map value #4
 	 * @param handler
 	 */
-	public abstract void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite,
-													  Constructor<? extends IChannelWidget> widgetConstructor,
-													  Constructor<? extends FilteredServerPortHandler> handler,
-													  IStackConverter lambda,
-													  Pair<Integer, Integer> UV, Pair<IStackEncoder, IStackDecoder> coderPair);
+	public abstract void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor, Constructor<? extends FilteredServerPortHandler> handler, IStackConverter lambda, Pair<Integer, Integer> UV, Pair<IStackEncoder, IStackDecoder> coderPair);
 
 	/**
 	 * Used by storage channel gui button
+	 *
 	 * @param channel Key for sprite
 	 * @return Sprite of given channel
 	 */
 	public abstract ResourceLocation getSpriteFromChannel(IStorageChannel<? extends IAEStack<?>> channel);
+
 	public abstract int getSpriteU(IStorageChannel<? extends IAEStack<?>> channel);
+
 	public abstract int getSpriteV(IStorageChannel<? extends IAEStack<?>> channel);
+
 	/**
 	 * @param chan Key for widget
 	 * @return Widget for displaying filter for material of current channel
 	 */
-    public abstract Constructor<? extends IChannelWidget> getWidgetFromChannel(IStorageChannel<? extends IAEStack<?>> chan);
+	public abstract Constructor<? extends IChannelWidget> getWidgetFromChannel(IStorageChannel<? extends IAEStack<?>> chan);
 
 	public abstract IStackEncoder getStackEncoder(IStorageChannel<? extends IAEStack<?>> chan);
+
 	public abstract IStackDecoder getStackDecoder(IStorageChannel<? extends IAEStack<?>> chan);
 
 	/**
 	 * @param itemStack Itemstack to convert
-	 * @param chan Key for convertor
+	 * @param chan      Key for convertor
 	 * @return Converted stack
 	 */
 	@Nullable
 	public abstract IAEStack<?> getAEStackFromItemStack(IStorageChannel<? extends IAEStack<?>> chan, ItemStack itemStack);
 
 	/**
-	 * @return  ME inventory handler from given channel
+	 * @return ME inventory handler from given channel
 	 */
 	public abstract Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel);
 }

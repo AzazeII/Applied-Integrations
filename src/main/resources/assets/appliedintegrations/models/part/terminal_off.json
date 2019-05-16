@@ -6,24 +6,57 @@
   },
   "elements": [
     {
-      "from": [2, 2, 0],
-      "to": [14, 14, 2],
+      "from": [
+        2,
+        2,
+        0
+      ],
+      "to": [
+        14,
+        14,
+        2
+      ],
       "faces": {
-        "north": { "texture": "#lightsBright", "tintindex": 1 }
+        "north": {
+          "texture": "#lightsBright",
+          "tintindex": 1
+        }
       }
     },
     {
-      "from": [2, 2, 0],
-      "to": [14, 14, 2],
+      "from": [
+        2,
+        2,
+        0
+      ],
+      "to": [
+        14,
+        14,
+        2
+      ],
       "faces": {
-        "north": { "texture": "#lightsMedium", "tintindex": 2 }
+        "north": {
+          "texture": "#lightsMedium",
+          "tintindex": 2
+        }
       }
     },
     {
-      "from": [2, 2, 0],
-      "to": [14, 14, 2],
+      "from": [
+        2,
+        2,
+        0
+      ],
+      "to": [
+        14,
+        14,
+        2
+      ],
       "faces": {
-        "north": { "texture": "#lightsDark", "tintindex": 3 }
+        "north": {
+          "texture": "#lightsDark",
+          "tintindex": 3
+        }
       }
     }
   ]

@@ -23,79 +23,80 @@ import static net.minecraft.util.EnumFacing.*;
  * @Author Azazell
  */
 public class BlockMEPylon extends BlockAIRegistrable {
-    // Facing in world
-    public static final PropertyDirection FACING = BlockHorizontal.FACING;
+	// Facing in world
+	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
-    public BlockMEPylon(String registryName, String unlocalizedName) {
-        super(registryName, unlocalizedName);
-    }
+	public BlockMEPylon(String registryName, String unlocalizedName) {
+		super(registryName, unlocalizedName);
+	}
 
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileMEPylon();
-    }
+	@Nullable
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileMEPylon();
+	}
 
-    @Override
-    public boolean isOpaqueCube(IBlockState iBlockState) {
-        return false;
-    }
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
 
-    @Override
-    protected BlockStateContainer createBlockState() {
-        // Add block state
-        return new BlockStateContainer(this, new IProperty[] { FACING});
-    }
+		// Get facing from meta
+		EnumFacing enumfacing = EnumFacing.getFront(meta);
 
-    @Override
-    public IBlockState getStateFromMeta(int meta) {
+		// Check if axis present X, or Z axis
+		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
+			// else set facing to north
+			enumfacing = EnumFacing.NORTH;
+		}
 
-        // Get facing from meta
-        EnumFacing enumfacing = EnumFacing.getFront(meta);
+		return this.getDefaultState().withProperty(FACING, enumfacing);
+	}
 
-        // Check if axis present X, or Z axis
-        if (enumfacing.getAxis() == EnumFacing.Axis.Y)
-        {
-            // else set facing to north
-            enumfacing = EnumFacing.NORTH;
-        }
+	@Override
+	public int getMetaFromState(IBlockState state) {
 
-        return this.getDefaultState().withProperty(FACING, enumfacing);
-    }
-    @Override
-    public int getMetaFromState(IBlockState state) {
+		// Set index as meta
+		int meta = (state.getValue(FACING)).getIndex();
 
-        // Set index as meta
-        int meta = (state.getValue(FACING)).getIndex();
+		return meta;
 
-        return meta;
+	}
 
-    }
+	@Override
+	public boolean isFullCube(IBlockState iBlockState) {
+		return false;
+	}
 
-    @Override
-    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
-    {
-        // Pre check for up or down facing
-        if(facing == UP || facing == DOWN)
-            // Return state with south as facing
-            return getDefaultState().withProperty(FACING, SOUTH);
-        // Return state with facing
-        return getDefaultState().withProperty(FACING, facing);
-    }
+	@Override
+	public boolean isOpaqueCube(IBlockState iBlockState) {
+		return false;
+	}
 
-    @Override
-    public boolean isFullCube(IBlockState iBlockState) {
-        return false;
-    }
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+		TileEntity tile = world.getTileEntity(pos);
+		// Pass activated to tile entity ( nothing new :) )
+		if (tile instanceof TileMEPylon) {
+			// Pass activate to tile
+			return ((TileMEPylon) tile).activate(hand, p);
+		}
+		return false;
+	}
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        TileEntity tile = world.getTileEntity(pos);
-        // Pass activated to tile entity ( nothing new :) )
-        if (tile instanceof TileMEPylon) {
-            // Pass activate to tile
-            return ((TileMEPylon) tile).activate(hand, p);
-        }
-        return false;
-    }
+	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		// Pre check for up or down facing
+		if (facing == UP || facing == DOWN)
+		// Return state with south as facing
+		{
+			return getDefaultState().withProperty(FACING, SOUTH);
+		}
+		// Return state with facing
+		return getDefaultState().withProperty(FACING, facing);
+	}
+
+	@Override
+	protected BlockStateContainer createBlockState() {
+		// Add block state
+		return new BlockStateContainer(this, new IProperty[]{FACING});
+	}
 }

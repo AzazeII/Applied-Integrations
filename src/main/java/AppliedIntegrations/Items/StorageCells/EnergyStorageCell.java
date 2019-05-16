@@ -1,7 +1,8 @@
 package AppliedIntegrations.Items.StorageCells;
+
+import AppliedIntegrations.Items.AIItemRegistrable;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
-import AppliedIntegrations.Items.AIItemRegistrable;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.implementations.items.IStorageCell;
@@ -35,23 +36,24 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 		this.setMaxStackSize(1);
 	}
 
-	@SideOnly( Side.CLIENT )
+	@SideOnly(Side.CLIENT)
 	@Override
-	public void addInformation( final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips ) {
-		ICellInventoryHandler<IAEEnergyStack> inventoryHandler = AEApi.instance().registries().cell().getCellInventory( stack, null, this.getChannel());
-		AEApi.instance().client().addCellInformation( inventoryHandler, lines );
+	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
+		ICellInventoryHandler<IAEEnergyStack> inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stack, null, this.getChannel());
+		AEApi.instance().client().addCellInformation(inventoryHandler, lines);
 
-		if (inventoryHandler == null)
+		if (inventoryHandler == null) {
 			return;
+		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))) {
 			// Get the list of stored energies
 			IItemList<IAEEnergyStack> cellEnergies = inventoryHandler.getAvailableItems(getChannel().createList());
-			for( IAEEnergyStack currentStack : cellEnergies ) {
-				if( currentStack != null ) {
+			for (IAEEnergyStack currentStack : cellEnergies) {
+				if (currentStack != null) {
 					// Add to the list
 					String energyInfo = TextFormatting.RED.toString() + currentStack.getStack().getEnergyName() + " x " + currentStack.getStackSize();
-					lines.add( energyInfo.toUpperCase() );
+					lines.add(energyInfo.toUpperCase());
 				}
 			}
 		} else {
@@ -113,7 +115,7 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 
 	@Override
 	public IItemHandler getConfigInventory(ItemStack itemStack) {
-		return new CellConfig( itemStack );
+		return new CellConfig(itemStack);
 	}
 
 	@Override

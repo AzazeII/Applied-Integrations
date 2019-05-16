@@ -1,7 +1,6 @@
 package AppliedIntegrations.Network.Packets.Server;
 
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import io.netty.buffer.ByteBuf;
@@ -13,29 +12,30 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketMasterSync extends AIPacket {
 
-    public IAIMultiBlock slave;
-    public IMaster master;
+	public IAIMultiBlock slave;
+	public IMaster master;
 
-    public PacketMasterSync () {}
+	public PacketMasterSync() {
+	}
 
-    public PacketMasterSync (IAIMultiBlock slave, IMaster master) {
-        this.slave = slave;
-        this.master = master;
-    }
+	public PacketMasterSync(IAIMultiBlock slave, IMaster master) {
+		this.slave = slave;
+		this.master = master;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        slave = (IAIMultiBlock) readSyncHost(buf);
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		slave = (IAIMultiBlock) readSyncHost(buf);
 
-        master = buf.readBoolean() ? null : (IMaster) readSyncHost(buf);
-    }
+		master = buf.readBoolean() ? null : (IMaster) readSyncHost(buf);
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        writeSyncHost(slave, buf);
+	@Override
+	public void toBytes(ByteBuf buf) {
+		writeSyncHost(slave, buf);
 
-        buf.writeBoolean(master == null);
+		buf.writeBoolean(master == null);
 
-        writeSyncHost(master, buf);
-    }
+		writeSyncHost(master, buf);
+	}
 }

@@ -5,14 +5,14 @@ import AppliedIntegrations.api.ISyncHost;
 /**
  * @Author Azazell
  */
-public interface IWidgetHost{
+public interface IWidgetHost {
 
-    int getLeft();
+	int getLeft();
 
-    int getTop();
+	int getTop();
 
-    ISyncHost getSyncHost();
+	ISyncHost getSyncHost();
 
-    void setSyncHost(ISyncHost host);
+	void setSyncHost(ISyncHost host);
 
 }

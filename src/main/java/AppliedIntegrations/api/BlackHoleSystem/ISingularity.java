@@ -15,42 +15,42 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
 /**
  * @Author Azazell
- *
+ * <p>
  * Class, used to mark any singularity/hole
  */
 public interface ISingularity {
-    static ISingularity readFromNBT(NBTTagCompound compound) {
-        // Deserialize positions
-        BlockPos p = BlockPos.fromLong(compound.getLong("#POS"));
+	static ISingularity readFromNBT(NBTTagCompound compound) {
+		// Deserialize positions
+		BlockPos p = BlockPos.fromLong(compound.getLong("#POS"));
 
-        // Deserialize world
-        World w = DimensionManager.getWorld(compound.getInteger("#WORLD"));
+		// Deserialize world
+		World w = DimensionManager.getWorld(compound.getInteger("#WORLD"));
 
-        return (ISingularity)w.getTileEntity(p);
-    }
+		return (ISingularity) w.getTileEntity(p);
+	}
 
-    static void writeNBTTag(ISingularity operatedTile, NBTTagCompound compound) {
-        // Serialize position
-        compound.setLong("#POS", ((TileEntity)operatedTile).getPos().toLong());
+	static void writeNBTTag(ISingularity operatedTile, NBTTagCompound compound) {
+		// Serialize position
+		compound.setLong("#POS", ((TileEntity) operatedTile).getPos().toLong());
 
-        // Serialize world
-        compound.setInteger("#WORLD", ((TileEntity)operatedTile).getWorld().provider.getDimension());
-    }
+		// Serialize world
+		compound.setInteger("#WORLD", ((TileEntity) operatedTile).getWorld().provider.getDimension());
+	}
 
-    void addMass(long l);
+	void addMass(long l);
 
-    IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable);
+	IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable);
 
-    IItemList<?> getList(IStorageChannel iStorageChannel);
+	IItemList<?> getList(IStorageChannel iStorageChannel);
 
-    @SideOnly(CLIENT)
-    void setMassFromServer(long mass);
+	@SideOnly(CLIENT)
+	void setMassFromServer(long mass);
 
-    long getMass();
+	long getMass();
 
-    boolean isEntangled();
+	boolean isEntangled();
 
-    void setEntangledHole(ISingularity t);
+	void setEntangledHole(ISingularity t);
 
-    void addListener(IPylon pylon);
+	void addListener(IPylon pylon);
 }

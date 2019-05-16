@@ -16,14 +16,12 @@ import java.util.List;
  * @Author Azazell
  */
 public class FilteredServerPortEnergyHandler extends FilteredServerPortHandler<IAEEnergyStack> {
-    public FilteredServerPortEnergyHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
-                                           LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
-                                           TileServerCore host) {
-        super(filteredMatter, filterMode, host);
-    }
+	public FilteredServerPortEnergyHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore host) {
+		super(filteredMatter, filterMode, host);
+	}
 
-    @Override
-    public IStorageChannel<IAEEnergyStack> getChannel() {
-        return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
-    }
+	@Override
+	public IStorageChannel<IAEEnergyStack> getChannel() {
+		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
+	}
 }

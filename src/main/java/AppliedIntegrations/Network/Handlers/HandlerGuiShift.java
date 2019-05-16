@@ -2,28 +2,27 @@ package AppliedIntegrations.Network.Handlers;
 
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class HandlerGuiShift implements IMessageHandler<PacketGuiShift, PacketGuiShift> {
-    @Override
-    public PacketGuiShift onMessage(PacketGuiShift message, MessageContext ctx) {
+	@Override
+	public PacketGuiShift onMessage(PacketGuiShift message, MessageContext ctx) {
 
-        // Open new gui
-        AIGuiHandler.open(
-                // Requested gui
-                message.gui,
+		// Open new gui
+		AIGuiHandler.open(
+				// Requested gui
+				message.gui,
 
-                // Player, who requested gui shift
-                message.player,
+				// Player, who requested gui shift
+				message.player,
 
-                // Relative host side to cable connection
-                message.part.getSide(),
+				// Relative host side to cable connection
+				message.part.getSide(),
 
-                // Part position in world
-                message.part.getHostTile().getPos());
+				// Part position in world
+				message.part.getHostTile().getPos());
 
-        return null;
-    }
+		return null;
+	}
 }

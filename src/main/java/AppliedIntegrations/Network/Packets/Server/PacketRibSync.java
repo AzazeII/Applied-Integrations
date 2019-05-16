@@ -11,25 +11,26 @@ import io.netty.buffer.ByteBuf;
  */
 public class PacketRibSync extends AIPacket {
 
-    public boolean nodeActivity;
-    public TileServerRib rib;
+	public boolean nodeActivity;
+	public TileServerRib rib;
 
-    public PacketRibSync(){}
+	public PacketRibSync() {
+	}
 
-    public PacketRibSync(TileServerRib rib, boolean activity){
-        this.rib = rib;
-        this.nodeActivity = activity;
-    }
+	public PacketRibSync(TileServerRib rib, boolean activity) {
+		this.rib = rib;
+		this.nodeActivity = activity;
+	}
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.rib = (TileServerRib) readTile(buf);
-        this.nodeActivity = buf.readBoolean();
-    }
+	@Override
+	public void fromBytes(ByteBuf buf) {
+		this.rib = (TileServerRib) readTile(buf);
+		this.nodeActivity = buf.readBoolean();
+	}
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        writeTile(rib, buf);
-        buf.writeBoolean(nodeActivity);
-    }
+	@Override
+	public void toBytes(ByteBuf buf) {
+		writeTile(rib, buf);
+		buf.writeBoolean(nodeActivity);
+	}
 }

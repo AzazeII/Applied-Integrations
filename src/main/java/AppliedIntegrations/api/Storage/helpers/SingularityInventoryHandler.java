@@ -9,34 +9,34 @@ import appeng.api.storage.data.IAEStack;
  */
 abstract class SingularityInventoryHandler<T extends IAEStack<T>> implements IMEInventoryHandler<T> {
 
-    // Singularity operated
-    public ISingularity singularity;
+	// Singularity operated
+	public ISingularity singularity;
 
-    public SingularityInventoryHandler(){
+	public SingularityInventoryHandler() {
 
-    }
+	}
 
-    @Override
-    public boolean isPrioritized(T t) {
-        return false;
-    }
+	@Override
+	public boolean isPrioritized(T t) {
+		return false;
+	}
 
-    @Override
-    public int getPriority() {
-        return 0;
-    }
+	@Override
+	public int getPriority() {
+		return 0;
+	}
 
-    @Override
-    public int getSlot() {
-        return 0;
-    }
+	@Override
+	public int getSlot() {
+		return 0;
+	}
 
-    @Override
-    public boolean validForPass(int i) {
-        return true;
-    }
+	@Override
+	public boolean validForPass(int i) {
+		return true;
+	}
 
-    public final void setSingularity(ISingularity singularity){
-        this.singularity = singularity;
-    }
+	public final void setSingularity(ISingularity singularity) {
+		this.singularity = singularity;
+	}
 }

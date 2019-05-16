@@ -19,28 +19,31 @@ import java.util.List;
  * @Author Azazell
  */
 public interface IEnergyInterface extends IEnergyInterfaceDuality, INetworkManipulator, ISyncHost {
-    void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side);
-    int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric);
+	void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side);
 
-    IGridNode getGridNode();
+	int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric);
 
-    TileEntity getFacingTile(EnumFacing side);
-    List<ContainerEnergyInterface> getListeners();
+	TileEntity getFacingTile(EnumFacing side);
 
-    /**
-     * @return Outer grid inventory of this host. Used by AppliedIntegrations.Inventory.Handlers#HandlerEnergyStorageBusInterface
-     */
-    default IMEInventory<IAEEnergyStack> getOuterGridInventory() {
-        // Check not null
-        if (getGridNode() == null)
-            return null;
+	List<ContainerEnergyInterface> getListeners();
 
-        // Create grid
-        IGrid grid = getGridNode().getGrid();
+	/**
+	 * @return Outer grid inventory of this host. Used by AppliedIntegrations.Inventory.Handlers#HandlerEnergyStorageBusInterface
+	 */
+	default IMEInventory<IAEEnergyStack> getOuterGridInventory() {
+		// Check not null
+		if (getGridNode() == null) {
+			return null;
+		}
 
-        // Create storage grid
-        IStorageGrid storage = grid.getCache(IStorageGrid.class);
+		// Create grid
+		IGrid grid = getGridNode().getGrid();
 
-        return storage.getInventory(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class));
-    }
+		// Create storage grid
+		IStorageGrid storage = grid.getCache(IStorageGrid.class);
+
+		return storage.getInventory(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class));
+	}
+
+	IGridNode getGridNode();
 }

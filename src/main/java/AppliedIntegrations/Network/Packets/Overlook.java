@@ -7,10 +7,11 @@ import java.lang.annotation.Target;
 
 /**
  * @Author Azazell
- *
+ * <p>
  * Mark field with this annotation, to ignore it on packet transition process
  * NOT transient
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Overlook { }
+public @interface Overlook {
+}

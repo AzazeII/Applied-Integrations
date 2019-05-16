@@ -17,50 +17,50 @@ import static appeng.api.config.IncludeExclude.WHITELIST;
  * @Author Azazell
  */
 public class ServerPortHandler<T extends IAEStack<T>> {
-    protected final TileServerCore host;
-    protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter;
-    protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode;
+	protected final TileServerCore host;
+	protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter;
+	protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode;
 
-    public ServerPortHandler(
-            LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
-            LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore tileServerCore) {
-        this.filteredMatter = filteredMatter;
-        this.filterMode = filterMode;
-        this.host = tileServerCore;
-    }
+	public ServerPortHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore tileServerCore) {
+		this.filteredMatter = filteredMatter;
+		this.filterMode = filterMode;
+		this.host = tileServerCore;
+	}
 
-    /**
-     * @param input stack to check
-     * @param permissions interaction type
-     * @return can requester interact with given stack?
-     */
-    protected boolean canInteract(T input, SecurityPermissions permissions) {
-        // Atomic result
-        AtomicBoolean canInteract = new AtomicBoolean(false);
+	/**
+	 * @param input       stack to check
+	 * @param permissions interaction type
+	 * @return can requester interact with given stack?
+	 */
+	protected boolean canInteract(T input, SecurityPermissions permissions) {
+		// Atomic result
+		AtomicBoolean canInteract = new AtomicBoolean(false);
 
-        // Check not null
-        if (input == null)
-            // Can't interact
-            return canInteract.get();
+		// Check not null
+		if (input == null)
+		// Can't interact
+		{
+			return canInteract.get();
+		}
 
-        // Iterate for each channel
-        List<IStorageChannel<? extends IAEStack<?>>> channelList = getChannelList();
+		// Iterate for each channel
+		List<IStorageChannel<? extends IAEStack<?>>> channelList = getChannelList();
 
-        // Iterate for each channel
-        for (IStorageChannel<? extends IAEStack<?>> channel : channelList) {
-            // Get mode
-            IncludeExclude mode = filterMode.get(permissions).get(channel);
+		// Iterate for each channel
+		for (IStorageChannel<? extends IAEStack<?>> channel : channelList) {
+			// Get mode
+			IncludeExclude mode = filterMode.get(permissions).get(channel);
 
-            // Set by default
-            canInteract.set(mode == BLACKLIST);
+			// Set by default
+			canInteract.set(mode == BLACKLIST);
 
-            // For blacklist: make result true if list doesn't contain this stack
-            // For whitelist: make result true if list contain this stack
+			// For blacklist: make result true if list doesn't contain this stack
+			// For whitelist: make result true if list contain this stack
 
-            // Convert list into stream and check if any stack matches given lambda
-            return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).stream().anyMatch(input::equals);
-        }
+			// Convert list into stream and check if any stack matches given lambda
+			return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).stream().anyMatch(input::equals);
+		}
 
-        return canInteract.get();
-    }
+		return canInteract.get();
+	}
 }

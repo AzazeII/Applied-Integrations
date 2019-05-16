@@ -13,24 +13,24 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class HandlerServerToClient implements IMessageHandler<PacketFilterServerToClient, PacketFilterServerToClient> {
 
-    public HandlerServerToClient(){
+	public HandlerServerToClient() {
 
-    }
+	}
 
-    @Override
-    public PacketFilterServerToClient onMessage(PacketFilterServerToClient message, MessageContext ctx) {
-        Minecraft.getMinecraft().addScheduledTask(() -> {
-            Gui gui = Minecraft.getMinecraft().currentScreen;
-            if (gui instanceof IFilterGUI) {
-                if (gui instanceof AIBaseGui) {
-                    // Check if we are updating correct GUI
-                    if (((AIBaseGui) gui).getSyncHost().compareTo(message.host, true)) {
-                        ((IFilterGUI) gui).updateEnergy(message.energy, message.index);
-                    }
-                }
-            }
-        });
+	@Override
+	public PacketFilterServerToClient onMessage(PacketFilterServerToClient message, MessageContext ctx) {
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			Gui gui = Minecraft.getMinecraft().currentScreen;
+			if (gui instanceof IFilterGUI) {
+				if (gui instanceof AIBaseGui) {
+					// Check if we are updating correct GUI
+					if (((AIBaseGui) gui).getSyncHost().compareTo(message.host, true)) {
+						((IFilterGUI) gui).updateEnergy(message.energy, message.index);
+					}
+				}
+			}
+		});
 
-        return null;
-    }
+		return null;
+	}
 }

@@ -21,90 +21,86 @@ import java.util.LinkedHashMap;
  * @Author Azazell
  */
 public class ApiInstance extends AIApi {
-    private static AIApi instance;
+	// ----# Channel Maps #---- //
+	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, ResourceLocation> channelSpriteMap = new LinkedHashMap<>();
+	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends IChannelWidget>> channelConstructorMap = new LinkedHashMap<>();
+	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends FilteredServerPortHandler>> channelHandlerMap = new LinkedHashMap<>();
+	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IStackConverter> channelStackConverterMap = new LinkedHashMap<>();
+	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Pair<Integer, Integer>> channelUVMap = new LinkedHashMap<>();
+	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Pair<IStackEncoder, IStackDecoder>> channelCoderMap = new LinkedHashMap<>();
+	private static AIApi instance;
+	// ----# Channel Maps #---- //
 
-    // ----# Channel Maps #---- //
-    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, ResourceLocation> channelSpriteMap = new LinkedHashMap<>();
-    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends IChannelWidget>> channelConstructorMap = new LinkedHashMap<>();
-    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends FilteredServerPortHandler>> channelHandlerMap = new LinkedHashMap<>();
-    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IStackConverter> channelStackConverterMap = new LinkedHashMap<>();
-    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Pair<Integer, Integer>> channelUVMap = new LinkedHashMap<>();
-    private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Pair<IStackEncoder, IStackDecoder>> channelCoderMap = new LinkedHashMap<>();
-    // ----# Channel Maps #---- //
+	public static AIApi staticInstance() {
+		// Check not null
+		if (instance == null)
+		// Update instance
+		{
+			instance = new ApiInstance();
+		}
 
-    @Override
-    public void addHandlersForMEPylon(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, Class<? extends WhiteHoleSingularityInventoryHandler<?>> handlerClassB,
-                                      IStorageChannel chan) {
-        TileMEPylon.addBlackHoleHandler(handlerClassA, chan);
-        TileMEPylon.addWhiteHoleHandler(handlerClassB, chan);
-    }
+		// Return instance
+		return instance;
+	}
 
-    @Override
-    public ResourceLocation getSpriteFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
-        return channelSpriteMap.get(channel);
-    }
+	@Override
+	public void addHandlersForMEPylon(Class<? extends BlackHoleSingularityInventoryHandler<?>> handlerClassA, Class<? extends WhiteHoleSingularityInventoryHandler<?>> handlerClassB, IStorageChannel chan) {
+		TileMEPylon.addBlackHoleHandler(handlerClassA, chan);
+		TileMEPylon.addWhiteHoleHandler(handlerClassB, chan);
+	}
 
-    @Override
-    public int getSpriteU(IStorageChannel<? extends IAEStack<?>> channel) {
-        return channelUVMap.get(channel).getLeft();
-    }
+	@Override
+	public void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor, Constructor<? extends FilteredServerPortHandler> handler, IStackConverter lambda, Pair<Integer, Integer> pair, Pair<IStackEncoder, IStackDecoder> coderPair) {
+		channelSpriteMap.put(channel, sprite);
+		channelConstructorMap.put(channel, widgetConstructor);
+		channelStackConverterMap.put(channel, lambda);
+		channelUVMap.put(channel, pair);
+		channelCoderMap.put(channel, coderPair);
+		channelHandlerMap.put(channel, handler);
+	}
 
-    @Override
-    public int getSpriteV(IStorageChannel<? extends IAEStack<?>> channel) {
-        return channelUVMap.get(channel).getRight();
-    }
+	@Override
+	public ResourceLocation getSpriteFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
+		return channelSpriteMap.get(channel);
+	}
 
-    @Override
-    public Constructor<? extends IChannelWidget> getWidgetFromChannel(IStorageChannel<? extends IAEStack<?>> chan) {
-        return channelConstructorMap.get(chan);
-    }
+	@Override
+	public int getSpriteU(IStorageChannel<? extends IAEStack<?>> channel) {
+		return channelUVMap.get(channel).getLeft();
+	}
 
-    @Override
-    public IStackEncoder getStackEncoder(IStorageChannel<? extends IAEStack<?>> chan) {
-        return channelCoderMap.get(chan).getLeft();
-    }
+	@Override
+	public int getSpriteV(IStorageChannel<? extends IAEStack<?>> channel) {
+		return channelUVMap.get(channel).getRight();
+	}
 
-    @Override
-    public IStackDecoder getStackDecoder(IStorageChannel<? extends IAEStack<?>> chan) {
-        return channelCoderMap.get(chan).getRight();
-    }
+	@Override
+	public Constructor<? extends IChannelWidget> getWidgetFromChannel(IStorageChannel<? extends IAEStack<?>> chan) {
+		return channelConstructorMap.get(chan);
+	}
 
-    @Nullable
-    @Override
-    public IAEStack<?> getAEStackFromItemStack(IStorageChannel<? extends IAEStack<?>> chan, ItemStack itemStack) {
-        try {
-            return channelStackConverterMap.get(chan).convert(itemStack);
-        } catch (IOException ignored) {
-            throw new IllegalStateException("Unexpected error");
-        }
-    }
+	@Override
+	public IStackEncoder getStackEncoder(IStorageChannel<? extends IAEStack<?>> chan) {
+		return channelCoderMap.get(chan).getLeft();
+	}
 
-    @Override
-    public Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
-        return channelHandlerMap.get(channel);
-    }
+	@Override
+	public IStackDecoder getStackDecoder(IStorageChannel<? extends IAEStack<?>> chan) {
+		return channelCoderMap.get(chan).getRight();
+	}
 
-    @Override
-    public void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite,
-                                             Constructor<? extends IChannelWidget> widgetConstructor,
-                                             Constructor<? extends FilteredServerPortHandler> handler,
-                                             IStackConverter lambda, Pair<Integer, Integer> pair,
-                                             Pair<IStackEncoder, IStackDecoder> coderPair) {
-        channelSpriteMap.put(channel, sprite);
-        channelConstructorMap.put(channel, widgetConstructor);
-        channelStackConverterMap.put(channel, lambda);
-        channelUVMap.put(channel, pair);
-        channelCoderMap.put(channel, coderPair);
-        channelHandlerMap.put(channel, handler);
-    }
+	@Nullable
+	@Override
+	public IAEStack<?> getAEStackFromItemStack(IStorageChannel<? extends IAEStack<?>> chan, ItemStack itemStack) {
+		try {
+			return channelStackConverterMap.get(chan).convert(itemStack);
+		} catch (IOException ignored) {
+			throw new IllegalStateException("Unexpected error");
+		}
+	}
 
-    public static AIApi staticInstance() {
-        // Check not null
-        if(instance == null)
-            // Update instance
-            instance = new ApiInstance();
-
-        // Return instance
-        return instance;
-    }
+	@Override
+	public Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
+		return channelHandlerMap.get(channel);
+	}
 }

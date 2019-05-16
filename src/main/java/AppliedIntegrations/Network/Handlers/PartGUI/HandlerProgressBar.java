@@ -12,24 +12,24 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  */
 public class HandlerProgressBar implements IMessageHandler<PacketProgressBar, PacketProgressBar> {
 
-    public HandlerProgressBar(){
+	public HandlerProgressBar() {
 
-    }
+	}
 
-    @Override
-    public PacketProgressBar onMessage(PacketProgressBar message, MessageContext ctx) {
+	@Override
+	public PacketProgressBar onMessage(PacketProgressBar message, MessageContext ctx) {
 
-        Minecraft.getMinecraft().addScheduledTask(() -> {
-            Gui g = Minecraft.getMinecraft().currentScreen;
-            if(g instanceof GuiEnergyInterface){
-                GuiEnergyInterface GEI = (GuiEnergyInterface)g;
+		Minecraft.getMinecraft().addScheduledTask(() -> {
+			Gui g = Minecraft.getMinecraft().currentScreen;
+			if (g instanceof GuiEnergyInterface) {
+				GuiEnergyInterface GEI = (GuiEnergyInterface) g;
 
-                // Check if we are updating correct GUI
-                if(GEI.getSyncHost().equals(message.sender)) {
-                    GEI.storage = (int) message.sender.getEnergyStorage(message.energy, message.energySide).getStored();
-                }
-            }
-        });
-        return null;
-    }
+				// Check if we are updating correct GUI
+				if (GEI.getSyncHost().equals(message.sender)) {
+					GEI.storage = (int) message.sender.getEnergyStorage(message.energy, message.energySide).getStored();
+				}
+			}
+		});
+		return null;
+	}
 }

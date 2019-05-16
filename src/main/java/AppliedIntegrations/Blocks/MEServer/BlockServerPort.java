@@ -11,19 +11,19 @@ import net.minecraft.world.World;
  * @Author Azazell
  */
 public class BlockServerPort extends AIMultiBlock {
-    public BlockServerPort(String reg, String unloc) {
-        super(reg, unloc);
-    }
+	public BlockServerPort(String reg, String unloc) {
+		super(reg, unloc);
+	}
 
-    @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-        // Get port
-        TileServerPort port = (TileServerPort)worldIn.getTileEntity(pos);
+	@Override
+	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
+		// Get port
+		TileServerPort port = (TileServerPort) worldIn.getTileEntity(pos);
 
-        // Check not null
-        if (port != null) {
-            // Pass call to tile
-            port.onNeighborChange();
-        }
-    }
+		// Check not null
+		if (port != null) {
+			// Pass call to tile
+			port.onNeighborChange();
+		}
+	}
 }

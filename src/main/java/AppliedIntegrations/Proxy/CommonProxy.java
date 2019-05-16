@@ -1,15 +1,15 @@
 package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.AIConfig;
-import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.tile.TileEnum;
 import AppliedIntegrations.Items.ItemEnum;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.grid.EnergyStorageChannel;
+import AppliedIntegrations.tile.TileEnum;
 import appeng.api.AEApi;
 import appeng.api.movable.IMovableRegistry;
 import appeng.api.recipes.IRecipeLoader;
@@ -18,63 +18,71 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 /**
  * @Author Azazell
  */
 public class CommonProxy {
 
-    public void SidedPreInit(){
-        ItemEnum.register();
-        BlocksEnum.register();
-        //EntityEnum.register();
-            //PartEnum.registerAEModels();
+	private class InternalRecipeLoader implements IRecipeLoader {
 
-        NetworkHandler.registerServerPackets();
+		@Override
+		public BufferedReader getFile(String path) throws Exception {
+			InputStream resourceAsStream = getClass().getResourceAsStream("/assets/appliedintegrations/recipes/" + path);
+			InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
+			return new BufferedReader(reader);
+		}
+	}
 
-        if(AIConfig.enableEnergyFeatures)
-            // Register channel
-            AEApi.instance().storage().registerStorageChannel(IEnergyStorageChannel.class, new EnergyStorageChannel());
+	public void SidedPreInit() {
+		ItemEnum.register();
+		BlocksEnum.register();
+		//EntityEnum.register();
+		//PartEnum.registerAEModels();
 
-        if(Loader.isModLoaded("botania") && AIConfig.enableManaFeatures)
-            BotaniaLoader.preInit();
-        if(Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures)
-            EmberLoader.preInit();
-        if(Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures)
-            AstralLoader.preInit();
-    }
+		NetworkHandler.registerServerPackets();
 
-    public void SidedInit(FMLInitializationEvent init){
+		if (AIConfig.enableEnergyFeatures)
+		// Register channel
+		{
+			AEApi.instance().storage().registerStorageChannel(IEnergyStorageChannel.class, new EnergyStorageChannel());
+		}
 
-    }
+		if (Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
+			BotaniaLoader.preInit();
+		}
+		if (Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures) {
+			EmberLoader.preInit();
+		}
+		if (Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures) {
+			AstralLoader.preInit();
+		}
+	}
 
-    public void SidedPostInit(){
+	public void SidedInit(FMLInitializationEvent init) {
 
-    }
+	}
 
-    private class InternalRecipeLoader implements IRecipeLoader {
+	public void SidedPostInit() {
 
-        @Override
-        public BufferedReader getFile(String path) throws Exception {
-            InputStream resourceAsStream = getClass().getResourceAsStream("/assets/appliedintegrations/recipes/" + path);
-            InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
-            return new BufferedReader(reader);
-        }
-    }
-    /**
-     * Adds tile entities to the AE2 SpatialIO whitelist
-     */
-    public void registerSpatialIOMovables()
-    {
-        IMovableRegistry movableRegistry = AEApi.instance().registries().movable();
-        for( TileEnum tile : TileEnum.values() )
-        {
-            if(tile.enabled)
-                movableRegistry.whiteListTileEntity( tile.clazz );
-        }
-    }
-    public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return ctx.getServerHandler().player;
-    }
+	}
+
+	/**
+	 * Adds tile entities to the AE2 SpatialIO whitelist
+	 */
+	public void registerSpatialIOMovables() {
+		IMovableRegistry movableRegistry = AEApi.instance().registries().movable();
+		for (TileEnum tile : TileEnum.values()) {
+			if (tile.enabled) {
+				movableRegistry.whiteListTileEntity(tile.clazz);
+			}
+		}
+	}
+
+	public EntityPlayer getPlayerEntity(MessageContext ctx) {
+		return ctx.getServerHandler().player;
+	}
 }
