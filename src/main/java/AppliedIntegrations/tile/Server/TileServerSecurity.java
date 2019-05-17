@@ -8,10 +8,11 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import appeng.api.AEApi;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
+import appeng.api.util.AEColor;
 import appeng.api.util.IOrientable;
+import appeng.me.GridAccessException;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
@@ -91,21 +92,22 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 	}
 
 	@Override
-	public void createAENode() {
+	public void createProxyNode() {
+		// Configure proxy states
+		this.getProxy().setColor(AEColor.TRANSPARENT); // (1) Color
+		this.getProxy().setIdlePowerUsage(1); // (2) Power usage
+		this.getProxy().onReady(); // (3) Make node ready
+		this.getProxy().setFlags(); // (4) Flags
+		this.getProxy().setValidSides(getValidSides()); // (5) Sides
 
-		if (!world.isRemote) {
-			if (gridNode == null) {
-				gridNode = AEApi.instance().grid().createGridNode(getProxy());
-			}
-			gridNode.updateState();
-		}
+		// Notify node
+		this.getProxy().getNode().updateState();
 	}
 
 	@Override
 	public void invalidate() {
-
 		if (world != null && !world.isRemote) {
-			destroyAENode();
+			destroyProxyNode();
 		}
 
 		if (hasMaster()) {
@@ -119,44 +121,48 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
 	@Override
 	public void update() {
-
 		super.update();
 
 		// Check if tile has master
 		if (!hasMaster()) {
 			// Check not null
-			if (gridNode == null) {
+			if (getProxy().getNode() == null) {
 				return;
 			}
 
-			// Get our grid
-			IGrid grid = gridNode.getGrid();
+			try {
+				// Get our grid
+				IGrid grid = getProxy().getGrid();
 
-			// Iterate for each node of this grid
-			for (IGridNode node : grid.getNodes()) {
-				// Check if node is server part
-				if (node.getMachine() instanceof AIServerMultiBlockTile) {
-					// Cast this node to server tile
-					AIServerMultiBlockTile tile = (AIServerMultiBlockTile) node.getMachine();
 
-					// Check if tile has master
-					if (!tile.hasMaster())
-					// Skip this tile
-					{
-						continue;
+				// Iterate for each node of this grid
+				for (IGridNode node : grid.getNodes()) {
+					// Check if node is server part
+					if (node.getMachine() instanceof AIServerMultiBlockTile) {
+						// Cast this node to server tile
+						AIServerMultiBlockTile tile = (AIServerMultiBlockTile) node.getMachine();
+
+						// Check if tile has master
+						if (!tile.hasMaster())
+						// Skip this tile
+						{
+							continue;
+						}
+
+						// Get tile master
+						TileServerCore master = (TileServerCore) tile.getMaster();
+
+						// Add this to slave list
+						master.addSlave(this);
+
+						// Set master
+						setMaster(master);
+
+						return;
 					}
-
-					// Get tile master
-					TileServerCore master = (TileServerCore) tile.getMaster();
-
-					// Add this to slave list
-					master.addSlave(this);
-
-					// Set master
-					setMaster(master);
-
-					return;
 				}
+			} catch (GridAccessException e) {
+				e.printStackTrace();
 			}
 		}
 
@@ -181,6 +187,7 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 		}
 	}
 
+	@Override
 	public void notifyBlock() {
 
 	}

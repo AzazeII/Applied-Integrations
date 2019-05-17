@@ -30,6 +30,7 @@ import appeng.api.storage.*;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
+import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,9 +65,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 			TileServerPort port = getPortAtSide(side);
 
 			// Check not null
-			if (port == null)
-			// Skip
-			{
+			if (port == null) {
+				// Skip
 				return;
 			}
 
@@ -227,7 +227,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerStorage, p, AEPartLocation.INTERNAL, pos);
 	}
 
-	public void postNetworkCellEvents() {
+	public void postNetworkCellEvents() throws GridAccessException {
 		// Iterate for each side
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			// Check not null
@@ -246,7 +246,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		postCellInventoryEvent();
 	}
 
-	public void postNetworkAlterationsEvents(IStorageChannel<? extends IAEStack<?>> channel, Iterable change, MachineSource machineSource) {
+	public void postNetworkAlterationsEvents(IStorageChannel<? extends IAEStack<?>> channel, Iterable change, MachineSource machineSource) throws GridAccessException {
 		// Iterate for each side
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			// Check not null
@@ -388,11 +388,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	@SuppressWarnings("unchecked")
 	@Override
 	public void invalidate() {
-
 		super.invalidate();
-		if (world != null && !world.isRemote) {
-			destroyAENode();
-		}
 
 		if (isFormed) {
 			this.destroyMultiBlock();
@@ -409,8 +405,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 			// Nullify master
 			tile.setMaster(null);
 
-			// Destroy node of slave
-			tile.destroyAENode();
+			// Destroy proxy noe
+			tile.destroyProxyNode();
 		}
 
 		// Nullify slave map
@@ -457,15 +453,13 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 	@Override
 	public void update() {
-
 		super.update();
 
 		// Check if construction was requested from read nbt method
 		if (constructionRequested) {
 			// Don't call on client
-			if (world.isRemote)
-			// Skip client call
-			{
+			if (world.isRemote) {
+				// Skip client call
 				return;
 			}
 
@@ -501,13 +495,15 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 			// Count of blocks matched the pattern. Atomic, because it accessed by lambda function
 			AtomicInteger count = new AtomicInteger();
 
-			// Get list of blocks matched the pattern
-			formServer((List<AIServerMultiBlockTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_SERVER, this, (block) -> count.getAndIncrement()), count, p);
+			try {
+				// Get list of blocks matched the pattern
+				formServer((List<AIServerMultiBlockTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_SERVER, this, (block) -> count.getAndIncrement()), count, p);
+			} catch (GridAccessException ignored) { }
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void formServer(List<AIServerMultiBlockTile> toUpdate, AtomicInteger count, EntityPlayer p) {
+	private void formServer(List<AIServerMultiBlockTile> toUpdate, AtomicInteger count, EntityPlayer p) throws GridAccessException {
 		// Check if length equal to count, so all block has matched the pattern
 		if (AIPatterns.ME_SERVER.length == count.get()) {
 			// Iterate for each block to update
@@ -519,8 +515,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 				// Set slave master
 				slave.setMaster(this);
 
-				// Create slave node
-				slave.createAENode();
+				// Create slave proxy
+				slave.createProxyNode();
 
 				// Put in category map
 				slaveMap.get(slave.getClass()).add(slave);

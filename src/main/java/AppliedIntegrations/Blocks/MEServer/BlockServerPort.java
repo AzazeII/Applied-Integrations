@@ -3,6 +3,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
 import AppliedIntegrations.tile.Server.TileServerPort;
+import appeng.me.GridAccessException;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +25,10 @@ public class BlockServerPort extends AIMultiBlock {
 
 		// Check not null
 		if (port != null) {
-			// Pass call to tile
-			port.onNeighborChange();
+			try {
+				// Pass call to tile
+				port.onNeighborChange();
+			} catch (GridAccessException ignored) {}
 		}
 	}
 }

@@ -5,6 +5,7 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.util.AEPartLocation;
+import appeng.me.GridAccessException;
 
 /**
  * @Author Azazell
@@ -17,7 +18,7 @@ public interface IEnergyInterfaceDuality {
 
 	IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side);
 
-	void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException;
+	void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException, GridAccessException;
 
-	void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException;
+	void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException, GridAccessException;
 }

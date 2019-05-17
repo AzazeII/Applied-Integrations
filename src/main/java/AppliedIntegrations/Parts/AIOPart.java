@@ -342,16 +342,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		}
 	}
 
-	/**
-	 * Determines how much power the host takes for just
-	 * existing.
-	 */
-	@Override
-	public double getIdlePowerUsage() {
-
-		return AIOPart.IDLE_POWER_DRAIN;
-	}
-
 	@Override
 	public TickingRequest getTickingRequest(final IGridNode node) {
 

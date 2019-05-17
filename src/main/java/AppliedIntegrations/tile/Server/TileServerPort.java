@@ -1,7 +1,6 @@
 package AppliedIntegrations.tile.Server;
 
 
-import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
@@ -11,7 +10,7 @@ import appeng.api.storage.ICellInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.util.AEPartLocation;
-import appeng.me.helpers.AENetworkProxy;
+import appeng.me.GridAccessException;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.util.EnumFacing;
 
@@ -30,60 +29,30 @@ import static java.util.EnumSet.of;
 public class TileServerPort extends AIServerMultiBlockTile implements ICellContainer, ICraftingProvider {
 
 	private AEPartLocation side = AEPartLocation.INTERNAL;
-	private AENetworkProxy outerProxy = new AENetworkProxy(this, "AI Tile Outer Proxy", getProxy().getMachineRepresentation(), true);
-
-	public TileServerPort() {
-		super();
-
-		// Set inner proxy constants
-		this.getProxy().setFlags(GridFlags.CANNOT_CARRY);
-		this.getProxy().setIdlePowerUsage(0);
-
-		// Set outer proxy constants
-		this.outerProxy.setFlags(GridFlags.CANNOT_CARRY);
-		this.outerProxy.setIdlePowerUsage(0);
-	}
 
 	public void setDir(EnumFacing side) {
 		// Update side
 		this.side = AEPartLocation.fromFacing(side);
 
-		// Make outer proxy connectible
-		this.outerProxy.setValidSides(of(side));
+		// Update valid sides of proxy
+		getProxy().setValidSides(getValidSides());
+
+		// Notify node
+		getProxy().getNode().updateState();
 	}
 
 	public AEPartLocation getSideVector() {
 		return side;
 	}
 
-	public IGrid requestNetwork() {
+	public IGrid requestNetwork() throws GridAccessException {
 		// Check not null
-		if (gridNode == null) {
+		if (getProxy().getNode() == null) {
 			return null;
 		}
 
 		// Get grid and return it
-		return gridNode.getGrid();
-	}
-
-	@Override
-	public void validate() {
-		super.validate();
-		this.onNeighborChange();
-		this.outerProxy.onReady();
-	}
-
-	@Override
-	public void invalidate() {
-		super.invalidate();
-		this.outerProxy.invalidate();
-
-	}
-
-	@Override
-	public void onChunkUnload() {
-		super.onChunkUnload();
-		this.outerProxy.onChunkUnload();
+		return getProxy().getGrid();
 	}
 
 	@Override
@@ -96,7 +65,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 		return noneOf(EnumFacing.class);
 	}
 
-	public void onNeighborChange() {
+	public void onNeighborChange() throws GridAccessException {
 		// Check if port has master
 		if (hasMaster()) {
 			// Get core

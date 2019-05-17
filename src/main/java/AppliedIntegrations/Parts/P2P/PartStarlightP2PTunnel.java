@@ -30,7 +30,6 @@ public class PartStarlightP2PTunnel extends AIP2PTunnel<PartStarlightP2PTunnel> 
 		return 0;
 	}
 
-	@Override
 	public double getIdlePowerUsage() {
 
 		return 0;

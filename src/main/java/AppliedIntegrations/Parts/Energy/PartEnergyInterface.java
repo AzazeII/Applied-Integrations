@@ -42,6 +42,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.core.sync.GuiBridge;
+import appeng.me.GridAccessException;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.block.state.IBlockState;
@@ -261,12 +262,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 		}
 	}
 
-	@Override
-	public double getIdlePowerUsage() {
-
-		return IDLE_POWER_DRAIN;
-	}
-
 	private void updateSinkSource() {
 
 		if (getEnergyStorage(EU, INTERNAL) == null) {
@@ -297,7 +292,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
-
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.STORAGE_INTERFACE_HAS_CHANNEL;
@@ -408,7 +402,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 					doInjectDualityWork(Actionable.MODULATE);
 					doExtractDualityWork(Actionable.MODULATE);
 				}
-			} catch (NullNodeConnectionException e) {
+			} catch (NullNodeConnectionException | GridAccessException e) {
 				AILog.error(e, "Node of Part Energy Interface, when it's active could not be null.. But it is");
 			}
 
@@ -552,14 +546,12 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	 * @return
 	 */
 	@Override
-	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
-
+	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
 		getDuality().doInjectDualityWork(action);
 	}
 
 	@Override
-	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
-
+	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
 		getDuality().doExtractDualityWork(action);
 	}
 

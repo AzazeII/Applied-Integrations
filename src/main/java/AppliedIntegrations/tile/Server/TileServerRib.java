@@ -30,8 +30,6 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 
 	public TileServerRib(){
 		super();
-
-		getProxy().setFlags(GridFlags.DENSE_CAPACITY);
 	}
 
 	public IGrid getMainNetwork() {
@@ -41,6 +39,19 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 		}
 
 		return getNetwork();
+	}
+
+	private void notifyListeners() {
+		// Sync with client
+		NetworkHandler.sendToDimension(new PacketRibSync(this, getGridNode().isActive()), world.provider.getDimension());
+	}
+
+	@Override
+	public void createProxyNode() {
+		super.createProxyNode();
+
+		// Set dense capacity flag to make rib conduct 32 channels
+		this.getProxy().setFlags(GridFlags.DENSE_CAPACITY);
 	}
 
 	@Override
@@ -60,11 +71,6 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 				notifyListeners();
 			}));
 		}
-	}
-
-	private void notifyListeners() {
-		// Sync with client
-		NetworkHandler.sendToDimension(new PacketRibSync(this, getGridNode().isActive()), world.provider.getDimension());
 	}
 
 	@Override

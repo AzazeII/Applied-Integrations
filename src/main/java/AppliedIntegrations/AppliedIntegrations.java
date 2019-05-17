@@ -36,7 +36,6 @@ public class AppliedIntegrations {
 	public static CreativeTabs AI = new CreativeTabs(I18n.translateToLocal(modid)) {
 		@Override
 		public ItemStack getTabIconItem() {
-
 			return new ItemStack(ItemEnum.CHAOSMANIPULATOR.getItem(), 1);
 		}
 	};

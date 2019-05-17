@@ -10,7 +10,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
 import static appeng.api.config.IncludeExclude.BLACKLIST;
 import static appeng.api.config.IncludeExclude.WHITELIST;
 
@@ -21,8 +20,7 @@ public class ServerPortHandler<T extends IAEStack<T>> {
 	protected final TileServerCore host;
 
 	protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter;
-
-	protected final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode;
+	private final LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode;
 
 	public ServerPortHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore tileServerCore) {
 
@@ -32,7 +30,7 @@ public class ServerPortHandler<T extends IAEStack<T>> {
 	}
 
 	/**
-	 * @param input       stack to check
+	 * @param input stack to check
 	 * @param permissions interaction type
 	 * @return can requester interact with given stack?
 	 */
@@ -41,30 +39,24 @@ public class ServerPortHandler<T extends IAEStack<T>> {
 		AtomicBoolean canInteract = new AtomicBoolean(false);
 
 		// Check not null
-		if (input == null)
-		// Can't interact
-		{
+		if (input == null) {
+			// Can't interact
 			return canInteract.get();
 		}
 
-		// Iterate for each channel
-		List<IStorageChannel<? extends IAEStack<?>>> channelList = getChannelList();
+		// Get channel of stack
+		IStorageChannel<? extends IAEStack<?>> channel = input.getChannel();
 
-		// Iterate for each channel
-		for (IStorageChannel<? extends IAEStack<?>> channel : channelList) {
-			// Get mode
-			IncludeExclude mode = filterMode.get(permissions).get(channel);
+		// Get mode
+		IncludeExclude mode = filterMode.get(permissions).get(channel);
 
-			// Set by default
-			canInteract.set(mode == BLACKLIST);
+		// Set by default
+		canInteract.set(mode == BLACKLIST);
 
-			// For blacklist: make result true if list doesn't contain this stack
-			// For whitelist: make result true if list contain this stack
+		// For blacklist: make result true if list doesn't contain this stack
+		// For whitelist: make result true if list contain this stack
 
-			// Convert list into stream and check if any stack matches given lambda
-			return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).stream().anyMatch(input::equals);
-		}
-
-		return canInteract.get();
+		// Convert list into stream and check if any stack matches given lambda
+		return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).stream().anyMatch(input::equals);
 	}
 }

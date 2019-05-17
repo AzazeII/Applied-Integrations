@@ -6,14 +6,12 @@ import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
-import appeng.api.AEApi;
 import appeng.api.util.AEPartLocation;
 import appeng.util.Platform;
 import com.google.common.collect.Lists;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -101,31 +99,12 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 	}
 
 	@Override
-	public void createAENode() {
-
-		if (!world.isRemote && hasMaster()) {
-			if (gridNode == null) {
-				gridNode = AEApi.instance().grid().createGridNode(getProxy());
-			}
-			gridNode.updateState();
+	public void createProxyNode() {
+		// Check if host has master
+		if (hasMaster()) {
+			// Create node
+			super.createProxyNode();
 		}
-	}
-
-	@Override
-	public void readFromNBT(NBTTagCompound compound) {
-
-		super.readFromNBT(compound);
-		//addMaster(getMaster().readMaster(compound));
-	}
-
-	@Override
-	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-
-		super.writeToNBT(compound);
-
-		//getMaster().writeMaster(compound);
-
-		return compound;
 	}
 
 	public EnumSet<EnumFacing> getSidesWithSlaves() {
@@ -151,10 +130,13 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 
 	@Override
 	public void update() {
-		//create grid node on add to world
+		// Check if node isn't loaded and host has master
 		if (!loaded && hasWorld() && !world.isRemote && hasMaster()) {
+			// Toggle load
 			loaded = true;
-			createAENode();
+
+			// Create node
+			createProxyNode();
 		}
 	}
 

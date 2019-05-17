@@ -8,6 +8,7 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.util.AEPartLocation;
+import appeng.me.GridAccessException;
 
 import static appeng.api.config.Actionable.MODULATE;
 
@@ -42,7 +43,7 @@ public class ManaInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	@Override
-	public void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException {
+	public void doInjectDualityWork(Actionable mode) throws NullNodeConnectionException, GridAccessException {
 
 		int ValuedReceive = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
 
@@ -54,7 +55,7 @@ public class ManaInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	@Override
-	public void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException {
+	public void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException, GridAccessException {
 
 		int ValuedExtract = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
 		if (owner.InjectMana(ValuedExtract, Actionable.SIMULATE) - getMaxTransfer(null) == 0) {

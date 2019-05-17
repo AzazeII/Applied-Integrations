@@ -330,7 +330,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		return false;
 	}
 
-	@Override
 	public double getIdlePowerUsage() {
 
 		return 0;

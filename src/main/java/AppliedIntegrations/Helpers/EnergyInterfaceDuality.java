@@ -21,6 +21,7 @@ import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGridNode;
 import appeng.api.util.AEPartLocation;
 import appeng.capabilities.Capabilities;
+import appeng.me.GridAccessException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -164,7 +165,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 
 	@Override
-	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
+	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
 
 		IGridNode node = owner.getGridNode();
 		if (node == null) {
@@ -220,7 +221,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 
 	@Override
-	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
+	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
 
 		IGridNode node = owner.getGridNode();
 		if (node == null) {

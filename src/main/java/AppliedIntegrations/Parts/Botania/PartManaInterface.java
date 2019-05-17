@@ -14,11 +14,11 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.exceptions.NullNodeConnectionException;
-import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPartModel;
+import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
@@ -103,7 +103,6 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall) {
-
 		if (!getWorld().isRemote) {
 			try {
 				if (isManaFiltered) {
@@ -111,9 +110,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 				} else {
 					doInjectDualityWork(Actionable.MODULATE);
 				}
-			} catch (NullNodeConnectionException e) {
-
-			}
+			} catch (NullNodeConnectionException | GridAccessException ignored) {}
 		}
 		return IDLE;
 	}
@@ -170,16 +167,14 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	 * @param actionable Simulate of Modulate?
 	 * @return amount extracted
 	 */
-	public int ExtractMana(int resource, Actionable actionable) {
-
-		if (node == null) {
+	public int ExtractMana(int resource, Actionable actionable) throws GridAccessException {
+		if (getProxy().getNode() == null) {
 			return 0;
 		}
-		IGrid grid = node.getGrid();
 
-		IStorageGrid storage = (IStorageGrid) grid.getCache(IStorageGrid.class);
+		IStorageGrid storage = getProxy().getStorage();
 
-		IAEManaStack notRemoved = (IAEManaStack) storage.getInventory(getManaChannel()).extractItems(new AEManaStack(resource), actionable, new MachineSource(this));
+		IAEManaStack notRemoved = storage.getInventory(getManaChannel()).extractItems(new AEManaStack(resource), actionable, new MachineSource(this));
 
 		if (notRemoved == null) {
 			return (int) resource;
@@ -192,19 +187,17 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	 * @param actionable Simulate or modulate?
 	 * @return amount injected
 	 */
-	public int InjectMana(int resource, Actionable actionable) {
-
-		if (node == null) {
+	public int InjectMana(int resource, Actionable actionable) throws GridAccessException {
+		if (getProxy().getNode() == null) {
 			return 0;
 		}
-		IGrid grid = node.getGrid(); // check grid node
 
-		IStorageGrid storage = grid.getCache(IStorageGrid.class);
+		IStorageGrid storage = getProxy().getStorage();
 
 		IAEManaStack returnAmount = storage.getInventory(this.getManaChannel()).injectItems(new AEManaStack(resource), actionable, new MachineSource(this));
 
 		if (returnAmount == null) {
-			return (int) resource;
+			return resource;
 		}
 		return (int) (resource - returnAmount.getStackSize());
 	}

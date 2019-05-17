@@ -64,7 +64,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 			// Notify block
 			slave.notifyBlock();
 			// destroy node ( very cruel moment in code )
-			slave.destroyAENode();
+			slave.destroyProxyNode();
 			// Notify grid node
 			slave.getGridNode().updateState();
 			// Remove from slave list
@@ -87,8 +87,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	@Nonnull
 	@Override
 	public IGridNode getActionableNode() {
-
-		return this.gridNode;
+		return getProxy().getNode();
 	}
 
 	@Override
@@ -242,8 +241,10 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 						slave.setMaster(this);
 						// Notify block state
 						slave.notifyBlock();
+
 						// Update node
-						slave.createAENode();
+						slave.createProxyNode();
+
 						// Add to slave list
 						slaves.add(slave);
 						// Mark to update

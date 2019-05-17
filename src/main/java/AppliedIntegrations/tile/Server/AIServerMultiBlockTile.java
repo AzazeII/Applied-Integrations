@@ -7,7 +7,6 @@ import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
-import appeng.api.AEApi;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -21,14 +20,6 @@ public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiB
 	protected TileServerCore master;
 
 	private ChangeHandler<TileServerCore> masterChangeHandler = new ChangeHandler<>();
-
-	public AIServerMultiBlockTile(){
-		super();
-
-		// Change proxy settings
-		this.getProxy().setFlags();
-		this.getProxy().setValidSides(getValidSides());
-	}
 
 	protected abstract EnumSet<EnumFacing> getValidSides();
 
@@ -63,24 +54,20 @@ public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiB
 	@Override
 	public void setMaster(IMaster tileServerCore) {
 		// Update master
-		master = (TileServerCore) tileServerCore;
-
-		// Update proxy settings
-		this.getProxy().setValidSides(getValidSides());
+		this.master = (TileServerCore) tileServerCore;
 	}
 
 	@Override
-	public void createAENode() {
-		// Run code only on server and check if tile has master
-		if (!world.isRemote && hasMaster()) {
-			// Check if node is null
-			if (gridNode == null) {
-				// Initialized node
-				gridNode = AEApi.instance().grid().createGridNode(getProxy());
-			}
+	public void createProxyNode() {
+		if (hasMaster()) {
+			super.createProxyNode();
 
-			// Update node status
-			gridNode.updateState();
+			// Change proxy settings
+			this.getProxy().setFlags(); // (1) Flags
+			this.getProxy().setValidSides(getValidSides()); // (2) Sides
+
+			// Notify node
+			this.getProxy().getNode().updateState();
 		}
 	}
 
@@ -104,7 +91,5 @@ public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiB
 	}
 
 	@Override
-	public void notifyBlock() {
-
-	}
+	public void notifyBlock() {}
 }

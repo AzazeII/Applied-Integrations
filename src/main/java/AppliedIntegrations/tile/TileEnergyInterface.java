@@ -23,6 +23,7 @@ import appeng.api.storage.IStorageMonitorable;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
+import appeng.me.GridAccessException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -185,14 +186,12 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	}
 
 	@Override
-	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException {
-
+	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
 		duality.doInjectDualityWork(action);
 	}
 
 	@Override
-	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException {
-
+	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
 		duality.doExtractDualityWork(action);
 	}
 
@@ -307,7 +306,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 				doInjectDualityWork(Actionable.MODULATE);
 				doExtractDualityWork(Actionable.MODULATE);
 			}
-		} catch (NullNodeConnectionException e) {
+		} catch (NullNodeConnectionException | GridAccessException e) {
 			AILog.error(e, "Node of Tile Energy Interface, when it's active could not be null.. But it is");
 		}
 	}

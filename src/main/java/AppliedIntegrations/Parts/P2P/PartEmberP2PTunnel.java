@@ -214,7 +214,6 @@ public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implemen
 		return 0;
 	}
 
-	@Override
 	public double getIdlePowerUsage() {
 
 		return 0;

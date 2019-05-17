@@ -368,17 +368,11 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 	}
 
 	@Override
-	public void createAENode() {
+	public void createProxyNode() {
+		super.createProxyNode();
 
-		if (world != null) {
-			if (!world.isRemote) {
-				gridNode = AEApi.instance().grid().createGridNode(getProxy());
-				gridNode.updateState();
-
-				// Fire new cell array update event!
-				postCellInventoryEvent();
-			}
-		}
+		if (world != null && !world.isRemote)
+			postCellInventoryEvent();
 	}
 
 	private EnumFacing getFw() {

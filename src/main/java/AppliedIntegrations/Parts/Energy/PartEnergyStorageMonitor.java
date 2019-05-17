@@ -71,12 +71,6 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	}
 
 	@Override
-	public double getIdlePowerUsage() {
-		// TODO See line at class start
-		return 0.5D;
-	}
-
-	@Override
 	public void onEntityCollision(Entity entity) {
 		// TODO See line at class start
 	}

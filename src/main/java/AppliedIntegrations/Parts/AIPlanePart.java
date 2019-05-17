@@ -69,7 +69,6 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 		return 0;
 	}
 
-	@Override
 	public double getIdlePowerUsage() {
 
 		return 1;

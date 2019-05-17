@@ -2,7 +2,6 @@ package AppliedIntegrations.Parts;
 
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
@@ -150,8 +149,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public IGridNode getActionableNode() {
-
-		return this.node;
+		return this.getProxy().getNode();
 	}
 
 	@Override
@@ -159,7 +157,6 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public IGridNode getGridNode(final AEPartLocation direction) {
-
 		return getGridNode();
 	}
 
@@ -209,19 +206,16 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public boolean requireDynamicRender() {
-
 		return false;
 	}
 
 	@Override
 	public boolean isSolid() {
-
 		return false;
 	}
 
 	@Override
 	public boolean canConnectRedstone() {
-
 		return false;
 	}
 
@@ -291,15 +285,13 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public IGridNode getGridNode() {
-
-		return this.node;
+		return this.getProxy().getNode();
 	}
 
 	@Override
 	public void removeFromWorld() {
-
-		if (this.node != null) {
-			this.node.destroy();
+		if (this.getProxy().getNode() != null) {
+			this.getProxy().getNode().destroy();
 		}
 	}
 
@@ -310,18 +302,15 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 			return;
 		}
 
-		this.node = AEApi.instance().grid().createGridNode(getProxy());
+		// Make proxy ready
+		getProxy().onReady();
 
 		// Set the player id
-		this.node.setPlayerID(this.ownerID);
+		getProxy().getNode().setPlayerID(this.ownerID);
 
 		// Update stateProp
-		if ((this.hostTile != null) && (this.host != null) && (this.hostTile.getWorld() != null)) {
-			try {
-				this.node.updateState();
-			} catch (Exception e) {
-				AILog.error(e, "Machine (%s) was unable to update it's node. The host may not function correctly", this.associatedItem.getDisplayName());
-			}
+		if ((this.hostTile != null) && (this.host != null)) {
+			getProxy().getNode().updateState();
 		}
 
 		// Update the host
@@ -335,9 +324,9 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 		}
 
 		// Do we have a node?
-		if (this.node != null) {
+		if (this.getProxy().getNode() != null) {
 			// Get the active stateProp
-			boolean currentlyActive = this.node.isActive();
+			boolean currentlyActive = this.getProxy().isActive();
 
 			// Has that stateProp changed?
 			if (currentlyActive != this.isActive) {
@@ -394,9 +383,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	@Override
-	public void randomDisplayTick(World world, BlockPos blockPos, Random random) {
-
-	}
+	public void randomDisplayTick(World world, BlockPos blockPos, Random random) { }
 
 	@Override
 	public void onPlacement(EntityPlayer player, EnumHand hand, ItemStack stack, AEPartLocation side) {
@@ -418,11 +405,8 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 		}
 	}
 
-	public abstract double getIdlePowerUsage();
-
 	@Override
 	public AENetworkProxy getProxy() {
-
 		return proxy;
 	}
 
@@ -438,7 +422,6 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public boolean isPowered() {
-
 		try {
 			// Server side?
 			if (!getWorld().isRemote && (this.proxy != null)) {
@@ -463,9 +446,9 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 		// Are we server side?
 		if (!getWorld().isRemote) {
 			// Do we have a node?
-			if (this.node != null) {
+			if (this.getProxy().getNode() != null) {
 				// Get it's activity
-				this.isActive = this.node.isActive();
+				this.isActive = this.getProxy().isActive();
 			} else {
 				this.isActive = false;
 			}

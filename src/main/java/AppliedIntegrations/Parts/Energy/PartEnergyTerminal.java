@@ -113,12 +113,6 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	}
 
 	@Override
-	public double getIdlePowerUsage() {
-
-		return 0.5D;
-	}
-
-	@Override
 	public void onEntityCollision(Entity entity) {
 
 	}
