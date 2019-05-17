@@ -35,6 +35,6 @@ public class MaterialEncorium extends AIItemRegistrable implements IBotaniaInteg
 		}
 
 		lines.add("");
-		lines.add(TextFormatting.DARK_BLUE + "Design by MegaTech");
+		lines.add(TextFormatting.GOLD + "Design by MegaTech");
 	}
 }

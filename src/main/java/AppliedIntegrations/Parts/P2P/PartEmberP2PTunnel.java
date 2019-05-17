@@ -15,8 +15,6 @@ import teamroots.embers.api.power.IEmberCapability;
 
 import javax.annotation.Nonnull;
 
-// TODO: 2019-02-17 Integration with Embers
-
 /**
  * @Author Azazell
  */

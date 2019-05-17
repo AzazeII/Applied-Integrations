@@ -10,6 +10,9 @@ item.energyMonitorPartItem.name=ME Energy Storage Monitor
 item.manaStoragePartItem.name=ME Mana Storage Bus
 
 item.emberP2PPartItem.name=P2P Tunnel - Ember
+item.manaP2PPartItem.name=P2P Tunnel - Mana
+item.starlightP2PPartItem.name=P2P Tunnel - Starlight
+item.xnetP2PPartItem.name=P2P Tunnel - Xnet
 
 item.manaInterfacePartItem.name=ME Mana Interface
 

@@ -3,6 +3,7 @@ package AppliedIntegrations.Helpers.Energy;
 
 import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
@@ -10,6 +11,7 @@ import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnumCapabilityType;
+import AppliedIntegrations.grid.Mana.AEManaStack;
 import AppliedIntegrations.tile.AITile;
 import appeng.api.AEApi;
 import appeng.api.parts.IPart;
@@ -211,5 +213,9 @@ public class Utils {
 		}
 
 		return world;
+	}
+
+	public static IAEManaStack getManaFromItemStack(ItemStack itemStack) {
+		return new AEManaStack(0);
 	}
 }

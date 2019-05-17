@@ -100,7 +100,6 @@ public class ApiInstance extends AIApi {
 
 	@Override
 	public IStackDecoder getStackDecoder(IStorageChannel<? extends IAEStack<?>> chan) {
-
 		return channelCoderMap.get(chan).getRight();
 	}
 

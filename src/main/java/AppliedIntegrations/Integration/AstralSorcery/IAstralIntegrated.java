@@ -1,8 +1,10 @@
 package AppliedIntegrations.Integration.AstralSorcery;
 
 
+import AppliedIntegrations.Integration.IIntegrated;
+
 /**
  * @Author Azazell
  */
-public interface IAstralIntegrated {
+public interface IAstralIntegrated extends IIntegrated {
 }

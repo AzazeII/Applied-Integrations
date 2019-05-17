@@ -113,14 +113,19 @@ public class NetworkCard extends AIItemRegistrable {
 				// Create temp stack list
 				List<IAEStack<? extends IAEStack>> list = new ArrayList<>();
 
-				if (securityTag == null)
-				// Break cycle
-				{
+				if (securityTag == null) {
+					// Break cycle
 					break;
 				}
 
 				// Get channel-sub-tag
 				NBTTagCompound channelTag = (NBTTagCompound) securityTag.getTag(KEY_SUB + j);
+
+				// Check not null. Channel tag may only be null if amount of storage channels is changed
+				if (channelTag == null) {
+					// Skip cycle
+					break;
+				}
 
 				// Iterate until i = size
 				for (int k = 0; k < channelTag.getInteger(NBT_KEY_LIST_SIZE); k++) {

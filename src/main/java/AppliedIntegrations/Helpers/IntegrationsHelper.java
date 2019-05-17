@@ -1,9 +1,7 @@
 package AppliedIntegrations.Helpers;
 
 
-import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
-import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
-import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
+import AppliedIntegrations.Integration.IIntegrated;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import net.minecraftforge.fml.common.Loader;
 
@@ -35,7 +33,6 @@ public class IntegrationsHelper {
 	}
 
 	public boolean isObjectIntegrated(Object obj) {
-
-		return obj instanceof IBotaniaIntegrated || obj instanceof IEmberIntegrated || obj instanceof IAstralIntegrated;
+		return obj instanceof IIntegrated;
 	}
 }

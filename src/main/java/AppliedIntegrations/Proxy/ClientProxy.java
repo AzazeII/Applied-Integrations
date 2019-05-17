@@ -188,6 +188,12 @@ public class ClientProxy extends CommonProxy {
 
 				// Encoder and decoder
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEEnergyStack::fromNBT)); // (3) Energy channel
+
+		// Check if botania is loaded and integrations is enabled
+		if (Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
+			// (4) Mana channel
+			BotaniaLoader.initChannelHandlers(instance);
+		}
 	}
 
 	@Override

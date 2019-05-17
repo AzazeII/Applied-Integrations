@@ -1,13 +1,23 @@
 package AppliedIntegrations.Integration.Botania;
 
 
+import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetManaSlot;
+import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Items.ItemEnum;
+import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
+import AppliedIntegrations.grid.Mana.AEManaStack;
 import AppliedIntegrations.grid.Mana.ManaStorageChannel;
+import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortManaHandler;
 import appeng.api.AEApi;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.botania.api.BotaniaAPI;
 
+import java.util.LinkedHashMap;
 import java.util.Optional;
 
 /**
@@ -79,5 +89,24 @@ public class BotaniaLoader {
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(7), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(6), 1, 0), 1000);
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(8), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(7), 1, 0), 1000);
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(9), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(8), 1, 0), 1000);
+	}
+
+	public static void initChannelHandlers(AIApi instance) throws NoSuchMethodException {
+		// Register mana channel handler and sprites
+		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class),
+				// Sprite
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+
+				// Constructor
+				WidgetManaSlot.class.getConstructor(),
+
+				// Handler
+				FilteredServerPortManaHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+
+				// Converter and UV
+				Utils::getManaFromItemStack, Pair.of(32, 0),
+
+				// Encoder and decoder
+				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEManaStack::fromNBT));
 	}
 }

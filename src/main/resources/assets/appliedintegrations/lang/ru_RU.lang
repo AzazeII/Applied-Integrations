@@ -45,6 +45,11 @@ appliedintegrations.Energy.StorageMonitor.name=МЭ Монитор Хранен�
 appliedintegrations.Energy.Machine.P2PRotary=Туннель Точка-Точка Ватты
 appliedintegrations.Energy.Machine.P2PJoules=Туннель Точка-Точка Джоули
 
+item.emberP2PPartItem.name=Туннель Точка-Точка Эмбер
+item.manaP2PPartItem.name=Туннель Точка-Точка Мана
+item.starlightP2PPartItem.name=Туннель Точка-Точка Звёздный Свет
+item.xnetP2PPartItem.name=Туннель Точка-Точка XNet
+
 item.manaInterfacePartItem.name=МЭ Интерфейс
 
 EnergyStorageCell_1k.name=МЭ 1k Энерго-Ячейка
