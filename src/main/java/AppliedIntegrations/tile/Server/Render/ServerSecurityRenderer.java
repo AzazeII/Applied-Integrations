@@ -41,7 +41,7 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 		prepareMatrix(x, y, z);
 
 		// Configure light blend
-		setLightAmbient();
+		setLightAmbient(te);
 
 		// Rescale render
 		GlStateManager.scale(1, 1, 1);

@@ -13,6 +13,7 @@ import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PMana;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PStarlight;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
@@ -43,12 +44,13 @@ public enum ItemEnum {
 	ITEMPARTANNIHILATION(new ItemPartEnergyAnnihilation("energyAnnihilationPartItem"), AIConfig.enableEnergyFeatures),
 	ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem"), AIConfig.enableEnergyFeatures),
 
-	ITEMP2PStarlight(new ItemPartP2PStarlight("starlightP2PPartItem"), AIConfig.enableStarlightFeatures),
+	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AIConfig.enableStarlightFeatures),
 	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), AIConfig.enableEmberFeatures),
 
 	// & ------------------------------------MANA------------------------------------ &
 	ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem"), AIConfig.enableManaFeatures),
 	ITEMMANAPARTSTORAGEBUS(new ItemPartManaStorageBus("manaStoragePartItem"), AIConfig.enableManaFeatures),
+	ITEMP2PMANA(new ItemPartP2PMana("manaP2PPartItem"), AIConfig.enableManaFeatures),
 	// & ------------------------------------PARTS------------------------------------ &
 
 

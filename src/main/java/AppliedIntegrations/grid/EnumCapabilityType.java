@@ -42,9 +42,6 @@ import java.util.Vector;
 		if (IntegrationsHelper.instance.isLoaded(AIEnergy.EU)) {
 			EU = new EnumCapabilityType(AIEnergy.EU, null);
 		}
-		if (IntegrationsHelper.instance.isLoaded(AIEnergy.Ember)) {
-			Ember = new EnumCapabilityType(AIEnergy.Ember, EmberCapabilityProvider.emberCapability);
-		}
 		if (IntegrationsHelper.instance.isLoaded(AIEnergy.TESLA)) {
 			Tesla = new EnumCapabilityType(AIEnergy.TESLA, TeslaCapabilities.CAPABILITY_CONSUMER, TeslaCapabilities.CAPABILITY_HOLDER, TeslaCapabilities.CAPABILITY_PRODUCER);
 		}

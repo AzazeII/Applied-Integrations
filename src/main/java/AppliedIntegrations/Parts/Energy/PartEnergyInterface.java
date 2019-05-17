@@ -89,8 +89,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	public LiquidAIEnergy bar;
 
-	public double IDLE_POWER_DRAIN = 0.5D;
-
 	public LiquidAIEnergy filteredEnergy = null;
 
 	private int priority;
@@ -104,8 +102,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	private InterfaceSinkSource EUStorage;
 
 	private JouleInterfaceStorage JStorage;
-
-	private EmberInterfaceStorageDuality EmberStorage;
 
 	private TeslaInterfaceStorageDuality TESLAStorage;
 
@@ -165,11 +161,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-
-		if (IntegrationsHelper.instance.isLoaded(Ember)) {
-			EmberStorage.writeToNBT(tag);
-		}
-
 		if (IntegrationsHelper.instance.isLoaded(EU)) {
 			tag.setDouble("#EUEnergy", EUStorage.getStored());
 		}
@@ -191,14 +182,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-
-		if (IntegrationsHelper.instance.isLoaded(Ember)) {
-			EmberStorage.readFromNBT(tag);
-		}
-
-		//if(IntegrationsHelper.instance.isLoaded(EU))
-		//EUStorage.readFromNBT(tag);
-
 		if (IntegrationsHelper.instance.isLoaded(J)) {
 			JStorage.readFromNBT(tag);
 		}
@@ -406,42 +389,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 				AILog.error(e, "Node of Part Energy Interface, when it's active could not be null.. But it is");
 			}
 
-			/** Manually take ember energy, as receptor code is not dedicated for ae parts:
-			 * attachedTile.hasCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**))
-			 * IEmberCapability cap = attachedTile.getCapability(EmbersCapabilities.EMBER_CAPABILITY, **null**);
-			 */
-			if (AIConfig.enableEmberFeatures) {
-				if (bar == null) {
-					if (IntegrationsHelper.instance.isLoaded(Ember)) {
-						if (getFacingTile() instanceof TileEntityReceiver) {
-							TileEntityReceiver emberReceptor = (TileEntityReceiver) getFacingTile();
-							IBlockState state = getHostTile().getWorld().getBlockState(emberReceptor.getPos());
-
-							// Check if facing is correct
-							if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
-								IEmberCapability emberStorage = emberReceptor.capability;
-
-								if (emberStorage.getEmber() > 0) {
-									emberStorage.removeAmount((Double) getEnergyStorage(Ember, INTERNAL).receive((int) emberStorage.getEmber(), false), true);
-								}
-							}
-						} else if (getFacingTile() instanceof TileEntityEmitter) {
-							TileEntityEmitter emberEmitter = (TileEntityEmitter) getFacingTile();
-							IBlockState state = getHostTile().getWorld().getBlockState(emberEmitter.getPos());
-
-							// Check if facing is correct
-							if (state.getValue(BlockEmberEmitter.facing) == this.getSide().getFacing()) {
-								IEmberCapability emberStorage = emberEmitter.capability;
-
-								if (((EmberInterfaceStorageDuality) getEnergyStorage(Ember, INTERNAL)).getEmber() > 0) {
-									getEnergyStorage(Ember, INTERNAL).extract((int) emberStorage.addAmount((Double) getEnergyStorage(Ember, INTERNAL).getStored(), true), false);
-								}
-							}
-						}
-					}
-				}
-			}
-
 			// Check if energy changed
 			energyChangeHandler.onChange(filteredEnergy, (energy) -> {
 				// Sync filtered energy
@@ -529,9 +476,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 		}
 		if (energy == J) {
 			return JStorage;
-		}
-		if (energy == Ember) {
-			return EmberStorage;
 		}
 		if (energy == TESLA) {
 			return TESLAStorage;
@@ -700,9 +644,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 		if (energy == J) {
 			initJStorage();
 		}
-		if (energy == Ember) {
-			initEmberStorage();
-		}
 		if (energy == TESLA) {
 			initTESLAStorage();
 		}
@@ -722,14 +663,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	private void initJStorage() {
 
 		JStorage = new JouleInterfaceStorage(this, (int) (capacity * 2.5));
-	}
-
-	@Optional.Method(modid = "embers")
-	private void initEmberStorage() {
-
-		EmberStorage = new EmberInterfaceStorageDuality();
-		EmberStorage.setEmberCapacity(capacity * 0.05); // Ember is really rich energy
-		EmberStorage.setEmber(0.0D);
 	}
 
 	@Optional.Method(modid = "tesla")

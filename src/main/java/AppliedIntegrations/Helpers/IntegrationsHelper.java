@@ -28,9 +28,6 @@ public class IntegrationsHelper {
 		if (energy == J) {
 			return Loader.isModLoaded("mekanism");
 		}
-		if (energy == Ember) {
-			return Loader.isModLoaded("embers");
-		}
 		if (energy == TESLA) {
 			return Loader.isModLoaded("tesla");
 		}

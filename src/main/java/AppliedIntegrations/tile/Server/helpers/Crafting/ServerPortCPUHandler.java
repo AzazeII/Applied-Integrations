@@ -15,7 +15,6 @@ public class ServerPortCPUHandler extends TileCraftingStorageTile {
 	private final TileServerCore host;
 
 	public ServerPortCPUHandler(TileServerCore core) {
-
 		this.host = core;
 	}
 

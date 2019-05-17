@@ -60,9 +60,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		if (IntegrationsHelper.instance.isLoaded(J)) {
 			initializedStorages.add(J);
 		}
-		if (IntegrationsHelper.instance.isLoaded(Ember)) {
-			initializedStorages.add(Ember);
-		}
 	}
 
 	public <T> T getCapability(Capability<T> capability, AEPartLocation side) {
@@ -71,9 +68,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 			// FE (RF) Capability
 			return (T) this.getEnergyStorage(RF, side);
 			// Ember capability
-		} else if (AIConfig.enableEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
-			return (T) this.getEnergyStorage(Ember, side);
-			// Joule capability
 		} else if (IntegrationsHelper.instance.isLoaded(J) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
 			return (T) this.getEnergyStorage(J, side);
 			// EU capability
@@ -84,8 +78,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	public boolean hasCapability(Capability<?> capability) {
 		// Register FE capability
 		if (capability == Capabilities.FORGE_ENERGY) {
-			return true;
-		} else if (AIConfig.enableEmberFeatures && IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
 			return true;
 		} else if (IntegrationsHelper.instance.isLoaded(J)) {
 			if (capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {

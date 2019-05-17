@@ -1,6 +1,5 @@
 package AppliedIntegrations.tile.Server;
 
-
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Items.NetworkCard;
@@ -24,12 +23,14 @@ import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingPatternDetails;
 import appeng.api.networking.crafting.ICraftingProvider;
 import appeng.api.networking.crafting.ICraftingProviderHelper;
+import appeng.api.networking.events.MENetworkCraftingCpuChange;
 import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
+import appeng.me.Grid;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
@@ -70,11 +71,17 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 				return;
 			}
 
-			// Nullify portHandlers for this port
+			// Nullify port handlers for this port
 			portHandlers.put(side, null);
 
-			// Nullify portHandlers for this port
+			// Nullify port crafting handlers for this port
 			portCraftingHandlers.put(side, null);
+
+			// Nullify cpu handlers for this port
+			portCPUHandlers.put(side, null);
+
+			// Update CPU handlers in each grid;
+			cpuUpdate();
 
 			// Notify grid of current port
 			port.postCellInventoryEvent();
@@ -129,11 +136,20 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 					// Encode new crafting handler for side from card
 					TileServerCore.this.portCraftingHandlers.put(side, new ServerPortCraftingHandler(data.getLeft(), data.getRight(), TileServerCore.this));
 
+					// Encode new CPU handler for side from card
+					TileServerCore.this.portCPUHandlers.put(side, new ServerPortCPUHandler(TileServerCore.this));
+
+					// Update CPU handler in each grid
+					TileServerCore.this.cpuUpdate();
+
 					// Notify grid of current port about inventory update
 					port.postCellInventoryEvent();
 
 					// Notify grid of current port about crafting update
 					port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side), getGridNode()));
+
+					// Notify grid of current port about cpu update
+					port.postCellEvent(new MENetworkCraftingCpuChange(getGridNode()));
 				}
 			}
 		}
@@ -161,6 +177,9 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	// List of all crafting "mediums" for providing craft grid from main network into adjacent networks
 	private LinkedHashMap<AEPartLocation, ICraftingProvider> portCraftingHandlers = new LinkedHashMap<>();
 
+	// List of all crafting CPU simulators
+	private LinkedHashMap<AEPartLocation, ServerPortCPUHandler> portCPUHandlers = new LinkedHashMap<>();
+
 	public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 30, 1, this.cardManager) {
 		@Override
 		public ItemStack decrStackSize(int slotId, int amount) {
@@ -180,15 +199,16 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 	};
 
-	// List of all crafting CPU simulators
-	private LinkedHashMap<AEPartLocation, ServerPortCPUHandler> portCPUHandlers = new LinkedHashMap<>();
-
 	private List<MEServerMonitorHandlerReceiver> receiverList = new ArrayList<>();
 
 	private boolean isFormed;
 
 	{
 		nullifyMap();
+	}
+
+	private void cpuUpdate() {
+		// TODO Later
 	}
 
 	public ICraftingGrid getMainNetworkCraftingGrid() {
@@ -419,6 +439,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		portMap = new LinkedHashMap<>(); // (1)
 		portHandlers = new LinkedHashMap<>(); // (2)
 		portCraftingHandlers = new LinkedHashMap<>(); // (3)
+		portCPUHandlers = new LinkedHashMap<>(); // (4)
 
 		// Make server not formed
 		isFormed = false;

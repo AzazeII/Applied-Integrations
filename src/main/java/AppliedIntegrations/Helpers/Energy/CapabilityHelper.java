@@ -19,8 +19,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import teamroots.embers.power.EmberCapabilityProvider;
-import teamroots.embers.power.IEmberCapability;
 
 import java.util.Vector;
 
@@ -71,10 +69,6 @@ public class CapabilityHelper {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					;
 					return energyStorageCapability.getMaxEnergyStored();
-				} else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
-					IEmberCapability emberCapability = (IEmberCapability) capabilityHandler.getCapability(capability, side.getFacing());
-					;
-					return (int) emberCapability.getEmberCapacity();
 				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
 					IStrictEnergyStorage storage = (IStrictEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					return (int) storage.getMaxEnergy();
@@ -102,17 +96,11 @@ public class CapabilityHelper {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 
 					return energyStorageCapability.receiveEnergy(val.intValue(), simulate);
-				} else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
-					IEmberCapability emberCapability = (IEmberCapability) capabilityHandler.getCapability(capability, side.getFacing());
-					;
-					return (int) emberCapability.addAmount(val.doubleValue(), simulate);
 				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
 					IStrictEnergyAcceptor storage = (IStrictEnergyAcceptor) capabilityHandler.getCapability(capability, side.getFacing());
-					;
 					return (int) storage.acceptEnergy(side.getFacing(), val.doubleValue(), !simulate);
 				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && (capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
 					ITeslaConsumer teslaHolderCapability = (ITeslaConsumer) capabilityHandler.getCapability(capability, side.getFacing());
-					;
 					return (int) teslaHolderCapability.givePower(val.longValue(), simulate);
 				}
 			}
@@ -159,25 +147,14 @@ public class CapabilityHelper {
 				if (capability == CapabilityEnergy.ENERGY) {
 					// Get storage
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
-					;
 
 					// Extract energy
 					return energyStorageCapability.extractEnergy(val.intValue(), simulate);
 
 					// Check if capability belong to Ember system
-				} else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
-					// Get storage
-					IEmberCapability emberCapability = (IEmberCapability) capabilityHandler.getCapability(capability, side.getFacing());
-					;
-
-					// Extract Energy
-					return (int) emberCapability.removeAmount(val.doubleValue(), simulate);
-
-					// Check if capability belong to Joule system
 				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
 					// Get storage
 					IStrictEnergyOutputter storage = (IStrictEnergyOutputter) capabilityHandler.getCapability(capability, side.getFacing());
-					;
 
 					// Extract energy
 					return (int) storage.pullEnergy(side.getFacing(), val.doubleValue(), simulate);
@@ -186,7 +163,6 @@ public class CapabilityHelper {
 				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_PRODUCER) {
 					// Get storage
 					ITeslaProducer teslaHolderCapability = (ITeslaProducer) capabilityHandler.getCapability(capability, side.getFacing());
-					;
 
 					// Extract energy
 					return (int) teslaHolderCapability.takePower(val.longValue(), simulate);
@@ -223,9 +199,6 @@ public class CapabilityHelper {
 				if (capability == CapabilityEnergy.ENERGY) {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					return energyStorageCapability.getEnergyStored();
-				} else if (IntegrationsHelper.instance.isLoaded(Ember) && capability == EmberCapabilityProvider.emberCapability) {
-					IEmberCapability emberCapability = (IEmberCapability) capabilityHandler.getCapability(capability, side.getFacing());
-					return (int) emberCapability.getEmber();
 				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
 					IStrictEnergyStorage storage = (IStrictEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					return (int) storage.getEnergy();

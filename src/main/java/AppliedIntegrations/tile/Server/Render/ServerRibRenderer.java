@@ -37,7 +37,7 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 		prepareMatrix(x, y, z);
 
 		// Configure light blend
-		setLightAmbient();
+		setLightAmbient(te);
 
 		// Rescale render
 		GlStateManager.scale(1, 1, 1);

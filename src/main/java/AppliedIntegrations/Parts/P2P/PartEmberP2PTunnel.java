@@ -4,8 +4,13 @@ package AppliedIntegrations.Parts.P2P;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
+import appeng.parts.p2p.PartP2PTunnel;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.Capability;
 import teamroots.embers.power.EmberCapabilityProvider;
 import teamroots.embers.power.IEmberCapability;
@@ -20,229 +25,10 @@ import javax.annotation.Nullable;
 /**
  * @Author Azazell
  */
-public class PartEmberP2PTunnel extends AIP2PTunnel<PartEmberP2PTunnel> implements IEmberIntegrated {
-
-	private class EmberInputCapability implements IEmberCapability {
-		@Override
-		public double getEmber() {
-
-			int capacity = 0;
-
-			for (PartEmberP2PTunnel tunnel : PartEmberP2PTunnel.this.getOutputs()) {
-				if (tunnel.getOperatedTile(TileEntityReceiver.class) != null) {
-					capacity += ((TileEntityReceiver) tunnel.getOperatedTile(TileEntityReceiver.class)).getCapability(EmberCapabilityProvider.emberCapability, null).
-							getEmber();
-				}
-			}
-			return capacity;
-		}
-
-		@Override
-		public void setEmber(double v) {
-
-		}
-
-		@Override
-		public double getEmberCapacity() {
-
-			int capacity = 0;
-
-			for (PartEmberP2PTunnel tunnel : PartEmberP2PTunnel.this.getOutputs()) {
-				if (tunnel.getOperatedTile(TileEntityReceiver.class) != null) {
-					capacity += ((TileEntityReceiver) tunnel.getOperatedTile(TileEntityReceiver.class)).getCapability(EmberCapabilityProvider.emberCapability, null).
-							getEmberCapacity();
-				}
-			}
-			return capacity;
-		}
-
-		@Override
-		public void setEmberCapacity(double v) {
-
-		}
-
-		@Override
-		public double addAmount(double v, boolean b) {
-
-			return 0;
-		}
-
-		@Override
-		public double removeAmount(double v, boolean b) {
-
-			return 0;
-		}
-
-		@Override
-		public void writeToNBT(NBTTagCompound nbtTagCompound) {
-
-		}
-
-		@Override
-		public void readFromNBT(NBTTagCompound nbtTagCompound) {
-
-		}
-
-		@Override
-		public void onContentsChanged() {
-
-		}
+public class PartEmberP2PTunnel extends PartP2PTunnel<PartEmberP2PTunnel> implements IEmberIntegrated {
+	public PartEmberP2PTunnel(ItemStack is) {
+		super(is);
 	}
 
-	private class EmberOutputCapability implements IEmberCapability {
-		@Override
-		public double getEmber() {
-
-			return PartEmberP2PTunnel.this.getOperatedTile(TileEntityEmitter.class).getCapability(EmberCapabilityProvider.emberCapability, null).getEmber();
-		}
-
-		@Override
-		public void setEmber(double v) {
-
-		}
-
-		@Override
-		public double getEmberCapacity() {
-
-			return 0;
-		}
-
-		@Override
-		public void setEmberCapacity(double v) {
-
-		}
-
-		@Override
-		public double addAmount(double v, boolean b) {
-
-			return 0;
-		}
-
-		@Override
-		public double removeAmount(double v, boolean b) {
-
-			return 0;
-		}
-
-		@Override
-		public void writeToNBT(NBTTagCompound nbtTagCompound) {
-
-		}
-
-		@Override
-		public void readFromNBT(NBTTagCompound nbtTagCompound) {
-
-		}
-
-		@Override
-		public void onContentsChanged() {
-
-		}
-	}
-
-	private class EmberNullCapability implements IEmberCapability {
-		@Override
-		public double getEmber() {
-
-			return 0;
-		}
-
-		@Override
-		public void setEmber(double v) {
-
-		}
-
-		@Override
-		public double getEmberCapacity() {
-
-			return 0;
-		}
-
-		@Override
-		public void setEmberCapacity(double v) {
-
-		}
-
-		@Override
-		public double addAmount(double v, boolean b) {
-
-			return 0;
-		}
-
-		@Override
-		public double removeAmount(double v, boolean b) {
-
-			return 0;
-		}
-
-		@Override
-		public void writeToNBT(NBTTagCompound nbtTagCompound) {
-
-		}
-
-		@Override
-		public void readFromNBT(NBTTagCompound nbtTagCompound) {
-
-		}
-
-		@Override
-		public void onContentsChanged() {
-
-		}
-	}
-
-	private IEmberCapability outputHandler = new EmberOutputCapability();
-
-	private IEmberCapability inputHandler = new EmberInputCapability();
-
-	private IEmberCapability NULLHandler = new EmberNullCapability();
-
-	public PartEmberP2PTunnel() {
-
-		super(PartEnum.P2PEmber);
-	}
-
-	@Override
-	protected AIGridNodeInventory getUpgradeInventory() {
-
-		return null;
-	}
-
-	@Override
-	public int getLightLevel() {
-
-		return 0;
-	}
-
-	public double getIdlePowerUsage() {
-
-		return 0;
-	}
-
-	@Override
-	public void onEntityCollision(Entity entity) {
-
-	}
-
-	@Override
-	public boolean hasCapability(@Nonnull Capability<?> capability) {
-
-		if (capability == EmberCapabilityProvider.emberCapability) {
-			return true;
-		}
-		return super.hasCapability(capability);
-	}
-
-	@Nullable
-	@Override
-	public <T> T getCapability(@Nonnull Capability<T> capability) {
-
-		if (capability == EmberCapabilityProvider.emberCapability) {
-			if (this.isOutput()) {
-				return (T) this.outputHandler;
-			}
-			return (T) this.inputHandler;
-		}
-		return super.getCapability(capability);
-	}
+	
 }

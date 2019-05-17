@@ -22,7 +22,5 @@ public class AIEnergy {
 
 	public static final LiquidAIEnergy AE = new LiquidAIEnergy("appliedenergistics2", 8, "AE", new ResourceLocation(AppliedIntegrations.modid, "textures/fluids/empty.png")); // AE fluid energy
 
-	public static final LiquidAIEnergy Ember = new LiquidAIEnergy("embers", 9, "Ember", new ResourceLocation(AppliedIntegrations.modid, "textures/fluids/empty.png")); // Ember fluid energy
-
-	public static final LiquidAIEnergy TESLA = new LiquidAIEnergy("tesla", 10, "TESLA", new ResourceLocation(AppliedIntegrations.modid, "textures/fluids/empty.png")); // Tesla flui energy (From TESLA)
+	public static final LiquidAIEnergy TESLA = new LiquidAIEnergy("tesla", 9, "TESLA", new ResourceLocation(AppliedIntegrations.modid, "textures/fluids/empty.png")); // Tesla flui energy (From TESLA)
 }

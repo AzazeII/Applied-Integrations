@@ -20,6 +20,7 @@ public enum AIStrings {
 
 	Part_P2PEmber("P2P.Ember", true),
 	Part_P2PStarlight("P2P.Starlight", true),
+	PartP2PMana("P2P.Mana", true),
 
 	Part_EnergyAnnihilation("Energy.AnnihilationBus", true),
 	Part_EnergyFormation("Energy.FormationBus", true),

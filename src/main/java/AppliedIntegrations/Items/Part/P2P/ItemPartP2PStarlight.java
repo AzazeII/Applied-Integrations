@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 /**
  * @Author Azazell
  */
-public class ItemPartP2PStarlight extends ItemPartAIBase<PartStarlightP2PTunnel> implements IAstralIntegrated {
+public class ItemPartP2PStarlight extends ItemPartP2PTunnel<PartStarlightP2PTunnel> implements IAstralIntegrated {
 
 	public ItemPartP2PStarlight(String registry) {
 
@@ -20,8 +20,7 @@ public class ItemPartP2PStarlight extends ItemPartAIBase<PartStarlightP2PTunnel>
 
 	@Nullable
 	@Override
-	public PartStarlightP2PTunnel createPartFromItemStack(ItemStack itemStack) {
-
-		return new PartStarlightP2PTunnel();
+	public PartStarlightP2PTunnel createPartFromItemStack(ItemStack is) {
+		return new PartStarlightP2PTunnel(is);
 	}
 }

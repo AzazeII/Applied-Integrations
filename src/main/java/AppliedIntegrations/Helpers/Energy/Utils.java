@@ -35,7 +35,6 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.relauncher.Side;
-import teamroots.embers.api.item.IEmberChargedTool;
 
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 
@@ -159,9 +158,6 @@ public class Utils {
 		} else if (IntegrationsHelper.instance.isLoaded(J) && item instanceof IEnergizedItem) {
 			return J;
 			// Check for Ember api loaded, and item can handle Ember
-		} else if (IntegrationsHelper.instance.isLoaded(Ember) && item instanceof IEmberChargedTool) {
-			return Ember;
-			// Check for RF Api loaded and item can handler RF
 		} else if (Loader.isModLoaded("redstoneflux") && item instanceof IEnergyContainerItem) {
 			return RF;
 		}

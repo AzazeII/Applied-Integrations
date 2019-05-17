@@ -33,13 +33,6 @@ public class LiquidAIEnergy extends Fluid {
 		linkedIndexMap.put(0, null);
 	}
 
-	// #Getter for #Getter for #Getter for #Get.... and so on.
-    /*
-        void getGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGet(){
-            return this.getGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGetGet();
-        }
-     */
-
 	public LiquidAIEnergy(String modid, Integer index, String tag, ResourceLocation image) {
 
 		super(tag, image, image);

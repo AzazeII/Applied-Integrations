@@ -11,7 +11,7 @@ import javax.annotation.Nullable;
 /**
  * @Author Azazell
  */
-public class ItemPartP2PEmber extends ItemPartAIBase<PartEmberP2PTunnel> implements IEmberIntegrated {
+public class ItemPartP2PEmber extends ItemPartP2PTunnel<PartEmberP2PTunnel> implements IEmberIntegrated {
 	public ItemPartP2PEmber(String name) {
 
 		super(name);
@@ -19,8 +19,7 @@ public class ItemPartP2PEmber extends ItemPartAIBase<PartEmberP2PTunnel> impleme
 
 	@Nullable
 	@Override
-	public PartEmberP2PTunnel createPartFromItemStack(ItemStack itemStack) {
-
-		return new PartEmberP2PTunnel();
+	public PartEmberP2PTunnel createPartFromItemStack(ItemStack is) {
+		return new PartEmberP2PTunnel(is);
 	}
 }

@@ -58,8 +58,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	private LinkedHashMap<AEPartLocation, JouleInterfaceStorage> JOStorage = new LinkedHashMap<>();
 
-	private LinkedHashMap<AEPartLocation, EmberInterfaceStorageDuality> EmberStorage = new LinkedHashMap<>();
-
 	private LinkedHashMap<AEPartLocation, LiquidAIEnergy> barMap = new LinkedHashMap<>();
 
 	private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
@@ -179,8 +177,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 			return this.EUStorage.get(side);
 		} else if (energy == J) {
 			return this.JOStorage.get(side);
-		} else if (energy == Ember) {
-			return this.EmberStorage.get(side);
 		}
 		return null;
 	}
@@ -206,9 +202,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 		}
 		if (energy == J) {
 			JOStorage.put(side, new JouleInterfaceStorage(this, capacity * 2));
-		}
-		if (energy == Ember) {
-			EmberStorage.put(side, new EmberInterfaceStorageDuality());
 		}
 	}
 

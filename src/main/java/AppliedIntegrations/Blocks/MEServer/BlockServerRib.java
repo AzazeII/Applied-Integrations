@@ -4,6 +4,7 @@ package AppliedIntegrations.Blocks.MEServer;
 import AppliedIntegrations.Blocks.AIMultiBlock;
 import AppliedIntegrations.tile.Server.TileServerCore;
 import AppliedIntegrations.tile.Server.TileServerRib;
+import appeng.block.storage.BlockSkyChest;
 import appeng.util.Platform;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +20,6 @@ import net.minecraft.world.World;
 public class BlockServerRib extends AIMultiBlock {
 
 	public BlockServerRib(String reg, String unloc) {
-
 		super(reg, unloc);
 	}
 
@@ -29,9 +29,9 @@ public class BlockServerRib extends AIMultiBlock {
 		return EnumBlockRenderType.INVISIBLE;
 	}
 
+
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
 		super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
 
 		// Check if item held is wrench

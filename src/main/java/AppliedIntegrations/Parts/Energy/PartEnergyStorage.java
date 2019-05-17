@@ -301,8 +301,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 				// Check for all energy types:
 			} else if (getFacingTile().hasCapability(CapabilityEnergy.ENERGY, getSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.FE);
-			} else if (IntegrationsHelper.instance.isLoaded(Ember) && getFacingTile().hasCapability(EmberCapabilityProvider.emberCapability, getSide().getFacing())) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Ember);
 			} else if (IntegrationsHelper.instance.isLoaded(J) && getFacingTile().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Joules);
 			} else if (IntegrationsHelper.instance.isLoaded(EU) && getFacingTile() instanceof IEnergySink) {
@@ -432,9 +430,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		capabilities.add(CapabilityEnergy.ENERGY);
 
 		// (If loaded -> add to allowed) blocks:
-		if (IntegrationsHelper.instance.isLoaded(Ember) && AIConfig.enableEmberFeatures) {
-			capabilities.add(EmberCapabilityProvider.emberCapability);
-		}
 		if (IntegrationsHelper.instance.isLoaded(J)) {
 			capabilities.add(Capabilities.ENERGY_STORAGE_CAPABILITY);
 			capabilities.add(Capabilities.ENERGY_OUTPUTTER_CAPABILITY);

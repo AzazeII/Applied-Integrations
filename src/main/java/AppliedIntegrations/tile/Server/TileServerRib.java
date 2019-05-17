@@ -28,10 +28,6 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 	// Did activity of grid node changed?
 	private ChangeHandler<Boolean> activityChangeHandler = new ChangeHandler<>();
 
-	public TileServerRib(){
-		super();
-	}
-
 	public IGrid getMainNetwork() {
 		// Check not null
 		if (getGridNode() == null) {

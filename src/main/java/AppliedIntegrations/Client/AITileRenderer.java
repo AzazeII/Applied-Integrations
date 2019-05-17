@@ -1,6 +1,8 @@
 package AppliedIntegrations.Client;
 
 
+import AppliedIntegrations.tile.Server.TileServerRib;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -111,10 +113,12 @@ public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRende
 		GlStateManager.popMatrix();
 	}
 
-	protected void setLightAmbient() {
+	protected void setLightAmbient(TileEntity te) {
+		int light = Minecraft.getMinecraft().world.getCombinedLight(te.getPos(), 0);
+
 		// Get light UV
-		float lightU = 240; // U
-		float lightV = 240; // V
+		float lightU = light & 65535; // U
+		float lightV = light >> 16; // V
 
 		// Set ambient
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightU, lightV);
