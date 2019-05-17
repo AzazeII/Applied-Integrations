@@ -2,10 +2,8 @@ package AppliedIntegrations.Parts.P2P;
 
 
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
-import AppliedIntegrations.Parts.PartEnum;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
-import appeng.parts.p2p.PartP2PTunnel;
-import net.minecraft.entity.Entity;
+import AppliedIntegrations.Parts.PartModelEnum;
+import appeng.api.parts.IPartModel;
 import net.minecraft.item.ItemStack;
 
 // TODO: 2019-02-17 Integrations with Astral sorcery
@@ -13,24 +11,15 @@ import net.minecraft.item.ItemStack;
 /**
  * @Author Azazell
  */
-public class PartStarlightP2PTunnel extends PartP2PTunnel<PartStarlightP2PTunnel> implements IAstralIntegrated {
+public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunnel> implements IAstralIntegrated {
+	private static final AIP2PModels MODELS = new AIP2PModels(PartModelEnum.P2P_STARLIGHT.getFirstModel());
+
 	public PartStarlightP2PTunnel(ItemStack is) {
 		super(is);
 	}
 
 	@Override
-	public int getLightLevel() {
-
-		return 0;
-	}
-
-	public double getIdlePowerUsage() {
-
-		return 0;
-	}
-
-	@Override
-	public void onEntityCollision(Entity entity) {
-
+	public IPartModel getStaticModels() {
+		return MODELS.getModel( this.isPowered(), this.isActive() );
 	}
 }

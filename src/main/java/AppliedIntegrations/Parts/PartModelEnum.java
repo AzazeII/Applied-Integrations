@@ -40,6 +40,10 @@ public enum PartModelEnum implements IPartModel {
 	MANA_STORAGE_BUS_ON(MANA_STORAGE_BUS_BASE, "mana_storage_on"),
 	MANA_STORAGE_BUS_HAS_CHANNEL(MANA_STORAGE_BUS_BASE, "mana_storage_has_channel"),
 
+	P2P_MANA("p2p/tunnel_mana"),
+	P2P_STARLIGHT("p2p/tunnel_starlight"),
+	P2P_EMBER("p2p/tunnel_ember"),
+	P2P_XNET("p2p/tunnel_xnet"),
 
 	STORAGE_INTERFACE_BASE("interface_base"),
 
@@ -66,15 +70,22 @@ public enum PartModelEnum implements IPartModel {
 	List<ResourceLocation> locations;
 
 	PartModelEnum(Object... modelNames) {
+		// Create model builder
+		ImmutableList.Builder<ResourceLocation> builder = new ImmutableList.Builder<>();
 
-		ImmutableList.Builder builder = new ImmutableList.Builder();
+		// Iterate for each object
 		for (Object o : modelNames) {
+			// Check if object is part model
 			if (o instanceof IPartModel) {
+				// Add all modesl of it
 				builder.addAll(((IPartModel) o).getModels());
 			} else {
+				// Add string representation of object
 				builder.add(new ResourceLocation(AppliedIntegrations.modid, "part/" + o.toString()));
 			}
 		}
+
+		// Set locations
 		locations = builder.build();
 	}
 
@@ -95,7 +106,10 @@ public enum PartModelEnum implements IPartModel {
 	@Nonnull
 	@Override
 	public List<ResourceLocation> getModels() {
-
 		return locations;
+	}
+
+	public ResourceLocation getFirstModel() {
+		return getModels().get(0);
 	}
 }
