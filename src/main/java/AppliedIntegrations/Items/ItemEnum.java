@@ -60,7 +60,6 @@ public enum ItemEnum {
 	// & ------------------------------------MANA------------------------------------ &
 
 	ITEMENERGYWIRELESSTERMINAL(new ItemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
-
 	CHAOSMANIPULATOR(new AdvancedNetworkTool("advancedWrench"), true),
 
 	// & ------------------------------------NETWORK------------------------------------ &

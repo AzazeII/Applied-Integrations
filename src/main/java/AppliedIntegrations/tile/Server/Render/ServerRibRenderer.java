@@ -36,6 +36,9 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 		// Save matrix to stack
 		prepareMatrix(x, y, z);
 
+		// Disable lighting
+		GlStateManager.disableLighting();
+
 		// Configure light blend
 		setLightAmbient(te);
 
@@ -63,6 +66,10 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 		// Quad #6 (-z - static) NORTH
 		drawQuadWithUV(new float[][]{{0.5F, -0.5F, -0.5F}, {0.5F, 0.5F, -0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, NORTH));
 
+		// Enable lighting
+		GlStateManager.enableLighting();
+
+		// Push matrix to stack
 		pushMatrix(x, y, z);
 	}
 

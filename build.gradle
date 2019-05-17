@@ -118,7 +118,7 @@ dependencies {
     compile "mezz.jei:jei_1.12.2:4.13.0.219"
     compile "appeng:appliedenergistics2:rv6-stable-6"
     compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
-    //compile 'baubles:Baubles:1.12:1.5.2'
+    compile 'baubles:Baubles:1.12:1.5.2'
     compile 'org.json:json:20171018'
 
     compile 'org.apache.logging.log4j:log4j-api'
@@ -130,7 +130,7 @@ dependencies {
 
     compile "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
     compile "vazkii.botania:Botania:r1.10-359.39"
-    compile "teamroots.embers:EmbersRekindled:1.13"
+    compile files('libs/')
 }
 
 processResources {

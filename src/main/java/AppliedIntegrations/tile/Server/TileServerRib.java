@@ -44,10 +44,17 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 
 	@Override
 	public void createProxyNode() {
-		super.createProxyNode();
+		// Configure proxy only if host has master
+		if (hasMaster()) {
+			// Pass to parent
+			super.createProxyNode();
 
-		// Set dense capacity flag to make rib conduct 32 channels
-		this.getProxy().setFlags(GridFlags.DENSE_CAPACITY);
+			// Set dense capacity flag to make rib conduct 32 channels
+			this.getProxy().setFlags(GridFlags.DENSE_CAPACITY);
+
+			// Notify node
+			this.getProxy().getNode().updateState();
+		}
 	}
 
 	@Override

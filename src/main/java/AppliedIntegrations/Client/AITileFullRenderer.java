@@ -12,6 +12,7 @@ import org.lwjgl.opengl.GL11;
  * Same as AITileRenderer, but don't disable lighting
  */
 public class AITileFullRenderer<T extends TileEntity> extends AITileRenderer<T> {
+	@Override
 	protected void prepareMatrix(double x, double y, double z) {
 		// Disable standard light
 		RenderHelper.disableStandardItemLighting();
@@ -41,6 +42,7 @@ public class AITileFullRenderer<T extends TileEntity> extends AITileRenderer<T> 
 		GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
 	}
 
+	@Override
 	protected void pushMatrix(double x, double y, double z) {
 		// Isolate changes
 		GlStateManager.popMatrix();

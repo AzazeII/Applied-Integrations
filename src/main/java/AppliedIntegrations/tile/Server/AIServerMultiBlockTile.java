@@ -59,7 +59,9 @@ public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiB
 
 	@Override
 	public void createProxyNode() {
+		// Configure proxy only if host has master
 		if (hasMaster()) {
+			// Configure parent
 			super.createProxyNode();
 
 			// Change proxy settings

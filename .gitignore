@@ -28,3 +28,6 @@
 
 # Include git directory
 !.github/
+
+# Include libs
+!libs/

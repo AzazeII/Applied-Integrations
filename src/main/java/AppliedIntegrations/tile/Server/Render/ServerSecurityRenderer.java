@@ -40,6 +40,9 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 		// Save matrix to stack
 		prepareMatrix(x, y, z);
 
+		// Disable lighting
+		GlStateManager.disableLighting();
+
 		// Configure light blend
 		setLightAmbient(te);
 
@@ -64,6 +67,11 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 		// Quad #6 (-z - static) NORTH
 		drawDirectionalQuadWithUV(NORTH, AEPartLocation.fromFacing(forward.getFacing().rotateAround(X)), te);
 
+
+		// Enable lighting
+		GlStateManager.enableLighting();
+
+		// Push matrix to stack
 		pushMatrix(x, y, z);
 	}
 

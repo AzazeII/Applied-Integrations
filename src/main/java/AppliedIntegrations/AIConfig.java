@@ -81,10 +81,10 @@ public class AIConfig {
 		enableEnergyFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableEnergyFeatures", true, "Default: true; If set to true, then all energy features will be enabled. Not recommended to disable, as it is core feature", featuresOrder);
 
 		// Mana parts/tile/items
-		enableManaFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false, "Default: true; If set to true, then all mana features will be enabled.", featuresOrder);
+		enableManaFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false, "Default: false; If set to true, then all mana features will be enabled.", featuresOrder);
 
 		// Ember capability for energy parts and p2p tunnel
-		enableEmberFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", false, "Default: false; If set to true, then all ember features will be enabled.", featuresOrder);
+		enableEmberFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", true, "Default: true; If set to true, then ember p2p tunnel will be available.", featuresOrder);
 
 		// p2p tunnel starlight
 		enableStarlightFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableStarlightTunnel", true, "Default: true; If set to true, then starlight p2p tunnel will be available.", featuresOrder);
