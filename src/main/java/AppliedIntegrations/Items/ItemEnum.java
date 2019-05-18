@@ -3,10 +3,12 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
+import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
+import AppliedIntegrations.Integration.BloodMagic.BloodMagicLoader;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
-import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
+import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Integration.IntegrationsHelper;
+import AppliedIntegrations.Integration.XNet.XnetLoader;
 import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
 import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;
@@ -42,10 +44,10 @@ public enum ItemEnum {
 	ITEMPARTANNIHILATION(new ItemPartEnergyAnnihilation("energyAnnihilationPartItem"), AIConfig.enableEnergyFeatures),
 	ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem"), AIConfig.enableEnergyFeatures),
 
-	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AIConfig.enableStarlightFeatures),
-	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), AIConfig.enableEmberFeatures),
-	ITEMP2PXNET(new ItemPartP2PXnet("xnetP2PPartItem"), AIConfig.enableXnetFeatures),
-	ITEMP2PWILL(new ItemPartP2PWill("willP2PPartItem"), AIConfig.enableWillFeatures),
+	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight()),
+	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), EmberLoader.enableEmber()),
+	ITEMP2PXNET(new ItemPartP2PXnet("xnetP2PPartItem"), XnetLoader.enableXnet()),
+	ITEMP2PWILL(new ItemPartP2PWill("willP2PPartItem"), BloodMagicLoader.enableWill()),
 
 	// & ------------------------------------MANA------------------------------------ &
 	ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem"), AIConfig.enableManaFeatures),
@@ -129,17 +131,6 @@ public enum ItemEnum {
 		}
 	}
 
-	@Optional.Method(modid = "astralsorcery")
-	public static void registerAstralItems() {
-
-		for (ItemEnum itemEnum : values()) {
-			// Register only that items, which **require AS as dependency**
-			if (itemEnum.item instanceof IAstralIntegrated && itemEnum.enabled) {
-				ForgeRegistries.ITEMS.register(itemEnum.item);
-			}
-		}
-	}
-
 	@Optional.Method(modid = "botania")
 	public static void registerBotaniaItems() {
 
@@ -163,17 +154,6 @@ public enum ItemEnum {
 
 				ForgeRegistries.ITEMS.register(mat);
 				encoriumVariants.add(mat);
-			}
-		}
-	}
-
-	@Optional.Method(modid = "embers")
-	public static void registerEmbersItems() {
-
-		for (ItemEnum itemEnum : values()) {
-			// Register only that items, which **require embers as dependency**
-			if (itemEnum.item instanceof IEmberIntegrated && itemEnum.enabled) {
-				ForgeRegistries.ITEMS.register(itemEnum.item);
 			}
 		}
 	}
@@ -206,33 +186,6 @@ public enum ItemEnum {
 		if (AIConfig.enableManaFeatures) {
 			for (MaterialEncorium mat : encoriumVariants) {
 				Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(mat, 0, new ModelResourceLocation(mat.getRegistryName(), "inventory"));
-			}
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	public static void registerAstralItemModels() {
-
-		for (ItemEnum item : values()) {
-			if (item.item instanceof IAstralIntegrated && item.enabled) {
-				if (item.item instanceof AIItemRegistrable) {
-					AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
-					registrableItem.registerModel();
-				}
-			}
-		}
-	}
-
-	@Optional.Method(modid = "embers")
-	@SideOnly(Side.CLIENT)
-	public static void registerEmbersItemModels() {
-
-		for (ItemEnum item : values()) {
-			if (item.item instanceof IEmberIntegrated && item.enabled) {
-				if (item.item instanceof AIItemRegistrable) {
-					AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
-					registrableItem.registerModel();
-				}
 			}
 		}
 	}

@@ -1,19 +1,20 @@
 package AppliedIntegrations.Integration.Embers;
 
 
-import AppliedIntegrations.Items.ItemEnum;
+import AppliedIntegrations.AIConfig;
+import net.minecraftforge.fml.common.Loader;
 
 /**
  * @Author Azazell
  */
 public class EmberLoader {
 	public static void preInit() {
-
-		ItemEnum.registerEmbersItems();
 	}
 
 	public static void init() {
+	}
 
-		ItemEnum.registerEmbersItemModels();
+	public static boolean enableEmber() {
+		return Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures;
 	}
 }

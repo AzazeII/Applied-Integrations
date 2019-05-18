@@ -1,21 +1,21 @@
 package AppliedIntegrations.Integration.AstralSorcery;
 
 
-import AppliedIntegrations.Items.ItemEnum;
+import AppliedIntegrations.AIConfig;
 import appeng.api.AEApi;
+import net.minecraftforge.fml.common.Loader;
 
 /**
  * @Author Azazell
  */
 public class AstralLoader {
-	public static void preInit() {
-
-		ItemEnum.registerAstralItems();
-	}
+	public static void preInit() {}
 
 	public static void init() {
-
-		ItemEnum.registerAstralItemModels();
 		AEApi.instance().partHelper().registerNewLayer(StarlightLayer.class.getName(), StarlightLayer.class.getName());
+	}
+
+	public static boolean enableStarlight() {
+		return Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures;
 	}
 }

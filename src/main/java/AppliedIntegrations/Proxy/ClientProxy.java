@@ -10,9 +10,7 @@ import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetFluidSlot;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetItemSlot;
 import AppliedIntegrations.Helpers.Energy.Utils;
-import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
-import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Topology.WebServer.WebManager;
@@ -112,16 +110,6 @@ public class ClientProxy extends CommonProxy {
 		if (AIConfig.enableWebServer) {
 			// Init web server
 			WebManager.init();
-		}
-
-		if (Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
-			BotaniaLoader.init();
-		}
-		if (Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures) {
-			EmberLoader.init();
-		}
-		if (Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures) {
-			AstralLoader.init();
 		}
 	}
 

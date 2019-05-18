@@ -4,6 +4,7 @@ package AppliedIntegrations.Proxy;
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
+import AppliedIntegrations.Integration.BloodMagic.BloodMagicLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Integration.IntegrationsHelper;
@@ -61,10 +62,26 @@ public class CommonProxy {
 		if (Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures) {
 			AstralLoader.preInit();
 		}
+		if (Loader.isModLoaded("bloodmagic") && AIConfig.enableWillFeatures) {
+			BloodMagicLoader.preInit();
+		}
 	}
 
 	public void SidedInit(FMLInitializationEvent init) {
 		IntegrationsHelper.instance.registerTunnelTypes();
+
+		if (Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
+			BotaniaLoader.init();
+		}
+		if (Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures) {
+			EmberLoader.init();
+		}
+		if (Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures) {
+			AstralLoader.init();
+		}
+		if (Loader.isModLoaded("bloodmagic") && AIConfig.enableWillFeatures) {
+			BloodMagicLoader.init();
+		}
 	}
 
 	public void SidedPostInit() {
