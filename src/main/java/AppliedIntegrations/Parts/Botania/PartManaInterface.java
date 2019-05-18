@@ -37,7 +37,9 @@ import java.util.List;
 
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
-@Optional.InterfaceList(value = {@Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkAttachable", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkEntity", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),})
+@Optional.InterfaceList(value = {@Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkAttachable", modid = "botania", striprefs = true),
+		@Optional.Interface(iface = "vazkii.botania.api.mana.spark.ISparkEntity", modid = "botania", striprefs = true),
+		@Optional.Interface(iface = "vazkii.botania.api.mana.IManaReceiver", modid = "botania", striprefs = true),})
 /**
  * @Author Azazell
  */ public class PartManaInterface extends PartEnergyInterface implements IManaReceiver, ISparkAttachable, IManaInterface {
@@ -110,7 +112,8 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 				} else {
 					doInjectDualityWork(Actionable.MODULATE);
 				}
-			} catch (NullNodeConnectionException | GridAccessException ignored) {}
+			} catch (NullNodeConnectionException | GridAccessException ignored) {
+			}
 		}
 		return IDLE;
 	}
