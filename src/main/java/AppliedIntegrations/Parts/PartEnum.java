@@ -3,17 +3,8 @@ package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.Parts.P2P.PartEmberP2PTunnel;
-import AppliedIntegrations.Parts.P2P.PartManaP2PTunnel;
-import AppliedIntegrations.Parts.P2P.PartStarlightP2PTunnel;
-import appeng.api.config.Upgrades;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @Author Azazell
@@ -61,12 +52,10 @@ public enum PartEnum {
 	}
 
 	public String getGroupName() {
-
 		return this.groupName;
 	}
 
 	public ItemStack getStack() {
-
 		return parentItem.getDamagedStack(ordinal());
 	}
 }

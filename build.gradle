@@ -130,6 +130,7 @@ dependencies {
 
     compile "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
     compile "vazkii.botania:Botania:r1.10-359.39"
+
     compile files('libs/')
 }
 

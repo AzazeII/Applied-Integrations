@@ -7,6 +7,7 @@ import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHand
 import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -100,7 +101,6 @@ public abstract class AIApi {
 	public abstract Constructor<? extends IChannelWidget> getWidgetFromChannel(IStorageChannel<? extends IAEStack<?>> chan);
 
 	public abstract IStackEncoder getStackEncoder(IStorageChannel<? extends IAEStack<?>> chan);
-
 	public abstract IStackDecoder getStackDecoder(IStorageChannel<? extends IAEStack<?>> chan);
 
 	/**
@@ -115,4 +115,16 @@ public abstract class AIApi {
 	 * @return ME inventory handler from given channel
 	 */
 	public abstract Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel);
+
+	/**
+	 * @param is Key stack
+	 * @return ItemPart stack representing p2p tunnel
+	 */
+	public abstract ItemStack getTunnelFromStack(ItemStack is);
+
+	/**
+	 * @param is Key stack
+	 * @param tunnel Any AI p2p tunnel
+	 */
+	public abstract void addTunnelAsStack(Item is, ItemStack tunnel);
 }

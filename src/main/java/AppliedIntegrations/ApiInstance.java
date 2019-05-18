@@ -9,6 +9,7 @@ import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.apache.commons.lang3.tuple.Pair;
@@ -37,6 +38,8 @@ public class ApiInstance extends AIApi {
 
 	private static AIApi instance;
 	// ----# Channel Maps #---- //
+
+	private static final LinkedHashMap<Item, ItemStack> tunnelMap = new LinkedHashMap<>();
 
 	public static AIApi staticInstance() {
 		// Check not null
@@ -118,5 +121,16 @@ public class ApiInstance extends AIApi {
 	public Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
 
 		return channelHandlerMap.get(channel);
+	}
+
+	@Override
+	public ItemStack getTunnelFromStack(ItemStack is) {
+		return tunnelMap.get(is);
+	}
+
+	@Override
+	public void addTunnelAsStack(Item item, ItemStack tunnel) {
+		// Put map in stack
+		tunnelMap.put(item, tunnel);
 	}
 }

@@ -3,6 +3,7 @@ package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlocksEnum;
+import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
@@ -66,7 +67,7 @@ public class CommonProxy {
 	}
 
 	public void SidedInit(FMLInitializationEvent init) {
-
+		IntegrationsHelper.instance.registerTunnelTypes();
 	}
 
 	public void SidedPostInit() {

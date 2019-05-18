@@ -109,9 +109,8 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		// Check if web server enabled
-		if (AIConfig.enableWebServer)
-		// Init web server
-		{
+		if (AIConfig.enableWebServer) {
+			// Init web server
 			WebManager.init();
 		}
 

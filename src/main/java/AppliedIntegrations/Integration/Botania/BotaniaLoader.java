@@ -34,11 +34,11 @@ public class BotaniaLoader {
 	}
 
 	public static void init() {
-		// Register new mana layer, as !@#!@!#! BOTANIA HAS NO !@#!#@! CAPABILITY FOR MANA !!!!
+		// Register new mana layer, since !@#!@!#! BOTANIA HAS NO !@#!#@! CAPABILITY FOR MANA !!!!
 		// Joking, botania is great mod `)
 		AEApi.instance().partHelper().registerNewLayer(ManaLayer.class.getName(), ManaLayer.class.getName());
 
-		ItemEnum.registerManaItemsModels();
+		ItemEnum.registerManaItemModels();
 	}
 
 	public static void postInit() {

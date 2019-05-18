@@ -195,8 +195,7 @@ public enum ItemEnum {
 
 	@Optional.Method(modid = "botania")
 	@SideOnly(Side.CLIENT)
-	public static void registerManaItemsModels() {
-
+	public static void registerManaItemModels() {
 		for (ItemEnum item : values()) {
 			if (item.item instanceof IBotaniaIntegrated && item.enabled) {
 				if (item.item instanceof AIItemRegistrable) {
@@ -243,6 +242,10 @@ public enum ItemEnum {
 	public ItemStack getDamagedStack(int damage) {
 
 		return this.getDMGStack(damage, 1);
+	}
+
+	public ItemStack getStack(){
+		return new ItemStack(item);
 	}
 
 	public ItemStack getDMGStack(final int damageValue, final int size) {
