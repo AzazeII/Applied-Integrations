@@ -71,7 +71,6 @@ public class ClientProxy extends CommonProxy {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void SidedPreInit() {
-
 		super.SidedPreInit();
 
 		NetworkHandler.registerClientPackets();
@@ -97,6 +96,7 @@ public class ClientProxy extends CommonProxy {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void SidedInit(FMLInitializationEvent init) {
+		super.SidedInit(init);
 
 		ItemEnum.registerModels();
 

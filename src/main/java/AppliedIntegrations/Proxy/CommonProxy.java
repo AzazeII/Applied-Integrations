@@ -41,17 +41,14 @@ public class CommonProxy {
 	}
 
 	public void SidedPreInit() {
-
 		ItemEnum.register();
+
 		BlocksEnum.register();
-		//EntityEnum.register();
-		//PartEnum.registerAEModels();
 
 		NetworkHandler.registerServerPackets();
 
-		if (AIConfig.enableEnergyFeatures)
-		// Register channel
-		{
+		if (AIConfig.enableEnergyFeatures)	{
+			// Register channel
 			AEApi.instance().storage().registerStorageChannel(IEnergyStorageChannel.class, new EnergyStorageChannel());
 		}
 

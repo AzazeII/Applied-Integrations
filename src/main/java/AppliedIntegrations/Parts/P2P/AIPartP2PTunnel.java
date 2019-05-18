@@ -94,9 +94,9 @@ public abstract class AIPartP2PTunnel<T extends AIPartP2PTunnel<T>> extends Part
 		ItemStack is = player.getHeldItem(hand);
 
 		// Get new tunnel stack from API
-		ItemStack newPart = Objects.requireNonNull(AIApi.instance()).getTunnelFromStack(is);
+		ItemStack newPart = Objects.requireNonNull(AIApi.instance()).getTunnelFromStack(is.getItem());
 
-		//
+		// Check if stack isn't empty and item in stack is memory card
 		if( !is.isEmpty() && is.getItem() instanceof IMemoryCard) {
 			// Cast item to memory card
 			final IMemoryCard mc = (IMemoryCard) is.getItem();

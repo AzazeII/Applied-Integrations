@@ -120,7 +120,7 @@ public abstract class AIApi {
 	 * @param is Key stack
 	 * @return ItemPart stack representing p2p tunnel
 	 */
-	public abstract ItemStack getTunnelFromStack(ItemStack is);
+	public abstract ItemStack getTunnelFromStack(Item is);
 
 	/**
 	 * @param is Key stack

@@ -43,9 +43,8 @@ public class ApiInstance extends AIApi {
 
 	public static AIApi staticInstance() {
 		// Check not null
-		if (instance == null)
-		// Update instance
-		{
+		if (instance == null) {
+			// Update instance
 			instance = new ApiInstance();
 		}
 
@@ -124,8 +123,8 @@ public class ApiInstance extends AIApi {
 	}
 
 	@Override
-	public ItemStack getTunnelFromStack(ItemStack is) {
-		return tunnelMap.get(is);
+	public ItemStack getTunnelFromStack(Item item) {
+		return tunnelMap.get(item);
 	}
 
 	@Override
