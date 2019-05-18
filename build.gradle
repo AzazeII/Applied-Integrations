@@ -103,6 +103,11 @@ repositories {
         url = "https://maven.blamejared.com/"
     }
 
+    // Include blood magic
+    maven {
+        url "http://tehnut.info/maven"
+    }
+
     maven {
         url "https://maven.thiakil.com/"
     }
@@ -133,6 +138,8 @@ dependencies {
     compile "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
     compile "vazkii.botania:Botania:r1.10-359.39"
     compile "teamroots.embers:EmbersRekindled:1.13"
+
+    compile "com.wayoftime.bloodmagic:BloodMagic:1.12.2-2.4.0-102"
 
     compile files('libs/')
 }

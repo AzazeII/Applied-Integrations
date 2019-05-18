@@ -48,6 +48,8 @@ public class AIConfig {
 
 	public static boolean enableXnetFeatures;
 
+	public static boolean enableWillFeatures;
+
 	private static Configuration config = null;
 
 	// Called only on server
@@ -91,8 +93,11 @@ public class AIConfig {
 		// p2p tunnel starlight
 		enableStarlightFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableStarlightTunnel", true, "Default: true; If set to true, then starlight p2p tunnel will be available.", featuresOrder);
 
-		// P2p tunnel xnet
+		// p2p tunnel xnet
 		enableXnetFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableXnetTunnel", true, "Default: true; If set to true, then xnet p2p tunnel will be available.", featuresOrder);
+
+		// p2p tunnel will
+		enableWillFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableWillTunnel", true, "Default: true; If set to true, then will p2p tunnel (demonic) will(you get :) ) be available.", featuresOrder);
 
 		// Black/white hole storage
 		enableBlackHoleStorage = (Boolean) addProperty(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true, "Default: true (only in alpha); If set to true, then all black/white hole storage system blocks will be available in game.", tileOrder);

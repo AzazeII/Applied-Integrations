@@ -26,7 +26,8 @@ public enum PartEnum {
 
 	P2PEmber(ItemEnum.ITEMP2PEMBER),
 	P2PStarlight(ItemEnum.ITEMP2PSTARLIGHT),
-	P2PMana(ItemEnum.ITEMP2PMANA);
+	P2PMana(ItemEnum.ITEMP2PMANA),
+	P2PWill(ItemEnum.ITEMP2PWILL);
 
 	/**
 	 * Cached enum values

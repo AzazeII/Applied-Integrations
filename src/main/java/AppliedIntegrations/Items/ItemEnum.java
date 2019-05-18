@@ -12,10 +12,7 @@ import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
-import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
-import AppliedIntegrations.Items.Part.P2P.ItemPartP2PMana;
-import AppliedIntegrations.Items.Part.P2P.ItemPartP2PStarlight;
-import AppliedIntegrations.Items.Part.P2P.ItemPartP2PXnet;
+import AppliedIntegrations.Items.Part.P2P.*;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.StorageCells.ManaStorageCell;
@@ -48,6 +45,7 @@ public enum ItemEnum {
 	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AIConfig.enableStarlightFeatures),
 	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), AIConfig.enableEmberFeatures),
 	ITEMP2PXNET(new ItemPartP2PXnet("xnetP2PPartItem"), AIConfig.enableXnetFeatures),
+	ITEMP2PWILL(new ItemPartP2PWill("willP2PPartItem"), AIConfig.enableWillFeatures),
 
 	// & ------------------------------------MANA------------------------------------ &
 	ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem"), AIConfig.enableManaFeatures),
