@@ -3,10 +3,10 @@ package AppliedIntegrations.Proxy;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.BlocksEnum;
-import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
+import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;

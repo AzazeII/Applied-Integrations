@@ -1,7 +1,7 @@
 package AppliedIntegrations.Helpers.Energy;
 
 
-import AppliedIntegrations.Helpers.IntegrationsHelper;
+import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.ISyncHost;

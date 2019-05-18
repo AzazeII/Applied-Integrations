@@ -1,9 +1,9 @@
 package AppliedIntegrations.Helpers;
 
 
-import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
+import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketBarChange;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
@@ -26,7 +26,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.common.capabilities.Capability;
-import teamroots.embers.power.EmberCapabilityProvider;
 
 import java.util.LinkedList;
 import java.util.List;

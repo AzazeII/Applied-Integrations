@@ -1,11 +1,10 @@
 package AppliedIntegrations.Parts.Energy;
 
 
-import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
-import AppliedIntegrations.Helpers.IntegrationsHelper;
+import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusContainer;
 import AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusInterface;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -58,7 +57,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
-import teamroots.embers.power.EmberCapabilityProvider;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -69,7 +67,8 @@ import java.util.List;
 import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiStoragePart;
 import static AppliedIntegrations.api.Storage.LiquidAIEnergy.energies;
-import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.EU;
+import static AppliedIntegrations.grid.Implementation.AIEnergy.J;
 import static java.util.Collections.singletonList;
 import static net.minecraftforge.fml.relauncher.Side.SERVER;
 

@@ -1,7 +1,7 @@
 package AppliedIntegrations.grid;
 
 
-import AppliedIntegrations.Helpers.IntegrationsHelper;
+import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.Implementation.AIEnergy;
 import mekanism.common.capabilities.Capabilities;
@@ -9,7 +9,6 @@ import net.darkhax.tesla.capability.TeslaCapabilities;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fml.common.Optional;
-import teamroots.embers.power.EmberCapabilityProvider;
 
 import javax.annotation.Nullable;
 import java.util.Vector;

@@ -3,10 +3,10 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Helpers.IntegrationsHelper;
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
+import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
 import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;

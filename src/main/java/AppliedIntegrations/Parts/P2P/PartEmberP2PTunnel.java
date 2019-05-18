@@ -279,6 +279,7 @@ public class PartEmberP2PTunnel extends AIPartP2PTunnel<PartEmberP2PTunnel> impl
 		return super.hasCapability(capability);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability) {
 		// Check if requested capability is ember interface

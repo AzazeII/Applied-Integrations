@@ -1,7 +1,7 @@
 package AppliedIntegrations.Helpers.Energy;
 
 
-import AppliedIntegrations.Helpers.IntegrationsHelper;
+import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.EnumCapabilityType;
