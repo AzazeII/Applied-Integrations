@@ -1,6 +1,6 @@
 {
   "parent": "appliedenergistics2:item/part/p2p_tunnel",
   "textures": {
-    "type": "astralsorcery:blocks/black_marble_runed"
+    "type": "astralsorcery:blocks/marble_chiseled"
   }
 }

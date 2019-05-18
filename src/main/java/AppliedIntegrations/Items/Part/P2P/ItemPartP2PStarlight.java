@@ -2,8 +2,7 @@ package AppliedIntegrations.Items.Part.P2P;
 
 
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
-import AppliedIntegrations.Items.ItemPartAIBase;
-import AppliedIntegrations.Parts.P2P.PartStarlightP2PTunnel;
+import AppliedIntegrations.Parts.P2P.Starlight.PartStarlightP2PTunnel;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;

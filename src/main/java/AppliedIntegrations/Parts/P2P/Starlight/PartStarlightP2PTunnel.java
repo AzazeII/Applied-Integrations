@@ -1,7 +1,9 @@
-package AppliedIntegrations.Parts.P2P;
+package AppliedIntegrations.Parts.P2P.Starlight;
 
 
 import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
+import AppliedIntegrations.Parts.P2P.AIP2PModels;
+import AppliedIntegrations.Parts.P2P.AIPartP2PTunnel;
 import AppliedIntegrations.Parts.PartModelEnum;
 import appeng.api.parts.IPartModel;
 import hellfirepvp.astralsorcery.common.auxiliary.link.ILinkableTile;
@@ -54,6 +56,9 @@ public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunn
 				if(!this.positions.contains(other)) {
 					// Add other to positions
 					this.positions.add(other);
+
+					// Notify chunk about host update
+					getHost().markForUpdate();
 				}
 			}
 		}
@@ -74,6 +79,9 @@ public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunn
 				// Remove link
 				TransmissionNetworkHelper.removeTransmissionLink(this, other);
 
+				// Notify chunk about host update
+				getHost().markForUpdate();
+
 				// Removed other to positions
 				this.positions.remove(other);
 
@@ -89,7 +97,6 @@ public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunn
 	}
 
 	private class InputStarlightHandler extends StarlightLinkable implements IStarlightTransmission {
-
 		@Nonnull
 		@Override
 		public BlockPos getTrPos() {
@@ -104,13 +111,12 @@ public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunn
 
 		@Nonnull
 		@Override
-		public IPrismTransmissionNode provideTransmissionNode(BlockPos blockPos) {
-			return null;
+		public IPrismTransmissionNode provideTransmissionNode(BlockPos outerPos) {
+			return new InputStarlightNode(outerPos);
 		}
 	}
 
 	private class OutputStarlightHandler extends StarlightLinkable implements IStarlightTransmission {
-
 		@Nonnull
 		@Override
 		public BlockPos getTrPos() {
@@ -125,8 +131,8 @@ public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunn
 
 		@Nonnull
 		@Override
-		public IPrismTransmissionNode provideTransmissionNode(BlockPos blockPos) {
-			return null;
+		public IPrismTransmissionNode provideTransmissionNode(BlockPos outerPos) {
+			return new OutputStarlightNode(outerPos);
 		}
 	}
 
