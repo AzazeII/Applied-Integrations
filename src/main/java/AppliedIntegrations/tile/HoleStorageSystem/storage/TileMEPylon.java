@@ -210,9 +210,9 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 		}
 	}
 
-	public void setSingularity(ISingularity tileEntity) {
+	public void setSingularity(ISingularity singularity) {
 		// Set singularity
-		operatedTile = tileEntity;
+		operatedTile = singularity;
 
 		// Sync client
 		notifyClient();
@@ -229,9 +229,9 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 	}
 
 	@Override
-	public void setDrain(boolean b) {
+	public void setDrain(boolean newValue) {
 		// Make tile consume energy
-		this.shouldDrain = b;
+		this.shouldDrain = newValue;
 
 		// Update time handler
 		this.drainHandler.updateData(this.getWorld());

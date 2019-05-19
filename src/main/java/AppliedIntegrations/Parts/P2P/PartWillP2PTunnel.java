@@ -1,6 +1,5 @@
 package AppliedIntegrations.Parts.P2P;
 
-
 import AppliedIntegrations.Parts.PartModelEnum;
 import WayofTime.bloodmagic.demonAura.WorldDemonWillHandler;
 import WayofTime.bloodmagic.soul.EnumDemonWillType;

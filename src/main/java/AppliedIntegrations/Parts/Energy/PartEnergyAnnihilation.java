@@ -7,7 +7,6 @@ import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.IPartModel;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +22,7 @@ public class PartEnergyAnnihilation extends AIPlanePart {
 
 	public PartEnergyAnnihilation() {
 
-		super(PartEnum.EnergyAnnihilation, SecurityPermissions.INJECT);
+		super(PartEnum.EnergyAnnihilation);
 	}
 
 	@Override

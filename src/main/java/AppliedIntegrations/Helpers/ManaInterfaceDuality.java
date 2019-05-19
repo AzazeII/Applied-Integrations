@@ -47,8 +47,8 @@ public class ManaInterfaceDuality implements IEnergyInterfaceDuality {
 
 		int ValuedReceive = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
 
-		if (owner.InjectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null) == 0) {
-			int injectedAmount = owner.InjectMana(ValuedReceive, MODULATE);
+		if (owner.injectMana(ValuedReceive, Actionable.SIMULATE) - getMaxTransfer(null) == 0) {
+			int injectedAmount = owner.injectMana(ValuedReceive, MODULATE);
 			// Remove only amount injected
 			owner.modifyManaStorage(-injectedAmount);
 		}
@@ -58,8 +58,8 @@ public class ManaInterfaceDuality implements IEnergyInterfaceDuality {
 	public void doExtractDualityWork(Actionable mode) throws NullNodeConnectionException, GridAccessException {
 
 		int ValuedExtract = (int) Math.min(owner.getManaStored(), getMaxTransfer(null));
-		if (owner.InjectMana(ValuedExtract, Actionable.SIMULATE) - getMaxTransfer(null) == 0) {
-			int extractedAmount = owner.ExtractMana(ValuedExtract, MODULATE);
+		if (owner.injectMana(ValuedExtract, Actionable.SIMULATE) - getMaxTransfer(null) == 0) {
+			int extractedAmount = owner.extractMana(ValuedExtract, MODULATE);
 
 			// Add only amount extracted
 			owner.modifyManaStorage(extractedAmount);

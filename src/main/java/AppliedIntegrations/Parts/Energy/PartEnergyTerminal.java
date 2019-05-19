@@ -11,7 +11,10 @@ import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
-import appeng.api.config.*;
+import appeng.api.config.Settings;
+import appeng.api.config.SortDir;
+import appeng.api.config.SortOrder;
+import appeng.api.config.ViewItems;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
@@ -60,7 +63,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	public PartEnergyTerminal() {
 
-		super(PartEnum.EnergyTerminal, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT, SecurityPermissions.CRAFT);
+		super(PartEnum.EnergyTerminal);
 
 		// Register setting for terminal
 		// Sort mode (default: name)

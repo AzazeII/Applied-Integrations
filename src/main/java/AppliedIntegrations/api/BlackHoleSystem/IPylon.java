@@ -1,10 +1,23 @@
 package AppliedIntegrations.api.BlackHoleSystem;
 
-
+/**
+ * @Author Azazell
+ * <p>
+ * Class, used to mark any pylon
+ */
 public interface IPylon {
-	void setSingularity(ISingularity o);
+	/**
+	 * @param singularity Update linked singularity
+	 */
+	void setSingularity(ISingularity singularity);
 
-	void setDrain(boolean b);
+	/**
+	 * @param newValue Update drain value
+	 */
+	void setDrain(boolean newValue);
 
+	/**
+	 * Update cell array of pylon
+	 */
 	void postCellInventoryEvent();
 }

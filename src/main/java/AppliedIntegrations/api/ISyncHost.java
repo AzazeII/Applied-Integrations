@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 /**
  * @Author Azazell
  * <p>
- * Any machine marked with this interface can be used as host for widget energy slot
+ * Any machine marked with this interface can be used as host for syncing between client and server
  */
 public interface ISyncHost {
 	// Compare this to any other sync host; True if objects equal

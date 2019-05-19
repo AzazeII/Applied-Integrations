@@ -3,7 +3,6 @@ package AppliedIntegrations.Parts;
 
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
@@ -34,8 +33,7 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
 	private TimeHandler lightningHandler = new TimeHandler();
 
-	public AIPlanePart(PartEnum associatedPart, SecurityPermissions... interactionPermissions) {
-
+	public AIPlanePart(PartEnum associatedPart) {
 		super(associatedPart);
 	}
 

@@ -198,10 +198,10 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 	}
 
 	@Override
-	public void setEntangledHole(ISingularity t) {
+	public void setEntangledHole(ISingularity singularity) {
 
-		AILog.chatLog("Setting entangled singularity to " + t.toString());
-		entangledHole = (TileBlackHole) t;
+		AILog.chatLog("Setting entangled singularity to " + singularity.toString());
+		entangledHole = (TileBlackHole) singularity;
 
 		// Update cell array
 		for (IPylon pylon : listeners)

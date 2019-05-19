@@ -11,7 +11,6 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.parts.IPartModel;
 import appeng.api.storage.ICellContainer;
@@ -39,7 +38,7 @@ import static java.util.Collections.singletonList;
 public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 	public PartEnergyFormation() {
 
-		super(PartEnum.EnergyFormation, SecurityPermissions.EXTRACT);
+		super(PartEnum.EnergyFormation);
 	}
 
 	@Override

@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts;
 
 
-import appeng.api.config.SecurityPermissions;
 import appeng.api.parts.PartItemStack;
 import appeng.util.Platform;
 import io.netty.buffer.ByteBuf;
@@ -23,7 +22,7 @@ public abstract class AIRotatablePart extends AIPart {
 	// Rotation value. Each byte gives +90 degree to rotation
 	private byte renderRotation = 0;
 
-	public AIRotatablePart(final PartEnum associatedPart, final SecurityPermissions... interactionPermissions) {
+	public AIRotatablePart(final PartEnum associatedPart) {
 
 		super(associatedPart);
 	}

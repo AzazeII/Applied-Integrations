@@ -6,7 +6,7 @@ import net.minecraft.nbt.NBTTagCompound;
 /**
  * @Author Azazell
  */
-public interface InbtStorage {
+public interface INBTStorage {
 	void readFromNBT(NBTTagCompound tag);
 
 	void writeToNBT(NBTTagCompound tag);

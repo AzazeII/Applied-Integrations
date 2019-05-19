@@ -170,7 +170,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	 * @param actionable Simulate of Modulate?
 	 * @return amount extracted
 	 */
-	public int ExtractMana(int resource, Actionable actionable) throws GridAccessException {
+	public int extractMana(int resource, Actionable actionable) throws GridAccessException {
 		if (getProxy().getNode() == null) {
 			return 0;
 		}
@@ -190,7 +190,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	 * @param actionable Simulate or modulate?
 	 * @return amount injected
 	 */
-	public int InjectMana(int resource, Actionable actionable) throws GridAccessException {
+	public int injectMana(int resource, Actionable actionable) throws GridAccessException {
 		if (getProxy().getNode() == null) {
 			return 0;
 		}

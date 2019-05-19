@@ -417,10 +417,10 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	}
 
 	@Override
-	public void setEntangledHole(ISingularity t) {
+	public void setEntangledHole(ISingularity singularity) {
 
-		AILog.chatLog("Setting entangled singularity to " + t.toString());
-		entangledHole = (TileWhiteHole) t;
+		AILog.chatLog("Setting entangled singularity to " + singularity.toString());
+		entangledHole = (TileWhiteHole) singularity;
 	}
 
 	@Override

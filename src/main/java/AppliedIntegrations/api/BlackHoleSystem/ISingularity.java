@@ -38,20 +38,51 @@ public interface ISingularity {
 		compound.setInteger("#WORLD", ((TileEntity) operatedTile).getWorld().provider.getDimension());
 	}
 
+	/**
+	 * @param l Add mass to singularity
+	 */
 	void addMass(long l);
 
+	/**
+	 * Store new AE stack in singularity
+	 * @param stack to store
+	 * @param actionable mode
+	 * @return Stack added
+	 */
 	IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable);
 
+	/**
+	 * Get stack list
+	 * @param iStorageChannel key channel
+	 * @return Stack list from key channel
+	 */
 	IItemList<?> getList(IStorageChannel iStorageChannel);
 
+	/**
+	 * Client-callback function, called by packet mass change
+	 * @param mass new mass
+	 */
 	@SideOnly(CLIENT)
 	void setMassFromServer(long mass);
 
+	/**
+	 * @return Current mass of singularity
+	 */
 	long getMass();
 
+	/**
+	 * @return Does this singularity has other singularity entangled with this?
+	 */
 	boolean isEntangled();
 
-	void setEntangledHole(ISingularity t);
+	/**
+	 *
+	 * @param singularity Singularity to link with this
+	 */
+	void setEntangledHole(ISingularity singularity);
 
+	/**
+	 * @param pylon New event listener
+	 */
 	void addListener(IPylon pylon);
 }
