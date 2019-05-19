@@ -17,7 +17,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * @Author Azazell
  */
 public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack> {
-	private LiquidAIEnergy Energy;
+	private LiquidAIEnergy energy;
 
 	private long stackSize;
 
@@ -27,24 +27,24 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 
 	private int hash;
 
-	private AEEnergyStack(LiquidAIEnergy Energy, long amount) {
+	private AEEnergyStack(LiquidAIEnergy energy, long amount) {
 
-		this.Energy = Energy;
+		this.energy = energy;
 
-		if (this.Energy == null) {
+		if (this.energy == null) {
 			throw new IllegalArgumentException("Energy is null");
 		}
 
 		this.setStackSize(amount);
 		this.setCraftable(false);
 		this.setCountRequestable(0);
-		this.hash = this.Energy.hashCode();
+		this.hash = this.energy.hashCode();
 	}
 
 	private AEEnergyStack(AEEnergyStack stack) {
 
-		this.Energy = stack.getEnergy();
-		if (this.Energy == null) {
+		this.energy = stack.getEnergy();
+		if (this.energy == null) {
 			throw new IllegalArgumentException("Energy is null");
 		}
 		this.setStackSize(stack.getStackSize());
@@ -56,7 +56,7 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 	@Override
 	public LiquidAIEnergy getEnergy() {
 
-		return this.Energy;
+		return this.energy;
 	}
 
 	@Override
@@ -193,7 +193,7 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 	@Override
 	public boolean fuzzyComparison(IAEEnergyStack other, FuzzyMode mode) {
 
-		return this.Energy == other.getEnergy();
+		return this.energy == other.getEnergy();
 	}
 
 	@Override

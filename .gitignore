@@ -31,3 +31,6 @@
 
 # Include libs
 !libs/
+
+# Include wiki
+!idea.wiki/
