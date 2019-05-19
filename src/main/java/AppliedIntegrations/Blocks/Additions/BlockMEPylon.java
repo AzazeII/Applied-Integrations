@@ -4,7 +4,6 @@ package AppliedIntegrations.Blocks.Additions;
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import net.minecraft.block.BlockHorizontal;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
@@ -28,7 +27,6 @@ public class BlockMEPylon extends BlockAIRegistrable {
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public BlockMEPylon(String registryName, String unlocalizedName) {
-
 		super(registryName, unlocalizedName);
 	}
 
@@ -56,22 +54,17 @@ public class BlockMEPylon extends BlockAIRegistrable {
 
 	@Override
 	public int getMetaFromState(IBlockState state) {
-
 		// Set index as meta
-		int meta = (state.getValue(FACING)).getIndex();
-
-		return meta;
+		return (state.getValue(FACING)).getIndex();
 	}
 
 	@Override
 	public boolean isFullCube(IBlockState iBlockState) {
-
 		return false;
 	}
 
 	@Override
 	public boolean isOpaqueCube(IBlockState iBlockState) {
-
 		return false;
 	}
 
@@ -102,6 +95,6 @@ public class BlockMEPylon extends BlockAIRegistrable {
 	@Override
 	protected BlockStateContainer createBlockState() {
 		// Add block state
-		return new BlockStateContainer(this, new IProperty[]{FACING});
+		return new BlockStateContainer(this, FACING);
 	}
 }

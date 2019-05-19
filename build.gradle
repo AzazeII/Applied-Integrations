@@ -80,12 +80,6 @@ repositories {
         url = "http://maven.covers1624.net"
     }
 
-    // Include forge
-    maven {
-        name = "CurseForge"
-        url = "https://minecraft.curseforge.com/api/maven/"
-    }
-
     // Include tesla api
     maven {
         url 'http://maven.mcmoddev.com'
@@ -107,9 +101,15 @@ repositories {
     maven {
         url "http://tehnut.info/maven"
     }
-
+    
     maven {
-        url "https://maven.thiakil.com/"
+        url "http://maven.thiakil.com/"
+    }
+
+    // Include forge
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
     }
 }
 
@@ -137,6 +137,7 @@ dependencies {
 
     compile "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
     compile "vazkii.botania:Botania:r1.10-359.39"
+
     compile "teamroots.embers:EmbersRekindled:1.13"
 
     compile "info.amerifrance.guideapi:Guide-API:1.12-2.1.8-63"

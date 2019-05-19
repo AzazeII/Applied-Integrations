@@ -7,13 +7,15 @@ import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.BloodMagic.BloodMagicLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
-import AppliedIntegrations.Integration.XNet.XnetLoader;
 import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
 import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
-import AppliedIntegrations.Items.Part.P2P.*;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PMana;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PStarlight;
+import AppliedIntegrations.Items.Part.P2P.ItemPartP2PWill;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.StorageCells.ManaStorageCell;
@@ -44,7 +46,6 @@ public enum ItemEnum {
 
 	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight()),
 	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), EmberLoader.enableEmber()),
-	ITEMP2PXNET(new ItemPartP2PXnet("xnetP2PPartItem"), XnetLoader.enableXnet()),
 	ITEMP2PWILL(new ItemPartP2PWill("willP2PPartItem"), BloodMagicLoader.enableWill()),
 
 	// & ------------------------------------MANA------------------------------------ &

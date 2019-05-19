@@ -286,13 +286,11 @@ public class NetworkCard extends AIItemRegistrable {
 					// Check if long "cnt" not null
 					if (stackTag.getLong("Cnt") == -1) {
 						// Check if tables isn't empty
-						if (!tables.equals(""))
-						// Update tables
-						{
+						if (!tables.equals("")) {
+							// Update tables
 							tables = tables.concat(" " + I18n.format(getPermissionList().get(i).getUnlocalizedName()));
-						} else
-						// Update tables
-						{
+						} else {
+							// Update tables
 							tables = I18n.format(getPermissionList().get(i).getUnlocalizedName());
 						}
 					}

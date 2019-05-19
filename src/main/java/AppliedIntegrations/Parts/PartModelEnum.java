@@ -43,7 +43,6 @@ public enum PartModelEnum implements IPartModel {
 	P2P_MANA("p2p/tunnel_mana"),
 	P2P_STARLIGHT("p2p/tunnel_starlight"),
 	P2P_EMBER("p2p/tunnel_ember"),
-	P2P_XNET("p2p/tunnel_xnet"),
 	P2P_WILL("p2p/tunnel_will"),
 
 	STORAGE_INTERFACE_BASE("interface_base"),

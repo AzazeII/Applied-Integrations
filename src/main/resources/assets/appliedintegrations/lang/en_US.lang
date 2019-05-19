@@ -56,6 +56,8 @@ tile.ME Pylon.name=ME Pylon
 tile.White Hole.name=White Hole
 tile.ME Pylon Crystal.name=ME Pylon Crystal
 
+tile.ME Demonic Will Pylon.name=ME Demonic Will Pylon
+
 ME Energy Interface=ME Energy Interface
 ME Energy Import Bus=ME Energy Import Bus
 ME Energy Export Bus=ME Energy Export Bus

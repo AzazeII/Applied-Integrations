@@ -1,5 +1,6 @@
 package AppliedIntegrations.Parts.P2P;
 
+
 import AppliedIntegrations.api.AIApi;
 import appeng.api.implementations.items.IMemoryCard;
 import appeng.api.implementations.items.MemoryCardMessages;
@@ -76,6 +77,12 @@ public abstract class AIPartP2PTunnel<T extends AIPartP2PTunnel<T>> extends Part
 		}
 
 		return false;
+	}
+
+	@Override
+	public ItemStack getItemStack( final PartItemStack type ) {
+		// Pass call to super, to make p2p tunnels drop them self instead of dropping p2p tunnel - ME
+		return super.getItemStack(type);
 	}
 
 	@Override

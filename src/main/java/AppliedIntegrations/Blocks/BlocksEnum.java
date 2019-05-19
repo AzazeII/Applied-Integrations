@@ -61,7 +61,6 @@ public enum BlocksEnum {
 	}
 
 	BlocksEnum(BlockAIRegistrable block) {
-
 		this.b = block;
 		this.b.setCreativeTab(AppliedIntegrations.AI);
 	}
