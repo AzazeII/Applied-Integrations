@@ -10,7 +10,7 @@ public interface IInterfaceStorageDuality<TYPE> {
 
 	Class<TYPE> getTypeClass();
 
-	// Number, becasue it can be easily overriden to any class extends Number
+	// Number, because it can be easily overridden to any class extends Number
 	TYPE getStored();
 
 	TYPE getMaxStored();

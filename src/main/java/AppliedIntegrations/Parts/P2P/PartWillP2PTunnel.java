@@ -88,7 +88,7 @@ public class PartWillP2PTunnel extends AIPartP2PTunnel<PartWillP2PTunnel> implem
 				// Check if it wasn't simulation
 				if (doFill) {
 					// Drain energy
-					PartWillP2PTunnel.this.queueTunnelDrain(PowerUnits.AE, totalReceived);
+					PartWillP2PTunnel.this.queueTunnelDrain(PowerUnits.AE, type != EnumDemonWillType.DEFAULT ? totalReceived * 2 : totalReceived);
 				}
 			} catch (GridAccessException ignored) {
 			}
