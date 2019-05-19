@@ -5,9 +5,8 @@ import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.BloodMagic.BloodMagicLoader;
-import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
+import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
-import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Integration.XNet.XnetLoader;
 import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
 import AppliedIntegrations.Items.Botania.*;
@@ -23,7 +22,6 @@ import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,15 +48,15 @@ public enum ItemEnum {
 	ITEMP2PWILL(new ItemPartP2PWill("willP2PPartItem"), BloodMagicLoader.enableWill()),
 
 	// & ------------------------------------MANA------------------------------------ &
-	ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem"), AIConfig.enableManaFeatures),
-	ITEMMANAPARTSTORAGEBUS(new ItemPartManaStorageBus("manaStoragePartItem"), AIConfig.enableManaFeatures),
-	ITEMP2PMANA(new ItemPartP2PMana("manaP2PPartItem"), AIConfig.enableManaFeatures),
+	ITEMMANAPARTINTERFACE(new ItemPartManaInterface("manaInterfacePartItem"), BotaniaLoader.enableBotania()),
+	ITEMMANAPARTSTORAGEBUS(new ItemPartManaStorageBus("manaStoragePartItem"), BotaniaLoader.enableBotania()),
+	ITEMP2PMANA(new ItemPartP2PMana("manaP2PPartItem"), BotaniaLoader.enableBotania()),
 	// & ------------------------------------PARTS------------------------------------ &
 
 
-	ITEMMANAWIRELESSMIRROR(new MEManaMirror("me_mana_mirror"), AIConfig.enableManaFeatures),
-	ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring"), AIConfig.enableManaFeatures),
-	ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), AIConfig.enableManaFeatures),
+	ITEMMANAWIRELESSMIRROR(new MEManaMirror("me_mana_mirror"), BotaniaLoader.enableBotania()),
+	ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring"), BotaniaLoader.enableBotania()),
+	ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), BotaniaLoader.enableBotania()),
 	// & ------------------------------------MANA------------------------------------ &
 
 	ITEMENERGYWIRELESSTERMINAL(new ItemWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
@@ -79,18 +77,18 @@ public enum ItemEnum {
 	ENERGYSTORAGE_4096k(new EnergyStorageCell("EnergyStorageCell_4096k", 4194304), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGE_16384k(new EnergyStorageCell("EnergyStorageCell_16384k", 16777216), AIConfig.enableEnergyFeatures),
 
-	MANASTORAGE_1k(new ManaStorageCell("ManaStorageCell_1k", 1024), AIConfig.enableManaFeatures),
-	MANASTORAGE_4k(new ManaStorageCell("ManaStorageCell_4k", 4096), AIConfig.enableManaFeatures),
-	MANASTORAGE_16k(new ManaStorageCell("ManaStorageCell_16k", 16384), AIConfig.enableManaFeatures),
-	MANASTORAGE_64k(new ManaStorageCell("ManaStorageCell_64k", 65536), AIConfig.enableManaFeatures),
-	MANASTORAGE_256k(new ManaStorageCell("ManaStorageCell_256k", 262144), AIConfig.enableManaFeatures),
-	MANASTORAGE_1024k(new ManaStorageCell("ManaStorageCell_1024k", 1048576), AIConfig.enableManaFeatures),
-	MANASTORAGE_4096k(new ManaStorageCell("ManaStorageCell_4096k", 4194304), AIConfig.enableManaFeatures),
-	MANASTORAGE_16384k(new ManaStorageCell("ManaStorageCell_16384k", 16777216), AIConfig.enableManaFeatures),
+	MANASTORAGE_1k(new ManaStorageCell("ManaStorageCell_1k", 1024), BotaniaLoader.enableBotania()),
+	MANASTORAGE_4k(new ManaStorageCell("ManaStorageCell_4k", 4096), BotaniaLoader.enableBotania()),
+	MANASTORAGE_16k(new ManaStorageCell("ManaStorageCell_16k", 16384), BotaniaLoader.enableBotania()),
+	MANASTORAGE_64k(new ManaStorageCell("ManaStorageCell_64k", 65536), BotaniaLoader.enableBotania()),
+	MANASTORAGE_256k(new ManaStorageCell("ManaStorageCell_256k", 262144), BotaniaLoader.enableBotania()),
+	MANASTORAGE_1024k(new ManaStorageCell("ManaStorageCell_1024k", 1048576), BotaniaLoader.enableBotania()),
+	MANASTORAGE_4096k(new ManaStorageCell("ManaStorageCell_4096k", 4194304), BotaniaLoader.enableBotania()),
+	MANASTORAGE_16384k(new ManaStorageCell("ManaStorageCell_16384k", 16777216), BotaniaLoader.enableBotania()),
 	// & ------------------------------------CELLS------------------------------------ &
 
-	MANAANNIHILATIONCORE(new ManaAnnihilationCore("mana_annihilation_core"), AIConfig.enableManaFeatures),
-	MANAFORMATIONCORE(new ManaFormationCore("mana_formation_core"), AIConfig.enableManaFeatures),
+	MANAANNIHILATIONCORE(new ManaAnnihilationCore("mana_annihilation_core"), BotaniaLoader.enableBotania()),
+	MANAFORMATIONCORE(new ManaFormationCore("mana_formation_core"), BotaniaLoader.enableBotania()),
 
 	// & ------------------------------------COMPONENTS------------------------------------ &
 	ENERGYSTORAGECOMPONENT_1k(new EnergyStorageComponent("EnergyStorageComponent_1k"), AIConfig.enableEnergyFeatures),
@@ -122,29 +120,14 @@ public enum ItemEnum {
 	}
 
 	public static void register() {
-
 		for (ItemEnum itemEnum : values()) {
-			// Register only that items, which not **require botania or ember or AS as dependency**
-			if (!IntegrationsHelper.instance.isObjectIntegrated(itemEnum.item) && itemEnum.enabled) {
-				ForgeRegistries.ITEMS.register(itemEnum.item);
-			}
-		}
-	}
-
-	@Optional.Method(modid = "botania")
-	public static void registerBotaniaItems() {
-
-		for (ItemEnum itemEnum : values()) {
-			if (itemEnum.item instanceof MaterialEncorium) {
-				return;
-			}
-			// Register only that items, which **require botania as dependency**
-			if (itemEnum.item instanceof IBotaniaIntegrated && itemEnum.enabled) {
+			// Register only enabled items
+			if (itemEnum.enabled) {
 				ForgeRegistries.ITEMS.register(itemEnum.item);
 			}
 		}
 
-		if (AIConfig.enableManaFeatures) {
+		if (BotaniaLoader.enableBotania()) {
 			for (int i = 0; i < 10; i++) {
 				MaterialEncorium mat = new MaterialEncorium("encorium" + i, (i + 1) * 10 + "%");
 
@@ -160,22 +143,8 @@ public enum ItemEnum {
 
 	@SideOnly(Side.CLIENT)
 	public static void registerModels() {
-
 		for (ItemEnum item : values()) {
-			if (!(item.item instanceof IBotaniaIntegrated) && item.enabled) {
-				if (item.item instanceof AIItemRegistrable) {
-					AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
-					registrableItem.registerModel();
-				}
-			}
-		}
-	}
-
-	@Optional.Method(modid = "botania")
-	@SideOnly(Side.CLIENT)
-	public static void registerManaItemModels() {
-		for (ItemEnum item : values()) {
-			if (item.item instanceof IBotaniaIntegrated && item.enabled) {
+			if (item.enabled) {
 				if (item.item instanceof AIItemRegistrable) {
 					AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
 					registrableItem.registerModel();
@@ -183,7 +152,7 @@ public enum ItemEnum {
 			}
 		}
 
-		if (AIConfig.enableManaFeatures) {
+		if (BotaniaLoader.enableBotania()) {
 			for (MaterialEncorium mat : encoriumVariants) {
 				Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(mat, 0, new ModelResourceLocation(mat.getRegistryName(), "inventory"));
 			}

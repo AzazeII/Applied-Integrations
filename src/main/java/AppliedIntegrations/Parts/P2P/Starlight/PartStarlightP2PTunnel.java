@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts.P2P.Starlight;
 
 
-import AppliedIntegrations.Integration.AstralSorcery.IAstralIntegrated;
 import AppliedIntegrations.Parts.P2P.AIP2PModels;
 import AppliedIntegrations.Parts.P2P.AIPartP2PTunnel;
 import AppliedIntegrations.Parts.PartModelEnum;
@@ -25,7 +24,7 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunnel> implements IAstralIntegrated, IStarlightTransmission, ILinkableTile {
+public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunnel> implements IStarlightTransmission, ILinkableTile {
 	private abstract class StarlightLinkable implements ILinkableTile, IStarlightTransmission {
 		private List<BlockPos> positions = new LinkedList<>();
 

@@ -39,10 +39,6 @@ public class IntegrationsHelper {
 		return false;
 	}
 
-	public boolean isObjectIntegrated(Object obj) {
-		return obj instanceof IIntegrated;
-	}
-
 	public void registerTunnelTypes() {
 		// Get api
 		final AIApi api = Objects.requireNonNull(AIApi.instance());

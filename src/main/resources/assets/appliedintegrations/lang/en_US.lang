@@ -13,6 +13,7 @@ item.emberP2PPartItem.name=P2P Tunnel - Ember
 item.manaP2PPartItem.name=P2P Tunnel - Mana
 item.starlightP2PPartItem.name=P2P Tunnel - Starlight
 item.xnetP2PPartItem.name=P2P Tunnel - Xnet
+item.willP2PPartItem.name=P2P Tunnel - Will
 
 item.manaInterfacePartItem.name=ME Mana Interface
 

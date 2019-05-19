@@ -1,6 +1,7 @@
 package AppliedIntegrations.Integration.Botania;
 
 
+import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetManaSlot;
 import AppliedIntegrations.Helpers.Energy.Utils;
@@ -14,6 +15,7 @@ import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortManaHand
 import appeng.api.AEApi;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.Loader;
 import org.apache.commons.lang3.tuple.Pair;
 import vazkii.botania.api.BotaniaAPI;
 
@@ -27,7 +29,6 @@ public class BotaniaLoader {
 	public static void preInit() {
 
 		AEApi.instance().storage().registerStorageChannel(IManaStorageChannel.class, new ManaStorageChannel());
-		ItemEnum.registerBotaniaItems();
 
 		BotaniaEntryHelper helper = new BotaniaEntryHelper();
 		helper.createPages();
@@ -37,8 +38,6 @@ public class BotaniaLoader {
 		// Register new mana layer, since !@#!@!#! BOTANIA HAS NO !@#!#@! CAPABILITY FOR MANA !!!!
 		// Joking, botania is great mod `)
 		AEApi.instance().partHelper().registerNewLayer(ManaLayer.class.getName(), ManaLayer.class.getName());
-
-		ItemEnum.registerManaItemModels();
 	}
 
 	public static void postInit() {
@@ -108,5 +107,9 @@ public class BotaniaLoader {
 
 				// Encoder and decoder
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEManaStack::fromNBT));
+	}
+
+	public static boolean enableBotania() {
+		return Loader.isModLoaded("botania") && AIConfig.enableManaFeatures;
 	}
 }

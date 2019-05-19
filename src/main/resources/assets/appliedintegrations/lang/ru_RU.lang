@@ -49,6 +49,7 @@ item.emberP2PPartItem.name=Туннель Точка-Точка Эмбер
 item.manaP2PPartItem.name=Туннель Точка-Точка Мана
 item.starlightP2PPartItem.name=Туннель Точка-Точка Звёздный Свет
 item.xnetP2PPartItem.name=Туннель Точка-Точка XNet
+item.willP2PPartItem.name=Туннель Точка-Точка Воля
 
 item.manaInterfacePartItem.name=МЭ Интерфейс
 

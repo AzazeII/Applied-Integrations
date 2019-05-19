@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts.P2P;
 
 
-import AppliedIntegrations.Integration.Embers.IEmberIntegrated;
 import AppliedIntegrations.Parts.PartModelEnum;
 import appeng.api.config.PowerUnits;
 import appeng.api.parts.IPartModel;
@@ -18,7 +17,7 @@ import javax.annotation.Nonnull;
 /**
  * @Author Azazell
  */
-public class PartEmberP2PTunnel extends AIPartP2PTunnel<PartEmberP2PTunnel> implements IEmberIntegrated {
+public class PartEmberP2PTunnel extends AIPartP2PTunnel<PartEmberP2PTunnel> {
 	private static class NullEmberHandler implements IEmberCapability {
 		@Override
 		public double getEmber() {

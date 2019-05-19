@@ -139,7 +139,7 @@ dependencies {
     compile "vazkii.botania:Botania:r1.10-359.39"
     compile "teamroots.embers:EmbersRekindled:1.13"
 
-    compile "info.amerifrance.guideapi:Guide-API:1.12-2.1.8-63"
+    compile "info.amerifrance.guideapi:Guide-API:1`.12-2.1.8-63"
     compile "com.wayoftime.bloodmagic:BloodMagic:1.12.2-2.4.0-102"
 
     compile files('libs/')
