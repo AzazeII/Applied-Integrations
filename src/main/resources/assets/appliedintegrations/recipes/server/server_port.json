@@ -1,9 +1,9 @@
 {
   "type": "forge:ore_shaped",
   "pattern": [
-    "CIC",
-    "APF",
-    "CIC"
+    "ITI",
+    "DPD",
+    "ISI"
   ],
   "key": {
     "C": {
@@ -18,13 +18,15 @@
       "type": "forge:ore_dict",
       "ore": "ingotIron"
     },
-    "A": {
-      "item": "appliedenergistics2:part",
-      "data": 440
+    "D": {
+      "item": "appliedenergistics2:material",
+      "data": 8
     },
-    "F": {
-      "item": "appliedenergistics2:part",
-      "data": 220
+    "S": {
+      "item": "minecraft:sticky_piston"
+    },
+    "T": {
+      "item": "minecraft:piston"
     }
   },
   "result": {
