@@ -50,6 +50,8 @@ public class AIConfig {
 
 	public static boolean enableWillFeatures;
 
+	public static boolean enableInteractionPart;
+
 	private static Configuration config = null;
 
 	// Called only on server
@@ -86,6 +88,9 @@ public class AIConfig {
 
 		// Mana parts/tile/items
 		enableManaFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableManaFeatures", false, "Default: false; If set to true, then all mana features will be enabled.", featuresOrder);
+
+		// Interaction plane
+		enableInteractionPart = (Boolean) addProperty(CATEGORY_FEATURES, "Enable Interaction Part", true, "Default: true; If enable, then interaction plane will be available in game", featuresOrder);
 
 		// Ember capability for energy parts and p2p tunnel
 		enableEmberFeatures = (Boolean) addProperty(CATEGORY_FEATURES, "EnableEmberFeatures", true, "Default: true; If set to true, then ember p2p tunnel will be available.", featuresOrder);

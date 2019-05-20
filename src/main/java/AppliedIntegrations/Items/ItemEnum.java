@@ -9,6 +9,7 @@ import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
 import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;
+import AppliedIntegrations.Items.Part.ItemPartInteractionPlane;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
@@ -41,8 +42,9 @@ public enum ItemEnum {
 	ITEMPARTTERMINAL(new ItemPartEnergyTerminal("energyTerminalPartItem"), AIConfig.enableEnergyFeatures),
 	ITEMPARTANNIHILATION(new ItemPartEnergyAnnihilation("energyAnnihilationPartItem"), AIConfig.enableEnergyFeatures),
 	ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem"), AIConfig.enableEnergyFeatures),
+	ITEMPARTINTERACTIONPLANE(new ItemPartInteractionPlane("interaction_plane"), AIConfig.enableInteractionPart),
 
-	// Currently disabled
+	// Currently disabled,
 	// ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight()),
 
 	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), EmberLoader.enableEmber()),

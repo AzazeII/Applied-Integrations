@@ -1,7 +1,6 @@
-package AppliedIntegrations.Items.Part;
+package AppliedIntegrations.Parts;
 
-import AppliedIntegrations.Parts.AIPart;
-import AppliedIntegrations.Parts.PartEnum;
+
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.util.AECableType;
@@ -11,8 +10,8 @@ import net.minecraft.entity.Entity;
  * @Author Azazell
  */
 public class PartInteractionPlane extends AIPart {
-	public PartInteractionPlane(PartEnum associatedPart) {
-		super(associatedPart);
+	public PartInteractionPlane() {
+		super(PartEnum.InteractionPlane);
 	}
 
 	@Override

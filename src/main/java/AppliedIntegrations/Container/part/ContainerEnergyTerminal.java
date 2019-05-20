@@ -111,7 +111,6 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 
 	@Override
 	public boolean canInteractWith(EntityPlayer player) {
-
 		return true;
 	}
 }
