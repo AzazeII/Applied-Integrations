@@ -9,7 +9,6 @@ import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
 import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
@@ -35,15 +34,13 @@ import static AppliedIntegrations.tile.MultiController.TileServerSecurity.*;
  */
 public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
-	public final TileServerCore core;
-
 	private final SlotRestrictive cardSlot;
 
 	private final TileServerSecurity terminal;
 
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> permissionChannelWidgetMap = new LinkedHashMap<>();
 
-	public ContainerServerTerminal(TileServerCore instance, TileServerSecurity terminal, EntityPlayer player) {
+	public ContainerServerTerminal(TileServerSecurity terminal, EntityPlayer player) {
 
 		super(player);
 
@@ -62,9 +59,6 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 
 		// Add widgets
 		this.initWidgets(terminal);
-
-		// Write instance
-		this.core = instance;
 
 		// Write terminal
 		this.terminal = terminal;

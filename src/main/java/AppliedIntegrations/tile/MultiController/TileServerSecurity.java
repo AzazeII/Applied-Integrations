@@ -8,11 +8,9 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
+import AppliedIntegrations.tile.AITile;
 import appeng.api.util.AEColor;
 import appeng.api.util.IOrientable;
-import appeng.me.GridAccessException;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
@@ -29,7 +27,7 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class TileServerSecurity extends AIServerMultiBlockTile implements IOrientable {
+public class TileServerSecurity extends AITile implements IOrientable {
 	// Used by both container and gui
 	public static final int SLOT_Y = 18; // (1)
 
@@ -57,16 +55,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 
 	public TileServerSecurity() {
 		super();
-
-		// Update proxy setting
-		getProxy().setValidSides(EnumSet.allOf(EnumFacing.class));
-		getProxy().getConnectableSides().remove(forward);
-	}
-
-	@Override
-	protected EnumSet<EnumFacing> getValidSides() {
-		// Constant sides
-		return getProxy().getConnectableSides();
 	}
 
 	public void updateCardData(NBTTagCompound tag) {
@@ -98,7 +86,10 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 		this.getProxy().setIdlePowerUsage(1); // (2) Power usage
 		this.getProxy().onReady(); // (3) Make node ready
 		this.getProxy().setFlags(); // (4) Flags
-		this.getProxy().setValidSides(getValidSides()); // (5) Sides
+
+		// Update proxy setting
+		this.getProxy().setValidSides(EnumSet.allOf(EnumFacing.class));
+		this.getProxy().getConnectableSides().remove(forward);
 
 		// Notify node
 		this.getProxy().getNode().updateState();
@@ -110,11 +101,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 			destroyProxyNode();
 		}
 
-		if (hasMaster()) {
-			// Remove this as slave from master
-			((TileServerCore) getMaster()).slaves.remove(this);
-		}
-
 		// Drop items from editor inventory
 		Platform.spawnDrops(world, pos, Arrays.asList(editorInv.slots));
 	}
@@ -122,49 +108,6 @@ public class TileServerSecurity extends AIServerMultiBlockTile implements IOrien
 	@Override
 	public void update() {
 		super.update();
-
-		// Check if tile has master
-		if (!hasMaster()) {
-			// Check not null
-			if (getProxy().getNode() == null) {
-				return;
-			}
-
-			try {
-				// Get our grid
-				IGrid grid = getProxy().getGrid();
-
-
-				// Iterate for each node of this grid
-				for (IGridNode node : grid.getNodes()) {
-					// Check if node is server part
-					if (node.getMachine() instanceof AIServerMultiBlockTile) {
-						// Cast this node to server tile
-						AIServerMultiBlockTile tile = (AIServerMultiBlockTile) node.getMachine();
-
-						// Check if tile has master
-						if (!tile.hasMaster())
-						// Skip this tile
-						{
-							continue;
-						}
-
-						// Get tile master
-						TileServerCore master = (TileServerCore) tile.getMaster();
-
-						// Add this to slave list
-						master.addSlave(this);
-
-						// Set master
-						setMaster(master);
-
-						return;
-					}
-				}
-			} catch (GridAccessException e) {
-				e.printStackTrace();
-			}
-		}
 
 		// Check if update requested
 		if (updateRequested) {

@@ -19,7 +19,6 @@ import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
 import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -60,8 +59,6 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 	private static final int GUI_WIDTH = 192;
 
 	private static final int GUI_HEIGH = 256;
-
-	public TileServerCore mInstance;
 
 	public EntityPlayer player;
 

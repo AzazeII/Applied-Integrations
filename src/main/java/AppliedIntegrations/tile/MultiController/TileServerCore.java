@@ -168,7 +168,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	private CardInventoryManager cardManager = new CardInventoryManager();
 
 	// list of blocks in multiblock
-	private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(TileServerHousing.class, TileServerSecurity.class, TileServerPort.class, TileServerRib.class);
+	private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(TileServerHousing.class, TileServerPort.class, TileServerRib.class);
 
 	// List of all "mediums" for providing cell inventory from main network into adjacent networks
 	private LinkedHashMap<AEPartLocation, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>> portHandlers = new LinkedHashMap<>();

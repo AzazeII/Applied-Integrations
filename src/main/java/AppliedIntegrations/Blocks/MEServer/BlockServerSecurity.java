@@ -60,19 +60,13 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
 				tile.rotateForward(facing);
 			} else {
 				// Call only on server
-				if (world.isRemote)
-				// Skip client
-				{
+				if (world.isRemote) {
+					// Skip client
 					return false;
 				}
 
 				// Check if tile is null
 				if (world.getTileEntity(pos) != null) {
-					// Check if tile has no master
-					if (tile == null || !tile.hasMaster()) {
-						return false;
-					}
-
 					// Open gui
 					AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerTerminal, p, INTERNAL, pos);
 

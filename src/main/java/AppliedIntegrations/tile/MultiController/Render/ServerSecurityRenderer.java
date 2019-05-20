@@ -113,8 +113,15 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 	}
 
 	private void bindTopTexture(TileServerSecurity te) {
+		// Check not null
+		if (te.getProxy() == null){
+			// Bind off texture
+			Minecraft.getMinecraft().renderEngine.bindTexture(topOff);
+			return;
+		}
+
 		// Check if server terminal has no master
-		if (!te.hasMaster()) {
+		if (!te.getProxy().isActive()) {
 			// Bind off texture
 			Minecraft.getMinecraft().renderEngine.bindTexture(topOff);
 			return;
