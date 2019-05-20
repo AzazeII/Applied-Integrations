@@ -21,14 +21,9 @@ public class ContainerServerCore extends ContainerWithPlayerInventory {
 
 	private static final int CARD_SLOT_COLUMNS = 6;
 
-	private TileServerCore master;
-
 	public ContainerServerCore(EntityPlayer player, TileServerCore master) {
 
 		super(player);
-
-		// Update master
-		this.master = master;
 
 		// Bind card slots
 		this.addCardSlots(master.cardInv);

@@ -15,6 +15,8 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.storage.IMEMonitor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.ContainerChest;
+import net.minecraft.inventory.Slot;
 import net.minecraft.inventory.SlotFurnaceOutput;
 import net.minecraft.item.ItemStack;
 
@@ -36,7 +38,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 	// Y of input
 	private static final int INPUT_POSITION_Y = OUTPUT_POSITION_Y;
 
-	private static int OUTPUT_INV_INDEX = 1, INPUT_INV_INDEX = 0;
+	private static int OUTPUT_INV_INDEX = 38, INPUT_INV_INDEX = 37;
 
 	public EntityPlayer player;
 
@@ -79,9 +81,46 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 			terminal.listeners.add(this);
 		}
 
-		this.addSlotToContainer(new SlotRestrictive(privateInventory, INPUT_INV_INDEX, INPUT_POSITION_X, INPUT_POSITION_Y));
+		this.addSlotToContainer(new SlotRestrictive(privateInventory, 0, INPUT_POSITION_X, INPUT_POSITION_Y));
 
-		this.addSlotToContainer(new SlotFurnaceOutput(this.player, privateInventory, OUTPUT_INV_INDEX, OUTPUT_POSITION_X, OUTPUT_POSITION_Y));
+		this.addSlotToContainer(new SlotFurnaceOutput(this.player, privateInventory, 1, OUTPUT_POSITION_X, OUTPUT_POSITION_Y));
+
+		ContainerChest chest;
+	}
+
+	@Override
+	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
+		// Create empty stack
+		ItemStack itemstack = ItemStack.EMPTY;
+
+		// Get slot at index
+		Slot slot = this.inventorySlots.get(index);
+
+		// Check not null and has stack
+		if (slot != null && slot.getHasStack()) {
+			// Get stack in slot
+			ItemStack itemstack1 = slot.getStack();
+
+			// Copy stack
+			itemstack = itemstack1.copy();
+
+			// Check if index
+			if (index < INPUT_INV_INDEX - 1) {
+				if (!this.mergeItemStack(itemstack1, INPUT_INV_INDEX - 1, this.inventorySlots.size(), true)) {
+					return ItemStack.EMPTY;
+				}
+			} else if (!this.mergeItemStack(itemstack1, 0, INPUT_INV_INDEX - 1, false)) {
+				return ItemStack.EMPTY;
+			}
+
+			if (itemstack1.isEmpty()) {
+				slot.putStack(ItemStack.EMPTY);
+			} else {
+				slot.onSlotChanged();
+			}
+		}
+
+		return itemstack;
 	}
 
 	@Override
