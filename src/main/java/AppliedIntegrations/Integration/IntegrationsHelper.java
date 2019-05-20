@@ -5,7 +5,7 @@ import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
-import hellfirepvp.astralsorcery.common.registry.RegistryBlocks;
+import WayofTime.bloodmagic.core.RegistrarBloodMagicItems;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.Loader;
 import teamroots.embers.RegistryManager;
@@ -53,9 +53,14 @@ public class IntegrationsHelper {
 			api.addTunnelAsStack(RegistryManager.shard_ember, ItemEnum.ITEMP2PEMBER.getStack());
 		}
 
+		// Check if bloodmagic loaded and will features enabled
+		if (Loader.isModLoaded("bloodmagic") && AIConfig.enableWillFeatures) {
+			api.addTunnelAsStack(RegistrarBloodMagicItems.SOUL_GEM, ItemEnum.ITEMP2PWILL.getStack());
+		}
+
 		// Check if astral sorcery loaded and starlight features enabled
 		if (Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures) {
-			api.addTunnelAsStack(Item.getItemFromBlock(RegistryBlocks.customNameItemBlocksToRegister.get(3)), ItemEnum.ITEMP2PSTARLIGHT.getStack());
+			//api.addTunnelAsStack(Item.getItemFromBlock(RegistryBlocks.customNameItemBlocksToRegister.get(3)), ItemEnum.ITEMP2PSTARLIGHT.getStack());
 		}
 
 		// Check if xnet loaded and xnet features enabled

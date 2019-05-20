@@ -1,8 +1,6 @@
 package AppliedIntegrations.Parts.P2P;
 
 
-import AppliedIntegrations.Parts.PartModelEnum;
-import appeng.api.parts.IPartModel;
 import hellfirepvp.astralsorcery.common.auxiliary.link.ILinkableTile;
 import hellfirepvp.astralsorcery.common.item.crystal.CrystalProperties;
 import hellfirepvp.astralsorcery.common.starlight.IStarlightTransmission;
@@ -22,7 +20,7 @@ import java.util.List;
  * @Author Azazell
  */
 public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunnel> implements IStarlightTransmission, ILinkableTile{
-	private static final AIP2PModels MODELS = new AIP2PModels(PartModelEnum.P2P_STARLIGHT.getFirstModel());
+	//private static final AIP2PModels MODELS = new AIP2PModels(PartModelEnum.P2P_STARLIGHT.getFirstModel());
 
 	private final TileTransmissionBase handler = new TileTransmissionBase() {
 		@Nonnull
@@ -47,10 +45,10 @@ public class PartStarlightP2PTunnel extends AIPartP2PTunnel<PartStarlightP2PTunn
 		super(is);
 	}
 
-	@Override
+	/*@Override
 	public IPartModel getStaticModels() {
 		return MODELS.getModel( this.isPowered(), this.isActive() );
-	}
+	}*/
 
 	@Override
 	public World getLinkWorld() {
