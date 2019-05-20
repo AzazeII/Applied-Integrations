@@ -3,7 +3,6 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Integration.AstralSorcery.AstralLoader;
 import AppliedIntegrations.Integration.BloodMagic.BloodMagicLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
@@ -14,7 +13,6 @@ import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaStorageBus;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PEmber;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PMana;
-import AppliedIntegrations.Items.Part.P2P.ItemPartP2PStarlight;
 import AppliedIntegrations.Items.Part.P2P.ItemPartP2PWill;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
@@ -45,7 +43,7 @@ public enum ItemEnum {
 	ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem"), AIConfig.enableEnergyFeatures),
 
 	// Currently disabled
-	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight() && false),
+	// ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight()),
 
 	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), EmberLoader.enableEmber()),
 	ITEMP2PWILL(new ItemPartP2PWill("willP2PPartItem"), BloodMagicLoader.enableWill()),

@@ -41,7 +41,7 @@ public enum PartModelEnum implements IPartModel {
 	MANA_STORAGE_BUS_HAS_CHANNEL(MANA_STORAGE_BUS_BASE, "mana_storage_has_channel"),
 
 	P2P_MANA("p2p/tunnel_mana"),
-	P2P_STARLIGHT("p2p/tunnel_starlight"),
+	//P2P_STARLIGHT("p2p/tunnel_starlight"),
 	P2P_EMBER("p2p/tunnel_ember"),
 	P2P_WILL("p2p/tunnel_will"),
 
