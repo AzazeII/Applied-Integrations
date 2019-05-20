@@ -9,8 +9,8 @@ import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.Server.TileServerCore;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static AppliedIntegrations.tile.Server.TileServerSecurity.*;
+import static AppliedIntegrations.tile.MultiController.TileServerSecurity.*;
 
 /**
  * @Author Azazell

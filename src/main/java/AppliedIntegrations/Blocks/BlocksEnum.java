@@ -28,11 +28,11 @@ import java.util.LinkedHashMap;
 public enum BlocksEnum {
 	BEI(new BlockEnergyInterface("EInterface", "ME Energy Interface"), TileEnum.EnergyInterface, AIConfig.enableEnergyFeatures),
 
-	BSCore(new BlockServerCore("ServerCore", "ME Server Core"), TileEnum.TSCore, AIConfig.enableMEServer),
-	BSRib(new BlockServerRib("ServerFrame", "ME Server Rib"), TileEnum.TSRib, AIConfig.enableMEServer),
-	BSPort(new BlockServerPort("ServerPort", "ME Server Port"), TileEnum.TSPort, AIConfig.enableMEServer),
-	BSHousing(new BlockServerHousing("ServerHousing", "ME Server Housing"), TileEnum.TSHousing, AIConfig.enableMEServer),
-	BSSecurity(new BlockServerSecurity("ServerSecurity", "ME Server Security Terminal"), TileEnum.TSSecurity, AIConfig.enableMEServer),
+	BMCCore(new BlockServerCore("ServerCore", "ME Server Core"), TileEnum.TMCCore, AIConfig.enableMEServer),
+	BMCRib(new BlockServerRib("ServerFrame", "ME Server Rib"), TileEnum.TMCRib, AIConfig.enableMEServer),
+	BMCPort(new BlockServerPort("ServerPort", "ME Server Port"), TileEnum.TMCPort, AIConfig.enableMEServer),
+	BMCHousing(new BlockServerHousing("ServerHousing", "ME Server Housing"), TileEnum.TMCHousing, AIConfig.enableMEServer),
+	BMCTerminal(new BlockServerSecurity("ServerSecurity", "ME Server Security Terminal"), TileEnum.TMCTerminal, AIConfig.enableMEServer),
 
 	BLBRibs(new BlockLogicBusRibs("BlockLogicBusRibs", "ME Logic Bus Rib"), TileEnum.TLBRib, AIConfig.enableLogicBus),
 	BLBCore(new BlockLogicBusCore("BlockLogicBusCore", "ME Logic Bus Core"), TileEnum.TLBCore, AIConfig.enableLogicBus),

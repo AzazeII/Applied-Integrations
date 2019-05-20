@@ -2,7 +2,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.tile.Server.TileServerPort;
+import AppliedIntegrations.tile.MultiController.TileServerPort;
 import appeng.me.GridAccessException;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;

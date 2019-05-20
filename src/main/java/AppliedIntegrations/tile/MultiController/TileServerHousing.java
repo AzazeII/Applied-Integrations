@@ -1,4 +1,4 @@
-package AppliedIntegrations.tile.Server;
+package AppliedIntegrations.tile.MultiController;
 
 
 import net.minecraft.tileentity.TileEntity;

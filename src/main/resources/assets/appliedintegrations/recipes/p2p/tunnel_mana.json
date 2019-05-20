@@ -1,0 +1,26 @@
+{
+	"result": {
+		"item": "appliedintegrations:manap2ppartitem"
+	},
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		[
+			{
+				"item": "botania:manaresource",
+				"data": 0
+			},
+			{
+				"item": "botania:manaresource",
+				"data": 1
+			},
+			{
+				"item": "botania:manaresource",
+				"data": 2
+			}
+		],
+		{
+			"item": "appliedenergistics2:part",
+			"data": 460
+		}
+	]
+}

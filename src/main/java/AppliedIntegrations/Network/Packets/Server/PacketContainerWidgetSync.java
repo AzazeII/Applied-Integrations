@@ -3,7 +3,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.ISyncHost;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;

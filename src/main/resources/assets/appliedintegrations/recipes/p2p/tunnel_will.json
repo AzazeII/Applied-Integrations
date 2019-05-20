@@ -1,0 +1,38 @@
+{
+	"result": {
+		"item": "appliedintegrations:willp2ppartitem"
+	},
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		[
+			{
+				"item": "bloodmagic:item_demon_crystal",
+				"data": 0
+			},
+			{
+				"item": "bloodmagic:item_demon_crystal",
+				"data": 1
+			},
+			{
+				"item": "bloodmagic:item_demon_crystal",
+				"data": 2
+			},
+			{
+				"item": "bloodmagic:item_demon_crystal",
+				"data": 3
+			},
+			{
+				"item": "bloodmagic:item_demon_crystal",
+				"data": 4
+			},
+			{
+				"item": "bloodmagic:soul_gem",
+				"data": 0
+			}
+		],
+		{
+			"item": "appliedenergistics2:part",
+			"data": 460
+		}
+	]
+}

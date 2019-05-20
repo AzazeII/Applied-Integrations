@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "appliedintegrations:emberp2ppartitem"
+  },
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    [
+      {
+        "item": "embers:shard_ember"
+      },
+      {
+        "item": "embers:crystal_ember"
+      },
+      {
+        "item": "embers:dust_ember"
+      }
+    ], {
+      "item": "appliedenergistics2:part",
+      "data": 460
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+	"result": {
+		"item": "appliedintegrations:starlightp2ppartitem"
+	},
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "astralsorcery:itemrockcrystalsimple",
+			"data": 0
+		},
+		{
+			"item": "appliedenergistics2:part",
+			"data": 460
+		}
+	]
+}

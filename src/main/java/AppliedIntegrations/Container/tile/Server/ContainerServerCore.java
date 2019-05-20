@@ -5,7 +5,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileServerCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;

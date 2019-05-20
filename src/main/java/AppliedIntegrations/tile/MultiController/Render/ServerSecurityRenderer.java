@@ -1,9 +1,9 @@
-package AppliedIntegrations.tile.Server.Render;
+package AppliedIntegrations.tile.MultiController.Render;
 
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Client.AITileFullRenderer;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

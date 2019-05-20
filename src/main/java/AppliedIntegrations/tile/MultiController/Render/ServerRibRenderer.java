@@ -1,9 +1,9 @@
-package AppliedIntegrations.tile.Server.Render;
+package AppliedIntegrations.tile.MultiController.Render;
 
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Client.AITileFullRenderer;
-import AppliedIntegrations.tile.Server.TileServerRib;
+import AppliedIntegrations.tile.MultiController.TileServerRib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;

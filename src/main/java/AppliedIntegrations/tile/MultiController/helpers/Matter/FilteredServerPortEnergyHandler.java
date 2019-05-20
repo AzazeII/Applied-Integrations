@@ -1,9 +1,9 @@
-package AppliedIntegrations.tile.Server.helpers.Matter;
+package AppliedIntegrations.tile.MultiController.helpers.Matter;
 
 
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
-import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileServerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;

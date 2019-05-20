@@ -1,7 +1,7 @@
-package AppliedIntegrations.tile.Server.Networking;
+package AppliedIntegrations.tile.MultiController.Networking;
 
 
-import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileServerCore;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;

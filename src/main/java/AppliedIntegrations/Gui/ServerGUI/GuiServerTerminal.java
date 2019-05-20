@@ -19,8 +19,8 @@ import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.Server.TileServerCore;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
@@ -46,7 +46,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static AppliedIntegrations.tile.Server.TileServerSecurity.*;
+import static AppliedIntegrations.tile.MultiController.TileServerSecurity.*;
 
 
 // TODO Rewrite this GUI, now it will be similar to normal security terminal.
@@ -464,7 +464,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		// Draw gui strings
-		this.fontRenderer.drawString("Server Security Terminal", 8, 6, 4210752); // (Name)
+		this.fontRenderer.drawString("Multi-Controller Terminal", 8, 6, 4210752); // (Name)
 		this.fontRenderer.drawString("Network Card Editor", 8, this.ySize - 96 + 3, 4210752); // (Editor)
 		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 8, this.ySize - 96 + 36, 4210752); // (Player inv.)
 

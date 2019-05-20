@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Handlers.Server;
 
 
 import AppliedIntegrations.Network.Packets.Server.PacketContainerWidgetSync;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 

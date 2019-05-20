@@ -2,9 +2,8 @@ package AppliedIntegrations.Blocks.MEServer;
 
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.tile.Server.TileServerCore;
-import AppliedIntegrations.tile.Server.TileServerRib;
-import appeng.block.storage.BlockSkyChest;
+import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileServerRib;
 import appeng.util.Platform;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.tile.Server.TileServerRib;
+import AppliedIntegrations.tile.MultiController.TileServerRib;
 import io.netty.buffer.ByteBuf;
 
 /**

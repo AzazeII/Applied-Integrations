@@ -1,7 +1,7 @@
-package AppliedIntegrations.tile.Server.helpers.Crafting;
+package AppliedIntegrations.tile.MultiController.helpers.Crafting;
 
 
-import AppliedIntegrations.tile.Server.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileServerCore;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.me.cluster.IAECluster;

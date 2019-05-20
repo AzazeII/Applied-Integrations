@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Handlers.Server;
 
 
 import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
-import AppliedIntegrations.tile.Server.TileServerRib;
+import AppliedIntegrations.tile.MultiController.TileServerRib;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;

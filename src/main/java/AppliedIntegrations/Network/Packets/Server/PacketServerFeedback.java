@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;

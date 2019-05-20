@@ -44,7 +44,9 @@ public enum ItemEnum {
 	ITEMPARTANNIHILATION(new ItemPartEnergyAnnihilation("energyAnnihilationPartItem"), AIConfig.enableEnergyFeatures),
 	ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem"), AIConfig.enableEnergyFeatures),
 
-	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight()),
+	// Currently disabled
+	ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight() && false),
+
 	ITEMP2PEMBER(new ItemPartP2PEmber("emberP2PPartItem"), EmberLoader.enableEmber()),
 	ITEMP2PWILL(new ItemPartP2PWill("willP2PPartItem"), BloodMagicLoader.enableWill()),
 

@@ -6,7 +6,7 @@ import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
-import AppliedIntegrations.tile.Server.helpers.Matter.FilteredServerPortHandler;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import net.minecraft.item.Item;

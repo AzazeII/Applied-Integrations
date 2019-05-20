@@ -35,17 +35,16 @@ item.annihilation_core.name=ME Energy Annihilation Core
 item.EnergyStorageCasing.name=ME Energy Cell Casing
 item.wireless_energy_terminal.name=ME Wireless Energy Terminal
 
-tile.ME Server Security Terminal.name=ME Server Security Terminal
 tile.ME Logic Bus Rib.name=ME Logic Bus Rib
 tile.ME Logic Bus Core.name=ME Logic Bus Core
 tile.ME Logic Bus Housing.name=ME Logic Bus Housing
 tile.ME Logic Bus Port.name=ME Logic Bus Port
 
-tile.ME Server Core.name=ME Server Core
-tile.ME Server Housing.name=ME Server Housing
-tile.ME Server Rib.name=ME Server Rib
-tile.ME Server Port.name=ME Server Port
-tile.ME Server Drive.name=ME Server Drive
+tile.ME Server Security Terminal.name=ME Multi-Controller Terminal
+tile.ME Server Core.name=ME Multi-Controller Core
+tile.ME Server Housing.name=ME Multi-Controller Housing
+tile.ME Server Rib.name=ME Multi-Controller Rib
+tile.ME Server Port.name=ME Multi-Controller Port
 
 tile.ME Energy Interface.name=ME Energy Interface
 tile.ME Turret.name=ME Defence Tower
@@ -115,7 +114,6 @@ of=Of
 Linked=Linked
 UnLinked=UnLinked
 
-ME Server Network Tracer=ME Server Network Tracer
 ME Energy Terminal=ME Energy Terminal
 ME Energy Import Bus=ME Energy Import Bus
 ME Energy Export Bus=ME Energy Export Bus

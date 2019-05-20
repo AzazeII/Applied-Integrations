@@ -5,12 +5,11 @@ tile.ME Logic Bus Core.name=МЭ Ядро Шины Логики
 tile.ME Logic Bus Housing.name=МЭ Обшивка Шины Логики
 tile.ME Logic Bus Port.name=МЭ Порт Шины Логики
 
-tile.ME Server Core.name=МЭ Ядро Сервера
-tile.ME Server Housing.name=МЭ Обшивка Сервера
-tile.ME Server Rib.name=МЭ Ребро Сервера
-tile.ME Server Port.name=МЭ Порт Сервера
-tile.ME Server Security Terminal.name=МЭ Терминал Безопасности Сервера
-tile.ME Server Drive.name=МЭ Накопитель Сервера
+tile.ME Server Security Terminal.name=МЭ Терминал Мульти-Контроллера
+tile.ME Server Core.name=МЭ Ядро Мульти-Контрроллера
+tile.ME Server Housing.name=МЭ
+tile.ME Server Rib.name=МЭ Ребро Мульти-Контроллера
+tile.ME Server Port.name=МЭ Порт Мульи-Контроллера
 
 item.graph_tool.name=МЭ Топологический Инструмент
 item.network_card.name=МЭ Карта Сети

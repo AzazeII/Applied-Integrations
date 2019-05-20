@@ -9,7 +9,7 @@ import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusPort;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusRib;
-import AppliedIntegrations.tile.Server.*;
+import AppliedIntegrations.tile.MultiController.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -21,11 +21,11 @@ public enum TileEnum {
 	TLBRib(TileLogicBusRib.class, AIConfig.enableLogicBus),
 	TLBCore(TileLogicBusCore.class, AIConfig.enableLogicBus),
 
-	TSCore(TileServerCore.class, AIConfig.enableMEServer),
-	TSPort(TileServerPort.class, AIConfig.enableMEServer),
-	TSRib(TileServerRib.class, AIConfig.enableMEServer),
-	TSHousing(TileServerHousing.class, AIConfig.enableMEServer),
-	TSSecurity(TileServerSecurity.class, AIConfig.enableMEServer),
+	TMCCore(TileServerCore.class, AIConfig.enableMEServer),
+	TMCPort(TileServerPort.class, AIConfig.enableMEServer),
+	TMCRib(TileServerRib.class, AIConfig.enableMEServer),
+	TMCHousing(TileServerHousing.class, AIConfig.enableMEServer),
+	TMCTerminal(TileServerSecurity.class, AIConfig.enableMEServer),
 
 	EnergyInterface(TileEnergyInterface.class, AIConfig.enableEnergyFeatures),
 

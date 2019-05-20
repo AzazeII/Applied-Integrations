@@ -3,7 +3,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.tile.Server.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileServerSecurity;
 import appeng.util.Platform;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;

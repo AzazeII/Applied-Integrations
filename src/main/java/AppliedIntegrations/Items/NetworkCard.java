@@ -8,7 +8,7 @@ import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.AIApi.IStackDecoder;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.Server.TileServerPort;
+import AppliedIntegrations.tile.MultiController.TileServerPort;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
