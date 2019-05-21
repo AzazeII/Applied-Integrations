@@ -237,10 +237,6 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		return rib.getMainNetwork();
 	}
 
-	public void addSlave(AIServerMultiBlockTile slave) {
-		slaves.add(slave);
-	}
-
 	public void activate(EntityPlayer p) {
 		// Open GUI
 		AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerStorage, p, AEPartLocation.INTERNAL, pos);
@@ -326,9 +322,8 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 	public void savePortChanges(ICellInventory<?> iCellInventory, AEPartLocation side) {
 		// Check if inventory not null
-		if (iCellInventory != null)
-		// Persist inventory
-		{
+		if (iCellInventory != null) {
+			// Persist inventory
 			iCellInventory.persist();
 		}
 

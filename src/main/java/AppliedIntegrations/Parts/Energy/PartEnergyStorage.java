@@ -220,7 +220,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
-
 		bch.addBox(3, 3, 15, 13, 13, 16);
 		bch.addBox(2, 2, 14, 14, 14, 15);
 		bch.addBox(5, 5, 12, 11, 11, 14);

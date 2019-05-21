@@ -12,7 +12,6 @@ import AppliedIntegrations.api.IEnergyInterfaceDuality;
 import AppliedIntegrations.grid.Mana.AEManaStack;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
@@ -52,7 +51,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
 	public PartManaInterface() {
 
-		super(PartEnum.ManaInterface, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
+		super(PartEnum.ManaInterface);
 	}
 
 	@Override

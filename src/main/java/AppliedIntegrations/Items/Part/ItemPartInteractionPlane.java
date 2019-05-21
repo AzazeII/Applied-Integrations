@@ -2,7 +2,7 @@ package AppliedIntegrations.Items.Part;
 
 
 import AppliedIntegrations.Items.ItemPartAIBase;
-import AppliedIntegrations.Parts.PartInteractionPlane;
+import AppliedIntegrations.Parts.Interaction.PartInteractionPlane;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;

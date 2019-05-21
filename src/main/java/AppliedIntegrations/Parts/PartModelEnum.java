@@ -65,7 +65,12 @@ public enum PartModelEnum implements IPartModel {
 	FORMATION_BASE("formation_base"),
 	FORMATION_OFF(FORMATION_BASE, "formation_off"),
 	FORMATION_HAS_CHANNEL(FORMATION_BASE, "formation_has_channel"),
-	FORMATION_ON(FORMATION_BASE, "formation_on");
+	FORMATION_ON(FORMATION_BASE, "formation_on"),
+
+	INTERACTION_BASE("interaction/interaction_base"),
+	INTERACTION_OFF(INTERACTION_BASE, "interaction/interaction_off"),
+	INTERACTION_HAS_CHANNEL(INTERACTION_BASE, "interaction/interaction_has_channel"),
+	INTERACTION_ON(INTERACTION_BASE, "interaction/interaction_on");
 
 	List<ResourceLocation> locations;
 

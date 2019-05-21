@@ -21,7 +21,6 @@ import AppliedIntegrations.api.*;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.config.SecurityPermissions;
 import appeng.api.exceptions.NullNodeConnectionException;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.networking.IGrid;
@@ -125,10 +124,9 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 		}
 	};
 
-	// Make host available as "extendant(class to extend)S"
+	// Make host available as "extendant(class to extend)"
 	// ** IMPORTANT FOR MANA INTERFACE **
-	public PartEnergyInterface(PartEnum corespondingEnumPart, SecurityPermissions... permissions) {
-
+	public PartEnergyInterface(PartEnum corespondingEnumPart) {
 		super(corespondingEnumPart);
 	}
 
@@ -149,7 +147,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	// hit boxes
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
-
 		bch.addBox(2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D);
 		bch.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 14.0D);
 	}
