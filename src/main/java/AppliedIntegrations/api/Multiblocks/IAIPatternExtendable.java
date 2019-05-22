@@ -1,9 +1,7 @@
 package AppliedIntegrations.api.Multiblocks;
 
 
-import net.minecraft.util.EnumFacing;
-
-import java.util.stream.Stream;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * @Author Azazell
@@ -11,14 +9,9 @@ import java.util.stream.Stream;
  * applied integrations <H>Which can be extended by calling method extend</H>
  */
 public interface IAIPatternExtendable extends IAIPattern {
-	/**
-	 * @param facing edge side
-	 * @return Geometrical edge of pattern from given facing
-	 */
-	Stream<BlockData> getEdgeFromFacing(EnumFacing facing);
 
 	/**
-	 * @return Variant of this multi-block with minimal size
+	 * @return Size of minimal frame of this pattern. For multi-controller it's {@Code new BlockPos(1,1,1);}
 	 */
-	IAIMinimalPattern getMinimalFrame();
+	BlockPos getMinimalFrameSize();
 }

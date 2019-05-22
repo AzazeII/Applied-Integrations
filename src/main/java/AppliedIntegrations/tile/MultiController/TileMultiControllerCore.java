@@ -548,7 +548,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					continue;
 
 				// Extend pattern by length from map
-				MultiBlockUtils.extendPattern(pattern, axis, axisLengthMap.get(axis) - 1);
+				pattern = MultiBlockUtils.getExtendedPattern(pattern, axis, axisLengthMap.get(axis) - 1);
 			}
 
 			try {

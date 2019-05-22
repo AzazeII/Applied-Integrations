@@ -14,13 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public abstract class BlockAIRegistrable extends BlockContainer {
 
-	public BlockAIRegistrable(String registryName) {
-
-		this(registryName, registryName);
-	}
-
 	public BlockAIRegistrable(String registryName, String unlocalizedName) {
-
 		super(Material.IRON, null);
 		this.setUnlocalizedName(unlocalizedName);
 		this.setRegistryName(registryName);
