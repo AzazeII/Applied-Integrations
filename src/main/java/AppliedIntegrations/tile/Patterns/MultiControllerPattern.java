@@ -5,7 +5,6 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.api.Multiblocks.BlockData;
 import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
-import appeng.api.util.AEPartLocation;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +18,18 @@ import java.util.List;
  * @Author Azazell
  */
 public class MultiControllerPattern implements IAIPatternExtendable {
+	private static final BlockPos[] corners = {
+			new BlockPos(1,1,1),
+			new BlockPos(-1,1,1),
+			new BlockPos(1,-1,1),
+			new BlockPos(1,1,-1),
+
+			new BlockPos(-1,-1,1),
+			new BlockPos(-1,1,-1),
+			new BlockPos(1,-1,-1),
+			new BlockPos(-1,-1,-1)
+	};
+
 	/**
 	 * Create line of given block and write it into list
 	 * @param size First line vertex point
@@ -56,32 +67,32 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 		// Create initial data list
 		List<BlockData> list = new ArrayList<>();
 
-		// Iterate for each side
-		for (AEPartLocation side : AEPartLocation.values()) {
-			// Get facing (may be null)
-			EnumFacing negativeA = side.getFacing();
+		// Iterate for each corner
+		for (BlockPos corner : corners) {
+			// Get valued size, which is size multiplied by corner
+			BlockPos valuedSize = new BlockPos(
+					size.getX() * corner.getX(),
+					size.getY() * corner.getY(),
+					size.getZ() * corner.getZ());
 
-			// Invert one ordinal of size and create new size
-			BlockPos invertedA = new BlockPos(
-					negativeA == null || negativeA.getFrontOffsetX() == 0 ? size.getX() : size.getX() * negativeA.getFrontOffsetX(),
-					negativeA == null || negativeA.getFrontOffsetY() == 0 ? size.getY() : size.getY() * negativeA.getFrontOffsetY(),
-					negativeA == null || negativeA.getFrontOffsetZ() == 0 ? size.getZ() : size.getZ() * negativeA.getFrontOffsetZ());
 
 			// Iterate for each axis
 			for (EnumFacing.Axis axisB : EnumFacing.Axis.values()) {
-				// Get negativeB side
-				EnumFacing negativeB = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axisB);
+				// Get negative side
+				EnumFacing negative = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axisB);
 
-				// Invert one ordinal of size and create new size
-				BlockPos invertedB = new BlockPos(
-						negativeB.getFrontOffsetX() == 0 ? size.getX() : size.getX() * negativeB.getFrontOffsetX(),
-						negativeB.getFrontOffsetY() == 0 ? size.getY() : size.getY() * negativeB.getFrontOffsetY(),
-						negativeB.getFrontOffsetZ() == 0 ? size.getZ() : size.getZ() * negativeB.getFrontOffsetZ());
+				// Invert one ordinal of size and create new halfInverted size
+				BlockPos halfInverted = new BlockPos(negative.getFrontOffsetX() == 0 ? valuedSize.getX() : valuedSize.getX() * negative.getFrontOffsetX(),
+						negative.getFrontOffsetY() == 0 ? valuedSize.getY() : valuedSize.getY() * negative.getFrontOffsetY(),
+						negative.getFrontOffsetZ() == 0 ? valuedSize.getZ() : valuedSize.getZ() * negative.getFrontOffsetZ());
 
-				// Draw rib line from invertedA to invertedB vertices
-				list.addAll(getDataMatrixVector(invertedA, invertedB, BlocksEnum.BMCRib.b));
+				// Draw rib line from invertedA to halfInverted vertices
+				list.addAll(getDataMatrixVector(valuedSize, halfInverted, BlocksEnum.BMCRib.b));
 			}
 		}
+
+		// Add size vector itself
+		list.add(new BlockData(size, BlocksEnum.BMCRib.b));
 
 		// Create new anonymous instance of pattern extendable
 		return new IAIPatternExtendable() {

@@ -1,6 +1,7 @@
 package AppliedIntegrations.api.Multiblocks;
 
 
+import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
@@ -23,12 +24,10 @@ public class BlockData {
 	public List<Block> options;
 
 	public BlockData(int x, int y, int z, Block b, BlockType type) {
-
 		this(x, y, z, type, b);
 	}
 
 	public BlockData(int x, int y, int z, BlockType type, Block... blockOptions) {
-
 		this.options = Arrays.asList(blockOptions);
 		this.x = (byte) x;
 		this.y = (byte) y;
@@ -37,7 +36,6 @@ public class BlockData {
 	}
 
 	public BlockData(int x, int y, int z, Block b) {
-
 		this(x, y, z, b, b);
 	}
 
@@ -54,6 +52,10 @@ public class BlockData {
 		this.x = (byte) x;
 		this.y = (byte) y;
 		this.z = (byte) z;
+	}
+
+	public BlockData(BlockPos size, BlockAIRegistrable b) {
+		this(size.getX(), size.getY(), size.getZ(), b);
 	}
 
 	public BlockPos getPos() {
