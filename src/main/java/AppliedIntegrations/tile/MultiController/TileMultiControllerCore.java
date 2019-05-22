@@ -516,18 +516,18 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			// Map for half of length from core to port at axis
 			Map<EnumFacing.Axis, Integer> axisLengthMap = new LinkedHashMap<>();
 
-			// Iterate until i = 5
-			for (int i = 1; i < 5; i++) {
+			// Iterate until i = 4
+			for (int rangeToBlock = 0; rangeToBlock < 4; rangeToBlock++) {
 				// Convert to final
-				final int finalI = i;
+				final int finalI = rangeToBlock;
 
 				// Iterate for each positive enum side
 				Arrays.stream(EnumFacing.values()).filter((facing) -> facing.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE).forEach((side) -> {
-					// Get tile with i blocks offset to side
+					// Get tile with rangeToBlock blocks offset to side
 					TileEntity maybePort = world.getTileEntity(new BlockPos(
-							getPos().getX() + side.getFrontOffsetX() * 2,
-							getPos().getY() + side.getFrontOffsetY() * 2,
-							getPos().getZ() + side.getFrontOffsetZ() * 2));
+							getPos().getX() + side.getFrontOffsetX() * finalI,
+							getPos().getY() + side.getFrontOffsetY() * finalI,
+							getPos().getZ() + side.getFrontOffsetZ() * finalI));
 
 					// Check if tile is port
 					if (maybePort instanceof TileMultiControllerPort) {
@@ -548,7 +548,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					continue;
 
 				// Extend pattern by length from map
-				MultiBlockUtils.extendPattern(pattern, axis, axisLengthMap.get(axis));
+				MultiBlockUtils.extendPattern(pattern, axis, axisLengthMap.get(axis) - 1);
 			}
 
 			try {

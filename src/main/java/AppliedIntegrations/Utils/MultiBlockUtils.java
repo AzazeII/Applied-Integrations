@@ -102,10 +102,30 @@ public class MultiBlockUtils {
 
 			// Update already existing pattern
 			// Get edge of pattern from facing. Add offset to edge
-			minimal = fromStream(minimal.getEdgeFromFacing(facing).map((data) -> {
+			minimal = addDataToPattern(minimal, fromStream(minimal.getEdgeFromFacing(facing).map((data) -> {
 				// Add offset to data
 				return data.offset(facing, length);
-			}));
+			})).getPatternData());
 		}
+
+
+	}
+
+	/**
+	 * Add all second pattern data values to first pattern
+	 * @param pattern to update
+	 * @param adjustment with update
+	 * @return New pattern
+	 */
+	private static IAIMinimalPattern addDataToPattern(IAIMinimalPattern pattern, List<BlockData> adjustment) {
+		return () -> {
+			// Get data list from pattern
+			List<BlockData> dataList = pattern.getPatternData();
+
+			// Add stream to this list
+			dataList.addAll(adjustment);
+
+			return dataList;
+		};
 	}
 }

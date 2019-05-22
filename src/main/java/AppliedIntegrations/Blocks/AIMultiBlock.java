@@ -58,7 +58,7 @@ public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEn
 			if (b.b == this) {
 				try {
 					return (TileEntity) b.tileEnum.clazz.newInstance();
-				} catch (Exception e) {
+				} catch (Exception ignored) {
 
 				}
 			}

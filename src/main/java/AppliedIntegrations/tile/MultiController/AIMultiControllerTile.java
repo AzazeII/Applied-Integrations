@@ -30,9 +30,9 @@ public abstract class AIMultiControllerTile extends AITile implements IAIMultiBl
 			for (EnumFacing side : EnumFacing.values()) {
 				// Get tile with i blocks offset to side
 				TileEntity tile = world.getTileEntity(new BlockPos(
-						getPos().getX() + side.getFrontOffsetX() * 2,
-						getPos().getY() + side.getFrontOffsetY() * 2,
-						getPos().getZ() + side.getFrontOffsetZ() * 2));
+						getPos().getX() + side.getFrontOffsetX() * i,
+						getPos().getY() + side.getFrontOffsetY() * i,
+						getPos().getZ() + side.getFrontOffsetZ() * i));
 
 				// Check if tile is core
 				if (tile instanceof TileMultiControllerCore) {

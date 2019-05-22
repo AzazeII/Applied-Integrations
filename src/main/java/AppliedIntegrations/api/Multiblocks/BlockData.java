@@ -65,7 +65,7 @@ public class BlockData {
 				return false;
 
 			// Check if our X isn't zero
-			return x != 0;
+			return facing.getAxisDirection().getOffset() == 1 ? x >= 1 : x <= -1;
 		}
 
 		// Check if axis is Y
@@ -75,7 +75,7 @@ public class BlockData {
 				return false;
 
 			// Check if our Y isn't zero
-			return y != 0;
+			return facing.getAxisDirection().getOffset() == 1 ? y >= 1 : y <= -1;
 		}
 
 		// Check if axis is Z
@@ -85,7 +85,7 @@ public class BlockData {
 				return false;
 
 			// Check if our Z isn't zero
-			return z != 0;
+			return facing.getAxisDirection().getOffset() == 1 ? z >= 1 : z <= -1;
 		}
 
 		return true;
