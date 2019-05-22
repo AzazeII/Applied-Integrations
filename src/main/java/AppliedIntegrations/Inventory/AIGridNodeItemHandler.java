@@ -1,5 +1,4 @@
-package AppliedIntegrations.Utils;
-
+package AppliedIntegrations.Inventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;

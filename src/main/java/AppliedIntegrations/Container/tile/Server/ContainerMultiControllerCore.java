@@ -4,7 +4,7 @@ package AppliedIntegrations.Container.tile.Server;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

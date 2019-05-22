@@ -1,4 +1,4 @@
-package AppliedIntegrations.Utils;
+package AppliedIntegrations.Inventory;
 
 
 import AppliedIntegrations.api.IInventoryHost;

@@ -3,8 +3,8 @@ package AppliedIntegrations.tile.MultiController;
 
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;

@@ -1,8 +1,8 @@
 package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
 
 
-import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.Utils.AIGridNodeItemHandler;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
+import AppliedIntegrations.Inventory.AIGridNodeItemHandler;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;

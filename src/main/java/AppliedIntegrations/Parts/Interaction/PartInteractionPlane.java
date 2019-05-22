@@ -1,10 +1,10 @@
 package AppliedIntegrations.Parts.Interaction;
 
 
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
 import appeng.api.AEApi;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;

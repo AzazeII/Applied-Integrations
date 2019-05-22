@@ -5,10 +5,12 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.api.Multiblocks.BlockData;
 import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -31,13 +33,13 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 		// Iterate |size.x| + |inverted.x| times
 		for (int x = inverted.getX(); x < size.getX(); x++) {
 			// Add block data at fixed y and z, dynamic X
-			list.add(new BlockData(size.getY(), size.getZ(), x, b));
+			list.add(new BlockData(x, size.getY(), size.getZ(), b));
 		}
 
 		// Iterate |size.y| + |inverted.y| times
 		for (int y = inverted.getY(); y < size.getY(); y++) {
 			// Add block data at fixed x and z, dynamic Y
-			list.add(new BlockData(size.getX(), size.getZ(), y, b));
+			list.add(new BlockData(size.getX(), y, size.getZ(), b));
 		}
 
 		// Iterate |size.z| + |inverted.z| times
@@ -48,40 +50,45 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 
 		// Line (matrix-vector) created!
 		return list;
-	} // list.forEach((data) -> {Minecraft.getMinecraft().world.setBlockState(data.getPos(), data.options.get(0).getDefaultBlockState());})
+	}
 
 	public static IAIPatternExtendable generateMultiControllerForSize(BlockPos size) {
 		// Create initial data list
-		List<BlockData> list = new LinkedList<>();
+		List<BlockData> list = new ArrayList<>();
 
-		// Iterate 2 times
-		for (int i = 0; i < 1; i++) {
+		// Iterate for each side
+		for (AEPartLocation side : AEPartLocation.values()) {
+			// Get facing (may be null)
+			EnumFacing negativeA = side.getFacing();
+
+			// Invert one ordinal of size and create new size
+			BlockPos invertedA = new BlockPos(
+					negativeA == null || negativeA.getFrontOffsetX() == 0 ? size.getX() : size.getX() * negativeA.getFrontOffsetX(),
+					negativeA == null || negativeA.getFrontOffsetY() == 0 ? size.getY() : size.getY() * negativeA.getFrontOffsetY(),
+					negativeA == null || negativeA.getFrontOffsetZ() == 0 ? size.getZ() : size.getZ() * negativeA.getFrontOffsetZ());
+
 			// Iterate for each axis
-			for (EnumFacing.Axis axis : EnumFacing.Axis.values()) {
-				// Get negative side
-				EnumFacing negative = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axis);
+			for (EnumFacing.Axis axisB : EnumFacing.Axis.values()) {
+				// Get negativeB side
+				EnumFacing negativeB = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axisB);
 
 				// Invert one ordinal of size and create new size
-				BlockPos inverted = new BlockPos(
-						negative.getFrontOffsetX() == 0 ? size.getX() : size.getX() * negative.getFrontOffsetX(),
-						negative.getFrontOffsetY() == 0 ? size.getY() : size.getY() * negative.getFrontOffsetY(),
-						negative.getFrontOffsetZ() == 0 ? size.getZ() : size.getZ() * negative.getFrontOffsetZ()
-				);
+				BlockPos invertedB = new BlockPos(
+						negativeB.getFrontOffsetX() == 0 ? size.getX() : size.getX() * negativeB.getFrontOffsetX(),
+						negativeB.getFrontOffsetY() == 0 ? size.getY() : size.getY() * negativeB.getFrontOffsetY(),
+						negativeB.getFrontOffsetZ() == 0 ? size.getZ() : size.getZ() * negativeB.getFrontOffsetZ());
 
-				// Draw rib line from inverted to size
-				list.addAll(getDataMatrixVector(size, inverted, BlocksEnum.BMCRib.b));
+				// Draw rib line from invertedA to invertedB vertices
+				list.addAll(getDataMatrixVector(invertedA, invertedB, BlocksEnum.BMCRib.b));
 			}
-
-			// Fully invert size
-			size = new BlockPos(-1 * size.getX(), -1 * size.getY(), -1 * size.getZ());
 		}
 
 		// Create new anonymous instance of pattern extendable
 		return new IAIPatternExtendable() {
 			@Override
 			public BlockPos getMinimalFrameSize() {
-				// Still max size
-				return new BlockPos(1, 1, 1);
+				// Updated size value
+				return size;
 			}
 
 			@Override

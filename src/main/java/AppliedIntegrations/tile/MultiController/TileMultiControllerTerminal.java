@@ -3,10 +3,10 @@ package AppliedIntegrations.tile.MultiController;
 
 import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.tile.AITile;
 import appeng.api.util.AEColor;

@@ -2,8 +2,8 @@ package AppliedIntegrations.Container.part;
 
 
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import net.minecraft.entity.player.EntityPlayer;

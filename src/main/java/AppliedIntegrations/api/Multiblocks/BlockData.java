@@ -49,6 +49,13 @@ public class BlockData {
 		this.z = (byte) z;
 	}
 
+	public BlockData(int x, int y, int z, List<Block> options) {
+		this.options = options;
+		this.x = (byte) x;
+		this.y = (byte) y;
+		this.z = (byte) z;
+	}
+
 	public BlockPos getPos() {
 
 		return new BlockPos(x, y, z);
@@ -108,5 +115,9 @@ public class BlockData {
 		}
 
 		return this;
+	}
+
+	public BlockData inverse() {
+		return new BlockData(x * -1, y * -1, z * -1, options);
 	}
 }

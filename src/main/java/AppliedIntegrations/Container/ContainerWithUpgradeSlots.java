@@ -3,9 +3,9 @@ package AppliedIntegrations.Container;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.IEnergyInterface;
 import appeng.api.implementations.items.IUpgradeModule;
 import net.minecraft.entity.player.EntityPlayer;

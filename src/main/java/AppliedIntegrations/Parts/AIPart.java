@@ -1,7 +1,7 @@
 package AppliedIntegrations.Parts;
 
 
-import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;

@@ -1,9 +1,9 @@
 package AppliedIntegrations.Parts.Energy;
 
 
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Parts.AIRotatablePart;
 import AppliedIntegrations.Parts.PartEnum;
-import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.networking.security.IActionSource;

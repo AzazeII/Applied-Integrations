@@ -1,7 +1,7 @@
 package AppliedIntegrations.Parts;
 
 
-import AppliedIntegrations.Utils.AIGridNodeInventory;
+import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
