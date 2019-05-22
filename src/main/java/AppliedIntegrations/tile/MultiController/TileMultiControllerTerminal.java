@@ -1,8 +1,8 @@
 package AppliedIntegrations.tile.MultiController;
 
 
-import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
-import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerTerminal;
+import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class TileServerSecurity extends AITile implements IOrientable {
+public class TileMultiControllerTerminal extends AITile implements IOrientable {
 	// Used by both container and gui
 	public static final int SLOT_Y = 18; // (1)
 
@@ -37,7 +37,7 @@ public class TileServerSecurity extends AITile implements IOrientable {
 
 	public static final int SLOT_COLUMNS = 9; // (4)
 
-	public List<ContainerServerTerminal> listeners = new LinkedList<>();
+	public List<ContainerMultiControllerTerminal> listeners = new LinkedList<>();
 
 	public AIGridNodeInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1) {
 		@Override
@@ -53,7 +53,7 @@ public class TileServerSecurity extends AITile implements IOrientable {
 
 	private List<IChannelWidget<?>> filterSlots = new LinkedList<>();
 
-	public TileServerSecurity() {
+	public TileMultiControllerTerminal() {
 		super();
 	}
 
@@ -112,7 +112,7 @@ public class TileServerSecurity extends AITile implements IOrientable {
 		// Check if update requested
 		if (updateRequested) {
 			// Check if we have gui to update
-			if (Minecraft.getMinecraft().currentScreen instanceof GuiServerTerminal) {
+			if (Minecraft.getMinecraft().currentScreen instanceof GuiMultiControllerTerminal) {
 				// Init gui coordinate set
 				initGuiCoordinates();
 			}
@@ -121,7 +121,7 @@ public class TileServerSecurity extends AITile implements IOrientable {
 
 	private void initGuiCoordinates() {
 		// Iterate for each listener
-		for (ContainerServerTerminal listener : listeners) {
+		for (ContainerMultiControllerTerminal listener : listeners) {
 			// Send update packet
 			NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
 

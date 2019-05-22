@@ -3,7 +3,7 @@ package AppliedIntegrations.tile.MultiController.Render;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Client.AITileFullRenderer;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,7 +13,7 @@ import static appeng.api.util.AEPartLocation.*;
 import static net.minecraft.util.EnumFacing.Axis.X;
 import static net.minecraft.util.EnumFacing.Axis.Z;
 
-public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurity> {
+public class ServerSecurityRenderer extends AITileFullRenderer<TileMultiControllerTerminal> {
 
 	// Init textures
 	private static final ResourceLocation top = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_top.png"); // (1)
@@ -33,7 +33,7 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 			{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {0.5F, 0.5F, -0.5F}, {0.5F, -0.5F, -0.5F},}};
 
 	@Override
-	public void render(TileServerSecurity te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void render(TileMultiControllerTerminal te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		// Get tile rotation data
 		AEPartLocation forward = AEPartLocation.fromFacing(te.getForward()); // (1)
 
@@ -79,7 +79,7 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 	 * @param textureSide Side for texture getting
 	 * @param actualSide  Side for texture drawing
 	 */
-	private void drawDirectionalQuadWithUV(AEPartLocation textureSide, AEPartLocation actualSide, TileServerSecurity te) {
+	private void drawDirectionalQuadWithUV(AEPartLocation textureSide, AEPartLocation actualSide, TileMultiControllerTerminal te) {
 		// Bind texture depending on side
 		// Check if side is south, west, north or east
 		if (textureSide != UP && textureSide != DOWN)
@@ -112,7 +112,7 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileServerSecurit
 		drawQuadWithUV(texturePositionMap[actualSide.ordinal()], defaultUV);
 	}
 
-	private void bindTopTexture(TileServerSecurity te) {
+	private void bindTopTexture(TileMultiControllerTerminal te) {
 		// Check not null
 		if (te.getProxy() == null){
 			// Bind off texture

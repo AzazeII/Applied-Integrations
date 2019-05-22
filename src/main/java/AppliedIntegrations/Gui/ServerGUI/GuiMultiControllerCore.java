@@ -2,7 +2,7 @@ package AppliedIntegrations.Gui.ServerGUI;
 
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
+import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.core.localization.GuiText;
@@ -14,10 +14,10 @@ import org.lwjgl.opengl.GL11;
 /**
  * @Author Azazell
  */
-public class GuiServerCore extends AIBaseGui {
+public class GuiMultiControllerCore extends AIBaseGui {
 	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_card_storage.png");
 
-	public GuiServerCore(ContainerServerCore container, EntityPlayer p) {
+	public GuiMultiControllerCore(ContainerMultiControllerCore container, EntityPlayer p) {
 
 		super(container, p);
 	}

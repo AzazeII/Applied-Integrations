@@ -9,7 +9,7 @@ import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
@@ -27,20 +27,20 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import static AppliedIntegrations.tile.MultiController.TileServerSecurity.*;
+import static AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal.*;
 
 /**
  * @Author Azazell
  */
-public class ContainerServerTerminal extends ContainerWithPlayerInventory {
+public class ContainerMultiControllerTerminal extends ContainerWithPlayerInventory {
 
 	private final SlotRestrictive cardSlot;
 
-	private final TileServerSecurity terminal;
+	private final TileMultiControllerTerminal terminal;
 
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> permissionChannelWidgetMap = new LinkedHashMap<>();
 
-	public ContainerServerTerminal(TileServerSecurity terminal, EntityPlayer player) {
+	public ContainerMultiControllerTerminal(TileMultiControllerTerminal terminal, EntityPlayer player) {
 
 		super(player);
 
@@ -67,7 +67,7 @@ public class ContainerServerTerminal extends ContainerWithPlayerInventory {
 		this.terminal.listeners.add(this);
 	}
 
-	public void initWidgets(TileServerSecurity terminal) {
+	public void initWidgets(TileMultiControllerTerminal terminal) {
 		// ************# Add Filter Slots #************ //
 		// Iterate for each security permission
 		GuiSecurityPermissionsButton.getPermissionList().forEach((permissions -> {

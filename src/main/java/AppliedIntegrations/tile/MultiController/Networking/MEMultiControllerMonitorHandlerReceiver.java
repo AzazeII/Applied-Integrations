@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile.MultiController.Networking;
 
 
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IBaseMonitor;
 import appeng.api.storage.IMEMonitorHandlerReceiver;
@@ -10,14 +10,14 @@ import appeng.api.storage.data.IAEStack;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 
-public class MEServerMonitorHandlerReceiver<T extends IAEStack<T>> implements IMEMonitorHandlerReceiver<T> {
-	private final TileServerCore host;
+public class MEMultiControllerMonitorHandlerReceiver<T extends IAEStack<T>> implements IMEMonitorHandlerReceiver<T> {
+	private final TileMultiControllerCore host;
 
 	private final IStorageChannel<? extends IAEStack<?>> channel;
 
-	public MEServerMonitorHandlerReceiver(TileServerCore tileServerCore, IStorageChannel<? extends IAEStack<?>> channel) {
+	public MEMultiControllerMonitorHandlerReceiver(TileMultiControllerCore tileMultiControllerCore, IStorageChannel<? extends IAEStack<?>> channel) {
 
-		this.host = tileServerCore;
+		this.host = tileMultiControllerCore;
 		this.channel = channel;
 	}
 

@@ -3,7 +3,7 @@ package AppliedIntegrations.tile.MultiController.helpers.Matter;
 
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -16,8 +16,8 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class FilteredServerPortEnergyHandler extends FilteredServerPortHandler<IAEEnergyStack> {
-	public FilteredServerPortEnergyHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore host) {
+public class FilteredMultiControllerPortEnergyHandler extends FilteredMultiControllerPortHandler<IAEEnergyStack> {
+	public FilteredMultiControllerPortEnergyHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileMultiControllerCore host) {
 
 		super(filteredMatter, filterMode, host);
 	}

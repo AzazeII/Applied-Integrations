@@ -73,9 +73,9 @@ public class InteractionPlaneHandler implements IMEInventoryHandler<IAEItemStack
 	public IAEItemStack injectItems(IAEItemStack input, Actionable type, IActionSource src) {
 		// Check if action source is machine
 		if (src.machine().isPresent()) {
-			// Check if source machine equal to this plane
-			if (src.machine().get().equals(host)){
-				// Ignore, to avoid chain calling, since interaction plane is also injecting items on callback
+			// Check if source machine instance of host
+			if (src.machine().get() instanceof PartInteractionPlane){
+				// Ignore, to avoid chain calling, sinc8e interaction plane is also injecting items on callback
 				return input;
 			}
 		}

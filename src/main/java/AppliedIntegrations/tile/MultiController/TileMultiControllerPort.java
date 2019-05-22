@@ -26,7 +26,7 @@ import static java.util.EnumSet.of;
 /**
  * @Author Azazell
  */
-public class TileServerPort extends AIServerMultiBlockTile implements ICellContainer, ICraftingProvider {
+public class TileMultiControllerPort extends AIMultiControllerTile implements ICellContainer, ICraftingProvider {
 
 	private AEPartLocation side = AEPartLocation.INTERNAL;
 
@@ -69,7 +69,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 		// Check if port has master
 		if (hasMaster()) {
 			// Get core
-			TileServerCore core = (TileServerCore) getMaster();
+			TileMultiControllerCore core = (TileMultiControllerCore) getMaster();
 
 			// Notify all networks
 			core.postNetworkCellEvents();
@@ -91,7 +91,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 		}
 
 		// Pass call to master
-		return ((TileServerCore) getMaster()).getPortCellArray(side, channel);
+		return ((TileMultiControllerCore) getMaster()).getPortCellArray(side, channel);
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 		}
 
 		// Pass call to master
-		((TileServerCore) getMaster()).savePortChanges(cellInventory, side);
+		((TileMultiControllerCore) getMaster()).savePortChanges(cellInventory, side);
 	}
 	/* -----------------------------Drive Methods----------------------------- */
 
@@ -124,7 +124,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 		}
 
 		// Pass call to master
-		((TileServerCore) getMaster()).providePortCrafting(craftingTracker, side);
+		((TileMultiControllerCore) getMaster()).providePortCrafting(craftingTracker, side);
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 		}
 
 		// Pass call to master
-		return ((TileServerCore) getMaster()).pushPortPattern(patternDetails, table, side);
+		return ((TileMultiControllerCore) getMaster()).pushPortPattern(patternDetails, table, side);
 	}
 
 	@Override
@@ -150,7 +150,7 @@ public class TileServerPort extends AIServerMultiBlockTile implements ICellConta
 		}
 
 		// Pass call to master
-		return ((TileServerCore) getMaster()).isPortBusy(side);
+		return ((TileMultiControllerCore) getMaster()).isPortBusy(side);
 	}
 	/* -----------------------------Crafting Methods----------------------------- */
 }

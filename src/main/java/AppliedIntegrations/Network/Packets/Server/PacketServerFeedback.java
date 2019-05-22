@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -16,13 +16,13 @@ public class PacketServerFeedback extends AIPacket {
 
 	public NBTTagCompound tag;
 
-	public TileServerSecurity terminal;
+	public TileMultiControllerTerminal terminal;
 
 	public PacketServerFeedback() {
 
 	}
 
-	public PacketServerFeedback(NBTTagCompound tag, TileServerSecurity terminal) {
+	public PacketServerFeedback(NBTTagCompound tag, TileMultiControllerTerminal terminal) {
 
 		this.tag = tag;
 		this.terminal = terminal;
@@ -32,7 +32,7 @@ public class PacketServerFeedback extends AIPacket {
 	public void fromBytes(ByteBuf buf) {
 
 		tag = ByteBufUtils.readTag(buf);
-		terminal = (TileServerSecurity) readSyncHost(buf);
+		terminal = (TileMultiControllerTerminal) readSyncHost(buf);
 	}
 
 	@Override

@@ -27,12 +27,12 @@ import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
 import AppliedIntegrations.tile.MultiController.Render.ServerRibRenderer;
 import AppliedIntegrations.tile.MultiController.Render.ServerSecurityRenderer;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
-import AppliedIntegrations.tile.MultiController.TileServerRib;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
-import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortEnergyHandler;
-import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortFluidHandler;
-import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortItemHandler;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerRib;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortEnergyHandler;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortFluidHandler;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortItemHandler;
 import appeng.api.AEApi;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
@@ -78,8 +78,8 @@ public class ClientProxy extends CommonProxy {
 
 		if (AIConfig.enableMEServer) {
 			// Register custom renderers
-			ClientRegistry.bindTileEntitySpecialRenderer(TileServerRib.class, new ServerRibRenderer()); // (1)
-			ClientRegistry.bindTileEntitySpecialRenderer(TileServerSecurity.class, new ServerSecurityRenderer()); // (2)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerRib.class, new ServerRibRenderer()); // (1)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerTerminal.class, new ServerSecurityRenderer()); // (2)
 		}
 
 		if (AIConfig.enableBlackHoleStorage) {
@@ -126,7 +126,7 @@ public class ClientProxy extends CommonProxy {
 				WidgetItemSlot.class.getConstructor(int.class, int.class),
 
 				// Handler
-				FilteredServerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+				FilteredMultiControllerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
 				// Converter and UV
 				(AEItemStack::fromItemStack), Pair.of(0, 0),
@@ -142,7 +142,7 @@ public class ClientProxy extends CommonProxy {
 				WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class, IWidgetHost.class),
 
 				// Handler
-				FilteredServerPortFluidHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+				FilteredMultiControllerPortFluidHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
 				// Converter and UV
 				(stack) -> {
@@ -168,7 +168,7 @@ public class ClientProxy extends CommonProxy {
 				WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class),
 
 				// Handler
-				FilteredServerPortEnergyHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+				FilteredMultiControllerPortEnergyHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
 				// Converter and UV
 				Utils::getEnergyStackFromItemStack, Pair.of(0, 16),

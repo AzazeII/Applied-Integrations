@@ -1,8 +1,8 @@
 package AppliedIntegrations.tile.MultiController.helpers.Crafting;
 
 
-import AppliedIntegrations.tile.MultiController.ServerPortHandler;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.MultiControllerPortHandler;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -26,10 +26,10 @@ import static appeng.api.config.SecurityPermissions.CRAFT;
 /**
  * @Author Azazell
  */
-public class ServerPortCraftingHandler extends ServerPortHandler<IAEItemStack> implements ICraftingProvider {
-	public ServerPortCraftingHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> left, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> right, TileServerCore tileServerCore) {
+public class MultiControllerCraftingHandler extends MultiControllerPortHandler<IAEItemStack> implements ICraftingProvider {
+	public MultiControllerCraftingHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> left, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> right, TileMultiControllerCore tileMultiControllerCore) {
 
-		super(left, right, tileServerCore);
+		super(left, right, tileMultiControllerCore);
 	}
 
 	/*

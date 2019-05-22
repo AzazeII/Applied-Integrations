@@ -5,7 +5,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Utils.AIGridNodeInventory;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -16,12 +16,12 @@ import javax.annotation.Nonnull;
 /**
  * @Author Azazell
  */
-public class ContainerServerCore extends ContainerWithPlayerInventory {
+public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 	private static final int CARD_SLOT_ROWS = 5;
 
 	private static final int CARD_SLOT_COLUMNS = 6;
 
-	public ContainerServerCore(EntityPlayer player, TileServerCore master) {
+	public ContainerMultiControllerCore(EntityPlayer player, TileMultiControllerCore master) {
 
 		super(player);
 

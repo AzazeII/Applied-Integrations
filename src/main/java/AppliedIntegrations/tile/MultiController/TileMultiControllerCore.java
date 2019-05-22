@@ -1,5 +1,6 @@
 package AppliedIntegrations.tile.MultiController;
 
+
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Items.NetworkCard;
@@ -7,14 +8,14 @@ import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
-import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
-import AppliedIntegrations.tile.MultiController.Networking.MEServerMonitorHandlerReceiver;
-import AppliedIntegrations.tile.MultiController.helpers.Crafting.ServerPortCPUHandler;
-import AppliedIntegrations.tile.MultiController.helpers.Crafting.ServerPortCraftingHandler;
-import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortHandler;
+import AppliedIntegrations.tile.MultiController.Networking.MEMultiControllerMonitorHandlerReceiver;
+import AppliedIntegrations.tile.MultiController.helpers.Crafting.MultiControllerCPUHandler;
+import AppliedIntegrations.tile.MultiController.helpers.Crafting.MultiControllerCraftingHandler;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortHandler;
+import AppliedIntegrations.tile.Patterns.AIPatterns;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
@@ -51,7 +52,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @Author Azazell
  */
-public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable {
+public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable {
 	private class CardInventoryManager implements IInventoryHost {
 
 		private void onCardRemove(ItemStack card) {
@@ -62,7 +63,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 			AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
 
 			// Get port
-			TileServerPort port = getPortAtSide(side);
+			TileMultiControllerPort port = getPortAtSide(side);
 
 			// Check not null
 			if (port == null) {
@@ -105,7 +106,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 					AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
 
 					// Get port
-					TileServerPort port = getPortAtSide(side);
+					TileMultiControllerPort port = getPortAtSide(side);
 
 					// Check not null
 					if (port == null) {
@@ -120,7 +121,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 					GuiStorageChannelButton.getChannelList().forEach(channel -> {
 						try {
 							// Get new handler from API
-							FilteredServerPortHandler handler = Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(data.getLeft(), data.getRight(), TileServerCore.this);
+							FilteredMultiControllerPortHandler handler = Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(data.getLeft(), data.getRight(), TileMultiControllerCore.this);
 
 							// Map handler with channel
 							handlers.put(channel, handler);
@@ -130,16 +131,16 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 					});
 
 					// Encode new handler for side from card
-					TileServerCore.this.portHandlers.put(side, handlers);
+					TileMultiControllerCore.this.portHandlers.put(side, handlers);
 
 					// Encode new crafting handler for side from card
-					TileServerCore.this.portCraftingHandlers.put(side, new ServerPortCraftingHandler(data.getLeft(), data.getRight(), TileServerCore.this));
+					TileMultiControllerCore.this.portCraftingHandlers.put(side, new MultiControllerCraftingHandler(data.getLeft(), data.getRight(), TileMultiControllerCore.this));
 
 					// Encode new CPU handler for side from card
-					TileServerCore.this.portCPUHandlers.put(side, new ServerPortCPUHandler(TileServerCore.this));
+					TileMultiControllerCore.this.portCPUHandlers.put(side, new MultiControllerCPUHandler(TileMultiControllerCore.this));
 
 					// Update CPU handler in each grid
-					TileServerCore.this.cpuUpdate();
+					TileMultiControllerCore.this.cpuUpdate();
 
 					// Notify grid of current port about inventory update
 					port.postCellInventoryEvent();
@@ -156,19 +157,19 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 	private static final String KEY_FORMED = "#FORMED";
 
-	public List<AIServerMultiBlockTile> slaves = new ArrayList<>();
+	public List<AIMultiControllerTile> slaves = new ArrayList<>();
 
 	private boolean constructionRequested;
 
-	private LinkedHashMap<Class<? extends AIServerMultiBlockTile>, List<AIServerMultiBlockTile>> slaveMap = new LinkedHashMap<>();
+	private LinkedHashMap<Class<? extends AIMultiControllerTile>, List<AIMultiControllerTile>> slaveMap = new LinkedHashMap<>();
 
 	// Port-side map
-	private LinkedHashMap<AEPartLocation, TileServerPort> portMap = new LinkedHashMap<>();
+	private LinkedHashMap<AEPartLocation, TileMultiControllerPort> portMap = new LinkedHashMap<>();
 
 	private CardInventoryManager cardManager = new CardInventoryManager();
 
 	// list of blocks in multiblock
-	private List<Class<? extends AIServerMultiBlockTile>> serverClasses = Arrays.asList(TileServerHousing.class, TileServerPort.class, TileServerRib.class);
+	private List<Class<? extends AIMultiControllerTile>> serverClasses = Arrays.asList(TileMultiControllerHousing.class, TileMultiControllerPort.class, TileMultiControllerRib.class);
 
 	// List of all "mediums" for providing cell inventory from main network into adjacent networks
 	private LinkedHashMap<AEPartLocation, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>> portHandlers = new LinkedHashMap<>();
@@ -177,7 +178,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	private LinkedHashMap<AEPartLocation, ICraftingProvider> portCraftingHandlers = new LinkedHashMap<>();
 
 	// List of all crafting CPU simulators
-	private LinkedHashMap<AEPartLocation, ServerPortCPUHandler> portCPUHandlers = new LinkedHashMap<>();
+	private LinkedHashMap<AEPartLocation, MultiControllerCPUHandler> portCPUHandlers = new LinkedHashMap<>();
 
 	public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 30, 1, this.cardManager) {
 		@Override
@@ -198,7 +199,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 	};
 
-	private List<MEServerMonitorHandlerReceiver> receiverList = new ArrayList<>();
+	private List<MEMultiControllerMonitorHandlerReceiver> receiverList = new ArrayList<>();
 
 	private boolean isFormed;
 
@@ -226,12 +227,12 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 
 		// Check if list is empty
-		if (slaveMap.get(TileServerRib.class).isEmpty()) {
+		if (slaveMap.get(TileMultiControllerRib.class).isEmpty()) {
 			return null;
 		}
 
 		// Get first rib in list in map
-		TileServerRib rib = (TileServerRib) slaveMap.get(TileServerRib.class).get(0);
+		TileMultiControllerRib rib = (TileMultiControllerRib) slaveMap.get(TileMultiControllerRib.class).get(0);
 
 		// Pass call to rib
 		return rib.getMainNetwork();
@@ -328,7 +329,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		}
 
 		// Get port
-		TileServerPort port = getPortAtSide(side);
+		TileMultiControllerPort port = getPortAtSide(side);
 
 		// Check not null
 		if (port == null) {
@@ -339,11 +340,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		getWorld().markChunkDirty(port.getPos(), port);
 	}
 	// -----------------------------Drive Methods-----------------------------//
-	private TileServerPort getPortAtSide(AEPartLocation side) {
+	private TileMultiControllerPort getPortAtSide(AEPartLocation side) {
 		// Iterate for each slave
-		for (IAIMultiBlock slave : slaveMap.get(TileServerPort.class)) {
+		for (IAIMultiBlock slave : slaveMap.get(TileMultiControllerPort.class)) {
 			// Get port
-			TileServerPort port = (TileServerPort) slave;
+			TileMultiControllerPort port = (TileMultiControllerPort) slave;
 
 			// Check if port side is given side
 			if (port.getSideVector() == side) {
@@ -415,7 +416,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 	@SuppressWarnings("unchecked")
 	public void destroyMultiBlock() {
 		// Iterate for each slave
-		for (AIServerMultiBlockTile tile : slaves) {
+		for (AIMultiControllerTile tile : slaves) {
 			// Nullify master
 			tile.setMaster(null);
 
@@ -442,11 +443,11 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		// Iterate for each channel
 		GuiStorageChannelButton.getChannelList().forEach(channel -> {
 			// Iterate for each ME server listeners in list
-			receiverList.forEach((meServerMonitorHandlerReceiver -> {
+			receiverList.forEach((meMultiControllerMonitorHandlerReceiver -> {
 				// Check not null
 				if (getMainNetworkInventory(channel) != null) {
 					// Remove from listeners
-					getMainNetworkInventory(channel).removeListener(meServerMonitorHandlerReceiver);
+					getMainNetworkInventory(channel).removeListener(meMultiControllerMonitorHandlerReceiver);
 				}
 			}));
 		});
@@ -460,7 +461,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 		slaveMap = new LinkedHashMap<>();
 
 		// Iterate for each tile type
-		for (Class<? extends AIServerMultiBlockTile> type : serverClasses) {
+		for (Class<? extends AIMultiControllerTile> type : serverClasses) {
 			// Add list to map
 			slaveMap.put(type, new ArrayList<>());
 		}
@@ -512,17 +513,17 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 
 			try {
 				// Get list of blocks matched the pattern
-				formServer((List<AIServerMultiBlockTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_SERVER, this, (block) -> count.getAndIncrement()), count, p);
+				formServer((List<AIMultiControllerTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_MULTI_CONTROLLER.getPatternData(), this, (block) -> count.getAndIncrement()), count, p);
 			} catch (GridAccessException ignored) { }
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void formServer(List<AIServerMultiBlockTile> toUpdate, AtomicInteger count, EntityPlayer p) throws GridAccessException {
+	private void formServer(List<AIMultiControllerTile> toUpdate, AtomicInteger count, EntityPlayer p) throws GridAccessException {
 		// Check if length equal to count, so all block has matched the pattern
-		if (AIPatterns.ME_SERVER.length == count.get()) {
+		if (AIPatterns.ME_MULTI_CONTROLLER.getPatternData().length == count.get()) {
 			// Iterate for each block to update
-			for (AIServerMultiBlockTile slave : toUpdate) {
+			for (AIMultiControllerTile slave : toUpdate) {
 				// Check if slave is null
 				if (slave == null)
 					continue;
@@ -546,9 +547,9 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 				TileEntity tile = world.getTileEntity(new BlockPos(getPos().getX() + side.xOffset * 2, getPos().getY() + side.yOffset * 2, getPos().getZ() + side.zOffset * 2));
 
 				// Check for instanceof port
-				if (tile instanceof TileServerPort) {
+				if (tile instanceof TileMultiControllerPort) {
 					// Get port
-					TileServerPort port = (TileServerPort) tile;
+					TileMultiControllerPort port = (TileMultiControllerPort) tile;
 
 					// Set proper direction
 					port.setDir(side.getFacing());
@@ -571,7 +572,7 @@ public class TileServerCore extends AITile implements IAIMultiBlock, IMaster, IN
 				IMEMonitor<? extends IAEStack<?>> inventory = getMainNetworkInventory(channel);
 
 				// Create receiver
-				MEServerMonitorHandlerReceiver receiver = new MEServerMonitorHandlerReceiver<>(this, channel);
+				MEMultiControllerMonitorHandlerReceiver receiver = new MEMultiControllerMonitorHandlerReceiver<>(this, channel);
 
 				// Add to receiver list
 				receiverList.add(receiver);

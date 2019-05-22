@@ -3,7 +3,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.ISyncHost;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -26,7 +26,7 @@ public class PacketContainerWidgetSync extends AIPacket {
 
 	}
 
-	public PacketContainerWidgetSync(ItemStack itemStack, TileServerSecurity terminal, int slotX, int slotY) {
+	public PacketContainerWidgetSync(ItemStack itemStack, TileMultiControllerTerminal terminal, int slotX, int slotY) {
 
 		this.itemStack = itemStack;
 		this.host = terminal;

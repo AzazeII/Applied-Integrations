@@ -2,8 +2,8 @@ package AppliedIntegrations.Blocks.MEServer;
 
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
-import AppliedIntegrations.tile.MultiController.TileServerRib;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerRib;
 import appeng.util.Platform;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -41,12 +41,12 @@ public class BlockServerRib extends AIMultiBlock {
 		// Check if player isn't sneaking
 		if (!p.isSneaking()) {
 			// Get rib
-			TileServerRib rib = (TileServerRib) world.getTileEntity(pos);
+			TileMultiControllerRib rib = (TileMultiControllerRib) world.getTileEntity(pos);
 
 			// Check not null, has master and call only on server
 			if (rib != null && rib.hasMaster() && !world.isRemote) {
 				// Get master
-				TileServerCore core = (TileServerCore) rib.getMaster();
+				TileMultiControllerCore core = (TileMultiControllerCore) rib.getMaster();
 
 				// Activate
 				core.activate(p);

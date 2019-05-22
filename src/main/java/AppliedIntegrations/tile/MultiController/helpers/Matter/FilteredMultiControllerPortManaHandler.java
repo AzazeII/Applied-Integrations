@@ -3,7 +3,7 @@ package AppliedIntegrations.tile.MultiController.helpers.Matter;
 
 import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -16,11 +16,11 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class FilteredServerPortManaHandler extends FilteredServerPortHandler<IAEManaStack> {
-	public FilteredServerPortManaHandler(
+public class FilteredMultiControllerPortManaHandler extends FilteredMultiControllerPortHandler<IAEManaStack> {
+	public FilteredMultiControllerPortManaHandler(
 			LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter,
 			LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode,
-			TileServerCore host) {
+			TileMultiControllerCore host) {
 		super(filteredMatter, filterMode, host);
 	}
 

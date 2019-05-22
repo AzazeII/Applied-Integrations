@@ -3,10 +3,10 @@ package AppliedIntegrations.tile.LogicBus;
 
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.Multiblocks.BlockType;
-import AppliedIntegrations.tile.AIPatterns;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
+import AppliedIntegrations.tile.Patterns.AIPatterns;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
 import appeng.api.storage.IMEInventory;

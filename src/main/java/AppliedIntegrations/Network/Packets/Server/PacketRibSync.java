@@ -2,7 +2,7 @@ package AppliedIntegrations.Network.Packets.Server;
 
 
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.tile.MultiController.TileServerRib;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerRib;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -14,13 +14,13 @@ public class PacketRibSync extends AIPacket {
 
 	public boolean nodeActivity;
 
-	public TileServerRib rib;
+	public TileMultiControllerRib rib;
 
 	public PacketRibSync() {
 
 	}
 
-	public PacketRibSync(TileServerRib rib, boolean activity) {
+	public PacketRibSync(TileMultiControllerRib rib, boolean activity) {
 
 		this.rib = rib;
 		this.nodeActivity = activity;
@@ -29,7 +29,7 @@ public class PacketRibSync extends AIPacket {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 
-		this.rib = (TileServerRib) readTile(buf);
+		this.rib = (TileMultiControllerRib) readTile(buf);
 		this.nodeActivity = buf.readBoolean();
 	}
 

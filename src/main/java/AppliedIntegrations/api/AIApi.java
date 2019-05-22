@@ -4,7 +4,7 @@ package AppliedIntegrations.api;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
-import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortHandler;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import net.minecraft.item.Item;
@@ -80,7 +80,7 @@ public abstract class AIApi {
 	 * @param coderPair         map value #4
 	 * @param handler
 	 */
-	public abstract void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor, Constructor<? extends FilteredServerPortHandler> handler, IStackConverter lambda, Pair<Integer, Integer> UV, Pair<IStackEncoder, IStackDecoder> coderPair);
+	public abstract void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor, Constructor<? extends FilteredMultiControllerPortHandler> handler, IStackConverter lambda, Pair<Integer, Integer> UV, Pair<IStackEncoder, IStackDecoder> coderPair);
 
 	/**
 	 * Used by storage channel gui button
@@ -114,7 +114,7 @@ public abstract class AIApi {
 	/**
 	 * @return ME inventory handler from given channel
 	 */
-	public abstract Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel);
+	public abstract Constructor<? extends FilteredMultiControllerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel);
 
 	/**
 	 * @param is Key stack

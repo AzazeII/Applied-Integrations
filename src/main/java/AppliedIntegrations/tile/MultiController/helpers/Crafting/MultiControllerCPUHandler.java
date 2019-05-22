@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile.MultiController.helpers.Crafting;
 
 
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.networking.crafting.ICraftingCPU;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.me.cluster.IAECluster;
@@ -11,10 +11,10 @@ import com.google.common.collect.ImmutableList;
 /**
  * @Author Azazell
  */
-public class ServerPortCPUHandler extends TileCraftingStorageTile {
-	private final TileServerCore host;
+public class MultiControllerCPUHandler extends TileCraftingStorageTile {
+	private final TileMultiControllerCore host;
 
-	public ServerPortCPUHandler(TileServerCore core) {
+	public MultiControllerCPUHandler(TileMultiControllerCore core) {
 		this.host = core;
 	}
 

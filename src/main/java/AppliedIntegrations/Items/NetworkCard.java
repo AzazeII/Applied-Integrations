@@ -8,7 +8,7 @@ import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.AIApi.IStackDecoder;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.MultiController.TileServerPort;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerPort;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
@@ -311,9 +311,9 @@ public class NetworkCard extends AIItemRegistrable {
 		TileEntity tile = world.getTileEntity(pos);
 
 		// Check if tile instance of server port
-		if (tile instanceof TileServerPort) {
+		if (tile instanceof TileMultiControllerPort) {
 			// Get port
-			TileServerPort port = (TileServerPort) tile;
+			TileMultiControllerPort port = (TileMultiControllerPort) tile;
 
 			// Update NBT tag data
 			tag.setBoolean(NBT_KEY_HAS_NET, port.getSideVector() != AEPartLocation.INTERNAL);

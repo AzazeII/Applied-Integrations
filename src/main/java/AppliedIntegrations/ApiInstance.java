@@ -6,7 +6,7 @@ import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler;
 import AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
-import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortHandler;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import net.minecraft.item.Item;
@@ -28,7 +28,7 @@ public class ApiInstance extends AIApi {
 
 	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends IChannelWidget>> channelConstructorMap = new LinkedHashMap<>();
 
-	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends FilteredServerPortHandler>> channelHandlerMap = new LinkedHashMap<>();
+	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, Constructor<? extends FilteredMultiControllerPortHandler>> channelHandlerMap = new LinkedHashMap<>();
 
 	private static final LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IStackConverter> channelStackConverterMap = new LinkedHashMap<>();
 
@@ -60,7 +60,7 @@ public class ApiInstance extends AIApi {
 	}
 
 	@Override
-	public void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor, Constructor<? extends FilteredServerPortHandler> handler, IStackConverter lambda, Pair<Integer, Integer> pair, Pair<IStackEncoder, IStackDecoder> coderPair) {
+	public void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor, Constructor<? extends FilteredMultiControllerPortHandler> handler, IStackConverter lambda, Pair<Integer, Integer> pair, Pair<IStackEncoder, IStackDecoder> coderPair) {
 
 		channelSpriteMap.put(channel, sprite);
 		channelConstructorMap.put(channel, widgetConstructor);
@@ -117,7 +117,7 @@ public class ApiInstance extends AIApi {
 	}
 
 	@Override
-	public Constructor<? extends FilteredServerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
+	public Constructor<? extends FilteredMultiControllerPortHandler> getHandlerFromChannel(IStorageChannel<? extends IAEStack<?>> channel) {
 
 		return channelHandlerMap.get(channel);
 	}

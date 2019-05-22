@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
 
-import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.AIApi;
 import appeng.api.AEApi;
@@ -30,7 +30,7 @@ public class GuiStorageChannelButton extends GuiServerButton {
 	// Current storage channel of button
 	private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 
-	public GuiStorageChannelButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+	public GuiStorageChannelButton(GuiMultiControllerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
 
 		super(terminal, ID, xPosition, yPosition, width, height, text);
 	}

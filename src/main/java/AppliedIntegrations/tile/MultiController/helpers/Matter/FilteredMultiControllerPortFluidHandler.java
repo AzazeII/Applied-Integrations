@@ -1,7 +1,7 @@
 package AppliedIntegrations.tile.MultiController.helpers.Matter;
 
 
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -16,8 +16,8 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class FilteredServerPortFluidHandler extends FilteredServerPortHandler<IAEFluidStack> {
-	public FilteredServerPortFluidHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore host) {
+public class FilteredMultiControllerPortFluidHandler extends FilteredMultiControllerPortHandler<IAEFluidStack> {
+	public FilteredMultiControllerPortFluidHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileMultiControllerCore host) {
 
 		super(filteredMatter, filterMode, host);
 	}

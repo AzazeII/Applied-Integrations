@@ -23,8 +23,6 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Collections.singletonList;
-
 /**
  * @Author Azazell
  */
@@ -99,7 +97,8 @@ public class PartInteractionPlane extends AIPart implements ICellContainer {
 			// Empty list
 			return new ArrayList<>();
 
-		return singletonList(this.handler);
+		//return singletonList(this.handler);
+		return new ArrayList<>();
 	}
 
 	@Override

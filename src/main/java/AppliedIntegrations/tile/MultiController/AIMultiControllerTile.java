@@ -16,10 +16,10 @@ import java.util.EnumSet;
 /**
  * @Author Azazell
  */
-public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiBlock {
-	protected TileServerCore master;
+public abstract class AIMultiControllerTile extends AITile implements IAIMultiBlock {
+	protected TileMultiControllerCore master;
 
-	private ChangeHandler<TileServerCore> masterChangeHandler = new ChangeHandler<>();
+	private ChangeHandler<TileMultiControllerCore> masterChangeHandler = new ChangeHandler<>();
 
 	protected abstract EnumSet<EnumFacing> getValidSides();
 
@@ -27,9 +27,9 @@ public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiB
 	public void tryConstruct(EntityPlayer p) {
 		for (EnumFacing side : EnumFacing.values()) {
 			// Check if tile from two block from this block to direction of side
-			if (world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2)) instanceof TileServerCore) {
+			if (world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2)) instanceof TileMultiControllerCore) {
 				// Get tile
-				TileServerCore tile = (TileServerCore) world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2));
+				TileMultiControllerCore tile = (TileMultiControllerCore) world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2));
 
 				// Check not null
 				if (tile != null) {
@@ -54,7 +54,7 @@ public abstract class AIServerMultiBlockTile extends AITile implements IAIMultiB
 	@Override
 	public void setMaster(IMaster tileServerCore) {
 		// Update master
-		this.master = (TileServerCore) tileServerCore;
+		this.master = (TileMultiControllerCore) tileServerCore;
 	}
 
 	@Override

@@ -21,11 +21,11 @@ public enum TileEnum {
 	TLBRib(TileLogicBusRib.class, AIConfig.enableLogicBus),
 	TLBCore(TileLogicBusCore.class, AIConfig.enableLogicBus),
 
-	TMCCore(TileServerCore.class, AIConfig.enableMEServer),
-	TMCPort(TileServerPort.class, AIConfig.enableMEServer),
-	TMCRib(TileServerRib.class, AIConfig.enableMEServer),
-	TMCHousing(TileServerHousing.class, AIConfig.enableMEServer),
-	TMCTerminal(TileServerSecurity.class, AIConfig.enableMEServer),
+	TMCCore(TileMultiControllerCore.class, AIConfig.enableMEServer),
+	TMCPort(TileMultiControllerPort.class, AIConfig.enableMEServer),
+	TMCRib(TileMultiControllerRib.class, AIConfig.enableMEServer),
+	TMCHousing(TileMultiControllerHousing.class, AIConfig.enableMEServer),
+	TMCTerminal(TileMultiControllerTerminal.class, AIConfig.enableMEServer),
 
 	EnergyInterface(TileEnergyInterface.class, AIConfig.enableEnergyFeatures),
 

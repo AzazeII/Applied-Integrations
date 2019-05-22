@@ -3,7 +3,7 @@ package AppliedIntegrations.tile.MultiController.Render;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Client.AITileFullRenderer;
-import AppliedIntegrations.tile.MultiController.TileServerRib;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerRib;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.EnumFacing;
@@ -15,7 +15,7 @@ import static net.minecraft.util.EnumFacing.*;
 import static net.minecraft.util.EnumFacing.Axis.Y;
 import static net.minecraft.util.EnumFacing.Axis.Z;
 
-public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
+public class ServerRibRenderer extends AITileFullRenderer<TileMultiControllerRib> {
 
 	// Initialize side variables
 	private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame.png"); // (1)
@@ -29,10 +29,10 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 	private static final EnumFacing[] axisDirections = {SOUTH, WEST, UP};
 
 	// Tile ---> Axis Map
-	private static LinkedHashMap<TileServerRib, Axis> tileAxisMap = new LinkedHashMap<>();
+	private static LinkedHashMap<TileMultiControllerRib, Axis> tileAxisMap = new LinkedHashMap<>();
 
 	@Override
-	public void render(TileServerRib te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
+	public void render(TileMultiControllerRib te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		// Save matrix to stack
 		prepareMatrix(x, y, z);
 
@@ -73,13 +73,13 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 		pushMatrix(x, y, z);
 	}
 
-	private void bindTileTexture(TileServerRib te) {
+	private void bindTileTexture(TileMultiControllerRib te) {
 		// Iterate for each axis direction
 		for (EnumFacing side : axisDirections) {
 			// Check if rib has same block at current side
-			if (te.getWorld().getTileEntity(te.getPos().offset(side)) instanceof TileServerRib) {
+			if (te.getWorld().getTileEntity(te.getPos().offset(side)) instanceof TileMultiControllerRib) {
 				// Check if rib has same block at opposite side
-				if (te.getWorld().getTileEntity(te.getPos().offset(side.getOpposite())) instanceof TileServerRib) {
+				if (te.getWorld().getTileEntity(te.getPos().offset(side.getOpposite())) instanceof TileMultiControllerRib) {
 					// Make rib directional
 					Minecraft.getMinecraft().renderEngine.bindTexture(bindDirectionalTexture(te));
 
@@ -99,7 +99,7 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 		}
 	}
 
-	private float[][] translateAxisToUV(TileServerRib te, EnumFacing side) {
+	private float[][] translateAxisToUV(TileMultiControllerRib te, EnumFacing side) {
 		// Get tile line axis
 		Axis axis = tileAxisMap.get(te);
 
@@ -128,7 +128,7 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 		return defaultUV;
 	}
 
-	private ResourceLocation bindDirectionalTexture(TileServerRib te) {
+	private ResourceLocation bindDirectionalTexture(TileMultiControllerRib te) {
 		// Check if node is not active
 		if (!te.isActive) {
 			return offDirectionalSide;
@@ -137,7 +137,7 @@ public class ServerRibRenderer extends AITileFullRenderer<TileServerRib> {
 		return directionalSide;
 	}
 
-	private ResourceLocation bindNondirectionalTexture(TileServerRib te) {
+	private ResourceLocation bindNondirectionalTexture(TileMultiControllerRib te) {
 		// Check if node is not active
 		if (!te.isActive) {
 			return offSide;

@@ -10,7 +10,7 @@ import java.util.EnumSet;
 /**
  * @Author Azazell
  */
-public class TileServerHousing extends AIServerMultiBlockTile {
+public class TileMultiControllerHousing extends AIMultiControllerTile {
 	@Override
 	public EnumSet<EnumFacing> getValidSides() {
 		if (hasMaster()) {
@@ -22,9 +22,9 @@ public class TileServerHousing extends AIServerMultiBlockTile {
 						getPos().getY() + side.getFrontOffsetY(),
 						getPos().getZ() + side.getFrontOffsetZ()));
 
-				if (tile instanceof TileServerCore ||
-					tile instanceof TileServerRib ||
-					tile instanceof TileServerHousing) {
+				if (tile instanceof TileMultiControllerCore ||
+					tile instanceof TileMultiControllerRib ||
+					tile instanceof TileMultiControllerHousing) {
 					set.add(side);
 				}
 			}

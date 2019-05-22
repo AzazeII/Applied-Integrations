@@ -12,8 +12,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * @Author Azazell
  */
-public class SlotMEServer extends Slot {
-	public SlotMEServer(IInventory inv, int index, int x, int y) {
+public class SlotMEMultiController extends Slot {
+	public SlotMEMultiController(IInventory inv, int index, int x, int y) {
 
 		super(inv, index, x, y);
 	}

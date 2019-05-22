@@ -3,7 +3,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import appeng.util.Platform;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -38,7 +38,7 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
 	@Override
 	public TileEntity createNewTileEntity(@Nullable World p_149915_1_, int p_149915_2_) {
 
-		return new TileServerSecurity();
+		return new TileMultiControllerTerminal();
 	}
 
 	@Override
@@ -52,7 +52,7 @@ public class BlockServerSecurity extends BlockAIRegistrable implements ITileEnti
 			ItemStack stack = p.getHeldItem(hand);
 
 			// Get tile
-			TileServerSecurity tile = (TileServerSecurity) world.getTileEntity(pos);
+			TileMultiControllerTerminal tile = (TileMultiControllerTerminal) world.getTileEntity(pos);
 
 			// Check if stack is wrench
 			if (Platform.isWrench(p, stack, pos)) {

@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
 
 
-import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import appeng.api.config.IncludeExclude;
 import appeng.core.AppEng;
@@ -15,7 +15,7 @@ public class GuiListTypeButton extends GuiServerButton {
 
 	private IncludeExclude mode;
 
-	public GuiListTypeButton(GuiServerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
+	public GuiListTypeButton(GuiMultiControllerTerminal terminal, int ID, int xPosition, int yPosition, int width, int height, String text) {
 
 		super(terminal, ID, xPosition, yPosition, width, height, text);
 	}

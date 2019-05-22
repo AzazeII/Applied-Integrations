@@ -20,7 +20,7 @@ import java.util.EnumSet;
 /**
  * @Author Azazell
  */
-public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlock, ITickable {
+public class TileMultiControllerRib extends AIMultiControllerTile implements IAIMultiBlock, ITickable {
 
 	// Used only client
 	public boolean isActive;
@@ -94,7 +94,7 @@ public class TileServerRib extends AIServerMultiBlockTile implements IAIMultiBlo
 		// Wrapper for card inventory of server core. Now subnetwork(ad-hoc network) with storage bus and
 		// ME terminal can access card storage of server core
 		{
-			return (T) new InvWrapper(((TileServerCore) getMaster()).cardInv);
+			return (T) new InvWrapper(((TileMultiControllerCore) getMaster()).cardInv);
 		}
 		return super.getCapability(capability, facing);
 	}

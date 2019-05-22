@@ -10,8 +10,8 @@ import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import AppliedIntegrations.grid.Mana.AEManaStack;
 import AppliedIntegrations.grid.Mana.ManaStorageChannel;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
-import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredServerPortManaHandler;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
+import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortManaHandler;
 import appeng.api.AEApi;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -100,7 +100,7 @@ public class BotaniaLoader {
 				WidgetManaSlot.class.getConstructor(),
 
 				// Handler
-				FilteredServerPortManaHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileServerCore.class),
+				FilteredMultiControllerPortManaHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
 				// Converter and UV
 				Utils::getManaFromItemStack, Pair.of(32, 0),

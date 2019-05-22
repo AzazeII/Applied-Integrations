@@ -8,15 +8,15 @@ import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
 import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Container.tile.ContainerLogicBus;
-import AppliedIntegrations.Container.tile.Server.ContainerServerCore;
-import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
+import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerCore;
+import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Gui.Part.GuiEnergyIO;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
 import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
-import AppliedIntegrations.Gui.ServerGUI.GuiServerCore;
-import AppliedIntegrations.Gui.ServerGUI.GuiServerTerminal;
+import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerCore;
+import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
@@ -24,8 +24,8 @@ import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
@@ -169,13 +169,13 @@ public class AIGuiHandler implements IGuiHandler {
 
 			return new ContainerAIPriority(player.inventory, host);
 		} else if (gui == GuiServerTerminal) {
-			TileServerSecurity terminal = (TileServerSecurity) Utils.getTileByParams(new BlockPos(x, y, z), world);
+			TileMultiControllerTerminal terminal = (TileMultiControllerTerminal) Utils.getTileByParams(new BlockPos(x, y, z), world);
 
-			return new ContainerServerTerminal(terminal, player);
+			return new ContainerMultiControllerTerminal(terminal, player);
 		} else if (gui == GuiServerStorage) {
-			TileServerCore core = (TileServerCore) Utils.getTileByParams(new BlockPos(x, y, z), world);
+			TileMultiControllerCore core = (TileMultiControllerCore) Utils.getTileByParams(new BlockPos(x, y, z), world);
 
-			return new ContainerServerCore(player, core);
+			return new ContainerMultiControllerCore(player, core);
 		}
 
 		return null;
@@ -215,9 +215,9 @@ public class AIGuiHandler implements IGuiHandler {
 
 			return new GuiPriorityAI(player.inventory, host);
 		} else if (gui == GuiServerTerminal) {
-			return new GuiServerTerminal((ContainerServerTerminal) getServerGuiElement(ID, player, world, x, y, z), player);
+			return new GuiMultiControllerTerminal((ContainerMultiControllerTerminal) getServerGuiElement(ID, player, world, x, y, z), player);
 		} else if (gui == GuiServerStorage) {
-			return new GuiServerCore((ContainerServerCore) getServerGuiElement(ID, player, world, x, y, z), player);
+			return new GuiMultiControllerCore((ContainerMultiControllerCore) getServerGuiElement(ID, player, world, x, y, z), player);
 		}
 		return null;
 	}

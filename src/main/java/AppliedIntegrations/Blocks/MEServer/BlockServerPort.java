@@ -2,7 +2,7 @@ package AppliedIntegrations.Blocks.MEServer;
 
 
 import AppliedIntegrations.Blocks.AIMultiBlock;
-import AppliedIntegrations.tile.MultiController.TileServerPort;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerPort;
 import appeng.me.GridAccessException;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -21,7 +21,7 @@ public class BlockServerPort extends AIMultiBlock {
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
 		// Get port
-		TileServerPort port = (TileServerPort) worldIn.getTileEntity(pos);
+		TileMultiControllerPort port = (TileMultiControllerPort) worldIn.getTileEntity(pos);
 
 		// Check not null
 		if (port != null) {

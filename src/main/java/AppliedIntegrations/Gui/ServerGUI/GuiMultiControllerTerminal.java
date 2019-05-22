@@ -3,7 +3,7 @@ package AppliedIntegrations.Gui.ServerGUI;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.tile.Server.ContainerServerTerminal;
+import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
@@ -19,7 +19,7 @@ import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
-import AppliedIntegrations.tile.MultiController.TileServerSecurity;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
@@ -45,7 +45,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static AppliedIntegrations.tile.MultiController.TileServerSecurity.*;
+import static AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal.*;
 
 
 // TODO Rewrite this GUI, now it will be similar to normal security terminal.
@@ -54,7 +54,7 @@ import static AppliedIntegrations.tile.MultiController.TileServerSecurity.*;
 /**
  * @Author Azazell
  */
-public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
+public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost {
 
 	private static final int GUI_WIDTH = 192;
 
@@ -68,7 +68,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
 	private GuiListTypeButton listTypeButton;
 
-	private TileServerSecurity terminal;
+	private TileMultiControllerTerminal terminal;
 
 	private ChangeHandler<ItemStack> cardChangeUpdateHandler = new ChangeHandler<>();
 
@@ -87,7 +87,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_terminal.png");
 
-	public GuiServerTerminal(ContainerServerTerminal container, EntityPlayer player) {
+	public GuiMultiControllerTerminal(ContainerMultiControllerTerminal container, EntityPlayer player) {
 
 		super(container, player);
 
@@ -118,8 +118,8 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 	@Override
 	public void setSyncHost(ISyncHost host) {
 
-		if (host instanceof TileServerSecurity) {
-			terminal = (TileServerSecurity) host;
+		if (host instanceof TileMultiControllerTerminal) {
+			terminal = (TileMultiControllerTerminal) host;
 		}
 	}
 
@@ -216,7 +216,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 		}));
 
 		// Link widgets from container to widgets in GUI
-		initWidgetLinkage((ContainerServerTerminal) inventorySlots);
+		initWidgetLinkage((ContainerMultiControllerTerminal) inventorySlots);
 
 		// ************# Add Filter Slots #************ //
 
@@ -244,9 +244,9 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 	0 1 -> 1
 	1 0    1
 	 */
-	public void initWidgetLinkage(ContainerServerTerminal containerServerTerminal) {
+	public void initWidgetLinkage(ContainerMultiControllerTerminal containerMultiControllerTerminal) {
 		// Iterate for each map in outer map
-		containerServerTerminal.getOuterMap().forEach((securityPermissions, innerMap) -> {
+		containerMultiControllerTerminal.getOuterMap().forEach((securityPermissions, innerMap) -> {
 			// Get inner gui map
 			LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelWidget<?>>> chanListMap = permissionChannelWidgetMap.get(securityPermissions);
 
@@ -281,13 +281,13 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 		// Check if is fake slot
 		if (slot instanceof SlotFake) {
 			// Cast container to higher class
-			ContainerServerTerminal containerServerTerminal = (ContainerServerTerminal) inventorySlots;
+			ContainerMultiControllerTerminal containerMultiControllerTerminal = (ContainerMultiControllerTerminal) inventorySlots;
 
 			// Get client player
 			EntityPlayer player = mc.player;
 
 			// Iterate for each widget in inner-inner list
-			containerServerTerminal.forEachWidget((widget) -> {
+			containerMultiControllerTerminal.forEachWidget((widget) -> {
 				// Check if slot wrapper of widget is given slot
 				if (slot == widget.getSlotWrapper()) {
 					// Get stack in player hand and update widget stack
@@ -319,9 +319,9 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
 	private ItemStack getCardStack() {
 		// Check if container has card
-		if (((ContainerServerTerminal) inventorySlots).hasCard()) {
+		if (((ContainerMultiControllerTerminal) inventorySlots).hasCard()) {
 			// Get card stack from container
-			return ((ContainerServerTerminal) inventorySlots).getCard();
+			return ((ContainerMultiControllerTerminal) inventorySlots).getCard();
 		}
 
 		return null;
@@ -361,7 +361,7 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 
 	public boolean isCardValid() {
 		// Check if container has card
-		if (((ContainerServerTerminal) inventorySlots).hasCard()) {
+		if (((ContainerMultiControllerTerminal) inventorySlots).hasCard()) {
 			// Get card stack from container
 			ItemStack stack = getCardStack();
 
@@ -378,10 +378,10 @@ public class GuiServerTerminal extends AIBaseGui implements IWidgetHost {
 		super.drawScreen(mX, mY, pOpacity);
 
 		// Cast container to server terminal container
-		ContainerServerTerminal containerServerTerminal = (ContainerServerTerminal) inventorySlots;
+		ContainerMultiControllerTerminal containerMultiControllerTerminal = (ContainerMultiControllerTerminal) inventorySlots;
 
 		// Iterate for each list in each inner map in outer map of container
-		containerServerTerminal.getOuterMap().forEach((perm, map) -> map.forEach((chan, list) -> list.forEach((widget) -> {
+		containerMultiControllerTerminal.getOuterMap().forEach((perm, map) -> map.forEach((chan, list) -> list.forEach((widget) -> {
 			// Make slot (in)visible depending on card state
 			widget.setVisible(isCardValid() && chan == storageChannelButton.getChannel() && perm == securityPermissionButton.getCurrentPermissions());
 		})));

@@ -1,8 +1,8 @@
 package AppliedIntegrations.tile.MultiController.helpers.Matter;
 
 
-import AppliedIntegrations.tile.MultiController.ServerPortHandler;
-import AppliedIntegrations.tile.MultiController.TileServerCore;
+import AppliedIntegrations.tile.MultiController.MultiControllerPortHandler;
+import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.IncludeExclude;
@@ -26,8 +26,8 @@ import static appeng.api.config.SecurityPermissions.INJECT;
 /**
  * @Author Azazell
  */
-public abstract class FilteredServerPortHandler<T extends IAEStack<T>> extends ServerPortHandler<T> implements IMEInventoryHandler<T> {
-	public FilteredServerPortHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileServerCore host) {
+public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> extends MultiControllerPortHandler<T> implements IMEInventoryHandler<T> {
+	public FilteredMultiControllerPortHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileMultiControllerCore host) {
 
 		super(filteredMatter, filterMode, host);
 	}
