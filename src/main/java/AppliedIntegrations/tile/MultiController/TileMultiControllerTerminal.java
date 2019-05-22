@@ -30,11 +30,9 @@ import java.util.List;
 public class TileMultiControllerTerminal extends AITile implements IOrientable {
 	// Used by both container and gui
 	public static final int SLOT_Y = 18; // (1)
-
 	public static final int SLOT_X = 9; // (2)
 
 	public static final int SLOT_ROWS = 3; // (3)
-
 	public static final int SLOT_COLUMNS = 9; // (4)
 
 	public List<ContainerMultiControllerTerminal> listeners = new LinkedList<>();

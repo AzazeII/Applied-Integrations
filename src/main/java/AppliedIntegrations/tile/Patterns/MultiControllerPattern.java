@@ -7,6 +7,7 @@ import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.api.Multiblocks.IAIMinimalPattern;
 import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -17,41 +18,52 @@ import java.util.stream.Stream;
 public class MultiControllerPattern implements IAIPatternExtendable {
 	private Map<EnumFacing, List<BlockData>> edgeMap = new HashMap<>();
 
-	private IAIMinimalPattern keyFrame = () -> new ArrayList<>(Arrays.asList(
-			// Corners
-			new BlockData(-1, -1, -1, BlocksEnum.BMCRib.b),
-			new BlockData(-1, -1, 1, BlocksEnum.BMCRib.b),
-			new BlockData(-1, 1, 1, BlocksEnum.BMCRib.b),
-			new BlockData(1, 1, 1, BlocksEnum.BMCRib.b),
+	private IAIMinimalPattern keyFrame = new IAIMinimalPattern() {
+		@Override
+		public BlockPos getSize() {
+			return new BlockPos(3,3,3);
+		}
 
-			new BlockData(-1, 1, -1, BlocksEnum.BMCRib.b),
-			new BlockData(1, 1, -1, BlocksEnum.BMCRib.b),
-			new BlockData(1, -1, -1, BlocksEnum.BMCRib.b),
-			new BlockData(1, -1, 1, BlocksEnum.BMCRib.b),
+		@Override
+		public List<BlockData> getPatternData() {
+			return new ArrayList<>(Arrays.asList(
+					// Corners
+					new BlockData(-1, -1, -1, BlocksEnum.BMCRib.b),
+					new BlockData(-1, -1, 1, BlocksEnum.BMCRib.b),
+					new BlockData(-1, 1, 1, BlocksEnum.BMCRib.b),
+					new BlockData(1, 1, 1, BlocksEnum.BMCRib.b),
 
-			// Ribs
-			new BlockData(1, -1, 0, BlocksEnum.BMCRib.b),
-			new BlockData(-1, 1, 0, BlocksEnum.BMCRib.b),
-			new BlockData(1, -1, 0, BlocksEnum.BMCRib.b),
-			new BlockData(-1, 1, 0, BlocksEnum.BMCRib.b),
+					new BlockData(-1, 1, -1, BlocksEnum.BMCRib.b),
+					new BlockData(1, 1, -1, BlocksEnum.BMCRib.b),
+					new BlockData(1, -1, -1, BlocksEnum.BMCRib.b),
+					new BlockData(1, -1, 1, BlocksEnum.BMCRib.b),
 
-			new BlockData(0, -1, 1, BlocksEnum.BMCRib.b),
-			new BlockData(0, 1, 1, BlocksEnum.BMCRib.b),
-			new BlockData(0, -1, -1, BlocksEnum.BMCRib.b),
-			new BlockData(0, 1, -1, BlocksEnum.BMCRib.b),
+					// Ribs
+					new BlockData(1, -1, 0, BlocksEnum.BMCRib.b),
+					new BlockData(-1, 1, 0, BlocksEnum.BMCRib.b),
+					new BlockData(1, -1, 0, BlocksEnum.BMCRib.b),
+					new BlockData(-1, 1, 0, BlocksEnum.BMCRib.b),
 
-			new BlockData(1, 0, 1, BlocksEnum.BMCRib.b),
-			new BlockData(1, 0, -1, BlocksEnum.BMCRib.b),
-			new BlockData(-1, 0, 1, BlocksEnum.BMCRib.b),
-			new BlockData(-1, 0, -1, BlocksEnum.BMCRib.b),
+					new BlockData(0, -1, 1, BlocksEnum.BMCRib.b),
+					new BlockData(0, 1, 1, BlocksEnum.BMCRib.b),
+					new BlockData(0, -1, -1, BlocksEnum.BMCRib.b),
+					new BlockData(0, 1, -1, BlocksEnum.BMCRib.b),
 
-			// Ports
-			new BlockData(1, 0, 0, BlocksEnum.BMCPort.b),
-			new BlockData(-1, 0, 0, BlocksEnum.BMCPort.b),
-			new BlockData(0, 1, 0, BlocksEnum.BMCPort.b),
-			new BlockData(0, -1, 0, BlocksEnum.BMCPort.b),
-			new BlockData(0, 0, 1, BlocksEnum.BMCPort.b),
-			new BlockData(0, 0, -1, BlocksEnum.BMCPort.b)));
+					new BlockData(1, 0, 1, BlocksEnum.BMCRib.b),
+					new BlockData(1, 0, -1, BlocksEnum.BMCRib.b),
+					new BlockData(-1, 0, 1, BlocksEnum.BMCRib.b),
+					new BlockData(-1, 0, -1, BlocksEnum.BMCRib.b),
+
+					// Ports
+					new BlockData(1, 0, 0, BlocksEnum.BMCPort.b),
+					new BlockData(-1, 0, 0, BlocksEnum.BMCPort.b),
+					new BlockData(0, 1, 0, BlocksEnum.BMCPort.b),
+					new BlockData(0, -1, 0, BlocksEnum.BMCPort.b),
+					new BlockData(0, 0, 1, BlocksEnum.BMCPort.b),
+					new BlockData(0, 0, -1, BlocksEnum.BMCPort.b))
+			);
+		}
+	};
 
 	private List<BlockData> ribs = Arrays.asList(
 			// Corners

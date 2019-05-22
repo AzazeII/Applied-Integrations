@@ -107,8 +107,6 @@ public class MultiBlockUtils {
 				return data.offset(facing, length);
 			})).getPatternData());
 		}
-
-
 	}
 
 	/**
@@ -122,8 +120,16 @@ public class MultiBlockUtils {
 			// Get data list from pattern
 			List<BlockData> dataList = pattern.getPatternData();
 
-			// Add stream to this list
-			dataList.addAll(adjustment);
+			// Iterate for each data
+			for (BlockData data : adjustment) {
+				// Check if data list already contains adjustment
+				if (dataList.contains(data))
+					// Illegal state
+					throw new IllegalStateException("Can't add multiple equal variables to one pattern");
+
+				// Add stream to this list
+				dataList.add(data);
+			}
 
 			return dataList;
 		};
