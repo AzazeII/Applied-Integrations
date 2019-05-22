@@ -16,9 +16,9 @@ import net.minecraft.world.World;
 /**
  * @Author Azazell
  */
-public class BlockServerRib extends AIMultiBlock {
+public class BlockMultiControllerRib extends AIMultiBlock {
 
-	public BlockServerRib(String reg, String unloc) {
+	public BlockMultiControllerRib(String reg, String unloc) {
 		super(reg, unloc);
 	}
 

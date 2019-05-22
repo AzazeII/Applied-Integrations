@@ -133,7 +133,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 			// Count all slaves
 			AtomicInteger count = new AtomicInteger();
 
-			MultiBlockUtils.fillListWithPattern(AIPatterns.ME_LOGIC, this, (data) -> {
+			MultiBlockUtils.fillListWithPattern(AIPatterns.ME_LOGIC_BUS.getPatternData(), this, (data) -> {
 				// Increment count
 				count.getAndIncrement();
 
@@ -150,7 +150,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 
 			// Check if count is equal to pattern's block count
-			if (count.get() == AIPatterns.ME_LOGIC.length) {
+			if (count.get() == AIPatterns.ME_LOGIC_BUS.getPatternData().size()) {
 
 				// Count of ribs in layer two of structure ( should be 4)
 				int ribCounter = 0;
@@ -315,9 +315,9 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 /* line 87:
 // Iterate over logic bus pattern
 // Iterate for i < len
-for (int i = 0; i < AIPatterns.ME_LOGIC.length; i++) {
+for (int i = 0; i < AIPatterns.ME_LOGIC_BUS.length; i++) {
     // Get pattern data
-    BlockData data = AIPatterns.ME_LOGIC[i];
+    BlockData data = AIPatterns.ME_LOGIC_BUS[i];
 
     // Get block
     Block block = world.getBlockState(new BlockPos(pos.getX() + data.x,

@@ -8,6 +8,7 @@ import AppliedIntegrations.Utils.AIGridNodeInventory;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
@@ -39,6 +40,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -511,9 +513,48 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			// Count of blocks matched the pattern. Atomic, because it accessed by lambda function
 			AtomicInteger count = new AtomicInteger();
 
+			// Map for half of length from core to port at axis
+			Map<EnumFacing.Axis, Integer> axisLengthMap = new LinkedHashMap<>();
+
+			// Iterate until i = 5
+			for (int i = 1; i < 5; i++) {
+				// Convert to final
+				final int finalI = i;
+
+				// Iterate for each positive enum side
+				Arrays.stream(EnumFacing.values()).filter((facing) -> facing.getAxisDirection() == EnumFacing.AxisDirection.POSITIVE).forEach((side) -> {
+					// Get tile with i blocks offset to side
+					TileEntity maybePort = world.getTileEntity(new BlockPos(
+							getPos().getX() + side.getFrontOffsetX() * 2,
+							getPos().getY() + side.getFrontOffsetY() * 2,
+							getPos().getZ() + side.getFrontOffsetZ() * 2));
+
+					// Check if tile is port
+					if (maybePort instanceof TileMultiControllerPort) {
+						// Put value in map
+						axisLengthMap.put(side.getAxis(), finalI);
+					}
+				});
+			}
+
+			// Get initial pattern
+			IAIPatternExtendable pattern = AIPatterns.ME_MULTI_CONTROLLER;
+
+			// Iterate for each axis
+			for (EnumFacing.Axis axis : EnumFacing.Axis.values()) {
+				// Check if map contains this axis
+				if (!axisLengthMap.containsKey(axis))
+					// Skip
+					continue;
+
+				// Extend pattern by length from map
+				MultiBlockUtils.extendPattern(pattern, axis, axisLengthMap.get(axis));
+			}
+
 			try {
 				// Get list of blocks matched the pattern
-				formServer((List<AIMultiControllerTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_MULTI_CONTROLLER.getPatternData(), this, (block) -> count.getAndIncrement()), count, p);
+				formServer((List<AIMultiControllerTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_MULTI_CONTROLLER.getPatternData(),
+						this, (block) -> count.getAndIncrement()), count, p);
 			} catch (GridAccessException ignored) { }
 		}
 	}
@@ -521,7 +562,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	@SuppressWarnings("unchecked")
 	private void formServer(List<AIMultiControllerTile> toUpdate, AtomicInteger count, EntityPlayer p) throws GridAccessException {
 		// Check if length equal to count, so all block has matched the pattern
-		if (AIPatterns.ME_MULTI_CONTROLLER.getPatternData().length == count.get()) {
+		if (AIPatterns.ME_MULTI_CONTROLLER.getPatternData().size() == count.get()) {
 			// Iterate for each block to update
 			for (AIMultiControllerTile slave : toUpdate) {
 				// Check if slave is null

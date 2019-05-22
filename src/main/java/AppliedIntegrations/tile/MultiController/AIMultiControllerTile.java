@@ -8,6 +8,7 @@ import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
@@ -21,22 +22,28 @@ public abstract class AIMultiControllerTile extends AITile implements IAIMultiBl
 
 	private ChangeHandler<TileMultiControllerCore> masterChangeHandler = new ChangeHandler<>();
 
-	protected abstract EnumSet<EnumFacing> getValidSides();
-
 	@Override
 	public void tryConstruct(EntityPlayer p) {
-		for (EnumFacing side : EnumFacing.values()) {
-			// Check if tile from two block from this block to direction of side
-			if (world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2)) instanceof TileMultiControllerCore) {
-				// Get tile
-				TileMultiControllerCore tile = (TileMultiControllerCore) world.getTileEntity(new BlockPos(getPos().getX() + side.getFrontOffsetX() * 2, getPos().getY() + side.getFrontOffsetY() * 2, getPos().getZ() + side.getFrontOffsetZ() * 2));
+		// Iterate until i = 5
+		for (int i = 1; i < 5; i++) {
+			// Iterate for each side
+			for (EnumFacing side : EnumFacing.values()) {
+				// Get tile with i blocks offset to side
+				TileEntity tile = world.getTileEntity(new BlockPos(
+						getPos().getX() + side.getFrontOffsetX() * 2,
+						getPos().getY() + side.getFrontOffsetY() * 2,
+						getPos().getZ() + side.getFrontOffsetZ() * 2));
 
-				// Check not null
-				if (tile != null) {
+				// Check if tile is core
+				if (tile instanceof TileMultiControllerCore) {
+					// Cast tile
+					TileMultiControllerCore core = (TileMultiControllerCore) tile;
+
 					// Pass call to core
-					tile.tryConstruct(p);
+					core.tryConstruct(p);
+
+					break;
 				}
-				break;
 			}
 		}
 	}
@@ -73,6 +80,12 @@ public abstract class AIMultiControllerTile extends AITile implements IAIMultiBl
 		}
 	}
 
+	protected abstract EnumSet<EnumFacing> getValidSides();
+
+	@Override
+	public void notifyBlock() {
+	}
+
 	@Override
 	public void invalidate() {
 		super.invalidate();
@@ -91,7 +104,4 @@ public abstract class AIMultiControllerTile extends AITile implements IAIMultiBl
 			NetworkHandler.sendToDimension(new PacketMasterSync(this, master), world.provider.getDimension());
 		});
 	}
-
-	@Override
-	public void notifyBlock() {}
 }

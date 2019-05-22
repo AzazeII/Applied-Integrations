@@ -23,8 +23,8 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 /**
  * @Author Azazell
  */
-public class BlockServerSecurity extends BlockAIRegistrable implements ITileEntityProvider {
-	public BlockServerSecurity(String reg, String unloc) {
+public class BlockMultiControllerTerminal extends BlockAIRegistrable implements ITileEntityProvider {
+	public BlockMultiControllerTerminal(String reg, String unloc) {
 
 		super(reg, unloc);
 	}

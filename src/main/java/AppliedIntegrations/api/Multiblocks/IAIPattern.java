@@ -1,5 +1,8 @@
 package AppliedIntegrations.api.Multiblocks;
 
+
+import java.util.List;
+
 /**
  * @Author Azazell
  * @apiNote This interface represents any multiblock pattern from
@@ -9,5 +12,5 @@ public interface IAIPattern {
 	/**
 	 * @return Array of block data variables
 	 */
-	BlockData[] getPatternData();
+	List<BlockData> getPatternData();
 }
