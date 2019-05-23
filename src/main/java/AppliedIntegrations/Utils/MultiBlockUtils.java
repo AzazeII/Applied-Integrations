@@ -12,7 +12,10 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
+
+import static net.minecraft.util.EnumFacing.Axis.*;
 
 /**
  * @Author Azazell
@@ -81,20 +84,22 @@ public class MultiBlockUtils {
 	}
 
 	/**
-	 * Extends {@code pattern} by one block for negative and positive facing of given {@code axis}
-	 * @param pattern To extend
-	 * @param axis For extending
-	 * @param length Count of block to extend
-	 * @return
+	 * Create new pattern from base extendable pattern
+	 * @param pattern Base pattern
+	 * @param axisLengthMap Map for resizing
+	 * @return Extended pattern
 	 */
-	public static IAIPatternExtendable getExtendedPattern(IAIPatternExtendable pattern, EnumFacing.Axis axis, Integer length) {
+	public static IAIPatternExtendable getExtendedPattern(IAIPatternExtendable pattern, Map<EnumFacing.Axis, Integer> axisLengthMap) {
 		// Get minimal frame size of pattern
 		BlockPos minimal = pattern.getMinimalFrameSize();
 
-		// Get facing from positive direction of axis
-		EnumFacing facing = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.POSITIVE, axis);
+		// Offset minimal vector
+		minimal = new BlockPos(
+				minimal.getX() + axisLengthMap.get(X),
+				minimal.getY() + axisLengthMap.get(Y),
+				minimal.getZ() + axisLengthMap.get(Z));
 
 		// Create new pattern from extended minimal size
-		return MultiControllerPattern.generateMultiControllerForSize(minimal.offset(facing, length));
+		return MultiControllerPattern.generateMultiController(minimal);
 	}
 }

@@ -516,8 +516,8 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			// Map for half of length from core to port at axis
 			Map<EnumFacing.Axis, Integer> axisLengthMap = new LinkedHashMap<>();
 
-			// Iterate until i = 4
-			for (int rangeToBlock = 0; rangeToBlock < 4; rangeToBlock++) {
+			// Iterate 3 times
+			for (int rangeToBlock = 0; rangeToBlock < 3; rangeToBlock++) {
 				// Convert to final
 				final int finalI = rangeToBlock;
 
@@ -532,7 +532,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					// Check if tile is port
 					if (maybePort instanceof TileMultiControllerPort) {
 						// Put value in map
-						axisLengthMap.put(side.getAxis(), finalI);
+						axisLengthMap.put(side.getAxis(), finalI - 1);
 					}
 				});
 			}
@@ -540,16 +540,16 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			// Get initial pattern
 			IAIPatternExtendable pattern = AIPatterns.ME_MULTI_CONTROLLER;
 
-			// Iterate for each axis
-			for (EnumFacing.Axis axis : EnumFacing.Axis.values()) {
-				// Check if map contains this axis
-				if (!axisLengthMap.containsKey(axis))
-					// Skip
-					continue;
+			// Check if axis length map has 3 entries
+			if (axisLengthMap.size() < 3)
+				// Incorrect setup
+				return;
 
-				// Extend pattern by length from map
-				pattern = MultiBlockUtils.getExtendedPattern(pattern, axis, axisLengthMap.get(axis) - 1);
-			}
+			// Extend pattern by length from map
+			pattern = MultiBlockUtils.getExtendedPattern(pattern, axisLengthMap);
+
+			if (p != null)
+				MultiBlockUtils.fillWorldWithPattern(pattern.getPatternData(), this);
 
 			try {
 				// Get list of blocks matched the pattern

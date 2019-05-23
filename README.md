@@ -78,8 +78,8 @@ DurableBasic, for suggesting some great ideas for mod.
 
 # Links
 
-You are currently here -> Github: https://github.com/AzazeII/Applied-Integrations/ <-
-Curseforge page: https://minecraft.curseforge.com/projects/applied-integrations
+You are currently here -> Github: https://github.com/AzazeII/Applied-Integrations/ <-  
+Curseforge page: https://minecraft.curseforge.com/projects/applied-integrations  
 
 Travis insights: https://travis-ci.org/AzazeII/Applied-Integrations
 CircleCI insights: https://circleci.com/gh/AzazeII/Applied-Integrations
