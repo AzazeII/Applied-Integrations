@@ -3,7 +3,6 @@ package AppliedIntegrations.tile.Patterns;
 
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.api.Multiblocks.BlockData;
-import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
@@ -11,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -272,10 +270,25 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 		};
 	}
 
+	// Don't use this for this pattern, generate new with MultiBlockUtils instead.
+	@Deprecated
 	@Override
 	public List<BlockData> getPatternData() {
 		// Create initial list from main data block
-		return Arrays.asList(
+		return new ArrayList<>();
+	}
+
+	@Override
+	public BlockPos getMinimalFrameSize() {
+		return new BlockPos(1, 1, 1);
+	}
+}
+
+/*
+Old multi-block manually generated pattern
+
+
+				Arrays.asList(
 				// Main axises
 				new BlockData(0, 2, 0, BlocksEnum.BMCPort.b),
 				new BlockData(2, 0, 0, BlocksEnum.BMCPort.b),
@@ -329,12 +342,12 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 				new BlockData(2, -2, 0, BlocksEnum.BMCRib.b),
 				new BlockData(-2, 2, 0, BlocksEnum.BMCRib.b),
 				new BlockData(-2, -2, 0, BlocksEnum.BMCRib.b),
-				
+
 				new BlockData(0, 2, 2, BlocksEnum.BMCRib.b),
 				new BlockData(0, -2, 2, BlocksEnum.BMCRib.b),
 				new BlockData(0, 2, -2, BlocksEnum.BMCRib.b),
 				new BlockData(0, -2, -2, BlocksEnum.BMCRib.b),
-				
+
 				new BlockData(2, 0, 2, BlocksEnum.BMCRib.b),
 				new BlockData(2, 0, -2, BlocksEnum.BMCRib.b),
 				new BlockData(-2, 0, 2, BlocksEnum.BMCRib.b),
@@ -386,7 +399,7 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 				new BlockData(1, -1, -2, BlocksEnum.BMCHousing.b),
 				new BlockData(-1, 1, -2, BlocksEnum.BMCHousing.b),
 				new BlockData(-1, -1, -2, BlocksEnum.BMCHousing.b),
-				
+
 				// East edge
 				new BlockData(2, 1, 0, BlocksEnum.BMCHousing.b),
 				new BlockData(2, -1, 0, BlocksEnum.BMCHousing.b),
@@ -406,7 +419,7 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 				new BlockData(-2, 1, -1, BlocksEnum.BMCHousing.b),
 				new BlockData(-2, -1, 1, BlocksEnum.BMCHousing.b),
 				new BlockData(-2, -1, -1, BlocksEnum.BMCHousing.b),
-				
+
 				// Up edge
 				new BlockData(1, 2, 0, BlocksEnum.BMCHousing.b),
 				new BlockData(-1, 2, 0, BlocksEnum.BMCHousing.b),
@@ -416,7 +429,7 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 				new BlockData(1, 2, -1, BlocksEnum.BMCHousing.b),
 				new BlockData(-1, 2, 1, BlocksEnum.BMCHousing.b),
 				new BlockData(-1, 2, -1, BlocksEnum.BMCHousing.b),
-				
+
 				// Down edge
 				new BlockData(1, -2, 0, BlocksEnum.BMCHousing.b),
 				new BlockData(-1, -2, 0, BlocksEnum.BMCHousing.b),
@@ -427,10 +440,4 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 				new BlockData(-1, -2, 1, BlocksEnum.BMCHousing.b),
 				new BlockData(-1, -2, -1, BlocksEnum.BMCHousing.b)
 		);
-	}
-
-	@Override
-	public BlockPos getMinimalFrameSize() {
-		return new BlockPos(1, 1, 1);
-	}
-}
+ */

@@ -8,6 +8,7 @@ import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
+import AppliedIntegrations.api.Multiblocks.BlockData;
 import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
@@ -548,21 +549,18 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			// Extend pattern by length from map
 			pattern = MultiBlockUtils.getExtendedPattern(pattern, axisLengthMap);
 
-			if (p != null)
-				MultiBlockUtils.fillWorldWithPattern(pattern.getPatternData(), this);
-
 			try {
 				// Get list of blocks matched the pattern
-				formServer((List<AIMultiControllerTile>) MultiBlockUtils.fillListWithPattern(AIPatterns.ME_MULTI_CONTROLLER.getPatternData(),
-						this, (block) -> count.getAndIncrement()), count, p);
+				formServer((List<AIMultiControllerTile>) MultiBlockUtils.fillListWithPattern(pattern.getPatternData(),
+						this, (block) -> count.getAndIncrement()), pattern.getPatternData(), count, p);
 			} catch (GridAccessException ignored) { }
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void formServer(List<AIMultiControllerTile> toUpdate, AtomicInteger count, EntityPlayer p) throws GridAccessException {
+	private void formServer(List<AIMultiControllerTile> toUpdate, List<BlockData> patternData, AtomicInteger count, EntityPlayer p) throws GridAccessException {
 		// Check if length equal to count, so all block has matched the pattern
-		if (AIPatterns.ME_MULTI_CONTROLLER.getPatternData().size() == count.get()) {
+		if (patternData.size() == count.get()) {
 			// Iterate for each block to update
 			for (AIMultiControllerTile slave : toUpdate) {
 				// Check if slave is null
