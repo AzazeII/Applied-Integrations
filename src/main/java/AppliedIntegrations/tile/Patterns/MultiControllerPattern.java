@@ -93,6 +93,39 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	}
 
 	/**
+	 * Replace all empty in pattern with data with given block options
+	 * @param size Size vector
+	 * @param options Block options
+	 * @return Inversed empty space array
+	 */
+	@Nonnull
+	private static List<BlockData> inverseEmptySpace(BlockPos size, Block[] options) {
+		// Create initial list
+		List<BlockData> list = new ArrayList<>();
+
+		// Fully inverse position vector
+		BlockPos inverted = size.subtract(size).subtract(size);
+
+		// Iterate from -Z to Z
+		for (int z = inverted.getZ(); z < size.getZ() + 1; ++z){
+			// Iterate from -Y to Y
+			for (int y = inverted.getY(); y < size.getY() + 1; ++y){
+				// Iterate from -X to X
+				for (int x = inverted.getX(); x < size.getX() + 1; ++x){
+					// Check if x, y and z is zero
+					if (x == 0 && y == 0 && z == 0)
+						continue;
+
+					// Add position
+					list.add(new BlockData(x, y, z, options));
+				}
+			}
+		}
+		
+		return list;
+	}
+
+	/**
 	 * Fill list with block data edge of options and given vector
 	 * @param sizeVec Size of edge
 	 * @param options Block options for data
@@ -112,7 +145,7 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 
 		// Iterate for each position on 2d plane on given axis
 		forPosOnAxis(sizeVec, inverted, (BlockPos pos) -> list.add(new BlockData(pos, options)), axis);
-		
+
 		return list;
 	}
 
@@ -123,6 +156,7 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	 * @param options blocks used for line
 	 * @return Line matrix-vector
 	 */
+	@Nonnull
 	private static List<BlockData> getDataMatrixVector(BlockPos size, BlockPos inverted, Block[] options) {
 		// Create initial data list
 		List<BlockData> list = new LinkedList<>();
@@ -152,7 +186,20 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 		return list;
 	}
 
+	/**
+	 * @param size Vector of distance from (0,0,0) to POSITIVE corner of pattern
+	 * @return Generated pattern, (0,0,0) is always empty
+	 */
 	public static IAIPatternExtendable generateMultiController(BlockPos size) {
+		/*
+			Pattern creation plan:
+			* Fill ribs of multi-block: ::getDataMatrixVector (1)
+			* Fill edges if multi-block: ::fillEdge (2)
+			* Fill inner space of multi-block: ::inverseEmptySpace (3)
+			* Remove Central block from pattern (3.1)
+		 */
+
+		// 1
 		// Create initial data list
 		List<BlockData> list = new ArrayList<>();
 
@@ -181,6 +228,7 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 			}
 		}
 
+		// 2
 		// Iterate for each facing
 		for (EnumFacing facing : EnumFacing.VALUES){
 			// Remove one block for all axises not equal to axis of current facing
@@ -198,6 +246,10 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 			// Fill edge with array of housing and port
 			list.addAll(fillEdge(valuedSize, new Block[]{BlocksEnum.BMCHousing.b, BlocksEnum.BMCPort.b}, facing.getAxis()));
 		}
+
+		// 3
+		// Add inverted empty space to list
+		list.addAll(inverseEmptySpace(size.add(-1, -1, -1), new Block[]{BlocksEnum.BMCHousing.b}));
 
 		// Remove duplicated list entries
 		list = list.stream().distinct().collect(Collectors.toList());
