@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static net.minecraft.util.EnumFacing.Axis.*;
@@ -53,6 +54,44 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 		return size;
 	}
 
+	private static void forPosOnAxis(BlockPos sizeVec, BlockPos inverted, Consumer<BlockPos> func, EnumFacing.Axis axis) {
+		// Check if axis is X
+		if (axis == X) {
+			// Iterate from -Y to Y
+			for (int y = inverted.getY(); y < sizeVec.getY() + 1; ++y) {
+				// Iterate from -Z to Z
+				for (int z = inverted.getZ(); z < sizeVec.getZ() + 1; ++z) {
+					// Call lambda
+					func.accept(new BlockPos(sizeVec.getX(), y, z));
+				}
+			}
+		}
+
+		// Check if axis is Y
+		if (axis == Y) {
+			// Iterate from -X to X
+			for (int x = inverted.getX(); x < sizeVec.getX() + 1; ++x) {
+				// Iterate from -Z to Z
+				for (int z = inverted.getZ(); z < sizeVec.getZ() + 1; ++z) {
+					// Call lambda
+					func.accept(new BlockPos(x, sizeVec.getY(), z));
+				}
+			}
+		}
+
+		// Check if axis is Z
+		if (axis == Z) {
+			// Iterate from -X to X
+			for (int x = inverted.getX(); x < sizeVec.getX() + 1; ++x) {
+				// Iterate from -Y to Y
+				for (int y = inverted.getY(); y < sizeVec.getY() + 1; ++y) {
+					// Call lambda
+					func.accept(new BlockPos(x, y, sizeVec.getZ()));
+				}
+			}
+		}
+	}
+
 	/**
 	 * Fill list with block data edge of options and given vector
 	 * @param sizeVec Size of edge
@@ -65,43 +104,15 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 		// Create initial list
 		List<BlockData> list = new ArrayList<>();
 
-		// Invert given size vector
-		BlockPos inverted = sizeVec.subtract(sizeVec).subtract(sizeVec);
+		// Invert positions components that not on given axis
+		BlockPos inverted = new BlockPos(
+				axis == X ? sizeVec.getX() : -sizeVec.getX(),
+				axis == Y ? sizeVec.getY() : -sizeVec.getY(),
+				axis == Z ? sizeVec.getZ() : -sizeVec.getZ());
 
-		// Also, inverted vector should have normal axis coordinate
-		// Check if axis is X
-		if (axis == X)
-			// return normal X
-			inverted.add(sizeVec.getX(), 0, 0).add(sizeVec.getX(), 0, 0);
-
-		// Check if axis is Y
-		if (axis == Y)
-			// return normal Y
-			inverted.add(0, sizeVec.getY(), 0).add(0, sizeVec.getY(), 0);
-
-		// Check if axis is Z
-		if (axis == Z)
-			// return normal Z
-			inverted.add(0, 0, sizeVec.getZ()).add(0, 0, sizeVec.getZ());
-
-		// Check if any component of size vector is zero
-		if (sizeVec.getX() == 0 || sizeVec.getY() == 0 || sizeVec.getZ() == 0 ){
-			// Pass call to line drawer
-			return getDataMatrixVector(sizeVec, inverted, options);
-		}
-
-		// Iterate from -z to z
-		for (int z = inverted.getZ(); z < sizeVec.getZ(); z++){
-			// Iterate from -y to y
-			for (int y = inverted.getY(); y < sizeVec.getY(); y++){
-				// Iterate from -x to x
-				for (int x = inverted.getX(); x < sizeVec.getX(); x++){
-					// Put data of coordinates and option to list
-					list.add(new BlockData(x, y, z, options));
-				}
-			}
-		}
-
+		// Iterate for each position on 2d plane on given axis
+		forPosOnAxis(sizeVec, inverted, (BlockPos pos) -> list.add(new BlockData(pos, options)), axis);
+		
 		return list;
 	}
 

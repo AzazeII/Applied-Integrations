@@ -517,7 +517,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			Map<EnumFacing.Axis, Integer> axisLengthMap = new LinkedHashMap<>();
 
 			// Iterate 3 times
-			for (int rangeToBlock = 0; rangeToBlock < 3; rangeToBlock++) {
+			for (int rangeToBlock = 0; rangeToBlock < 4; rangeToBlock++) {
 				// Convert to final
 				final int finalI = rangeToBlock;
 
