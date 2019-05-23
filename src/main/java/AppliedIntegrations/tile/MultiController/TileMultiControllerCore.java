@@ -8,7 +8,6 @@ import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
-import AppliedIntegrations.api.Multiblocks.BlockData;
 import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
@@ -552,15 +551,15 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			try {
 				// Get list of blocks matched the pattern
 				formServer((List<AIMultiControllerTile>) MultiBlockUtils.fillListWithPattern(pattern.getPatternData(),
-						this, (block) -> count.getAndIncrement()), pattern.getPatternData(), count, p);
+						this, (block) -> count.getAndIncrement()), pattern, count, p);
 			} catch (GridAccessException ignored) { }
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void formServer(List<AIMultiControllerTile> toUpdate, List<BlockData> patternData, AtomicInteger count, EntityPlayer p) throws GridAccessException {
+	private void formServer(List<AIMultiControllerTile> toUpdate, IAIPatternExtendable patternData, AtomicInteger count, EntityPlayer p) throws GridAccessException {
 		// Check if length equal to count, so all block has matched the pattern
-		if (patternData.size() == count.get()) {
+		if (patternData.getPatternData().size() == count.get()) {
 			// Iterate for each block to update
 			for (AIMultiControllerTile slave : toUpdate) {
 				// Check if slave is null
@@ -582,10 +581,13 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 			// Iterate for each side
 			for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-				// get tile with double offset from this side
-				TileEntity tile = world.getTileEntity(new BlockPos(getPos().getX() + side.xOffset * 2, getPos().getY() + side.yOffset * 2, getPos().getZ() + side.zOffset * 2));
+				// Get tile with size offset from side
+				TileEntity tile = world.getTileEntity(new BlockPos(
+						getPos().getX() + side.xOffset * patternData.getMinimalFrameSize().getX(),
+						getPos().getY() + side.yOffset * patternData.getMinimalFrameSize().getY(),
+						getPos().getZ() + side.zOffset * patternData.getMinimalFrameSize().getZ()));
 
-				// Check for instanceof port
+				// Check for instanceof port (normally it's always port)
 				if (tile instanceof TileMultiControllerPort) {
 					// Get port
 					TileMultiControllerPort port = (TileMultiControllerPort) tile;
