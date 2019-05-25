@@ -39,6 +39,10 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 			return input;
 		}
 
+		// Check not null
+		if (getOuterInventory() == null)
+			return input;
+
 		// Check if channel of inventory equal to channel of this handler
 		if (!getChannel().equals(getOuterInventory().getChannel())) {
 			return input;
@@ -49,7 +53,6 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 	}
 
 	private IMEInventory<T> getOuterInventory() {
-
 		return host.getMainNetworkInventory(getChannel());
 	}
 
@@ -59,6 +62,11 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 		if (!canExtract(request)) {
 			return null;
 		}
+
+
+		// Check not null
+		if (getOuterInventory() == null)
+			return null;
 
 		// Check if channel of inventory equal to channel of this handler
 		if (!getChannel().equals(getOuterInventory().getChannel())) {
@@ -80,6 +88,10 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 		if (getAccess() == AccessRestriction.READ || getAccess() == AccessRestriction.READ_WRITE) {
 			return out;
 		}
+
+		// Check not null
+		if (getOuterInventory() == null)
+			return out;
 
 		// Check if channel of inventory equal to channel of this handler
 		if (!getChannel().equals(getOuterInventory().getChannel())) {

@@ -103,3 +103,6 @@ ME Energy Terminal=МЭ Терминал Энергии
 ME Energy Import Bus=МЭ Шина Экспорта Энергии
 ME Energy Export Bus=МЭ Шина Импорта Энергии
 ME Energy Interface=МЭ Интерфейс Энергии
+
+network_card_port_side.name=Сторона грани на мульти-контроллере
+network_card_port_id.name=Номер на грани мульти-контроллера

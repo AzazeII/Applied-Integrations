@@ -551,19 +551,8 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 				return;
 			}
 
-			// Check if grid node is already initialized
-			if (getGridNode() != null) {
-
-			}
-
 			// Try construct server
 			tryConstruct(null);
-
-			// Check if server was constructed successfully
-			if (isFormed) {
-				// Update inventory
-				cardManager.onInventoryChanged();
-			}
 
 			// Toggle
 			constructionRequested = true;
@@ -673,15 +662,18 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 						// Map port in map
 						portMap.get(side).put(edgePosId, port);
-
-						// Update grid of port
-						port.onNeighborChange();
 					}
 
 					// Increase counter value
 					edgePosId ++;
 				}
 			}
+
+			// Update inventory
+			cardManager.onInventoryChanged();
+
+			// Update networks of each port
+			postNetworkCellEvents();
 
 			// Toggle formed
 			isFormed = true;

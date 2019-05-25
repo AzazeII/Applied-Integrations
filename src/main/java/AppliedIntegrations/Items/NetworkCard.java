@@ -256,8 +256,13 @@ public class NetworkCard extends AIItemRegistrable {
 		// Transform name
 		String name = str.substring(0, 1).toUpperCase() + str.substring(1);
 
+		int id = tag.getInteger(NBT_KEY_PORT_ID);
+
 		// Add formatted side name
-		lines.add("Port - " + name);
+		lines.add(I18n.format("network_card_port_side.name") + " - " + name);
+
+		// Add id on cluster
+		lines.add(I18n.format("network_card_port_id.name") + " - " + id);
 
 		// Add permissions info
 		lines.add(tag.getString(NBT_KEY_PERMISSIONS));
