@@ -1,4 +1,4 @@
-package AppliedIntegrations.Gui.ServerGUI.SubGui;
+package AppliedIntegrations.Gui.MultiController.SubGui;
 
 
 import appeng.api.util.AEPartLocation;

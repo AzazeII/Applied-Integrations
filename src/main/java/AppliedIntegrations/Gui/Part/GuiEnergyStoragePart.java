@@ -5,7 +5,7 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.IFilterGUI;
-import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
+import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;

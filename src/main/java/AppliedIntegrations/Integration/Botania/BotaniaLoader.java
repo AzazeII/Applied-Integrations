@@ -3,7 +3,7 @@ package AppliedIntegrations.Integration.Botania;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetManaSlot;
+import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetManaSlot;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.api.AIApi;

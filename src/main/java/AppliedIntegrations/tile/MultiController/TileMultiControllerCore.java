@@ -2,7 +2,7 @@ package AppliedIntegrations.tile.MultiController;
 
 
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
+import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Utils.MultiBlockUtils;
@@ -56,16 +56,18 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable {
 	private class CardInventoryManager implements IInventoryHost {
-
 		private void onCardRemove(ItemStack card) {
 			// Get tag
 			NBTTagCompound tag = Platform.openNbtData(card);
 
 			// Get side
-			AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
+			AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_PORT_SIDE)];
+
+			// Get id
+			int id = tag.getInteger(NetworkCard.NBT_KEY_PORT_ID);
 
 			// Get port
-			TileMultiControllerPort port = getPortAtSide(side);
+			TileMultiControllerPort port = getPortAtSide(id, side);
 
 			// Check not null
 			if (port == null) {
@@ -74,13 +76,13 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			}
 
 			// Nullify port handlers for this port
-			portHandlers.put(side, null);
+			portHandlers.get(side).put(id, null);
 
 			// Nullify port crafting handlers for this port
-			portCraftingHandlers.put(side, null);
+			portCraftingHandlers.get(side).put(id, null);
 
 			// Nullify cpu handlers for this port
-			portCPUHandlers.put(side, null);
+			portCPUHandlers.get(side).put(id, null);
 
 			// Update CPU handlers in each grid;
 			cpuUpdate();
@@ -89,7 +91,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			port.postCellInventoryEvent();
 
 			// Notify grid of current port about crafting update
-			port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side), getGridNode()));
+			port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
 		}
 
 		@Override
@@ -102,13 +104,18 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					NBTTagCompound tag = Platform.openNbtData(stack);
 
 					// Get decoded pair from card
-					Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> data = NetworkCard.decodeDataFromTag(tag);
+					Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>,
+							LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> data =
+							NetworkCard.decodeDataFromTag(tag);
 
 					// Get side
-					AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_NET_SIDE)];
+					AEPartLocation side = AEPartLocation.values()[tag.getInteger(NetworkCard.NBT_KEY_PORT_SIDE)];
+
+					// Get id
+					int id = tag.getInteger(NetworkCard.NBT_KEY_PORT_ID);
 
 					// Get port
-					TileMultiControllerPort port = getPortAtSide(side);
+					TileMultiControllerPort port = getPortAtSide(id, side);
 
 					// Check not null
 					if (port == null) {
@@ -133,22 +140,23 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					});
 
 					// Encode new handler for side from card
-					TileMultiControllerCore.this.portHandlers.put(side, handlers);
+					portHandlers.get(side).put(id, handlers);
 
 					// Encode new crafting handler for side from card
-					TileMultiControllerCore.this.portCraftingHandlers.put(side, new MultiControllerCraftingHandler(data.getLeft(), data.getRight(), TileMultiControllerCore.this));
+					portCraftingHandlers.get(side).put(
+							id, new MultiControllerCraftingHandler(data.getLeft(), data.getRight(), TileMultiControllerCore.this));
 
 					// Encode new CPU handler for side from card
-					TileMultiControllerCore.this.portCPUHandlers.put(side, new MultiControllerCPUHandler(TileMultiControllerCore.this));
+					portCPUHandlers.get(side).put(id, new MultiControllerCPUHandler(TileMultiControllerCore.this));
 
 					// Update CPU handler in each grid
-					TileMultiControllerCore.this.cpuUpdate();
+					cpuUpdate();
 
 					// Notify grid of current port about inventory update
 					port.postCellInventoryEvent();
 
 					// Notify grid of current port about crafting update
-					port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side), getGridNode()));
+					port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
 
 					// Notify grid of current port about cpu update
 					port.postCellEvent(new MENetworkCraftingCpuChange(getGridNode()));
@@ -165,22 +173,47 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 	private LinkedHashMap<Class<? extends AIMultiControllerTile>, List<AIMultiControllerTile>> slaveMap = new LinkedHashMap<>();
 
-	// Port-side map
-	private LinkedHashMap<AEPartLocation, TileMultiControllerPort> portMap = new LinkedHashMap<>();
-
 	private CardInventoryManager cardManager = new CardInventoryManager();
 
-	// list of blocks in multiblock
-	private List<Class<? extends AIMultiControllerTile>> serverClasses = Arrays.asList(TileMultiControllerHousing.class, TileMultiControllerPort.class, TileMultiControllerRib.class);
+	// list of blocks in multi-block
+	private List<Class<? extends AIMultiControllerTile>> multi_controllerClasses =
+			Arrays.asList(TileMultiControllerHousing.class, TileMultiControllerPort.class, TileMultiControllerRib.class);
+
+	// Port-side map
+	private LinkedHashMap<AEPartLocation,Map<Integer, TileMultiControllerPort>> portMap = new LinkedHashMap<AEPartLocation, Map<Integer, TileMultiControllerPort>>() {{
+		// Iterate for each side
+		for (AEPartLocation side : AEPartLocation.values()){
+			// Put list in map
+			put(side, new HashMap<>());
+		}
+	}};
 
 	// List of all "mediums" for providing cell inventory from main network into adjacent networks
-	private LinkedHashMap<AEPartLocation, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>> portHandlers = new LinkedHashMap<>();
+	private LinkedHashMap<AEPartLocation, Map<Integer, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>>> portHandlers = new LinkedHashMap<AEPartLocation, Map<Integer, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>>>() {{
+		// Iterate for each side
+		for (AEPartLocation side : AEPartLocation.values()){
+			// Put list in map
+			put(side, new HashMap<>());
+		}
+	}};
 
 	// List of all crafting "mediums" for providing craft grid from main network into adjacent networks
-	private LinkedHashMap<AEPartLocation, ICraftingProvider> portCraftingHandlers = new LinkedHashMap<>();
+	private LinkedHashMap<AEPartLocation, Map<Integer, ICraftingProvider>> portCraftingHandlers = new LinkedHashMap<AEPartLocation, Map<Integer, ICraftingProvider>>() {{
+		// Iterate for each side
+		for (AEPartLocation side : AEPartLocation.values()) {
+			// Put list in map
+			put(side, new HashMap<>());
+		}
+	}};
 
 	// List of all crafting CPU simulators
-	private LinkedHashMap<AEPartLocation, MultiControllerCPUHandler> portCPUHandlers = new LinkedHashMap<>();
+	private LinkedHashMap<AEPartLocation, Map<Integer, MultiControllerCPUHandler>> portCPUHandlers = new LinkedHashMap<AEPartLocation, Map<Integer, MultiControllerCPUHandler>>(){{
+		// Iterate for each side
+		for (AEPartLocation side : AEPartLocation.values()){
+			// Put list in map
+			put(side, new HashMap<>());
+		}
+	}};
 
 	public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 30, 1, this.cardManager) {
 		@Override
@@ -196,7 +229,6 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-
 			return itemstack.getItem() instanceof NetworkCard;
 		}
 	};
@@ -210,7 +242,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	}
 
 	private void cpuUpdate() {
-		// TODO Later
+		// TODO: 2019-05-25 Later
 	}
 
 	public ICraftingGrid getMainNetworkCraftingGrid() {
@@ -248,82 +280,90 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	public void postNetworkCellEvents() throws GridAccessException {
 		// Iterate for each side
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			// Check not null
-			if (portMap.get(side) == null || portMap.get(side).requestNetwork() == null) {
-				continue;
+			// Iterate size times
+			for (int portID = 0; portID < portMap.get(side).size(); portID++) {
+				// Check not null
+				if (portMap.get(side).get(portID) == null || portMap.get(side).get(portID).requestNetwork() == null) {
+					continue;
+				}
+
+				// Post cell event for network at this side
+				postCellInventoryEvent(portMap.get(side).get(portID).requestNetwork());
+
+				// Notify grid of current port about crafting update
+				postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(portID), getGridNode()));
 			}
-
-			// Post cell event for network at this side
-			postCellInventoryEvent(portMap.get(side).requestNetwork());
-
-			// Notify grid of current port about crafting update
-			postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side), getGridNode()));
 		}
 
 		// Notify main server network
 		postCellInventoryEvent();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void postNetworkAlterationsEvents(IStorageChannel<? extends IAEStack<?>> channel, Iterable change, MachineSource machineSource) throws GridAccessException {
 		// Iterate for each side
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			// Check not null
-			if (portMap.get(side) == null || portMap.get(side).requestNetwork() == null) {
-				continue;
+			// Iterate size times
+			for (int portID = 0; portID < portMap.get(side).size(); portID++) {
+				// Check not null
+				if (portMap.get(side).get(portID) == null || portMap.get(side).get(portID).requestNetwork() == null) {
+					continue;
+				}
+
+				// Get storage grid of network
+				IStorageGrid grid = portMap.get(side).get(portID).requestNetwork().getCache(IStorageGrid.class);
+
+				// Post alteration
+				grid.postAlterationOfStoredItems(channel, change, machineSource);
 			}
-
-			// Get storage grid of network
-			IStorageGrid grid = portMap.get(side).requestNetwork().getCache(IStorageGrid.class);
-
-			// Post alteration
-			grid.postAlterationOfStoredItems(channel, change, machineSource);
 		}
 	}
 
 	// -----------------------------Crafting Methods-----------------------------//
-	public void providePortCrafting(ICraftingProviderHelper craftingTracker, AEPartLocation side) {
-		// Check if handler not null
-		if (portCraftingHandlers.get(side) == null) {
+	public void providePortCrafting(ICraftingProviderHelper craftingTracker, AEPartLocation side, int portID) {
+		// Check not null
+ 		if (portCraftingHandlers.get(side).get(portID) == null) {
 			return;
 		}
 
 		// Pass call to handler
-		portCraftingHandlers.get(side).provideCrafting(craftingTracker);
+		portCraftingHandlers.get(side).get(portID).provideCrafting(craftingTracker);
 	}
 
-	public boolean pushPortPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table, AEPartLocation side) {
-		// Check if handler not null
-		if (portCraftingHandlers.get(side) == null) {
+	public boolean pushPortPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table, AEPartLocation side,
+	                               int portID) {
+		// Check not null
+		if (portCraftingHandlers.get(side).get(portID) == null) {
 			return false;
 		}
 
 		// Pass call to handler
-		return portCraftingHandlers.get(side).pushPattern(patternDetails, table);
+		return portCraftingHandlers.get(side).get(portID).pushPattern(patternDetails, table);
 	}
 
-	public boolean isPortBusy(AEPartLocation side) {
-		// Check if handler not null
-		if (portCraftingHandlers.get(side) == null) {
+	public boolean isPortBusy(AEPartLocation side, int portID) {
+		// Check not null and avoid index bound exception
+		if (portCraftingHandlers.get(side).get(portID) == null) {
 			return false;
 		}
 
 		// Pass call to handler
-		return portCraftingHandlers.get(side).isBusy();
+		return portCraftingHandlers.get(side).get(portID).isBusy();
 	}
 	// -----------------------------Crafting Methods-----------------------------//
 
 	// -----------------------------Drive Methods-----------------------------//
-	public List<IMEInventoryHandler> getPortCellArray(AEPartLocation side, IStorageChannel<?> channel) {
-		// Check if handler not null
-		if (portHandlers.get(side) == null) {
+	public List<IMEInventoryHandler> getPortCellArray(AEPartLocation side, int portID, IStorageChannel<?> channel) {
+		// Check not null
+		if (portHandlers.get(side) == null || portHandlers.get(side).get(portID) == null) {
 			return new ArrayList<>();
 		}
 
 		// Return only one handler for tile
-		return Collections.singletonList(portHandlers.get(side).get(channel));
+		return Collections.singletonList(portHandlers.get(side).get(portID).get(channel));
 	}
 
-	public void savePortChanges(ICellInventory<?> iCellInventory, AEPartLocation side) {
+	public void savePortChanges(ICellInventory<?> iCellInventory, AEPartLocation side, int id) {
 		// Check if inventory not null
 		if (iCellInventory != null) {
 			// Persist inventory
@@ -331,7 +371,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		}
 
 		// Get port
-		TileMultiControllerPort port = getPortAtSide(side);
+		TileMultiControllerPort port = getPortAtSide(id, side);
 
 		// Check not null
 		if (port == null) {
@@ -342,14 +382,15 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		getWorld().markChunkDirty(port.getPos(), port);
 	}
 	// -----------------------------Drive Methods-----------------------------//
-	private TileMultiControllerPort getPortAtSide(AEPartLocation side) {
+
+	private TileMultiControllerPort getPortAtSide(int id, AEPartLocation side) {
 		// Iterate for each slave
 		for (IAIMultiBlock slave : slaveMap.get(TileMultiControllerPort.class)) {
 			// Get port
 			TileMultiControllerPort port = (TileMultiControllerPort) slave;
 
 			// Check if port side is given side
-			if (port.getSideVector() == side) {
+			if (port.getSideVector() == side && port.getPortID() == id) {
 				return port;
 			}
 		}
@@ -407,7 +448,9 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	public void invalidate() {
 		super.invalidate();
 
+		// Check if block is formed
 		if (isFormed) {
+			// Destroy multi-block
 			this.destroyMultiBlock();
 		}
 
@@ -433,10 +476,37 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		slaves = new ArrayList<>();
 
 		// Nullify maps
-		portMap = new LinkedHashMap<>(); // (1)
-		portHandlers = new LinkedHashMap<>(); // (2)
-		portCraftingHandlers = new LinkedHashMap<>(); // (3)
-		portCPUHandlers = new LinkedHashMap<>(); // (4)
+		portMap = new LinkedHashMap<AEPartLocation, Map<Integer, TileMultiControllerPort>>() {{
+			// Iterate for each side
+			for (AEPartLocation side : AEPartLocation.values()){
+				// Put list in map
+				put(side, new HashMap<>());
+			}
+		}}; // (1)
+
+		portHandlers = new LinkedHashMap<AEPartLocation, Map<Integer, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler>>>() {{
+			// Iterate for each side
+			for (AEPartLocation side : AEPartLocation.values()){
+				// Put list in map
+				put(side, new HashMap<>());
+			}
+		}}; // (2)
+
+		portCraftingHandlers = new LinkedHashMap<AEPartLocation, Map<Integer, ICraftingProvider>>() {{
+			// Iterate for each side
+			for (AEPartLocation side : AEPartLocation.values()){
+				// Put list in map
+				put(side, new HashMap<>());
+			}
+		}}; // (3)
+
+		portCPUHandlers = new LinkedHashMap<AEPartLocation, Map<Integer, MultiControllerCPUHandler>>() {{
+			// Iterate for each side
+			for (AEPartLocation side : AEPartLocation.values()){
+				// Put list in map
+				put(side, new HashMap<>());
+			}
+		}}; // (4)
 
 		// Make server not formed
 		isFormed = false;
@@ -463,7 +533,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		slaveMap = new LinkedHashMap<>();
 
 		// Iterate for each tile type
-		for (Class<? extends AIMultiControllerTile> type : serverClasses) {
+		for (Class<? extends AIMultiControllerTile> type : multi_controllerClasses) {
 			// Add list to map
 			slaveMap.put(type, new ArrayList<>());
 		}
@@ -541,7 +611,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			IAIPatternExtendable pattern = AIPatterns.ME_MULTI_CONTROLLER;
 
 			// Check if axis length map has 3 entries
-			if (axisLengthMap.size() < 3)
+			if (axisLengthMap.size() != 3)
 				// Incorrect setup
 				return;
 
@@ -557,9 +627,9 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	}
 
 	@SuppressWarnings("unchecked")
-	private void formServer(List<AIMultiControllerTile> toUpdate, IAIPatternExtendable patternData, AtomicInteger count, EntityPlayer p) throws GridAccessException {
+	private void formServer(List<AIMultiControllerTile> toUpdate, IAIPatternExtendable pattern, AtomicInteger count, EntityPlayer p) throws GridAccessException {
 		// Check if length equal to count, so all block has matched the pattern
-		if (patternData.getPatternData().size() == count.get()) {
+		if (pattern.getPatternData().size() == count.get()) {
 			// Iterate for each block to update
 			for (AIMultiControllerTile slave : toUpdate) {
 				// Check if slave is null
@@ -581,25 +651,35 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 			// Iterate for each side
 			for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-				// Get tile with size offset from side
-				TileEntity tile = world.getTileEntity(new BlockPos(
-						getPos().getX() + side.xOffset * patternData.getMinimalFrameSize().getX(),
-						getPos().getY() + side.yOffset * patternData.getMinimalFrameSize().getY(),
-						getPos().getZ() + side.zOffset * patternData.getMinimalFrameSize().getZ()));
+				// Get edge from pattern
+				List<BlockPos> edge = pattern.getPosEdgeMap().get(side);
 
-				// Check for instanceof port (normally it's always port)
-				if (tile instanceof TileMultiControllerPort) {
-					// Get port
-					TileMultiControllerPort port = (TileMultiControllerPort) tile;
+				// Create counter
+				int edgePosId = 0;
 
-					// Set proper direction
-					port.setDir(side.getFacing());
+				// Iterate for each pos of edge
+				for (BlockPos pos : edge) {
+					// Get tile entity relative to our pos
+					TileEntity maybePort = getWorld().getTileEntity(getPos().add(pos));
 
-					// Add port
-					portMap.put(side, port);
+					// Check if tile is port
+					if (maybePort instanceof TileMultiControllerPort) {
+						// Cast to port
+						TileMultiControllerPort port = (TileMultiControllerPort) maybePort;
 
-					// Update grid of port
-					port.onNeighborChange();
+						// Update port data
+						port.setSideVector(side); // Side vector
+						port.setPortID(edgePosId); // Port id
+
+						// Map port in map
+						portMap.get(side).put(edgePosId, port);
+
+						// Update grid of port
+						port.onNeighborChange();
+					}
+
+					// Increase counter value
+					edgePosId ++;
 				}
 			}
 

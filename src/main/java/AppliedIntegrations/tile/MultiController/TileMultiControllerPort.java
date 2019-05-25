@@ -28,11 +28,15 @@ import static java.util.EnumSet.of;
  */
 public class TileMultiControllerPort extends AIMultiControllerTile implements ICellContainer, ICraftingProvider {
 
+	// Side of port in multi-block
 	private AEPartLocation side = AEPartLocation.INTERNAL;
 
-	public void setDir(EnumFacing side) {
+	// ID of port on edge
+	private int portID = -1;
+
+	public void setSideVector(AEPartLocation side) {
 		// Update side
-		this.side = AEPartLocation.fromFacing(side);
+		this.side = side;
 
 		// Update valid sides of proxy
 		getProxy().setValidSides(getValidSides());
@@ -45,12 +49,15 @@ public class TileMultiControllerPort extends AIMultiControllerTile implements IC
 		return side;
 	}
 
-	public IGrid requestNetwork() throws GridAccessException {
-		// Check not null
-		if (getProxy().getNode() == null) {
-			return null;
-		}
+	public int getPortID() {
+		return portID;
+	}
 
+	public void setPortID(int portID) {
+		this.portID = portID;
+	}
+
+	public IGrid requestNetwork() throws GridAccessException {
 		// Get grid and return it
 		return getProxy().getGrid();
 	}
@@ -91,7 +98,7 @@ public class TileMultiControllerPort extends AIMultiControllerTile implements IC
 		}
 
 		// Pass call to master
-		return ((TileMultiControllerCore) getMaster()).getPortCellArray(side, channel);
+		return ((TileMultiControllerCore) getMaster()).getPortCellArray(side, portID, channel);
 	}
 
 	@Override
@@ -109,7 +116,7 @@ public class TileMultiControllerPort extends AIMultiControllerTile implements IC
 		}
 
 		// Pass call to master
-		((TileMultiControllerCore) getMaster()).savePortChanges(cellInventory, side);
+		((TileMultiControllerCore) getMaster()).savePortChanges(cellInventory, side, portID);
 	}
 	/* -----------------------------Drive Methods----------------------------- */
 
@@ -117,40 +124,37 @@ public class TileMultiControllerPort extends AIMultiControllerTile implements IC
 	@Override
 	public void provideCrafting(ICraftingProviderHelper craftingTracker) {
 		// Check not null
-		if (getMaster() == null)
-		// Skip
-		{
+		if (getMaster() == null) {
+			// Skip
 			return;
 		}
 
 		// Pass call to master
-		((TileMultiControllerCore) getMaster()).providePortCrafting(craftingTracker, side);
+		((TileMultiControllerCore) getMaster()).providePortCrafting(craftingTracker, side, portID);
 	}
 
 	@Override
 	public boolean pushPattern(ICraftingPatternDetails patternDetails, InventoryCrafting table) {
 		// Check not null
-		if (getMaster() == null)
-		// Skip
-		{
+		if (getMaster() == null) {
+			// Skip
 			return false;
 		}
 
 		// Pass call to master
-		return ((TileMultiControllerCore) getMaster()).pushPortPattern(patternDetails, table, side);
+		return ((TileMultiControllerCore) getMaster()).pushPortPattern(patternDetails, table, side, portID);
 	}
 
 	@Override
 	public boolean isBusy() {
 		// Check not null
-		if (getMaster() == null)
-		// Skip
-		{
+		if (getMaster() == null) {
+			// Skip
 			return false;
 		}
 
 		// Pass call to master
-		return ((TileMultiControllerCore) getMaster()).isPortBusy(side);
+		return ((TileMultiControllerCore) getMaster()).isPortBusy(side, portID);
 	}
 	/* -----------------------------Crafting Methods----------------------------- */
 }

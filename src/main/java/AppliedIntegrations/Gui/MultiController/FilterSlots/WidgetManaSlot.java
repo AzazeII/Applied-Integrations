@@ -1,4 +1,4 @@
-package AppliedIntegrations.Gui.ServerGUI.FilterSlots;
+package AppliedIntegrations.Gui.MultiController.FilterSlots;
 
 
 import AppliedIntegrations.api.Botania.IAEManaStack;

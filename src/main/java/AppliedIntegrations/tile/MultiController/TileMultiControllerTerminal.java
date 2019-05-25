@@ -1,8 +1,8 @@
 package AppliedIntegrations.tile.MultiController;
 
 
-import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerTerminal;
-import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
+import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;

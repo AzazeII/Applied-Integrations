@@ -4,14 +4,13 @@ package AppliedIntegrations.tile.Patterns;
 import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.api.Multiblocks.BlockData;
 import AppliedIntegrations.api.Multiblocks.IAIPatternExtendable;
+import appeng.api.util.AEPartLocation;
 import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -201,6 +200,15 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 		// Create initial data list
 		List<BlockData> list = new ArrayList<>();
 
+		// Create initial map
+		Map<AEPartLocation, List<BlockPos>> edgeMap = new HashMap<AEPartLocation, List<BlockPos>>() {{
+			// Iterate for each side
+			for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
+				// Put new array list
+				put(side, new ArrayList<>());
+			}
+		}};
+
 		// Iterate for each corner
 		for (BlockPos corner : corners) {
 			// Get valued size, which is size multiplied by corner
@@ -241,8 +249,17 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 						facing.getFrontOffsetZ() == 0 ? valuedSize.getZ() : valuedSize.getZ() * facing.getFrontOffsetZ());
 			}
 
+			// Crete edge list
+			List<BlockData> edge = fillEdge(valuedSize, new Block[]{BlocksEnum.BMCHousing.b, BlocksEnum.BMCPort.b}, facing.getAxis());
+
 			// Fill edge with array of housing and port
-			list.addAll(fillEdge(valuedSize, new Block[]{BlocksEnum.BMCHousing.b, BlocksEnum.BMCPort.b}, facing.getAxis()));
+			list.addAll(edge);
+
+			// Iterate for each data in edge
+			for (BlockData data : edge) {
+				// Put position in edge map
+				edgeMap.get(AEPartLocation.fromFacing(facing)).add(data.getPos());
+			}
 		}
 
 		// 3
@@ -261,6 +278,11 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 			public BlockPos getMinimalFrameSize() {
 				// Updated size value
 				return size;
+			}
+
+			@Override
+			public Map<AEPartLocation, List<BlockPos>> getPosEdgeMap() {
+				return edgeMap;
 			}
 
 			@Override

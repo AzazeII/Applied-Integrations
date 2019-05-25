@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
-import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
+import static AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
 import static appeng.api.config.SecurityPermissions.EXTRACT;
 import static appeng.api.config.SecurityPermissions.INJECT;
 

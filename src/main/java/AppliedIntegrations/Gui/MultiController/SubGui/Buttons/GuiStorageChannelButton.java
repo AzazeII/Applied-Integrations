@@ -1,7 +1,7 @@
-package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
+package AppliedIntegrations.Gui.MultiController.SubGui.Buttons;
 
 
-import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
+import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.AIApi;
 import appeng.api.AEApi;

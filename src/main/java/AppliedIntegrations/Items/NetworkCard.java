@@ -3,8 +3,8 @@ package AppliedIntegrations.Items;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiSecurityPermissionsButton;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
+import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermissionsButton;
+import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.AIApi.IStackDecoder;
 import AppliedIntegrations.api.Storage.IChannelWidget;
@@ -37,8 +37,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiSecurityPermissionsButton.getPermissionList;
-import static AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
+import static AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermissionsButton.getPermissionList;
+import static AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
 
 /**
  * @Author Azazell
@@ -48,7 +48,9 @@ public class NetworkCard extends AIItemRegistrable {
 
 	public static final String KEY_SUB = "#SUB_TAG";
 
-	public static final String NBT_KEY_NET_SIDE = "#NET_SIDE";
+	public static final String NBT_KEY_PORT_SIDE = "#NET_SIDE";
+
+	public static final String NBT_KEY_PORT_ID = "#PORT_ID";
 
 	private static final String NBT_KEY_PERMISSIONS = "#PERMISSIONS";
 
@@ -71,10 +73,10 @@ public class NetworkCard extends AIItemRegistrable {
 			// Check if tag has no network
 			if (!tag.getBoolean(NBT_KEY_HAS_NET)) {
 				// Change tag to INTERNAL
-				tag.setInteger(NBT_KEY_NET_SIDE, AEPartLocation.INTERNAL.ordinal());
+				tag.setInteger(NBT_KEY_PORT_SIDE, AEPartLocation.INTERNAL.ordinal());
 			}
 
-			return (((float) tag.getInteger(NBT_KEY_NET_SIDE) + 1) / (float) 10);
+			return (((float) tag.getInteger(NBT_KEY_PORT_SIDE) + 1) / (float) 10);
 		});
 	}
 
@@ -241,7 +243,7 @@ public class NetworkCard extends AIItemRegistrable {
 		}
 
 		// Get side
-		AEPartLocation side = AEPartLocation.values()[tag.getInteger(NBT_KEY_NET_SIDE)];
+		AEPartLocation side = AEPartLocation.values()[tag.getInteger(NBT_KEY_PORT_SIDE)];
 
 		// Check if side isn't internal
 		if (side == AEPartLocation.INTERNAL) {
@@ -316,8 +318,9 @@ public class NetworkCard extends AIItemRegistrable {
 			TileMultiControllerPort port = (TileMultiControllerPort) tile;
 
 			// Update NBT tag data
-			tag.setBoolean(NBT_KEY_HAS_NET, port.getSideVector() != AEPartLocation.INTERNAL);
-			tag.setInteger(NBT_KEY_NET_SIDE, port.getSideVector().ordinal());
+			tag.setBoolean(NBT_KEY_HAS_NET, port.getSideVector() != AEPartLocation.INTERNAL); // Has network or not
+			tag.setInteger(NBT_KEY_PORT_SIDE, port.getSideVector().ordinal()); // Side of port
+			tag.setInteger(NBT_KEY_PORT_ID, port.getPortID());
 
 			// Success!
 			return EnumActionResult.SUCCESS;

@@ -3,7 +3,7 @@ package AppliedIntegrations.tile.HoleStorageSystem.storage;
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
+import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
 import AppliedIntegrations.Utils.AILog;

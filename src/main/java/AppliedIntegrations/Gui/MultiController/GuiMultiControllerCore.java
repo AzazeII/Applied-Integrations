@@ -1,8 +1,8 @@
-package AppliedIntegrations.Gui.ServerGUI;
+package AppliedIntegrations.Gui.MultiController;
 
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerCore;
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.core.localization.GuiText;
@@ -18,7 +18,6 @@ public class GuiMultiControllerCore extends AIBaseGui {
 	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_card_storage.png");
 
 	public GuiMultiControllerCore(ContainerMultiControllerCore container, EntityPlayer p) {
-
 		super(container, p);
 	}
 

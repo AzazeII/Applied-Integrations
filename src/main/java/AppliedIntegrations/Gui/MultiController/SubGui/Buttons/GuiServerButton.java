@@ -1,8 +1,8 @@
-package AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons;
+package AppliedIntegrations.Gui.MultiController.SubGui.Buttons;
 
 
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
-import AppliedIntegrations.Gui.ServerGUI.GuiMultiControllerTerminal;
+import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
 
 public abstract class GuiServerButton extends AIGuiButton {
 	protected final GuiMultiControllerTerminal host;

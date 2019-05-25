@@ -1,15 +1,15 @@
-package AppliedIntegrations.Gui.ServerGUI;
+package AppliedIntegrations.Gui.MultiController;
 
 
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.tile.Server.ContainerMultiControllerTerminal;
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
-import AppliedIntegrations.Gui.ServerGUI.FilterSlots.WidgetEnergySlot;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiListTypeButton;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiSecurityPermissionsButton;
-import AppliedIntegrations.Gui.ServerGUI.SubGui.Buttons.GuiStorageChannelButton;
+import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
+import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiListTypeButton;
+import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermissionsButton;
+import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.Server.PacketContainerWidgetSync;
