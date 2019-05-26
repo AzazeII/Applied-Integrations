@@ -42,6 +42,10 @@ public class MultiControllerCraftingHandler extends MultiControllerPortHandler<I
 		CraftingGridCache craftingGrid = getOuterCraftingGrid();
 
 		// Check not null
+		if (craftingGrid == null)
+			return;
+
+		// Check not null
 		if (filteredMatter.get(CRAFT) == null || filteredMatter.get(CRAFT).get(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class)) == null) {
 			return;
 		}
@@ -76,7 +80,14 @@ public class MultiControllerCraftingHandler extends MultiControllerPortHandler<I
 		try {
 			return (CraftingGridCache) host.getMainNetworkCraftingGrid();
 		} catch (ClassCastException classCast) {
-			throw new IllegalStateException("Applied integrations tried to cast ICraftingGrid into CraftingGridCache, this message indicates that AI" + "didn't successfully casted it. It means some mod has overrode crafting grid cache. If you'll get this message, you can submit issue on github:" + " https://github.com/AzazeII/Applied-Integrations/issues");
+			throw new IllegalStateException("Applied integrations tried to" +
+					" cast ICraftingGrid into CraftingGridCache," +
+					" this message indicates that AI"
+					+ "didn't successfully casted it." +
+					" It means some mod has overrode" +
+					" crafting grid cache. If you'll " +
+					"get this message, you can submit " +
+					"issue on github:" + " https://github.com/AzazeII/Applied-Integrations/issues");
 		}
 	}
 

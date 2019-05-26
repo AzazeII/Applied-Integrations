@@ -662,10 +662,10 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 						// Map port in map
 						portMap.get(side).put(edgePosId, port);
-					}
 
-					// Increase counter value
-					edgePosId ++;
+						// Increase counter value
+						edgePosId ++;
+					}
 				}
 			}
 
