@@ -16,6 +16,7 @@ import AppliedIntegrations.tile.MultiController.Networking.MEMultiControllerMoni
 import AppliedIntegrations.tile.MultiController.helpers.Crafting.MultiControllerCPUHandler;
 import AppliedIntegrations.tile.MultiController.helpers.Crafting.MultiControllerCraftingHandler;
 import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortHandler;
+import AppliedIntegrations.tile.MultiController.helpers.MultiControllerCoreInventory;
 import AppliedIntegrations.tile.Patterns.AIPatterns;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
@@ -55,8 +56,8 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Author Azazell
  */
 public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable {
-	private class CardInventoryManager implements IInventoryHost {
-		private void onCardRemove(ItemStack card) {
+	public class CardInventoryManager implements IInventoryHost {
+		public void onCardRemove(ItemStack card) {
 			// Get tag
 			NBTTagCompound tag = Platform.openNbtData(card);
 
@@ -167,11 +168,13 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 	private static final String KEY_FORMED = "#FORMED";
 
-	public List<AIMultiControllerTile> slaves = new ArrayList<>();
+	private List<AIMultiControllerTile> slaves = new ArrayList<>();
 
 	private boolean constructionRequested;
 
 	private LinkedHashMap<Class<? extends AIMultiControllerTile>, List<AIMultiControllerTile>> slaveMap = new LinkedHashMap<>();
+
+	private MultiControllerCoreInventory cardInventory = new MultiControllerCoreInventory(this);
 
 	private CardInventoryManager cardManager = new CardInventoryManager();
 
@@ -239,6 +242,11 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 	{
 		nullifyMap();
+	}
+
+
+	public CardInventoryManager getCardManager() {
+		return cardManager;
 	}
 
 	private void cpuUpdate() {

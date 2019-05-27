@@ -145,7 +145,8 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 		IStorageGrid storage = getProxy().getStorage();
 
-		IAEEnergyStack notRemoved = storage.getInventory(getEnergyChannel()).extractItems(getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
+		IAEEnergyStack notRemoved = storage.getInventory(getEnergyChannel()).extractItems(getEnergyChannel().createStack(
+				resource), actionable, new MachineSource(this));
 
 		if (notRemoved == null) {
 			return (int) resource.amount;
@@ -169,7 +170,8 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 		IStorageGrid storage = getProxy().getStorage();
 
-		IAEEnergyStack returnAmount = storage.getInventory(this.getEnergyChannel()).injectItems(getEnergyChannel().createStack(resource), actionable, new MachineSource(this));
+		IAEEnergyStack returnAmount = storage.getInventory(this.getEnergyChannel()).injectItems(getEnergyChannel().createStack(
+				resource), actionable, new MachineSource(this));
 
 		if (returnAmount == null) {
 			return (int) resource.amount;
