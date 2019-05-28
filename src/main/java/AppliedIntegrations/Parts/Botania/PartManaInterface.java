@@ -81,7 +81,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
 
-		if (!getWorld().isRemote) {
+		if (!getHostWorld().isRemote) {
 
 		}
 		return true;
@@ -104,7 +104,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall) {
-		if (!getWorld().isRemote) {
+		if (!getHostWorld().isRemote) {
 			try {
 				if (isManaFiltered) {
 					doExtractDualityWork(Actionable.MODULATE);

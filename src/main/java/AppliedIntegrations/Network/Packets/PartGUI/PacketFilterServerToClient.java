@@ -25,7 +25,7 @@ public class PacketFilterServerToClient extends AIPacket {
 
 	public PacketFilterServerToClient(LiquidAIEnergy energy, int index, ISyncHost host) {
 
-		super(host.getPositionVector().getX(), host.getPositionVector().getY(), host.getPositionVector().getZ(), host.getSide().getFacing(), host.getWorld());
+		super(host.getHostPos().getX(), host.getHostPos().getY(), host.getHostPos().getZ(), host.getHostSide().getFacing(), host.getHostWorld());
 		this.energy = energy;
 		this.index = index;
 		this.host = host;

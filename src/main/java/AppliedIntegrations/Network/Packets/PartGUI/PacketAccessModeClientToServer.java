@@ -21,7 +21,7 @@ public class PacketAccessModeClientToServer extends AIPacket {
 
 	public PacketAccessModeClientToServer(AccessRestriction currentValue, AIPart part) {
 
-		super(part.getX(), part.getY(), part.getZ(), part.getSide().getFacing(), part.getWorld());
+		super(part.getX(), part.getY(), part.getZ(), part.getHostSide().getFacing(), part.getHostWorld());
 		// Set val
 		val = currentValue;
 

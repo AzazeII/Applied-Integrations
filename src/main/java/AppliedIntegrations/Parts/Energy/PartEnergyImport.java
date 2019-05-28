@@ -55,7 +55,7 @@ public class PartEnergyImport extends AIOPart {
 	@Override
 	public TickRateModulation doWork(int valuedTransfer, IGridNode node) {
 		// Create helper
-		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getSide().getOpposite());
+		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getHostSide().getOpposite());
 
 		// Iterate over all energies
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {

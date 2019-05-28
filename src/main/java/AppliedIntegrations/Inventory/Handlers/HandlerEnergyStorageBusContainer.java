@@ -72,7 +72,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		}
 
 		// Create helper
-		CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide().getOpposite());
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide().getOpposite());
 
 		// Get number injected
 		int added = helper.receiveEnergy(input.getStackSize(), type == Actionable.SIMULATE, this.type.energy);
@@ -126,7 +126,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		}
 
 		// Create capability helper
-		CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide());
 
 		// Get extracted value
 		int extracted = helper.extractEnergy(request.getStackSize(), mode == Actionable.SIMULATE, this.type.energy);
@@ -154,7 +154,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		}
 
 		// Create capability helper
-		CapabilityHelper helper = new CapabilityHelper(storage, owner.getSide());
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide());
 
 		// Get stored energy
 		int stored = helper.getStored(type.energy);

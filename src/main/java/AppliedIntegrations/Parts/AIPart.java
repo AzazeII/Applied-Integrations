@@ -298,7 +298,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	@Override
 	public void addToWorld() {
 		// Ignored on client side
-		if (getWorld().isRemote) {
+		if (getHostWorld().isRemote) {
 			return;
 		}
 
@@ -319,7 +319,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	private void updateStatus() {
 		// Ignored client side
-		if (getWorld().isRemote) {
+		if (getHostWorld().isRemote) {
 			return;
 		}
 
@@ -424,7 +424,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	public boolean isPowered() {
 		try {
 			// Server side?
-			if (!getWorld().isRemote && (this.proxy != null)) {
+			if (!getHostWorld().isRemote && (this.proxy != null)) {
 				// Get the energy grid
 				IEnergyGrid eGrid = this.proxy.getEnergy();
 
@@ -444,7 +444,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	@Override
 	public boolean isActive() {
 		// Are we server side?
-		if (!getWorld().isRemote) {
+		if (!getHostWorld().isRemote) {
 			// Do we have a node?
 			if (this.getProxy().getNode() != null) {
 				// Get it's activity
@@ -502,18 +502,18 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	@Override
-	public BlockPos getPositionVector() {
+	public BlockPos getHostPos() {
 		return getHostTile().getPos();
 	}
 
 	@Override
-	public World getWorld() {
+	public World getHostWorld() {
 
 		return getHostTile().getWorld();
 	}
 
 	@Override
-	public AEPartLocation getSide() {
+	public AEPartLocation getHostSide() {
 
 		return cableSide;
 	}

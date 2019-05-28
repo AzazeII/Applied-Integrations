@@ -81,7 +81,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 		// Check if terminal is active
 		if (isActive()) {
 			// Open gui
-			AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiTerminalPart, player, getSide(), getPositionVector());
+			AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiTerminalPart, player, getHostSide(), getHostPos());
 
 			// Trigger update request
 			updateRequsted = true;
@@ -160,7 +160,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 			}
 
 			// Do all AE2 mechanics only on server
-			if (!this.getWorld().isRemote) {
+			if (!this.getHostWorld().isRemote) {
 
 				// Get energy inventory
 				IMEMonitor<IAEEnergyStack> inv = this.getEnergyInventory();

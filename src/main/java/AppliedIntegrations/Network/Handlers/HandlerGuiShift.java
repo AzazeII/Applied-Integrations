@@ -19,7 +19,7 @@ public class HandlerGuiShift implements IMessageHandler<PacketGuiShift, PacketGu
 				message.player,
 
 				// Relative host side to cable connection
-				message.part.getSide(),
+				message.part.getHostSide(),
 
 				// Part position in world
 				message.part.getHostTile().getPos());

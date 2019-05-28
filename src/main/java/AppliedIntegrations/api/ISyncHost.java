@@ -16,19 +16,19 @@ public interface ISyncHost {
 
 		if (!ignoreWorld) {
 			// Check if all three components of sync host are equal
-			return host.getPositionVector().equals(host.getPositionVector()) && getWorld().equals(host.getWorld()) && getSide().equals(host.getSide());
+			return host.getHostPos().equals(host.getHostPos()) && getHostWorld().equals(host.getHostWorld()) && getHostSide().equals(host.getHostSide());
 		} else {
 			// Check if two components of sync host are equal
-			return host.getPositionVector().equals(host.getPositionVector()) && getSide().equals(host.getSide());
+			return host.getHostPos().equals(host.getHostPos()) && getHostSide().equals(host.getHostSide());
 		}
 	}
 
 	// Pos of host
-	BlockPos getPositionVector();
+	BlockPos getHostPos();
 
 	// World of host
-	World getWorld();
+	World getHostWorld();
 
 	// Relative side to center of block
-	AEPartLocation getSide();
+	AEPartLocation getHostSide();
 }

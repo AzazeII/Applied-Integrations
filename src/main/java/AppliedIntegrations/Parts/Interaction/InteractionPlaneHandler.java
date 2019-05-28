@@ -100,14 +100,14 @@ public class InteractionPlaneHandler implements IMEInventoryHandler<IAEItemStack
 				ItemStack stack = simulation.getDefinition();
 
 				// Create fake player
-				FakePlayer player = new FakePlayer((WorldServer) host.getWorld(), fakeProfile);
+				FakePlayer player = new FakePlayer((WorldServer) host.getHostWorld(), fakeProfile);
 
 				// Set held item for player
 				player.setHeldItem(MAIN_HAND, stack);
 
 				// Get block and click on block with stack
-				host.getWorld().getBlockState(pos).getBlock().onBlockActivated(host.getWorld(), host.getPositionVector(), host.getWorld().getBlockState(pos),
-						player, MAIN_HAND, host.getSide().getFacing(), 0, 0, 0);
+				host.getHostWorld().getBlockState(pos).getBlock().onBlockActivated(host.getHostWorld(), host.getHostPos(), host.getHostWorld().getBlockState(pos),
+						player, MAIN_HAND, host.getHostSide().getFacing(), 0, 0, 0);
 
 				// Return ae stack from stack
 				return input.setStackSize(input.getStackSize() - stack.getCount());

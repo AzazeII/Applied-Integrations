@@ -22,7 +22,7 @@ public class PacketAccessModeServerToClient extends AIPacket {
 
 	public PacketAccessModeServerToClient(AccessRestriction accessRestriction, PartEnergyStorage part) {
 
-		super(part.getX(), part.getY(), part.getZ(), part.getSide().getFacing(), part.getWorld());
+		super(part.getX(), part.getY(), part.getZ(), part.getHostSide().getFacing(), part.getHostWorld());
 		access = accessRestriction;
 	}
 

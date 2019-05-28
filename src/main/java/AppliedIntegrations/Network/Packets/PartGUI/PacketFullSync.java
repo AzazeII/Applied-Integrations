@@ -28,7 +28,7 @@ public class PacketFullSync extends AIPacket {
 
 	public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, boolean redstoneControlled, AIOPart aioPart) {
 
-		super(aioPart.getX(), aioPart.getY(), aioPart.getZ(), aioPart.getSide().getFacing(), aioPart.getWorld());
+		super(aioPart.getX(), aioPart.getY(), aioPart.getZ(), aioPart.getHostSide().getFacing(), aioPart.getHostWorld());
 
 		this.filterSize = filterSize;
 		this.redstoneControl = redstoneControlled;

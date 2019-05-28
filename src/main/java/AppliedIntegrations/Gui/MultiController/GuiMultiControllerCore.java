@@ -56,7 +56,6 @@ public class GuiMultiControllerCore extends AIBaseGui {
 		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 7, this.ySize - 108, 4210752); // (Player inv.)
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
 
-		BlockData d;
 		// Draw bar
 		bar.draw(new AEBaseGui(this.inventorySlots) {
 			@Override

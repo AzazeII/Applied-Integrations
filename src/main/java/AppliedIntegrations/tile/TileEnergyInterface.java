@@ -111,7 +111,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 		if (getLogicalSide() == SERVER) {
 			if (!player.isSneaking()) {
 				// Open GUI
-				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getSide(), getPos());
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getHostSide(), getPos());
 
 				// Request gui update
 				updateRequested = true;

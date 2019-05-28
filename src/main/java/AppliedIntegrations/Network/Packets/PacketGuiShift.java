@@ -26,7 +26,7 @@ public class PacketGuiShift extends AIPacket {
 
 	public PacketGuiShift(AIGuiHandler.GuiEnum newGui, IPriorityHostExtended part) {
 
-		super(part.getPositionVector().getX(), part.getPositionVector().getY(), part.getPositionVector().getZ(), part.getSide().getFacing(), part.getWorld());
+		super(part.getHostPos().getX(), part.getHostPos().getY(), part.getHostPos().getZ(), part.getHostSide().getFacing(), part.getHostWorld());
 
 		gui = newGui;
 	}

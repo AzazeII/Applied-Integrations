@@ -23,7 +23,7 @@ public class PacketPriorityChange extends AIPacket {
 
 	public PacketPriorityChange(String text, IPriorityHostExtended host) {
 
-		super(host.getPositionVector().getX(), host.getPositionVector().getY(), host.getPositionVector().getZ(), host.getSide().getFacing(), host.getWorld());
+		super(host.getHostPos().getX(), host.getHostPos().getY(), host.getHostPos().getZ(), host.getHostSide().getFacing(), host.getHostWorld());
 		this.text = text;
 	}
 

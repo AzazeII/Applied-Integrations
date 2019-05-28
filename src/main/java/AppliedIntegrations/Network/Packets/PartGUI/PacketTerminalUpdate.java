@@ -31,7 +31,7 @@ public class PacketTerminalUpdate extends AIPacket {
 
 	public PacketTerminalUpdate(IItemList<IAEEnergyStack> monitor, @Nonnull SortOrder order, AIPart partToken) {
 
-		super(partToken.getX(), partToken.getY(), partToken.getZ(), partToken.getSide().getFacing(), partToken.getWorld());
+		super(partToken.getX(), partToken.getY(), partToken.getZ(), partToken.getHostSide().getFacing(), partToken.getHostWorld());
 		this.list = monitor;
 		this.part = partToken;
 		this.order = order;

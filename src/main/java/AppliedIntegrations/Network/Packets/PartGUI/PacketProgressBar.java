@@ -26,7 +26,7 @@ public class PacketProgressBar extends AIPacket {
 
 	public PacketProgressBar(IEnergyInterface sender, LiquidAIEnergy energy, AEPartLocation energySide) {
 
-		super(sender.getPositionVector().getX(), sender.getPositionVector().getY(), sender.getPositionVector().getZ(), sender.getSide().getFacing(), sender.getWorld());
+		super(sender.getHostPos().getX(), sender.getHostPos().getY(), sender.getHostPos().getZ(), sender.getHostSide().getFacing(), sender.getHostWorld());
 		this.sender = sender;
 		this.energy = energy;
 		this.energySide = energySide;

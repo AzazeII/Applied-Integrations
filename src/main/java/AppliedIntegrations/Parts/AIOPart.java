@@ -244,7 +244,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	@Override
 	public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos blockPos1) {
 		// Ignored client side
-		if (getWorld().isRemote) {
+		if (getHostWorld().isRemote) {
 			return;
 		}
 
@@ -264,7 +264,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			// Iterate over all capabilities
 			for (Capability capability : type.capabilities) {
 				// Check if tile has one of type's capabilities
-				if (tileEntity.hasCapability(capability, getSide().getFacing())) {
+				if (tileEntity.hasCapability(capability, getHostSide().getFacing())) {
 					this.adjacentEnergyStorage = tileEntity;
 				}
 			}
@@ -288,7 +288,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		if (getLogicalSide() == SERVER) {
 			if (!player.isSneaking()) {
 				// Open gui trough handler
-				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getSide(), getHostTile().getPos());
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getHostSide(), getHostTile().getPos());
 
 				// Make host update gui's coordinates
 				this.updateRequested = true;

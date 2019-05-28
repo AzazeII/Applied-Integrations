@@ -60,7 +60,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 		this.player = player;
 
 		// Do all AE2 mechanics only on server
-		if (!terminal.getWorld().isRemote) {
+		if (!terminal.getHostWorld().isRemote) {
 
 			// Get energy inventory
 			IMEMonitor<IAEEnergyStack> inv = terminal.getEnergyInventory();

@@ -218,7 +218,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 			if (!player.isSneaking()) {
 
 				// Open GUI
-				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getSide(), getHostTile().getPos());
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getHostSide(), getHostTile().getPos());
 				// Request gui update
 				updateRequested = true;
 			}
@@ -648,7 +648,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Optional.Method(modid = "ic2")
 	private void initEUStorage() {
-		//EUStorage = new InterfaceSinkSource(getWorld(), );
+		//EUStorage = new InterfaceSinkSource(getHostWorld(), );
 	}
 
 	@Optional.Method(modid = "mekanism")

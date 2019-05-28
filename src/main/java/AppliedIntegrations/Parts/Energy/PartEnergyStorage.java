@@ -275,7 +275,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 			return;
 		}
 		// Check if changed neighbor was next to storage bus's side
-		if (pos.offset(this.getSide().getFacing()).equals(neighbor)) {
+		if (pos.offset(this.getHostSide().getFacing()).equals(neighbor)) {
 			// Notify cell array
 			postCellEvent();
 		}
@@ -292,14 +292,15 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 				TileCableBus maybeInterface = (TileCableBus) getFacingTile();
 
 				// Check if candidate instanceof IEnergyInterface
-				if (maybeInterface.getPart(getSide().getOpposite()) instanceof IEnergyInterface) {
-					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) ((TileCableBus) getFacingTile()).getPart(getSide().getOpposite()), this);
+				if (maybeInterface.getPart(getHostSide().getOpposite()) instanceof IEnergyInterface) {
+					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) ((TileCableBus) getFacingTile()).getPart(
+							getHostSide().getOpposite()), this);
 				}
 
 				// Check for all energy types:
-			} else if (getFacingTile().hasCapability(CapabilityEnergy.ENERGY, getSide().getFacing())) {
+			} else if (getFacingTile().hasCapability(CapabilityEnergy.ENERGY, getHostSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.FE);
-			} else if (IntegrationsHelper.instance.isLoaded(J) && getFacingTile().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getSide().getFacing())) {
+			} else if (IntegrationsHelper.instance.isLoaded(J) && getFacingTile().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getHostSide().getFacing())) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Joules);
 			} else if (IntegrationsHelper.instance.isLoaded(EU) && getFacingTile() instanceof IEnergySink) {
 				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.EU);
@@ -313,7 +314,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		if (getLogicalSide() == SERVER) {
 			if (!player.isSneaking()) {
 				// Open gui
-				AIGuiHandler.open(GuiStoragePart, player, getSide(), getHostTile().getPos());
+				AIGuiHandler.open(GuiStoragePart, player, getHostSide(), getHostTile().getPos());
 
 				// Request filter update
 				updateRequested = true;
