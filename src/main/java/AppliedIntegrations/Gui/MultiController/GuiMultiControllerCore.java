@@ -3,8 +3,9 @@ package AppliedIntegrations.Gui.MultiController;
 
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.Widgets.GuiAIScrollbar;
 import AppliedIntegrations.api.ISyncHost;
+import appeng.client.gui.AEBaseGui;
+import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.core.AppEng;
 import appeng.core.localization.GuiText;
 import net.minecraft.client.Minecraft;
@@ -17,7 +18,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiMultiControllerCore extends AIBaseGui {
 	private static final ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID, "textures/guis/terminal.png");
-	private GuiAIScrollbar bar;
+	private GuiScrollbar bar;
 
 	public GuiMultiControllerCore(ContainerMultiControllerCore container, EntityPlayer p) {
 		super(container, p);
@@ -28,7 +29,7 @@ public class GuiMultiControllerCore extends AIBaseGui {
 		super.initGui();
 
 		// Init scroll bar
-		bar = new GuiAIScrollbar();
+		bar = new GuiScrollbar();
 	}
 
 	@Override
@@ -55,7 +56,28 @@ public class GuiMultiControllerCore extends AIBaseGui {
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
 
 		// Draw bar
-		bar.draw(this);
+		bar.draw(new AEBaseGui(this.inventorySlots) {
+			@Override
+			public void drawTexturedModalRect(int x, int y, int textureX, int textureY, int width, int height) {
+				// Pass call to given GUI
+				GuiMultiControllerCore.this.drawTexturedModalRect(x, y, textureX, textureY, width, height);
+			}
+
+			@Override
+			public void drawFG(int offsetX, int offsetY, int mouseX, int mouseY) {
+				// Ignored
+			}
+
+			@Override
+			public void drawBG(int offsetX, int offsetY, int mouseX, int mouseY) {
+				// Ignored
+			}
+
+			@Override
+			protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+				// Ignored
+			}
+		});
 	}
 
 
