@@ -4,6 +4,7 @@ package AppliedIntegrations.Gui.MultiController;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Multiblocks.BlockData;
 import appeng.client.gui.AEBaseGui;
 import appeng.client.gui.widgets.GuiScrollbar;
 import appeng.core.AppEng;
@@ -55,6 +56,7 @@ public class GuiMultiControllerCore extends AIBaseGui {
 		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 7, this.ySize - 108, 4210752); // (Player inv.)
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
 
+		BlockData d;
 		// Draw bar
 		bar.draw(new AEBaseGui(this.inventorySlots) {
 			@Override

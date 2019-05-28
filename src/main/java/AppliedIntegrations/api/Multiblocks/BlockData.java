@@ -5,9 +5,8 @@ import net.minecraft.block.Block;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Arrays;
 import java.util.List;
-
-import static scala.actors.threadpool.Arrays.asList;
 
 /**
  * @Author Azazell
@@ -27,7 +26,7 @@ public class BlockData {
 
 	@SuppressWarnings("unchecked")
 	public BlockData(int x, int y, int z, BlockType type, Block... blockOptions) {
-		this(x, y, z, asList(blockOptions));
+		this(x, y, z, Arrays.asList(blockOptions));
 		this.type = type;
 	}
 
@@ -37,7 +36,7 @@ public class BlockData {
 
 	@SuppressWarnings("unchecked")
 	public BlockData(int x, int y, int z, Block... blockOptions) {
-		this(x, y, z, asList(blockOptions));
+		this(x, y, z, Arrays.asList(blockOptions));
 	}
 
 	public BlockData(int x, int y, int z, List<Block> options) {
