@@ -10,6 +10,9 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 
+/**
+ * @Author Azazell
+ */
 public class WidgetEnergySelector extends EnergyWidget {
 	// True by default
 	private boolean shouldRender = true;

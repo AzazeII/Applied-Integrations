@@ -47,10 +47,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import static AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal.*;
 
-
-// TODO Rewrite this GUI, now it will be similar to normal security terminal.
-// Instead of biometric cards it will accept networks cards.
-
 /**
  * @Author Azazell
  */
