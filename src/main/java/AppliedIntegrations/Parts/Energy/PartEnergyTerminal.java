@@ -81,7 +81,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 		// Check if terminal is active
 		if (isActive()) {
 			// Open gui
-			AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiTerminalPart, player, getSide(), getPos());
+			AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiTerminalPart, player, getSide(), getPositionVector());
 
 			// Trigger update request
 			updateRequsted = true;

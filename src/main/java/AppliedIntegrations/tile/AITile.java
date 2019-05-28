@@ -28,6 +28,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.Optional;
 
 import javax.annotation.Nonnull;
@@ -271,8 +272,12 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	}
 
 	@Override
-	public AEPartLocation getSide() {
+	public BlockPos getPositionVector() {
+		return pos;
+	}
 
+	@Override
+	public AEPartLocation getSide() {
 		return AEPartLocation.INTERNAL;
 	}
 }

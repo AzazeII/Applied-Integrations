@@ -61,6 +61,7 @@ public class MultiControllerCoreInventory implements IMEInventoryHandler<IAEItem
 				return null;
 			}
 
+
 			// Add input to list
 			itemList.add( input );
 

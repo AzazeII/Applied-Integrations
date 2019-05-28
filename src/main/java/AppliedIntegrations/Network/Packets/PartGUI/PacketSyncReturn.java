@@ -30,7 +30,7 @@ public class PacketSyncReturn extends AIPacket {
 
 	public PacketSyncReturn(Enum currentValue, ISyncHost syncHost) {
 
-		super(syncHost.getPos().getX(), syncHost.getPos().getY(), syncHost.getPos().getZ(), syncHost.getSide().getFacing(), syncHost.getWorld());
+		super(syncHost.getPositionVector().getX(), syncHost.getPositionVector().getY(), syncHost.getPositionVector().getZ(), syncHost.getSide().getFacing(), syncHost.getWorld());
 		this.mode = currentValue;
 	}
 

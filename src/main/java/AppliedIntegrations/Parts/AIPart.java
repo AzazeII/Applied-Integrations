@@ -502,8 +502,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	@Override
-	public BlockPos getPos() {
-
+	public BlockPos getPositionVector() {
 		return getHostTile().getPos();
 	}
 

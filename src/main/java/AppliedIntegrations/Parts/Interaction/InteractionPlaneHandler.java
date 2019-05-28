@@ -106,7 +106,7 @@ public class InteractionPlaneHandler implements IMEInventoryHandler<IAEItemStack
 				player.setHeldItem(MAIN_HAND, stack);
 
 				// Get block and click on block with stack
-				host.getWorld().getBlockState(pos).getBlock().onBlockActivated(host.getWorld(), host.getPos(), host.getWorld().getBlockState(pos),
+				host.getWorld().getBlockState(pos).getBlock().onBlockActivated(host.getWorld(), host.getPositionVector(), host.getWorld().getBlockState(pos),
 						player, MAIN_HAND, host.getSide().getFacing(), 0, 0, 0);
 
 				// Return ae stack from stack

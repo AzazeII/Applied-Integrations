@@ -1,10 +1,10 @@
 package AppliedIntegrations.Gui.MultiController;
 
 
-import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.api.ISyncHost;
+import appeng.core.AppEng;
 import appeng.core.localization.GuiText;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
  * @Author Azazell
  */
 public class GuiMultiControllerCore extends AIBaseGui {
-	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_card_storage.png");
+	private static final ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID, "textures/guis/terminal.png");
 
 	public GuiMultiControllerCore(ContainerMultiControllerCore container, EntityPlayer p) {
 		super(container, p);
@@ -33,7 +33,7 @@ public class GuiMultiControllerCore extends AIBaseGui {
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 
 		// Draw texture
-		drawTexturedModalRect(this.guiLeft, this.guiTop - 15, 0, 0, 210, 200);
+		drawTexturedModalRect(this.guiLeft, this.guiTop - 15, 0, 0, 190, 200);
 	}
 
 	@Override

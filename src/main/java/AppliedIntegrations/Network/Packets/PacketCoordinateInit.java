@@ -20,7 +20,7 @@ public class PacketCoordinateInit extends AIPacket {
 
 	public PacketCoordinateInit(ISyncHost host) {
 
-		super(host.getPos().getX(), host.getPos().getY(), host.getPos().getZ(), host.getSide().getFacing(), host.getWorld());
+		super(host.getPositionVector().getX(), host.getPositionVector().getY(), host.getPositionVector().getZ(), host.getSide().getFacing(), host.getWorld());
 		this.host = host;
 	}
 

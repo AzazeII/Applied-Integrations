@@ -6,7 +6,6 @@ import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
-import appeng.tile.misc.TileSecurityStation;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -23,10 +22,7 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 	private static final int CARD_SLOT_COLUMNS = 6;
 
 	public ContainerMultiControllerCore(EntityPlayer player, TileMultiControllerCore master) {
-
 		super(player);
-
-		TileSecurityStation s;
 
 		// Bind card slots
 		this.addCardSlots(master.cardInv);

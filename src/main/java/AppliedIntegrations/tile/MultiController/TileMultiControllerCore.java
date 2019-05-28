@@ -18,8 +18,7 @@ import AppliedIntegrations.tile.MultiController.helpers.Crafting.MultiController
 import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortHandler;
 import AppliedIntegrations.tile.MultiController.helpers.MultiControllerCoreInventory;
 import AppliedIntegrations.tile.Patterns.AIPatterns;
-import appeng.api.config.IncludeExclude;
-import appeng.api.config.SecurityPermissions;
+import appeng.api.config.*;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingGrid;
@@ -30,11 +29,16 @@ import appeng.api.networking.events.MENetworkCraftingCpuChange;
 import appeng.api.networking.events.MENetworkCraftingPatternChange;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.*;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
+import appeng.api.util.IConfigManager;
 import appeng.api.util.INetworkToolAgent;
 import appeng.me.GridAccessException;
+import appeng.me.helpers.MEMonitorHandler;
 import appeng.me.helpers.MachineSource;
+import appeng.util.ConfigManager;
+import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryCrafting;
@@ -55,7 +59,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @Author Azazell
  */
-public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable {
+public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable, ITerminalHost, IConfigManagerHost {
 	public class CardInventoryManager implements IInventoryHost {
 		public void onCardRemove(ItemStack card) {
 			// Get tag
@@ -176,7 +180,11 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 	private MultiControllerCoreInventory cardInventory = new MultiControllerCoreInventory(this);
 
+	private IMEMonitor<IAEItemStack> monitor = new MEMonitorHandler<>(cardInventory);
+
 	private CardInventoryManager cardManager = new CardInventoryManager();
+
+	private IConfigManager configManager = new ConfigManager(this);
 
 	// list of blocks in multi-block
 	private List<Class<? extends AIMultiControllerTile>> multi_controllerClasses =
@@ -241,7 +249,13 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	private boolean isFormed;
 
 	{
+		// Fill maps with empty data
 		nullifyMap();
+
+		// Configure CM
+		configManager.registerSetting( Settings.SORT_BY, SortOrder.NAME ); // (1) Sort mode
+		configManager.registerSetting( Settings.VIEW_MODE, ViewItems.ALL ); // (2) View mode
+		configManager.registerSetting( Settings.SORT_DIRECTION, SortDir.ASCENDING ); // (3) Sort direction
 	}
 
 
@@ -734,5 +748,26 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	@Override
 	public void setMaster(IMaster tileServerCore) {
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> channel) {
+		// Check for correct channel
+		if (channel == cardInventory.getChannel()) {
+			return (IMEMonitor<T>) monitor;
+		}
+
+		return null;
+	}
+
+	@Override
+	public IConfigManager getConfigManager() {
+		return configManager;
+	}
+
+	@Override
+	public void updateSetting(IConfigManager manager, Enum settingName, Enum newValue) {
+		// Ignored ( not, since this comment here :) )
 	}
 }

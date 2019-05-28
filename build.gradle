@@ -61,7 +61,7 @@ compileJava {
 }
 
 minecraft {
-    version = "1.12.2-14.23.5.2838"
+    version = "1.12.2-14.23.5.2768"
     runDir = "run"
     
     // the mappings can be changed at any time, and must be in the following format.
@@ -127,21 +127,17 @@ dependencies {
     compile "appeng:appliedenergistics2:rv6-stable-6"
     compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
     compile 'org.json:json:20171018'
-
     compile 'org.apache.logging.log4j:log4j-api'
     compile 'org.apache.logging.log4j:log4j-core'
-    
     compile "com.sparkjava:spark-core:2.8.0"
-    compile "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
-    compile "mekanism:Mekanism:1.12.2:9.4.13.349"
-
-    compile "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
     compile "vazkii.botania:Botania:r1.10-359.39"
-
     compile "teamroots.embers:EmbersRekindled:1.13"
 
-    compile "info.amerifrance.guideapi:Guide-API:1.12-2.1.8-63"
-    compile "com.wayoftime.bloodmagic:BloodMagic:1.12.2-2.4.0-102"
+    compileOnly "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
+    compileOnly "mekanism:Mekanism:1.12.2:9.4.13.349"
+    compileOnly "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"
+    compileOnly "info.amerifrance.guideapi:Guide-API:1.12-2.1.8-63"
+    compileOnly "com.wayoftime.bloodmagic:BloodMagic:1.12.2-2.4.0-102"
 
     compile files('libs/')
 }

@@ -16,15 +16,15 @@ public interface ISyncHost {
 
 		if (!ignoreWorld) {
 			// Check if all three components of sync host are equal
-			return host.getPos().equals(host.getPos()) && getWorld().equals(host.getWorld()) && getSide().equals(host.getSide());
+			return host.getPositionVector().equals(host.getPositionVector()) && getWorld().equals(host.getWorld()) && getSide().equals(host.getSide());
 		} else {
 			// Check if two components of sync host are equal
-			return host.getPos().equals(host.getPos()) && getSide().equals(host.getSide());
+			return host.getPositionVector().equals(host.getPositionVector()) && getSide().equals(host.getSide());
 		}
 	}
 
 	// Pos of host
-	BlockPos getPos();
+	BlockPos getPositionVector();
 
 	// World of host
 	World getWorld();

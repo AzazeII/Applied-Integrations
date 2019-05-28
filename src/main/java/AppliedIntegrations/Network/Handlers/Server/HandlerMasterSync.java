@@ -16,7 +16,7 @@ public class HandlerMasterSync implements IMessageHandler<PacketMasterSync, Pack
 		// Schedule master update
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			// Cast tile to multi block
-			IAIMultiBlock multiBlock = (IAIMultiBlock) Minecraft.getMinecraft().world.getTileEntity(message.slave.getPos());
+			IAIMultiBlock multiBlock = (IAIMultiBlock) Minecraft.getMinecraft().world.getTileEntity(message.slave.getPositionVector());
 
 			// Check not null
 			if (multiBlock != null)
