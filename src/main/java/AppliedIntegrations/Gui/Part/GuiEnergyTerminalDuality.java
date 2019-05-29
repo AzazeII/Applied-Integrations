@@ -47,7 +47,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 	private static final int WIDGET_ROWS_PER_PAGE = 4;
 
 	@Nonnull
-	private static ContainerEnergyTerminal LinkedContainer;
+	private static ContainerEnergyTerminal linkedContainer;
 
 	private final List<WidgetEnergySelector> widgetEnergySelectors = new ArrayList<>();
 
@@ -120,7 +120,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 
 		super(container, player);
 
-		LinkedContainer = container;
+		linkedContainer = container;
 
 		this.player = player;
 		this.part = partEnergyTerminal;
@@ -161,7 +161,7 @@ public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelect
 	@Override
 	public IEnergySelectorContainer getContainer() {
 
-		return LinkedContainer;
+		return linkedContainer;
 	}
 
 	@Nullable
