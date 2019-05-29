@@ -57,9 +57,4 @@ public abstract class EnergyWidget extends AIWidget {
 		// Add energy name
 		tooltip.add(currentStack.getEnergy().getEnergyName());
 	}
-
-	@Override
-	public final void onMouseClicked() {
-		// Ignored
-	}
 }

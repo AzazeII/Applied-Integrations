@@ -3,6 +3,7 @@ package AppliedIntegrations.Gui.MultiController;
 
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.Widgets.WidgetScrollbar;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.core.AppEng;
 import appeng.core.localization.GuiText;
@@ -16,6 +17,8 @@ import org.lwjgl.opengl.GL11;
  */
 public class GuiMultiControllerCore extends AIBaseGui {
 	private static final ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID, "textures/guis/terminal.png");
+
+	private final WidgetScrollbar scroll = new WidgetScrollbar(this, 175, 18);
 
 	public GuiMultiControllerCore(ContainerMultiControllerCore container, EntityPlayer p) {
 		super(container, p);
@@ -43,6 +46,9 @@ public class GuiMultiControllerCore extends AIBaseGui {
 		// Draw string
 		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 7, this.ySize - 108, 4210752); // (Player inv.)
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
+
+		// Draw scroll bar
+		scroll.drawWidget();
 	}
 
 

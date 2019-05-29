@@ -101,7 +101,6 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 	}
 
 	public void setIncludeExcludeMode(IncludeExclude mode) {
-
 		permissionChannelModeMap.get(securityPermissionButton.getCurrentPermissions()).put(storageChannelButton.getChannel(), mode);
 	}
 
@@ -113,7 +112,6 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-
 		if (host instanceof TileMultiControllerTerminal) {
 			terminal = (TileMultiControllerTerminal) host;
 		}
@@ -121,7 +119,6 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 
 	@Override
 	public void initGui() {
-
 		super.initGui();
 
 		// Add new security permissions button to button list

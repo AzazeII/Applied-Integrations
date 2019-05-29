@@ -15,9 +15,6 @@ import java.util.List;
  */
 @SideOnly(Side.CLIENT)
 public abstract class AIWidget extends Gui {
-	/**
-	 * The width and height of the energy slot!
-	 */
 	public static final int WIDGET_SIZE = 18;
 
 	protected int xPosition;
@@ -56,9 +53,4 @@ public abstract class AIWidget extends Gui {
 
 		return AIGuiHelper.INSTANCE.isPointInGuiRegion(this.yPosition, this.xPosition, AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1, mouseX, mouseY, this.hostGUI.getLeft(), this.hostGUI.getTop());
 	}
-
-	/**
-	 * Called when the mouse is clicked on the widget.
-	 */
-	public abstract void onMouseClicked();
 }
