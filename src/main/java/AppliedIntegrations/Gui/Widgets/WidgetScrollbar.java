@@ -13,31 +13,13 @@ public class WidgetScrollbar extends AIWidget implements IScrollSource {
 	private int currentScroll;
 
 	// Minimum scroll value for widget
-	private int minScroll;
+	private int minScroll = 0;
 
 	// Maximum scroll value for widget
 	private int maxScroll;
-
+	
 	public WidgetScrollbar(IWidgetHost hostGUI, int xPos, int yPos) {
 		super(hostGUI, xPos, yPos);
-	}
-
-	@Override
-	public void drawWidget() {
-		// Bind texture of scrollbar in creative tab
-		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("minecraft",
-				"gui/container/creative_inventory/tabs.png"));
-
-		// Nullify color
-		GlStateManager.color( 1.0f, 1.0f, 1.0f, 1.0f );
-
-		// Draw texture
-		drawTexturedModalRect( xPosition, yPosition, 232, 0, 12, 15 );
-	}
-
-	@Override
-	public void getTooltip(List<String> tooltip) {
-		// Ignored
 	}
 
 	private void applyRange() {
@@ -49,10 +31,35 @@ public class WidgetScrollbar extends AIWidget implements IScrollSource {
 		diff = Math.max( Math.min( -diff, 1 ), -1 );
 
 		// Change current scroll
-		currentScroll += diff;
+		currentScroll += diff * 3/6;
 
 		// See function name
 		applyRange();
+	}
+
+	@Override
+	public void drawWidget() {
+		// Bind texture of scrollbar in creative tab
+		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("minecraft",
+				"gui/container/creative_inventory/tabs.png"));
+
+		// Nullify color
+		GlStateManager.color( 1.0f, 1.0f, 1.0f, 1.0f );
+
+		// Calculate offset for drawing
+		final int offset = ( this.currentScroll - this.minScroll ) * 99 / (maxScroll - minScroll);
+
+		// Draw bound texture
+		drawTexturedModalRect( xPosition, offset + yPosition, 232, 0, 12, 15 );
+	}
+
+	public void setMaxScroll(int maxScroll) {
+		this.maxScroll = maxScroll;
+	}
+
+	@Override
+	public void getTooltip(List<String> tooltip) {
+		// Ignored
 	}
 
 	@Override

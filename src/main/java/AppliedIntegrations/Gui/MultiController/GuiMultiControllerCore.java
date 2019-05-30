@@ -81,6 +81,9 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		this.buttonList // 3. Sort direction
 				.add( sortDirButton = new GuiImgButton( this.guiLeft - 18, this.guiTop + 48,
 						Settings.SORT_DIRECTION, configSource.getSetting( Settings.SORT_DIRECTION)));
+
+		// Set max size for scroll
+		scroll.setMaxScroll(( (itemStorage.size() + 2 ) / 2));
 	}
 
 	@Override
