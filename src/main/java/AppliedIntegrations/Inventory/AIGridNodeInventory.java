@@ -77,7 +77,6 @@ public class AIGridNodeInventory implements IInventory {
 
 	@Override
 	public ItemStack getStackInSlot(int index) {
-
 		return slots[index];
 	}
 

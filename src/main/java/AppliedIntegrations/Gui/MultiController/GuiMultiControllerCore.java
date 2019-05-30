@@ -1,6 +1,7 @@
 package AppliedIntegrations.Gui.MultiController;
 
 
+import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.Widgets.WidgetScrollbar;
@@ -13,7 +14,6 @@ import appeng.api.util.IConfigManager;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.ISortSource;
 import appeng.client.me.ItemRepo;
-import appeng.core.AppEng;
 import appeng.core.localization.GuiText;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
@@ -29,7 +29,8 @@ import java.io.IOException;
  * @Author Azazell
  */
 public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IConfigManagerHost {
-	private static final ResourceLocation texture = new ResourceLocation(AppEng.MOD_ID, "textures/guis/terminal.png");
+	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid,
+			"textures/gui/multi_controller_card_storage.png");
 
 	private final WidgetScrollbar scroll = new WidgetScrollbar(this, 175, 18);
 
@@ -105,7 +106,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		// Draw string
-		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 7, this.ySize - 108, 4210752); // (Player inv.)
+		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 7, this.ySize - 71, 4210752); // (Player inv.)
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
 
 		// Draw scroll bar

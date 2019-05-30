@@ -81,7 +81,7 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 
 	private LinkedHashMap<SecurityPermissions, AEFluidInventory> tanks = new LinkedHashMap<>();
 
-	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/server_terminal.png");
+	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/multi_controller_terminal.png");
 
 	public GuiMultiControllerTerminal(ContainerMultiControllerTerminal container, EntityPlayer player) {
 

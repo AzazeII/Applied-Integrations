@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
  * @Author Azazell
  */
 public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
-	private static final int CARD_SLOT_ROWS = 3;
+	private static final int CARD_SLOT_ROWS = 5;
 	private static final int CARD_SLOT_COLUMNS = 9;
 
 	public ContainerMultiControllerCore(EntityPlayer player, TileMultiControllerCore master) {
@@ -27,7 +27,7 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 		this.addCardSlots(master.cardInv);
 
 		// Bind player slots
-		super.bindPlayerInventory(player.inventory, 71, 129);
+		super.bindPlayerInventory(player.inventory, 108, 164);
 	}
 
 	private void addCardSlots(AIGridNodeInventory cardInv) {
