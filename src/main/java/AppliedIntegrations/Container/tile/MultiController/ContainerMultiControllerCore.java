@@ -30,7 +30,7 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 		master.listeners.add(this);
 
 		// Bind player slots
-		super.bindPlayerInventory(player.inventory, 108, 162);
+		super.bindPlayerInventory(player.inventory, 107, 165);
 	}
 
 	private void addCardSlots(AIGridNodeInventory cardInv) {

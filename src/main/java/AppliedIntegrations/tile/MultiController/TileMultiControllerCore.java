@@ -105,6 +105,10 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			// Notify grid of current port about crafting update
 			port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
 
+			// Call only on server
+			if (world.isRemote)
+				return;
+
 			// Notify client
 			notifyNetworkCardInventoryChange();
 		}
@@ -177,6 +181,10 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					port.postCellEvent(new MENetworkCraftingCpuChange(getGridNode()));
 				}
 			}
+
+			// Call only on server
+			if (world.isRemote)
+				return;
 
 			// Notify client
 			notifyNetworkCardInventoryChange();

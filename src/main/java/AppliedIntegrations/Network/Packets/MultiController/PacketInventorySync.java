@@ -6,7 +6,6 @@ import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 public class PacketInventorySync extends AIPacket {
@@ -33,11 +32,8 @@ public class PacketInventorySync extends AIPacket {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		NBTTagCompound tag = new NBTTagCompound();
-		NBTTagList list = new NBTTagList();
 
-		inventory.readFromNBT(list);
-
-		tag.setTag(key, list);
+		tag.setTag(key, inventory.writeToNBT());
 
 		writeSyncHost(host, buf);
 		ByteBufUtils.writeTag(buf, tag);

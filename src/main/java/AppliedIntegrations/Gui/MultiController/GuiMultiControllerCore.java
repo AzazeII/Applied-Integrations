@@ -46,6 +46,8 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 	private GuiImgButton sortDirButton;
 	private GuiImgButton viewModeButton;
 
+	private ISyncHost core;
+
 	public GuiMultiControllerCore(ContainerMultiControllerCore container, EntityPlayer p) {
 		super(container, p);
 
@@ -146,12 +148,12 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 
 	@Override
 	public ISyncHost getSyncHost() {
-		return null;
+		return core;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-
+		this.core = host;
 	}
 
 	@Override

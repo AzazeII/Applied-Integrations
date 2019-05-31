@@ -29,10 +29,6 @@ public class HandlerInventorySync implements IMessageHandler<PacketInventorySync
 				// Cast to GuiMultiControllerCore
 				GuiMultiControllerCore guiCore = (GuiMultiControllerCore) gui;
 
-				// Check not null
-				if (guiCore.getSyncHost() == null)
-					return;
-
 				// Check if we are updating correct GUI
 				if (guiCore.getSyncHost().compareTo(message.host, true)) {
 					// Create initial list
