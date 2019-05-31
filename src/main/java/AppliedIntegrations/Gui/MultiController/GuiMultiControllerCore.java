@@ -10,6 +10,7 @@ import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
+import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.ISortSource;
@@ -24,6 +25,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @Author Azazell
@@ -31,6 +33,8 @@ import java.io.IOException;
 public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IConfigManagerHost {
 	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid,
 			"textures/gui/multi_controller_card_storage.png");
+
+	private static final int SLOT_COLUMNS = 9;
 
 	private final WidgetScrollbar scroll = new WidgetScrollbar(this, 175, 18);
 
@@ -48,8 +52,23 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		// Put default settings into config source
 		configSource.registerSetting(Settings.SORT_BY, SortOrder.NAME); // Sort order (Name, amount, invTweaks, mod)
 		configSource.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING); // Sort direction (ascending, descending)
-		configSource.registerSetting(Settings.VIEW_MODE, ViewItems.ALL); // View mode (all, craftable, stored)
+		configSource.registerSetting(Settings.VIEW_MODE, ViewItems.ALL); // View mode (all, craft-able, stored)
 	}
+
+	public void receiveServerData(final List<IAEItemStack> stackChange) {
+		// Iterate for each item stack in given list
+		for( final IAEItemStack is : stackChange ) {
+			// Post update to storage
+			itemStorage.postUpdate( is );
+		}
+
+		// Update view cell array of repo
+		itemStorage.updateView();
+
+		// Set max size for scroll
+		scroll.setMaxScroll(( ( itemStorage.size() + SLOT_COLUMNS - 1 ) / SLOT_COLUMNS ));
+	}
+
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
@@ -82,9 +101,6 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		this.buttonList // 3. Sort direction
 				.add( sortDirButton = new GuiImgButton( this.guiLeft - 18, this.guiTop + 48,
 						Settings.SORT_DIRECTION, configSource.getSetting( Settings.SORT_DIRECTION)));
-
-		// Set max size for scroll
-		scroll.setMaxScroll(( (itemStorage.size() + 2 ) / 2));
 	}
 
 	@Override
@@ -95,7 +111,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		final int scroll = Mouse.getEventDWheel();
 
 		// Check if wheel is scrolled
-		if(scroll != 0) {
+		if (scroll != 0) {
 			// Pass call to scrollbar
 			this.scroll.onWheel(scroll);
 		}

@@ -1,4 +1,4 @@
-package AppliedIntegrations.Blocks.MEServer;
+package AppliedIntegrations.Blocks.MultiController;
 
 
 import AppliedIntegrations.Blocks.BlockAIRegistrable;

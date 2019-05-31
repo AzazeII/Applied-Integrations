@@ -1,10 +1,15 @@
 package AppliedIntegrations.tile.MultiController;
 
 
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIGuiHandler;
+import AppliedIntegrations.Gui.MultiController.GuiMultiControllerCore;
 import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.MultiController.PacketInventorySync;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
@@ -40,7 +45,9 @@ import appeng.me.helpers.MachineSource;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -97,6 +104,9 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 			// Notify grid of current port about crafting update
 			port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
+
+			// Notify client
+			notifyNetworkCardInventoryChange();
 		}
 
 		@Override
@@ -167,6 +177,9 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					port.postCellEvent(new MENetworkCraftingCpuChange(getGridNode()));
 				}
 			}
+
+			// Notify client
+			notifyNetworkCardInventoryChange();
 		}
 	}
 
@@ -248,6 +261,10 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 	private boolean isFormed;
 
+	private boolean updateRequested;
+
+	public List<ContainerMultiControllerCore> listeners = new ArrayList<>();
+
 	{
 		// Fill maps with empty data
 		nullifyMap();
@@ -297,6 +314,9 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	public void activate(EntityPlayer p) {
 		// Open GUI
 		AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerStorage, p, AEPartLocation.INTERNAL, pos);
+
+		// Request GUI update
+		updateRequested = true;
 	}
 
 	public void postNetworkCellEvents() throws GridAccessException {
@@ -561,23 +581,55 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		}
 	}
 
+	private void notifyNetworkCardInventoryChange() {
+		// Iterate for each container
+		for (ContainerMultiControllerCore listener : listeners) {
+			// Send packet
+			NetworkHandler.sendTo(new PacketInventorySync(cardInv, this), (EntityPlayerMP) listener.player);
+		}
+	}
+
+	private void notifyHostChange() {
+		// Iterate for each container
+		for (ContainerMultiControllerCore listener : listeners) {
+			// Send packet
+			NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
+		}
+	}
+
 	@Override
 	public void update() {
 		super.update();
 
+		// Don't call on client
+		if (world.isRemote) {
+			// Skip client call
+			return;
+		}
+
 		// Check if construction was requested from read nbt method
 		if (constructionRequested) {
-			// Don't call on client
-			if (world.isRemote) {
-				// Skip client call
-				return;
-			}
-
 			// Try construct server
 			tryConstruct(null);
 
 			// Toggle
 			constructionRequested = true;
+		}
+
+		// Check if GUI update was requested from activate method
+		if (updateRequested) {
+			// Check if current GUI isn't GUI of this tile
+			if ( !(Minecraft.getMinecraft().currentScreen instanceof GuiMultiControllerCore) )
+				return;
+
+			// Sync host with client
+			notifyHostChange();
+
+			// Sync inventory with client
+			notifyNetworkCardInventoryChange();
+
+			// Toggle
+			updateRequested = true;
 		}
 	}
 

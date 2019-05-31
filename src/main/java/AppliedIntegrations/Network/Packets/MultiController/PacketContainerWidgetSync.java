@@ -1,4 +1,4 @@
-package AppliedIntegrations.Network.Packets.Server;
+package AppliedIntegrations.Network.Packets.MultiController;
 
 
 import AppliedIntegrations.Network.Packets.AIPacket;

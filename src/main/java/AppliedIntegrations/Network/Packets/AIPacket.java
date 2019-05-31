@@ -42,6 +42,10 @@ public abstract class AIPacket implements IMessage {
 		this.w = w;
 	}
 
+	public AIPacket(ISyncHost token) {
+		this(token.getHostPos().getX(), token.getHostPos().getY(), token.getHostPos().getZ(), token.getHostSide().getFacing(), token.getHostWorld());
+	}
+
 	protected LiquidAIEnergy readEnergy(ByteBuf buf) {
 
 		int buffed = buf.readInt();
@@ -82,7 +86,6 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writeSyncHost(ISyncHost host, ByteBuf buf) {
-
 		if (host instanceof AIPart) {
 			// Write state to buf
 			buf.writeBoolean(true);

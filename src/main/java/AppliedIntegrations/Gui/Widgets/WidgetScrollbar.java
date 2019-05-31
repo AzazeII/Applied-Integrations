@@ -30,8 +30,8 @@ public class WidgetScrollbar extends AIWidget implements IScrollSource {
 		// Calculate difference
 		diff = Math.max( Math.min( -diff, 1 ), -1 );
 
-		// Change current scroll
-		currentScroll += diff * 3/6;
+		// Change current scroll value
+		currentScroll += diff;
 
 		// See function name
 		applyRange();
@@ -46,11 +46,17 @@ public class WidgetScrollbar extends AIWidget implements IScrollSource {
 		// Nullify color
 		GlStateManager.color( 1.0f, 1.0f, 1.0f, 1.0f );
 
-		// Calculate offset for drawing
-		final int offset = ( this.currentScroll - this.minScroll ) * 99 / (maxScroll - minScroll);
+		// Check not zero
+		if (maxScroll - minScroll != 0) {
+			// Calculate offset for drawing
+			final int offset = (this.currentScroll - this.minScroll) / (maxScroll - minScroll);
 
-		// Draw bound texture
-		drawTexturedModalRect( xPosition, offset + yPosition, 232, 0, 12, 15 );
+			// Draw bound texture
+			drawTexturedModalRect(xPosition, offset + yPosition, 232, 0, 12, 15);
+		} else {
+			// Draw bound texture
+			drawTexturedModalRect(xPosition, yPosition, 244, 0, 12, 15);
+		}
 	}
 
 	public void setMaxScroll(int maxScroll) {

@@ -2,7 +2,7 @@ package AppliedIntegrations.tile.MultiController;
 
 
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.Server.PacketRibSync;
+import AppliedIntegrations.Network.Packets.MultiController.PacketRibSync;
 import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import appeng.api.networking.GridFlags;

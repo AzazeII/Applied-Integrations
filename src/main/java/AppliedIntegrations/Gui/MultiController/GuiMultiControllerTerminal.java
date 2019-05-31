@@ -12,8 +12,8 @@ import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermiss
 import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.Server.PacketContainerWidgetSync;
-import AppliedIntegrations.Network.Packets.Server.PacketServerFeedback;
+import AppliedIntegrations.Network.Packets.MultiController.PacketContainerWidgetSync;
+import AppliedIntegrations.Network.Packets.MultiController.PacketServerFeedback;
 import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;

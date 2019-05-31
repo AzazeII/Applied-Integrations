@@ -1,7 +1,7 @@
-package AppliedIntegrations.Network.Handlers.Server;
+package AppliedIntegrations.Network.Handlers.MultiController;
 
 
-import AppliedIntegrations.Network.Packets.Server.PacketMasterSync;
+import AppliedIntegrations.Network.Packets.MultiController.PacketMasterSync;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;

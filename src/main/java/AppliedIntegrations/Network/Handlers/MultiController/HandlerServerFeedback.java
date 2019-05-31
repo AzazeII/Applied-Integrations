@@ -1,7 +1,7 @@
-package AppliedIntegrations.Network.Handlers.Server;
+package AppliedIntegrations.Network.Handlers.MultiController;
 
 
-import AppliedIntegrations.Network.Packets.Server.PacketServerFeedback;
+import AppliedIntegrations.Network.Packets.MultiController.PacketServerFeedback;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -17,9 +17,8 @@ public class HandlerServerFeedback implements IMessageHandler<PacketServerFeedba
 	@Override
 	public PacketServerFeedback onMessage(PacketServerFeedback message, MessageContext ctx) {
 		// Check not null
-		if (message.terminal != null)
-		// Update data
-		{
+		if (message.terminal != null) {
+			// Update data
 			message.terminal.updateCardData(message.tag);
 		}
 

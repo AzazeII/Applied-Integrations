@@ -2,7 +2,7 @@ package AppliedIntegrations.tile.MultiController;
 
 
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.Server.PacketMasterSync;
+import AppliedIntegrations.Network.Packets.MultiController.PacketMasterSync;
 import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
