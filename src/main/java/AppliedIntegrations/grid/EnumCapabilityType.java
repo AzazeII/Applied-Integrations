@@ -16,14 +16,13 @@ import java.util.Vector;
 @Optional.InterfaceList(value = {@Optional.Interface(iface = "mekanism.common.capabilities.Capabilities", modid = "mekanism", striprefs = true), @Optional.Interface(iface = "teamroots.embers.power.EmberCapabilityProvider", modid = "embers", striprefs = true), @Optional.Interface(iface = "net.darkhax.tesla.capability.TeslaCapabilities", modid = "tesla", striprefs = true)})
 /**
  * @Author Azazell
- */ public class EnumCapabilityType {
+ */
+public class EnumCapabilityType {
 	public static EnumCapabilityType FE;
 
 	public static EnumCapabilityType Joules;
 
 	public static EnumCapabilityType EU;
-
-	public static EnumCapabilityType Ember;
 
 	public static EnumCapabilityType Tesla;
 
@@ -63,12 +62,12 @@ import java.util.Vector;
 	}
 
 	public static EnumCapabilityType fromEnergy(LiquidAIEnergy energy) {
-
 		for (EnumCapabilityType type : values) {
 			if (type.energy == energy) {
 				return type;
 			}
 		}
+
 		return null;
 	}
 

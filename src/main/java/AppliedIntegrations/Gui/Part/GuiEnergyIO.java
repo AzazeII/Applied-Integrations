@@ -253,16 +253,18 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 		// Call super
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		for (WidgetEnergySlot EnergySlot : this.energySlotList) {
-			if (EnergySlot.isMouseOverWidget(mouseX, mouseY)) {
+		for (WidgetEnergySlot slot : this.energySlotList) {
+			if (slot.isMouseOverWidget(mouseX, mouseY)) {
 				// Get the Energy of the currently held item
 				LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
 
-				if (EnergySlot.getCurrentStack().getEnergy() == itemEnergy) {
+				// Check not null && energy not equal
+				if (slot.getCurrentStack() == null || slot.getCurrentStack().getEnergy() == itemEnergy) {
 					return;
 				}
 
-				EnergySlot.onMouseClicked(new EnergyStack(itemEnergy, 0));
+				// Call mouse click function
+				slot.onMouseClicked(new EnergyStack(itemEnergy, 0));
 
 				break;
 			}

@@ -12,10 +12,8 @@ import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.IPartModel;
-import appeng.api.parts.PartItemStack;
 import appeng.api.util.AECableType;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 
@@ -25,7 +23,6 @@ import javax.annotation.Nonnull;
 public class PartEnergyExport extends AIOPart {
 
 	public PartEnergyExport() {
-
 		super(PartEnum.EnergyExportBus);
 	}
 
@@ -40,26 +37,7 @@ public class PartEnergyExport extends AIOPart {
 
 	@Override
 	public int getLightLevel() {
-
 		return 0;
-	}
-
-	@Override
-	public void writeToNBT(final NBTTagCompound data, final PartItemStack saveType) {
-		// Call super
-		super.writeToNBT(data, saveType);
-
-		boolean doSave = (saveType == PartItemStack.WORLD);
-		if (!doSave) {
-			// Are there any filters?
-			for (LiquidAIEnergy energy : this.filteredEnergies) {
-				if (energy != null) {
-					// Only save the void stateProp if filters are set.
-					doSave = true;
-					break;
-				}
-			}
-		}
 	}
 
 	@Override
@@ -69,32 +47,30 @@ public class PartEnergyExport extends AIOPart {
 
 		// Iterate over all energies
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-
 			// Check if we are filtering this energy
 			if (filteredEnergies.contains(energy)) {
-
 				// Check if tile can operate given energy
 				if (helper.operatesEnergy(energy)) {
 
 					// Simulate extraction
-					int extracted = ExtractEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
+					int extracted = extractEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
 
-					// Create helper
-					helper.receiveEnergy(extracted, false, energy);
+					// Simulate energy receive
+					int received = helper.receiveEnergy(extracted, true, energy);
 
-					// Modulate extraction
-					ExtractEnergy(new EnergyStack(energy, extracted), Actionable.MODULATE);
+					// Modulate extraction & insertion
+					extractEnergy(new EnergyStack(energy, helper.receiveEnergy(received, false, energy)), Actionable.MODULATE);
 
 					// Check if energy was actually extracted
-					if (extracted > 0)
-					// Tick faster
-					{
+					if (extracted > 0) {
+						// Tick faster
 						return TickRateModulation.FASTER;
 					}
 				}
 			}
 		}
 
+		// Tick slower
 		return TickRateModulation.SLOWER;
 	}
 

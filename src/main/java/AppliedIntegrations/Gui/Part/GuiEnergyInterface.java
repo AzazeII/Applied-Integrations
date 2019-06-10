@@ -47,7 +47,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 	public LiquidAIEnergy linkedMetric = RF;
 
-	public int storage;
+	public Number storage;
 
 	private IEnergyInterface energyInterface;
 
@@ -281,8 +281,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	}
 
 	public int getStorage(LiquidAIEnergy energy, AEPartLocation side) {
-
-		return storage;
+		return storage == null ? 0 : storage.intValue();
 	}
 
 	private boolean drawPowerBar(int pLeft, int pTop, int pMouseX, int pMouseY, int width, int height, int v, int u) {

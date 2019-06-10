@@ -4,13 +4,11 @@ package AppliedIntegrations.api;
 /**
  * @Author Azazell
  */
-public interface IInterfaceStorageDuality<TYPE> {
-
+public interface IInterfaceStorageDuality<TYPE extends Number> {
 	void modifyEnergyStored(int i);
 
 	Class<TYPE> getTypeClass();
 
-	// Number, because it can be easily overridden to any class extends Number
 	TYPE getStored();
 
 	TYPE getMaxStored();

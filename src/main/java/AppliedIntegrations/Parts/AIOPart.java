@@ -259,12 +259,12 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			return;
 		}
 
-		// Iterate over all capabiltiy types
+		// Iterate over all capability types
 		for (EnumCapabilityType type : EnumCapabilityType.values) {
 			// Iterate over all capabilities
 			for (Capability capability : type.capabilities) {
 				// Check if tile has one of type's capabilities
-				if (tileEntity.hasCapability(capability, getHostSide().getFacing())) {
+				if (tileEntity.hasCapability(capability, getHostSide().getFacing().getOpposite())) {
 					this.adjacentEnergyStorage = tileEntity;
 				}
 			}

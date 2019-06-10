@@ -49,11 +49,10 @@ public abstract class AIRotatablePart extends AIPart {
 
 	@Override
 	public boolean readFromStream(final ByteBuf stream) throws IOException {
-
-		boolean redraw = false;
+		boolean redraw;
 
 		// Call super
-		redraw |= super.readFromStream(stream);
+		redraw = super.readFromStream(stream);
 
 		// Read the rotation
 		byte streamRot = stream.readByte();

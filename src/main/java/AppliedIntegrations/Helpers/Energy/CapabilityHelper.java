@@ -89,18 +89,28 @@ public class CapabilityHelper {
 	}
 
 	public int receiveEnergy(Number val, boolean simulate, LiquidAIEnergy energy) {
-
+		// Iterate for each capability from energy
 		for (Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
+			// Check if our capabilities contains this capability
 			if (capabilities.contains(capability)) {
+				// Check if capability is RF capability
 				if (capability == CapabilityEnergy.ENERGY) {
+					// Create RF Storage
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 
+					// Receive energy
 					return energyStorageCapability.receiveEnergy(val.intValue(), simulate);
 				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
+					// Create joule storage
 					IStrictEnergyAcceptor storage = (IStrictEnergyAcceptor) capabilityHandler.getCapability(capability, side.getFacing());
+
+					// Receive energy
 					return (int) storage.acceptEnergy(side.getFacing(), val.doubleValue(), !simulate);
 				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && (capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
+					// Create TESLA storage
 					ITeslaConsumer teslaHolderCapability = (ITeslaConsumer) capabilityHandler.getCapability(capability, side.getFacing());
+
+					// Receive energy
 					return (int) teslaHolderCapability.givePower(val.longValue(), simulate);
 				}
 			}

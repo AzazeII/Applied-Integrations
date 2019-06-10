@@ -21,11 +21,13 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
+import appeng.core.localization.PlayerMessages;
 import appeng.me.GridAccessException;
 import appeng.parts.reporting.PartStorageMonitor;
 import appeng.util.IWideReadableNumberConverter;
 import appeng.util.Platform;
 import appeng.util.ReadableNumberConverter;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,11 +38,13 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.io.IOException;
+
 /**
  * @Author Azazell
  */
 
-// TODO Rewrite EVERYTHING here!:
+// TODO Rewrite EVERYTHING here!
 /*
     1. onActivate mechanics
     2. Cell container mechanics
@@ -97,15 +101,47 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	}
 
 	@Override
+	public void writeToStream( final ByteBuf data ) throws IOException {
+		super.writeToStream( data );
+
+		/*data.writeBoolean( this.isLocked );
+		data.writeBoolean( this.configuredItem != null );
+		if( this.configuredItem != null )
+		{
+			this.configuredItem.writeToPacket( data );
+		}*/
+	}
+
+	@Override
+	public boolean readFromStream( final ByteBuf data ) {
+		boolean needRedraw;
+
+		/*final boolean isLocked = data.readBoolean();
+		needRedraw = this.isLocked != isLocked;
+
+		this.isLocked = isLocked;
+
+		final boolean val = data.readBoolean();
+		if( val )
+		{
+			this.configuredItem = AEItemStack.fromPacket( data );
+		}
+		else
+		{
+			this.configuredItem = null;
+		}*/
+
+		return true;
+	}
+
+	@Override
 	@SideOnly( Side.CLIENT )
 	public void renderDynamic( double x, double y, double z, float partialTicks, int destroyStage ) {
 
 	}
 
 	@Override
-	protected AIGridNodeInventory getUpgradeInventory() {
-		return null;
-	}
+	protected AIGridNodeInventory getUpgradeInventory() { return null; }
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
@@ -159,7 +195,29 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		} catch (GridAccessException ignored) { }
 	}
 
+	@Override
+	public boolean onShiftActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+		// Ignored on client && Ignored if player has held item
+		if( getHostWorld().isRemote ||  !player.getHeldItem( enumHand ).isEmpty() ) {
+			return true;
+		}
 
+		// Ignored while inactive && Ignored if player has no permissions
+		if( !this.getProxy().isActive() || !Platform.hasPermissions( this.getLocation(), player )) {
+			return false;
+		}
+
+		// Toggle lock
+		this.isLocked = !this.isLocked;
+
+		// Notify player
+		player.sendMessage( ( this.isLocked ? PlayerMessages.isNowLocked : PlayerMessages.isNowUnlocked ).get() );
+
+		// Mark for save & update
+		this.getHost().markForSave(); // 1. Save
+		this.getHost().markForUpdate(); // 2. Update
+		return true;
+	}
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d position) {

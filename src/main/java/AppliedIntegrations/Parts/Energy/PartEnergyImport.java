@@ -72,13 +72,13 @@ public class PartEnergyImport extends AIOPart {
 			if (helper.operatesEnergy(energy)) {
 
 				// Simulate injection
-				int injected = InjectEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
+				int injected = injectEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
 
 				// Create helper
 				helper.extractEnergy(injected, false, energy);
 
 				// Modulate injection
-				InjectEnergy(new EnergyStack(energy, injected), Actionable.MODULATE);
+				injectEnergy(new EnergyStack(energy, injected), Actionable.MODULATE);
 
 				// Check if energy was actually injected
 				if (injected > 0)

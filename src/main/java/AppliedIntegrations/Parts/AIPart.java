@@ -373,7 +373,6 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@Override
 	public boolean onShiftActivate(EntityPlayer entityPlayer, EnumHand enumHand, Vec3d vec3d) {
-
 		return false;
 	}
 
@@ -518,21 +517,6 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 		return cableSide;
 	}
 
-	/**
-	 * @param resource   Resource to be extracted
-	 * @param actionable Simulate of Modulate?
-	 * @return amount extracted
-	 */
-	public int ExtractEnergy(EnergyStack resource, Actionable actionable) {
-		// Extract energy from MEInventory
-		IAEEnergyStack extracted = getEnergyInventory().extractItems(AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
-
-		if (extracted == null) {
-			return 0;
-		}
-		return (int) (extracted.getStackSize());
-	}
-
 	public IMEMonitor<IAEEnergyStack> getEnergyInventory() {
 
 		IGridNode n = getGridNode();
@@ -557,11 +541,27 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	/**
+	 * @param resource   Resource to be extracted
+	 * @param actionable Simulate of Modulate?
+	 * @return amount extracted
+	 */
+	public int extractEnergy(EnergyStack resource, Actionable actionable) {
+		// Extract energy from MEInventory
+		IAEEnergyStack extracted = getEnergyInventory().extractItems(AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
+
+		if (extracted == null) {
+			return 0;
+		}
+		return (int) (extracted.getStackSize());
+	}
+
+
+	/**
 	 * @param resource   Resource to be injected
 	 * @param actionable Simulate or modulate?
 	 * @return amount not added
 	 */
-	public int InjectEnergy(EnergyStack resource, Actionable actionable) {
+	public int injectEnergy(EnergyStack resource, Actionable actionable) {
 		// Insert energy to MEInventory
 		IAEEnergyStack notInjected = getEnergyInventory().injectItems(AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 

@@ -20,14 +20,25 @@ public class HandlerServerToClient implements IMessageHandler<PacketFilterServer
 
 	@Override
 	public PacketFilterServerToClient onMessage(PacketFilterServerToClient message, MessageContext ctx) {
-
+		// Schedule later call on client thread/computer
 		Minecraft.getMinecraft().addScheduledTask(() -> {
+			// Get GUI
 			Gui gui = Minecraft.getMinecraft().currentScreen;
+
+			// Check if gui is filter gui
 			if (gui instanceof IFilterGUI) {
+				// Cast GUI
+				IFilterGUI filterGUI = (IFilterGUI) gui;
+
+				// Check if gui is base gui
 				if (gui instanceof AIBaseGui) {
-					// Check if we are updating correct GUI
-					if (((AIBaseGui) gui).getSyncHost().compareTo(message.host, true)) {
-						((IFilterGUI) gui).updateEnergy(message.energy, message.index);
+					// Cast GUI
+					AIBaseGui baseGUI = (AIBaseGui) gui;
+
+					// Check not null && Check if we are updating correct GUI
+					if (baseGUI.getSyncHost() != null && baseGUI.getSyncHost().compareTo(message.host, true)) {
+						// Update energy in GUI
+						filterGUI.updateEnergy(message.energy, message.index);
 					}
 				}
 			}

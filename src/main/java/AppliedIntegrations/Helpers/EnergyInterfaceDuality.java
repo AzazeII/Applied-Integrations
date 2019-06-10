@@ -181,10 +181,10 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 							// Find minimum value between energy stored and max transfer
 							int ValuedReceive = (int) Math.min(stored, this.getMaxTransfer(side));
 							// Find amount of energy that can be injected
-							int InjectedAmount = owner.InjectEnergy(new EnergyStack(energy, ValuedReceive), SIMULATE);
+							int InjectedAmount = owner.injectEnergy(new EnergyStack(energy, ValuedReceive), SIMULATE);
 
 							// Inject energy in ME Network
-							owner.InjectEnergy(new EnergyStack(energy, InjectedAmount), MODULATE);
+							owner.injectEnergy(new EnergyStack(energy, InjectedAmount), MODULATE);
 							// Remove injected amount from interface storage
 							owner.getEnergyStorage(energy, side).modifyEnergyStored(-InjectedAmount);
 						}
@@ -234,12 +234,12 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 						// minimum value between max transfer and empty space in storage
 						int valuedExtract = Math.min(capacity - stored, (int) getMaxTransfer(side));
 						// Extract energy from drive array
-						int extracted = owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), valuedExtract), SIMULATE);
+						int extracted = owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), valuedExtract), SIMULATE);
 
 						// Check if storage can store new energy
 						if (extracted + stored <= capacity) {
 							// Drain energy from network
-							owner.ExtractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE);
+							owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE);
 
 							// Give energy to tile's storage
 							interfaceStorageDuality.modifyEnergyStored(extracted);

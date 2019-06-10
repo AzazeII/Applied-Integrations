@@ -55,10 +55,10 @@ public class PartEnergyAnnihilation extends AIPlanePart {
 						int extracted = helper.extractEnergy(energy, ENERGY_TRANSFER, SIMULATE);
 
 						// Simulate injection
-						int injected = InjectEnergy(new EnergyStack(energy, extracted), SIMULATE);
+						int injected = injectEnergy(new EnergyStack(energy, extracted), SIMULATE);
 
 						// Modulate injection
-						if (InjectEnergy(new EnergyStack(energy, helper.extractEnergy(energy, injected, MODULATE)), MODULATE) > 0) {
+						if (injectEnergy(new EnergyStack(energy, helper.extractEnergy(energy, injected, MODULATE)), MODULATE) > 0) {
 							// Spawn lightning
 							super.spawnLightning(workingEntity);
 						}
@@ -81,10 +81,10 @@ public class PartEnergyAnnihilation extends AIPlanePart {
 							int extracted = helper.extractEnergy(energy, ENERGY_TRANSFER, SIMULATE);
 
 							// Simulate injection
-							int injected = InjectEnergy(new EnergyStack(energy, extracted), SIMULATE);
+							int injected = injectEnergy(new EnergyStack(energy, extracted), SIMULATE);
 
 							// Modulate injection
-							if (InjectEnergy(new EnergyStack(energy, helper.extractEnergy(energy, injected, MODULATE)), MODULATE) > 0) {
+							if (injectEnergy(new EnergyStack(energy, helper.extractEnergy(energy, injected, MODULATE)), MODULATE) > 0) {
 								// Spawn lightning
 								super.spawnLightning(workingEntity);
 							}

@@ -140,7 +140,7 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	 * @param actionable Simulate of Modulate?
 	 * @return amount extracted
 	 */
-	public int ExtractEnergy(EnergyStack resource, Actionable actionable) throws GridAccessException {
+	public int extractEnergy(EnergyStack resource, Actionable actionable) throws GridAccessException {
 		if (getProxy().getNode() == null) {
 			return 0;
 		}
@@ -165,7 +165,7 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	 * @param actionable Simulate or modulate?
 	 * @return amount injected
 	 */
-	public int InjectEnergy(EnergyStack resource, Actionable actionable) throws GridAccessException {
+	public int injectEnergy(EnergyStack resource, Actionable actionable) throws GridAccessException {
 		if (getProxy().getNode() == null) {
 			return 0;
 		}

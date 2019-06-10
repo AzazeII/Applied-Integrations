@@ -19,18 +19,24 @@ public class HandlerProgressBar implements IMessageHandler<PacketProgressBar, Pa
 
 	@Override
 	public PacketProgressBar onMessage(PacketProgressBar message, MessageContext ctx) {
-
+		// Invoke later on client thread
 		Minecraft.getMinecraft().addScheduledTask(() -> {
+			// Get current screen
 			Gui g = Minecraft.getMinecraft().currentScreen;
+
+			// Check if gui instanceof energy interface gui
 			if (g instanceof GuiEnergyInterface) {
+				// Cast gui
 				GuiEnergyInterface GEI = (GuiEnergyInterface) g;
 
 				// Check if we are updating correct GUI
 				if (GEI.getSyncHost().equals(message.sender)) {
-					GEI.storage = (int) message.sender.getEnergyStorage(message.energy, message.energySide).getStored();
+					// Replace current storage
+					GEI.storage = message.sender.getEnergyStorage(message.energy, message.energySide).getStored();
 				}
 			}
 		});
+
 		return null;
 	}
 }
