@@ -75,6 +75,7 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
 /**
  * @Author Azazell
  */
+
 @net.minecraftforge.fml.common.Optional.InterfaceList(value = {@Optional.Interface(iface = "ic2.api.energy.event.EnergyTileLoadEvent", modid = "ic2", striprefs = true), @Optional.Interface(iface = "ic2.api.energy.tile.IEnergySink", modid = "ic2", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "Mekanism", striprefs = true), @Optional.Interface(iface = "mcp.mobius.waila.api.*", modid = "Waila", striprefs = true), @Optional.Interface(iface = "teamroots.embers.power.IEmberCapability", modid = "embers", striprefs = true), @Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)}
 
 )
