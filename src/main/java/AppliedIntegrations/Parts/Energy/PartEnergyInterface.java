@@ -375,7 +375,10 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 			try {
 				if (this.isActive()) {
+					// Try injecting energy from buffer
 					doInjectDualityWork(Actionable.MODULATE);
+
+					// Try extracting energy into buffer
 					doExtractDualityWork(Actionable.MODULATE);
 				}
 			} catch (NullNodeConnectionException | GridAccessException e) {

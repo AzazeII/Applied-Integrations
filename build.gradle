@@ -125,14 +125,14 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     compile "mezz.jei:jei_1.12.2:4.13.0.219"
     compile "appeng:appliedenergistics2:rv6-stable-6"
-    compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
     compile 'org.json:json:20171018'
     compile 'org.apache.logging.log4j:log4j-api'
     compile 'org.apache.logging.log4j:log4j-core'
     compile "com.sparkjava:spark-core:2.8.0"
-    compile "vazkii.botania:Botania:r1.10-359.39"
-    compile "teamroots.embers:EmbersRekindled:1.13"
+    compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
 
+    compileOnly "teamroots.embers:EmbersRekindled:1.13"
+    compileOnly "vazkii.botania:Botania:r1.10-359.39"
     compileOnly "mekanism:Mekanism:1.12.2:9.4.13.349"
     compileOnly "net.darkhax.tesla:Tesla-1.12.2:1.0.63"
     compileOnly "net.industrial-craft:industrialcraft-2:2.8.111-ex112:api"

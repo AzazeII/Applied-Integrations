@@ -210,7 +210,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		return initializedStorages.contains(energy);
 	}
 
-
+	@SuppressWarnings("unchecked")
 	@Override
 	public void doExtractDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
 
@@ -222,28 +222,34 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			if (action == Actionable.MODULATE) {
 				if (getFilteredEnergy(side) != null) {
-					Class<?> T = getEnergyStorage(getFilteredEnergy(side), INTERNAL).getTypeClass();
+					// Get storage class type
+					Class<?> t = getEnergyStorage(getFilteredEnergy(side), INTERNAL).getTypeClass();
+
+					//  Get storage duality
 					IInterfaceStorageDuality interfaceStorageDuality = getEnergyStorage(getFilteredEnergy(side), INTERNAL);
 
-					if (T != Long.class) {
-
+					// Check not long
+					if (t != Long.class) {
 						// Get int value from stored amount
-						int stored = ((Number) interfaceStorageDuality.getStored()).intValue();
+						int stored = interfaceStorageDuality.getStored().intValue();
+
 						// Get int value from capacity
-						int capacity = ((Number) interfaceStorageDuality.getMaxStored()).intValue();
+						int capacity = interfaceStorageDuality.getMaxStored().intValue();
+
 						// minimum value between max transfer and empty space in storage
 						int valuedExtract = Math.min(capacity - stored, (int) getMaxTransfer(side));
-						// Extract energy from drive array
-						int extracted = owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), valuedExtract), SIMULATE);
 
-						// Check if storage can store new energy
-						if (extracted + stored <= capacity) {
-							// Drain energy from network
-							owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE);
+						// Simulate energy insertion into our storage duality
+						int received = interfaceStorageDuality.receive(valuedExtract, true).intValue();
 
-							// Give energy to tile's storage
-							interfaceStorageDuality.modifyEnergyStored(extracted);
-						}
+						// Simulate energy extraction from cells array
+						int extracted = owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), received), SIMULATE);
+
+						// Give energy to tile's storage
+						interfaceStorageDuality.receive(received, false);
+
+						// Drain energy from network
+						owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), extracted), MODULATE);
 
 						// Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
 						// Otherwise it will be really OP
@@ -262,7 +268,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount, EnumFacing side) {
-
 		TileEntity tile = owner.getFacingTile(side);
 
 		if (tile == null) {

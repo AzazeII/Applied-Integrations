@@ -1,6 +1,5 @@
 package AppliedIntegrations.Parts.Energy;
 
-
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
@@ -23,7 +22,6 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
-import appeng.api.config.Actionable;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
@@ -56,7 +54,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
-import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.energy.CapabilityEnergy;
 
 import javax.annotation.Nonnull;
@@ -154,6 +151,42 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		}
 	}
 
+	private IMEInventoryHandler<IAEEnergyStack> generateNewHandler(TileEntity tile) {
+		// Check for energy interface
+		if (tile instanceof IEnergyInterface) {
+			handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) tile, this);
+
+			// Check for host tile
+		} else if (tile instanceof TileCableBus) {
+			// Get interface candidate
+			TileCableBus maybeInterface = (TileCableBus) tile;
+
+			// Check if candidate instanceof IEnergyInterface
+			if (maybeInterface.getPart(getHostSide().getOpposite()) instanceof IEnergyInterface) {
+				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) ((TileCableBus) tile).getPart(
+						getHostSide().getOpposite()), this);
+			}
+
+			// Check for all energy types:
+		} else if (IntegrationsHelper.instance.isLoaded(J) && tile.hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY,
+				getHostSide().getFacing().getOpposite())) { // 1. Joules
+			// Create handler for joules
+			handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.Joules);
+		} else if (tile.hasCapability(CapabilityEnergy.ENERGY, getHostSide().getFacing().getOpposite())) { // 2. FE
+			// Create handler for FE
+			handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.FE);
+		} else if (IntegrationsHelper.instance.isLoaded(EU) && tile instanceof IEnergySink) { // 3. EU
+			// Create handler for EU
+			handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.EU);
+		}
+
+		return handler;
+	}
+
+	private IMEInventoryHandler<IAEEnergyStack> getHandler() {
+		return handler == null && getFacingTile() != null ? generateNewHandler(getFacingTile()) : handler;
+	}
+
 	@Override
 	public TickingRequest getTickingRequest(final IGridNode node) {
 		// Update every 20 ticks
@@ -173,30 +206,33 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 				// Create on change event
 				filteredEnergiesChangeHandler.get(i).onChange(filteredEnergies.get(i), (energy -> {
 					// Sync with client
-					NetworkHandler.sendTo(new PacketFilterServerToClient(energy, finalI, this), (EntityPlayerMP) listener.player);
+					NetworkHandler.sendTo(new PacketFilterServerToClient(energy, finalI, this),
+							(EntityPlayerMP) listener.player);
 				}));
 
 				// Check if update was requested
-				if (updateRequested)
-				// Sync with client
-				{
-					NetworkHandler.sendTo(new PacketFilterServerToClient(filteredEnergies.get(i), finalI, this), (EntityPlayerMP) listener.player);
+				if (updateRequested) {
+					// Sync with client
+					NetworkHandler.sendTo(new PacketFilterServerToClient(filteredEnergies.get(i), finalI, this),
+							(EntityPlayerMP) listener.player);
 				}
 			}
 
 			// Check if energy was changed
 			accessRestrictionChangeHandler.onChange(access, (accessRestriction -> {
 				// Sync with client
-				NetworkHandler.sendTo(new PacketAccessModeServerToClient(access, this), (EntityPlayerMP) listener.player);
+				NetworkHandler.sendTo(new PacketAccessModeServerToClient(access, this),
+						(EntityPlayerMP) listener.player);
 			}));
 
 			// Check if update was requested
-			if (updateRequested)
-			// Sync with client
-			{
-				NetworkHandler.sendTo(new PacketAccessModeServerToClient(access, this), (EntityPlayerMP) listener.player);
+			if (updateRequested) {
+				// Sync with client
+				NetworkHandler.sendTo(new PacketAccessModeServerToClient(access, this),
+						(EntityPlayerMP) listener.player);
 			}
 		}
+
 		// Reset update request
 		updateRequested = false;
 
@@ -221,13 +257,11 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		// Iterate for filter size
 		for (int i = 0; i < FILTER_SIZE; i++) {
 			// Check not null
-			if (filteredEnergies.get(i) != null)
-			// Write energy
-			{
+			if (filteredEnergies.get(i) != null) {
+				// Write energy
 				tag.setString("#ENERGY" + i, filteredEnergies.get(i).getTag());
-			} else
-			// Write "null"
-			{
+			} else {
+				// Write "null"
 				tag.setString("#ENERGY" + i, "null");
 			}
 		}
@@ -241,13 +275,11 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 			String energyTag = tag.getString("#ENERGY" + i);
 
 			// Check not "null"
-			if (energyTag.equals("null"))
-			// Set null energy
-			{
+			if (energyTag.equals("null")) {
+				// Set null energy
 				filteredEnergies.set(i, null);
-			} else
-			// Otherwise get filtered energy from map
-			{
+			} else {
+				// Otherwise get filtered energy from map
 				filteredEnergies.set(i, energies.get(energyTag));
 			}
 		}
@@ -255,7 +287,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public int getLightLevel() {
-
 		return 0;
 	}
 
@@ -265,43 +296,17 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		if (pos == null || neighbor == null) {
 			return;
 		}
-		// Check if changed neighbor was next to storage bus's side
-		if (pos.offset(this.getHostSide().getFacing()).equals(neighbor)) {
-			// Notify grid
-			postCellEvent();
-		}
 
 		// Get facing tile
 		TileEntity tile = getFacingTile();
 
 		// Check not null
 		if (tile != null) {
-			// Check for energy interface
-			if (tile instanceof IEnergyInterface) {
-				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) tile, this);
+			// Generate new handler for facing tile
+			generateNewHandler(tile);
 
-			// Check for host tile
-			} else if (tile instanceof TileCableBus) {
-				// Get interface candidate
-				TileCableBus maybeInterface = (TileCableBus) tile;
-
-				// Check if candidate instanceof IEnergyInterface
-				if (maybeInterface.getPart(getHostSide().getOpposite()) instanceof IEnergyInterface) {
-					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) ((TileCableBus) tile).getPart(
-							getHostSide().getOpposite()), this);
-				}
-
-			// Check for all energy types:
-			} else if (IntegrationsHelper.instance.isLoaded(J) && tile.hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getHostSide().getFacing())) { // 1. Joules
-				// Create handler for joules
-				handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.Joules);
-			} else if (tile.hasCapability(CapabilityEnergy.ENERGY, getHostSide().getFacing())) { // 2. FE
-				// Create handler for FE
-				handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.FE);
-			} else if (IntegrationsHelper.instance.isLoaded(EU) && tile instanceof IEnergySink) { // 3. EU
-				// Create handler for EU
-				handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.EU);
-			}
+			// Notify grid
+			postCellEvent();
 		}
 	}
 
@@ -326,12 +331,18 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@MENetworkEventSubscribe
 	public void updateChannels(final MENetworkChannelsChanged changedChannels) {
-
+		// Get current activity
 		final boolean currentActive = this.getGridNode().isActive();
+
+		// Check if activity changed
 		if (this.lastActive != currentActive) {
+			// Update last activity
 			this.lastActive = currentActive;
+
+			// Mark host for update
 			this.host.markForUpdate();
 
+			// Make network know cell array should be updated
 			postCellEvent();
 		}
 	}
@@ -343,14 +354,12 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
-
 		return 2;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
-
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.STORAGE_BUS_HAS_CHANNEL;
@@ -368,14 +377,18 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 
 	@Override
 	public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> channel) {
+		// Get handler
+		IMEInventoryHandler<IAEEnergyStack> handler = getHandler();
+
 		// Check if channel present working channel, and handler not null
-		if (channel != this.getChannel() || this.handler == null) {
+		if (channel != this.getChannel() || handler == null) {
 			return new LinkedList<>();
 		}
 
 		// Return only one handler for tile
 		return singletonList(handler);
 	}
+
 
 	@Override
 	public int getPriority() {
@@ -411,28 +424,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		}
 		// Mark dirty
 		getHostTile().getWorld().markChunkDirty(getHostTile().getPos(), getHostTile());
-	}
-
-	private List<Capability> getAllowedCappabilities() {
-		// Create capability list
-		ArrayList<Capability> capabilities = new ArrayList<>();
-
-		// Add FE by default
-		capabilities.add(CapabilityEnergy.ENERGY);
-
-		// (If loaded -> add to allowed) blocks:
-		if (IntegrationsHelper.instance.isLoaded(J)) {
-			capabilities.add(Capabilities.ENERGY_STORAGE_CAPABILITY);
-			capabilities.add(Capabilities.ENERGY_OUTPUTTER_CAPABILITY);
-			capabilities.add(Capabilities.ENERGY_ACCEPTOR_CAPABILITY);
-		}
-
-		return capabilities;
-	}
-
-	public boolean extractPowerForEnergyTransfer(int drained, Actionable simulate) {
-
-		return false;
 	}
 
 	@Override
