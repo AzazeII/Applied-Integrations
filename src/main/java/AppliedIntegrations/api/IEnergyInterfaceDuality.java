@@ -11,7 +11,6 @@ import appeng.me.GridAccessException;
  * @Author Azazell
  */
 public interface IEnergyInterfaceDuality {
-
 	double getMaxTransfer(AEPartLocation side);
 
 	LiquidAIEnergy getFilteredEnergy(AEPartLocation side);

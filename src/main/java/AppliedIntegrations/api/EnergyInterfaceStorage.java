@@ -1,6 +1,7 @@
 package AppliedIntegrations.api;
 
 
+import appeng.api.config.Actionable;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.energy.EnergyStorage;
 
@@ -53,15 +54,18 @@ public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceS
 	}
 
 	@Override
-	public Integer receive(Integer value, boolean simulate) {
-
-		return receiveEnergy((int) value, simulate);
+	public Integer receive(Integer value, Actionable action) {
+		return receiveEnergy(value, action == Actionable.SIMULATE);
 	}
 
 	@Override
-	public Integer extract(Integer value, boolean simulate) {
+	public Integer extract(Integer value, Actionable action) {
+		return extractEnergy(value, action == Actionable.SIMULATE);
+	}
 
-		return extractEnergy((int) value, simulate);
+	@Override
+	public Integer toNativeValue(Number val) {
+		return val.intValue();
 	}
 
 	@Override

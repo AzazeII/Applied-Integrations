@@ -744,8 +744,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Optional.Method(modid = "ic2")
 	@Override
 	public double injectEnergy(EnumFacing enumFacing, double v, double v1) {
-
-		return (Double) getEnergyStorage(EU, INTERNAL).receive(v, false);
+		return (Double) getEnergyStorage(EU, INTERNAL).receive(v, Actionable.MODULATE);
 	}
 
 	@Optional.Method(modid = "ic2")

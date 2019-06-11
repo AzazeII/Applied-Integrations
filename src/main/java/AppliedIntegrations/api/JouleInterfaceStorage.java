@@ -1,6 +1,6 @@
 package AppliedIntegrations.api;
 
-
+import appeng.api.config.Actionable;
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyOutputter;
 import mekanism.api.energy.IStrictEnergyStorage;
@@ -8,10 +8,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.Optional;
 
-@Optional.InterfaceList(value = {@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "mekanism", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyOutputter", modid = "mekanism", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "mekanism", striprefs = true)})
+@Optional.InterfaceList(value = {@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyAcceptor", modid = "mekanism", striprefs = true),
+		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyOutputter", modid = "mekanism", striprefs = true),
+		@Optional.Interface(iface = "mekanism.api.energy.IStrictEnergyStorage", modid = "mekanism", striprefs = true)})
 /**
  * @Author Azazell
- */ public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, INBTStorage, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
+ */
+public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, INBTStorage, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
 
 	private final double capacity;
 
@@ -52,23 +55,30 @@ import net.minecraftforge.fml.common.Optional;
 	}
 
 	@Override
-	public Double receive(Double value, boolean simulate) {
-
+	public Double receive(Double value, Actionable action) {
 		double energyReceived = Math.min(capacity - storage, value);
-		if (!simulate) {
+
+		if (action == Actionable.MODULATE) {
 			storage += energyReceived;
 		}
+
 		return energyReceived;
 	}
 
 	@Override
-	public Double extract(Double value, boolean simulate) {
-
+	public Double extract(Double value, Actionable action) {
 		double energyExtracted = Math.min(storage, value);
-		if (!simulate) {
+
+		if (action == Actionable.MODULATE) {
 			storage -= energyExtracted;
 		}
+
 		return energyExtracted;
+	}
+
+	@Override
+	public Double toNativeValue(Number val) {
+		return val.doubleValue();
 	}
 
 	@Override
@@ -85,8 +95,7 @@ import net.minecraftforge.fml.common.Optional;
 
 	@Override
 	public double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
-
-		return receive(v, b);
+		return receive(v, b ? Actionable.SIMULATE : Actionable.MODULATE);
 	}
 
 	@Override
@@ -97,8 +106,7 @@ import net.minecraftforge.fml.common.Optional;
 
 	@Override
 	public double pullEnergy(EnumFacing enumFacing, double v, boolean b) {
-
-		return extract(v, b);
+		return extract(v, b ? Actionable.SIMULATE : Actionable.MODULATE);
 	}
 
 	@Override

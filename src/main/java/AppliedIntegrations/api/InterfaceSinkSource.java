@@ -1,6 +1,7 @@
 package AppliedIntegrations.api;
 
 
+import appeng.api.config.Actionable;
 import ic2.api.energy.prefab.BasicSinkSource;
 import ic2.api.energy.tile.IEnergyAcceptor;
 import ic2.api.energy.tile.IEnergyEmitter;
@@ -59,14 +60,12 @@ public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceSt
 	}
 
 	@Override
-	public Double receive(Double value, boolean simulate) {
-
+	public Double receive(Double value, Actionable action) {
 		return injectEnergy(null, value, 4);
 	}
 
 	@Override
-	public Double extract(Double value, boolean simulate) {
-
+	public Double extract(Double value, Actionable action) {
 		double storedBefore = getEnergyStored();
 
 		drawEnergy(value);
@@ -74,5 +73,10 @@ public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceSt
 		double storedAfter = getEnergyStored();
 
 		return storedBefore - storedAfter;
+	}
+
+	@Override
+	public Double toNativeValue(Number val) {
+		return val.doubleValue();
 	}
 }

@@ -1,6 +1,7 @@
 package AppliedIntegrations.api;
 
 
+import appeng.api.config.Actionable;
 import net.darkhax.tesla.api.implementation.BaseTeslaContainer;
 
 /**
@@ -43,14 +44,17 @@ public class TeslaInterfaceStorageDuality extends BaseTeslaContainer implements 
 	}
 
 	@Override
-	public Long receive(Long value, boolean simulate) {
-
-		return super.givePower(value, simulate);
+	public Long receive(Long value, Actionable action) {
+		return super.givePower(value, action == Actionable.SIMULATE);
 	}
 
 	@Override
-	public Long extract(Long value, boolean simulate) {
+	public Long extract(Long value, Actionable action) {
+		return super.takePower(value, action == Actionable.SIMULATE);
+	}
 
-		return super.takePower(value, simulate);
+	@Override
+	public Long toNativeValue(Number val) {
+		return val.longValue();
 	}
 }
