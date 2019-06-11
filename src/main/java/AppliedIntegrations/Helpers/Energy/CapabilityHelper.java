@@ -161,7 +161,7 @@ public class CapabilityHelper {
 					// Extract energy
 					return energyStorageCapability.extractEnergy(val.intValue(), simulate);
 
-					// Check if capability belong to Ember system
+				// Check if capability belong to Ember system
 				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
 					// Get storage
 					IStrictEnergyOutputter storage = (IStrictEnergyOutputter) capabilityHandler.getCapability(capability, side.getFacing());
@@ -169,7 +169,7 @@ public class CapabilityHelper {
 					// Extract energy
 					return (int) storage.pullEnergy(side.getFacing(), val.doubleValue(), simulate);
 
-					// Check if capability belong to TESLA system
+				// Check if capability belong to TESLA system
 				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_PRODUCER) {
 					// Get storage
 					ITeslaProducer teslaHolderCapability = (ITeslaProducer) capabilityHandler.getCapability(capability, side.getFacing());

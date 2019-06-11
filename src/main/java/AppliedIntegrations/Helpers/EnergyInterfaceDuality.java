@@ -179,14 +179,14 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 						// Check if there is energy exists and energy not filtered
 						if (stored > 0 && this.getFilteredEnergy(side) != energy) {
 							// Find minimum value between energy stored and max transfer
-							int ValuedReceive = (int) Math.min(stored, this.getMaxTransfer(side));
+							int valuedReceive = (int) Math.min(stored, this.getMaxTransfer(side));
 							// Find amount of energy that can be injected
-							int InjectedAmount = owner.injectEnergy(new EnergyStack(energy, ValuedReceive), SIMULATE);
+							int injectedAmount = owner.injectEnergy(new EnergyStack(energy, valuedReceive), SIMULATE);
 
 							// Inject energy in ME Network
-							owner.injectEnergy(new EnergyStack(energy, InjectedAmount), MODULATE);
+							owner.injectEnergy(new EnergyStack(energy, injectedAmount), MODULATE);
 							// Remove injected amount from interface storage
-							owner.getEnergyStorage(energy, side).modifyEnergyStored(-InjectedAmount);
+							owner.getEnergyStorage(energy, side).modifyEnergyStored(-injectedAmount);
 						}
 					}
 				}

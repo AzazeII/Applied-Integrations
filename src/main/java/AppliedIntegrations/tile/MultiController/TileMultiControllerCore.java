@@ -779,7 +779,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			// Check not null
 			if (p != null) {
 				// Send message
-				p.sendMessage(new TextComponentTranslation("ME Server Formed!"));
+				p.sendMessage(new TextComponentTranslation("ME multi-controller formed!"));
 			}
 		}
 	}

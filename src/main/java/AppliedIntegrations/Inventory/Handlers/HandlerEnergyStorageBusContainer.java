@@ -6,6 +6,7 @@ import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import appeng.api.AEApi;
@@ -16,6 +17,9 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IItemList;
 import net.minecraft.tileentity.TileEntity;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @Author Azazell
@@ -33,6 +37,11 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		this.storage = operand;
 		this.type = type;
 		this.owner = owner;
+	}
+
+	private boolean listContainsNonNullValues(List<LiquidAIEnergy> filteredEnergies) {
+		// Create stream from list and check if each element is null trough Objects::isNull predicate
+		return filteredEnergies.stream().allMatch(Objects::isNull);
 	}
 
 	/**
@@ -53,7 +62,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 
 		// Check not null
 		if (input == null) {
-			return input;
+			return null;
 		}
 
 		// Check meaningful
@@ -62,11 +71,10 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		}
 
 		// Check if filtered energies has any energies
-		if (!owner.filteredEnergies.isEmpty()) {
+		if (!listContainsNonNullValues(owner.filteredEnergies)) {
 			// Check if one of filtered energies is equal to input energy
-			if (!owner.filteredEnergies.contains(input.getEnergy()))
-			// Ignore
-			{
+			if (!owner.filteredEnergies.contains(input.getEnergy())) {
+				// Ignore
 				return input;
 			}
 		}
@@ -81,9 +89,8 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		int notAdded = (int) input.getStackSize() - added;
 
 		// Check greater than 0
-		if (notAdded > 0)
-		// Return value not added
-		{
+		if (notAdded > 0) {
+			// Return value not added
 			return input.copy().setStackSize(notAdded);
 		}
 
@@ -116,25 +123,23 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		}
 
 		// Check if filtered energies has any energies
-		if (!owner.filteredEnergies.isEmpty()) {
+		if (!listContainsNonNullValues(owner.filteredEnergies)){
 			// Check if one of filtered energies is equal to input energy
-			if (!owner.filteredEnergies.contains(request.getEnergy()))
-			// Ignore
-			{
+			if (!owner.filteredEnergies.contains(request.getEnergy())) {
+				// Ignore
 				return null;
 			}
 		}
 
 		// Create capability helper
-		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide());
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide().getOpposite());
 
 		// Get extracted value
 		int extracted = helper.extractEnergy(request.getStackSize(), mode == Actionable.SIMULATE, this.type.energy);
 
 		// Check greater than 0
-		if (extracted > 0)
-		// Return extracted amount
-		{
+		if (extracted > 0) {
+			// Return extracted amount
 			return request.copy().setStackSize(extracted);
 		}
 		return null;
@@ -154,7 +159,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		}
 
 		// Create capability helper
-		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide());
+		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide().getOpposite());
 
 		// Get stored energy
 		int stored = helper.getStored(type.energy);

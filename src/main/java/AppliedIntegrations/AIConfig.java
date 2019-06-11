@@ -108,7 +108,7 @@ public class AIConfig {
 		enableBlackHoleStorage = (Boolean) addProperty(CATEGORY_TILES, "EnableBlackHoleStorageSystem", true, "Default: true (only in alpha); If set to true, then all black/white hole storage system blocks will be available in game.", tileOrder);
 
 		// ME Server
-		enableMEServer = (Boolean) addProperty(CATEGORY_TILES, "EnableMEServer", true, "Default: true; If set to true, then ME Server blocks will be available in game.", tileOrder);
+		enableMEServer = (Boolean) addProperty(CATEGORY_TILES, "EnableMEMC", true, "Default: true; If set to true, then ME multi-controller, blocks will be available in game.", tileOrder);
 
 		// Logic bus
 		enableLogicBus = (Boolean) addProperty(CATEGORY_TILES, "EnableLogicBus", true, "Default: true; If set to true, then Logic bus blocks will be available in game.", tileOrder);

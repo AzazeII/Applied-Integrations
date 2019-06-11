@@ -549,9 +549,12 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 		// Extract energy from MEInventory
 		IAEEnergyStack extracted = getEnergyInventory().extractItems(AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
+		// Check not null
 		if (extracted == null) {
 			return 0;
 		}
+
+		// Return amount extracted
 		return (int) (extracted.getStackSize());
 	}
 
@@ -566,11 +569,11 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 		IAEEnergyStack notInjected = getEnergyInventory().injectItems(AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
 
 		// Check for null result
-		if (notInjected == null)
-		// Return original amount
-		{
+		if (notInjected == null) {
+			// Return original amount
 			return (int) resource.amount;
 		}
+
 		// Return original amount - not injected
 		return (int) (resource.amount - notInjected.getStackSize());
 	}

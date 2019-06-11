@@ -267,7 +267,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		}
 		// Check if changed neighbor was next to storage bus's side
 		if (pos.offset(this.getHostSide().getFacing()).equals(neighbor)) {
-			// Notify cell array
+			// Notify grid
 			postCellEvent();
 		}
 
@@ -322,11 +322,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		}
 
 		return false;
-	}
-
-	public double getIdlePowerUsage() {
-
-		return 0;
 	}
 
 	@MENetworkEventSubscribe
