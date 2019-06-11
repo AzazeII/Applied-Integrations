@@ -51,6 +51,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -106,17 +107,9 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
 
 	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("ME Energy Export/Import Bus", 4, 1, this) {
-
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-
-			if (itemStack == null) {
-				return false;
-			}
-			if (AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack)) {
-				return true;
-			}
-			return false;
+			return AEApi.instance().definitions().materials().cardInverter().isSameAs(itemStack);
 		}
 	};
 
@@ -155,11 +148,9 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		if (node != null) {
 			// Get grid
 			IGrid grid = node.getGrid();
-			// Check not null
-			if (grid != null) {
-				// Post update
-				grid.postEvent(new MENetworkCellArrayUpdate());
-			}
+
+			// Post update
+			grid.postEvent(new MENetworkCellArrayUpdate());
 		}
 	}
 
@@ -280,30 +271,36 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 			postCellEvent();
 		}
 
-		// Check not null
-		if (getFacingTile() != null) {
-			// Check for energy interface
-			if (getFacingTile() instanceof IEnergyInterface) {
-				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) getFacingTile(), this);
+		// Get facing tile
+		TileEntity tile = getFacingTile();
 
-				// Check for host tile
-			} else if (getFacingTile() instanceof TileCableBus) {
+		// Check not null
+		if (tile != null) {
+			// Check for energy interface
+			if (tile instanceof IEnergyInterface) {
+				handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) tile, this);
+
+			// Check for host tile
+			} else if (tile instanceof TileCableBus) {
 				// Get interface candidate
-				TileCableBus maybeInterface = (TileCableBus) getFacingTile();
+				TileCableBus maybeInterface = (TileCableBus) tile;
 
 				// Check if candidate instanceof IEnergyInterface
 				if (maybeInterface.getPart(getHostSide().getOpposite()) instanceof IEnergyInterface) {
-					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) ((TileCableBus) getFacingTile()).getPart(
+					handler = new HandlerEnergyStorageBusInterface((IEnergyInterface) ((TileCableBus) tile).getPart(
 							getHostSide().getOpposite()), this);
 				}
 
-				// Check for all energy types:
-			} else if (getFacingTile().hasCapability(CapabilityEnergy.ENERGY, getHostSide().getFacing())) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.FE);
-			} else if (IntegrationsHelper.instance.isLoaded(J) && getFacingTile().hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getHostSide().getFacing())) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.Joules);
-			} else if (IntegrationsHelper.instance.isLoaded(EU) && getFacingTile() instanceof IEnergySink) {
-				handler = new HandlerEnergyStorageBusContainer(this, getFacingTile(), EnumCapabilityType.EU);
+			// Check for all energy types:
+			} else if (IntegrationsHelper.instance.isLoaded(J) && tile.hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY, getHostSide().getFacing())) { // 1. Joules
+				// Create handler for joules
+				handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.Joules);
+			} else if (tile.hasCapability(CapabilityEnergy.ENERGY, getHostSide().getFacing())) { // 2. FE
+				// Create handler for FE
+				handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.FE);
+			} else if (IntegrationsHelper.instance.isLoaded(EU) && tile instanceof IEnergySink) { // 3. EU
+				// Create handler for EU
+				handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.EU);
 			}
 		}
 	}

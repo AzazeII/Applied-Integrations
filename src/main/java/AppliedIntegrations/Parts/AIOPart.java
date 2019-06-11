@@ -265,6 +265,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			for (Capability capability : type.capabilities) {
 				// Check if tile has one of type's capabilities
 				if (tileEntity.hasCapability(capability, getHostSide().getFacing().getOpposite())) {
+					// Update adjacent storage
 					this.adjacentEnergyStorage = tileEntity;
 				}
 			}
