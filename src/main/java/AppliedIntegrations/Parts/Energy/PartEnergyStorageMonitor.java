@@ -1,6 +1,5 @@
 package AppliedIntegrations.Parts.Energy;
 
-
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Parts.AIRotatablePart;
@@ -17,17 +16,21 @@ import appeng.api.networking.security.IActionSource;
 import appeng.api.networking.storage.IStackWatcher;
 import appeng.api.networking.storage.IStackWatcherHost;
 import appeng.api.parts.IPartCollisionHelper;
+import appeng.api.parts.IPartModel;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
+import appeng.client.render.TesrRenderHelper;
 import appeng.core.localization.PlayerMessages;
 import appeng.me.GridAccessException;
-import appeng.parts.reporting.PartStorageMonitor;
 import appeng.util.IWideReadableNumberConverter;
 import appeng.util.Platform;
 import appeng.util.ReadableNumberConverter;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -39,6 +42,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
+
+import static appeng.parts.reporting.PartStorageMonitor.*;
+import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
+import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 /**
  * @Author Azazell
@@ -54,6 +61,7 @@ import java.io.IOException;
 public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackWatcherHost, IPowerChannelState, IPartStorageMonitor {
 
 	private static final String KEY_IS_LOCKED = "#IS_LOCKED";
+	private static final String KEY_STACK_TAG = "#STACK_TAG";
 	private static final IWideReadableNumberConverter NUMBER_CONVERTER = ReadableNumberConverter.INSTANCE;
 
 	private String lastHumanReadableText;
@@ -63,8 +71,6 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	public PartEnergyStorageMonitor() {
 		super(PartEnum.EnergyStorageMonitor);
-
-		PartStorageMonitor r;
 	}
 
 	private void onStackWatchUpdate() throws GridAccessException {
@@ -100,44 +106,84 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		currentStack.setStackSize( output == null ? 0 : output.getStackSize() );
 	}
 
-	@Override
+	@Override // Server side
 	public void writeToStream( final ByteBuf data ) throws IOException {
 		super.writeToStream( data );
 
-		/*data.writeBoolean( this.isLocked );
-		data.writeBoolean( this.configuredItem != null );
-		if( this.configuredItem != null )
-		{
-			this.configuredItem.writeToPacket( data );
-		}*/
+		// Write is locked value
+		data.writeBoolean(isLocked);
+
+		// Write has stack
+		data.writeBoolean(currentStack != null);
+
+		// Check not null
+		if (currentStack == null)
+			return;
+
+		// Write stack
+		currentStack.writeToPacket(data);
 	}
 
-	@Override
-	public boolean readFromStream( final ByteBuf data ) {
-		boolean needRedraw;
+	@Override // Client side
+	public boolean readFromStream( final ByteBuf data ) throws IOException {
+		// Read is locked
+		boolean isLocked = data.readBoolean();
 
-		/*final boolean isLocked = data.readBoolean();
-		needRedraw = this.isLocked != isLocked;
+		// Track change in current and written is locked data
+		boolean redraw = isLocked != this.isLocked;
 
-		this.isLocked = isLocked;
-
-		final boolean val = data.readBoolean();
-		if( val )
-		{
-			this.configuredItem = AEItemStack.fromPacket( data );
+		// Check if stack exists
+		if (data.readBoolean()) {
+			// Read stack
+			this.currentStack = AEEnergyStack.fromPacket(data);
+		} else {
+			// Nullify stack
+			this.currentStack = null;
 		}
-		else
-		{
-			this.configuredItem = null;
-		}*/
 
-		return true;
+		return super.readFromStream(data) || redraw;
 	}
 
 	@Override
 	@SideOnly( Side.CLIENT )
 	public void renderDynamic( double x, double y, double z, float partialTicks, int destroyStage ) {
+		// Get currently displayed stack
+		IAEEnergyStack stack = this.getDisplayed();
 
+		// Check not null
+		if( stack == null ) {
+			return;
+		}
+
+		// Isolate changes
+		GlStateManager.pushMatrix();
+
+		// Translate pointer
+		GlStateManager.translate( x + 0.5, y + 0.5, z + 0.5 );
+
+		// Move to current facing
+		TesrRenderHelper.moveToFace( getHostSide().getFacing() );
+
+		// Get tesselator
+		Tessellator tessellator = Tessellator.getInstance();
+
+		// Get buffered builder
+		BufferBuilder builder = tessellator.getBuffer();
+
+		// Begin drawing quads
+		builder.begin(GL_QUADS, POSITION_TEX);
+
+		// Energy quad
+		builder.pos(-0.2, -0.2, 0).endVertex(); // 1.
+		builder.pos(-0.2, 0.2, 0).endVertex(); // 2.
+		builder.pos(0.2, -0.2, 0).endVertex(); // 3.
+		builder.pos(0.2, 0.2, 0).endVertex(); // 4.
+
+		// End drawing
+		tessellator.draw();
+
+		// Isolate changes
+		GlStateManager.popMatrix();
 	}
 
 	@Override
@@ -151,11 +197,45 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	}
 
 	@Override
+	public IPartModel getStaticModels() {
+		// First condition -> Is locked---> Locked model
+		//                             |--> Unlocked Model
+		if( this.isActive() ) { // 1. Is active
+			if( this.isLocked() ) { // Is locked
+				return MODELS_LOCKED_HAS_CHANNEL; // Locked model
+			} else {
+				return MODELS_HAS_CHANNEL; // Unlocked model
+			}
+		} else if( this.isPowered() ) { // 2. Is powered
+			if( this.isLocked() ) { // Is locked
+				return MODELS_LOCKED_ON; // Locked model
+			} else {
+				return MODELS_ON; // Unlocked model
+			}
+		} else { // 3. Else
+			if( this.isLocked() ) { // Is locked
+				return MODELS_LOCKED_OFF; // Locked model
+			} else {
+				return MODELS_OFF; // Unlocked model
+			}
+		}
+	}
+
+	@Override
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
 
-		// Write dat to nbt
-		currentStack.writeToNBT(data); // 1. Stack
+		// Create stack tag
+		NBTTagCompound stackTag = new NBTTagCompound();
+
+		// Check not null
+		if (currentStack != null) {
+			// Write stack to sub-nbt tag
+			currentStack.writeToNBT(stackTag);
+		}
+
+		// Write data to nbt
+		data.setTag(KEY_STACK_TAG, stackTag);
 		data.setBoolean(KEY_IS_LOCKED, isLocked); // 2. Is locked
 	}
 
@@ -164,7 +244,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		super.readFromNBT(data);
 
 		// Read data from nbt
-		currentStack = AEEnergyStack.fromNBT(data); // 1. Stack
+		currentStack = AEEnergyStack.fromNBT(data.getCompoundTag(KEY_STACK_TAG)); // 1. Sub stack tag & Stack
 		isLocked = data.getBoolean(KEY_IS_LOCKED); // 2. Is locked
 	}
 
@@ -231,7 +311,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 			return false;
 		}
 
-		// Get permissions fron player, if player has no permissions, then:
+		// Get permissions from player, if player has no permissions, then:
 		// DENIED - https://www.deviantart.com/the-masked-max/art/Arstotzka-Emblem-Papers-Please-ASCII-Art-736130975
 		if( !Platform.hasPermissions( this.getLocation(), player ) ) {
 			return false;
@@ -291,7 +371,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	}
 
 	@Override
-	public IAEStack<?> getDisplayed() {
+	public IAEEnergyStack getDisplayed() {
 		return currentStack;
 	}
 

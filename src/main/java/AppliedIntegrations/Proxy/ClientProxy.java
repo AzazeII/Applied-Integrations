@@ -25,8 +25,8 @@ import AppliedIntegrations.tile.HoleStorageSystem.render.TileWhiteHoleRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import AppliedIntegrations.tile.HoleStorageSystem.storage.TileMEPylon;
-import AppliedIntegrations.tile.MultiController.Render.ServerRibRenderer;
-import AppliedIntegrations.tile.MultiController.Render.ServerSecurityRenderer;
+import AppliedIntegrations.tile.MultiController.Render.MultiControllerRibRenderer;
+import AppliedIntegrations.tile.MultiController.Render.MultiControllerSecurityRenderer;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerRib;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
@@ -78,8 +78,8 @@ public class ClientProxy extends CommonProxy {
 
 		if (AIConfig.enableMEServer) {
 			// Register custom renderers
-			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerRib.class, new ServerRibRenderer()); // (1)
-			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerTerminal.class, new ServerSecurityRenderer()); // (2)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerRib.class, new MultiControllerRibRenderer()); // (1)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerTerminal.class, new MultiControllerSecurityRenderer()); // (2)
 		}
 
 		if (AIConfig.enableBlackHoleStorage) {

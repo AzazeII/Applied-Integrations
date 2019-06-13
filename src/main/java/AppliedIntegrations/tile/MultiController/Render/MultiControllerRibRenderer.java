@@ -15,7 +15,7 @@ import static net.minecraft.util.EnumFacing.*;
 import static net.minecraft.util.EnumFacing.Axis.Y;
 import static net.minecraft.util.EnumFacing.Axis.Z;
 
-public class ServerRibRenderer extends AITileFullRenderer<TileMultiControllerRib> {
+public class MultiControllerRibRenderer extends AITileFullRenderer<TileMultiControllerRib> {
 
 	// Initialize side variables
 	private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/server_frame.png"); // (1)

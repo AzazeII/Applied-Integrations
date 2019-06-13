@@ -13,7 +13,7 @@ import static appeng.api.util.AEPartLocation.*;
 import static net.minecraft.util.EnumFacing.Axis.X;
 import static net.minecraft.util.EnumFacing.Axis.Z;
 
-public class ServerSecurityRenderer extends AITileFullRenderer<TileMultiControllerTerminal> {
+public class MultiControllerSecurityRenderer extends AITileFullRenderer<TileMultiControllerTerminal> {
 
 	// Init textures
 	private static final ResourceLocation top = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_top.png"); // (1)
@@ -82,30 +82,26 @@ public class ServerSecurityRenderer extends AITileFullRenderer<TileMultiControll
 	private void drawDirectionalQuadWithUV(AEPartLocation textureSide, AEPartLocation actualSide, TileMultiControllerTerminal te) {
 		// Bind texture depending on side
 		// Check if side is south, west, north or east
-		if (textureSide != UP && textureSide != DOWN)
-		// Bind side texture
-		{
+		if (textureSide != UP && textureSide != DOWN) {
+			// Bind side texture
 			Minecraft.getMinecraft().renderEngine.bindTexture(side);
 		}
 
 		// Check if side is up
-		if (textureSide == UP)
-		// Bind top texture
-		{
+		if (textureSide == UP) {
+			// Bind top texture
 			bindTopTexture(te);
 		}
 
 		// Check if side is down
-		if (textureSide == DOWN)
-		// Bind bottom texture
-		{
+		if (textureSide == DOWN) {
+			// Bind bottom texture
 			Minecraft.getMinecraft().renderEngine.bindTexture(bottom);
 		}
 
 		// Check if side isn't internal
-		if (textureSide == INTERNAL || actualSide == INTERNAL)
-		// Illegal state
-		{
+		if (textureSide == INTERNAL || actualSide == INTERNAL) {
+			// Illegal state
 			throw new IllegalStateException("Side must be valid");
 		}
 
