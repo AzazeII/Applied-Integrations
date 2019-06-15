@@ -40,14 +40,17 @@ public class EnergyStorageChannel implements IEnergyStorageChannel {
 	@Nullable
 	@Override
 	public IAEEnergyStack readFromPacket(@Nonnull ByteBuf buf) {
-
 		return AEEnergyStack.fromPacket(buf);
 	}
 
 	@Nullable
 	@Override
 	public IAEEnergyStack createFromNBT(@Nonnull NBTTagCompound tag) {
-
 		return AEEnergyStack.fromNBT(tag);
+	}
+
+	@Override
+	public int getUnitsPerByte() {
+		return 1000;
 	}
 }
