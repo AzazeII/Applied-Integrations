@@ -60,9 +60,8 @@ public class PartEnergyImport extends AIOPart {
 		// Iterate over all energies
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 			// Check if filter contains any values
-			if (filteredEnergies.size() > 0)
-			// Check if filter not contains current energy
-			{
+			if (filteredEnergies.size() > 0) {
+				// Check if filter not contains current energy
 				if (!filteredEnergies.contains(energy)) {
 					continue;
 				}

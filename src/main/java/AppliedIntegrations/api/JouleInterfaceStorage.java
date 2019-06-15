@@ -83,14 +83,12 @@ public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, 
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-
-		tag.setDouble("#Joules", storage);
+		storage = tag.getDouble("#Joules");
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-
-		storage = tag.getDouble("#Joules");
+		tag.setDouble("#Joules", storage);
 	}
 
 	@Override

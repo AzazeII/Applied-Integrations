@@ -11,21 +11,15 @@ import net.minecraftforge.energy.EnergyStorage;
  */
 public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceStorageDuality<Integer>, INBTStorage {
 
-	private IEnergyInterface energyInterface;
-
 	public EnergyInterfaceStorage(IEnergyInterface iEnergyInterface, int capacity, int maxTransfer) {
-
 		super(capacity, maxTransfer);
-		this.energyInterface = iEnergyInterface;
 	}
 
 	/**
-	 * Implementation of original cofh\api EnergyStorage method
-	 *
+	 * Implementation of original cofh|API EnergyStorage method
 	 * @param energy
 	 */
 	public void modifyEnergyStored(int energy) {
-
 		this.energy += energy;
 
 		if (this.energy > capacity) {
@@ -70,14 +64,12 @@ public class EnergyInterfaceStorage extends EnergyStorage implements IInterfaceS
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-
-		tag.setInteger("#ENERGY_TAG", getEnergyStored());
+		this.setEnergyStored(tag.getInteger("#ENERGY_TAG"));
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-
-		this.setEnergyStored(tag.getInteger("#ENERGY_TAG"));
+		tag.setInteger("#ENERGY_TAG", getEnergyStored());
 	}
 
 	/**

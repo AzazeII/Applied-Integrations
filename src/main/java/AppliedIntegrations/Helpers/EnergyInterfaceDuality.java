@@ -89,9 +89,8 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		// Iterate for each energy
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 			// Check if storage is initialized
-			if (IntegrationsHelper.instance.isLoaded(energy))
-			// Update energy
-			{
+			if (IntegrationsHelper.instance.isLoaded(energy)) {
+				// Update energy
 				owner.initEnergyStorage(energy, side);
 			}
 		}
@@ -137,6 +136,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 	/**
 	 * check if energy storage initialized (mod with capability for this storage loaded)
+	 *
 	 * @return Is mod with capability for this energy is initialized
 	 */
 	private boolean isStorageInitialized(LiquidAIEnergy energy) {
@@ -192,15 +192,21 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 							// Find amount of energy that can be injected
 							int injectedAmount = owner.injectEnergy(new EnergyStack(energy, valuedReceive), SIMULATE);
 
-							// Find amount of energy that can be extracted
-							int extractedAmount = energyStorage.extract(energyStorage.toNativeValue(injectedAmount),
-									SIMULATE).intValue();
+							// Check if any energy was injected
+							if (injectedAmount > 0) {
+								// Find amount of energy that can be extracted
+								int extractedAmount = energyStorage.extract(energyStorage.toNativeValue(injectedAmount),
+										SIMULATE).intValue();
 
-							// Inject energy in ME Network
-							owner.injectEnergy(new EnergyStack(energy, extractedAmount), MODULATE);
+								// Check if any energy was extracted
+								if (extractedAmount > 0) {
+									// Inject energy in ME Network
+									owner.injectEnergy(new EnergyStack(energy, extractedAmount), MODULATE);
 
-							// Drain extracted amount from network
-							energyStorage.extract(energyStorage.toNativeValue(extractedAmount), MODULATE);
+									// Drain extracted amount from network
+									energyStorage.extract(energyStorage.toNativeValue(extractedAmount), MODULATE);
+								}
+							}
 						}
 					}
 				}
@@ -248,21 +254,29 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 						int injectedAmount = interfaceStorageDuality.receive(interfaceStorageDuality.toNativeValue(
 								valuedExtract), SIMULATE).intValue();
 
-						// Simulate energy extraction from cells array
-						int extractedAmount = owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), injectedAmount),
-								SIMULATE);
+						// Check if any energy was injected
+						if (injectedAmount > 0) {
+							// Simulate energy extraction from cells array
+							int extractedAmount = owner.extractEnergy(new EnergyStack(getFilteredEnergy(side),
+									injectedAmount), SIMULATE);
 
-						// Make storage receive extracted amount
-						interfaceStorageDuality.receive((interfaceStorageDuality.toNativeValue(extractedAmount)), MODULATE);
+							// Check if any energy was extracted
+							if (extractedAmount > 0) {
+								// Make storage receive extracted amount
+								interfaceStorageDuality.receive((interfaceStorageDuality.toNativeValue(extractedAmount)),
+										MODULATE);
 
-						// Drain extracted amount from network
-						owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), extractedAmount), MODULATE);
+								// Drain extracted amount from network
+								owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), extractedAmount),
+										MODULATE);
 
-						// Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
-						// Otherwise it will be really OP
-						transferEnergy(getFilteredEnergy(side),
-								Math.min(stored, Math.min((int) getMaxTransfer(side), 50000)),
-								side.getFacing().getOpposite());
+								// Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
+								// Otherwise it will be really OP
+								transferEnergy(getFilteredEnergy(side),
+										Math.min(stored, Math.min((int) getMaxTransfer(side), 50000)),
+										side.getFacing().getOpposite());
+							}
+						}
 					} else {
 						// TODO: 2019-02-27 Add tesla extraction
 					}

@@ -25,7 +25,6 @@ public class PacketProgressBar extends AIPacket {
 	}
 
 	public PacketProgressBar(IEnergyInterface sender, LiquidAIEnergy energy, AEPartLocation energySide) {
-
 		super(sender.getHostPos().getX(), sender.getHostPos().getY(), sender.getHostPos().getZ(), sender.getHostSide().getFacing(), sender.getHostWorld());
 		this.sender = sender;
 		this.energy = energy;
@@ -34,7 +33,6 @@ public class PacketProgressBar extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		sender = (IEnergyInterface) readSyncHost(buf);
 		energy = readEnergy(buf);
 		energySide = AEPartLocation.values()[buf.readByte()];
@@ -42,7 +40,6 @@ public class PacketProgressBar extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
 		writeSyncHost(sender, buf);
 		writeEnergy(energy, buf);
 		buf.writeByte(energySide.ordinal());
