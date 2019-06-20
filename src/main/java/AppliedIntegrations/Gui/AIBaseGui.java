@@ -1,6 +1,4 @@
 package AppliedIntegrations.Gui;
-
-
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;

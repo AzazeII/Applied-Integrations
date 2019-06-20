@@ -31,8 +31,8 @@ public class HandlerProgressBar implements IMessageHandler<PacketProgressBar, Pa
 
 				// Check if we are updating correct GUI
 				if (GEI.getSyncHost().equals(message.sender)) {
-					// Replace current storage
-					GEI.storage = message.sender.getEnergyStorage(message.energy, message.energySide).getStored();
+					// Pass call to GUI
+					GEI.onStorageUpdate(message.energy, message.energySide, message.sender);
 				}
 			}
 		});
