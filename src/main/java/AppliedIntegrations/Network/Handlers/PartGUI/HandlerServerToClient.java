@@ -20,7 +20,7 @@ public class HandlerServerToClient implements IMessageHandler<PacketFilterServer
 
 	@Override
 	public PacketFilterServerToClient onMessage(PacketFilterServerToClient message, MessageContext ctx) {
-		// Schedule later call on client thread/computer
+		// Schedule task for later call on client thread/computer
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			// Get GUI
 			Gui gui = Minecraft.getMinecraft().currentScreen;

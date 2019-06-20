@@ -1,6 +1,4 @@
 package AppliedIntegrations.Parts;
-
-
 import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
@@ -39,10 +37,8 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static appeng.api.config.RedstoneMode.*;
 import static net.minecraft.init.Items.AIR;
-import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
@@ -74,13 +70,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	private final static int MAX_FILTER_SIZE = 9;
 
 	private final static int BASE_SLOT_INDEX = 4;
-
-	private final static int[] TIER2_INDEXS = {0, 2, 6, 8};
-
-	private final static int[] TIER1_INDEXS = {1, 3, 5, 7};
-
-	// Passive ae drain
-	private static final double IDLE_POWER_DRAIN = 0.7;
 
 	private static final RedstoneMode DEFAULT_REDSTONE_MODE = IGNORE;
 
@@ -286,7 +275,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 		super.onActivate(player, hand, position);
 		// Activation logic is server sided
-		if (getLogicalSide() == SERVER) {
+		if (!getHostWorld().isRemote) {
 			if (!player.isSneaking()) {
 				// Open gui trough handler
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getHostSide(), getHostTile().getPos());

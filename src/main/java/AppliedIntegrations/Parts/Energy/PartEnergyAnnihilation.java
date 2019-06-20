@@ -27,7 +27,6 @@ public class PartEnergyAnnihilation extends AIPlanePart {
 
 	@Override
 	public IPartModel getStaticModels() {
-
 		if (isPowered()) {
 			if (isActive()) {
 				return PartModelEnum.ANNIHILATION_HAS_CHANNEL;

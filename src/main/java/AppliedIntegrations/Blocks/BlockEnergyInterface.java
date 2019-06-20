@@ -64,7 +64,6 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 
 	@Override
 	public boolean hasTileEntity(IBlockState blockState) {
-
 		return true;
 	}
 }

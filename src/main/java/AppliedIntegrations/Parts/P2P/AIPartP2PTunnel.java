@@ -1,6 +1,4 @@
 package AppliedIntegrations.Parts.P2P;
-
-
 import AppliedIntegrations.api.AIApi;
 import appeng.api.implementations.items.IMemoryCard;
 import appeng.api.implementations.items.MemoryCardMessages;
@@ -20,9 +18,6 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
 import java.util.Objects;
-
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
-import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 
 /**
  * @Author Azazell
@@ -87,8 +82,8 @@ public abstract class AIPartP2PTunnel<T extends AIPartP2PTunnel<T>> extends Part
 
 	@Override
 	public boolean onPartActivate(final EntityPlayer player, final EnumHand hand, final Vec3d pos ) {
-		// Call only on client
-		if( getLogicalSide() == CLIENT ) {
+		// Call only on server
+		if( getTile().getWorld().isRemote ) {
 			return true;
 		}
 

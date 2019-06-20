@@ -39,6 +39,11 @@ import static appeng.api.util.AEPartLocation.*;
  * @Author Azazell
  */
 public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidgetHost {
+	private static ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
+	private static ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
+
+	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
+
 	protected final List<String> tooltip = new ArrayList<String>();
 
 	public PartEnergyInterface part;
@@ -51,12 +56,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 	private IEnergyInterface energyInterface;
 
-	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
-
-	private ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
-
-	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
-
 	private TileEnergyInterface tile;
 
 	private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
@@ -67,25 +66,14 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 	private List<String> buttonTooltip = new ArrayList<String>();
 
-	public GuiEnergyInterface(ContainerEnergyInterface CEI, PartEnergyInterface part, EntityPlayer player) {
-
-		super(CEI, player);
-		this.player = player;
-
-		this.energyInterface = part;
-		this.part = (PartEnergyInterface) energyInterface;
-
-		this.guiLeft = this.guiLeft - 51;
-	}
-
-	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface Einterface, EntityPlayer player) {
+	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface energyInterface, EntityPlayer player) {
 
 		super(container, player);
 		this.player = player;
-		this.energyInterface = Einterface;
+		this.energyInterface = energyInterface;
 
 		if (this.energyInterface instanceof TileEnergyInterface) {
-			this.tile = (TileEnergyInterface) Einterface;
+			this.tile = (TileEnergyInterface) energyInterface;
 		}
 
 		this.guiLeft = this.guiLeft - 51;
@@ -125,11 +113,11 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		if (this.energyInterface instanceof PartEnergyInterface) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(this.texturePart);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texturePart);
 		}
 		if (this.energyInterface instanceof TileEnergyInterface) {
 
-			Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
+			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
 		}
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize + 75);
 		// Draw upgrade slots
@@ -200,8 +188,9 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 		//binding correct Gui
 		if (linkedMetric == RF || linkedMetric == J || linkedMetric == EU) {
-			this.energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + linkedMetric.getTag() + ".bar.png");
+			energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + linkedMetric.getTag() + ".bar.png");
 		}
+
 		Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
 
 		// Drawing Name
@@ -209,13 +198,13 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 		// Drawing Tooltips
 		if (this.energyInterface instanceof TileEnergyInterface) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
-			drawPower(35, 11, mouseX - 10, mouseY - 10, 16, AEPartLocation.SOUTH);
-			drawPower(52, 11, mouseX - 10, mouseY - 10, 16, NORTH);
-			drawPower(70, 11, mouseX - 10, mouseY - 10, 16, WEST);
-			drawPower(88, 11, mouseX - 10, mouseY - 10, 16, EAST);
-			drawPower(106, 11, mouseX - 10, mouseY - 10, 16, UP);
-			drawPower(124, 11, mouseX - 10, mouseY - 10, 16, DOWN);
+			Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
+			drawPower(35, 14, mouseX - 10, mouseY - 10, 16, SOUTH);
+			drawPower(53, 14, mouseX - 10, mouseY - 10, 16, NORTH);
+			drawPower(71, 14, mouseX - 10, mouseY - 10, 16, WEST);
+			drawPower(89, 14, mouseX - 10, mouseY - 10, 16, EAST);
+			drawPower(107, 14, mouseX - 10, mouseY - 10, 16, UP);
+			drawPower(125, 14, mouseX - 10, mouseY - 10, 16, DOWN);
 		} else if (this.energyInterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
 
@@ -224,7 +213,8 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 			}
 		}
 
-		energySlotList.forEach((energySlot) -> energySlot.drawWidget());
+		// Draw each widget in slot list
+		energySlotList.forEach(WidgetEnergySlot::drawWidget);
 	}
 
 	@Override

@@ -1,6 +1,4 @@
 package AppliedIntegrations.tile;
-
-
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
@@ -39,9 +37,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
-import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
@@ -49,9 +45,6 @@ import static net.minecraftforge.fml.relauncher.Side.SERVER;
 public class TileEnergyInterface extends AITile implements IEnergyMachine, INetworkToolAgent, IEnergyInterface, IStorageMonitorable, IInventoryHost {
 
 	public static int capacity = 100000;
-
-	private Boolean energyStates[] = new Boolean[6];
-
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> RFStorage = new LinkedHashMap<>();
 
 	private LinkedHashMap<AEPartLocation, EnergyInterfaceStorage> EUStorage = new LinkedHashMap<>();
@@ -62,7 +55,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
 
-	private List<ContainerEnergyInterface> linkedListeners = new ArrayList<ContainerEnergyInterface>();
+	private List<ContainerEnergyInterface> containers = new ArrayList<ContainerEnergyInterface>();
 
 	private byte outputTracker;
 
@@ -77,38 +70,35 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	};
 
 	public TileEnergyInterface() {
-
-		this.energyStates[1] = true;
+		// Iterate fore each side
 		for (AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS) {
+			// Init storage from this side
 			duality.initStorage(dir);
 		}
 	}
 
 	public int x() {
-
 		return super.pos.getX();
 	}
 
 	public int y() {
-
 		return super.pos.getY();
 	}
 
 	public int z() {
-
 		return super.pos.getZ();
 	}
 
 	public void addListener(final ContainerEnergyInterface container) {
-
-		if (!this.linkedListeners.contains(container)) {
-			this.linkedListeners.add(container);
+		if (!this.containers.contains(container)) {
+			this.containers.add(container);
 		}
 	}
 
 	public void onActivate(EntityPlayer player, AEPartLocation side) {
 		// Activation logic is server sided
-		if (getLogicalSide() == SERVER) {
+		if (!world.isRemote) {
+			// Don't activate GUI if player isn't sneaking
 			if (!player.isSneaking()) {
 				// Open GUI
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getHostSide(), getPos());
@@ -141,14 +131,12 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-
 		return duality.hasCapability(capability);
 	}
 
 	@Nullable
 	@Override
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-
 		return duality.getCapability(capability, AEPartLocation.fromFacing(facing));
 	}
 
@@ -213,7 +201,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 		}
 
 		// Get max energy stored number
-		Number num = (Number) getEnergyStorage(linkedMetric, side).getMaxStored();
+		Number num = getEnergyStorage(linkedMetric, side).getMaxStored();
 
 		// Check not null
 		if (num == null) {
@@ -233,7 +221,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	@Override
 	public List<ContainerEnergyInterface> getListeners() {
 
-		return linkedListeners;
+		return containers;
 	}
 
 	@Override
@@ -276,16 +264,14 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 			}
 
 			// Check if bar counter equal to 0
-			if (barCounter == 0)
-			// Put null in this bar map entry
-			{
+			if (barCounter == 0) {
+				// Put null in this bar map entry
 				barMap.put(side, null);
 			}
 
 			// Notify container and gui
-			if (barMap.get(side) != null)
-			// Bar Filter With Gui
-			{
+			if (barMap.get(side) != null) {
+				// Bar Filter With Gui
 				duality.notifyListenersOfEnergyBarChange(barMap.get(side), side);
 			}
 		}
@@ -306,7 +292,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	private void initGuiCoordinates() {
 		// Iterate for each listener
-		for (ContainerEnergyInterface listener : this.linkedListeners) {
+		for (ContainerEnergyInterface listener : this.containers) {
 			// Check not null
 			if (listener != null) {
 				// Send packet init
@@ -319,15 +305,13 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	}
 
 	private void notifyListenersOfFilterEnergyChange() {
-
-		for (ContainerEnergyInterface listener : this.linkedListeners) {
+		for (ContainerEnergyInterface listener : this.containers) {
 			if (listener != null) {
 				// Iterate for each side
-				for (AEPartLocation side : AEPartLocation.values()) {
+				for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 					// Iterate for each energy
-					LiquidAIEnergy.energies.values().forEach((liquidAIEnergy -> {
-						NetworkHandler.sendTo(new PacketFilterServerToClient(getFilteredEnergy(side), side.ordinal(), this), (EntityPlayerMP) listener.player);
-					}));
+					LiquidAIEnergy.energies.values().forEach((liquidAIEnergy ->
+							NetworkHandler.sendTo(new PacketFilterServerToClient(getFilteredEnergy(side), side.ordinal(), this), (EntityPlayerMP) listener.player)));
 				}
 			}
 		}

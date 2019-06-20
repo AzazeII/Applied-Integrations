@@ -1,6 +1,4 @@
 package AppliedIntegrations.Parts;
-
-
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;
 import appeng.api.networking.IGrid;
@@ -38,9 +36,7 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 	}
 
 	@Override
-	public final void onEntityCollision(Entity entity) {
-
-	}
+	public final void onEntityCollision(Entity entity) {}
 
 	@Override
 	public float getCableConnectionLength(AECableType cable) {
@@ -66,16 +62,9 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
 		return 0;
 	}
-
-	public double getIdlePowerUsage() {
-
-		return 1;
-	}
-
-	@Nonnull
+	 @Nonnull
 	@Override
 	public TickingRequest getTickingRequest(IGridNode iGridNode) {
-
 		return new TickingRequest(1, 1, false, false);
 	}
 

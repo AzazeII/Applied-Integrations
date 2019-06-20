@@ -1,5 +1,4 @@
 package AppliedIntegrations.Parts.Energy;
-
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
@@ -62,13 +61,11 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiStoragePart;
 import static AppliedIntegrations.api.Storage.LiquidAIEnergy.energies;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.EU;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.J;
 import static java.util.Collections.singletonList;
-import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
@@ -115,7 +112,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		this(PartEnum.EnergyStorageBus, SecurityPermissions.EXTRACT, SecurityPermissions.INJECT);
 
 		// Iterate until filter size
-		for (int index = 0; index < this.FILTER_SIZE; index++) {
+		for (int index = 0; index < FILTER_SIZE; index++) {
 			// Fill vector
 			this.filteredEnergies.add(null);
 
@@ -313,7 +310,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
 		// Activation logic is server sided
-		if (getLogicalSide() == SERVER) {
+		if (!getHostWorld().isRemote) {
 			if (!player.isSneaking()) {
 				// Open gui
 				AIGuiHandler.open(GuiStoragePart, player, getHostSide(), getHostTile().getPos());

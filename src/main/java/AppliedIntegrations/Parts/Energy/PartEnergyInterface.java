@@ -1,5 +1,4 @@
 package AppliedIntegrations.Parts.Energy;
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIBaseGui;
@@ -64,12 +63,10 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.AppliedIntegrations.getLogicalSide;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 import static appeng.api.parts.PartItemStack.BREAK;
 import static appeng.api.util.AEPartLocation.INTERNAL;
-import static net.minecraftforge.fml.relauncher.Side.SERVER;
 
 /**
  * @Author Azazell
@@ -201,10 +198,11 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
 		// Activation logic is server sided
-		if (getLogicalSide() == SERVER) {
+		if (!getHostWorld().isRemote) {
 			if (!player.isSneaking()) {
 				// Open GUI
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getHostSide(), getHostTile().getPos());
+
 				// Request gui update
 				updateRequested = true;
 			}
@@ -230,6 +228,8 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 					4,
 					4);
 		}
+
+		// Update handler
 		((InterfaceSinkSource) getEnergyStorage(EU, INTERNAL)).update();
 	}
 
@@ -334,6 +334,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 					duality.notifyListenersOfFilterEnergyChange(filteredEnergy);
 				}
 			}
+
 			try {
 				if (this.isActive()) {
 					// Try injecting energy from buffer
@@ -344,11 +345,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 			} catch(NullNodeConnectionException | GridAccessException e) {
 				AILog.error(e, "Part energy interface can't access it's grid");
 			}
+
 			// Check if energy changed
 			energyChangeHandler.onChange(filteredEnergy, (energy) -> {
 				// Sync filtered energy
 				duality.notifyListenersOfFilterEnergyChange(energy);
 			});
+
 			// Energy Stored with GUI
 			int storedEnergyTypesAmount = 0;
 			// Iterate for each energy
@@ -364,14 +367,17 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 					}
 				}
 			}
+
 			if (storedEnergyTypesAmount == 0) {
 				bar = null;
 			}
+
 			// Notify container and gui
 			if (bar != null) {
 				// Bar Filter With Gui
 				duality.notifyListenersOfEnergyBarChange(bar, INTERNAL);
 			}
+
 			this.saveChanges();
 		}
 		return IDLE;
