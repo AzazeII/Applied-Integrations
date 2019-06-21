@@ -189,7 +189,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 							// Find minimum value between energy stored and max transfer
 							int valuedReceive = (int) Math.min(stored, this.getMaxTransfer(side));
 
-							// Find amount of energy that can be injected
+							// Find amount of energy that can be inje¡cted
 							int injectedAmount = owner.injectEnergy(new EnergyStack(energy, valuedReceive), SIMULATE);
 
 							// Check if any energy was injected

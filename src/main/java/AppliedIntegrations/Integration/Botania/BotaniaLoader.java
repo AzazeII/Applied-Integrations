@@ -54,13 +54,10 @@ public class BotaniaLoader {
 
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_64k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_64k.getItem(), 1, 0), 200000);
 
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_256k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_256k.getItem(), 1, 0), 200000);
-
+		/*BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_256k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_256k.getItem(), 1, 0), 200000);
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_1024k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_1024k.getItem(), 1, 0), 200000);
-
 		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_4096k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_4096k.getItem(), 1, 0), 300000);
-
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_16384k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_16384k.getItem(), 1, 0), 300000);
+		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.MANASTORAGE_16384k.getItem(), 1, 0), new ItemStack(ItemEnum.ENERGYSTORAGE_16384k.getItem(), 1, 0), 300000);*/
 
 		/*------------------------------------------Elven Trade------------------------------------------*/
 

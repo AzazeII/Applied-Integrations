@@ -75,19 +75,19 @@ public enum ItemEnum {
 	ENERGYSTORAGE_4k(new EnergyStorageCell("EnergyStorageCell_4k", 4096), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGE_16k(new EnergyStorageCell("EnergyStorageCell_16k", 16384), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGE_64k(new EnergyStorageCell("EnergyStorageCell_64k", 65536), AIConfig.enableEnergyFeatures),
-	ENERGYSTORAGE_256k(new EnergyStorageCell("EnergyStorageCell_256k", 262144), AIConfig.enableEnergyFeatures),
+	/*ENERGYSTORAGE_256k(new EnergyStorageCell("EnergyStorageCell_256k", 262144), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGE_1024k(new EnergyStorageCell("EnergyStorageCell_1024k", 1048576), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGE_4096k(new EnergyStorageCell("EnergyStorageCell_4096k", 4194304), AIConfig.enableEnergyFeatures),
-	ENERGYSTORAGE_16384k(new EnergyStorageCell("EnergyStorageCell_16384k", 16777216), AIConfig.enableEnergyFeatures),
+	ENERGYSTORAGE_16384k(new EnergyStorageCell("EnergyStorageCell_16384k", 16777216), AIConfig.enableEnergyFeatures),*/
 
 	MANASTORAGE_1k(new ManaStorageCell("ManaStorageCell_1k", 1024), BotaniaLoader.enableBotania()),
 	MANASTORAGE_4k(new ManaStorageCell("ManaStorageCell_4k", 4096), BotaniaLoader.enableBotania()),
 	MANASTORAGE_16k(new ManaStorageCell("ManaStorageCell_16k", 16384), BotaniaLoader.enableBotania()),
 	MANASTORAGE_64k(new ManaStorageCell("ManaStorageCell_64k", 65536), BotaniaLoader.enableBotania()),
-	MANASTORAGE_256k(new ManaStorageCell("ManaStorageCell_256k", 262144), BotaniaLoader.enableBotania()),
+	/*MANASTORAGE_256k(new ManaStorageCell("ManaStorageCell_256k", 262144), BotaniaLoader.enableBotania()),
 	MANASTORAGE_1024k(new ManaStorageCell("ManaStorageCell_1024k", 1048576), BotaniaLoader.enableBotania()),
 	MANASTORAGE_4096k(new ManaStorageCell("ManaStorageCell_4096k", 4194304), BotaniaLoader.enableBotania()),
-	MANASTORAGE_16384k(new ManaStorageCell("ManaStorageCell_16384k", 16777216), BotaniaLoader.enableBotania()),
+	MANASTORAGE_16384k(new ManaStorageCell("ManaStorageCell_16384k", 16777216), BotaniaLoader.enableBotania()),*/
 	// & ------------------------------------CELLS------------------------------------ &
 
 	MANAANNIHILATIONCORE(new ManaAnnihilationCore("mana_annihilation_core"), BotaniaLoader.enableBotania()),
@@ -97,11 +97,11 @@ public enum ItemEnum {
 	ENERGYSTORAGECOMPONENT_1k(new EnergyStorageComponent("EnergyStorageComponent_1k"), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGECOMPONENT_4k(new EnergyStorageComponent("EnergyStorageComponent_4k"), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGECOMPONENT_16k(new EnergyStorageComponent("EnergyStorageComponent_16k"), AIConfig.enableEnergyFeatures),
-	ENERGYSTORAGECOMPONENT_64k(new EnergyStorageComponent("EnergyStorageComponent_64k"), AIConfig.enableEnergyFeatures),
-	ENERGYSTORAGECOMPONENT_256k(new EnergyStorageComponent("EnergyStorageComponent_256k"), AIConfig.enableEnergyFeatures),
+	ENERGYSTORAGECOMPONENT_64k(new EnergyStorageComponent("EnergyStorageComponent_64k"), AIConfig.enableEnergyFeatures);
+	/*ENERGYSTORAGECOMPONENT_256k(new EnergyStorageComponent("EnergyStorageComponent_256k"), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGECOMPONENT_1024k(new EnergyStorageComponent("EnergyStorageComponent_1024k"), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGECOMPONENT_4096k(new EnergyStorageComponent("EnergyStorageComponent_4096k"), AIConfig.enableEnergyFeatures),
-	ENERGYSTORAGECOMPONENT_16384k(new EnergyStorageComponent("EnergyStorageComponent_16384k"), AIConfig.enableEnergyFeatures);
+	ENERGYSTORAGECOMPONENT_16384k(new EnergyStorageComponent("EnergyStorageComponent_16384k"), AIConfig.enableEnergyFeatures);*/
 	// & ------------------------------------COMPONENTS------------------------------------ &
 
 	public static LinkedList<MaterialEncorium> encoriumVariants = new LinkedList<>();
