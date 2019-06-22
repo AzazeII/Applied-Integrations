@@ -1,6 +1,4 @@
 package AppliedIntegrations.tile.HoleStorageSystem;
-
-
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.tile.AITile;
@@ -35,7 +33,6 @@ import static net.minecraft.util.EnumFacing.DOWN;
  * @Author Azazell
  */
 public class TileMETurretFoundation extends AITile implements ICellContainer {
-
 	private enum Ammo {
 		MatterBall(1),
 		PaintBall(1),
@@ -44,7 +41,6 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		int cooldown;
 
 		Ammo(int cooldown) {
-
 			this.cooldown = cooldown;
 		}
 	}
@@ -75,6 +71,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 				return true;
 			}
 		}
+
 		return false;
 	}
 

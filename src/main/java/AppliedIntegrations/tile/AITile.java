@@ -6,6 +6,7 @@ import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
+import AppliedIntegrations.grid.AEEnergyStack;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.GridFlags;
@@ -141,19 +142,17 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	 * @return amount extracted
 	 */
 	public int extractEnergy(EnergyStack resource, Actionable actionable) throws GridAccessException {
-		if (getProxy().getNode() == null) {
+		// Extract energy from MEInventory
+		IAEEnergyStack extracted = getProxy().getStorage().getInventory(getEnergyChannel())
+				.extractItems(AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
+
+		// Check not null
+		if (extracted == null) {
 			return 0;
 		}
 
-		IStorageGrid storage = getProxy().getStorage();
-
-		IAEEnergyStack notRemoved = storage.getInventory(getEnergyChannel()).extractItems(getEnergyChannel().createStack(
-				resource), actionable, new MachineSource(this));
-
-		if (notRemoved == null) {
-			return (int) resource.amount;
-		}
-		return (int) (resource.amount - notRemoved.getStackSize());
+		// Return amount extracted
+		return (int) (extracted.getStackSize());
 	}
 
 	private IEnergyStorageChannel getEnergyChannel() {

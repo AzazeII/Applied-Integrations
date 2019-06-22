@@ -76,15 +76,12 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 			// Add central slot
 			this.energySlotList.add(new WidgetEnergySlot(this, 0, 79, 111, true));
 		} else if (energyInterface instanceof TileEnergyInterface) {
-			// Temp ID for slots
-			byte id = 0;
-
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 34, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 52, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 70, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 88, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id++, 106, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, id, 124, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, DOWN.ordinal(), 34, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, UP.ordinal(), 52, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, NORTH.ordinal(), 70, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, SOUTH.ordinal(), 88, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, WEST.ordinal(), 106, 111, true));
+			this.energySlotList.add(new WidgetEnergySlot(this, EAST.ordinal(), 124, 111, true));
 		}
 
 		// Add priority button
@@ -194,12 +191,12 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		// Drawing Tooltips
 		if (this.energyInterface instanceof TileEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
-			drawPower(35, 14, mouseX - 10, mouseY - 10, 16, SOUTH);
-			drawPower(53, 14, mouseX - 10, mouseY - 10, 16, NORTH);
-			drawPower(71, 14, mouseX - 10, mouseY - 10, 16, WEST);
-			drawPower(89, 14, mouseX - 10, mouseY - 10, 16, EAST);
-			drawPower(107, 14, mouseX - 10, mouseY - 10, 16, UP);
-			drawPower(125, 14, mouseX - 10, mouseY - 10, 16, DOWN);
+			drawPower(35, 14, mouseX - 10, mouseY - 10, 16, DOWN);
+			drawPower(53, 14, mouseX - 10, mouseY - 10, 16, UP);
+			drawPower(71, 14, mouseX - 10, mouseY - 10, 16, NORTH);
+			drawPower(89, 14, mouseX - 10, mouseY - 10, 16, SOUTH);
+			drawPower(107, 14, mouseX - 10, mouseY - 10, 16, WEST);
+			drawPower(125, 14, mouseX - 10, mouseY - 10, 16, EAST);
 		} else if (this.energyInterface instanceof PartEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(this.energybar);
 
@@ -221,12 +218,13 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 					getX(),getY(),getZ(),player));
 		}*/
 
+		// When mouse clicked GUI will try to find slot(s) over mouse and populate click on them(if any)
 		energySlotList.forEach((energySlot) -> {
 			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
-				LiquidAIEnergy EnergyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
+				LiquidAIEnergy energyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
 
 				try {
-					energySlot.onMouseClicked(new EnergyStack(EnergyItem, 1));
+					energySlot.onMouseClicked(new EnergyStack(energyItem, 1));
 				} catch (Exception e) {
 					AILog.debug(e + "");
 				}

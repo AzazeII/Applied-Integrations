@@ -49,9 +49,8 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 		setCurrentStack(stack);
 
 		// Check not null
-		if (hostGUI.getSyncHost() == null)
-		// Return
-		{
+		if (hostGUI.getSyncHost() == null) {
+			// Return
 			return;
 		}
 

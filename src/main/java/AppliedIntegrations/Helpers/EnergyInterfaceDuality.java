@@ -1,5 +1,4 @@
 package AppliedIntegrations.Helpers;
-
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Integration.IntegrationsHelper;
@@ -32,7 +31,6 @@ import java.util.List;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 import static appeng.api.config.Actionable.MODULATE;
 import static appeng.api.config.Actionable.SIMULATE;
-import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
@@ -47,11 +45,11 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	private List<LiquidAIEnergy> initializedStorages = new LinkedList<>();
 
 	public EnergyInterfaceDuality(IEnergyInterface owner) {
-
 		this.owner = owner;
 
 		// RF always Initialized, as FE
 		initializedStorages.add(RF);
+
 		if (IntegrationsHelper.instance.isLoaded(EU)) {
 			initializedStorages.add(EU);
 		}
@@ -61,7 +59,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	public <T> T getCapability(Capability<T> capability, AEPartLocation side) {
-
 		if (capability == Capabilities.FORGE_ENERGY) {
 			// FE (RF) Capability
 			return (T) this.getEnergyStorage(RF, side);
@@ -96,11 +93,10 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		}
 	}
 
-	public void notifyListenersOfFilterEnergyChange(LiquidAIEnergy energy) {
-
+	public void notifyListenersOfFilterEnergyChange(LiquidAIEnergy energy, int index) {
 		for (ContainerEnergyInterface listener : owner.getListeners()) {
 			if (listener != null) {
-				NetworkHandler.sendTo(new PacketFilterServerToClient(energy, 0, owner),
+				NetworkHandler.sendTo(new PacketFilterServerToClient(energy, index, owner),
 						(EntityPlayerMP) listener.player);
 			}
 		}
@@ -151,7 +147,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 	@Override
 	public LiquidAIEnergy getFilteredEnergy(AEPartLocation side) {
-
 		return owner.getFilteredEnergy(side);
 	}
 
@@ -230,14 +225,16 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
 			// Check if action is modulate
 			if (action == Actionable.MODULATE) {
+				// Get filtered energy
+				LiquidAIEnergy filteredEnergy = getFilteredEnergy(side);
+
 				// Check if filtered energy not equal to null
-				if (getFilteredEnergy(side) != null) {
+				if (filteredEnergy != null) {
 					// Get storage class type
-					Class<?> t = getEnergyStorage(getFilteredEnergy(side), INTERNAL).getTypeClass();
+					Class<?> t = getEnergyStorage(filteredEnergy, side).getTypeClass();
 
 					// Get storage duality
-					IInterfaceStorageDuality interfaceStorageDuality = getEnergyStorage(getFilteredEnergy(side),
-							INTERNAL);
+					IInterfaceStorageDuality interfaceStorageDuality = getEnergyStorage(filteredEnergy, side);
 
 					// Check not long
 					if (t != Long.class) {
@@ -257,7 +254,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 						// Check if any energy was injected
 						if (injectedAmount > 0) {
 							// Simulate energy extraction from cells array
-							int extractedAmount = owner.extractEnergy(new EnergyStack(getFilteredEnergy(side),
+							int extractedAmount = owner.extractEnergy(new EnergyStack(filteredEnergy,
 									injectedAmount), SIMULATE);
 
 							// Check if any energy was extracted
@@ -267,12 +264,12 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 										MODULATE);
 
 								// Drain extracted amount from network
-								owner.extractEnergy(new EnergyStack(getFilteredEnergy(side), extractedAmount),
+								owner.extractEnergy(new EnergyStack(filteredEnergy, extractedAmount),
 										MODULATE);
 
 								// Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
 								// Otherwise it will be really OP
-								transferEnergy(getFilteredEnergy(side),
+								transferEnergy(filteredEnergy,
 										Math.min(stored, Math.min((int) getMaxTransfer(side), 50000)),
 										side.getFacing().getOpposite());
 							}

@@ -63,12 +63,10 @@ public class LiquidAIEnergy extends Fluid {
 
 	// Get energy from it's tag
 	public static LiquidAIEnergy getEnergy(String tag) {
-
 		return energies.get(tag);
 	}
 
 	public static LiquidAIEnergy readFromNBT(NBTTagCompound tag) {
-
 		return linkedIndexMap.get(tag.getInteger("#AIEnergy"));
 	}
 
@@ -113,7 +111,7 @@ public class LiquidAIEnergy extends Fluid {
 	}
 
 	public void writeToNBT(NBTTagCompound tag) {
-
+		// Put energy in key
 		tag.setInteger("#AIEnergy", this.getIndex());
 	}
 

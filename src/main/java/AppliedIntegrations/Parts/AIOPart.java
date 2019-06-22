@@ -88,8 +88,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	private boolean lastRedstone;
 
-	private int[] availableFilterSlots = {AIOPart.BASE_SLOT_INDEX};
-
 	// list of all container listeners
 	private List<ContainerPartEnergyIOBus> listeners = new ArrayList<ContainerPartEnergyIOBus>();
 
@@ -430,7 +428,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	public abstract TickRateModulation doWork(int toTransfer, IGridNode node);
 
 	private void notifyListenersOfFilterEnergyChange(int i, LiquidAIEnergy energy) {
-
 		if (player != null) {
 			NetworkHandler.sendTo(new PacketFilterServerToClient(energy, i, this), (EntityPlayerMP) this.player);
 		}

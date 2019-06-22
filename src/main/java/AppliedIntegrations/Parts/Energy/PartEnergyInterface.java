@@ -310,8 +310,9 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	public final void updateFilter(final LiquidAIEnergy energy, final int index) {
 		// Set the filter
 		this.filteredEnergy = energy;
+
 		// Send callback packet
-		duality.notifyListenersOfFilterEnergyChange(energy);
+		duality.notifyListenersOfFilterEnergyChange(energy, 0);
 	}
 
 	/**
@@ -330,8 +331,9 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 				if (Minecraft.getMinecraft().currentScreen instanceof AIBaseGui) {
 					// Init gui coordinate set
 					initGuiCoordinates();
+
 					// Force update filtered energy of gui
-					duality.notifyListenersOfFilterEnergyChange(filteredEnergy);
+					duality.notifyListenersOfFilterEnergyChange(filteredEnergy, 0);
 				}
 			}
 
@@ -349,7 +351,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 			// Check if energy changed
 			energyChangeHandler.onChange(filteredEnergy, (energy) -> {
 				// Sync filtered energy
-				duality.notifyListenersOfFilterEnergyChange(energy);
+				duality.notifyListenersOfFilterEnergyChange(energy, 0);
 			});
 
 			// Energy Stored with GUI
@@ -417,9 +419,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 		return filteredEnergy;
 	}
 
-	/**
-	 * Cooperate:
-	 */
 	public IInterfaceStorageDuality getEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
 		if (energy == RF) {
 			return RFStorage;

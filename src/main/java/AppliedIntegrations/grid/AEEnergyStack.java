@@ -35,9 +35,7 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 			throw new IllegalArgumentException("Energy is null");
 		}
 
-		this.setStackSize(amount);
-		this.setCraftable(false);
-		this.setCountRequestable(0);
+		this.setStackSize(amount).setCraftable(false).setCountRequestable(0);
 		this.hash = this.energy.hashCode();
 	}
 
@@ -47,9 +45,7 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 		if (this.energy == null) {
 			throw new IllegalArgumentException("Energy is null");
 		}
-		this.setStackSize(stack.getStackSize());
-		this.setCraftable(false);
-		this.setCountRequestable(0);
+		this.setStackSize(stack.getStackSize()).setCraftable(false).setCountRequestable(0);
 		this.hash = stack.hash;
 	}
 
