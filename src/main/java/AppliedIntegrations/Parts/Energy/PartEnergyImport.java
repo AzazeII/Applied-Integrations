@@ -1,10 +1,9 @@
 package AppliedIntegrations.Parts.Energy;
-
-
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.Utils.IterableHelpers;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
@@ -60,7 +59,7 @@ public class PartEnergyImport extends AIOPart {
 		// Iterate over all energies
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 			// Check if filter contains any values
-			if (filteredEnergies.size() > 0) {
+			if (!IterableHelpers.containsOnlyNulls(filteredEnergies)) {
 				// Check if filter not contains current energy
 				if (!filteredEnergies.contains(energy)) {
 					continue;
@@ -80,9 +79,8 @@ public class PartEnergyImport extends AIOPart {
 				injectEnergy(new EnergyStack(energy, injected), Actionable.MODULATE);
 
 				// Check if energy was actually injected
-				if (injected > 0)
-				// Tick faster
-				{
+				if (injected > 0) {
+					// Tick faster
 					return TickRateModulation.FASTER;
 				}
 			}

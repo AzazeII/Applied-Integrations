@@ -165,14 +165,14 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 			}
 
 			// Check for all energy types:
-		} else if (IntegrationsHelper.instance.isLoaded(J) && tile.hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY,
+		} else if (IntegrationsHelper.instance.isLoaded(J, false) && tile.hasCapability(Capabilities.ENERGY_ACCEPTOR_CAPABILITY,
 				getHostSide().getFacing().getOpposite())) { // 1. Joules
 			// Create handler for joules
 			handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.Joules);
 		} else if (tile.hasCapability(CapabilityEnergy.ENERGY, getHostSide().getFacing().getOpposite())) { // 2. FE
 			// Create handler for FE
 			handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.FE);
-		} else if (IntegrationsHelper.instance.isLoaded(EU) && tile instanceof IEnergySink) { // 3. EU
+		} else if (IntegrationsHelper.instance.isLoaded(EU, false) && tile instanceof IEnergySink) { // 3. EU
 			// Create handler for EU
 			handler = new HandlerEnergyStorageBusContainer(this, tile, EnumCapabilityType.EU);
 		}

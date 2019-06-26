@@ -147,13 +147,13 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public void writeToNBT(NBTTagCompound tag) {
-		if (IntegrationsHelper.instance.isLoaded(EU)) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
 			tag.setDouble("#EUEnergy", EUStorage.getStored());
 		}
-		if (IntegrationsHelper.instance.isLoaded(J)) {
+		if (IntegrationsHelper.instance.isLoaded(J, false)) {
 			JStorage.writeToNBT(tag);
 		}
-		if (IntegrationsHelper.instance.isLoaded(TESLA)) {
+		if (IntegrationsHelper.instance.isLoaded(TESLA, false)) {
 			tag.setTag("#TeslaTag", TESLAStorage.serializeNBT());
 		}
 		RFStorage.writeToNBT(tag);
@@ -164,10 +164,10 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
-		if (IntegrationsHelper.instance.isLoaded(J)) {
+		if (IntegrationsHelper.instance.isLoaded(J, false)) {
 			JStorage.readFromNBT(tag);
 		}
-		if (IntegrationsHelper.instance.isLoaded(TESLA)) {
+		if (IntegrationsHelper.instance.isLoaded(TESLA, false)) {
 			TESLAStorage.deserializeNBT(tag.getCompoundTag("#TeslaTag"));
 		}
 		RFStorage.readFromNBT(tag);
@@ -182,7 +182,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Override
 	public void removeFromWorld() {
 		super.removeFromWorld();
-		if (IntegrationsHelper.instance.isLoaded(EU)) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
 			this.invalidateSinkSource();
 		}
 	}
@@ -190,7 +190,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Override
 	public void addToWorld() {
 		super.addToWorld();
-		if (IntegrationsHelper.instance.isLoaded(EU)) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
 			this.updateSinkSource();
 		}
 	}

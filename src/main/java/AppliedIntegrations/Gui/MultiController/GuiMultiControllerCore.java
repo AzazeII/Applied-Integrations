@@ -1,6 +1,4 @@
 package AppliedIntegrations.Gui.MultiController;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
@@ -35,6 +33,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 			"textures/gui/multi_controller_card_storage.png");
 
 	private static final int SLOT_COLUMNS = 9;
+	private static final int SLOT_ROWS = 5;
 
 	private final WidgetScrollbar scroll = new WidgetScrollbar(this, 175, 18);
 
@@ -66,9 +65,6 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 
 		// Update view cell array of repo
 		itemStorage.updateView();
-
-		// Set max size for scroll
-		scroll.setMaxScroll(( ( itemStorage.size() + SLOT_COLUMNS - 1 ) / SLOT_COLUMNS ));
 	}
 
 
@@ -85,6 +81,9 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 
 		// Draw texture
 		drawTexturedModalRect(this.guiLeft, this.guiTop - 15, 0, 0, 195, 200);
+
+		// Draw scroll bar
+		scroll.drawWidget();
 	}
 
 	@Override
@@ -103,6 +102,9 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		this.buttonList // 3. Sort direction
 				.add( sortDirButton = new GuiImgButton( this.guiLeft - 18, this.guiTop + 48,
 						Settings.SORT_DIRECTION, configSource.getSetting( Settings.SORT_DIRECTION)));
+
+		// Set max size for scroll
+		this.scroll.setMaxScroll(( ( 125 + SLOT_COLUMNS - 1 ) / SLOT_COLUMNS ));
 	}
 
 	@Override
@@ -126,9 +128,6 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		// Draw string
 		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 7, this.ySize - 71, 4210752); // (Player inv.)
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
-
-		// Draw scroll bar
-		scroll.drawWidget();
 	}
 
 	@Override

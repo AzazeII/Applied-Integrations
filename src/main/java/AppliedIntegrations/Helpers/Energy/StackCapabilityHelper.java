@@ -17,7 +17,8 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 
 /**
  * @Author Azazell
- */ public class StackCapabilityHelper {
+ */
+public class StackCapabilityHelper {
 
 	private ItemStack operatedStack;
 
@@ -30,13 +31,14 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 		// Get item
 		Item item = operatedStack.getItem();
 
-		if (!IntegrationsHelper.instance.isLoaded(energy)) {
+		if (!IntegrationsHelper.instance.isLoaded(energy, true)) {
 			return false;
 		}
 
 		if (energy == RF && item instanceof IEnergyContainerItem) {
 			return true;
 		}
+
 		if (energy == EU && item instanceof IElectricItem) {
 			return true;
 		}
@@ -58,7 +60,7 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 		// Get item
 		Item item = operatedStack.getItem();
 
-		if (!IntegrationsHelper.instance.isLoaded(energy)) {
+		if (!IntegrationsHelper.instance.isLoaded(energy, true)) {
 			return 0;
 		}
 
@@ -101,7 +103,7 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 		// Get item
 		Item item = operatedStack.getItem();
 
-		if (!IntegrationsHelper.instance.isLoaded(energy)) {
+		if (!IntegrationsHelper.instance.isLoaded(energy, true)) {
 			return 0;
 		}
 

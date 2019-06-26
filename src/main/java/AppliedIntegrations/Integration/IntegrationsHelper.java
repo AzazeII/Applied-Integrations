@@ -21,11 +21,15 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 public class IntegrationsHelper {
 	public static IntegrationsHelper instance = new IntegrationsHelper();
 
-	public boolean isLoaded(LiquidAIEnergy energy) {
+	public boolean isLoaded(LiquidAIEnergy energy, boolean trueRFCheck) {
 
 		if (energy == RF) {
-			// always true, since RF initialized as FE
-			return true;
+			if (!trueRFCheck) {
+				// always true, since RF initialized as FE
+				return true;
+			} else {
+				return Loader.isModLoaded("redstoneflux");
+			}
 		}
 		if (energy == EU) {
 			return Loader.isModLoaded("ic2");

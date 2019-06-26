@@ -1,6 +1,4 @@
 package AppliedIntegrations.Gui.Widgets;
-
-
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import appeng.client.gui.widgets.IScrollSource;
 import net.minecraft.client.Minecraft;

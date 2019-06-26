@@ -34,13 +34,13 @@ public class EnumCapabilityType {
 
 	static {
 		FE = new EnumCapabilityType(AIEnergy.RF, CapabilityEnergy.ENERGY);
-		if (IntegrationsHelper.instance.isLoaded(AIEnergy.J)) {
+		if (IntegrationsHelper.instance.isLoaded(AIEnergy.J, false)) {
 			Joules = new EnumCapabilityType(AIEnergy.J, Capabilities.ENERGY_ACCEPTOR_CAPABILITY, Capabilities.ENERGY_STORAGE_CAPABILITY, Capabilities.ENERGY_OUTPUTTER_CAPABILITY);
 		}
-		if (IntegrationsHelper.instance.isLoaded(AIEnergy.EU)) {
+		if (IntegrationsHelper.instance.isLoaded(AIEnergy.EU, false)) {
 			EU = new EnumCapabilityType(AIEnergy.EU, null);
 		}
-		if (IntegrationsHelper.instance.isLoaded(AIEnergy.TESLA)) {
+		if (IntegrationsHelper.instance.isLoaded(AIEnergy.TESLA, false)) {
 			Tesla = new EnumCapabilityType(AIEnergy.TESLA, TeslaCapabilities.CAPABILITY_CONSUMER, TeslaCapabilities.CAPABILITY_HOLDER, TeslaCapabilities.CAPABILITY_PRODUCER);
 		}
 	}
@@ -78,7 +78,7 @@ public class EnumCapabilityType {
 	 */
 	public Capability getInputCapability() {
 		// Check energy api loaded
-		if (IntegrationsHelper.instance.isLoaded(this.energy))
+		if (IntegrationsHelper.instance.isLoaded(this.energy, false))
 		// Check not null and not empty
 		{
 			if (capabilities != null && !capabilities.isEmpty()) {
@@ -95,7 +95,7 @@ public class EnumCapabilityType {
 	 */
 	public Vector<Capability> getCapabilityWithModCheck() {
 
-		if (IntegrationsHelper.instance.isLoaded(this.energy))
+		if (IntegrationsHelper.instance.isLoaded(this.energy, false))
 		// Check not null and not empty
 		{
 			if (capabilities != null && !capabilities.isEmpty()) {
@@ -112,7 +112,7 @@ public class EnumCapabilityType {
 	 */
 	public Capability getOutputCapabilities() {
 		// Check energy api loaded
-		if (IntegrationsHelper.instance.isLoaded(this.energy))
+		if (IntegrationsHelper.instance.isLoaded(this.energy, false))
 		// Check not null and not empty
 		{
 			if (capabilities != null && !capabilities.isEmpty()) {

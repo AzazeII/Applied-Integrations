@@ -69,10 +69,10 @@ public class CapabilityHelper {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					;
 					return energyStorageCapability.getMaxEnergyStored();
-				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
+				} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
 					IStrictEnergyStorage storage = (IStrictEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					return (int) storage.getMaxEnergy();
-				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+				} else if (IntegrationsHelper.instance.isLoaded(TESLA, false) && capability == TeslaCapabilities.CAPABILITY_HOLDER) {
 					ITeslaHolder teslaHolderCapability = (ITeslaHolder) capabilityHandler.getCapability(capability, side.getFacing());
 					;
 					return (int) teslaHolderCapability.getCapacity();
@@ -80,7 +80,7 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU) && capabilityHandler instanceof IEnergySink) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
 			// sink = (IEnergySink)capabilityHandler;
 			// sink.getDemandedEnergy());
 		}
@@ -100,13 +100,13 @@ public class CapabilityHelper {
 
 					// Receive energy
 					return energyStorageCapability.receiveEnergy(val.intValue(), simulate);
-				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
+				} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
 					// Create joule storage
 					IStrictEnergyAcceptor storage = (IStrictEnergyAcceptor) capabilityHandler.getCapability(capability, side.getFacing());
 
 					// Receive energy
 					return (int) storage.acceptEnergy(side.getFacing(), val.doubleValue(), !simulate);
-				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && (capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
+				} else if (IntegrationsHelper.instance.isLoaded(TESLA, false) && (capability == TeslaCapabilities.CAPABILITY_CONSUMER)) {
 					// Create TESLA storage
 					ITeslaConsumer teslaHolderCapability = (ITeslaConsumer) capabilityHandler.getCapability(capability, side.getFacing());
 
@@ -116,7 +116,7 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU) && capabilityHandler instanceof IEnergySink) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
 			// sink = (IEnergySink)capabilityHandler;
 			// sink.getDemandedEnergy());
 		}
@@ -162,7 +162,7 @@ public class CapabilityHelper {
 					return energyStorageCapability.extractEnergy(val.intValue(), simulate);
 
 				// Check if capability belong to Ember system
-				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
+				} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
 					// Get storage
 					IStrictEnergyOutputter storage = (IStrictEnergyOutputter) capabilityHandler.getCapability(capability, side.getFacing());
 
@@ -170,7 +170,7 @@ public class CapabilityHelper {
 					return (int) storage.pullEnergy(side.getFacing(), val.doubleValue(), simulate);
 
 				// Check if capability belong to TESLA system
-				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_PRODUCER) {
+				} else if (IntegrationsHelper.instance.isLoaded(TESLA, false) && capability == TeslaCapabilities.CAPABILITY_PRODUCER) {
 					// Get storage
 					ITeslaProducer teslaHolderCapability = (ITeslaProducer) capabilityHandler.getCapability(capability, side.getFacing());
 
@@ -180,7 +180,7 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU) && capabilityHandler instanceof IEnergySink) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
 			// sink = (IEnergySink)capabilityHandler;
 			// sink.getDemandedEnergy());
 		}
@@ -209,17 +209,17 @@ public class CapabilityHelper {
 				if (capability == CapabilityEnergy.ENERGY) {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					return energyStorageCapability.getEnergyStored();
-				} else if (IntegrationsHelper.instance.isLoaded(J) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
+				} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == Capabilities.ENERGY_STORAGE_CAPABILITY) {
 					IStrictEnergyStorage storage = (IStrictEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 					return (int) storage.getEnergy();
-				} else if (IntegrationsHelper.instance.isLoaded(TESLA) && capability == TeslaCapabilities.CAPABILITY_HOLDER) {
+				} else if (IntegrationsHelper.instance.isLoaded(TESLA, false) && capability == TeslaCapabilities.CAPABILITY_HOLDER) {
 					ITeslaHolder teslaHolderCapability = (ITeslaHolder) capabilityHandler.getCapability(capability, side.getFacing());
 					return (int) teslaHolderCapability.getStoredPower();
 				}
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU) && capabilityHandler instanceof IEnergySink) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
 			IEnergySink sink = (IEnergySink) capabilityHandler;
 			return 0;
 		}

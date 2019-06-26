@@ -50,10 +50,10 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		// RF always Initialized, as FE
 		initializedStorages.add(RF);
 
-		if (IntegrationsHelper.instance.isLoaded(EU)) {
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
 			initializedStorages.add(EU);
 		}
-		if (IntegrationsHelper.instance.isLoaded(J)) {
+		if (IntegrationsHelper.instance.isLoaded(J, false)) {
 			initializedStorages.add(J);
 		}
 	}
@@ -63,7 +63,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 			// FE (RF) Capability
 			return (T) this.getEnergyStorage(RF, side);
 			// Ember capability
-		} else if (IntegrationsHelper.instance.isLoaded(J) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
+		} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
 			return (T) this.getEnergyStorage(J, side);
 			// EU capability
 		}
@@ -74,7 +74,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		// Register FE capability
 		if (capability == Capabilities.FORGE_ENERGY) {
 			return true;
-		} else if (IntegrationsHelper.instance.isLoaded(J)) {
+		} else if (IntegrationsHelper.instance.isLoaded(J, false)) {
 			if (capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
 				return true;
 			}
@@ -86,7 +86,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		// Iterate for each energy
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 			// Check if storage is initialized
-			if (IntegrationsHelper.instance.isLoaded(energy)) {
+			if (IntegrationsHelper.instance.isLoaded(energy, false)) {
 				// Update energy
 				owner.initEnergyStorage(energy, side);
 			}
