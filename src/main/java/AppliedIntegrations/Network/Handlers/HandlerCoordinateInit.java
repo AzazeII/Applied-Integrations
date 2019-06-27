@@ -1,10 +1,8 @@
 package AppliedIntegrations.Network.Handlers;
-
-
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Container.AIContainer;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -19,14 +17,13 @@ public class HandlerCoordinateInit implements IMessageHandler<PacketCoordinateIn
 
 	@Override
 	public PacketCoordinateInit onMessage(PacketCoordinateInit message, MessageContext ctx) {
-
 		Minecraft.getMinecraft().addScheduledTask(() -> {
-			Gui g = Minecraft.getMinecraft().currentScreen;
+			Container c = Minecraft.getMinecraft().player.openContainer;
 
-			if (g instanceof AIBaseGui) {
-				AIBaseGui partGui = (AIBaseGui) g;
+			if (c instanceof AIContainer) {
+				AIContainer hostContainer = (AIContainer) c;
 
-				partGui.setSyncHost(message.host);
+				hostContainer.setSyncHost(message.host);
 			}
 		});
 		return null;

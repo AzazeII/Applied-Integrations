@@ -7,8 +7,6 @@ import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.PartEnum;
@@ -47,7 +45,6 @@ import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -334,7 +331,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 				// Check if we have gui to update
 				if (Minecraft.getMinecraft().currentScreen instanceof AIBaseGui) {
 					// Init gui coordinate set
-					initGuiCoordinates();
+					//initGuiCoordinates();
 
 					// Force update filtered energy of gui
 					duality.notifyListenersOfFilterEnergyChange(filteredEnergy, 0);
@@ -387,18 +384,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 			this.saveChanges();
 		}
 		return IDLE;
-	}
-
-	/**
-	 * marks GUI, as gui of THIS machine
-	 */
-	private void initGuiCoordinates() {
-		for (ContainerEnergyInterface listener : this.linkedListeners) {
-			if (listener != null) {
-				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
-				updateRequested = false;
-			}
-		}
 	}
 
 	private void saveChanges() {

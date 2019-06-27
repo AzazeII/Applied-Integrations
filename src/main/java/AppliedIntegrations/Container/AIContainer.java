@@ -1,6 +1,5 @@
 package AppliedIntegrations.Container;
-
-
+import AppliedIntegrations.Gui.Hosts.ISyncHostHolder;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
@@ -13,7 +12,7 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public abstract class AIContainer extends Container {
+public abstract class AIContainer extends Container implements ISyncHostHolder {
 	/**
 	 * The player interacting with this container.
 	 */

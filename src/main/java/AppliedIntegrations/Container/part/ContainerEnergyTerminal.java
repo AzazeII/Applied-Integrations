@@ -1,6 +1,4 @@
 package AppliedIntegrations.Container.part;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
@@ -10,6 +8,7 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketTerminalUpdate;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.api.IEnergySelectorContainer;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.storage.IMEMonitor;
@@ -28,23 +27,18 @@ import javax.annotation.Nonnull;
 public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implements IEnergySelectorContainer {
 	// X of output
 	private static final int OUTPUT_POSITION_X = 26;
-
 	// Y of output
 	private static final int OUTPUT_POSITION_Y = 92;
-
 	// X of input
 	private static final int INPUT_POSITION_X = 8;
-
 	// Y of input
 	private static final int INPUT_POSITION_Y = OUTPUT_POSITION_Y;
-
 	private static int OUTPUT_INV_INDEX = 38, INPUT_INV_INDEX = 37;
-
 	public EntityPlayer player;
-
 	private PartEnergyTerminal terminal;
-
-	private AIGridNodeInventory privateInventory = new AIGridNodeInventory(AppliedIntegrations.modid + ".item.energy.cell.inventory", 2, 64) {
+	private AIGridNodeInventory privateInventory = new AIGridNodeInventory(AppliedIntegrations.modid + ".item.energy.cell.inventory",
+			2,
+			64) {
 		@Override
 		public boolean isItemValidForSlot(final int slotID, final ItemStack itemStack) {
 
@@ -73,7 +67,9 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 				// Notify GUI first time about list, to make it show current list of all energies
 				for (ContainerEnergyTerminal listener : terminal.listeners) {
 					// Send packet over network
-					NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), terminal.getSortOrder(), terminal), (EntityPlayerMP) listener.player);
+					NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(),
+							terminal.getSortOrder(),
+							terminal), (EntityPlayerMP) listener.player);
 				}
 			}
 
@@ -83,7 +79,11 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 
 		this.addSlotToContainer(new SlotRestrictive(privateInventory, 0, INPUT_POSITION_X, INPUT_POSITION_Y));
 
-		this.addSlotToContainer(new SlotFurnaceOutput(this.player, privateInventory, 1, OUTPUT_POSITION_X, OUTPUT_POSITION_Y));
+		this.addSlotToContainer(new SlotFurnaceOutput(this.player,
+				privateInventory,
+				1,
+				OUTPUT_POSITION_X,
+				OUTPUT_POSITION_Y));
 
 		ContainerChest chest;
 	}
@@ -152,5 +152,18 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 	public boolean canInteractWith(EntityPlayer player) {
 		return true;
 	}
-}
 
+	@Override
+	public ISyncHost getSyncHost() {
+		return this.terminal;
+	}
+
+	@Override
+	public void setSyncHost(ISyncHost host) {
+		// Check if host match our host class
+		if (host instanceof PartEnergyTerminal) {
+			// Update current host
+			this.terminal = (PartEnergyTerminal) host;
+		}
+	}
+}

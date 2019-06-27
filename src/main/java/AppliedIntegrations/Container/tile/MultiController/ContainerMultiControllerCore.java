@@ -1,10 +1,9 @@
 package AppliedIntegrations.Container.tile.MultiController;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +18,7 @@ import javax.annotation.Nonnull;
 public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 	private static final int CARD_SLOT_ROWS = 5;
 	private static final int CARD_SLOT_COLUMNS = 9;
+	private TileMultiControllerCore master;
 
 	public ContainerMultiControllerCore(EntityPlayer player, TileMultiControllerCore master) {
 		super(player);
@@ -28,6 +28,8 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 
 		// Add listener
 		master.listeners.add(this);
+
+		this.master = master;
 
 		// Bind player slots
 		super.bindPlayerInventory(player.inventory, 107, 165);
@@ -69,5 +71,19 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 	@Override
 	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber) {
 		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ISyncHost getSyncHost() {
+		return this.master;
+	}
+
+	@Override
+	public void setSyncHost(ISyncHost host) {
+		// Check if host match our host class
+		if (host instanceof TileMultiControllerCore) {
+			// Update current host
+			this.master = (TileMultiControllerCore) host;
+		}
 	}
 }

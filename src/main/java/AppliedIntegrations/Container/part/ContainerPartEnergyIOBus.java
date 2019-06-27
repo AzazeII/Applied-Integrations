@@ -1,8 +1,7 @@
 package AppliedIntegrations.Container.part;
-
-
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Parts.AIOPart;
+import AppliedIntegrations.api.ISyncHost;
 import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nonnull;
@@ -13,14 +12,11 @@ import javax.annotation.Nonnull;
 public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots {
 	// Number of upgrade slots
 	private static int NUMBER_OF_UPGRADE_SLOTS = 4;
-
 	// X of upgrades
 	private static int UPGRADE_X_POS = 187;
-
 	// Y of upgrades
 	private static int UPGRADE_Y_POS = 8;
-
-	private final AIOPart part;
+	private AIOPart part;
 
 	public ContainerPartEnergyIOBus(final AIOPart part, final EntityPlayer player) {
 
@@ -52,5 +48,19 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots {
 	public boolean canInteractWith(EntityPlayer p_75145_1_) {
 
 		return true;
+	}
+
+	@Override
+	public ISyncHost getSyncHost() {
+		return this.part;
+	}
+
+	@Override
+	public void setSyncHost(ISyncHost host) {
+		// Check if host match our host class
+		if (host instanceof AIOPart) {
+			// Update current host
+			this.part = (AIOPart) host;
+		}
 	}
 }

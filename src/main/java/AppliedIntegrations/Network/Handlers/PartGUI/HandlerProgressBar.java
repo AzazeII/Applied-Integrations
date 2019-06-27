@@ -1,10 +1,9 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
-
-
+import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketProgressBar;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -22,17 +21,19 @@ public class HandlerProgressBar implements IMessageHandler<PacketProgressBar, Pa
 		// Invoke later on client thread
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			// Get current screen
-			Gui g = Minecraft.getMinecraft().currentScreen;
+			Container container = Minecraft.getMinecraft().player.openContainer;
+
+			GuiEnergyInterface g;
 
 			// Check if gui instanceof energy interface gui
-			if (g instanceof GuiEnergyInterface) {
+			if (container instanceof ContainerEnergyInterface) {
 				// Cast gui
-				GuiEnergyInterface GEI = (GuiEnergyInterface) g;
+				ContainerEnergyInterface CEI = (ContainerEnergyInterface) container;
 
 				// Check if we are updating correct GUI
-				if (GEI.getSyncHost().equals(message.sender)) {
+				if (CEI.getSyncHost().equals(message.sender)) {
 					// Pass call to GUI
-					GEI.onStorageUpdate(message.energy, message.energySide, message.sender);
+					CEI.onStorageUpdate(message.energy, message.energySide, message.sender);
 				}
 			}
 		});

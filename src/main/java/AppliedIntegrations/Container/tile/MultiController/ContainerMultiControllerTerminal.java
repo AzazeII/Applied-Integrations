@@ -7,6 +7,7 @@ import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermissionsButton;
 import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
@@ -36,7 +37,7 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 
 	private final SlotRestrictive cardSlot;
 
-	private final TileMultiControllerTerminal terminal;
+	private TileMultiControllerTerminal terminal;
 
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> permissionChannelWidgetMap = new LinkedHashMap<>();
 
@@ -166,5 +167,19 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber) {
 
 		return ItemStack.EMPTY;
+	}
+
+	@Override
+	public ISyncHost getSyncHost() {
+		return terminal;
+	}
+
+	@Override
+	public void setSyncHost(ISyncHost host) {
+		// Check if host match terminal class
+		if (host instanceof TileMultiControllerTerminal) {
+			// Update current terminal
+			this.terminal = (TileMultiControllerTerminal) host;
+		}
 	}
 }

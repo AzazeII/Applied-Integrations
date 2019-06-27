@@ -27,9 +27,7 @@ import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
@@ -43,7 +41,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	private static ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
 	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");
 
-	private Map<AEPartLocation, Number> sideStorageMap = new LinkedHashMap<>();
 	protected final List<String> tooltip = new ArrayList<>();
 	private List<String> buttonTooltip = new ArrayList<>();
 	private List<WidgetEnergySlot> energySlotList = new ArrayList<>();
@@ -51,14 +48,17 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 	public LiquidAIEnergy linkedMetric = RF;
 	private IEnergyInterface energyInterface;
 	private EntityPlayer player;
-	public Number storage;
 
 	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface energyInterface, EntityPlayer player) {
 		super(container, player);
 
 		this.player = player;
-		this.energyInterface = energyInterface;
+		this.energyInterface = container.energyInterface;
 		this.guiLeft = this.guiLeft - 51;
+	}
+
+	public ContainerEnergyInterface getContainer() {
+		return (ContainerEnergyInterface) inventorySlots;
 	}
 
 	@Override
@@ -271,10 +271,10 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 		// Check if interface is part
 		if (energyInterface instanceof PartEnergyInterface) {
 			// One storage for only bar
-			return storage == null ? 0 : storage.intValue();
+			return getContainer().storage == null ? 0 : getContainer().storage.intValue();
 		} else {
 			// Select storage from map (if any)
-			return sideStorageMap.get(side) == null ? 0 : sideStorageMap.get(side).intValue();
+			return getContainer().sideStorageMap.get(side) == null ? 0 : getContainer().sideStorageMap.get(side).intValue();
 		}
 	}
 
@@ -324,21 +324,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IFilterGUI, IWidget
 
 			// Add tooltip
 			tooltip.add(tip);
-		}
-	}
-
-	public void onStorageUpdate(LiquidAIEnergy energy, AEPartLocation energySide, IEnergyInterface sender) {
-		// Get stored energy from interface
-		Number stored = sender.getEnergyStorage(energy, energySide).getStored();
-
-		// If interface-sender is bus, then update central bar. If interface-sender is tile, then update bar from side
-		// Check if sender is part-interface
-		if (sender instanceof PartEnergyInterface) {
-			// Update storage of central bar
-			this.storage = stored;
-		} else if (sender instanceof TileEnergyInterface) {
-			// Update storage of bar from side
-			this.sideStorageMap.put(energySide, stored);
 		}
 	}
 }

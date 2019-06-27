@@ -1,18 +1,8 @@
 package AppliedIntegrations.Gui.Hosts;
-
-
-import AppliedIntegrations.api.ISyncHost;
-
 /**
  * @Author Azazell
  */
-public interface IWidgetHost {
-
+public interface IWidgetHost extends ISyncHostHolder {
 	int getLeft();
-
 	int getTop();
-
-	ISyncHost getSyncHost();
-
-	void setSyncHost(ISyncHost host);
 }

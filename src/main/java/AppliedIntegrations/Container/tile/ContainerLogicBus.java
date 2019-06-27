@@ -1,7 +1,6 @@
 package AppliedIntegrations.Container.tile;
-
-
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
+import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -9,10 +8,13 @@ import net.minecraft.entity.player.EntityPlayer;
  * @Author Azazell
  */
 public class ContainerLogicBus extends ContainerWithPlayerInventory {
+	private TileLogicBusCore core;
+
 	public ContainerLogicBus(EntityPlayer player, TileLogicBusCore core) {
 
 		super(player);
 
+		this.core = core;
 		this.bindPlayerInventory(player.inventory, 134, 182);
 
         /*int counter = 0;
@@ -26,5 +28,19 @@ public class ContainerLogicBus extends ContainerWithPlayerInventory {
                 counter++;
             }
         }*/
+	}
+
+	@Override
+	public ISyncHost getSyncHost() {
+		return this.core;
+	}
+
+	@Override
+	public void setSyncHost(ISyncHost host) {
+		// Check if host match our host class
+		if (host instanceof TileLogicBusCore) {
+			// Update current host
+			this.core = (TileLogicBusCore) host;
+		}
 	}
 }
