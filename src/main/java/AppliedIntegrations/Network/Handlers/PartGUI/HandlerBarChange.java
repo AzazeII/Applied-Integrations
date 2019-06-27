@@ -1,10 +1,8 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
-
-
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
+import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketBarChange;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
@@ -19,14 +17,16 @@ public class HandlerBarChange implements IMessageHandler<PacketBarChange, Packet
 
 	@Override
 	public PacketBarChange onMessage(PacketBarChange message, MessageContext ctx) {
-
 		Minecraft.getMinecraft().addScheduledTask(() -> {
-			Gui gui = Minecraft.getMinecraft().currentScreen;
-			if (gui instanceof GuiEnergyInterface) {
-				GuiEnergyInterface GEI = (GuiEnergyInterface) gui;
-				// Check if we are updating correct GUI
-				if (GEI.getSyncHost().compareTo(message.host, false)) {
-					GEI.linkedMetric = message.energy;
+			Container container = Minecraft.getMinecraft().player.openContainer;
+
+			if (container instanceof ContainerEnergyInterface) {
+				ContainerEnergyInterface CEI = (ContainerEnergyInterface) container;
+
+				// Check if we are updating correct container
+				if (CEI.getSyncHost().compareTo(message.host, false)) {
+					// Update linked energy
+					CEI.linkedMetric = message.energy;
 				}
 			}
 		});

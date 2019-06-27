@@ -1,26 +1,29 @@
 package AppliedIntegrations.Container.part;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
+import AppliedIntegrations.Container.Sync.IFilterContainer;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.util.AEPartLocation;
-import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import static AppliedIntegrations.grid.Implementation.AIEnergy.RF;
 
 /**
  * @Author Azazell
  */
-public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
+public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implements IFilterContainer {
+	public List<LiquidAIEnergy> energyFilterList = new ArrayList<LiquidAIEnergy>();
+
 	// Number of upgrades
 	private static int NUMBER_OF_UPGRADE_SLOTS = 1;
 
@@ -36,6 +39,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
 
 	public Map<AEPartLocation, Number> sideStorageMap = new LinkedHashMap<>();
 	public Number storage;
+	public LiquidAIEnergy linkedMetric = RF;
 
 	public ContainerEnergyInterface(final EntityPlayer player, final IEnergyInterface energyInterface) {
 		super(energyInterface, player);
@@ -48,12 +52,6 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
 
 		// Update interface
 		this.energyInterface = energyInterface;
-
-		// Ignored on client
-		if (Platform.isServer()) {
-			// Force update filtered energy of gui
-			// getDuality().notifyListenersOfFilterEnergyChange(filteredEnergy, 0);
-		}
 
 		// check if interface host or tile?
 		if (this.energyInterface instanceof PartEnergyInterface) {
@@ -84,10 +82,11 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
 			// add slots
 			this.addUpgradeSlots(inventory, NUMBER_OF_UPGRADE_SLOTS, UPGRADE_X_POS, UPGRADE_Y_POS);
 		}
-	}
 
-	private void syncHostWithGUI() {
-		NetworkHandler.sendTo(new PacketCoordinateInit(energyInterface), (EntityPlayerMP) this.player);
+		// Pre-fill list with values
+		for (int i = 0; i < 6; i++) {
+			energyFilterList.add(null);
+		}
 	}
 
 	public void onStorageUpdate(LiquidAIEnergy energy, AEPartLocation energySide, IEnergyInterface sender) {
@@ -123,9 +122,8 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots {
 	}
 
 	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
-		this.syncHostWithGUI();
+	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
+		this.energyFilterList.set(index, energy);
 	}
 
 	@Override

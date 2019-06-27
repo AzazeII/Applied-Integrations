@@ -1,4 +1,6 @@
 package AppliedIntegrations.Gui.Hosts;
+import AppliedIntegrations.Container.Sync.ISyncHostHolder;
+
 /**
  * @Author Azazell
  */

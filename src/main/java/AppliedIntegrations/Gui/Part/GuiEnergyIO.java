@@ -1,9 +1,7 @@
 package AppliedIntegrations.Gui.Part;
-
-
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -28,7 +26,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,7 +37,7 @@ import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
-public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
+public class GuiEnergyIO extends AIBaseGui {
 
 
 	private static final int FILTER_GRID_SIZE = 3;
@@ -63,14 +60,13 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.io.bus.png");
 
-	private List<WidgetEnergySlot> energySlotList = new ArrayList<WidgetEnergySlot>();
+	private List<WidgetEnergySlot> energySlotList = new ArrayList<>();
 
 	private boolean[] configMatrix = {false, false, false, false, true, false, false, false, false};
 
 	private GuiImgButton redstoneControlBtn;
 
 	public GuiEnergyIO(Container container, EntityPlayer player) {
-
 		super(container, player);
 		this.player = player;
 	}
@@ -123,12 +119,6 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 	}
 
 	@Override
-	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
-
-		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
-	}
-
-	@Override
 	public ISyncHost getSyncHost() {
 
 		return part;
@@ -174,6 +164,10 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 		this.redstoneControlBtn.set(redstoneMode);
 	}
 
+	private ContainerPartEnergyIOBus getContainer() {
+		return (ContainerPartEnergyIOBus) inventorySlots;
+	}
+
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
 		// Avoid null pointer exception in packet
@@ -208,7 +202,10 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 		WidgetEnergySlot slotUnderMouse = null;
 
 		// Iterate over widgets
-		for (WidgetEnergySlot slotWidget : energySlotList) {
+		for (int i = 0; i < energySlotList.size(); i++) {
+			// Get slot on this index
+			WidgetEnergySlot slotWidget = energySlotList.get(i);
+
 			// Check if overlay not rendering, slot widget should render and mouse is under widget
 			if ((!hoverUnderlayRendered) && (slotWidget.shouldRender) && (slotWidget.isMouseOverWidget(mouseX, mouseY))) {
 				// Draw widget's underlay
@@ -221,10 +218,13 @@ public class GuiEnergyIO extends AIBaseGui implements IFilterGUI {
 				hoverUnderlayRendered = true;
 			}
 
+			// Update current energy stack
+			slotWidget.setCurrentStack(new EnergyStack(getContainer().energyFilterList.get(i), 0));
+
 			// Draw widget
 			slotWidget.drawWidget();
 		}
-		//
+
 		// Should we get the tooltip from the slot?
 		if (slotUnderMouse != null) {
 			// Add the tooltip from the widget

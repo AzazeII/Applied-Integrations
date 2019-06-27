@@ -1,4 +1,4 @@
-package AppliedIntegrations.Gui.Hosts;
+package AppliedIntegrations.Container.Sync;
 import AppliedIntegrations.api.ISyncHost;
 
 /**

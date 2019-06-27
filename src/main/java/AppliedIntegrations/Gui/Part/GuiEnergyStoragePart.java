@@ -1,10 +1,7 @@
 package AppliedIntegrations.Gui.Part;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.IFilterGUI;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -37,7 +34,7 @@ import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
-public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
+public class GuiEnergyStoragePart extends AIBaseGui {
 
 	// Widget constants
 	private static final int WIDGET_COLUMNS = 2; // (1)
@@ -100,6 +97,10 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 		this.ySize = 251;
 	}
 
+	private ContainerEnergyStorage getContainer() {
+		return (ContainerEnergyStorage) inventorySlots;
+	}
+
 	@Override
 	public void initGui() {
 
@@ -148,12 +149,6 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 		if (this.hasNetworkTool) {
 			this.drawTexturedModalRect(this.guiLeft + 179, this.guiTop + 93, 178, 93, 68, 68);
 		}
-	}
-
-	@Override
-	public void updateEnergy(final LiquidAIEnergy energy, int index) {
-
-		this.energyWidgetList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 
 	@Override
@@ -214,12 +209,18 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 
 		WidgetEnergySlot slotUnderMouse = null;
 
+		// Iterate over widgets
+		for (int i = 0; i < energyWidgetList.size(); i++) {
+			// Get widget
+			WidgetEnergySlot currentWidget = energyWidgetList.get(i);
 
-		for (WidgetEnergySlot currentWidget : this.energyWidgetList) {
 			if ((slotUnderMouse == null) && (currentWidget.shouldRender) && (currentWidget.isMouseOverWidget(mouseX, mouseY))) {
 				// Set the slot
 				slotUnderMouse = currentWidget;
 			}
+
+			// Update current energy stack
+			currentWidget.setCurrentStack(new EnergyStack(getContainer().energyFilterList.get(i), 0));
 
 			// Draw the widget
 			currentWidget.drawWidget();
@@ -237,7 +238,6 @@ public class GuiEnergyStoragePart extends AIBaseGui implements IFilterGUI {
 			slotUnderMouse.getTooltip(this.tooltip);
 		}
 	}
-
 	@Override
 	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
 		// Call super

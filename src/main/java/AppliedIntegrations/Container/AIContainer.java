@@ -1,6 +1,9 @@
 package AppliedIntegrations.Container;
-import AppliedIntegrations.Gui.Hosts.ISyncHostHolder;
+import AppliedIntegrations.Container.Sync.ISyncHostHolder;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 
@@ -23,6 +26,16 @@ public abstract class AIContainer extends Container implements ISyncHostHolder {
 	public AIContainer(final EntityPlayer player) {
 		// Set the player
 		this.player = player;
+	}
+
+	protected void syncHostWithGUI() {
+		NetworkHandler.sendTo(new PacketCoordinateInit(getSyncHost()), (EntityPlayerMP) this.player);
+	}
+
+	@Override
+	public void detectAndSendChanges() {
+		super.detectAndSendChanges();
+		this.syncHostWithGUI();
 	}
 
 	@Override

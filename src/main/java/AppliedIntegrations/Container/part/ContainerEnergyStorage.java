@@ -1,13 +1,21 @@
 package AppliedIntegrations.Container.part;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
+import AppliedIntegrations.Container.Sync.IFilterContainer;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import net.minecraft.entity.player.EntityPlayer;
+
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @Author Azazell
  */
-public class ContainerEnergyStorage extends ContainerWithUpgradeSlots {
+public class ContainerEnergyStorage extends ContainerWithUpgradeSlots implements IFilterContainer {
+	public List<LiquidAIEnergy> energyFilterList = new ArrayList<LiquidAIEnergy>();
+
 	// X position of upgrade cluster
 	private static final int UPGRADE_SLOT_X = 187;
 	// Y position of upgrade cluster
@@ -55,5 +63,10 @@ public class ContainerEnergyStorage extends ContainerWithUpgradeSlots {
 			// Update current host
 			this.storageBus = (PartEnergyStorage) host;
 		}
+	}
+
+	@Override
+	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
+		this.energyFilterList.set(index, energy);
 	}
 }

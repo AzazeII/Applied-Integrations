@@ -1,6 +1,5 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketProgressBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Container;
@@ -22,8 +21,6 @@ public class HandlerProgressBar implements IMessageHandler<PacketProgressBar, Pa
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			// Get current screen
 			Container container = Minecraft.getMinecraft().player.openContainer;
-
-			GuiEnergyInterface g;
 
 			// Check if gui instanceof energy interface gui
 			if (container instanceof ContainerEnergyInterface) {
