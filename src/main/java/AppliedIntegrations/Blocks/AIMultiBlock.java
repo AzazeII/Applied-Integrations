@@ -29,7 +29,7 @@ public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEn
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-		if (!world.isRemote) {
+		if (Platform.isServer()) {
 			if (Platform.isWrench(p, p.inventory.getCurrentItem(), pos)) {
 				if (!p.isSneaking()) {
 					((IAIMultiBlock) world.getTileEntity(pos)).tryConstruct(p);

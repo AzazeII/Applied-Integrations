@@ -88,10 +88,6 @@ public class AppliedIntegrations {
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
-
-		// Register GuiHandler
-		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AIGuiHandler());
-
 		// Register objects, that can be moved by spatial cards io
 		proxy.registerSpatialIOMovables();
 		proxy.SidedInit(event);
@@ -106,7 +102,9 @@ public class AppliedIntegrations {
 	}
 
 	@Mod.EventHandler
-	public void postLoad(FMLPostInitializationEvent event) {
+	public void postInit(FMLPostInitializationEvent event) {
+		// Register GuiHandler
+		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AIGuiHandler());
 
 		AILog.info("Post load Completed");
 	}

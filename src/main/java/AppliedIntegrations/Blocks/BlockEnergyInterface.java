@@ -38,7 +38,6 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
 		TileEntity entity = world.getTileEntity(pos);
 
 		if (!p.isSneaking()) {
@@ -47,8 +46,8 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 			}
 		}
 
-		// TODO: 2019-02-19 Fix GUI opening crash
-		if (!world.isRemote) {
+		// Ignore on client
+		if (Platform.isServer()) {
 			if (Platform.isWrench(p, p.inventory.getCurrentItem(), pos)) {
 				if (p.isSneaking()) {
 					final List<ItemStack> list = Lists.newArrayList(Platform.getBlockDrops(world, pos));

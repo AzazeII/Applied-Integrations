@@ -95,7 +95,7 @@ public class TileMultiControllerTerminal extends AITile implements IOrientable {
 
 	@Override
 	public void invalidate() {
-		if (world != null && !world.isRemote) {
+		if (world != null && Platform.isServer()) {
 			destroyProxyNode();
 		}
 

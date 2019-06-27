@@ -41,6 +41,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.core.sync.GuiBridge;
 import appeng.tile.networking.TileCableBus;
+import appeng.util.Platform;
 import ic2.api.energy.tile.IEnergySink;
 import mekanism.common.capabilities.Capabilities;
 import net.minecraft.entity.Entity;
@@ -310,7 +311,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
 		// Activation logic is server sided
-		if (!getHostWorld().isRemote) {
+		if (Platform.isServer()) {
 			if (!player.isSneaking()) {
 				// Open gui
 				AIGuiHandler.open(GuiStoragePart, player, getHostSide(), getHostTile().getPos());

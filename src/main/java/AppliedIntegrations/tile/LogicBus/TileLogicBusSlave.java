@@ -32,7 +32,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
 
-		if (!world.isRemote) {
+		if (Platform.isServer()) {
 			// Check if it's wrench
 			if (Platform.isWrench(p, p.getHeldItem(hand), pos)) {
 				// Destroy tile
@@ -131,7 +131,7 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 	@Override
 	public void update() {
 		// Check if node isn't loaded and host has master
-		if (!loaded && hasWorld() && !world.isRemote && hasMaster()) {
+		if (!loaded && hasWorld() && Platform.isServer() && hasMaster()) {
 			// Toggle load
 			loaded = true;
 

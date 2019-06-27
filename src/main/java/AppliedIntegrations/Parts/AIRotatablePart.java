@@ -74,7 +74,7 @@ public abstract class AIRotatablePart extends AIPart {
 		// Is the player not sneaking and using a wrench
 		if (!player.isSneaking() && Platform.isWrench(player, player.getHeldItem(hand), hte.getPos())) {
 			// Call only on server
-			if (!getHostWorld().isRemote) {
+			if (Platform.isServer()) {
 				// Bounds check the rotation
 				if ((this.renderRotation > 3) || (this.renderRotation < 0)) {
 					// Move to first rotation value

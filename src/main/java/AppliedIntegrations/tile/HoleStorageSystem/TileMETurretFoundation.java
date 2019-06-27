@@ -13,6 +13,7 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
+import appeng.util.Platform;
 import appeng.util.item.ItemList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -60,7 +61,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		// Only call when player clicking with right hand
 		if (hand == EnumHand.MAIN_HAND) {
 			// Call only on server
-			if (!world.isRemote) {
+			if (Platform.isServer()) {
 				// Update only on server
 				this.renderingDirection = p.getPosition();
 

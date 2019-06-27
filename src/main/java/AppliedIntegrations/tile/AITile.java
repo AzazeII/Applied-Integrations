@@ -24,6 +24,7 @@ import appeng.me.GridAccessException;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;
+import appeng.util.Platform;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -262,7 +263,7 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	@Override
 	public void update() {
 		// Check if grid node isn't loaded yet
-		if (!loaded && hasWorld() && !world.isRemote) {
+		if (!loaded && hasWorld() && Platform.isServer()) {
 			// Toggle load
 			loaded = true;
 

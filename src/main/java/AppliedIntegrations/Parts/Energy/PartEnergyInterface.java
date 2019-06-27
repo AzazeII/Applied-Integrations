@@ -40,6 +40,8 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.core.sync.GuiBridge;
 import appeng.me.GridAccessException;
+import appeng.parts.misc.PartInterface;
+import appeng.util.Platform;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
 import net.minecraft.client.Minecraft;
@@ -198,10 +200,12 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
 		// Activation logic is server sided
-		if (!getHostWorld().isRemote) {
+		if (Platform.isServer()) {
 			if (!player.isSneaking()) {
 				// Open GUI
-				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getHostSide(), getHostTile().getPos());
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterface, player, getHostSide(), getHostTile().getPos());
+
+				PartInterface h;
 
 				// Request gui update
 				updateRequested = true;
@@ -676,7 +680,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Nonnull
 	@Override
 	public AIGuiHandler.GuiEnum getGui() {
-		return AIGuiHandler.GuiEnum.GuiInterfacePart;
+		return AIGuiHandler.GuiEnum.GuiInterface;
 	}
 }
 

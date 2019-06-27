@@ -21,6 +21,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.me.GridAccessException;
+import appeng.util.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -93,11 +94,11 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	public void onActivate(EntityPlayer player, AEPartLocation side) {
 		// Activation logic is server sided
-		if (!world.isRemote) {
+		if (Platform.isServer()) {
 			// Don't activate GUI if player isn't sneaking
 			if (!player.isSneaking()) {
 				// Open GUI
-				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterfacePart, player, getHostSide(), getPos());
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterface, player, getHostSide(), getPos());
 
 				// Request gui update
 				updateRequested = true;

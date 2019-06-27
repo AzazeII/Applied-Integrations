@@ -19,6 +19,7 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.parts.IPartModel;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
+import appeng.util.Platform;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -80,10 +81,6 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
-
-		if (!getHostWorld().isRemote) {
-
-		}
 		return true;
 	}
 
@@ -104,7 +101,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall) {
-		if (!getHostWorld().isRemote) {
+		if (Platform.isServer()) {
 			try {
 				if (isManaFiltered) {
 					doExtractDualityWork(Actionable.MODULATE);

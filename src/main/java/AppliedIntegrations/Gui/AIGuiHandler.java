@@ -27,12 +27,14 @@ import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
 import appeng.api.util.AEPartLocation;
+import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.*;
@@ -42,8 +44,7 @@ import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.*;
  */
 public class AIGuiHandler implements IGuiHandler {
 	public enum GuiEnum {
-		GuiInterfacePart,
-		GuiInterfaceTile,
+		GuiInterface,
 		GuiStoragePart,
 		GuiServerStorage,
 		GuiTerminalPart,
@@ -53,19 +54,10 @@ public class AIGuiHandler implements IGuiHandler {
 		GuiIOPart
 	}
 
-	public static void open(GuiEnum gui, EntityPlayer player, AEPartLocation side, BlockPos pos) {
-
-		if (player == null) {
-			throw new IllegalStateException("Null player. Is it server side?");
-		}
-		if (pos == null) {
-			throw new IllegalStateException("Null pos. Is it server side?");
-		}
-		if (gui == null) {
-			throw new IllegalStateException("How can gui handler open null gui?");
-		}
-		if (side == null) {
-			throw new IllegalStateException("Null host location, Is it server side?");
+	public static void open(@Nonnull GuiEnum gui, @Nonnull EntityPlayer player, @Nonnull AEPartLocation side, @Nonnull BlockPos pos) {
+		// Ignore on client
+		if( Platform.isClient() ) {
+			return;
 		}
 
 		player.openGui(AppliedIntegrations.instance, concat(gui, side), player.getEntityWorld(), pos.getX(), pos.getY(), pos.getZ());
@@ -94,7 +86,6 @@ public class AIGuiHandler implements IGuiHandler {
 	 * returns 10111 or 23
 	 */
 	public static int concat(GuiEnum gui, AEPartLocation side) {
-
 		return (gui.ordinal() << 3) | side.ordinal();
 	}
 
@@ -136,12 +127,11 @@ public class AIGuiHandler implements IGuiHandler {
 	@Nullable
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-
 		AEPartLocation side = getSide(ID);
 		GuiEnum gui = getGui(ID);
 
 		// Energy interface container
-		if (gui == GuiEnum.GuiInterfacePart) {
+		if (gui == GuiEnum.GuiInterface) {
 			ISyncHost host = Utils.getSyncHostByParams(new BlockPos(x, y, z), side, world);
 
 			return new ContainerEnergyInterface(player, (IEnergyInterface) host);
@@ -189,7 +179,7 @@ public class AIGuiHandler implements IGuiHandler {
 		GuiEnum gui = getGui(ID);
 
 		// Energy interface gui
-		if (gui == GuiEnum.GuiInterfacePart) {
+		if (gui == GuiEnum.GuiInterface) {
 			ISyncHost host = Utils.getSyncHostByParams(new BlockPos(x, y, z), side, world);
 
 			return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(ID, player, world, x, y, z), (IEnergyInterface) host, player);

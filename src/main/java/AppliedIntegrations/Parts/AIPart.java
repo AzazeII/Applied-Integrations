@@ -28,6 +28,7 @@ import appeng.api.util.DimensionalCoord;
 import appeng.me.helpers.AENetworkProxy;
 import appeng.me.helpers.IGridProxyable;
 import appeng.me.helpers.MachineSource;
+import appeng.util.Platform;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -423,7 +424,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	public boolean isPowered() {
 		try {
 			// Server side?
-			if (!getHostWorld().isRemote && (this.proxy != null)) {
+			if (Platform.isServer() && (this.proxy != null)) {
 				// Get the energy grid
 				IEnergyGrid eGrid = this.proxy.getEnergy();
 
@@ -443,7 +444,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	@Override
 	public boolean isActive() {
 		// Are we server side?
-		if (!getHostWorld().isRemote) {
+		if (Platform.isServer()) {
 			// Do we have a node?
 			if (this.getProxy().getNode() != null) {
 				// Get it's activity

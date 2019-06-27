@@ -35,6 +35,7 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.util.AEPartLocation;
+import appeng.util.Platform;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -115,7 +116,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
 		// Call only on server
-		if (!world.isRemote) {
+		if (Platform.isServer()) {
 			// Check if proxy isn't configured yet
 			if (!configured) {
 				// Configure proxy
@@ -371,7 +372,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 	public void createProxyNode() {
 		super.createProxyNode();
 
-		if (world != null && !world.isRemote)
+		if (world != null && Platform.isServer())
 			postCellInventoryEvent();
 	}
 

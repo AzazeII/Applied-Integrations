@@ -12,6 +12,7 @@ import appeng.api.networking.IGridNode;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.me.helpers.MachineSource;
+import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -50,7 +51,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	public void invalidate() {
 
 		super.invalidate();
-		if (isFormed && !world.isRemote) {
+		if (isFormed && Platform.isServer()) {
 			destroyMultiBlock();
 		}
 	}
@@ -123,7 +124,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	@Override
 	public void tryConstruct(EntityPlayer p) {
 
-		if (!isFormed() && !world.isRemote) {
+		if (!isFormed() && Platform.isServer()) {
 			// Create list of tiles which may be slaves
 			Vector<TileLogicBusSlave> slaveCandidates = new Vector<>();
 

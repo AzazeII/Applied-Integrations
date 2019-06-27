@@ -44,7 +44,7 @@ public class BlockMultiControllerRib extends AIMultiBlock {
 			TileMultiControllerRib rib = (TileMultiControllerRib) world.getTileEntity(pos);
 
 			// Check not null, has master and call only on server
-			if (rib != null && rib.hasMaster() && !world.isRemote) {
+			if (rib != null && rib.hasMaster() && Platform.isServer()) {
 				// Get master
 				TileMultiControllerCore core = (TileMultiControllerCore) rib.getMaster();
 

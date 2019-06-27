@@ -19,7 +19,6 @@ import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -28,9 +27,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.fml.relauncher.Side;
+
+import javax.annotation.Nonnull;
 
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 
@@ -159,44 +158,21 @@ public class Utils {
 		return null;
 	}
 
-	public static ISyncHost getSyncHostByParams(BlockPos pos, AEPartLocation side, World obj) {
-
+	public static ISyncHost getSyncHostByParams(@Nonnull BlockPos pos, @Nonnull AEPartLocation side, @Nonnull World obj) {
 		if (side == AEPartLocation.INTERNAL) {
 			return getTileByParams(pos, obj);
-		} else if (side != null) {
+		} else {
 			return getPartByParams(pos, side.getFacing(), obj);
 		}
-		return null;
 	}
 
-	public static AITile getTileByParams(BlockPos pos, World worldObj) {
-
-		World world = getClientOrServerWorld(worldObj);
-
-		// Check if tile instance of AIpart, depending on it return null or part
+	public static AITile getTileByParams(BlockPos pos, World world) {
+		// Check if tile instance of AITile, depending on it return null or tile
 		return world.getTileEntity(pos) instanceof AITile ? (AITile) world.getTileEntity(pos) : null;
 	}
 
-	public static AIPart getPartByParams(BlockPos pos, EnumFacing side, World worldObj) {
-
-		World world = getClientOrServerWorld(worldObj);
-
-		TileEntity entity = world.getTileEntity(pos);
-
-		return (AIPart) (((IPartHost) entity).getPart(side));
-	}
-
-	private static World getClientOrServerWorld(World w) {
-
-		World world = w;
-
-		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-			if (world == null) {
-				world = Minecraft.getMinecraft().world;
-			}
-		}
-
-		return world;
+	public static AIPart getPartByParams(@Nonnull BlockPos pos, @Nonnull EnumFacing side, @Nonnull World world) {
+		return (AIPart) (((IPartHost) world.getTileEntity(pos)).getPart(side));
 	}
 
 	public static IAEManaStack getManaFromItemStack(ItemStack itemStack) {

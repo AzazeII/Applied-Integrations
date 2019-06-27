@@ -23,6 +23,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.FluidList;
+import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import appeng.util.item.ItemList;
 import net.minecraft.block.Block;
@@ -133,9 +134,8 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	@Override
 	public void update() {
 
-		if (!world.isRemote)
-		// Modulate gravity
-		{
+		if (Platform.isServer()) {
+			// Modulate gravity
 			modulateBlockGravity();
 		}
 
@@ -474,7 +474,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
 
 		if (hand == EnumHand.MAIN_HAND) {
-			if (!world.isRemote) {
+			if (Platform.isServer()) {
 				if (!p.isSneaking()) {
 					AnomalyEnum.EntangleHoles.action.accept(this);
 				}

@@ -1,11 +1,10 @@
 package AppliedIntegrations.Network.Packets;
-
-
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.AITile;
+import appeng.util.Platform;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
@@ -13,10 +12,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.relauncher.Side;
 
 /**
  * @Author Azazell
@@ -156,13 +154,15 @@ public abstract class AIPacket implements IMessage {
 		return readWorld(buf).getTileEntity(pos);
 	}
 
-	public World readWorld(ByteBuf buf) {
+	private World readWorld(ByteBuf buf) {
+		WorldServer world = DimensionManager.getWorld(buf.readInt());
 
-		World world = DimensionManager.getWorld(buf.readInt());
-
-		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+		// Ignore on server
+		if (Platform.isClient()) {
+			// Check not null
 			if (world == null) {
-				world = Minecraft.getMinecraft().world;
+				// Transform world into client world
+				return Minecraft.getMinecraft().world;
 			}
 		}
 

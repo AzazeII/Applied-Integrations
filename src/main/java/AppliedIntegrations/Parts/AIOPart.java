@@ -20,6 +20,7 @@ import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
 import appeng.core.sync.GuiBridge;
 import appeng.me.Grid;
+import appeng.util.Platform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
@@ -270,10 +271,10 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	@Override
 	public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position) {
-
 		super.onActivate(player, hand, position);
+
 		// Activation logic is server sided
-		if (!getHostWorld().isRemote) {
+		if (Platform.isServer()) {
 			if (!player.isSneaking()) {
 				// Open gui trough handler
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getHostSide(), getHostTile().getPos());
