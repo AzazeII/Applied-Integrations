@@ -1,10 +1,12 @@
 package AppliedIntegrations.Container.part;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Container.Sync.IFilterContainer;
+import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.util.AEPartLocation;
@@ -22,7 +24,7 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.RF;
  * @Author Azazell
  */
 public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implements IFilterContainer {
-	public List<LiquidAIEnergy> energyFilterList = new ArrayList<LiquidAIEnergy>();
+	public List<WidgetEnergySlot> energySlotList = new ArrayList<>();
 
 	// Number of upgrades
 	private static int NUMBER_OF_UPGRADE_SLOTS = 1;
@@ -82,11 +84,6 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 			// add slots
 			this.addUpgradeSlots(inventory, NUMBER_OF_UPGRADE_SLOTS, UPGRADE_X_POS, UPGRADE_Y_POS);
 		}
-
-		// Pre-fill list with values
-		for (int i = 0; i < 6; i++) {
-			energyFilterList.add(null);
-		}
 	}
 
 	public void onStorageUpdate(LiquidAIEnergy energy, AEPartLocation energySide, IEnergyInterface sender) {
@@ -123,7 +120,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 
 	@Override
 	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
-		this.energyFilterList.set(index, energy);
+		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 
 	@Override

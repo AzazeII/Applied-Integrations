@@ -41,7 +41,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
 
 	protected final List<String> tooltip = new ArrayList<>();
 	private List<String> buttonTooltip = new ArrayList<>();
-	private List<WidgetEnergySlot> energySlotList = new ArrayList<>();
 
 	private IEnergyInterface energyInterface;
 	private EntityPlayer player;
@@ -65,14 +64,14 @@ public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
 		// Check if interface is bus
 		if (energyInterface instanceof PartEnergyInterface) {
 			// Add central slot
-			this.energySlotList.add(new WidgetEnergySlot(this, 0, 79, 111, true));
+			getContainer().energySlotList.add(new WidgetEnergySlot(this, 0, 79, 111, true));
 		} else if (energyInterface instanceof TileEnergyInterface) {
-			this.energySlotList.add(new WidgetEnergySlot(this, DOWN.ordinal(), 34, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, UP.ordinal(), 52, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, NORTH.ordinal(), 70, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, SOUTH.ordinal(), 88, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, WEST.ordinal(), 106, 111, true));
-			this.energySlotList.add(new WidgetEnergySlot(this, EAST.ordinal(), 124, 111, true));
+			getContainer().energySlotList.add(new WidgetEnergySlot(this, DOWN.ordinal(), 34, 111, true));
+			getContainer().energySlotList.add(new WidgetEnergySlot(this, UP.ordinal(), 52, 111, true));
+			getContainer().energySlotList.add(new WidgetEnergySlot(this, NORTH.ordinal(), 70, 111, true));
+			getContainer().energySlotList.add(new WidgetEnergySlot(this, SOUTH.ordinal(), 88, 111, true));
+			getContainer().energySlotList.add(new WidgetEnergySlot(this, WEST.ordinal(), 106, 111, true));
+			getContainer().energySlotList.add(new WidgetEnergySlot(this, EAST.ordinal(), 124, 111, true));
 		}
 
 		// Add priority button
@@ -101,20 +100,6 @@ public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
 
 		// Draw upgrade slots
 		this.drawTexturedModalRect(this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0, GUI_UPGRADES_WIDTH, GUI_UPGRADES_HEIGHT);
-	}
-
-	@Override
-	public ISyncHost getSyncHost() {
-		return energyInterface;
-	}
-
-	@Override
-	public void setSyncHost(ISyncHost host) {
-		// Check if host is interface
-		if (host instanceof IEnergyInterface) {
-			// Update current "validation token"
-			energyInterface = (IEnergyInterface) host;
-		}
 	}
 
 	@Override
@@ -147,7 +132,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
 		}
 
 		// Iterate over all energy widgets
-		for (WidgetEnergySlot slot : energySlotList) {
+		for (WidgetEnergySlot slot : getContainer().energySlotList) {
 			// Check if mouse over widget
 			if (slot.isMouseOverWidget(MouseX, MouseY)) {
 				// Create tooltip list
@@ -197,10 +182,9 @@ public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
 		}
 
 		// Push filter from container to slots + draw slots
-		for (int i = 0; i < energySlotList.size(); i++) {
-			WidgetEnergySlot slot = energySlotList.get(i);
+		for (int i = 0; i < getContainer().energySlotList.size(); i++) {
+			WidgetEnergySlot slot = getContainer().energySlotList.get(i);
 
-			slot.setCurrentStack(new EnergyStack(getContainer().energyFilterList.get(i), 0));
 			slot.drawWidget();
 		}
 	}
@@ -215,7 +199,7 @@ public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
 		}*/
 
 		// When mouse clicked GUI will try to find slot(s) over mouse and populate click on them(if any)
-		energySlotList.forEach((energySlot) -> {
+		getContainer().energySlotList.forEach((energySlot) -> {
 			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
 				LiquidAIEnergy energyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
 
@@ -321,6 +305,16 @@ public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
 			// Add tooltip
 			tooltip.add(tip);
 		}
+	}
+
+	@Override
+	public ISyncHost getSyncHost() {
+		return getContainer().getSyncHost();
+	}
+
+	@Override
+	public void setSyncHost(ISyncHost host) {
+		getContainer().setSyncHost(host);
 	}
 }
 

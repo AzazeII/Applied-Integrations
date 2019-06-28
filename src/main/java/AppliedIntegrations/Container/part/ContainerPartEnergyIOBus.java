@@ -1,8 +1,10 @@
 package AppliedIntegrations.Container.part;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Container.Sync.IFilterContainer;
+import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -14,17 +16,18 @@ import java.util.List;
  * @Author Azazell
  */
 public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implements IFilterContainer {
-	public List<LiquidAIEnergy> energyFilterList = new ArrayList<LiquidAIEnergy>();
+	public List<WidgetEnergySlot> energySlotList = new ArrayList<>();
+
 	// Number of upgrade slots
 	private static int NUMBER_OF_UPGRADE_SLOTS = 4;
 	// X of upgrades
 	private static int UPGRADE_X_POS = 187;
 	// Y of upgrades
 	private static int UPGRADE_Y_POS = 8;
-	private AIOPart part;
+
+	public AIOPart part;
 
 	public ContainerPartEnergyIOBus(final AIOPart part, final EntityPlayer player) {
-
 		super(part, player);
 
 		// Set the host
@@ -38,11 +41,6 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implemen
 
 		// Register listener
 		this.part.addListener(this);
-
-		// Pre-fill list with values
-		for (int i = 0; i < 9; i++) {
-			energyFilterList.add(null);
-		}
 	}
 
 	@Override
@@ -75,6 +73,6 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implemen
 
 	@Override
 	public void updateEnergy(@Nonnull LiquidAIEnergy energy, int index) {
-		this.energyFilterList.set(index, energy);
+		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 }

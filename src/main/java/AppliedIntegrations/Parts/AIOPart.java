@@ -4,7 +4,6 @@ import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Utils.ChangeHandler;
@@ -21,8 +20,6 @@ import appeng.api.parts.PartItemStack;
 import appeng.core.sync.GuiBridge;
 import appeng.me.Grid;
 import appeng.util.Platform;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -46,9 +43,13 @@ import static net.minecraft.init.Items.AIR;
  */
 
 public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHostExtended {
-	/**
-	 * Constant fields
-	 */
+	// Size of filter
+	public final static int MAX_FILTER_SIZE = 9;
+
+	public List<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>(AIOPart.MAX_FILTER_SIZE);
+	public boolean redstoneControlled;
+
+
 	// How much energy can be transfered in second
 	private final static int BASE_ENERGY_TRANSFER = 4000;
 
@@ -67,9 +68,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	// Mininmum transfer per second
 	private final static int MINIMUM_TRANSFER_PER_SECOND = 4000;
 
-	// Size of filter
-	private final static int MAX_FILTER_SIZE = 9;
-
 	private final static int BASE_SLOT_INDEX = 4;
 
 	private static final RedstoneMode DEFAULT_REDSTONE_MODE = IGNORE;
@@ -81,8 +79,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	// Current max transfer
 	protected int maxTransfer;
 
-	protected List<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>(AIOPart.MAX_FILTER_SIZE);
-
 	protected TileEntity adjacentEnergyStorage;
 
 	private EntityPlayer player;
@@ -93,15 +89,11 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	private List<ContainerPartEnergyIOBus> listeners = new ArrayList<ContainerPartEnergyIOBus>();
 
 	// Current mode
-	private RedstoneMode redstoneMode = AIOPart.DEFAULT_REDSTONE_MODE;
+	public RedstoneMode redstoneMode = AIOPart.DEFAULT_REDSTONE_MODE;
 
-	private byte filterSize;
+	public byte filterSize;
 
 	private byte upgradeSpeedCount = 0;
-
-	private boolean redstoneControlled;
-
-	private boolean updateRequested;
 
 	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
 
@@ -279,9 +271,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 				// Open gui trough handler
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiIOPart, player, getHostSide(), getHostTile().getPos());
 
-				// Make host update gui's coordinates
-				this.updateRequested = true;
-
 				// Update player
 				this.player = player;
 				return true;
@@ -360,18 +349,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	}
 
 	public void updateGui() {
-		// Check if update was requested
-		if (updateRequested) {
-			// Get current gui
-			Gui g = Minecraft.getMinecraft().currentScreen;
-
-			// Check not null
-			if (g != null) {
-				// Send packet
-				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) player);
-			}
-		}
-
 		// Iterate until i equal to filter size
 		for (int i = 0; i < MAX_FILTER_SIZE; i++) {
 
@@ -384,21 +361,8 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 				this.notifyListenersOfFilterEnergyChange(finalI, energy);
 			}));
 
-			// Check if update requested (player opened GUI)
-			if (updateRequested) {
-				// Notify listeners
-				this.notifyListenersOfFilterEnergyChange(finalI, filteredEnergies.get(i));
-
-				// Notify listeners
-				notifyListenersOfStateUpdate(filterSize, redstoneControlled);
-			}
-		}
-
-		// Check if update was requested
-		if (updateRequested)
-		// Trigger request
-		{
-			updateRequested = false;
+			notifyListenersOfFilterEnergyChange(i, filteredEnergies.get(i));
+			notifyListenersOfStateUpdate(filterSize, redstoneControlled);
 		}
 	}
 
@@ -483,5 +447,9 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		this.redstoneMode = mode;
 
 		this.redstoneControlled = mode != IGNORE;
+	}
+
+	public byte getFilterSize() {
+		return filterSize;
 	}
 }

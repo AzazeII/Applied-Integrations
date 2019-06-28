@@ -7,7 +7,6 @@ import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketSyncReturn;
-import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 import AppliedIntegrations.Parts.Energy.PartEnergyImport;
 import AppliedIntegrations.api.ISyncHost;
@@ -26,9 +25,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
@@ -38,8 +35,6 @@ import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
  */
 @SideOnly(Side.CLIENT)
 public class GuiEnergyIO extends AIBaseGui {
-
-
 	private static final int FILTER_GRID_SIZE = 3;
 
 	private static final int WIDGET_X_POSITION = 61;
@@ -52,15 +47,11 @@ public class GuiEnergyIO extends AIBaseGui {
 
 	private static final int GUI_UPGRADES_HEIGHT = 86;
 
-	public AIOPart part;
-
 	public EntityPlayer player;
 
 	String stringName;
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.io.bus.png");
-
-	private List<WidgetEnergySlot> energySlotList = new ArrayList<>();
 
 	private boolean[] configMatrix = {false, false, false, false, true, false, false, false, false};
 
@@ -69,6 +60,10 @@ public class GuiEnergyIO extends AIBaseGui {
 	public GuiEnergyIO(Container container, EntityPlayer player) {
 		super(container, player);
 		this.player = player;
+	}
+
+	public ContainerPartEnergyIOBus getContainer() {
+		return (ContainerPartEnergyIOBus) inventorySlots;
 	}
 
 	@Override
@@ -88,19 +83,23 @@ public class GuiEnergyIO extends AIBaseGui {
 		// Add to button list
 		buttonList.add(redstoneControlBtn);
 
+		// Don't add slots if energy slot list isn't empty
+		if (!getContainer().energySlotList.isEmpty()) {
+			return;
+		}
+
 		// Calculate the index
 		int index = 0;
-		for (int row = 0; row < this.FILTER_GRID_SIZE; row++) {
-			for (int column = 0; column < this.FILTER_GRID_SIZE; column++) {
-
-
+		for (int row = 0; row < FILTER_GRID_SIZE; row++) {
+			for (int column = 0; column < FILTER_GRID_SIZE; column++) {
 				// Calculate the x position
-				int xPos = this.WIDGET_X_POSITION + (column * AIWidget.WIDGET_SIZE);
+				int xPos = WIDGET_X_POSITION + (column * AIWidget.WIDGET_SIZE);
 
 				// Calculate the y position
-				int yPos = this.WIDGET_Y_POSITION + (row * AIWidget.WIDGET_SIZE);
+				int yPos = WIDGET_Y_POSITION + (row * AIWidget.WIDGET_SIZE);
 
-				this.energySlotList.add(new WidgetEnergySlot(this, index, xPos, yPos, this.configMatrix[index]));
+				getContainer().energySlotList.add(new WidgetEnergySlot(this, index, xPos, yPos, this.configMatrix[index]));
+
 				index++;
 			}
 		}
@@ -120,41 +119,34 @@ public class GuiEnergyIO extends AIBaseGui {
 
 	@Override
 	public ISyncHost getSyncHost() {
-
-		return part;
+		return getContainer().getSyncHost();
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-
-		if (host instanceof AIOPart) {
-			part = (AIOPart) host;
-		}
+		getContainer().setSyncHost(host);
 	}
 
 	public void updateState(boolean redstoneControl, RedstoneMode redstoneMode, byte filterSize) {
 		// Set filter matrix, from filter size
-		if (filterSize == 0)
-		// Update matrix
-		{
+		if (filterSize == 0) {
+			// Update matrix
 			this.configMatrix = new boolean[]{false, false, false, false, true, false, false, false, false};
 		}
-		if (filterSize == 1)
-		// Update matrix
-		{
+		if (filterSize == 1) {
+			// Update matrix
 			this.configMatrix = new boolean[]{false, true, false, true, true, true, false, true, false};
 		}
 
-		if (filterSize == 2)
-		// Update matrix
-		{
+		if (filterSize == 2) {
+			// Update matrix
 			this.configMatrix = new boolean[]{true, true, true, true, true, true, true, true, true};
 		}
 
 		// Iterate for i until it equal to cM.length
 		for (int i = 0; i < configMatrix.length; i++) {
 			// Get slot and update it to value from config matrix
-			this.energySlotList.get(i).shouldRender = configMatrix[i];
+			getContainer().energySlotList.get(i).shouldRender = configMatrix[i];
 		}
 
 		// Set redstone control button visibility to redstone control
@@ -164,27 +156,22 @@ public class GuiEnergyIO extends AIBaseGui {
 		this.redstoneControlBtn.set(redstoneMode);
 	}
 
-	private ContainerPartEnergyIOBus getContainer() {
-		return (ContainerPartEnergyIOBus) inventorySlots;
-	}
-
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
 		// Avoid null pointer exception in packet
-		if (part == null) {
+		if (getContainer().part == null) {
 			return;
 		}
 
 		// Check if click was performed on priority button
 		if (btn == priorityButton) {
 			// Send packet to client
-			NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, part));
+			NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, getContainer().part));
 		}
 	}
 
 	@Override
 	public void drawScreen(int MouseX, int MouseY, float pOpacity) {
-
 		super.drawScreen(MouseX, MouseY, pOpacity);
 
 		renderHoveredToolTip(MouseX, MouseY);
@@ -202,9 +189,9 @@ public class GuiEnergyIO extends AIBaseGui {
 		WidgetEnergySlot slotUnderMouse = null;
 
 		// Iterate over widgets
-		for (int i = 0; i < energySlotList.size(); i++) {
+		for (int i = 0; i < getContainer().energySlotList.size(); i++) {
 			// Get slot on this index
-			WidgetEnergySlot slotWidget = energySlotList.get(i);
+			WidgetEnergySlot slotWidget = getContainer().energySlotList.get(i);
 
 			// Check if overlay not rendering, slot widget should render and mouse is under widget
 			if ((!hoverUnderlayRendered) && (slotWidget.shouldRender) && (slotWidget.isMouseOverWidget(mouseX, mouseY))) {
@@ -217,9 +204,6 @@ public class GuiEnergyIO extends AIBaseGui {
 				// trigger boolean
 				hoverUnderlayRendered = true;
 			}
-
-			// Update current energy stack
-			slotWidget.setCurrentStack(new EnergyStack(getContainer().energyFilterList.get(i), 0));
 
 			// Draw widget
 			slotWidget.drawWidget();
@@ -238,10 +222,11 @@ public class GuiEnergyIO extends AIBaseGui {
 			tooltip.addAll(Arrays.asList(redstoneControlBtn.getMessage().split("\n")));
 		}
 
-		if (part instanceof PartEnergyExport) {
+		if (getContainer().part instanceof PartEnergyExport) {
 			this.stringName = I18n.translateToLocal("ME Energy Export Bus");
 		}
-		if (part instanceof PartEnergyImport) {
+
+		if (getContainer().part instanceof PartEnergyImport) {
 			this.stringName = I18n.translateToLocal("ME Energy Import Bus");
 		}
 
@@ -253,13 +238,13 @@ public class GuiEnergyIO extends AIBaseGui {
 		// Call super
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		for (WidgetEnergySlot slot : this.energySlotList) {
+		for (WidgetEnergySlot slot : getContainer().energySlotList) {
 			if (slot.isMouseOverWidget(mouseX, mouseY)) {
 				// Get the Energy of the currently held item
 				LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
 
-				// Check not null && energy not equal
-				if (slot.getCurrentStack() == null || slot.getCurrentStack().getEnergy() == itemEnergy) {
+				// Check if item energy not equal to energy in slot
+				if (slot.getCurrentStack() != null && slot.getCurrentStack().getEnergy() == itemEnergy) {
 					return;
 				}
 
@@ -279,7 +264,7 @@ public class GuiEnergyIO extends AIBaseGui {
 			redstoneControlBtn.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
 
 			// Send packet to client
-			NetworkHandler.sendToServer(new PacketSyncReturn(redstoneControlBtn.getCurrentValue(), this.part));
+			NetworkHandler.sendToServer(new PacketSyncReturn(redstoneControlBtn.getCurrentValue(), getContainer().part));
 		}
 	}
 }

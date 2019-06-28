@@ -23,9 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import static AppliedIntegrations.Gui.AIGuiHandler.GuiEnum.GuiAIPriority;
 import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
@@ -62,11 +60,6 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 	 * Player viewing this gui.
 	 */
 	private EntityPlayer player;
-
-	/**
-	 * Filter widget list
-	 */
-	private List<WidgetEnergySlot> energyWidgetList = new ArrayList<WidgetEnergySlot>();
 
 	// Should gui render network tool slots?
 	private boolean hasNetworkTool;
@@ -112,14 +105,14 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 		// Create widget @for_each row and @for_each column with zero index
 		for (int row = 0; row < GuiEnergyStoragePart.WIDGET_COLUMNS; row++) {
 			for (int column = 0; column < GuiEnergyStoragePart.WIDGET_ROWS; column++) {
-				this.energyWidgetList.add(new WidgetEnergySlot(this, 0, this.WIDGET_X_POS + (AIWidget.WIDGET_SIZE * column) - 6, this.WIDGET_Y_POS + (AIWidget.WIDGET_SIZE * row) - 1, true));
+				getContainer().energySlotList.add(new WidgetEnergySlot(this, 0, WIDGET_X_POS + (AIWidget.WIDGET_SIZE * column) - 6, this.WIDGET_Y_POS + (AIWidget.WIDGET_SIZE * row) - 1, true));
 			}
 		}
 
 		// Iterate from 0 to 17 and map all widgets
 		for (int i = 0; i < PartEnergyStorage.FILTER_SIZE; i++) {
 			// Change index
-			energyWidgetList.get(i).id = i;
+			getContainer().energySlotList.get(i).id = i;
 		}
 
 		// Create access mode
@@ -210,17 +203,14 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 		WidgetEnergySlot slotUnderMouse = null;
 
 		// Iterate over widgets
-		for (int i = 0; i < energyWidgetList.size(); i++) {
+		for (int i = 0; i < getContainer().energySlotList.size(); i++) {
 			// Get widget
-			WidgetEnergySlot currentWidget = energyWidgetList.get(i);
+			WidgetEnergySlot currentWidget = getContainer().energySlotList.get(i);
 
 			if ((slotUnderMouse == null) && (currentWidget.shouldRender) && (currentWidget.isMouseOverWidget(mouseX, mouseY))) {
 				// Set the slot
 				slotUnderMouse = currentWidget;
 			}
-
-			// Update current energy stack
-			currentWidget.setCurrentStack(new EnergyStack(getContainer().energyFilterList.get(i), 0));
 
 			// Draw the widget
 			currentWidget.drawWidget();
@@ -243,7 +233,7 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 		// Call super
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 
-		for (WidgetEnergySlot energySlot : this.energyWidgetList) {
+		for (WidgetEnergySlot energySlot : getContainer().energySlotList) {
 			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
 				// Get the Energy of the currently held item
 				LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
