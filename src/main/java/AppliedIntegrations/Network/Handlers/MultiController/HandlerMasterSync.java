@@ -19,9 +19,8 @@ public class HandlerMasterSync implements IMessageHandler<PacketMasterSync, Pack
 			IAIMultiBlock multiBlock = (IAIMultiBlock) Minecraft.getMinecraft().world.getTileEntity(message.slave.getHostPos());
 
 			// Check not null
-			if (multiBlock != null)
-			// Set master
-			{
+			if (multiBlock != null) {
+				// Set master
 				multiBlock.setMaster(message.master);
 			}
 		});

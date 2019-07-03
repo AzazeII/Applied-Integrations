@@ -19,14 +19,12 @@ public class PacketCoordinateInit extends AIPacket {
 	}
 
 	public PacketCoordinateInit(ISyncHost host) {
-
 		super(host.getHostPos().getX(), host.getHostPos().getY(), host.getHostPos().getZ(), host.getHostSide().getFacing(), host.getHostWorld());
 		this.host = host;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		boolean isPart = buf.readBoolean();
 
 		if (isPart) {
@@ -38,7 +36,6 @@ public class PacketCoordinateInit extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
 		writeSyncHost(host, buf);
 	}
 }

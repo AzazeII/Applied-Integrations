@@ -5,12 +5,14 @@ import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
+import appeng.api.storage.data.IAEItemStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * @Author Azazell
@@ -33,6 +35,17 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 
 		// Bind player slots
 		super.bindPlayerInventory(player.inventory, 107, 165);
+	}
+
+	public void receiveServerData(final List<IAEItemStack> stackChange) {
+		// Iterate for each item stack in given list
+		for( final IAEItemStack is : stackChange ) {
+			// Post update to storage
+			///itemStorage.postUpdate( is );
+		}
+
+		// Update view cell array of repo
+		///itemStorage.updateView();
 	}
 
 	private void addCardSlots(AIGridNodeInventory cardInv) {

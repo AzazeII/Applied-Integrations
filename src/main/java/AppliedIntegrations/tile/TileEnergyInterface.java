@@ -1,6 +1,5 @@
 package AppliedIntegrations.tile;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
@@ -22,7 +21,6 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.INetworkToolAgent;
 import appeng.me.GridAccessException;
 import appeng.util.Platform;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -328,20 +326,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 		super.update();
 
-		if (updateRequested) {
-			// Check if we have gui to update
-			if (Minecraft.getMinecraft().currentScreen instanceof AIBaseGui) {
-				// Init gui coordinate set
-				initGuiCoordinates();
-
-				// Iterate for each side
-				for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-					// Notify GUI
-					duality.notifyListenersOfFilterEnergyChange(filteredEnergies.get(side), side.ordinal());
-				}
-			}
-		}
-
 		// Iterate for each side of part location
 		for (AEPartLocation side : AEPartLocation.values()) {
 			// Place bar counter here, because we have not one, but six bars
@@ -410,9 +394,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	public void updateFilter(LiquidAIEnergy energyInArray, int index) {
 		// Update filtered energy
 		this.filteredEnergies.put(AEPartLocation.fromOrdinal(index), energyInArray);
-
-		// Send callback to GUI
-		duality.notifyListenersOfFilterEnergyChange(energyInArray, index);
 	}
 
 	@Override

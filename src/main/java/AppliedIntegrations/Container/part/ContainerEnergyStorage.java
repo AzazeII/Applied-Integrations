@@ -6,6 +6,7 @@ import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
+import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nonnull;
@@ -26,13 +27,16 @@ public class ContainerEnergyStorage extends ContainerWithUpgradeSlots implements
 	private static int PLAYER_INV_POSITION_Y = 102;
 	// Y position of hotbar slot cluster
 	private static int HOTBAR_INV_POSITION_Y = 160;
+
+	// Current access mode
+	public GuiImgButton accessMode;
+
 	// Storage bus operated
 	private PartEnergyStorage storageBus;
 
 	public ContainerEnergyStorage(final PartEnergyStorage part, final EntityPlayer player) {
-
-		super(part, player);
 		// Call super
+		super(part, player);
 
 		// Add listener
 		part.linkedListeners.add(this);
@@ -49,7 +53,6 @@ public class ContainerEnergyStorage extends ContainerWithUpgradeSlots implements
 
 	@Override
 	public boolean canInteractWith(final EntityPlayer player) {
-
 		return true;
 	}
 

@@ -53,10 +53,6 @@ public class GuiEnergyIO extends AIBaseGui {
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.io.bus.png");
 
-	private boolean[] configMatrix = {false, false, false, false, true, false, false, false, false};
-
-	private GuiImgButton redstoneControlBtn;
-
 	public GuiEnergyIO(Container container, EntityPlayer player) {
 		super(container, player);
 		this.player = player;
@@ -75,13 +71,13 @@ public class GuiEnergyIO extends AIBaseGui {
 		addPriorityButton();
 
 		// Add redstone control button
-		redstoneControlBtn = new GuiImgButton(this.guiLeft - 18, this.guiTop + 8, Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
+		getContainer().redstoneControlBtn = new GuiImgButton(this.guiLeft - 18, this.guiTop + 8, Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
 
 		// Set visible to false
-		redstoneControlBtn.setVisibility(false);
+		getContainer().redstoneControlBtn.setVisibility(false);
 
 		// Add to button list
-		buttonList.add(redstoneControlBtn);
+		buttonList.add(getContainer().redstoneControlBtn);
 
 		// Don't add slots if energy slot list isn't empty
 		if (!getContainer().energySlotList.isEmpty()) {
@@ -98,7 +94,7 @@ public class GuiEnergyIO extends AIBaseGui {
 				// Calculate the y position
 				int yPos = WIDGET_Y_POSITION + (row * AIWidget.WIDGET_SIZE);
 
-				getContainer().energySlotList.add(new WidgetEnergySlot(this, index, xPos, yPos, this.configMatrix[index]));
+				getContainer().energySlotList.add(new WidgetEnergySlot(this, index, xPos, yPos, getContainer().configMatrix[index]));
 
 				index++;
 			}
@@ -125,35 +121,6 @@ public class GuiEnergyIO extends AIBaseGui {
 	@Override
 	public void setSyncHost(ISyncHost host) {
 		getContainer().setSyncHost(host);
-	}
-
-	public void updateState(boolean redstoneControl, RedstoneMode redstoneMode, byte filterSize) {
-		// Set filter matrix, from filter size
-		if (filterSize == 0) {
-			// Update matrix
-			this.configMatrix = new boolean[]{false, false, false, false, true, false, false, false, false};
-		}
-		if (filterSize == 1) {
-			// Update matrix
-			this.configMatrix = new boolean[]{false, true, false, true, true, true, false, true, false};
-		}
-
-		if (filterSize == 2) {
-			// Update matrix
-			this.configMatrix = new boolean[]{true, true, true, true, true, true, true, true, true};
-		}
-
-		// Iterate for i until it equal to cM.length
-		for (int i = 0; i < configMatrix.length; i++) {
-			// Get slot and update it to value from config matrix
-			getContainer().energySlotList.get(i).shouldRender = configMatrix[i];
-		}
-
-		// Set redstone control button visibility to redstone control
-		this.redstoneControlBtn.setVisibility(redstoneControl);
-
-		// Update redstone mode
-		this.redstoneControlBtn.set(redstoneMode);
 	}
 
 	@Override
@@ -217,9 +184,9 @@ public class GuiEnergyIO extends AIBaseGui {
 
 		// Add tooltip to redstone control button
 		// Check if mouse over redstone control button
-		if (redstoneControlBtn.isMouseOver()) {
+		if (getContainer().redstoneControlBtn.isMouseOver()) {
 			// Split messages using regex "\n"
-			tooltip.addAll(Arrays.asList(redstoneControlBtn.getMessage().split("\n")));
+			tooltip.addAll(Arrays.asList(getContainer().redstoneControlBtn.getMessage().split("\n")));
 		}
 
 		if (getContainer().part instanceof PartEnergyExport) {
@@ -256,15 +223,15 @@ public class GuiEnergyIO extends AIBaseGui {
 		}
 
 		// Check if mouse over redstone control button
-		if (redstoneControlBtn.isMouseOver()) {
+		if (getContainer().redstoneControlBtn.isMouseOver()) {
 			// Get current mode ordinal
-			short ordinal = (short) redstoneControlBtn.getCurrentValue().ordinal();
+			short ordinal = (short) getContainer().redstoneControlBtn.getCurrentValue().ordinal();
 
 			// Switch to next mode
-			redstoneControlBtn.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
+			getContainer().redstoneControlBtn.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
 
 			// Send packet to client
-			NetworkHandler.sendToServer(new PacketSyncReturn(redstoneControlBtn.getCurrentValue(), getContainer().part));
+			NetworkHandler.sendToServer(new PacketSyncReturn(getContainer().redstoneControlBtn.getCurrentValue(), getContainer().part));
 		}
 	}
 }

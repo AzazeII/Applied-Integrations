@@ -2,6 +2,7 @@ package AppliedIntegrations.Container;
 import AppliedIntegrations.Container.Sync.ISyncHostHolder;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
+import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
@@ -35,6 +36,11 @@ public abstract class AIContainer extends Container implements ISyncHostHolder {
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
+
+		// Ignore on client
+		if (Platform.isClient())
+			return;
+
 		this.syncHostWithGUI();
 	}
 

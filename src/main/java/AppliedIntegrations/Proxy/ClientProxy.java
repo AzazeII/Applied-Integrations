@@ -1,6 +1,4 @@
 package AppliedIntegrations.Proxy;
-
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Blocks.BlocksEnum;
@@ -12,7 +10,6 @@ import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetItemSlot;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Topology.WebServer.WebManager;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
@@ -70,8 +67,6 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void SidedPreInit() {
 		super.SidedPreInit();
-
-		NetworkHandler.registerClientPackets();
 
 		// Register texture manager to event bus
 		FMLCommonHandler.instance().bus().register(new TextureEventManager());

@@ -4,15 +4,12 @@ import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.AITile;
-import appeng.util.Platform;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
@@ -27,12 +24,10 @@ public abstract class AIPacket implements IMessage {
 	public int x, y, z;
 
 	public AIPacket() {
-
 		this(0, 0, 0, null, null);
 	}
 
 	public AIPacket(int x, int y, int z, EnumFacing side, World w) {
-
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -45,7 +40,6 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected LiquidAIEnergy readEnergy(ByteBuf buf) {
-
 		int buffed = buf.readInt();
 
 		if (buffed != -1) {
@@ -55,7 +49,6 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writeEnergy(LiquidAIEnergy energy, ByteBuf buf) {
-
 		if (energy != null) {
 			buf.writeInt(energy.getIndex());
 		} else {
@@ -64,22 +57,18 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writeVec(Vec3d vecA, ByteBuf buf) {
-
 		writePos(new BlockPos(vecA), buf);
 	}
 
 	protected void writePos(BlockPos pos, ByteBuf buf) {
-
 		buf.writeLong(pos.toLong());
 	}
 
 	protected Vec3d readVec(ByteBuf buf) {
-
 		return new Vec3d(readPos(buf));
 	}
 
 	protected BlockPos readPos(ByteBuf buf) {
-
 		return BlockPos.fromLong(buf.readLong());
 	}
 
@@ -98,7 +87,6 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writePart(ByteBuf buf) {
-
 		buf.writeLong(new BlockPos(x, y, z).toLong());
 
 		writeWorld(buf, w);
@@ -106,18 +94,15 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected void writeTile(TileEntity tile, ByteBuf buf) {
-
 		writePos(tile.getPos(), buf);
 		writeWorld(buf, tile.getWorld());
 	}
 
 	protected void writeWorld(ByteBuf buf, World world) {
-
 		buf.writeInt(world.provider.getDimension());
 	}
 
 	protected ISyncHost readSyncHost(ByteBuf buf) {
-
 		boolean isPart = buf.readBoolean();
 
 		ISyncHost host;
@@ -132,7 +117,6 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected AIPart readPart(ByteBuf buf) {
-
 		BlockPos pos = BlockPos.fromLong(buf.readLong());
 		World w = readWorld(buf);
 
@@ -149,28 +133,15 @@ public abstract class AIPacket implements IMessage {
 	}
 
 	protected TileEntity readTile(ByteBuf buf) {
-
 		BlockPos pos = readPos(buf);
 		return readWorld(buf).getTileEntity(pos);
 	}
 
 	private World readWorld(ByteBuf buf) {
-		WorldServer world = DimensionManager.getWorld(buf.readInt());
-
-		// Ignore on server
-		if (Platform.isClient()) {
-			// Check not null
-			if (world == null) {
-				// Transform world into client world
-				return Minecraft.getMinecraft().world;
-			}
-		}
-
-		return world;
+		return DimensionManager.getWorld(buf.readInt());
 	}
 
 	private EnumFacing readSide(ByteBuf buf) {
-
 		return EnumFacing.getFront(buf.readInt());
 	}
 }

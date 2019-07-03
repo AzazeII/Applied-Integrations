@@ -1,31 +1,28 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
-
-
-import AppliedIntegrations.Gui.Part.GuiEnergyIO;
+import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFullSync> {
 	@Override
 	public PacketFullSync onMessage(PacketFullSync message, MessageContext ctx) {
-
 		Minecraft.getMinecraft().addScheduledTask(() -> {
-			Gui gui = Minecraft.getMinecraft().currentScreen;
-			if (gui instanceof GuiEnergyIO) {
-				GuiEnergyIO GEIO = (GuiEnergyIO) gui;
+			Container container = Minecraft.getMinecraft().player.openContainer;
+			if (container instanceof ContainerPartEnergyIOBus) {
+				ContainerPartEnergyIOBus CEIOB = (ContainerPartEnergyIOBus) container;
 
 				// Check not null
-				if (GEIO.getSyncHost() == null) {
+				if (CEIOB.getSyncHost() == null) {
 					return;
 				}
 
 				// Compare sync hosts
-				if (GEIO.getSyncHost().compareTo(message.part, true)) {
+				if (CEIOB.getSyncHost().compareTo(message.part, true)) {
 					// Update each state
-					GEIO.updateState(message.redstoneControl, message.redstoneMode, message.filterSize);
+					CEIOB.updateState(message.redstoneControl, message.redstoneMode, message.filterSize);
 				}
 			}
 		});

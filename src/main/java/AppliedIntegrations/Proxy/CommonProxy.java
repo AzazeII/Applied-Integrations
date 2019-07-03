@@ -46,7 +46,7 @@ public class CommonProxy {
 
 		BlocksEnum.register();
 
-		NetworkHandler.registerServerPackets();
+		NetworkHandler.registerPackets();
 
 		if (AIConfig.enableEnergyFeatures)	{
 			// Register channel

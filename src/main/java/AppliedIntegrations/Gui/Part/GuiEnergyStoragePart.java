@@ -53,9 +53,6 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 
 	private static final int TITLE_Y_POS = 5; // (2)
 
-	// Current access mode
-	public GuiImgButton accessMode;
-
 	/**
 	 * Player viewing this gui.
 	 */
@@ -116,10 +113,10 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 		}
 
 		// Create access mode
-		accessMode = new GuiImgButton(this.guiLeft - 18, this.guiTop + 8, Settings.ACCESS, AccessRestriction.READ_WRITE);
+		getContainer().accessMode = new GuiImgButton(this.guiLeft - 18, this.guiTop + 8, Settings.ACCESS, AccessRestriction.READ_WRITE);
 
 		// Register button in list
-		buttonList.add(accessMode);
+		buttonList.add(getContainer().accessMode);
 	}
 
 	/**
@@ -164,20 +161,20 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 		super.onButtonClicked(btn, mouseButton);
 
 		// Check if action performed on access mode button
-		if (btn == accessMode) {
-			AccessRestriction mode = (AccessRestriction) accessMode.getCurrentValue();
+		if (btn == getContainer().accessMode) {
+			AccessRestriction mode = (AccessRestriction) getContainer().accessMode.getCurrentValue();
 
 			// Cycle modes
 			if (mode == AccessRestriction.WRITE) {
-				accessMode.set(AccessRestriction.READ_WRITE);
+				getContainer().accessMode.set(AccessRestriction.READ_WRITE);
 			} else if (mode == AccessRestriction.READ_WRITE) {
-				accessMode.set(AccessRestriction.READ);
+				getContainer().accessMode.set(AccessRestriction.READ);
 			} else if (mode == AccessRestriction.READ) {
-				accessMode.set(AccessRestriction.WRITE);
+				getContainer().accessMode.set(AccessRestriction.WRITE);
 			}
 
 			// Notify server
-			NetworkHandler.sendToServer(new PacketAccessModeClientToServer((AccessRestriction) accessMode.getCurrentValue(), storageBus));
+			NetworkHandler.sendToServer(new PacketAccessModeClientToServer((AccessRestriction) getContainer().accessMode.getCurrentValue(), storageBus));
 		}
 
 		// Avoid null pointer exception in packet
@@ -217,9 +214,9 @@ public class GuiEnergyStoragePart extends AIBaseGui {
 		}
 
 		// Check if mouse over access mode widget
-		if (accessMode.isMouseOver()) {
+		if (getContainer().accessMode.isMouseOver()) {
 			// Split messages using regex "\n"
-			tooltip.addAll(Arrays.asList(accessMode.getMessage().split("\n")));
+			tooltip.addAll(Arrays.asList(getContainer().accessMode.getMessage().split("\n")));
 		}
 
 		// Should we get the tooltip from the slot?

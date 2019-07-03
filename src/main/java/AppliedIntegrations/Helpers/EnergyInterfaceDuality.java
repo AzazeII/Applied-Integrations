@@ -4,7 +4,6 @@ import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
 import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketBarChange;
-import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketProgressBar;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.api.IEnergyInterface;
@@ -89,15 +88,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 			if (IntegrationsHelper.instance.isLoaded(energy, false)) {
 				// Update energy
 				owner.initEnergyStorage(energy, side);
-			}
-		}
-	}
-
-	public void notifyListenersOfFilterEnergyChange(LiquidAIEnergy energy, int index) {
-		for (ContainerEnergyInterface listener : owner.getListeners()) {
-			if (listener != null) {
-				NetworkHandler.sendTo(new PacketFilterServerToClient(energy, index, owner),
-						(EntityPlayerMP) listener.player);
 			}
 		}
 	}

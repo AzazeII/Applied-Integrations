@@ -8,11 +8,9 @@ import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
 import appeng.api.config.SortOrder;
 import appeng.api.config.ViewItems;
-import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.IConfigManager;
 import appeng.client.gui.widgets.GuiImgButton;
 import appeng.client.gui.widgets.ISortSource;
-import appeng.client.me.ItemRepo;
 import appeng.core.localization.GuiText;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
@@ -23,7 +21,6 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * @Author Azazell
@@ -36,8 +33,6 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 	private static final int SLOT_ROWS = 5;
 
 	private final WidgetScrollbar scroll = new WidgetScrollbar(this, 175, 18);
-
-	private ItemRepo itemStorage = new ItemRepo(scroll, this);
 
 	private IConfigManager configSource = new ConfigManager(this);
 
@@ -56,17 +51,9 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		configSource.registerSetting(Settings.VIEW_MODE, ViewItems.ALL); // View mode (all, craft-able, stored)
 	}
 
-	public void receiveServerData(final List<IAEItemStack> stackChange) {
-		// Iterate for each item stack in given list
-		for( final IAEItemStack is : stackChange ) {
-			// Post update to storage
-			itemStorage.postUpdate( is );
-		}
-
-		// Update view cell array of repo
-		itemStorage.updateView();
+	private ContainerMultiControllerCore getContainer() {
+		return (ContainerMultiControllerCore) inventorySlots;
 	}
-
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
@@ -163,6 +150,6 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		viewModeButton.set( configSource.getSetting( Settings.VIEW_MODE ) ); // 3. View mode button
 
 		// Update view of item storage repo
-		itemStorage.updateView();
+		//getContainer().itemStorage.updateView();
 	}
 }

@@ -1,12 +1,10 @@
 package AppliedIntegrations.Network.Handlers.MultiController;
-
-
-import AppliedIntegrations.Gui.MultiController.GuiMultiControllerCore;
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Network.Packets.MultiController.PacketInventorySync;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -21,16 +19,16 @@ public class HandlerInventorySync implements IMessageHandler<PacketInventorySync
 	public PacketInventorySync onMessage(PacketInventorySync message, MessageContext ctx) {
 		// Schedule update
 		Minecraft.getMinecraft().addScheduledTask(() -> {
-			// Get current GUI
-			Gui gui = Minecraft.getMinecraft().currentScreen;
+			// Get current container
+			Container container = Minecraft.getMinecraft().player.openContainer;
 
 			// Check if gui is gui of multi-controller core
-			if (gui instanceof GuiMultiControllerCore) {
-				// Cast to GuiMultiControllerCore
-				GuiMultiControllerCore guiCore = (GuiMultiControllerCore) gui;
+			if (container instanceof ContainerMultiControllerCore) {
+				// Cast to ContainerMultiControllerCore
+				ContainerMultiControllerCore containerMCC = (ContainerMultiControllerCore) container;
 
-				// Check if we are updating correct GUI
-				if (guiCore.getSyncHost().compareTo(message.host, true)) {
+				// Check if we are updating correct container, by comparing sync host with host from message
+				if (containerMCC.getSyncHost().compareTo(message.host, true)) {
 					// Create initial list
 					List<IAEItemStack> stackList = new ArrayList<>();
 
@@ -41,7 +39,7 @@ public class HandlerInventorySync implements IMessageHandler<PacketInventorySync
 					}
 
 					// Call update receive method
-					guiCore.receiveServerData(stackList);
+					containerMCC.receiveServerData(stackList);
 				}
 			}
 		});

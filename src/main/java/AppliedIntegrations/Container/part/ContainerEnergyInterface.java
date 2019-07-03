@@ -3,7 +3,11 @@ import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Container.Sync.IFilterContainer;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
+import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -11,6 +15,7 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.tile.TileEnergyInterface;
 import appeng.api.util.AEPartLocation;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -98,6 +103,20 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 		} else if (sender instanceof TileEnergyInterface) {
 			// Update storage of bar from side
 			this.sideStorageMap.put(energySide, stored);
+		}
+	}
+
+	@Override
+	protected void syncHostWithGUI() {
+		NetworkHandler.sendTo(new PacketCoordinateInit(getSyncHost()), (EntityPlayerMP) this.player);
+
+		// Separate sync method for part and block
+		if (energyInterface instanceof PartEnergyStorage) {
+			NetworkHandler.sendTo(new PacketFilterServerToClient(energyInterface.getFilteredEnergy(AEPartLocation.INTERNAL), 0, energyInterface), (EntityPlayerMP) this.player);
+		} else if (energyInterface instanceof TileEnergyInterface) {
+			for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
+				NetworkHandler.sendTo(new PacketFilterServerToClient(energyInterface.getFilteredEnergy(side), side.ordinal(), energyInterface), (EntityPlayerMP) this.player);
+			}
 		}
 	}
 

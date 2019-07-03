@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.AIBaseGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
@@ -42,7 +41,6 @@ import appeng.parts.misc.PartInterface;
 import appeng.util.Platform;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
@@ -78,7 +76,9 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 		@Optional.Interface(iface = "mcp.mobius.waila.api.*", modid = "Waila", striprefs = true),
 		@Optional.Interface(iface = "teamroots.embers.power.IEmberCapability", modid = "embers", striprefs = true),
 		@Optional.Interface(iface = "teamroots.embers.power.DefaultEmberCapability", modid = "embers", striprefs = true)})
-public class PartEnergyInterface extends AIPart implements IInventory, IEnergyInterface, IInventoryHost, IEnergyMachine, IPriorityHostExtended, IGridTickable, IStorageMonitorable, ICraftingProvider, IPowerChannelState, IEnergySink {
+public class PartEnergyInterface extends AIPart implements IInventory, IEnergyInterface,
+		IInventoryHost, IEnergyMachine, IPriorityHostExtended, IGridTickable, IStorageMonitorable,
+		ICraftingProvider, IPowerChannelState, IEnergySink {
 	private final ChangeHandler<LiquidAIEnergy> energyChangeHandler = new ChangeHandler<>();
 
 	public LiquidAIEnergy bar;
@@ -311,14 +311,8 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	public final void updateFilter(final LiquidAIEnergy energy, final int index) {
 		// Set the filter
 		this.filteredEnergy = energy;
-
-		// Send callback packet
-		duality.notifyListenersOfFilterEnergyChange(energy, 0);
 	}
 
-	/**
-	 * Ticking Request:
-	 */
 	@Override
 	public TickingRequest getTickingRequest(final IGridNode node) {
 		return new TickingRequest(1, 1, false, false);
@@ -327,17 +321,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int TicksSinceLastCall) {
 		if (!getHostTile().getWorld().isRemote) {
-			if (updateRequested) {
-				// Check if we have gui to update
-				if (Minecraft.getMinecraft().currentScreen instanceof AIBaseGui) {
-					// Init gui coordinate set
-					//initGuiCoordinates();
-
-					// Force update filtered energy of gui
-					duality.notifyListenersOfFilterEnergyChange(filteredEnergy, 0);
-				}
-			}
-
 			try {
 				if (this.isActive()) {
 					// Try injecting energy from buffer
@@ -348,12 +331,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 			} catch(NullNodeConnectionException | GridAccessException e) {
 				AILog.error(e, "Part energy interface can't access it's grid");
 			}
-
-			// Check if energy changed
-			energyChangeHandler.onChange(filteredEnergy, (energy) -> {
-				// Sync filtered energy
-				duality.notifyListenersOfFilterEnergyChange(energy, 0);
-			});
 
 			// Energy Stored with GUI
 			int storedEnergyTypesAmount = 0;

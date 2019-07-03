@@ -348,7 +348,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		return TickRateModulation.IDLE;
 	}
 
-	public void updateGui() {
+	private void updateGui() {
 		// Iterate until i equal to filter size
 		for (int i = 0; i < MAX_FILTER_SIZE; i++) {
 
