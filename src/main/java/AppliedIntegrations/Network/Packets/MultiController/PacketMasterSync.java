@@ -4,6 +4,8 @@ import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import io.netty.buffer.ByteBuf;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

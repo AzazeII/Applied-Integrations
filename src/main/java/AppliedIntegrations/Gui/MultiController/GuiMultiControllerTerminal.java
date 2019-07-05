@@ -1,6 +1,4 @@
 package AppliedIntegrations.Gui.MultiController;
-
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
@@ -51,7 +49,6 @@ import static AppliedIntegrations.tile.MultiController.TileMultiControllerTermin
  * @Author Azazell
  */
 public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost {
-
 	private static final int GUI_WIDTH = 192;
 
 	private static final int GUI_HEIGH = 256;
@@ -63,9 +60,6 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 	private GuiStorageChannelButton storageChannelButton;
 
 	private GuiListTypeButton listTypeButton;
-
-	private TileMultiControllerTerminal terminal;
-
 	private ChangeHandler<ItemStack> cardChangeUpdateHandler = new ChangeHandler<>();
 
 	/**
@@ -96,7 +90,6 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 	}
 
 	public IncludeExclude getIncludeExcludeMode() {
-
 		return permissionChannelModeMap.get(securityPermissionButton.getCurrentPermissions()).get(storageChannelButton.getChannel());
 	}
 
@@ -106,14 +99,13 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 
 	@Override
 	public ISyncHost getSyncHost() {
-
-		return terminal;
+		return getContainer().terminal;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
 		if (host instanceof TileMultiControllerTerminal) {
-			terminal = (TileMultiControllerTerminal) host;
+			getContainer().terminal = (TileMultiControllerTerminal) host;
 		}
 	}
 
@@ -137,7 +129,7 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 			LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelWidget<?>>> tempMap = new LinkedHashMap<>();
 
 			// Iterate for each storage channel is list
-			GuiStorageChannelButton.getChannelList().forEach((chan) -> {
+			ContainerMultiControllerTerminal.channelList.forEach((chan) -> {
 				// Get widget from API
 				Constructor<? extends IChannelWidget> channelWidgetConstructor = Objects.requireNonNull(AIApi.instance()).getWidgetFromChannel(chan);
 
@@ -219,7 +211,7 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 			LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude> tempMap = new LinkedHashMap<>();
 
 			// Iterate for each storage channel
-			GuiStorageChannelButton.getChannelList().forEach((chan -> {
+			ContainerMultiControllerTerminal.channelList.forEach((chan -> {
 				// Add default list mode to map
 				tempMap.put(chan, AIConfig.defaultListMode);
 			}));
@@ -287,7 +279,8 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 					widget.setAEStack(AEItemStack.fromItemStack(player.inventory.getItemStack()));
 
 					// Sync with server
-					NetworkHandler.sendToServer(new PacketContainerWidgetSync(player.inventory.getItemStack(), terminal, slot.xPos, slot.yPos));
+					NetworkHandler.sendToServer(new PacketContainerWidgetSync(player.inventory.getItemStack(), getContainer().terminal,
+							slot.xPos, slot.yPos));
 
 					// Encode data
 					encodeCardTag();
@@ -310,11 +303,15 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 		getCardStack().setTagCompound(tag);
 	}
 
+	private ContainerMultiControllerTerminal getContainer() {
+		return (ContainerMultiControllerTerminal) inventorySlots;
+	}
+
 	private ItemStack getCardStack() {
 		// Check if container has card
-		if (((ContainerMultiControllerTerminal) inventorySlots).hasCard()) {
+		if (getContainer().hasCard()) {
 			// Get card stack from container
-			return ((ContainerMultiControllerTerminal) inventorySlots).getCard();
+			return getContainer().getCard();
 		}
 
 		return null;
@@ -322,7 +319,7 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 
 	private void syncWithServer(NBTTagCompound tag) {
 
-		NetworkHandler.sendToServer(new PacketServerFeedback(tag, terminal));
+		NetworkHandler.sendToServer(new PacketServerFeedback(tag, getContainer().terminal));
 	}
 
 	@Override
@@ -416,7 +413,11 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 			// Check if stack has valid tags
 			if (tag.hasKey(NetworkCard.KEY_SUB + "_INJECT")) {
 				// Decode map pair
-				Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> data = NetworkCard.decodeDataFromTag(tag);
+				Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>,
+						List<IAEStack<? extends IAEStack>>>>,
+						LinkedHashMap<SecurityPermissions,
+						LinkedHashMap<IStorageChannel<? extends IAEStack<?>>,
+						IncludeExclude>>> data = NetworkCard.decodeDataFromTag(tag);
 
 				// Update mode map
 				permissionChannelModeMap = data.getRight();
@@ -424,7 +425,7 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 				// Iterate for each security permissions
 				GuiSecurityPermissionsButton.getPermissionList().forEach((securityPermissions -> {
 					// Iterate for each channel
-					GuiStorageChannelButton.getChannelList().forEach((channel -> {
+					ContainerMultiControllerTerminal.channelList.forEach((channel -> {
 						// Create atomic integer
 						AtomicInteger counter = new AtomicInteger();
 
@@ -433,9 +434,8 @@ public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost
 							List<IAEStack<? extends IAEStack>> stackList = data.getLeft().get(securityPermissions).get(channel);
 
 							// Check if list has enough elements
-							if (stackList.size() >= counter.get() + 1)
-							// Update stack in channel widget
-							{
+							if (stackList != null && stackList.size() >= counter.get() + 1) {
+								// Update stack in channel widget
 								iChannelWidget.setAEStack(stackList.get(counter.get()));
 							}
 

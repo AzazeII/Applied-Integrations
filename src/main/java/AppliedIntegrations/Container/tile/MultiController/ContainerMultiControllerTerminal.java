@@ -1,16 +1,14 @@
 package AppliedIntegrations.Container.tile.MultiController;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermissionsButton;
-import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
+import appeng.api.AEApi;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
@@ -22,10 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
 import static AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal.*;
@@ -34,10 +29,12 @@ import static AppliedIntegrations.tile.MultiController.TileMultiControllerTermin
  * @Author Azazell
  */
 public class ContainerMultiControllerTerminal extends ContainerWithPlayerInventory {
+	public static ArrayList<IStorageChannel<? extends IAEStack<?>>> channelList
+			= new ArrayList<>(AEApi.instance().storage().storageChannels());
 
 	private final SlotRestrictive cardSlot;
 
-	private TileMultiControllerTerminal terminal;
+	public TileMultiControllerTerminal terminal;
 
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> permissionChannelWidgetMap = new LinkedHashMap<>();
 
@@ -76,7 +73,7 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 			LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>> tempMap = new LinkedHashMap<>();
 
 			// Iterate for each storage channel is list
-			GuiStorageChannelButton.getChannelList().forEach((chan) -> {
+			AEApi.instance().storage().storageChannels().forEach((chan) -> {
 				// Get widget from API
 				Constructor<? extends IChannelWidget> channelWidgetConstructor = Objects.requireNonNull(AIApi.instance()).getWidgetFromChannel(chan);
 

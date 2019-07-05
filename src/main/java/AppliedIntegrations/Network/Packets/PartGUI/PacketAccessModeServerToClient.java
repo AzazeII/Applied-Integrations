@@ -6,6 +6,8 @@ import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import appeng.api.config.AccessRestriction;
 import io.netty.buffer.ByteBuf;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

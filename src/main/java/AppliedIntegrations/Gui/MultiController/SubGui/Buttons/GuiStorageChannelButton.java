@@ -1,6 +1,5 @@
 package AppliedIntegrations.Gui.MultiController.SubGui.Buttons;
-
-
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.api.AIApi;
@@ -13,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -23,10 +21,6 @@ import java.util.Objects;
 
 // this one is special
 public class GuiStorageChannelButton extends GuiServerButton {
-
-	// Array list of all storage channels registered
-	private static final List<IStorageChannel<? extends IAEStack<?>>> channelList = new ArrayList<>(Objects.requireNonNull(AEApi.instance().storage().storageChannels()));
-
 	// Current storage channel of button
 	private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 
@@ -35,20 +29,15 @@ public class GuiStorageChannelButton extends GuiServerButton {
 		super(terminal, ID, xPosition, yPosition, width, height, text);
 	}
 
-	public static List<IStorageChannel<? extends IAEStack<?>>> getChannelList() {
-
-		return channelList;
-	}
-
 	public void cycleChannel() {
 		// Check if channel is last channel in list
-		if (channel == channelList.get(channelList.size() - 1)) {
+		if (channel == ContainerMultiControllerTerminal.channelList.get(ContainerMultiControllerTerminal.channelList.size() - 1)) {
 
 			// Make channel first in list
-			channel = channelList.get(0);
+			channel = ContainerMultiControllerTerminal.channelList.get(0);
 		} else {
 			// Make channel next in list
-			channel = channelList.get(channelList.indexOf(channel) + 1);
+			channel = ContainerMultiControllerTerminal.channelList.get(ContainerMultiControllerTerminal.channelList.indexOf(channel) + 1);
 		}
 	}
 

@@ -1,10 +1,8 @@
 package AppliedIntegrations.tile.MultiController;
-
-
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerCore;
-import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -146,7 +144,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IMEInventoryHandler> handlers = new LinkedHashMap<>();
 
 					// Iterate for each channel
-					GuiStorageChannelButton.getChannelList().forEach(channel -> {
+					ContainerMultiControllerTerminal.channelList.forEach(channel -> {
 						try {
 							// Get new handler from API
 							FilteredMultiControllerPortHandler handler = Objects.requireNonNull(AIApi.instance()).getHandlerFromChannel(channel).newInstance(data.getLeft(), data.getRight(), TileMultiControllerCore.this);
@@ -563,7 +561,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 		// Remove receivers from listeners of each channel from main server grid
 		// Iterate for each channel
-		GuiStorageChannelButton.getChannelList().forEach(channel -> {
+		ContainerMultiControllerTerminal.channelList.forEach(channel -> {
 			// Iterate for each ME server listeners in list
 			receiverList.forEach((meMultiControllerMonitorHandlerReceiver -> {
 				// Check not null
@@ -762,7 +760,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 			// Add receivers to listeners of each channel of main server grid
 			// Iterate for each channel
-			GuiStorageChannelButton.getChannelList().forEach(channel -> {
+			ContainerMultiControllerTerminal.channelList.forEach(channel -> {
 				// Get inventory
 				IMEMonitor<? extends IAEStack<?>> inventory = getMainNetworkInventory(channel);
 

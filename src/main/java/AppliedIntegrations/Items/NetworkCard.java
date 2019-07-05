@@ -1,10 +1,8 @@
 package AppliedIntegrations.Items;
-
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
+import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermissionsButton;
-import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.AIApi.IStackDecoder;
 import AppliedIntegrations.api.Storage.IChannelWidget;
@@ -38,7 +36,6 @@ import java.util.List;
 import java.util.Objects;
 
 import static AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiSecurityPermissionsButton.getPermissionList;
-import static AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
 
 /**
  * @Author Azazell
@@ -82,8 +79,10 @@ public class NetworkCard extends AIItemRegistrable {
 
 	public static Pair<LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>>, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>>> decodeDataFromTag(NBTTagCompound tag) {
 		// Create initial maps
-		LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> channelStackMap = new LinkedHashMap<>(); // (1)
-		LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> channelTypeMap = new LinkedHashMap<>(); // (2)
+		LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> channelStackMap
+				= new LinkedHashMap<>(); // (1)
+		LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> channelTypeMap
+				= new LinkedHashMap<>(); // (2)
 
 		// Pre-fill map with mode values
 		// Iterate for each security permissions
@@ -92,7 +91,7 @@ public class NetworkCard extends AIItemRegistrable {
 			LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude> tempMap = new LinkedHashMap<>();
 
 			// Iterate for each storage channel
-			GuiStorageChannelButton.getChannelList().forEach((chan -> {
+			ContainerMultiControllerTerminal.channelList.forEach((chan -> {
 				// Add default list mode to map
 				tempMap.put(chan, AIConfig.defaultListMode);
 			}));
@@ -111,7 +110,7 @@ public class NetworkCard extends AIItemRegistrable {
 			LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude> typeMap = new LinkedHashMap<>(); // (2)
 
 			// Iterate for each storage channel
-			for (int j = 0; j < getChannelList().size(); j++) {
+			for (int j = 0; j < ContainerMultiControllerTerminal.channelList.size(); j++) {
 				// Create temp stack list
 				List<IAEStack<? extends IAEStack>> list = new ArrayList<>();
 
@@ -135,7 +134,7 @@ public class NetworkCard extends AIItemRegistrable {
 					NBTTagCompound stackTag = (NBTTagCompound) channelTag.getTag(KEY_SUB + k);
 
 					// Get decoder for stack
-					IStackDecoder decoder = Objects.requireNonNull(AIApi.instance()).getStackDecoder(getChannelList().get(j));
+					IStackDecoder decoder = Objects.requireNonNull(AIApi.instance()).getStackDecoder(ContainerMultiControllerTerminal.channelList.get(j));
 
 					try {
 						// Decode stack
@@ -152,10 +151,10 @@ public class NetworkCard extends AIItemRegistrable {
 				IncludeExclude mode = IncludeExclude.values()[channelTag.getInteger(NBT_KEY_LIST_MODE)];
 
 				// Put mode in map
-				typeMap.put(getChannelList().get(j), mode);
+				typeMap.put(ContainerMultiControllerTerminal.channelList.get(j), mode);
 
 				// Put list in map
-				stackMap.put(getChannelList().get(j), list);
+				stackMap.put(ContainerMultiControllerTerminal.channelList.get(j), list);
 			}
 
 			// Put map in map
@@ -179,9 +178,9 @@ public class NetworkCard extends AIItemRegistrable {
 			NBTTagCompound securityNBT = new NBTTagCompound();
 
 			// Iterate for each storage channel
-			for (int j = 0; j < getChannelList().size(); j++) {
+			for (int j = 0; j < ContainerMultiControllerTerminal.channelList.size(); j++) {
 				// Get channel
-				IStorageChannel<? extends IAEStack<?>> chan = getChannelList().get(j);
+				IStorageChannel<? extends IAEStack<?>> chan = ContainerMultiControllerTerminal.channelList.get(j);
 
 				// Create channel sub-nbt
 				NBTTagCompound channelNBT = new NBTTagCompound();
@@ -276,7 +275,7 @@ public class NetworkCard extends AIItemRegistrable {
 			NBTTagCompound securityTag = (NBTTagCompound) tag.getTag(KEY_SUB + getPermissionList().get(i));
 
 			// Iterate for each storage channel
-			for (int j = 0; j < getChannelList().size(); j++) {
+			for (int j = 0; j < ContainerMultiControllerTerminal.channelList.size(); j++) {
 				// Check not null
 				if (securityTag == null || securityTag.getTag(KEY_SUB + j) == null) {
 					return;

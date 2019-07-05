@@ -3,6 +3,7 @@ package AppliedIntegrations.tile.MultiController.helpers.Matter;
 
 import AppliedIntegrations.tile.MultiController.MultiControllerPortHandler;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
+import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
 import appeng.api.config.IncludeExclude;
@@ -19,7 +20,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 
-import static AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton.getChannelList;
 import static appeng.api.config.SecurityPermissions.EXTRACT;
 import static appeng.api.config.SecurityPermissions.INJECT;
 
@@ -168,7 +168,7 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 		// Iterate for each permission
 		for (SecurityPermissions securityPermissions : new SecurityPermissions[]{INJECT, EXTRACT}) {
 			// Iterate for each channel
-			getChannelList().forEach((channel -> {
+			AEApi.instance().storage().storageChannels().forEach((channel -> {
 				// Check not null
 				if (filteredMatter.get(securityPermissions) != null && filteredMatter.get(securityPermissions).get(channel) != null) {
 					// Iterate for each stack

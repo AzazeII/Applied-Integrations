@@ -7,6 +7,8 @@ import AppliedIntegrations.Parts.AIPart;
 import appeng.api.config.RedstoneMode;
 import io.netty.buffer.ByteBuf;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

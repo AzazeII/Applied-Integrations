@@ -2,6 +2,8 @@ package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.api.ISyncHost;
 import io.netty.buffer.ByteBuf;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

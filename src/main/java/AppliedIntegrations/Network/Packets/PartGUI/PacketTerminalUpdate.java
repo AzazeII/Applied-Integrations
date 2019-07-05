@@ -13,6 +13,8 @@ import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

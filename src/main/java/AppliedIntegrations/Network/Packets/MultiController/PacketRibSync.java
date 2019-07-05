@@ -5,6 +5,8 @@ import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerRib;
 import io.netty.buffer.ByteBuf;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

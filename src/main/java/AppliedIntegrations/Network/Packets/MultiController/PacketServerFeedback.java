@@ -23,21 +23,18 @@ public class PacketServerFeedback extends AIPacket {
 	}
 
 	public PacketServerFeedback(NBTTagCompound tag, TileMultiControllerTerminal terminal) {
-
 		this.tag = tag;
 		this.terminal = terminal;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		tag = ByteBufUtils.readTag(buf);
 		terminal = (TileMultiControllerTerminal) readSyncHost(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
 		ByteBufUtils.writeTag(buf, tag);
 		writeSyncHost(terminal, buf, true);
 	}

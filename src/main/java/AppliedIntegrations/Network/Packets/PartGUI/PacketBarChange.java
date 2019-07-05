@@ -6,6 +6,8 @@ import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import io.netty.buffer.ByteBuf;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

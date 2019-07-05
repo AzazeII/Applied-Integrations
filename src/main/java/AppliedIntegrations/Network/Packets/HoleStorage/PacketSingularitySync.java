@@ -4,6 +4,8 @@ import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client

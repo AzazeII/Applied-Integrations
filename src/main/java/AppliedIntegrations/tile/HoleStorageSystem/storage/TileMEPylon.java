@@ -1,9 +1,6 @@
 package AppliedIntegrations.tile.HoleStorageSystem.storage;
-
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
-import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiStorageChannelButton;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
 import AppliedIntegrations.Utils.AILog;
@@ -133,8 +130,8 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 			}
 
 			// Check if active
-			if (getGridNode().isActive()) {
-				// Check if has no handled black hole
+			if (getGridNode() != null && getGridNode().isActive()) {
+				// Check if has no handled singularity
 				if (!hasSingularity()) {
 					tryToGetSingularity();
 				} else if (shouldDrain) {
@@ -309,7 +306,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 		activeBlackHoleHandlers = new LinkedHashMap<>();
 
 		// Iterate over all channels
-		for (IStorageChannel chan : GuiStorageChannelButton.getChannelList()) {
+		for (IStorageChannel chan : AEApi.instance().storage().storageChannels()) {
 			try {
 				// Get inv
 				WhiteHoleSingularityInventoryHandler<?> invWhiteHole = passiveWhiteHoleHandlers.get(chan).newInstance();

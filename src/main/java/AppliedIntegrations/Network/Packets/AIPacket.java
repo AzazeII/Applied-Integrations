@@ -4,7 +4,6 @@ import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -50,23 +49,6 @@ public abstract class AIPacket implements IMessage {
 		if (useWorld) {
 			writeWorld(buf, host.getHostWorld());
 		}
-	}
-
-	// Separate r/w method for server and client
-	protected static ISyncHost readSyncHostClient(ByteBuf buf) {
-		ISyncHost host;
-
-		BlockPos pos = BlockPos.fromLong(buf.readLong());
-
-		AEPartLocation side = AEPartLocation.values()[buf.readInt()];
-
-		if (side == AEPartLocation.INTERNAL) {
-			host = (ISyncHost) Minecraft.getMinecraft().world.getTileEntity(pos);
-		} else {
-			host = Utils.getSyncHostByParams(pos, side, Minecraft.getMinecraft().world);
-		}
-
-		return host;
 	}
 
 	protected ISyncHost readSyncHost(ByteBuf buf) {

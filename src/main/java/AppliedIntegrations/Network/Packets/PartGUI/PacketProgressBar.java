@@ -4,6 +4,8 @@ import AppliedIntegrations.api.IEnergyInterface;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 
+import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
+
 /**
  * @Author Azazell
  * @Side Server -> Client
