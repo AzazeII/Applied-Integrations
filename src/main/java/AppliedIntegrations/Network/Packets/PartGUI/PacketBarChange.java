@@ -21,25 +21,19 @@ public class PacketBarChange extends AIPacket {
 	}
 
 	public PacketBarChange(LiquidAIEnergy energy, ISyncHost host) {
-
-		super(host.getHostPos().getX(), host.getHostPos().getY(), host.getHostPos().getZ(), host.getHostSide().getFacing(), host.getHostWorld());
 		this.energy = energy;
 		this.host = host;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		this.energy = LiquidAIEnergy.linkedIndexMap.get(buf.readInt());
-
-		host = readSyncHost(buf);
+		this.host = readSyncHostClient(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
 		buf.writeInt(this.energy.getIndex());
-
-		writeSyncHost(host, buf);
+		writeSyncHost(host, buf, false);
 	}
 }

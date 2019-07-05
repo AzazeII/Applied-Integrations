@@ -10,9 +10,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 /**
  * @Author Azazell
  */
-public class HandlerServerToClient implements IMessageHandler<PacketFilterServerToClient, PacketFilterServerToClient> {
+public class HandlerServerToClientFilter implements IMessageHandler<PacketFilterServerToClient, PacketFilterServerToClient> {
 
-	public HandlerServerToClient() {
+	public HandlerServerToClientFilter() {
 
 	}
 
@@ -26,17 +26,17 @@ public class HandlerServerToClient implements IMessageHandler<PacketFilterServer
 			// Check if container is filter container
 			if (container instanceof IFilterContainer) {
 				// Cast container
-				IFilterContainer filterGUI = (IFilterContainer) container;
+				IFilterContainer filterHost = (IFilterContainer) container;
 
 				// Check if gui is base gui
 				if (container instanceof AIContainer) {
 					// Cast GUI
 					AIContainer baseGUI = (AIContainer) container;
 
-					// Check not null && Check if we are updating correct GUI
+					// Check not null && Check if we are updating correct filter host
 					if (baseGUI.getSyncHost() != null && baseGUI.getSyncHost().compareTo(message.host, true)) {
 						// Update energy in GUI
-						filterGUI.updateEnergy(message.energy, message.index);
+						filterHost.updateEnergy(message.energy, message.index);
 					}
 				}
 			}

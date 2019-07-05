@@ -104,7 +104,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 				// Check not null
 				if (hostTile != null) {
 					// Send packet
-					NetworkHandler.sendTo(new PacketProgressBar(owner, energy, energySide),
+					NetworkHandler.sendTo(new PacketProgressBar(owner, energySide, getEnergyStorage(energy, energySide).getStored()),
 							(EntityPlayerMP) listener.player);
 				}
 			}

@@ -36,7 +36,6 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 /**
  * @Author Azazell
  */
-
 @Optional.InterfaceList(value = {@Optional.Interface(iface = "teamroots.embers.api.item.IEmberChargedTool", modid = "embers", striprefs = true), @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IEnergizedItem", modid = "mekanism", striprefs = true)})
 public class Utils {
 	public static IAEStack<IAEEnergyStack> getEnergyStackFromItemStack(ItemStack itemStack) {
@@ -67,6 +66,7 @@ public class Utils {
 				return getEnergyFromContainer(blk.createTileEntity(null, blk.getDefaultState()));
 			}
 		}
+
 		return getEnergyFromItem(item);
 	}
 
@@ -95,9 +95,8 @@ public class Utils {
 				// Iterate over
 				for (Capability capability : type.getCapabilityWithModCheck()) {
 					// Check if host has capability
-					if (part.hasCapability(capability))
-					// return
-					{
+					if (part.hasCapability(capability)) {
+						// return
 						return type.energy;
 					}
 				}
@@ -132,9 +131,8 @@ public class Utils {
 				// Iterate over
 				for (Capability capability : type.getCapabilityWithModCheck()) {
 					// Check if host has capability
-					if (tile.hasCapability(capability, null))
-					// return
-					{
+					if (tile.hasCapability(capability, null)) {
+						// return
 						return type.energy;
 					}
 				}
@@ -172,7 +170,7 @@ public class Utils {
 	}
 
 	public static AIPart getPartByParams(@Nonnull BlockPos pos, @Nonnull EnumFacing side, @Nonnull World world) {
-		return (AIPart) (((IPartHost) world.getTileEntity(pos)).getPart(side));
+		return (AIPart) (((IPartHost) world.getTileEntity(pos)).getPart(side)); // -1, 64, 3
 	}
 
 	public static IAEManaStack getManaFromItemStack(ItemStack itemStack) {

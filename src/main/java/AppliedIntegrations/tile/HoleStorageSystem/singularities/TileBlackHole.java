@@ -21,6 +21,7 @@ import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import appeng.api.util.AEPartLocation;
 import appeng.fluids.util.AEFluidStack;
 import appeng.fluids.util.FluidList;
 import appeng.util.Platform;
@@ -481,5 +482,20 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 			}
 		}
 		return true;
+	}
+
+	@Override
+	public BlockPos getHostPos() {
+		return pos;
+	}
+
+	@Override
+	public World getHostWorld() {
+		return world;
+	}
+
+	@Override
+	public AEPartLocation getHostSide() {
+		return AEPartLocation.INTERNAL;
 	}
 }

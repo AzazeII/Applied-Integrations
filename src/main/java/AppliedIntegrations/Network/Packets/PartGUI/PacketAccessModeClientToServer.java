@@ -8,6 +8,7 @@ import io.netty.buffer.ByteBuf;
 
 /**
  * @Author Azazell
+ * @Side Client -> Server
  */
 public class PacketAccessModeClientToServer extends AIPacket {
 
@@ -20,27 +21,20 @@ public class PacketAccessModeClientToServer extends AIPacket {
 	}
 
 	public PacketAccessModeClientToServer(AccessRestriction currentValue, AIPart part) {
-
-		super(part.getX(), part.getY(), part.getZ(), part.getHostSide().getFacing(), part.getHostWorld());
-		// Set val
 		val = currentValue;
-
-		// Set host
 		bus = part;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
-		bus = readPart(buf);
+		bus = (AIPart) readSyncHost(buf);
 
 		val = AccessRestriction.values()[buf.readInt()];
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
-		writePart(buf);
+		writeSyncHost(bus, buf, true);
 
 		int i = 0;
 

@@ -39,6 +39,6 @@ public class PacketServerFeedback extends AIPacket {
 	public void toBytes(ByteBuf buf) {
 
 		ByteBufUtils.writeTag(buf, tag);
-		writeSyncHost(terminal, buf);
+		writeSyncHost(terminal, buf, true);
 	}
 }

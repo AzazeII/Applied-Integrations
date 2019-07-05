@@ -27,9 +27,6 @@ public class PacketFullSync extends AIPacket {
 	}
 
 	public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, boolean redstoneControlled, AIOPart aioPart) {
-
-		super(aioPart.getX(), aioPart.getY(), aioPart.getZ(), aioPart.getHostSide().getFacing(), aioPart.getHostWorld());
-
 		this.filterSize = filterSize;
 		this.redstoneControl = redstoneControlled;
 		this.redstoneMode = redstoneMode;
@@ -40,7 +37,7 @@ public class PacketFullSync extends AIPacket {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		// Read everything
-		part = readPart(buf);
+		part = (AIPart) readSyncHostClient(buf);
 
 		filterSize = buf.readByte();
 		redstoneControl = buf.readBoolean();
@@ -50,7 +47,7 @@ public class PacketFullSync extends AIPacket {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		// Write everything
-		writePart(buf);
+		writeSyncHost(part, buf, false);
 
 		buf.writeByte(filterSize);
 		buf.writeBoolean(redstoneControl);

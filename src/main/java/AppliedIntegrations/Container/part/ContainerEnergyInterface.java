@@ -7,7 +7,6 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
-import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -91,10 +90,8 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 		}
 	}
 
-	public void onStorageUpdate(LiquidAIEnergy energy, AEPartLocation energySide, IEnergyInterface sender) {
-		// Get stored energy from interface
-		Number stored = sender.getEnergyStorage(energy, energySide).getStored();
-
+	public void onStorageUpdate(AEPartLocation energySide, IEnergyInterface sender,
+	                            Number stored) {
 		// If interface-sender is bus, then update central bar. If interface-sender is tile, then update bar from side
 		// Check if sender is part-interface
 		if (sender instanceof PartEnergyInterface) {
@@ -111,11 +108,13 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 		NetworkHandler.sendTo(new PacketCoordinateInit(getSyncHost()), (EntityPlayerMP) this.player);
 
 		// Separate sync method for part and block
-		if (energyInterface instanceof PartEnergyStorage) {
-			NetworkHandler.sendTo(new PacketFilterServerToClient(energyInterface.getFilteredEnergy(AEPartLocation.INTERNAL), 0, energyInterface), (EntityPlayerMP) this.player);
+		if (energyInterface instanceof PartEnergyInterface) {
+			NetworkHandler.sendTo(new PacketFilterServerToClient(energyInterface.getFilteredEnergy(AEPartLocation.INTERNAL),
+					0, energyInterface), (EntityPlayerMP) this.player);
 		} else if (energyInterface instanceof TileEnergyInterface) {
 			for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-				NetworkHandler.sendTo(new PacketFilterServerToClient(energyInterface.getFilteredEnergy(side), side.ordinal(), energyInterface), (EntityPlayerMP) this.player);
+				NetworkHandler.sendTo(new PacketFilterServerToClient(energyInterface.getFilteredEnergy(side),
+						side.ordinal(), energyInterface), (EntityPlayerMP) this.player);
 			}
 		}
 	}

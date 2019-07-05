@@ -21,23 +21,21 @@ public class PacketAccessModeServerToClient extends AIPacket {
 	}
 
 	public PacketAccessModeServerToClient(AccessRestriction accessRestriction, PartEnergyStorage part) {
-
-		super(part.getX(), part.getY(), part.getZ(), part.getHostSide().getFacing(), part.getHostWorld());
+		partEnergyStorage = part;
 		access = accessRestriction;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 
-		partEnergyStorage = (PartEnergyStorage) readPart(buf);
+		partEnergyStorage = (PartEnergyStorage) readSyncHostClient(buf);
 
 		access = AccessRestriction.values()[buf.readInt()];
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
-		writePart(buf);
+		writeSyncHost(partEnergyStorage, buf, false);
 
 		int i = 0;
 

@@ -1,10 +1,7 @@
 package AppliedIntegrations.Network.Packets.HoleStorage;
-
-
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -43,7 +40,7 @@ public class PacketSingularitySync extends AIPacket {
 		boolean isNull = buf.readBoolean();
 
 		if (!isNull) {
-			operatedTile = (ISingularity) readTile(buf);
+			operatedTile = (ISingularity) readSyncHostClient(buf);
 		}
 	}
 
@@ -56,7 +53,7 @@ public class PacketSingularitySync extends AIPacket {
 
 		if (operatedTile != null) {
 			buf.writeBoolean(false);
-			writeTile((TileEntity) operatedTile, buf);
+			writeSyncHost(operatedTile, buf, false);
 		} else {
 			buf.writeBoolean(true);
 		}

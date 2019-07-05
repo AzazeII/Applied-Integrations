@@ -37,7 +37,7 @@ public class NetworkHandler {
 		Handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
 		Handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
 		Handler.registerMessage(HandlerFullSync.class, PacketFullSync.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerServerToClient.class, PacketFilterServerToClient.class, packetId++, Side.CLIENT);
+		Handler.registerMessage(HandlerServerToClientFilter.class, PacketFilterServerToClient.class, packetId++, Side.CLIENT);
 		Handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
 		Handler.registerMessage(HandlerVectorSync.class, PacketVectorSync.class, packetId++, Side.CLIENT);
 		Handler.registerMessage(HandlerMassChange.class, PacketMassChange.class, packetId++, Side.CLIENT);

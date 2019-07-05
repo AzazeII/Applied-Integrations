@@ -1,6 +1,4 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
-
-
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.RedstoneMode;
@@ -29,15 +27,13 @@ public class PacketSyncReturn extends AIPacket {
 	}
 
 	public PacketSyncReturn(Enum currentValue, ISyncHost syncHost) {
-
-		super(syncHost.getHostPos().getX(), syncHost.getHostPos().getY(), syncHost.getHostPos().getZ(), syncHost.getHostSide().getFacing(), syncHost.getHostWorld());
 		this.mode = currentValue;
+		this.host = syncHost;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
-		host = readPart(buf);
+		host = readSyncHost(buf);
 
 		// Get enum ordinal of enum class
 		byte enumerationOrdinal = buf.readByte();
@@ -57,8 +53,7 @@ public class PacketSyncReturn extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
-		writePart(buf);
+		writeSyncHost(host, buf, true);
 
 		// Check for each enum of enumeration above
 		// Write it's ordinal

@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * @Author Azazell
+ * @Side Client -> Server
  */
 public class PacketContainerWidgetSync extends AIPacket {
 
@@ -27,7 +28,6 @@ public class PacketContainerWidgetSync extends AIPacket {
 	}
 
 	public PacketContainerWidgetSync(ItemStack itemStack, TileMultiControllerTerminal terminal, int slotX, int slotY) {
-
 		this.itemStack = itemStack;
 		this.host = terminal;
 		this.slotX = slotX;
@@ -51,6 +51,6 @@ public class PacketContainerWidgetSync extends AIPacket {
 		buf.writeInt(slotY);
 
 		ByteBufUtils.writeTag(buf, itemStack.writeToNBT(new NBTTagCompound()));
-		writeSyncHost(host, buf);
+		writeSyncHost(host, buf, true);
 	}
 }

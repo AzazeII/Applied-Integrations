@@ -1,6 +1,4 @@
 package AppliedIntegrations.Network.Packets.MultiController;
-
-
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
@@ -30,18 +28,18 @@ public class PacketMasterSync extends AIPacket {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 
-		slave = (IAIMultiBlock) readSyncHost(buf);
+		slave = (IAIMultiBlock) readSyncHostClient(buf);
 
-		master = buf.readBoolean() ? null : (IMaster) readSyncHost(buf);
+		master = buf.readBoolean() ? null : (IMaster) readSyncHostClient(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 
-		writeSyncHost(slave, buf);
+		writeSyncHost(slave, buf, false);
 
 		buf.writeBoolean(master == null);
 
-		writeSyncHost(master, buf);
+		writeSyncHost(master, buf, false);
 	}
 }

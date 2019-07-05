@@ -26,7 +26,6 @@ public class PacketClientToServerFilter extends AIPacket {
 	}
 
 	public PacketClientToServerFilter(@Nonnull ISyncHost host, LiquidAIEnergy energy, int index) {
-		super(host.getHostPos().getX(), host.getHostPos().getY(), host.getHostPos().getZ(), host.getHostSide().getFacing(), host.getHostWorld());
 		this.energy = energy;
 		this.index = index;
 		this.host = host;
@@ -44,7 +43,7 @@ public class PacketClientToServerFilter extends AIPacket {
 	// Encode data from client to server
 	@Override
 	public void toBytes(ByteBuf buf) {
-		writeSyncHost(host, buf);
+		writeSyncHost(host, buf, true);
 		writeEnergy(energy, buf);
 		buf.writeInt(index);
 	}

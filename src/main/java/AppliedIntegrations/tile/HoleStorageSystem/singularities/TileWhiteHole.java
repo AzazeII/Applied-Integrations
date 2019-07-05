@@ -17,6 +17,7 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import appeng.api.util.AEPartLocation;
 import appeng.fluids.util.FluidList;
 import appeng.util.item.ItemList;
 import net.minecraft.block.state.IBlockState;
@@ -210,7 +211,21 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 
 	@Override
 	public void addListener(IPylon pylon) {
-
 		listeners.add(pylon);
+	}
+
+	@Override
+	public BlockPos getHostPos() {
+		return pos;
+	}
+
+	@Override
+	public World getHostWorld() {
+		return world;
+	}
+
+	@Override
+	public AEPartLocation getHostSide() {
+		return AEPartLocation.INTERNAL;
 	}
 }

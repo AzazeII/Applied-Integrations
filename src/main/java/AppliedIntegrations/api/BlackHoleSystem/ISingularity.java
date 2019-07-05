@@ -1,6 +1,7 @@
 package AppliedIntegrations.api.BlackHoleSystem;
 
 
+import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.Actionable;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
@@ -19,7 +20,7 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
  * <p>
  * Class, used to mark any singularity/hole
  */
-public interface ISingularity {
+public interface ISingularity extends ISyncHost {
 	static ISingularity readFromNBT(NBTTagCompound compound) {
 		// Deserialize positions
 		BlockPos p = BlockPos.fromLong(compound.getLong("#POS"));

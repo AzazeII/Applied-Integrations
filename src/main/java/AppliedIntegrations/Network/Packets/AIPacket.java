@@ -1,14 +1,11 @@
 package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.Helpers.Energy.Utils;
-import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
-import AppliedIntegrations.tile.AITile;
+import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -17,28 +14,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
  * @Author Azazell
  */
 public abstract class AIPacket implements IMessage {
-	public World w;
-
-	public EnumFacing side;
-
-	public int x, y, z;
-
-	public AIPacket() {
-		this(0, 0, 0, null, null);
-	}
-
-	public AIPacket(int x, int y, int z, EnumFacing side, World w) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.side = side;
-		this.w = w;
-	}
-
-	public AIPacket(ISyncHost token) {
-		this(token.getHostPos().getX(), token.getHostPos().getY(), token.getHostPos().getZ(), token.getHostSide().getFacing(), token.getHostWorld());
-	}
-
 	protected LiquidAIEnergy readEnergy(ByteBuf buf) {
 		int buffed = buf.readInt();
 
@@ -56,92 +31,61 @@ public abstract class AIPacket implements IMessage {
 		}
 	}
 
-	protected void writeVec(Vec3d vecA, ByteBuf buf) {
-		writePos(new BlockPos(vecA), buf);
-	}
-
 	protected void writePos(BlockPos pos, ByteBuf buf) {
 		buf.writeLong(pos.toLong());
-	}
-
-	protected Vec3d readVec(ByteBuf buf) {
-		return new Vec3d(readPos(buf));
 	}
 
 	protected BlockPos readPos(ByteBuf buf) {
 		return BlockPos.fromLong(buf.readLong());
 	}
 
-	protected void writeSyncHost(ISyncHost host, ByteBuf buf) {
-		if (host instanceof AIPart) {
-			// Write state to buf
-			buf.writeBoolean(true);
-
-			writePart(buf);
-		} else if (host instanceof AITile) {
-			// Write state to buf
-			buf.writeBoolean(false);
-
-			writeTile((AITile) host, buf);
-		}
-	}
-
-	protected void writePart(ByteBuf buf) {
-		buf.writeLong(new BlockPos(x, y, z).toLong());
-
-		writeWorld(buf, w);
-		buf.writeInt(side.ordinal());
-	}
-
-	protected void writeTile(TileEntity tile, ByteBuf buf) {
-		writePos(tile.getPos(), buf);
-		writeWorld(buf, tile.getWorld());
-	}
-
-	protected void writeWorld(ByteBuf buf, World world) {
+	private void writeWorld(ByteBuf buf, World world) {
 		buf.writeInt(world.provider.getDimension());
 	}
 
-	protected ISyncHost readSyncHost(ByteBuf buf) {
-		boolean isPart = buf.readBoolean();
+	protected void writeSyncHost(ISyncHost host, ByteBuf buf, boolean useWorld) {
+		buf.writeLong(host.getHostPos().toLong());
+		buf.writeInt(host.getHostSide().ordinal());
 
+		if (useWorld) {
+			writeWorld(buf, host.getHostWorld());
+		}
+	}
+
+	// Separate r/w method for server and client
+	protected static ISyncHost readSyncHostClient(ByteBuf buf) {
 		ISyncHost host;
 
-		if (isPart) {
-			host = readPart(buf);
+		BlockPos pos = BlockPos.fromLong(buf.readLong());
+
+		AEPartLocation side = AEPartLocation.values()[buf.readInt()];
+
+		if (side == AEPartLocation.INTERNAL) {
+			host = (ISyncHost) Minecraft.getMinecraft().world.getTileEntity(pos);
 		} else {
-			host = (ISyncHost) readTile(buf);
+			host = Utils.getSyncHostByParams(pos, side, Minecraft.getMinecraft().world);
 		}
 
 		return host;
 	}
 
-	protected AIPart readPart(ByteBuf buf) {
+	protected ISyncHost readSyncHost(ByteBuf buf) {
+		ISyncHost host;
+
 		BlockPos pos = BlockPos.fromLong(buf.readLong());
+		AEPartLocation side = AEPartLocation.values()[buf.readInt()];
 		World w = readWorld(buf);
 
-		EnumFacing side = readSide(buf);
+		if (side == AEPartLocation.INTERNAL) {
+			host = (ISyncHost) w.getTileEntity(pos);
+		} else {
+			host = Utils.getSyncHostByParams(pos, side, w);
+		}
 
-		x = pos.getX();
-		y = pos.getY();
-		z = pos.getZ();
-
-		this.w = w;
-		this.side = side;
-
-		return Utils.getPartByParams(pos, side, w);
-	}
-
-	protected TileEntity readTile(ByteBuf buf) {
-		BlockPos pos = readPos(buf);
-		return readWorld(buf).getTileEntity(pos);
+		return host;
 	}
 
 	private World readWorld(ByteBuf buf) {
 		return DimensionManager.getWorld(buf.readInt());
-	}
-
-	private EnumFacing readSide(ByteBuf buf) {
-		return EnumFacing.getFront(buf.readInt());
 	}
 }

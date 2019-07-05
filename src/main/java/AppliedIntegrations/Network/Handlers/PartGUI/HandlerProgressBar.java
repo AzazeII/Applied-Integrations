@@ -22,15 +22,15 @@ public class HandlerProgressBar implements IMessageHandler<PacketProgressBar, Pa
 			// Get current screen
 			Container container = Minecraft.getMinecraft().player.openContainer;
 
-			// Check if gui instanceof energy interface gui
+			// Check if container instanceof energy interface container
 			if (container instanceof ContainerEnergyInterface) {
-				// Cast gui
+				// Cast container
 				ContainerEnergyInterface CEI = (ContainerEnergyInterface) container;
 
-				// Check if we are updating correct GUI
+				// Check if we are updating correct container
 				if (CEI.getSyncHost().equals(message.sender)) {
-					// Pass call to GUI
-					CEI.onStorageUpdate(message.energy, message.energySide, message.sender);
+					// Pass call to container
+					CEI.onStorageUpdate(message.energySide, message.sender, message.stored);
 				}
 			}
 		});

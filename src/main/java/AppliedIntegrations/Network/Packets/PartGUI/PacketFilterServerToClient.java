@@ -1,6 +1,4 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
-
-
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -24,7 +22,6 @@ public class PacketFilterServerToClient extends AIPacket {
 	}
 
 	public PacketFilterServerToClient(LiquidAIEnergy energy, int index, ISyncHost host) {
-		super(host.getHostPos().getX(), host.getHostPos().getY(), host.getHostPos().getZ(), host.getHostSide().getFacing(), host.getHostWorld());
 		this.energy = energy;
 		this.index = index;
 		this.host = host;
@@ -34,13 +31,13 @@ public class PacketFilterServerToClient extends AIPacket {
 	public void fromBytes(ByteBuf buf) {
 		this.energy = readEnergy(buf);
 		this.index = buf.readInt();
-		this.host = readSyncHost(buf);
+		this.host = readSyncHostClient(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		writeEnergy(energy, buf);
 		buf.writeInt(index);
-		writeSyncHost(host, buf);
+		writeSyncHost(host, buf, false);
 	}
 }

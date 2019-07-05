@@ -30,8 +30,6 @@ public class PacketTerminalUpdate extends AIPacket {
 	}
 
 	public PacketTerminalUpdate(IItemList<IAEEnergyStack> monitor, @Nonnull SortOrder order, AIPart partToken) {
-
-		super(partToken.getX(), partToken.getY(), partToken.getZ(), partToken.getHostSide().getFacing(), partToken.getHostWorld());
 		this.list = monitor;
 		this.part = partToken;
 		this.order = order;
@@ -58,7 +56,7 @@ public class PacketTerminalUpdate extends AIPacket {
 		}
 
 		// Read host
-		this.part = readPart(buf);
+		this.part = (AIPart) readSyncHostClient(buf);
 
 		// Set list
 		this.list = list;
@@ -83,7 +81,7 @@ public class PacketTerminalUpdate extends AIPacket {
 		}));
 
 		// Write host
-		writePart(buf);
+		writeSyncHost(part, buf, false);
 
 		// Write ordinal of order
 		buf.writeByte((byte) order.ordinal());

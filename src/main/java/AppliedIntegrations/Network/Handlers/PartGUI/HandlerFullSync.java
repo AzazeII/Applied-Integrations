@@ -6,6 +6,9 @@ import net.minecraft.inventory.Container;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
+/**
+ * @Author Azazell
+ */
 public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFullSync> {
 	@Override
 	public PacketFullSync onMessage(PacketFullSync message, MessageContext ctx) {

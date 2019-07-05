@@ -5,6 +5,8 @@ import appeng.api.util.AEPartLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * @Author Azazell
  * <p>
@@ -24,11 +26,14 @@ public interface ISyncHost {
 	}
 
 	// Pos of host
+	@Nonnull
 	BlockPos getHostPos();
 
 	// World of host
+	@Nonnull
 	World getHostWorld();
 
 	// Relative side to center of block
-	AEPartLocation getHostSide();
+	@Nonnull
+	AEPartLocation getHostSide(); // Use INTERNAL for tiles
 }

@@ -1,10 +1,7 @@
 package AppliedIntegrations.Network.Packets.HoleStorage;
-
-
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 
 /**
@@ -22,7 +19,6 @@ public class PacketMassChange extends AIPacket {
 	}
 
 	public PacketMassChange(ISingularity singularity, BlockPos pos) {
-
 		this.pos = pos;
 		this.singularity = singularity;
 	}
@@ -31,13 +27,13 @@ public class PacketMassChange extends AIPacket {
 	public void fromBytes(ByteBuf buf) {
 
 		pos = readPos(buf);
-		singularity = (ISingularity) readTile(buf);
+		singularity = (ISingularity) readSyncHostClient(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 
 		writePos(pos, buf);
-		writeTile((TileEntity) singularity, buf);
+		writeSyncHost(singularity, buf, false);
 	}
 }

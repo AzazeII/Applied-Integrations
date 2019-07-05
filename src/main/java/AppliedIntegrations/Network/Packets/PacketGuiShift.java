@@ -25,16 +25,14 @@ public class PacketGuiShift extends AIPacket {
 	}
 
 	public PacketGuiShift(AIGuiHandler.GuiEnum newGui, IPriorityHostExtended part) {
-
-		super(part.getHostPos().getX(), part.getHostPos().getY(), part.getHostPos().getZ(), part.getHostSide().getFacing(), part.getHostWorld());
-
-		gui = newGui;
+		this.part = (AIPart) part;
+		this.gui = newGui;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		// Read host
-		part = readPart(buf);
+		part = (AIPart) readSyncHost(buf);
 
 		// Read gui
 		gui = AIGuiHandler.GuiEnum.values()[buf.readInt()];
@@ -46,7 +44,7 @@ public class PacketGuiShift extends AIPacket {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		// Write host
-		writePart(buf);
+		writeSyncHost(part, buf, true);
 
 		// Write gui
 		buf.writeInt(gui.ordinal());

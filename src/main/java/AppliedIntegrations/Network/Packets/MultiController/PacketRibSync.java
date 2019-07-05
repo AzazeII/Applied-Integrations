@@ -29,14 +29,13 @@ public class PacketRibSync extends AIPacket {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 
-		this.rib = (TileMultiControllerRib) readTile(buf);
+		this.rib = (TileMultiControllerRib) readSyncHostClient(buf);
 		this.nodeActivity = buf.readBoolean();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
-		writeTile(rib, buf);
+		writeSyncHost(rib, buf, false);
 		buf.writeBoolean(nodeActivity);
 	}
 }

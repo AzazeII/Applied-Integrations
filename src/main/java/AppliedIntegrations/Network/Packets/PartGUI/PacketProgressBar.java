@@ -1,47 +1,42 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
-
-
 import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.api.IEnergyInterface;
-import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 
 /**
  * @Author Azazell
  * @Side Server -> Client
- * @Usage This packet is only needed for updating energy bar in Energy interface, when you need to update current energy value, you can send this packet
+ * @Usage This packet is only needed for updating energy
+ *  bar in Energy interface, when you need to update current energy value, you can send this packet
  */
 public class PacketProgressBar extends AIPacket {
 
 	public IEnergyInterface sender;
-
-	public LiquidAIEnergy energy;
-
 	public AEPartLocation energySide;
+	public Number stored;
 
 	public PacketProgressBar() {
 
 	}
 
-	public PacketProgressBar(IEnergyInterface sender, LiquidAIEnergy energy, AEPartLocation energySide) {
-		super(sender.getHostPos().getX(), sender.getHostPos().getY(), sender.getHostPos().getZ(), sender.getHostSide().getFacing(), sender.getHostWorld());
+	public PacketProgressBar(IEnergyInterface sender, AEPartLocation energySide, Number stored) {
 		this.sender = sender;
-		this.energy = energy;
 		this.energySide = energySide;
+		this.stored = stored;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		sender = (IEnergyInterface) readSyncHost(buf);
-		energy = readEnergy(buf);
+		sender = (IEnergyInterface) readSyncHostClient(buf);
 		energySide = AEPartLocation.values()[buf.readByte()];
+		stored = buf.readDouble();
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		writeSyncHost(sender, buf);
-		writeEnergy(energy, buf);
+		writeSyncHost(sender, buf, false);
 		buf.writeByte(energySide.ordinal());
+		buf.writeDouble(stored.doubleValue());
 	}
 }
