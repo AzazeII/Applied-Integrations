@@ -11,7 +11,6 @@ import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.AILog;
-import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.api.*;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.AEApi;
@@ -79,8 +78,6 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
 public class PartEnergyInterface extends AIPart implements IInventory, IEnergyInterface,
 		IInventoryHost, IEnergyMachine, IPriorityHostExtended, IGridTickable, IStorageMonitorable,
 		ICraftingProvider, IPowerChannelState, IEnergySink {
-	private final ChangeHandler<LiquidAIEnergy> energyChangeHandler = new ChangeHandler<>();
-
 	public LiquidAIEnergy bar;
 
 	public LiquidAIEnergy filteredEnergy = null;

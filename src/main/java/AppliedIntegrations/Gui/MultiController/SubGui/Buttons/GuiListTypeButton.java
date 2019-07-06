@@ -11,7 +11,7 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
-public class GuiListTypeButton extends GuiServerButton {
+public class GuiListTypeButton extends GuiMultiControllerButton {
 
 	private IncludeExclude mode;
 

@@ -60,7 +60,6 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 
 	@Override
 	public void drawWidget() {
-
 		if (shouldRender) {
 			// Disable lighting
 			GL11.glDisable(GL11.GL_LIGHTING);

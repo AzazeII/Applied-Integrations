@@ -21,8 +21,6 @@ import java.util.List;
  * @Author Azazell
  */
 public class BlockEnergyInterface extends BlockAIRegistrable {
-	private boolean isThirdClick = false;
-
 	public BlockEnergyInterface(String reg, String unloc) {
 
 		super(reg, unloc);

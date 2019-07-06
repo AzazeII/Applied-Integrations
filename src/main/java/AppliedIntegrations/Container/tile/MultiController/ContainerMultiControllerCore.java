@@ -3,10 +3,13 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.MultiController.PacketInventorySync;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import appeng.api.storage.data.IAEItemStack;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -73,6 +76,14 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected void syncHostWithGUI() {
+		super.syncHostWithGUI();
+
+		// Send packet
+		NetworkHandler.sendTo(new PacketInventorySync(master.cardInv, master), (EntityPlayerMP) player);
 	}
 
 	@Override

@@ -15,7 +15,10 @@ import java.util.List;
 
 import static appeng.api.config.SecurityPermissions.*;
 
-public class GuiSecurityPermissionsButton extends GuiServerButton {
+/**
+ * @Author Azazell
+ */
+public class GuiSecurityPermissionsButton extends GuiMultiControllerButton {
 	private static final List<SecurityPermissions> allowedPermissions = new ArrayList<>();
 
 	private SecurityPermissions currentPermissions = INJECT;

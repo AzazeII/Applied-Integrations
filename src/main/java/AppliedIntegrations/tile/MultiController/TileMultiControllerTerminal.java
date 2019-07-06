@@ -1,8 +1,5 @@
 package AppliedIntegrations.tile.MultiController;
-
-
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
-import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -13,7 +10,6 @@ import appeng.api.util.AEColor;
 import appeng.api.util.IOrientable;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -101,20 +97,6 @@ public class TileMultiControllerTerminal extends AITile implements IOrientable {
 
 		// Drop items from editor inventory
 		Platform.spawnDrops(world, pos, Arrays.asList(editorInv.slots));
-	}
-
-	@Override
-	public void update() {
-		super.update();
-
-		// Check if update requested
-		if (updateRequested) {
-			// Check if we have gui to update
-			if (Minecraft.getMinecraft().currentScreen instanceof GuiMultiControllerTerminal) {
-				// Init gui coordinate set
-				initGuiCoordinates();
-			}
-		}
 	}
 
 	private void initGuiCoordinates() {

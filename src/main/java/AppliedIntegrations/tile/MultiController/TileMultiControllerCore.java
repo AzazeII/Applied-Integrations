@@ -2,7 +2,6 @@ package AppliedIntegrations.tile.MultiController;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Gui.MultiController.GuiMultiControllerCore;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -43,7 +42,6 @@ import appeng.me.helpers.MachineSource;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCrafting;
@@ -620,22 +618,6 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 			// Toggle
 			constructionRequested = true;
-		}
-
-		// Check if GUI update was requested from activate method
-		if (updateRequested) {
-			// Check if current GUI isn't GUI of this tile
-			if ( !(Minecraft.getMinecraft().currentScreen instanceof GuiMultiControllerCore) )
-				return;
-
-			// Sync host with client
-			notifyHostChange();
-
-			// Sync inventory with client
-			notifyNetworkCardInventoryChange();
-
-			// Toggle
-			updateRequested = true;
 		}
 	}
 

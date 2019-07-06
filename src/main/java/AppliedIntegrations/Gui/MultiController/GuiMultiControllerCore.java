@@ -2,7 +2,6 @@ package AppliedIntegrations.Gui.MultiController;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
-import AppliedIntegrations.Gui.Widgets.WidgetScrollbar;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
@@ -32,7 +31,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 	private static final int SLOT_COLUMNS = 9;
 	private static final int SLOT_ROWS = 5;
 
-	private final WidgetScrollbar scroll = new WidgetScrollbar(this, 175, 18);
+	//private final WidgetScrollbar scroll = new WidgetScrollbar(this, this.guiLeft + 100, this.guiTop + 8);
 
 	private IConfigManager configSource = new ConfigManager(this);
 
@@ -68,9 +67,6 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 
 		// Draw texture
 		drawTexturedModalRect(this.guiLeft, this.guiTop - 15, 0, 0, 195, 200);
-
-		// Draw scroll bar
-		scroll.drawWidget();
 	}
 
 	@Override
@@ -91,7 +87,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 						Settings.SORT_DIRECTION, configSource.getSetting( Settings.SORT_DIRECTION)));
 
 		// Set max size for scroll
-		this.scroll.setMaxScroll(( ( 125 + SLOT_COLUMNS - 1 ) / SLOT_COLUMNS ));
+		//this.scroll.setMaxScroll(( ( 125 + SLOT_COLUMNS - 1 ) / SLOT_COLUMNS ));
 	}
 
 	@Override
@@ -104,7 +100,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		// Check if wheel is scrolled
 		if (scroll != 0) {
 			// Pass call to scrollbar
-			this.scroll.onWheel(scroll);
+			//this.scroll.onWheel(scroll);
 		}
 	}
 
@@ -115,6 +111,9 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		// Draw string
 		this.fontRenderer.drawString(GuiText.inventory.getLocal(), 7, this.ySize - 71, 4210752); // (Player inv.)
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
+
+		// Draw scroll bar
+		//this.scroll.drawWidget();
 	}
 
 	@Override

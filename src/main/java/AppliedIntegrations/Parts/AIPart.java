@@ -61,7 +61,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	private final static String NBT_KEY_OWNER = "Owner";
 
 	// Item, that creates this host
-	public final ItemStack associatedItem;
+	private final ItemStack associatedItem;
 
 	// Host of this gridblock
 	protected IPartHost host;

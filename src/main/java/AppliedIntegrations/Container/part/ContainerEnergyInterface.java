@@ -4,7 +4,6 @@ import AppliedIntegrations.Container.Sync.IFilterContainer;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Parts.Energy.PartEnergyInterface;
 import AppliedIntegrations.api.IEnergyInterface;
@@ -105,7 +104,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 
 	@Override
 	protected void syncHostWithGUI() {
-		NetworkHandler.sendTo(new PacketCoordinateInit(getSyncHost()), (EntityPlayerMP) this.player);
+		super.syncHostWithGUI();
 
 		// Separate sync method for part and block
 		if (energyInterface instanceof PartEnergyInterface) {

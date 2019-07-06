@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.function.Consumer;
 
 import static AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal.*;
+import static appeng.util.Platform.isServer;
 
 /**
  * @Author Azazell
@@ -55,14 +56,19 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 			}
 		});
 
-		// Add widgets
-		this.initWidgets(terminal);
-
 		// Write terminal
 		this.terminal = terminal;
 
 		// Add listener
 		this.terminal.listeners.add(this);
+
+		// Ignored on server
+		if (isServer()) {
+			return;
+		}
+
+		// Add widgets
+		this.initWidgets(terminal);
 	}
 
 	public void initWidgets(TileMultiControllerTerminal terminal) {

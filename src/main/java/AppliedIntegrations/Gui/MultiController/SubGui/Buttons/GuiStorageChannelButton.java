@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 
 // this one is special
-public class GuiStorageChannelButton extends GuiServerButton {
+public class GuiStorageChannelButton extends GuiMultiControllerButton {
 	// Current storage channel of button
 	private IStorageChannel<? extends IAEStack<?>> channel = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 
