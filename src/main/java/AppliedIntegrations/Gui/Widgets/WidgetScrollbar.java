@@ -8,32 +8,36 @@ import org.lwjgl.opengl.GL11;
 
 import java.util.List;
 
+/**
+ * @Author Azazell
+ */
 public class WidgetScrollbar extends AIWidget implements IScrollSource {
+	private static final int step = 11;
+	private final int minScroll;
 	private int currentScroll;
-
-	// Minimum scroll value for widget
-	private int minScroll = 0;
-
-	// Maximum scroll value for widget
 	private int maxScroll;
-	
+
 	public WidgetScrollbar(IWidgetHost hostGUI, int xPos, int yPos) {
 		super(hostGUI, xPos, yPos);
+		this.minScroll = yPos;
 	}
 
-	private void applyRange() {
-		this.currentScroll = Math.max( Math.min( this.currentScroll, maxScroll ), minScroll );
-	}
-
-	public void onWheel(int diff) {
+	public int onWheel(int diff) {
 		// Calculate difference
-		diff = Math.max( Math.min( -diff, 1 ), -1 );
+		diff = Math.max( Math.min( -diff, step ), -step );
 
-		// Change current scroll value
-		currentScroll += diff;
+		// Calculate new position
+		int newPos = yPosition + currentScroll + diff;
 
-		// See function name
-		applyRange();
+		// Don't scroll over limit
+		if (newPos <= maxScroll && newPos >= minScroll) {
+			// Change current scroll value
+			currentScroll += diff;
+
+			return diff;
+		}
+
+		return 0;
 	}
 
 	@Override
@@ -51,15 +55,12 @@ public class WidgetScrollbar extends AIWidget implements IScrollSource {
 		GlStateManager.color( 1.0f, 1.0f, 1.0f, 1.0f );
 
 		// Draw bound texture
-		drawTexturedModalRect(xPosition, yPosition, 244, 0, 12, 15);
+		drawTexturedModalRect(xPosition, yPosition + currentScroll, 244, 0, 12, 15);
 
 		// Re-enable lighting
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
-	public void setMaxScroll(int maxScroll) {
-		this.maxScroll = maxScroll;
-	}
 
 	@Override
 	public void getTooltip(List<String> tooltip) {
@@ -69,5 +70,9 @@ public class WidgetScrollbar extends AIWidget implements IScrollSource {
 	@Override
 	public int getCurrentScroll() {
 		return currentScroll;
+	}
+
+	public void setMaxScroll(int maxScroll) {
+		this.maxScroll = maxScroll;
 	}
 }

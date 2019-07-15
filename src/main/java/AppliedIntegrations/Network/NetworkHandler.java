@@ -1,6 +1,4 @@
 package AppliedIntegrations.Network;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Network.Handlers.HandlerCoordinateInit;
 import AppliedIntegrations.Network.Handlers.HandlerGuiShift;
@@ -28,59 +26,59 @@ import net.minecraftforge.fml.relauncher.Side;
  * @Author Azazell
  */
 public class NetworkHandler {
-	private static final SimpleNetworkWrapper Handler = NetworkRegistry.INSTANCE.newSimpleChannel(AppliedIntegrations.modid);
+	private static final SimpleNetworkWrapper handler = NetworkRegistry.INSTANCE.newSimpleChannel(AppliedIntegrations.modid);
 
 	private static byte packetId = 0;
 
 	public static void registerPackets() {
 		// -- Server -> Client -- //
-		Handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerFullSync.class, PacketFullSync.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerServerToClientFilter.class, PacketFilterServerToClient.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerVectorSync.class, PacketVectorSync.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerMassChange.class, PacketMassChange.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerSingularitySync.class, PacketSingularitySync.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerAccessModeServerToClient.class, PacketAccessModeServerToClient.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerTerminalUpdate.class, PacketTerminalUpdate.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerPriorityChange.class, PacketPriorityChange.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerRibSync.class, PacketRibSync.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerMasterSync.class, PacketMasterSync.class, packetId++, Side.CLIENT);
-		Handler.registerMessage(HandlerInventorySync.class, PacketInventorySync.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerProgressBar.class, PacketProgressBar.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerBarChange.class, PacketBarChange.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerFullSync.class, PacketFullSync.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerServerToClientFilter.class, PacketFilterServerToClient.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerVectorSync.class, PacketVectorSync.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerMassChange.class, PacketMassChange.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerSingularitySync.class, PacketSingularitySync.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerAccessModeServerToClient.class, PacketAccessModeServerToClient.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerTerminalUpdate.class, PacketTerminalUpdate.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerPriorityChange.class, PacketPriorityChange.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerRibSync.class, PacketRibSync.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerMasterSync.class, PacketMasterSync.class, packetId++, Side.CLIENT);
 
 		// -- Client -> Server -- //
-		Handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
-		Handler.registerMessage(HandlerAccessModeClientToServer.class, PacketAccessModeClientToServer.class, packetId++, Side.SERVER);
-		Handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.SERVER);
-		Handler.registerMessage(HandlerSyncReturn.class, PacketSyncReturn.class, packetId++, Side.SERVER);
-		Handler.registerMessage(HandlerServerFeedback.class, PacketServerFeedback.class, packetId++, Side.SERVER);
-		Handler.registerMessage(HandlerContainerWidgetSync.class, PacketContainerWidgetSync.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerAccessModeClientToServer.class, PacketAccessModeClientToServer.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerSyncReturn.class, PacketSyncReturn.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerServerFeedback.class, PacketServerFeedback.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerContainerWidgetSync.class, PacketContainerWidgetSync.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerScrollSync.class, PacketScrollSync.class, packetId++, Side.SERVER);
 	}
 
 	// send packet info to player
 	public static final void sendTo(IMessage message, EntityPlayerMP player) {
 
-		NetworkHandler.Handler.sendTo(message, player);
+		NetworkHandler.handler.sendTo(message, player);
 	}
 
 	public static final void sendToDimension(IMessage message, int dimensionId) {
 
-		NetworkHandler.Handler.sendToDimension(message, dimensionId);
+		NetworkHandler.handler.sendToDimension(message, dimensionId);
 	}
 
 	public static final void sendToAllInRange(IMessage message, NetworkRegistry.TargetPoint range) {
 
-		NetworkHandler.Handler.sendToAllAround(message, range);
+		NetworkHandler.handler.sendToAllAround(message, range);
 	}
 
 	public static final void sendToServer(IMessage message) {
 
-		NetworkHandler.Handler.sendToServer(message);
+		NetworkHandler.handler.sendToServer(message);
 	}
 
 	public static final void sendToAll(IMessage message) {
 
-		NetworkHandler.Handler.sendToAll(message);
+		NetworkHandler.handler.sendToAll(message);
 	}
 }

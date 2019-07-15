@@ -2,6 +2,7 @@ package AppliedIntegrations.Gui.MultiController;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.Widgets.WidgetScrollbar;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
@@ -28,10 +29,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid,
 			"textures/gui/multi_controller_card_storage.png");
 
-	private static final int SLOT_COLUMNS = 9;
-	private static final int SLOT_ROWS = 5;
-
-	//private final WidgetScrollbar scroll = new WidgetScrollbar(this, this.guiLeft + 100, this.guiTop + 8);
+	private WidgetScrollbar scroll;
 
 	private IConfigManager configSource = new ConfigManager(this);
 
@@ -86,8 +84,8 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 				.add( sortDirButton = new GuiImgButton( this.guiLeft - 18, this.guiTop + 48,
 						Settings.SORT_DIRECTION, configSource.getSetting( Settings.SORT_DIRECTION)));
 
-		// Set max size for scroll
-		//this.scroll.setMaxScroll(( ( 125 + SLOT_COLUMNS - 1 ) / SLOT_COLUMNS ));
+		this.scroll = new WidgetScrollbar(this, 175, 3);
+		this.scroll.setMaxScroll(88);
 	}
 
 	@Override
@@ -100,7 +98,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		// Check if wheel is scrolled
 		if (scroll != 0) {
 			// Pass call to scrollbar
-			//this.scroll.onWheel(scroll);
+			getContainer().scrollTo(this.scroll.onWheel(scroll));
 		}
 	}
 
@@ -113,7 +111,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		this.fontRenderer.drawString("ME Network Card Drive", 7, -12, 4210752); // (Server drive inv)
 
 		// Draw scroll bar
-		//this.scroll.drawWidget();
+		this.scroll.drawWidget();
 	}
 
 	@Override

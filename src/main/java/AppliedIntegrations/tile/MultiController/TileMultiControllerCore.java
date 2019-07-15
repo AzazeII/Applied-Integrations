@@ -4,9 +4,6 @@ import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControll
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Items.NetworkCard;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.MultiController.PacketInventorySync;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
@@ -43,7 +40,6 @@ import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
 import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -100,13 +96,6 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 
 			// Notify grid of current port about crafting update
 			port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
-
-			// Call only on server
-			if (world.isRemote)
-				return;
-
-			// Notify client
-			notifyNetworkCardInventoryChange();
 		}
 
 		@Override
@@ -177,13 +166,6 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					port.postCellEvent(new MENetworkCraftingCpuChange(getGridNode()));
 				}
 			}
-
-			// Call only on server
-			if (world.isRemote)
-				return;
-
-			// Notify client
-			notifyNetworkCardInventoryChange();
 		}
 	}
 
@@ -243,7 +225,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		}
 	}};
 
-	public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 45, 1, this.cardManager) {
+	public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 125, 1, this.cardManager) {
 		@Override
 		public ItemStack decrStackSize(int slotId, int amount) {
 			// Check if slot decreasing is network card
@@ -582,22 +564,6 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		for (Class<? extends AIMultiControllerTile> type : multi_controllerClasses) {
 			// Add list to map
 			slaveMap.put(type, new ArrayList<>());
-		}
-	}
-
-	private void notifyNetworkCardInventoryChange() {
-		// Iterate for each container
-		for (ContainerMultiControllerCore listener : listeners) {
-			// Send packet
-			NetworkHandler.sendTo(new PacketInventorySync(cardInv, this), (EntityPlayerMP) listener.player);
-		}
-	}
-
-	private void notifyHostChange() {
-		// Iterate for each container
-		for (ContainerMultiControllerCore listener : listeners) {
-			// Send packet
-			NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
 		}
 	}
 

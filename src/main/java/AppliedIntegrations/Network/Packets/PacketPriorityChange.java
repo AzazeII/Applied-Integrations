@@ -11,7 +11,6 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  */
 public class PacketPriorityChange extends AIPacket {
 	public IPriorityHostExtended host;
-
 	public String text;
 
 	public PacketPriorityChange() {
