@@ -228,7 +228,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		}
 	}};
 
-	public AIGridNodeInventoryWithView cardInv = new AIGridNodeInventoryWithView("Network Card Slots", 150, 45, 1, this.cardManager) {
+	public AIGridNodeInventoryWithView cardInv = new AIGridNodeInventoryWithView("Network Card Slots", 153, 45, 1, this.cardManager) {
 		@Override
 		public ItemStack decrStackSize(int slotId, int amount) {
 			// Check if slot decreasing is network card

@@ -11,7 +11,7 @@ import java.util.List;
  * @Author Azazell
  */
 public class WidgetScrollbar extends AIWidget {
-	private static final int step = 11;
+	private static final int step = 7;
 	private final int minScroll;
 	private int scroll;
 	private int maxScroll;
