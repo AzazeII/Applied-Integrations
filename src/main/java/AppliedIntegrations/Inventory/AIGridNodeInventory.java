@@ -19,7 +19,6 @@ import static net.minecraft.init.Items.AIR;
 public class AIGridNodeInventory implements IInventory {
 
 	public ItemStack[] slots;
-
 	private String customName;
 
 	private int stackLimit;

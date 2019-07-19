@@ -36,7 +36,6 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 	private GuiImgButton sortModeButton;
 	private GuiImgButton sortDirButton;
 	private GuiImgButton viewModeButton;
-
 	private ISyncHost core;
 
 	public GuiMultiControllerCore(ContainerMultiControllerCore container, EntityPlayer p) {
@@ -50,6 +49,10 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 
 	private ContainerMultiControllerCore getContainer() {
 		return (ContainerMultiControllerCore) inventorySlots;
+	}
+
+	public WidgetScrollbar getScroll() {
+		return scroll;
 	}
 
 	@Override

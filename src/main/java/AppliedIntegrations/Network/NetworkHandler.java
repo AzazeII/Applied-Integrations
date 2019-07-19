@@ -45,6 +45,7 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerPriorityChange.class, PacketPriorityChange.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerRibSync.class, PacketRibSync.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerMasterSync.class, PacketMasterSync.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerScrollServerToClient.class, PacketScrollServerToClient.class, packetId++, Side.CLIENT);
 
 		// -- Client -> Server -- //
 		handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
@@ -53,7 +54,7 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerSyncReturn.class, PacketSyncReturn.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerServerFeedback.class, PacketServerFeedback.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerContainerWidgetSync.class, PacketContainerWidgetSync.class, packetId++, Side.SERVER);
-		handler.registerMessage(HandlerScrollSync.class, PacketScrollSync.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerScrollClientToServer.class, PacketScrollClientToServer.class, packetId++, Side.SERVER);
 	}
 
 	// send packet info to player

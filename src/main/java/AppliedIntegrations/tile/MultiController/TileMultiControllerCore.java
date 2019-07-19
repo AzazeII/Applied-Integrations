@@ -2,8 +2,10 @@ package AppliedIntegrations.tile.MultiController;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.AIGuiHandler;
-import AppliedIntegrations.Inventory.AIGridNodeInventory;
+import AppliedIntegrations.Inventory.AIGridNodeInventoryWithView;
 import AppliedIntegrations.Items.NetworkCard;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.MultiController.PacketScrollClientToServer;
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.IInventoryHost;
@@ -58,7 +60,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * @Author Azazell
  */
-public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IMaster, INetworkToolAgent, ITickable, ITerminalHost, IConfigManagerHost {
+public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IMaster,
+		INetworkToolAgent, ITickable, ITerminalHost, IConfigManagerHost {
 	public class CardInventoryManager implements IInventoryHost {
 		public void onCardRemove(ItemStack card) {
 			// Get tag
@@ -225,7 +228,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		}
 	}};
 
-	public AIGridNodeInventory cardInv = new AIGridNodeInventory("Network Card Slots", 125, 1, this.cardManager) {
+	public AIGridNodeInventoryWithView cardInv = new AIGridNodeInventoryWithView("Network Card Slots", 150, 45, 1, this.cardManager) {
 		@Override
 		public ItemStack decrStackSize(int slotId, int amount) {
 			// Check if slot decreasing is network card
@@ -246,11 +249,9 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 	private List<MEMultiControllerMonitorHandlerReceiver> receiverList = new ArrayList<>();
 
 	private boolean isFormed;
-
-	private boolean updateRequested;
+	private int slotDifference;
 
 	public List<ContainerMultiControllerCore> listeners = new ArrayList<>();
-
 	{
 		// Fill maps with empty data
 		nullifyMap();
@@ -261,6 +262,19 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		configManager.registerSetting( Settings.SORT_DIRECTION, SortDir.ASCENDING ); // (3) Sort direction
 	}
 
+	public int getSlotDiff() {
+		return this.slotDifference;
+	}
+
+	public void setSlotDiff(int scroll) {
+		this.slotDifference = scroll;
+		this.cardInv.updateView(scroll);
+
+		if (world.isRemote) {
+			// Populate changes on server
+			NetworkHandler.sendToServer(new PacketScrollClientToServer(getSlotDiff(), this));
+		}
+	}
 
 	public CardInventoryManager getCardManager() {
 		return cardManager;
@@ -302,7 +316,6 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 		AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerStorage, p, AEPartLocation.INTERNAL, pos);
 
 		// Request GUI update
-		updateRequested = true;
 	}
 
 	public void postNetworkCellEvents() throws GridAccessException {

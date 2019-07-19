@@ -5,11 +5,13 @@ import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 
+/**
+ * @Author Azazell
+ */
 public class AIGridNodeItemHandler implements IItemHandler {
 	private final AIGridNodeInventory inner;
 
 	public AIGridNodeItemHandler(AIGridNodeInventory inv) {
-
 		this.inner = inv;
 	}
 

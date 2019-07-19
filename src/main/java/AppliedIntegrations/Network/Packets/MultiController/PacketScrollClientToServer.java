@@ -7,17 +7,17 @@ import io.netty.buffer.ByteBuf;
 /**
  * @Author Azazell
  * @Side Client -> Server
- * @Usage used to sync scroll between server and client container
+ * @Usage used to sync scroll between server and client tile
  */
-public class PacketScrollSync extends AIPacket {
+public class PacketScrollClientToServer extends AIPacket {
 	public ISyncHost host;
 	public int scroll;
 
-	public PacketScrollSync() {
+	public PacketScrollClientToServer() {
 
 	}
 
-	public PacketScrollSync(int scroll, TileMultiControllerCore master) {
+	public PacketScrollClientToServer(int scroll, TileMultiControllerCore master) {
 		this.scroll = scroll;
 		this.host = master;
 	}
