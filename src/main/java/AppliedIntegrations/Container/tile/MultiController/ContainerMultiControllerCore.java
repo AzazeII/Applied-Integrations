@@ -16,8 +16,9 @@ import javax.annotation.Nonnull;
  * @Author Azazell
  */
 public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
-	private static final int CARD_SLOT_ROWS = 5;
-	private static final int CARD_SLOT_COLUMNS = 9;
+	public static final int CARD_SLOT_VIEW_ROWS = 5;
+	public static final int CARD_SLOT_ROWS = 17;
+	public static final int CARD_SLOT_COLUMNS = 9;
 	private TileMultiControllerCore master;
 
 	public ContainerMultiControllerCore(EntityPlayer player, TileMultiControllerCore master) {
@@ -35,7 +36,7 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 		super.bindPlayerInventory(player.inventory, 107, 165);
 	}
 
-	public void scrollTo(int slotScroll) {
+	public void scrollTo(double slotScroll) {
 		if (slotScroll == 0) {
 			return;
 		}
@@ -49,7 +50,7 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 		int i = 0;
 
 		// Iterate for Y
-		for (int y = 0; y < CARD_SLOT_ROWS; y++) {
+		for (int y = 0; y < CARD_SLOT_VIEW_ROWS; y++) {
 			// Iterate for X
 			for (int x = 0; x < CARD_SLOT_COLUMNS; x++) {
 				// Check not null

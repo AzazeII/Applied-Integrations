@@ -28,8 +28,7 @@ import java.io.IOException;
 public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IConfigManagerHost {
 	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid,
 			"textures/gui/multi_controller_card_storage.png");
-
-	private WidgetScrollbar scroll;
+	private WidgetScrollbar.GuiScrollbar scroll;
 
 	private IConfigManager configSource = new ConfigManager(this);
 
@@ -51,7 +50,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		return (ContainerMultiControllerCore) inventorySlots;
 	}
 
-	public WidgetScrollbar getScroll() {
+	public WidgetScrollbar.GuiScrollbar getScroll() {
 		return scroll;
 	}
 
@@ -87,8 +86,9 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 				.add( sortDirButton = new GuiImgButton( this.guiLeft - 18, this.guiTop + 48,
 						Settings.SORT_DIRECTION, configSource.getSetting( Settings.SORT_DIRECTION)));
 
-		this.scroll = new WidgetScrollbar(this, 175, 3);
-		this.scroll.setMaxScroll(88);
+		this.scroll = new WidgetScrollbar.GuiScrollbar(this, 175, 3);
+		this.scroll.setRange((ContainerMultiControllerCore.CARD_SLOT_ROWS - ContainerMultiControllerCore.CARD_SLOT_VIEW_ROWS)
+				* ContainerMultiControllerCore.CARD_SLOT_COLUMNS, ContainerMultiControllerCore.CARD_SLOT_COLUMNS);
 	}
 
 	@Override
@@ -101,7 +101,7 @@ public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IC
 		// Check if wheel is scrolled
 		if (scroll != 0) {
 			// Pass call to scrollbar
-			getContainer().scrollTo(this.scroll.onWheel(scroll));
+			getContainer().scrollTo(this.scroll.wheel(scroll));
 		}
 	}
 
