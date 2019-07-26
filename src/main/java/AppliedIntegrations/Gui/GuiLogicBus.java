@@ -15,7 +15,7 @@ import org.lwjgl.opengl.GL11;
  * @Author Azazell
  */
 
-public class GuiLogicBus extends AIBaseGui {
+public class GuiLogicBus extends AIGui {
 
 	public final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/logic_bus.png");
 

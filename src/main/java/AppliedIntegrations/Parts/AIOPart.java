@@ -46,7 +46,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	// Size of filter
 	public final static int MAX_FILTER_SIZE = 9;
 
-	public List<LiquidAIEnergy> filteredEnergies = new ArrayList<LiquidAIEnergy>(AIOPart.MAX_FILTER_SIZE);
+	public List<LiquidAIEnergy> filteredEnergies = new ArrayList<>(AIOPart.MAX_FILTER_SIZE);
 	public boolean redstoneControlled;
 
 

@@ -3,24 +3,19 @@ package AppliedIntegrations.Gui;
 
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerAIPriority;
-import AppliedIntegrations.Container.part.ContainerEnergyInterface;
-import AppliedIntegrations.Container.part.ContainerEnergyStorage;
-import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
-import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
+import AppliedIntegrations.Container.part.*;
 import AppliedIntegrations.Container.tile.ContainerLogicBus;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerCore;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
-import AppliedIntegrations.Gui.Part.GuiEnergyIO;
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
-import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
-import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
+import AppliedIntegrations.Gui.Part.*;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
+import AppliedIntegrations.Parts.Interaction.PartInteractionPlane;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
@@ -46,6 +41,7 @@ public class AIGuiHandler implements IGuiHandler {
 	public enum GuiEnum {
 		GuiInterface,
 		GuiStoragePart,
+		GuiInteraction,
 		GuiServerStorage,
 		GuiTerminalPart,
 		GuiServerTerminal,
@@ -99,7 +95,7 @@ public class AIGuiHandler implements IGuiHandler {
 	 * 10111 >> 4 = 1
 	 * return GuiEnum.values()[1];
 	 */
-	public static GuiEnum getGui(int value) {
+	private static GuiEnum getGui(int value) {
 
 		return GuiEnum.values()[value >> 3];
 	}
@@ -119,7 +115,7 @@ public class AIGuiHandler implements IGuiHandler {
 	 * 111
 	 * return AEPartLocation.values()[7];
 	 */
-	public static AEPartLocation getSide(int value) {
+	private static AEPartLocation getSide(int value) {
 
 		return AEPartLocation.fromOrdinal(value & 7);
 	}
@@ -166,6 +162,10 @@ public class AIGuiHandler implements IGuiHandler {
 			TileMultiControllerCore core = (TileMultiControllerCore) Utils.getTileByParams(new BlockPos(x, y, z), world);
 
 			return new ContainerMultiControllerCore(player, core);
+		} else if (gui == GuiInteraction) {
+			PartInteractionPlane interaction = (PartInteractionPlane) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
+
+			return new ContainerInteractionPlane(player, interaction);
 		}
 
 		return null;
@@ -208,7 +208,12 @@ public class AIGuiHandler implements IGuiHandler {
 			return new GuiMultiControllerTerminal((ContainerMultiControllerTerminal) getServerGuiElement(ID, player, world, x, y, z), player);
 		} else if (gui == GuiServerStorage) {
 			return new GuiMultiControllerCore((ContainerMultiControllerCore) getServerGuiElement(ID, player, world, x, y, z), player);
+		} else if (gui == GuiInteraction) {
+			PartInteractionPlane interaction = (PartInteractionPlane) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
+
+			return new GuiInteractionPlane((ContainerInteractionPlane) getServerGuiElement(ID, player, world, x, y, z), player, interaction);
 		}
+
 		return null;
 	}
 }

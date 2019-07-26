@@ -36,7 +36,6 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.core.sync.GuiBridge;
 import appeng.me.GridAccessException;
-import appeng.parts.misc.PartInterface;
 import appeng.util.Platform;
 import ic2.api.energy.tile.IEnergyEmitter;
 import ic2.api.energy.tile.IEnergySink;
@@ -198,8 +197,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 			if (!player.isSneaking()) {
 				// Open GUI
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterface, player, getHostSide(), getHostTile().getPos());
-
-				PartInterface h;
 
 				// Request gui update
 				updateRequested = true;

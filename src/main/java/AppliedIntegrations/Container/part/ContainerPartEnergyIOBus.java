@@ -33,7 +33,7 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implemen
 	public AIOPart part;
 
 	public ContainerPartEnergyIOBus(final AIOPart part, final EntityPlayer player) {
-		super(part, player);
+		super(player);
 
 		// Set the host
 		this.part = part;

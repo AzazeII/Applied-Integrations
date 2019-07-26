@@ -24,7 +24,7 @@ import java.util.Optional;
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
-public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
+public abstract class AIGui extends GuiContainer implements IWidgetHost {
 
 	protected static final int GUI_MAIN_WIDTH = 176;
 
@@ -42,7 +42,7 @@ public abstract class AIBaseGui extends GuiContainer implements IWidgetHost {
 
 	private EntityPlayer player;
 
-	public AIBaseGui(final Container container, EntityPlayer player) {
+	public AIGui(final Container container, EntityPlayer player) {
 
 		super(container);
 

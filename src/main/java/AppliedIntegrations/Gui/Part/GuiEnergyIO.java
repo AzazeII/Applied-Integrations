@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.Part;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -34,7 +34,7 @@ import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
-public class GuiEnergyIO extends AIBaseGui {
+public class GuiEnergyIO extends AIGui {
 	private static final int FILTER_GRID_SIZE = 3;
 
 	private static final int WIDGET_X_POSITION = 61;
@@ -45,11 +45,11 @@ public class GuiEnergyIO extends AIBaseGui {
 
 	private static final int GUI_UPGRADES_WIDTH = 35;
 
-	private static final int GUI_UPGRADES_HEIGHT = 86;
+	public static final int GUI_UPGRADES_HEIGHT = 86;
 
 	public EntityPlayer player;
 
-	String stringName;
+	private String stringName;
 
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.io.bus.png");
 

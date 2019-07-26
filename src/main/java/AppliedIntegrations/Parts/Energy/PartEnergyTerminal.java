@@ -2,7 +2,7 @@ package AppliedIntegrations.Parts.Energy;
 
 
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -154,7 +154,7 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 		// Check if update was requested
 		if (updateRequsted) {
 			// Check if we have gui to update
-			if (!(Minecraft.getMinecraft().currentScreen instanceof AIBaseGui)) {
+			if (!(Minecraft.getMinecraft().currentScreen instanceof AIGui)) {
 				// Break function
 				return SAME;
 			}

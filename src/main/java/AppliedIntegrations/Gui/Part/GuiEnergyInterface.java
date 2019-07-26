@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.Part;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyInterface;
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
@@ -34,7 +34,7 @@ import static appeng.api.util.AEPartLocation.*;
 /**
  * @Author Azazell
  */
-public class GuiEnergyInterface extends AIBaseGui implements IWidgetHost {
+public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	private static ResourceLocation textureTile = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.tile.png");
 	private static ResourceLocation texturePart = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.interface.part.png");
 	private ResourceLocation energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png");

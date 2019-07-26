@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.MultiController;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerCore;
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.Widgets.WidgetScrollbar;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.Settings;
@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * @Author Azazell
  */
-public class GuiMultiControllerCore extends AIBaseGui implements ISortSource, IConfigManagerHost {
+public class GuiMultiControllerCore extends AIGui implements ISortSource, IConfigManagerHost {
 	private static final ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid,
 			"textures/gui/multi_controller_card_storage.png");
 	private WidgetScrollbar.GuiScrollbar scroll;

@@ -36,7 +36,7 @@ public class ContainerEnergyStorage extends ContainerWithUpgradeSlots implements
 
 	public ContainerEnergyStorage(final PartEnergyStorage part, final EntityPlayer player) {
 		// Call super
-		super(part, player);
+		super(player);
 
 		// Add listener
 		part.linkedListeners.add(this);

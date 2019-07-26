@@ -1,12 +1,7 @@
 package AppliedIntegrations.Container;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
-import AppliedIntegrations.Parts.AIOPart;
-import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
-import AppliedIntegrations.api.IEnergyInterface;
 import appeng.api.implementations.items.IUpgradeModule;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
@@ -39,18 +34,7 @@ public abstract class ContainerWithUpgradeSlots extends ContainerWithPlayerInven
 	// Last upgrade slot
 	private int lastUpgradeSlot = -1;
 
-	public ContainerWithUpgradeSlots(IEnergyInterface Einterface, EntityPlayer player) {
-
-		super(player);
-	}
-
-	public ContainerWithUpgradeSlots(PartEnergyStorage EStorage, EntityPlayer player) {
-
-		super(player);
-	}
-
-	public ContainerWithUpgradeSlots(AIOPart part, final EntityPlayer player) {
-
+	public ContainerWithUpgradeSlots(final EntityPlayer player) {
 		super(player);
 	}
 

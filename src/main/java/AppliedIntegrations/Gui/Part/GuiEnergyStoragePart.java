@@ -1,7 +1,7 @@
 package AppliedIntegrations.Gui.Part;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyStorage;
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -32,7 +32,7 @@ import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
  * @Author Azazell
  */
 @SideOnly(Side.CLIENT)
-public class GuiEnergyStoragePart extends AIBaseGui {
+public class GuiEnergyStoragePart extends AIGui {
 
 	// Widget constants
 	private static final int WIDGET_COLUMNS = 2; // (1)

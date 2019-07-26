@@ -113,14 +113,4 @@ public class PartEnergyImport extends AIOPart {
 		}
 		return PartModelEnum.IMPORT_OFF;
 	}
-
-	private int getMaxTransfer() {
-
-		return 500;
-	}
-
-	private LiquidAIEnergy getFilteredEnergy() {
-
-		return null;
-	}
 }

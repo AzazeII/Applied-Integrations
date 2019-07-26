@@ -1,6 +1,4 @@
 package AppliedIntegrations.Parts;
-
-
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -11,7 +9,6 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.networking.GridFlags;
-import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridHost;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.energy.IEnergyGrid;
@@ -519,20 +516,15 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public IMEMonitor<IAEEnergyStack> getEnergyInventory() {
-
 		IGridNode n = getGridNode();
+
 		if (n == null) {
 			return null;
 		}
-		IGrid g = n.getGrid();
 
-		IStorageGrid storage = g.getCache(IStorageGrid.class);
+		IStorageGrid storage = n.getGrid().getCache(IStorageGrid.class);
 
-		IMEMonitor<IAEEnergyStack> energyStorage = storage.getInventory(this.getChannel());
-		if (energyStorage == null) {
-			return null;
-		}
-		return energyStorage;
+		return storage.getInventory(this.getChannel());
 	}
 
 	//*---------*Storage features*---------*//

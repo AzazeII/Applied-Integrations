@@ -6,7 +6,7 @@ package AppliedIntegrations.Gui.Part;
  */
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Network.NetworkHandler;
@@ -35,7 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @SideOnly(Side.CLIENT)
-public class GuiEnergyTerminalDuality extends AIBaseGui implements IEnergySelectorGui {
+public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGui {
 	private static final int WIDGETS_PER_ROW = 9;
 
 	private static final int WIDGET_ROWS_PER_PAGE = 4;

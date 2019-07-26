@@ -2,7 +2,7 @@ package AppliedIntegrations.Gui.MultiController;
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControllerTerminal;
-import AppliedIntegrations.Gui.AIBaseGui;
+import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.MultiController.SubGui.Buttons.GuiListTypeButton;
@@ -48,7 +48,7 @@ import static AppliedIntegrations.tile.MultiController.TileMultiControllerTermin
 /**
  * @Author Azazell
  */
-public class GuiMultiControllerTerminal extends AIBaseGui implements IWidgetHost {
+public class GuiMultiControllerTerminal extends AIGui implements IWidgetHost {
 	private static final int GUI_WIDTH = 192;
 
 	private static final int GUI_HEIGH = 256;

@@ -47,7 +47,7 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 	public LiquidAIEnergy linkedMetric = RF;
 
 	public ContainerEnergyInterface(final EntityPlayer player, final IEnergyInterface energyInterface) {
-		super(energyInterface, player);
+		super(player);
 
 		// Set player
 		this.player = player;
