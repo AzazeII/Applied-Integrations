@@ -22,7 +22,6 @@ public class AIItemRegistrable extends Item {
 	}
 
 	void registerModel() {
-
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
 	}
 }

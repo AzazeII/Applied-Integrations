@@ -2,8 +2,7 @@ package AppliedIntegrations.Network.Packets.PartGUI;
 
 
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.Parts.AIOPart;
-import AppliedIntegrations.Parts.AIPart;
+import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.RedstoneMode;
 import io.netty.buffer.ByteBuf;
 
@@ -12,13 +11,13 @@ import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
 /**
  * @Author Azazell
  * @Side Server -> Client
- * @Usage Fully sync AIPart with GUI
+ * @Usage Fully sync upgradable host with it's container
  */
 public class PacketFullSync extends AIPacket {
 
 	public RedstoneMode redstoneMode;
 
-	public AIPart part;
+	public ISyncHost part;
 
 	public byte filterSize;
 
@@ -28,18 +27,18 @@ public class PacketFullSync extends AIPacket {
 
 	}
 
-	public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, boolean redstoneControlled, AIOPart aioPart) {
+	public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, boolean redstoneControlled, ISyncHost host) {
 		this.filterSize = filterSize;
 		this.redstoneControl = redstoneControlled;
 		this.redstoneMode = redstoneMode;
 
-		this.part = aioPart;
+		this.part = host;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		// Read everything
-		part = (AIPart) readSyncHostClient(buf);
+		part = readSyncHostClient(buf);
 
 		filterSize = buf.readByte();
 		redstoneControl = buf.readBoolean();

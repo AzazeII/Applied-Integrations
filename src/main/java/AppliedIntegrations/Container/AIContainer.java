@@ -17,9 +17,6 @@ import java.util.List;
  * @Author Azazell
  */
 public abstract class AIContainer extends Container implements ISyncHostHolder {
-	/**
-	 * The player interacting with this container.
-	 */
 	public final EntityPlayer player;
 
 	private final List<Slot> slotMap = new ArrayList<>();

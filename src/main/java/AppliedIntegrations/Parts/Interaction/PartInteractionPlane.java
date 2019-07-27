@@ -2,6 +2,7 @@ package AppliedIntegrations.Parts.Interaction;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
+import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
@@ -54,14 +55,14 @@ import static appeng.api.networking.ticking.TickRateModulation.SAME;
 /**
  * @Author Azazell
  */
-public class PartInteractionPlane extends AIPart implements IGridTickable {
+public class PartInteractionPlane extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost {
+	private WeakReference<FakePlayer> fakePlayer;
 	private final static int MAX_FILTER_SIZE = 9;
 	private static final String KEY_FILTER_INVENTORY = "#FILTER_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
 	private static final String KEY_OPERATED_BLOCK = "#OPERATED_BLOCK_KEY";
-	private WeakReference<FakePlayer> fakePlayer;
 	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Plane Filter", MAX_FILTER_SIZE, 1);
-	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("Interaction Plane Upgrade Inventory", 4, 1);
+	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Plane Upgrade Inventory", 4);
 	private BlockPos operatedBlock;
 	private UUID uniIdentifier;
 
@@ -105,7 +106,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable {
 					fakePlayer) {
 				@SuppressWarnings("rawtypes")
 				@Override
-				public void sendPacket(@Nonnull Packet packetIn) { }
+				public void sendPacket(@Nonnull Packet packetIn) {}
 			};
 
 			fakePlayer.setSilent(true);
@@ -113,12 +114,15 @@ public class PartInteractionPlane extends AIPart implements IGridTickable {
 	}
 
 	@Override
+	public void doSync(int filterSize, boolean redstoneControlled, int upgradeSpeedCount) {}
+
+	@Override
 	public void readFromNBT(final NBTTagCompound data) {
 		super.readFromNBT(data);
 
 		// Read inventory content
 		this.filterInventory.readFromNBT(data.getTagList(KEY_FILTER_INVENTORY, 10));
-		this.upgradeInventory.readFromNBT(data.getTagList(KEY_UPGRADE_INVENTORY, 10));
+		this.upgradeInventoryManager.upgradeInventory.readFromNBT(data.getTagList(KEY_UPGRADE_INVENTORY, 10));
 
 		// Read operated block
 		this.operatedBlock = BlockPos.fromLong(data.getLong(KEY_OPERATED_BLOCK));
@@ -130,7 +134,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable {
 
 		// Write inventory content
 		data.setTag(KEY_FILTER_INVENTORY, this.filterInventory.writeToNBT());
-		data.setTag(KEY_UPGRADE_INVENTORY, this.upgradeInventory.writeToNBT());
+		data.setTag(KEY_UPGRADE_INVENTORY, this.upgradeInventoryManager.upgradeInventory.writeToNBT());
 
 		// Write operated block
 		data.setLong(KEY_OPERATED_BLOCK, this.operatedBlock.toLong());
@@ -157,7 +161,6 @@ public class PartInteractionPlane extends AIPart implements IGridTickable {
 		}
 	}
 
-
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
@@ -179,11 +182,9 @@ public class PartInteractionPlane extends AIPart implements IGridTickable {
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
 		// Interface-like boxes
-		bch.addBox(2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D);
+		bch.addBox(2.0D, 2.0D, 15.0D, 14.0D, 14.0D, 16.0D);
+		bch.addBox(4.0D, 4.0D, 14.0D, 12.0D, 12.0D, 15.0D);
 		bch.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 14.0D);
-
-		// Additional boxes
-		bch.addBox(2.0D, 8.0D, 14.0D, 14.0D, 8.0D, 16.0D);
 	}
 
 	@Override

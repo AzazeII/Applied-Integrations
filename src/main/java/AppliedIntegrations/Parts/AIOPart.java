@@ -3,22 +3,24 @@ import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
+import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Utils.ChangeHandler;
-import AppliedIntegrations.api.IInventoryHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.EnumCapabilityType;
-import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
+import appeng.api.parts.IPartCollisionHelper;
 import appeng.api.parts.PartItemStack;
+import appeng.api.util.AECableType;
 import appeng.core.sync.GuiBridge;
 import appeng.util.Platform;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -34,20 +36,18 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
+import static AppliedIntegrations.Inventory.AIGridNodeInventory.validateStack;
 import static appeng.api.config.RedstoneMode.*;
-import static net.minecraft.init.Items.AIR;
 
 /**
  * @Author Azazell
  */
 
-public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHostExtended {
+public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMachine, IPriorityHostExtended, UpgradeInventoryManager.IUpgradeInventoryManagerHost {
 	// Size of filter
 	public final static int MAX_FILTER_SIZE = 9;
 
 	public List<LiquidAIEnergy> filteredEnergies = new ArrayList<>(AIOPart.MAX_FILTER_SIZE);
-	public boolean redstoneControlled;
-
 
 	// How much energy can be transfered in second
 	private final static int BASE_ENERGY_TRANSFER = 4000;
@@ -98,14 +98,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	private int priority = 0;
 
-	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("ME Energy Export/Import Bus", 4, 1, this) {
-
-		@Override
-		public boolean isItemValidForSlot(int i, ItemStack itemStack) {
-
-			return validateStack(itemStack);
-		}
-	};
+	private UpgradeInventoryManager upgradeInventoryManager = new UpgradeInventoryManager(this, "ME Energy Export/Import Bus", 4, (stack) -> validateStack(stack));
 
 	public AIOPart(final PartEnum associatedPart) {
 
@@ -124,49 +117,11 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		}
 	}
 
+
 	@Override
-	public void onInventoryChanged() {
-		//=========+Reset+=========//
-		// Set current filter size to zero
-		this.filterSize = 0;
-
-		// Trigger redstone control
-		this.redstoneControlled = false;
-
-		// Set speed to 0
-		this.upgradeSpeedCount = 0;
-		//=========+Reset+=========//
-
-		// Iterate until i equal to stack size
-		for (int i = 0; i < this.upgradeInventory.getSizeInventory(); i++) {
-
-			// Get current stack from slot
-			ItemStack currentStack = this.upgradeInventory.getStackInSlot(i);
-
-			// Check not air
-			if (currentStack.getItem() != AIR) {
-				// Check if current stack is capacity card stack
-				if (AEApi.instance().definitions().materials().cardCapacity().isSameAs(currentStack)) {
-					// Increase filter size
-					this.filterSize++;
-				}
-
-				// Check if current stack is redstone card stack
-				if (AEApi.instance().definitions().materials().cardRedstone().isSameAs(currentStack)) {
-					// Trigger restone control
-					this.redstoneControlled = true;
-				}
-
-				// Check if current stack is speed card stack
-				if (AEApi.instance().definitions().materials().cardSpeed().isSameAs(currentStack)) {
-					// Increase speed
-					this.upgradeSpeedCount++;
-				}
-			}
-		}
-
+	public void doSync(int filterSize, boolean redstoneControlled, int upgradeSpeedCount) {
 		// Request full state update
-		notifyListenersOfStateUpdate(filterSize, redstoneControlled);
+		notifyListenersOfStateUpdate((byte) filterSize, redstoneControlled);
 	}
 
 	private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled) {
@@ -185,8 +140,12 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	@Override
 	public AIGridNodeInventory getUpgradeInventory() {
+		return this.upgradeInventoryManager.upgradeInventory;
+	}
 
-		return this.upgradeInventory;
+	@Override
+	public void getBoxes(IPartCollisionHelper helper) {
+
 	}
 
 	@Override
@@ -203,7 +162,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		}
 
 		// Read upgrade inventory
-		this.upgradeInventory.readFromNBT(data.getTagList("upgradeInventory", 10));
+		this.upgradeInventoryManager.upgradeInventory.readFromNBT(data.getTagList("upgradeInventoryManager", 10));
 	}
 
 	/**
@@ -256,6 +215,11 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	}
 
 	@Override
+	public void onEntityCollision(Entity entity) {
+
+	}
+
+	@Override
 	public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position) {
 		super.onActivate(player, hand, position);
 
@@ -276,13 +240,17 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
-
-		for (ItemStack stack : upgradeInventory.slots) {
+		for (ItemStack stack : upgradeInventoryManager.upgradeInventory.slots) {
 			if (stack == null) {
 				continue;
 			}
 			drops.add(stack);
 		}
+	}
+
+	@Override
+	public float getCableConnectionLength(AECableType cable) {
+		return 0;
 	}
 
 	@Override
@@ -308,7 +276,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 					data.setInteger(NBT_KEY_REDSTONE_MODE, this.redstoneMode.ordinal());
 				}
 
-				data.setTag("upgradeInventory", this.upgradeInventory.writeToNBT());
+				data.setTag("upgradeInventoryManager", this.upgradeInventoryManager.upgradeInventory.writeToNBT());
 			}
 		}
 	}
@@ -355,7 +323,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			}));
 
 			notifyListenersOfFilterEnergyChange(i, filteredEnergies.get(i));
-			notifyListenersOfStateUpdate(filterSize, redstoneControlled);
+			notifyListenersOfStateUpdate(filterSize, upgradeInventoryManager.redstoneControlled);
 		}
 	}
 
@@ -436,13 +404,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	}
 
 	public void setRedstoneMode(RedstoneMode mode) {
-
 		this.redstoneMode = mode;
-
-		this.redstoneControlled = mode != IGNORE;
-	}
-
-	public byte getFilterSize() {
-		return filterSize;
+		this.upgradeInventoryManager.redstoneControlled = mode != IGNORE;
 	}
 }

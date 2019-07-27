@@ -3,6 +3,8 @@ import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
@@ -10,8 +12,20 @@ import javax.annotation.Nonnull;
  * @Author Azazell
  */
 public class SlotFilter extends Slot {
-	public SlotFilter(AIGridNodeInventory filterInventory, int index, int x, int y) {
+	private boolean[] matrix;
+
+	public SlotFilter(AIGridNodeInventory filterInventory, int index, int x, int y, boolean[] slotMatrix) {
 		super(filterInventory, index, x, y);
+		this.matrix = slotMatrix;
+	}
+
+	public void updateMatrix(boolean[] slotMatrix) {
+		this.matrix = slotMatrix;
+	}
+
+	@SideOnly(Side.CLIENT)
+	public boolean isEnabled() {
+		return matrix[getSlotIndex()];
 	}
 
 	@Override

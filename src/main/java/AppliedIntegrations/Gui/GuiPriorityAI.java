@@ -15,6 +15,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import java.io.IOException;
 import java.lang.reflect.Field;
 
+/**
+ * @Author Azazell
+ */
 public class GuiPriorityAI extends GuiPriority {
 	private IPriorityHostExtended host;
 

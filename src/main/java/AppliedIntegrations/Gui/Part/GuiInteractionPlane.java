@@ -1,6 +1,7 @@
 package AppliedIntegrations.Gui.Part;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerInteractionPlane;
+import AppliedIntegrations.Container.slot.SlotFilter;
 import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Parts.Interaction.PartInteractionPlane;
 import AppliedIntegrations.api.ISyncHost;
@@ -48,5 +49,21 @@ public class GuiInteractionPlane extends AIGui {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 
 		this.fontRenderer.drawString(I18n.translateToLocal("ME Interaction Plane"), 9, 3, 4210752);
+		this.drawFilterSlotsBackground();
+	}
+
+	private void drawFilterSlotsBackground() {
+		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		// Make slot background highlighted if it's enabled
+		for (SlotFilter filter : ((ContainerInteractionPlane) inventorySlots).filters) {
+			int x = filter.xPos - 1;
+			int y = filter.yPos - 1;
+
+			if (filter.isEnabled()) {
+				drawTexturedModalRect(x, y, 79, 39, 18, 18);
+			}
+		}
 	}
 }

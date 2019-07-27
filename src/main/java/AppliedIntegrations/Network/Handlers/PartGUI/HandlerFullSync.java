@@ -1,5 +1,5 @@
 package AppliedIntegrations.Network.Handlers.PartGUI;
-import AppliedIntegrations.Container.part.ContainerPartEnergyIOBus;
+import AppliedIntegrations.Container.part.IUpgradeHostContainer;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import net.minecraft.client.Minecraft;
 import net.minecraft.inventory.Container;
@@ -14,18 +14,18 @@ public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFu
 	public PacketFullSync onMessage(PacketFullSync message, MessageContext ctx) {
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Container container = Minecraft.getMinecraft().player.openContainer;
-			if (container instanceof ContainerPartEnergyIOBus) {
-				ContainerPartEnergyIOBus CEIOB = (ContainerPartEnergyIOBus) container;
+			if (container instanceof IUpgradeHostContainer) {
+				IUpgradeHostContainer upgradeHostContainer = (IUpgradeHostContainer) container;
 
 				// Check not null
-				if (CEIOB.getSyncHost() == null) {
+				if (upgradeHostContainer.getSyncHost() == null) {
 					return;
 				}
 
 				// Compare sync hosts
-				if (CEIOB.getSyncHost().compareTo(message.part, true)) {
+				if (upgradeHostContainer.getSyncHost().compareTo(message.part, true)) {
 					// Update each state
-					CEIOB.updateState(message.redstoneControl, message.redstoneMode, message.filterSize);
+					upgradeHostContainer.updateState(message.redstoneControl, message.redstoneMode, message.filterSize);
 				}
 			}
 		});

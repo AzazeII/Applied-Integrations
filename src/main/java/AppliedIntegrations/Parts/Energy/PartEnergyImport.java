@@ -25,7 +25,6 @@ import java.util.Random;
  * @Author Azazell
  */
 public class PartEnergyImport extends AIOPart {
-
 	public PartEnergyImport() {
 
 		super(PartEnum.EnergyImportBus);

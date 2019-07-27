@@ -17,16 +17,16 @@ import java.util.List;
 /**
  * @Author Azazell
  */
-public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implements IFilterContainer {
+public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implements IFilterContainer, IUpgradeHostContainer {
 	public List<WidgetEnergySlot> energySlotList = new ArrayList<>();
 	public GuiImgButton redstoneControlBtn;
 
 	// Number of upgrade slots
-	private static int NUMBER_OF_UPGRADE_SLOTS = 4;
+	public static int NUMBER_OF_UPGRADE_SLOTS = 4;
 	// X of upgrades
-	private static int UPGRADE_X_POS = 187;
+	public static int UPGRADE_X_POS = 187;
 	// Y of upgrades
-	private static int UPGRADE_Y_POS = 8;
+	public static int UPGRADE_Y_POS = 8;
 
 	public boolean[] configMatrix = {false, false, false, false, true, false, false, false, false};
 
@@ -81,6 +81,7 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implemen
 		this.energySlotList.get(index).setCurrentStack(new EnergyStack(energy, 0));
 	}
 
+	@Override
 	public void updateState(boolean redstoneControl, RedstoneMode redstoneMode, byte filterSize) {
 		// Set filter matrix, from filter size
 		if (filterSize == 0) {
