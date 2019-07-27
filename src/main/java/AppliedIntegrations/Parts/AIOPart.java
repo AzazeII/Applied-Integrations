@@ -18,7 +18,6 @@ import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
 import appeng.api.parts.PartItemStack;
 import appeng.core.sync.GuiBridge;
-import appeng.me.Grid;
 import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -195,11 +194,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		// Call super
 		super.readFromNBT(data);
 
-		// Read redstone mode
-		if (data.hasKey(NBT_KEY_REDSTONE_MODE)) {
-
-		}
-
 		// Read filters
 		for (int index = 0; index < MAX_FILTER_SIZE; index++) {
 			if (data.hasKey(NBT_KEY_FILTER_NUMBER + index)) {
@@ -306,7 +300,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 					data.setString(NBT_KEY_FILTER_NUMBER + i, energy.getTag());
 				}
 				i++;
-				Grid a;
 			}
 
 			if (saveType == PartItemStack.WORLD) {
