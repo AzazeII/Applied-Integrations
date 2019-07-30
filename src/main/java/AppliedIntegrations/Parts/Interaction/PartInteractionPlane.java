@@ -21,6 +21,7 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
+import appeng.api.util.AEPartLocation;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
@@ -37,12 +38,12 @@ import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -54,7 +55,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 import static appeng.api.networking.ticking.TickRateModulation.SAME;
 import static net.minecraft.util.EnumHand.MAIN_HAND;
@@ -69,9 +70,9 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 	private static final String KEY_FILTER_INVENTORY = "#FILTER_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
 	private static final String KEY_OPERATED_BLOCK = "#OPERATED_BLOCK_KEY";
+	private static final String KEY_HAS_OPERATED_BLOCK = "#HAS_OPERATED_BLOCK_KEY";
 	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Plane Filter", MAX_FILTER_SIZE, 1);
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Plane Upgrade Inventory", 4);
-	private BlockPos operatedBlock;
 	private UUID uniIdentifier;
 
 	public PartInteractionPlane() {
@@ -118,6 +119,26 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 			};
 
 			fakePlayer.setSilent(true);
+
+			// Set player position
+			fakePlayer.posX = getHostPos().getX();
+			fakePlayer.posY = getHostPos().getY();
+			fakePlayer.posZ = getHostPos().getZ();
+
+			// Rotate player's head depending on host side
+			// South is original zero value, so don't change it if host side equal to south
+			fakePlayer.eyeHeight = 0;
+			if (getHostSide() == AEPartLocation.WEST) {
+				fakePlayer.rotationYaw = 90;
+			} else if (getHostSide() == AEPartLocation.NORTH) {
+				fakePlayer.rotationYaw = 180;
+			} else if (getHostSide() == AEPartLocation.EAST) {
+				fakePlayer.rotationYaw = 270;
+			} else if (getHostSide() == AEPartLocation.DOWN) {
+				fakePlayer.rotationPitch = 90;
+			} else if (getHostSide() == AEPartLocation.UP) {
+				fakePlayer.rotationPitch = -90;
+			}
 		}
 	}
 
@@ -131,9 +152,6 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		// Read inventory content
 		this.filterInventory.readFromNBT(data.getTagList(KEY_FILTER_INVENTORY, 10));
 		this.upgradeInventoryManager.upgradeInventory.readFromNBT(data.getTagList(KEY_UPGRADE_INVENTORY, 10));
-
-		// Read operated block
-		this.operatedBlock = BlockPos.fromLong(data.getLong(KEY_OPERATED_BLOCK));
 	}
 
 	@Override
@@ -143,9 +161,6 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		// Write inventory content
 		data.setTag(KEY_FILTER_INVENTORY, this.filterInventory.writeToNBT());
 		data.setTag(KEY_UPGRADE_INVENTORY, this.upgradeInventoryManager.upgradeInventory.writeToNBT());
-
-		// Write operated block
-		data.setLong(KEY_OPERATED_BLOCK, this.operatedBlock.toLong());
 	}
 
 	@Override
@@ -157,16 +172,6 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 			}
 		}
 		return true;
-	}
-
-	@Override
-	public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos pos, BlockPos changedPos) {
-		super.onNeighborChanged(iBlockAccess, pos, changedPos);
-
-		// Select block pos
-		if (getHostPos().offset(getHostSide().getFacing()).equals(changedPos)) {
-			operatedBlock = changedPos;
-		}
 	}
 
 	@Nonnull
@@ -213,10 +218,6 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
-		if (operatedBlock == null) {
-			return SAME;
-		}
-
 		// Create new fake player for this run
 		createFakePlayer();
 
@@ -226,16 +227,17 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 
 		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
 		FakePlayer player = Objects.requireNonNull(fakePlayer.get());
+		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
 
-		// Do click on entities and on block
-		click(player, node, this::clickBlock);
-		click(player, node, this::clickEntity);
-		click(player, node, this::clickWithItem);
+		// Do click on entity(ies), item(s) and block(s)
+		click(player, node, facingPos, this::clickWithItem);
+		click(player, node, facingPos, this::clickEntity);
+		click(player, node, facingPos, this::clickBlock);
 
 		return SAME;
 	}
 
-	private void click(FakePlayer player, IGridNode node, Consumer<FakePlayer> method) {
+	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method) {
 		for (ItemStack stack : filterInventory.slots) {
 			// Don't operate with empty stack unless there is inverter card
 			if (stack.isEmpty()) {
@@ -258,33 +260,35 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 					inventory.extractItems(extracted, Actionable.MODULATE, new MachineSource(this));
 
 					// Click using given method
-					method.accept(player);
+					method.accept(player, facingPos);
 					injectClickResult(player, inventory);
 				}
 			} catch(GridAccessException ignored) {}
 		}
 	}
 
-	private void clickBlock(FakePlayer player) {
+	private void clickBlock(FakePlayer player, BlockPos facingPos) {
 		ItemStack itemStack = player.getHeldItem(MAIN_HAND);
 
 		// Click on this block
 		player.interactionManager.processRightClickBlock(player, getHostWorld(), itemStack,
-				MAIN_HAND, operatedBlock, EnumFacing.UP, .5F, .5F, .5F);
+				MAIN_HAND, facingPos, EnumFacing.UP, .5F, .5F, .5F);
 	}
 
-	private void clickEntity(FakePlayer player) {
+	private void clickEntity(FakePlayer player, BlockPos facingPos) {
 		List<EntityLivingBase> ents = getHostWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
-				operatedBlock.getX() - 0.5, operatedBlock.getY() - 0.5, operatedBlock.getZ() - 0.5,
-				operatedBlock.getX() + 0.5, operatedBlock.getY() + 0.5, operatedBlock.getZ() + 0.5));
+				facingPos.getX() - 0.5, facingPos.getY() - 0.5, facingPos.getZ() - 0.5,
+				facingPos.getX() + 0.5, facingPos.getY() + 0.5, facingPos.getZ() + 0.5));
 
 		for (EntityLivingBase ent : ents) {
 			player.interactOn(ent, MAIN_HAND);
 		}
 	}
 
-	private void clickWithItem(FakePlayer player) {
-
+	private void clickWithItem(FakePlayer player, BlockPos facingPos) {
+		// Trace result after clicking with item and replace current player stack with stack from result to make system inject return item right into it
+		ActionResult<ItemStack> result = player.getHeldItemMainhand().getItem().onItemRightClick(getHostWorld(), player, MAIN_HAND);
+		player.setHeldItem(MAIN_HAND, result.getResult());
 	}
 
 	private void injectClickResult(FakePlayer player, IMEMonitor<IAEItemStack> inventory) {
