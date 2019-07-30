@@ -32,7 +32,6 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 		this.bindPlayerInventory(player.inventory, 102, 160);
 		this.addUpgradeSlots(interaction.upgradeInventoryManager.upgradeInventory, ContainerPartEnergyIOBus.NUMBER_OF_UPGRADE_SLOTS, ContainerPartEnergyIOBus.UPGRADE_X_POS,
 																											ContainerPartEnergyIOBus.UPGRADE_Y_POS);
-
 		int index = 0;
 		for (int x = 0; x < SLOT_AREA; x++ ) {
 			for (int y = 0; y < SLOT_AREA; y++) {

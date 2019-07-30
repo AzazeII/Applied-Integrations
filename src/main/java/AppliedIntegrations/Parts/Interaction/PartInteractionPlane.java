@@ -8,6 +8,7 @@ import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.config.PowerMultiplier;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
@@ -20,12 +21,14 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
+import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -36,6 +39,7 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.IBlockAccess;
@@ -47,15 +51,19 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import static appeng.api.networking.ticking.TickRateModulation.SAME;
+import static net.minecraft.util.EnumHand.MAIN_HAND;
 
 /**
  * @Author Azazell
  */
 public class PartInteractionPlane extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost {
+	private static final double AE_DRAIN_PER_OPERATION = 0.5;
 	private WeakReference<FakePlayer> fakePlayer;
 	private final static int MAX_FILTER_SIZE = 9;
 	private static final String KEY_FILTER_INVENTORY = "#FILTER_INVENTORY_KEY";
@@ -219,45 +227,84 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
 		FakePlayer player = Objects.requireNonNull(fakePlayer.get());
 
+		// Do click on entities and on block
+		click(player, node, this::clickBlock);
+		click(player, node, this::clickEntity);
+		click(player, node, this::clickWithItem);
+
+		return SAME;
+	}
+
+	private void click(FakePlayer player, IGridNode node, Consumer<FakePlayer> method) {
 		for (ItemStack stack : filterInventory.slots) {
 			// Don't operate with empty stack unless there is inverter card
 			if (stack.isEmpty()) {
 				continue;
 			}
 
-			player.setHeldItem(EnumHand.MAIN_HAND, stack.copy());
+			player.setHeldItem(MAIN_HAND, stack.copy());
 
+			// Simulate operations
 			IStorageGrid cache = node.getGrid().getCache(IStorageGrid.class);
 			IMEMonitor<IAEItemStack> inventory = cache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 			AEItemStack input = AEItemStack.fromItemStack(player.getHeldItemMainhand());
-			IAEItemStack extracted = inventory.extractItems(input, Actionable.MODULATE, new MachineSource(this));
+			IAEItemStack extracted = inventory.extractItems(input, Actionable.SIMULATE, new MachineSource(this));
 
-			if (extracted != null) {
-				// Click on block
-				ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
-				player.interactionManager.processRightClickBlock(player, getHostWorld(), itemStack, EnumHand.MAIN_HAND, operatedBlock, EnumFacing.UP, .5F, .5F, .5F);
+			try {
+				double extractedAEPower = getProxy().getEnergy().extractAEPower(AE_DRAIN_PER_OPERATION, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+				if (extracted != null && extractedAEPower != 0) {
+					// Modulate operations
+					getProxy().getEnergy().extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
+					inventory.extractItems(extracted, Actionable.MODULATE, new MachineSource(this));
 
-				IAEItemStack aeStack = AEItemStack.fromItemStack(player.getHeldItem(EnumHand.MAIN_HAND));
-
-				if (aeStack == null || aeStack.getDefinition().isEmpty()) {
-					return SAME;
+					// Click using given method
+					method.accept(player);
+					injectClickResult(player, inventory);
 				}
+			} catch(GridAccessException ignored) {}
+		}
+	}
 
-				// Modulate item injection into ME system
-				IAEItemStack notInjected = inventory.injectItems(aeStack, Actionable.MODULATE, new MachineSource(this));
+	private void clickBlock(FakePlayer player) {
+		ItemStack itemStack = player.getHeldItem(MAIN_HAND);
 
-				// Drop not injected item stack
-				if (notInjected != null) {
-					getHostWorld().spawnEntity(new EntityItem(getHostWorld(),
-							0.5 + getHostPos().getX(),
-							0.5 + getHostPos().getY(),
-							0.2 + getHostPos().getZ(),
-							notInjected.getDefinition().copy()));
-				}
-			}
+		// Click on this block
+		player.interactionManager.processRightClickBlock(player, getHostWorld(), itemStack,
+				MAIN_HAND, operatedBlock, EnumFacing.UP, .5F, .5F, .5F);
+	}
+
+	private void clickEntity(FakePlayer player) {
+		List<EntityLivingBase> ents = getHostWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
+				operatedBlock.getX() - 0.5, operatedBlock.getY() - 0.5, operatedBlock.getZ() - 0.5,
+				operatedBlock.getX() + 0.5, operatedBlock.getY() + 0.5, operatedBlock.getZ() + 0.5));
+
+		for (EntityLivingBase ent : ents) {
+			player.interactOn(ent, MAIN_HAND);
+		}
+	}
+
+	private void clickWithItem(FakePlayer player) {
+
+	}
+
+	private void injectClickResult(FakePlayer player, IMEMonitor<IAEItemStack> inventory) {
+		IAEItemStack aeStack = AEItemStack.fromItemStack(player.getHeldItem(MAIN_HAND));
+
+		if (aeStack == null || aeStack.getDefinition().isEmpty()) {
+			return;
 		}
 
-		return SAME;
+		// Modulate item injection into ME system
+		IAEItemStack notInjected = inventory.injectItems(aeStack, Actionable.MODULATE, new MachineSource(this));
+
+		// Drop not injected item stack
+		if (notInjected != null) {
+			getHostWorld().spawnEntity(new EntityItem(getHostWorld(),
+					0.5 + getHostPos().getX(),
+					0.5 + getHostPos().getY(),
+					0.2 + getHostPos().getZ(),
+					notInjected.getDefinition().copy()));
+		}
 	}
 
 	@Nonnull
