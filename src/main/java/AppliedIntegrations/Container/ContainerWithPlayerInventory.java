@@ -1,9 +1,7 @@
 package AppliedIntegrations.Container;
-
-
+import AppliedIntegrations.Container.slot.SlotToggle;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -23,10 +21,10 @@ public abstract class ContainerWithPlayerInventory extends AIContainer {
 	private static int COLUMNS = 9;
 
 	// Player's hotbar slots
-	private final Slot[] hotbarSlots = new Slot[ContainerWithPlayerInventory.COLUMNS];
+	protected final SlotToggle[] hotbarSlots = new SlotToggle[ContainerWithPlayerInventory.COLUMNS];
 
 	// Player's main slots
-	private final Slot[] playerSlots = new Slot[ContainerWithPlayerInventory.COLUMNS * ContainerWithPlayerInventory.ROWS];
+	protected final SlotToggle[] playerSlots = new SlotToggle[ContainerWithPlayerInventory.COLUMNS * ContainerWithPlayerInventory.ROWS];
 
 	public ContainerWithPlayerInventory(final EntityPlayer player) {
 
@@ -81,7 +79,7 @@ public abstract class ContainerWithPlayerInventory extends AIContainer {
 		// Iterate until column = count
 		for (int column = 0; column < ContainerWithPlayerInventory.COLUMNS; column++) {
 			// Create the slot
-			this.hotbarSlots[column] = new Slot(playerInventory, column, ContainerWithPlayerInventory.INVENTORY_X_OFFSET + (column * ContainerWithPlayerInventory.SLOT_SIZE), hotbarPositionY);
+			this.hotbarSlots[column] = new SlotToggle(playerInventory, column, ContainerWithPlayerInventory.INVENTORY_X_OFFSET + (column * ContainerWithPlayerInventory.SLOT_SIZE), hotbarPositionY);
 
 			// Add the slot
 			this.addSlotToContainer(this.hotbarSlots[column]);
@@ -96,7 +94,7 @@ public abstract class ContainerWithPlayerInventory extends AIContainer {
 				int index = column + (row * ContainerWithPlayerInventory.COLUMNS);
 
 				// Create the slot
-				this.playerSlots[index] = new Slot(playerInventory, ContainerWithPlayerInventory.COLUMNS + index, ContainerWithPlayerInventory.INVENTORY_X_OFFSET + (column * ContainerWithPlayerInventory.SLOT_SIZE), (row * ContainerWithPlayerInventory.SLOT_SIZE) + inventoryOffsetY);
+				this.playerSlots[index] = new SlotToggle(playerInventory, ContainerWithPlayerInventory.COLUMNS + index, ContainerWithPlayerInventory.INVENTORY_X_OFFSET + (column * ContainerWithPlayerInventory.SLOT_SIZE), (row * ContainerWithPlayerInventory.SLOT_SIZE) + inventoryOffsetY);
 
 				// Add the slot
 				this.addSlotToContainer(this.playerSlots[index]);

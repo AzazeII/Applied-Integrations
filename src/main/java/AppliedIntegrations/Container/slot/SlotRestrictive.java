@@ -1,14 +1,11 @@
 package AppliedIntegrations.Container.slot;
-
-
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 /**
  * @Author Azazell
  */
-public class SlotRestrictive extends Slot {
+public class SlotRestrictive extends SlotToggle {
 	/**
 	 * @see net.minecraft.inventory.Slot#Slot
 	 */

@@ -51,9 +51,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
-import java.lang.ref.WeakReference;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
@@ -64,13 +62,16 @@ import static net.minecraft.util.EnumHand.MAIN_HAND;
  * @Author Azazell
  */
 public class PartInteractionPlane extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost {
+	public enum EnumInteractionPlaneTabs {
+		PLANE_FAKE_PLAYER_FILTER,
+		PLANE_FAKE_PLAYER_INVENTORY
+	}
+
 	private static final double AE_DRAIN_PER_OPERATION = 0.5;
-	private WeakReference<FakePlayer> fakePlayer;
+	public FakePlayer fakePlayer;
 	private final static int MAX_FILTER_SIZE = 9;
 	private static final String KEY_FILTER_INVENTORY = "#FILTER_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
-	private static final String KEY_OPERATED_BLOCK = "#OPERATED_BLOCK_KEY";
-	private static final String KEY_HAS_OPERATED_BLOCK = "#HAS_OPERATED_BLOCK_KEY";
 	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Plane Filter", MAX_FILTER_SIZE, 1);
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Plane Upgrade Inventory", 4);
 	private UUID uniIdentifier;
@@ -95,20 +96,17 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 			GameProfile fakeProfile = new GameProfile(this.uniIdentifier, AppliedIntegrations.modid + "fake_player_interaction_plane");
 
 			try {
-				fakePlayer = new WeakReference<>(FakePlayerFactory.get((WorldServer) hostWorld, fakeProfile));
+				fakePlayer = FakePlayerFactory.get((WorldServer) hostWorld, fakeProfile);
 			} catch(Exception e) {
 				fakePlayer = null;
 				return;
 			}
 
-			if (fakePlayer.get() == null) {
-				fakePlayer = null;
+			if (fakePlayer == null) {
 				return;
 			}
 
 			// Configure fake player
-			FakePlayer fakePlayer = Objects.requireNonNull(this.fakePlayer.get());
-
 			fakePlayer.onGround = true;
 			fakePlayer.connection = new NetHandlerPlayServer(FMLCommonHandler.instance().getMinecraftServerInstance(),
 					new NetworkManager(EnumPacketDirection.SERVERBOUND),
@@ -218,26 +216,25 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
-		// Create new fake player for this run
-		createFakePlayer();
-
 		if (fakePlayer == null) {
-			return SAME;
+			this.createFakePlayer();
 		}
 
-		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
-		FakePlayer player = Objects.requireNonNull(fakePlayer.get());
 		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
 
+		// Nullify player's main hand for this run
+		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
+
 		// Do click on entity(ies), item(s) and block(s)
-		click(player, node, facingPos, this::clickWithItem);
-		click(player, node, facingPos, this::clickEntity);
-		click(player, node, facingPos, this::clickBlock);
+		click(fakePlayer, node, facingPos, this::clickWithItem);
+		click(fakePlayer, node, facingPos, this::clickEntity);
+		click(fakePlayer, node, facingPos, this::clickBlock);
 
 		return SAME;
 	}
 
 	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method) {
+		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
 		for (ItemStack stack : filterInventory.slots) {
 			// Don't operate with empty stack unless there is inverter card
 			if (stack.isEmpty()) {
@@ -268,7 +265,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 	}
 
 	private void clickBlock(FakePlayer player, BlockPos facingPos) {
-		ItemStack itemStack = player.getHeldItem(MAIN_HAND);
+		ItemStack itemStack = player.getHeldItemMainhand();
 
 		// Click on this block
 		player.interactionManager.processRightClickBlock(player, getHostWorld(), itemStack,

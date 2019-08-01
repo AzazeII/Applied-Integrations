@@ -16,11 +16,8 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public abstract class AIWidget extends Gui {
 	public static final int WIDGET_SIZE = 18;
-
 	protected int xPosition;
-
 	protected int yPosition;
-
 	protected IWidgetHost hostGUI;
 
 	public AIWidget(final IWidgetHost hostGUI, final int xPos, final int yPos) {
@@ -38,7 +35,12 @@ public abstract class AIWidget extends Gui {
 
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-		this.drawGradientRect(this.xPosition + 1, this.yPosition + 1, this.xPosition + 17, this.yPosition + 17, 0x80FFFFFF, 0x80FFFFFF);
+		this.drawGradientRect(this.xPosition + 1,
+				this.yPosition + 1,
+				this.xPosition + 17,
+				this.yPosition + 17,
+				0x80FFFFFF,
+				0x80FFFFFF);
 
 		GL11.glEnable(GL11.GL_LIGHTING);
 
@@ -50,7 +52,7 @@ public abstract class AIWidget extends Gui {
 	public abstract void getTooltip(List<String> tooltip);
 
 	public boolean isMouseOverWidget(final int mouseX, final int mouseY) {
-
-		return AIGuiHelper.INSTANCE.isPointInGuiRegion(this.yPosition, this.xPosition, AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1, mouseX, mouseY, this.hostGUI.getLeft(), this.hostGUI.getTop());
+		return AIGuiHelper.INSTANCE.isPointInGuiRegion(this.yPosition, this.xPosition,
+				AIWidget.WIDGET_SIZE - 1, AIWidget.WIDGET_SIZE - 1, mouseX, mouseY, this.hostGUI.getLeft(), this.hostGUI.getTop());
 	}
 }

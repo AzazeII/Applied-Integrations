@@ -117,24 +117,24 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	}
 
 	@Override
-	public void drawScreen(int MouseX, int MouseY, float pOpacity) {
+	public void drawScreen(int mouseX, int mouseY, float pOpacity) {
 		// Clear tip
 		tooltip.clear();
 
 		// Draw screen
-		super.drawScreen(MouseX, MouseY, pOpacity);
+		super.drawScreen(mouseX, mouseY, pOpacity);
 
 		// Draw current tip
-		drawHoveringText(tooltip, MouseX, MouseY, fontRenderer);
+		drawHoveringText(tooltip, mouseX, mouseY, fontRenderer);
 
-		if (AIGuiHelper.INSTANCE.isPointInGuiRegion(this.guiLeft - 18, this.guiTop + 8, 16, 16, MouseX, MouseY, this.guiLeft, this.guiTop)) {
-			drawHoveringText(buttonTooltip, MouseX, MouseY, fontRenderer);
+		if (AIGuiHelper.INSTANCE.isPointInGuiRegion(this.guiLeft - 18, this.guiTop + 8, 16, 16, mouseX, mouseY, this.guiLeft, this.guiTop)) {
+			drawHoveringText(buttonTooltip, mouseX, mouseY, fontRenderer);
 		}
 
 		// Iterate over all energy widgets
 		for (WidgetEnergySlot slot : getContainer().energySlotList) {
 			// Check if mouse over widget
-			if (slot.isMouseOverWidget(MouseX, MouseY)) {
+			if (slot.isMouseOverWidget(mouseX, mouseY)) {
 				// Create tooltip list
 				List<String> tip = new ArrayList<String>();
 
@@ -144,7 +144,7 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 					tip.add(slot.getCurrentStack().getEnergyName());
 
 					// Draw tooltip
-					drawHoveringText(tip, MouseX, MouseY, fontRenderer);
+					drawHoveringText(tip, mouseX, mouseY, fontRenderer);
 				}
 			}
 		}

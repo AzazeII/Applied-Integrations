@@ -1,7 +1,6 @@
 package AppliedIntegrations.Container.slot;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,7 +10,7 @@ import javax.annotation.Nonnull;
 /**
  * @Author Azazell
  */
-public class SlotFilter extends Slot {
+public class SlotFilter extends SlotToggle {
 	private boolean[] matrix;
 
 	public SlotFilter(AIGridNodeInventory filterInventory, int index, int x, int y, boolean[] slotMatrix) {
@@ -25,7 +24,7 @@ public class SlotFilter extends Slot {
 
 	@SideOnly(Side.CLIENT)
 	public boolean isEnabled() {
-		return matrix[getSlotIndex()];
+		return isEnabled && matrix[getSlotIndex()];
 	}
 
 	@Override
