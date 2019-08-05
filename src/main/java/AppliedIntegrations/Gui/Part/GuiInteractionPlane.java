@@ -21,7 +21,7 @@ import static AppliedIntegrations.Parts.Interaction.PartInteractionPlane.EnumInt
  * @Author Azazell
  */
 public class GuiInteractionPlane extends AIGui {
-	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation("minecraft", "textures/gui/container/creative_inventory/tab_inventory.png");
+	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 	private static final ResourceLocation TEXTURE_FILTER = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.png");
 	private PartInteractionPlane interaction;
 	private EnumInteractionPlaneTabs currentTab = EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER;
@@ -47,7 +47,7 @@ public class GuiInteractionPlane extends AIGui {
 		super.initGui();
 		this.tabs.add(new WidgetGuiTab(this, 0, -28, 4,true,
 				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Plane Filters"));
-		this.tabs.add(new WidgetGuiTab(this, 29, -28, 2,false,
+		this.tabs.add(new WidgetGuiTab(this, 29, -28, 1,false,
 				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY, "Interaction Plane Inventory"));
 	}
 
@@ -94,12 +94,14 @@ public class GuiInteractionPlane extends AIGui {
 		// Draw background depending on current tab
 		if (currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_FILTER);
+
+			drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize + 75);
+			drawTexturedModalRect(this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0, GUI_UPGRADES_WIDTH, GuiEnergyIO.GUI_UPGRADES_HEIGHT);
 		} else {
 			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_INVENTORY);
-		}
 
-		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize + 75);
-		drawTexturedModalRect(this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0, GUI_UPGRADES_WIDTH, GuiEnergyIO.GUI_UPGRADES_HEIGHT);
+			drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+		}
 	}
 
 	@Override

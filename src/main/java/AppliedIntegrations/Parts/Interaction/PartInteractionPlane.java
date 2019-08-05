@@ -6,6 +6,7 @@ import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.api.IInventoryHost;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
@@ -32,6 +33,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.EnumPacketDirection;
@@ -61,18 +63,36 @@ import static net.minecraft.util.EnumHand.MAIN_HAND;
 /**
  * @Author Azazell
  */
-public class PartInteractionPlane extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost {
+public class PartInteractionPlane extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost{
 	public enum EnumInteractionPlaneTabs {
 		PLANE_FAKE_PLAYER_FILTER,
 		PLANE_FAKE_PLAYER_INVENTORY
 	}
 
+	private FakePlayer fakePlayer;
 	private static final double AE_DRAIN_PER_OPERATION = 0.5;
-	public FakePlayer fakePlayer;
 	private final static int MAX_FILTER_SIZE = 9;
+
+	private static final int FAKE_PLAYER_INVENTORY_SIZE = 36;
+	private static final int FAKE_PLAYER_ARMOR_INVENTORY_SIZE = 32;
+
 	private static final String KEY_FILTER_INVENTORY = "#FILTER_INVENTORY_KEY";
+	private static final String KEY_MAIN_INVENTORY = "#MAIN_INVENTORY_KEY";
+	private static final String KEY_ARMOR_INVENTORY = "#ARMOR_INVENTORY_KEY";
+	private static final String KEY_OFFHAND_INVENTORY = "#OFFHAND_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
+
 	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Plane Filter", MAX_FILTER_SIZE, 1);
+
+	public AIGridNodeInventory mainInventory =
+			new AIGridNodeInventory("Interaction Plane Inventory", FAKE_PLAYER_INVENTORY_SIZE, 64, this);
+
+	public AIGridNodeInventory armorInventory =
+			new AIGridNodeInventory("Interaction Plane Armor Inventory", FAKE_PLAYER_ARMOR_INVENTORY_SIZE, 64, this);
+
+	public AIGridNodeInventory offhandInventory =
+			new AIGridNodeInventory("Interaction Plane Offhand Inventory", 1, 64, this);
+
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Plane Upgrade Inventory", 4);
 	private UUID uniIdentifier;
 
@@ -109,8 +129,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 			// Configure fake player
 			fakePlayer.onGround = true;
 			fakePlayer.connection = new NetHandlerPlayServer(FMLCommonHandler.instance().getMinecraftServerInstance(),
-					new NetworkManager(EnumPacketDirection.SERVERBOUND),
-					fakePlayer) {
+					new NetworkManager(EnumPacketDirection.SERVERBOUND), fakePlayer) {
 				@SuppressWarnings("rawtypes")
 				@Override
 				public void sendPacket(@Nonnull Packet packetIn) {}
@@ -140,97 +159,28 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		}
 	}
 
-	@Override
-	public void doSync(int filterSize, boolean redstoneControlled, int upgradeSpeedCount) {}
+	private void clickBlock(FakePlayer player, BlockPos facingPos) {
+		ItemStack itemStack = player.getHeldItemMainhand();
 
-	@Override
-	public void readFromNBT(final NBTTagCompound data) {
-		super.readFromNBT(data);
-
-		// Read inventory content
-		this.filterInventory.readFromNBT(data.getTagList(KEY_FILTER_INVENTORY, 10));
-		this.upgradeInventoryManager.upgradeInventory.readFromNBT(data.getTagList(KEY_UPGRADE_INVENTORY, 10));
+		// Click on this block
+		player.interactionManager.processRightClickBlock(player, getHostWorld(), itemStack,
+				MAIN_HAND, facingPos, EnumFacing.UP, .5F, .5F, .5F);
 	}
 
-	@Override
-	public void writeToNBT(final NBTTagCompound data, final PartItemStack saveType) {
-		super.writeToNBT(data, saveType);
+	private void clickEntity(FakePlayer player, BlockPos facingPos) {
+		List<EntityLivingBase> ents = getHostWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
+				facingPos.getX() - 0.5, facingPos.getY() - 0.5, facingPos.getZ() - 0.5,
+				facingPos.getX() + 0.5, facingPos.getY() + 0.5, facingPos.getZ() + 0.5));
 
-		// Write inventory content
-		data.setTag(KEY_FILTER_INVENTORY, this.filterInventory.writeToNBT());
-		data.setTag(KEY_UPGRADE_INVENTORY, this.upgradeInventoryManager.upgradeInventory.writeToNBT());
-	}
-
-	@Override
-	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
-		// Activation logic is server sided
-		if (Platform.isServer()) {
-			if (!player.isSneaking()) {
-				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInteraction, player, getHostSide(), getHostTile().getPos());
-			}
+		for (EntityLivingBase ent : ents) {
+			player.interactOn(ent, MAIN_HAND);
 		}
-		return true;
 	}
 
-	@Nonnull
-	@Override
-	public IPartModel getStaticModels() {
-		if (this.isPowered()) {
-			if (this.isActive()) {
-				return PartModelEnum.INTERACTION_HAS_CHANNEL;
-			} else {
-				return PartModelEnum.INTERACTION_ON;
-			}
-		}
-		return PartModelEnum.INTERACTION_OFF;
-	}
-
-	@Override
-	protected AIGridNodeInventory getUpgradeInventory() {
-		return null;
-	}
-
-	@Override
-	public void getBoxes(IPartCollisionHelper bch) {
-		// Interface-like boxes
-		bch.addBox(2.0D, 2.0D, 15.0D, 14.0D, 14.0D, 16.0D);
-		bch.addBox(4.0D, 4.0D, 14.0D, 12.0D, 12.0D, 15.0D);
-		bch.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 14.0D);
-	}
-
-	@Override
-	public int getLightLevel() {
-		return 0;
-	}
-
-	@Override
-	public void onEntityCollision(Entity entity) {
-
-	}
-
-	@Override
-	public float getCableConnectionLength(AECableType cable) {
-		return 2F;
-	}
-
-	@Nonnull
-	@Override
-	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
-		if (fakePlayer == null) {
-			this.createFakePlayer();
-		}
-
-		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
-
-		// Nullify player's main hand for this run
-		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
-
-		// Do click on entity(ies), item(s) and block(s)
-		click(fakePlayer, node, facingPos, this::clickWithItem);
-		click(fakePlayer, node, facingPos, this::clickEntity);
-		click(fakePlayer, node, facingPos, this::clickBlock);
-
-		return SAME;
+	private void clickWithItem(FakePlayer player, BlockPos facingPos) {
+		// Trace result after clicking with item and replace current player stack with stack from result to make system inject return item right into it
+		ActionResult<ItemStack> result = player.getHeldItemMainhand().getItem().onItemRightClick(getHostWorld(), player, MAIN_HAND);
+		player.setHeldItem(MAIN_HAND, result.getResult());
 	}
 
 	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method) {
@@ -264,30 +214,6 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		}
 	}
 
-	private void clickBlock(FakePlayer player, BlockPos facingPos) {
-		ItemStack itemStack = player.getHeldItemMainhand();
-
-		// Click on this block
-		player.interactionManager.processRightClickBlock(player, getHostWorld(), itemStack,
-				MAIN_HAND, facingPos, EnumFacing.UP, .5F, .5F, .5F);
-	}
-
-	private void clickEntity(FakePlayer player, BlockPos facingPos) {
-		List<EntityLivingBase> ents = getHostWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
-				facingPos.getX() - 0.5, facingPos.getY() - 0.5, facingPos.getZ() - 0.5,
-				facingPos.getX() + 0.5, facingPos.getY() + 0.5, facingPos.getZ() + 0.5));
-
-		for (EntityLivingBase ent : ents) {
-			player.interactOn(ent, MAIN_HAND);
-		}
-	}
-
-	private void clickWithItem(FakePlayer player, BlockPos facingPos) {
-		// Trace result after clicking with item and replace current player stack with stack from result to make system inject return item right into it
-		ActionResult<ItemStack> result = player.getHeldItemMainhand().getItem().onItemRightClick(getHostWorld(), player, MAIN_HAND);
-		player.setHeldItem(MAIN_HAND, result.getResult());
-	}
-
 	private void injectClickResult(FakePlayer player, IMEMonitor<IAEItemStack> inventory) {
 		IAEItemStack aeStack = AEItemStack.fromItemStack(player.getHeldItem(MAIN_HAND));
 
@@ -308,9 +234,131 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		}
 	}
 
+	@Override
+	public void onInventoryChanged() {
+		// Ignored on client
+		if (getHostWorld().isRemote) {
+			return;
+		}
+
+		// Sync all inventories with inventory of fake player. Don't sync hand slot in main inventory
+		InventoryPlayer inventoryPlayer = fakePlayer.inventory;
+		for (int idx = 1; idx < mainInventory.getSizeInventory(); idx++) {
+			inventoryPlayer.mainInventory.set(idx, mainInventory.getStackInSlot(idx));
+		}
+		for (int idx = 0; idx < armorInventory.getSizeInventory(); idx++) {
+			inventoryPlayer.armorInventory.set(idx, armorInventory.getStackInSlot(idx));
+		}
+		for (int idx = 0; idx < offhandInventory.getSizeInventory(); idx++) {
+			inventoryPlayer.offHandInventory.set(idx, offhandInventory.getStackInSlot(idx));
+		}
+	}
+
+	@Override
+	public void doSync(int filterSize, boolean redstoneControlled, int upgradeSpeedCount) {}
+
+	@Override
+	public void readFromNBT(final NBTTagCompound data) {
+		super.readFromNBT(data);
+
+		// Read inventories from NBT
+		this.filterInventory.readFromNBT(data.getTagList(KEY_FILTER_INVENTORY, 10));
+		this.upgradeInventoryManager.upgradeInventory.readFromNBT(data.getTagList(KEY_UPGRADE_INVENTORY, 10));
+
+		this.mainInventory.readFromNBT(data.getTagList(KEY_MAIN_INVENTORY, 10));
+		this.armorInventory.readFromNBT(data.getTagList(KEY_ARMOR_INVENTORY, 10));
+		this.offhandInventory.readFromNBT(data.getTagList(KEY_OFFHAND_INVENTORY, 10));
+	}
+
+	@Override
+	public void writeToNBT(final NBTTagCompound data, final PartItemStack saveType) {
+		super.writeToNBT(data, saveType);
+
+		// Write inventories to NBT
+		data.setTag(KEY_FILTER_INVENTORY, this.filterInventory.writeToNBT());
+		data.setTag(KEY_UPGRADE_INVENTORY, this.upgradeInventoryManager.upgradeInventory.writeToNBT());
+
+		data.setTag(KEY_MAIN_INVENTORY, this.mainInventory.writeToNBT());
+		data.setTag(KEY_ARMOR_INVENTORY, this.armorInventory.writeToNBT());
+		data.setTag(KEY_OFFHAND_INVENTORY, this.offhandInventory.writeToNBT());
+	}
+
+	@Override
+	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+		// Activation logic is server sided
+		if (Platform.isServer()) {
+			if (!player.isSneaking()) {
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInteraction, player, getHostSide(), getHostTile().getPos());
+			}
+		}
+		return true;
+	}
+
+	@Nonnull
+	@Override
+	public IPartModel getStaticModels() {
+		if (this.isPowered()) {
+			if (this.isActive()) {
+				return PartModelEnum.INTERACTION_HAS_CHANNEL;
+			} else {
+				return PartModelEnum.INTERACTION_ON;
+			}
+		}
+		return PartModelEnum.INTERACTION_OFF;
+	}
+
+	@Override
+	protected AIGridNodeInventory getUpgradeInventory() {
+		return upgradeInventoryManager.upgradeInventory;
+	}
+
+	@Override
+	public void getBoxes(IPartCollisionHelper bch) {
+		// Interface-like boxes
+		bch.addBox(2.0D, 2.0D, 15.0D, 14.0D, 14.0D, 16.0D);
+		bch.addBox(4.0D, 4.0D, 14.0D, 12.0D, 12.0D, 15.0D);
+		bch.addBox(5.0D, 5.0D, 12.0D, 11.0D, 11.0D, 14.0D);
+	}
+
+	@Override
+	public int getLightLevel() {
+		return 0;
+	}
+
+	@Override
+	public void onEntityCollision(Entity entity) {
+
+	}
+
+	@Override
+	public float getCableConnectionLength(AECableType cable) {
+		return 2F;
+	}
+
+	@Nonnull
+	@Override
+	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
+		if (fakePlayer == null) {
+			this.createFakePlayer();
+			return TickRateModulation.IDLE;
+		}
+
+		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
+
+		// Nullify player's main hand for this run
+		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
+
+		// Do click on entity(ies), item(s) and block(s)
+		click(fakePlayer, node, facingPos, this::clickWithItem);
+		click(fakePlayer, node, facingPos, this::clickEntity);
+		click(fakePlayer, node, facingPos, this::clickBlock);
+
+		return SAME;
+	}
+
 	@Nonnull
 	@Override
 	public TickingRequest getTickingRequest(@Nonnull IGridNode node) {
-		return new TickingRequest(10, 10, false, false);
+		return new TickingRequest(1, 10, false, false);
 	}
 }

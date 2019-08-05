@@ -37,8 +37,11 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 
 		// Bind inventories
 		this.bindPlayerInventory(player.inventory, 102, 160);
+		this.bindPlayerInventory(interaction.mainInventory, 84, 142);
 		this.addUpgradeSlots(interaction.upgradeInventoryManager.upgradeInventory, ContainerPartEnergyIOBus.NUMBER_OF_UPGRADE_SLOTS, ContainerPartEnergyIOBus.UPGRADE_X_POS,
-																											ContainerPartEnergyIOBus.UPGRADE_Y_POS);
+																					ContainerPartEnergyIOBus.UPGRADE_Y_POS);
+
+		// Filter slots
 		int index = 0;
 		for (int x = 0; x < SLOT_AREA; x++ ) {
 			for (int y = 0; y < SLOT_AREA; y++) {
@@ -50,13 +53,21 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 				index++;
 			}
 		}
+
+		// Armor slots
+		for (int y = 0; y < 4; y++) {
+			this.addSlotToContainer(new SlotToggle(interaction.armorInventory, y, 8, 8 + (y * 18)));
+		}
+
+		this.toggleInvSlots(true);
 	}
 
 	private void toggleInvSlots(boolean isEnabled) {
-		// Toggle slot
+		// Toggle slot. Inverse if slot is in inventory of fake player
 		for (Slot slot : this.inventorySlots) {
 			if (slot instanceof SlotToggle) {
-				((SlotToggle) slot).isEnabled = isEnabled;
+				((SlotToggle) slot).isEnabled =
+						(slot.inventory == plane.mainInventory || slot.inventory == plane.armorInventory || slot.inventory == plane.offhandInventory) != isEnabled;
 			}
 		}
 	}
