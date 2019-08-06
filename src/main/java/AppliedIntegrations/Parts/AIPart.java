@@ -375,9 +375,7 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	@Override
-	public void getDrops(final List<ItemStack> drops, final boolean wrenched) {
-
-	}
+	public void getDrops(final List<ItemStack> drops, final boolean wrenched) {}
 
 	@Override
 	public void randomDisplayTick(World world, BlockPos blockPos, Random random) { }

@@ -51,11 +51,13 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
 
 import static appeng.api.networking.ticking.TickRateModulation.SAME;
+import static net.minecraft.entity.player.EntityPlayer.REACH_DISTANCE;
 import static net.minecraft.util.EnumHand.MAIN_HAND;
 
 /**
@@ -139,6 +141,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 			fakePlayer.posX = getHostPos().getX();
 			fakePlayer.posY = getHostPos().getY();
 			fakePlayer.posZ = getHostPos().getZ();
+			fakePlayer.getEntityAttribute(REACH_DISTANCE).setBaseValue(1);
 
 			// Rotate player's head depending on host side
 			// South is original zero value, so don't change it if host side equal to south
@@ -154,6 +157,9 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 			} else if (getHostSide() == AEPartLocation.UP) {
 				fakePlayer.rotationPitch = -90;
 			}
+
+			// Sync our inventories with inventories of fake player
+			onInventoryChanged();
 		}
 	}
 
@@ -202,7 +208,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		float f5 = MathHelper.sin(-pitch * 0.017453292F);
 		float f6 = MathHelper.sin(-yaw * 0.017453292F - (float)Math.PI) * f4;
 		float f7 = MathHelper.cos(-yaw * 0.017453292F - (float)Math.PI) * f4;
-		double range = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
+		double range = player.getEntityAttribute(REACH_DISTANCE).getAttributeValue();
 
 		// Calculate direction vector and ray trace blocks on this directions
 		Vec3d direction = position.addVector((double)f6 * range, (double)f5 * range, (double)f7 * range);
@@ -258,6 +264,14 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 					0.2 + getHostPos().getZ(),
 					notInjected.getDefinition().copy()));
 		}
+	}
+
+	@Override
+	public void getDrops(List<ItemStack> drops, boolean wrenched) {
+		// Drop items from all inventories
+		drops.addAll(Arrays.asList(mainInventory.slots));
+		drops.addAll(Arrays.asList(armorInventory.slots));
+		drops.addAll(Arrays.asList(offhandInventory.slots));
 	}
 
 	@Override

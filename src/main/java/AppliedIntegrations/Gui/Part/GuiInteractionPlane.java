@@ -32,6 +32,21 @@ public class GuiInteractionPlane extends AIGui {
 		this.interaction = interaction;
 	}
 
+	private void drawFilterSlotsBackground() {
+		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_FILTER);
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		// Make slot background highlighted if it's enabled
+		for (SlotFilter filter : ((ContainerInteractionPlane) inventorySlots).filters) {
+			int x = filter.xPos - 1;
+			int y = filter.yPos - 1;
+
+			if (filter.isEnabled()) {
+				drawTexturedModalRect(x, y, 79, 39, 18, 18);
+			}
+		}
+	}
+
 	@Override
 	public ISyncHost getSyncHost() {
 		return interaction;
@@ -69,6 +84,18 @@ public class GuiInteractionPlane extends AIGui {
 				}
 			}
 		}
+	}
+
+	@Override
+	protected boolean hasClickedOutside(int mouseX, int mouseY, int guiLeft, int guiTop) {
+		// Don't drop item stack if it is over tab
+		for (WidgetGuiTab tab : tabs) {
+			if (tab.isMouseOverWidget(mouseX, mouseY)) {
+				return false;
+			}
+		}
+
+		return mouseX < guiLeft || mouseY < guiTop || mouseX >= guiLeft + this.xSize || mouseY >= guiTop + this.ySize;
 	}
 
 	@Override
@@ -116,20 +143,5 @@ public class GuiInteractionPlane extends AIGui {
 
 		// Draw tabs
 		tabs.forEach(WidgetGuiTab::drawWidget);
-	}
-
-	private void drawFilterSlotsBackground() {
-		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_FILTER);
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		// Make slot background highlighted if it's enabled
-		for (SlotFilter filter : ((ContainerInteractionPlane) inventorySlots).filters) {
-			int x = filter.xPos - 1;
-			int y = filter.yPos - 1;
-
-			if (filter.isEnabled()) {
-				drawTexturedModalRect(x, y, 79, 39, 18, 18);
-			}
-		}
 	}
 }
