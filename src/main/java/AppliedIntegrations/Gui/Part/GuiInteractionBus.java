@@ -4,10 +4,12 @@ import AppliedIntegrations.Container.part.ContainerInteractionPlane;
 import AppliedIntegrations.Container.slot.SlotFilter;
 import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.Widgets.WidgetGuiTab;
+import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
@@ -61,9 +63,9 @@ public class GuiInteractionBus extends AIGui {
 	public void initGui() {
 		super.initGui();
 		this.tabs.add(new WidgetGuiTab(this, 0, -28, 4,true,
-				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Bus Filters"));
+				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Bus Filters", ItemEnum.ITEMPARTINTERACTIONPLANE.getItem(), itemRender, fontRenderer));
 		this.tabs.add(new WidgetGuiTab(this, 29, -28, 1,false,
-				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY, "Interaction Bus Inventory"));
+				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY, "Interaction Bus Inventory", Blocks.CHEST, itemRender, fontRenderer));
 	}
 
 	@Override

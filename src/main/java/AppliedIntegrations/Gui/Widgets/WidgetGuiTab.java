@@ -3,7 +3,12 @@ import AppliedIntegrations.Gui.AIGuiHelper;
 import AppliedIntegrations.Gui.Hosts.IWidgetHost;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketTabChange;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
@@ -14,18 +19,38 @@ import java.util.List;
  */
 public class WidgetGuiTab extends AIWidget {
 	private static final ResourceLocation INV_TABS = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
+	private static final int ICON_OFFSET_X = 6;
+	private static final int ICON_OFFSET_Y = 8;
+
+	private final RenderItem itemRenderer;
+	private final FontRenderer fontRenderer;
 	private final int adjustentHeight;
 	private final int width = 27;
 	public final Enum tabEnum;
+	private final ItemStack stack;
 	public boolean isTabSelected;
 	private String tabName;
 
-	public WidgetGuiTab(IWidgetHost hostGUI, int xPos, int yPos, int adjustentHeight, boolean isSelected, Enum tabEnum, String tabName) {
+	private WidgetGuiTab(IWidgetHost hostGUI, int xPos, int yPos, int adjustentHeight, boolean isSelected, Enum tabEnum,
+	                    String tabName, ItemStack itemStack, RenderItem itemRenderer, FontRenderer fontRenderer) {
 		super(hostGUI, xPos, yPos);
 		this.tabEnum = tabEnum;
 		this.isTabSelected = isSelected;
 		this.tabName = tabName;
 		this.adjustentHeight = adjustentHeight;
+		this.itemRenderer = itemRenderer;
+		this.fontRenderer = fontRenderer;
+		this.stack = itemStack;
+	}
+
+	public WidgetGuiTab(IWidgetHost hostGUI, int xPos, int yPos, int adjustentHeight, boolean isSelected, Enum tabEnum,
+	                    String tabName, Item item, RenderItem itemRenderer, FontRenderer fontRenderer) {
+		this(hostGUI, xPos, yPos, adjustentHeight, isSelected, tabEnum, tabName, new ItemStack(item), itemRenderer, fontRenderer);
+	}
+
+	public WidgetGuiTab(IWidgetHost hostGUI, int xPos, int yPos, int adjustentHeight, boolean isSelected, Enum tabEnum,
+	                    String tabName, Block block, RenderItem itemRender, FontRenderer fontRenderer) {
+		this(hostGUI, xPos, yPos, adjustentHeight, isSelected, tabEnum, tabName, new ItemStack(block), itemRender, fontRenderer);
 	}
 
 	private int getHeight() {
@@ -38,9 +63,14 @@ public class WidgetGuiTab extends AIWidget {
 
 	@Override
 	public void drawWidget() {
+		// Render widget background
 		Minecraft.getMinecraft().renderEngine.bindTexture(INV_TABS);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		drawTexturedModalRect(xPosition, yPosition, 0, getTextureY(), width, getHeight());
+
+		// Render item
+		this.itemRenderer.renderItemAndEffectIntoGUI(stack, xPosition + ICON_OFFSET_X, yPosition + ICON_OFFSET_Y);
+		this.itemRenderer.renderItemOverlays(fontRenderer, stack, xPosition + ICON_OFFSET_X, yPosition + ICON_OFFSET_Y);
 	}
 
 	@Override

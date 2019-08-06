@@ -69,7 +69,6 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		PLANE_FAKE_PLAYER_INVENTORY
 	}
 
-	private FakePlayer fakePlayer;
 	private static final double AE_DRAIN_PER_OPERATION = 0.5;
 	private final static int MAX_FILTER_SIZE = 9;
 
@@ -82,6 +81,7 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	private static final String KEY_OFFHAND_INVENTORY = "#OFFHAND_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
 
+	public FakePlayer fakePlayer;
 	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Bus Filter", MAX_FILTER_SIZE, 1);
 
 	public AIGridNodeInventory mainInventory =
