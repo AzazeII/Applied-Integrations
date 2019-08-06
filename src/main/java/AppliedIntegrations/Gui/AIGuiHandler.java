@@ -15,7 +15,7 @@ import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
-import AppliedIntegrations.Parts.Interaction.PartInteractionPlane;
+import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.IEnergyInterface;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.tile.LogicBus.TileLogicBusCore;
@@ -163,7 +163,7 @@ public class AIGuiHandler implements IGuiHandler {
 
 			return new ContainerMultiControllerCore(player, core);
 		} else if (gui == GuiInteraction) {
-			PartInteractionPlane interaction = (PartInteractionPlane) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
+			PartInteraction interaction = (PartInteraction) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
 			return new ContainerInteractionPlane(player, interaction);
 		}
@@ -209,9 +209,9 @@ public class AIGuiHandler implements IGuiHandler {
 		} else if (gui == GuiServerStorage) {
 			return new GuiMultiControllerCore((ContainerMultiControllerCore) getServerGuiElement(ID, player, world, x, y, z), player);
 		} else if (gui == GuiInteraction) {
-			PartInteractionPlane interaction = (PartInteractionPlane) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
+			PartInteraction interaction = (PartInteraction) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
-			return new GuiInteractionPlane((ContainerInteractionPlane) getServerGuiElement(ID, player, world, x, y, z), player, interaction);
+			return new GuiInteractionBus((ContainerInteractionPlane) getServerGuiElement(ID, player, world, x, y, z), player, interaction);
 		}
 
 		return null;

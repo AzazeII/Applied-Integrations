@@ -26,7 +26,7 @@ item.mana_annihilation_core.name=ME Mana Annihilation Core
 item.me_mana_mirror.name=ME Mana Mirror
 item.me_greater_mana_ring.name=ME Greater Mana Ring
 item.me_mana_ring.name=ME Mana Ring
-item.interaction_plane.name=ME Interaction Plane
+item.interaction_bus.name=ME Interaction Bus
 
 item.graph_tool.name=ME Graph Tool
 item.network_card.name=ME Network Card

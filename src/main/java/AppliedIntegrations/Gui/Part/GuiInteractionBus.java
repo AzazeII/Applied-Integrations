@@ -4,7 +4,7 @@ import AppliedIntegrations.Container.part.ContainerInteractionPlane;
 import AppliedIntegrations.Container.slot.SlotFilter;
 import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.Widgets.WidgetGuiTab;
-import AppliedIntegrations.Parts.Interaction.PartInteractionPlane;
+import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,19 +15,19 @@ import org.lwjgl.opengl.GL11;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.Parts.Interaction.PartInteractionPlane.EnumInteractionPlaneTabs;
+import static AppliedIntegrations.Parts.Interaction.PartInteraction.EnumInteractionPlaneTabs;
 
 /**
  * @Author Azazell
  */
-public class GuiInteractionPlane extends AIGui {
+public class GuiInteractionBus extends AIGui {
 	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.inventory.png");
 	private static final ResourceLocation TEXTURE_FILTER = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.png");
-	private PartInteractionPlane interaction;
+	private PartInteraction interaction;
 	private EnumInteractionPlaneTabs currentTab = EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER;
 	private List<WidgetGuiTab> tabs = new ArrayList<>();
 
-	public GuiInteractionPlane(ContainerInteractionPlane container, EntityPlayer player, PartInteractionPlane interaction) {
+	public GuiInteractionBus(ContainerInteractionPlane container, EntityPlayer player, PartInteraction interaction) {
 		super(container, player);
 		this.interaction = interaction;
 	}
@@ -54,16 +54,16 @@ public class GuiInteractionPlane extends AIGui {
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		this.interaction = (PartInteractionPlane) host;
+		this.interaction = (PartInteraction) host;
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
 		this.tabs.add(new WidgetGuiTab(this, 0, -28, 4,true,
-				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Plane Filters"));
+				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Bus Filters"));
 		this.tabs.add(new WidgetGuiTab(this, 29, -28, 1,false,
-				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY, "Interaction Plane Inventory"));
+				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY, "Interaction Bus Inventory"));
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class GuiInteractionPlane extends AIGui {
 
 		// Draw foreground depending on current tab
 		if (currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
-			this.fontRenderer.drawString(I18n.translateToLocal("ME Interaction Plane"), 9, 3, 4210752);
+			this.fontRenderer.drawString(I18n.translateToLocal("ME Interaction Bus"), 9, 3, 4210752);
 			this.drawFilterSlotsBackground();
 		}
 

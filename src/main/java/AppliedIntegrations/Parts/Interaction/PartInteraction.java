@@ -63,7 +63,7 @@ import static net.minecraft.util.EnumHand.MAIN_HAND;
 /**
  * @Author Azazell
  */
-public class PartInteractionPlane extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost{
+public class PartInteraction extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost{
 	public enum EnumInteractionPlaneTabs {
 		PLANE_FAKE_PLAYER_FILTER,
 		PLANE_FAKE_PLAYER_INVENTORY
@@ -82,21 +82,21 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 	private static final String KEY_OFFHAND_INVENTORY = "#OFFHAND_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
 
-	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Plane Filter", MAX_FILTER_SIZE, 1);
+	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Bus Filter", MAX_FILTER_SIZE, 1);
 
 	public AIGridNodeInventory mainInventory =
-			new AIGridNodeInventory("Interaction Plane Inventory", FAKE_PLAYER_INVENTORY_SIZE, 64, this);
+			new AIGridNodeInventory("Interaction Bus Inventory", FAKE_PLAYER_INVENTORY_SIZE, 64, this);
 
 	public AIGridNodeInventory armorInventory =
-			new AIGridNodeInventory("Interaction Plane Armor Inventory", FAKE_PLAYER_ARMOR_INVENTORY_SIZE, 64, this);
+			new AIGridNodeInventory("Interaction Bus Armor Inventory", FAKE_PLAYER_ARMOR_INVENTORY_SIZE, 64, this);
 
 	public AIGridNodeInventory offhandInventory =
-			new AIGridNodeInventory("Interaction Plane Offhand Inventory", 1, 64, this);
+			new AIGridNodeInventory("Interaction Bus Offhand Inventory", 1, 64, this);
 
-	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Plane Upgrade Inventory", 4);
+	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Bus Upgrade Inventory", 4);
 	private UUID uniIdentifier;
 
-	public PartInteractionPlane() {
+	public PartInteraction() {
 		super(PartEnum.InteractionPlane);
 	}
 
@@ -113,7 +113,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 			}
 
 			// Generate fake player
-			GameProfile fakeProfile = new GameProfile(this.uniIdentifier, AppliedIntegrations.modid + "fake_player_interaction_plane");
+			GameProfile fakeProfile = new GameProfile(this.uniIdentifier, AppliedIntegrations.modid + "fake_player_interaction_bus");
 
 			try {
 				fakePlayer = FakePlayerFactory.get((WorldServer) hostWorld, fakeProfile);

@@ -43,7 +43,7 @@ appliedintegrations.Energy.terminal.name=МЭ Терминал Энергии
 appliedintegrations.Energy.StorageMonitor.name=МЭ Монитор Хранения Энергии
 appliedintegrations.Energy.Machine.P2PRotary=Туннель Точка-Точка Ватты
 appliedintegrations.Energy.Machine.P2PJoules=Туннель Точка-Точка Джоули
-item.interaction_plane.name=МЭ Шина Взаимодействия
+item.interaction_bus.name=МЭ Шина Взаимодействия
 
 item.emberP2PPartItem.name=Туннель Точка-Точка Эмбер
 item.manaP2PPartItem.name=Туннель Точка-Точка Мана

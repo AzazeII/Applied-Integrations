@@ -5,7 +5,7 @@ import AppliedIntegrations.Container.slot.SlotFilter;
 import AppliedIntegrations.Container.slot.SlotToggle;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
-import AppliedIntegrations.Parts.Interaction.PartInteractionPlane;
+import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.RedstoneMode;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static AppliedIntegrations.Parts.Interaction.PartInteractionPlane.EnumInteractionPlaneTabs;
+import static AppliedIntegrations.Parts.Interaction.PartInteraction.EnumInteractionPlaneTabs;
 
 /**
  * @Author Azazell
@@ -37,9 +37,9 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 			false, false, false
 	};
 
-	private PartInteractionPlane plane;
+	private PartInteraction plane;
 
-	public ContainerInteractionPlane(EntityPlayer player, PartInteractionPlane interaction) {
+	public ContainerInteractionPlane(EntityPlayer player, PartInteraction interaction) {
 		super(player);
 		this.plane = interaction;
 
@@ -119,7 +119,7 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		this.plane = (PartInteractionPlane) host;
+		this.plane = (PartInteraction) host;
 	}
 
 	@Override
