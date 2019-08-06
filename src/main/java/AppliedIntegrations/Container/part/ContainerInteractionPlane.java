@@ -8,10 +8,18 @@ import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Parts.Interaction.PartInteractionPlane;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.RedstoneMode;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,10 +62,39 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 			}
 		}
 
-		// Armor slots
-		for (int y = 0; y < 4; y++) {
-			this.addSlotToContainer(new SlotToggle(interaction.armorInventory, y, 8, 8 + (y * 18)));
+		// Armor slots (derived from ContainerPlayer)
+		for (int y = 0; y < 4; ++y) {
+			final EntityEquipmentSlot armorType = EntityEquipmentSlot.values()[EntityEquipmentSlot.values().length - 1 - y];
+			this.addSlotToContainer(new SlotToggle(interaction.armorInventory, y, 8, 8 + y * 18) {
+				public int getSlotStackLimit() {
+					return 1;
+				}
+
+				public boolean isItemValid(ItemStack stack) {
+					return stack.getItem().isValidArmor(stack, armorType, player);
+				}
+
+				public boolean canTakeStack(EntityPlayer playerIn) {
+					ItemStack stack = getStack();
+					return (stack.isEmpty() || playerIn.isCreative() || !EnchantmentHelper.hasBindingCurse(stack)) && super.canTakeStack(playerIn);
+				}
+
+				@Nullable
+				@SideOnly(Side.CLIENT)
+				public String getSlotTexture() {
+					return ItemArmor.EMPTY_SLOT_NAMES[armorType.getIndex()];
+				}
+			});
 		}
+
+		// Offhand slot (derived from ContainerPlayer)
+		this.addSlotToContainer(new SlotToggle(interaction.offhandInventory, 0, 77, 62) {
+			@Nonnull
+			@SideOnly(Side.CLIENT)
+			public String getSlotTexture() {
+				return "minecraft:items/empty_armor_slot_shield";
+			}
+		});
 
 		this.toggleInvSlots(true);
 	}

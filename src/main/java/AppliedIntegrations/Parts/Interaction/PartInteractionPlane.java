@@ -43,9 +43,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -74,7 +72,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 	private final static int MAX_FILTER_SIZE = 9;
 
 	private static final int FAKE_PLAYER_INVENTORY_SIZE = 36;
-	private static final int FAKE_PLAYER_ARMOR_INVENTORY_SIZE = 32;
+	private static final int FAKE_PLAYER_ARMOR_INVENTORY_SIZE = 4;
 
 	private static final String KEY_FILTER_INVENTORY = "#FILTER_INVENTORY_KEY";
 	private static final String KEY_MAIN_INVENTORY = "#MAIN_INVENTORY_KEY";
@@ -159,7 +157,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		}
 	}
 
-	private void clickBlock(FakePlayer player, BlockPos facingPos) {
+	private void interactBlock(FakePlayer player, BlockPos facingPos) {
 		ItemStack itemStack = player.getHeldItemMainhand();
 
 		// Click on this block
@@ -167,7 +165,7 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 				MAIN_HAND, facingPos, EnumFacing.UP, .5F, .5F, .5F);
 	}
 
-	private void clickEntity(FakePlayer player, BlockPos facingPos) {
+	private void interactEntity(FakePlayer player, BlockPos facingPos) {
 		List<EntityLivingBase> ents = getHostWorld().getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(
 				facingPos.getX() - 0.5, facingPos.getY() - 0.5, facingPos.getZ() - 0.5,
 				facingPos.getX() + 0.5, facingPos.getY() + 0.5, facingPos.getZ() + 0.5));
@@ -177,10 +175,38 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		}
 	}
 
-	private void clickWithItem(FakePlayer player, BlockPos facingPos) {
+	private void onItemUse(FakePlayer player, BlockPos facingPos) {
 		// Trace result after clicking with item and replace current player stack with stack from result to make system inject return item right into it
 		ActionResult<ItemStack> result = player.getHeldItemMainhand().getItem().onItemRightClick(getHostWorld(), player, MAIN_HAND);
 		player.setHeldItem(MAIN_HAND, result.getResult());
+	}
+
+	private void onItemRightClick(FakePlayer player, BlockPos facingPos) {
+		// Get ray tracing result and use it on onItemUse method
+		RayTraceResult traceResult = getTraceResult(player);
+		if(traceResult == null) {
+			return;
+		}
+
+		player.getHeldItemMainhand().getItem().onItemUse(player, getHostWorld(), traceResult.getBlockPos(), MAIN_HAND, traceResult.sideHit,
+				(float) traceResult.hitVec.x, (float) traceResult.hitVec.y, (float) traceResult.hitVec.z);
+	}
+
+	private RayTraceResult getTraceResult(FakePlayer player) {
+		Vec3d position = new Vec3d(player.posX, player.posY + (double)player.getEyeHeight(), player.posZ);
+		float pitch = player.rotationPitch;
+		float yaw = player.rotationYaw;
+
+		// Calculate trigonometric values from pitch and yaw
+		float f4 = -MathHelper.cos(-pitch * 0.017453292F);
+		float f5 = MathHelper.sin(-pitch * 0.017453292F);
+		float f6 = MathHelper.sin(-yaw * 0.017453292F - (float)Math.PI) * f4;
+		float f7 = MathHelper.cos(-yaw * 0.017453292F - (float)Math.PI) * f4;
+		double range = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue();
+
+		// Calculate direction vector and ray trace blocks on this directions
+		Vec3d direction = position.addVector((double)f6 * range, (double)f5 * range, (double)f7 * range);
+		return getHostWorld().rayTraceBlocks(position, direction, true, false, false);
 	}
 
 	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method) {
@@ -349,9 +375,10 @@ public class PartInteractionPlane extends AIPart implements IGridTickable, Upgra
 		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
 
 		// Do click on entity(ies), item(s) and block(s)
-		click(fakePlayer, node, facingPos, this::clickWithItem);
-		click(fakePlayer, node, facingPos, this::clickEntity);
-		click(fakePlayer, node, facingPos, this::clickBlock);
+		click(fakePlayer, node, facingPos, this::onItemRightClick);
+		click(fakePlayer, node, facingPos, this::interactEntity);
+		click(fakePlayer, node, facingPos, this::interactBlock);
+		click(fakePlayer, node, facingPos, this::onItemUse);
 
 		return SAME;
 	}
