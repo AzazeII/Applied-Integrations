@@ -21,7 +21,7 @@ import static AppliedIntegrations.Parts.Interaction.PartInteractionPlane.EnumInt
  * @Author Azazell
  */
 public class GuiInteractionPlane extends AIGui {
-	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
+	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.inventory.png");
 	private static final ResourceLocation TEXTURE_FILTER = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.png");
 	private PartInteractionPlane interaction;
 	private EnumInteractionPlaneTabs currentTab = EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER;

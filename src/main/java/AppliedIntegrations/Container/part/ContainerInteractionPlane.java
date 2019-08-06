@@ -70,6 +70,9 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 						(slot.inventory == plane.mainInventory || slot.inventory == plane.armorInventory || slot.inventory == plane.offhandInventory) != isEnabled;
 			}
 		}
+
+		// Constantly disable 1st hotbar slot, it may be configured from first inventory and second inventory(this inventory) shouldn't have access to this slot
+		hotbarSlots[0].isEnabled = false;
 	}
 
 	@Override
