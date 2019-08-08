@@ -1,6 +1,7 @@
 package AppliedIntegrations.Parts.Interaction;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Gui.AIGuiHandler;
+import AppliedIntegrations.Gui.Part.Interaction.Buttons.ClickMode;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Parts.AIPart;
@@ -264,6 +265,10 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 					0.2 + getHostPos().getZ(),
 					notInjected.getDefinition().copy()));
 		}
+	}
+
+	public void setSneakingMode(ClickMode mode) {
+		this.fakePlayer.setSneaking(mode == ClickMode.SHIFT_CLICK);
 	}
 
 	@Override

@@ -29,27 +29,13 @@ public class PacketAccessModeServerToClient extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		partEnergyStorage = (PartEnergyStorage) readSyncHostClient(buf);
-
-		access = AccessRestriction.values()[buf.readInt()];
+		access = (AccessRestriction) readEnum(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		writeSyncHost(partEnergyStorage, buf, false);
-
-		int i = 0;
-
-		// Iterate over all restrictions
-		for (AccessRestriction restriction : AccessRestriction.values()) {
-			// Check if restriction present val
-			if (restriction == access)
-			// Write it's index
-			{
-				buf.writeInt(i);
-			}
-			i++;
-		}
+		writeEnum(access, buf);
 	}
 }

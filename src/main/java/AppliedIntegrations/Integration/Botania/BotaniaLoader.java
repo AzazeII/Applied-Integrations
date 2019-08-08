@@ -91,7 +91,7 @@ public class BotaniaLoader {
 		// Register mana channel handler and sprites
 		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class),
 				// Sprite
-				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png"),
 
 				// Constructor
 				WidgetManaSlot.class.getConstructor(),

@@ -1,13 +1,16 @@
-package AppliedIntegrations.Gui.Part;
+package AppliedIntegrations.Gui.Part.Interaction;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.part.ContainerInteractionPlane;
+import AppliedIntegrations.Container.part.ContainerInteractionBus;
 import AppliedIntegrations.Container.slot.SlotFilter;
 import AppliedIntegrations.Gui.AIGui;
+import AppliedIntegrations.Gui.Part.GuiEnergyIO;
+import AppliedIntegrations.Gui.Part.Interaction.Buttons.GuiClickModeButton;
 import AppliedIntegrations.Gui.Widgets.WidgetGuiTab;
 import AppliedIntegrations.Items.ItemEnum;
 import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.ResourceLocation;
@@ -25,13 +28,18 @@ import static AppliedIntegrations.Parts.Interaction.PartInteraction.EnumInteract
 public class GuiInteractionBus extends AIGui {
 	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.inventory.png");
 	private static final ResourceLocation TEXTURE_FILTER = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.png");
-	private PartInteraction interaction;
+	public PartInteraction interaction;
 	private EnumInteractionPlaneTabs currentTab = EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER;
 	private List<WidgetGuiTab> tabs = new ArrayList<>();
+	private GuiClickModeButton shiftClickButton;
 
-	public GuiInteractionBus(ContainerInteractionPlane container, EntityPlayer player, PartInteraction interaction) {
+	public GuiInteractionBus(ContainerInteractionBus container, EntityPlayer player, PartInteraction interaction) {
 		super(container, player);
 		this.interaction = interaction;
+	}
+
+	public ContainerInteractionBus getContainer() {
+		return (ContainerInteractionBus) this.inventorySlots;
 	}
 
 	private void drawFilterSlotsBackground() {
@@ -39,13 +47,21 @@ public class GuiInteractionBus extends AIGui {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		// Make slot background highlighted if it's enabled
-		for (SlotFilter filter : ((ContainerInteractionPlane) inventorySlots).filters) {
+		for (SlotFilter filter : getContainer().filters) {
 			int x = filter.xPos - 1;
 			int y = filter.yPos - 1;
 
 			if (filter.isEnabled()) {
 				drawTexturedModalRect(x, y, 79, 39, 18, 18);
 			}
+		}
+	}
+
+	@Override
+	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
+		// Transfer click on button under mouse
+		if (btn == shiftClickButton) {
+			shiftClickButton.cycleMode();
 		}
 	}
 
@@ -66,6 +82,8 @@ public class GuiInteractionBus extends AIGui {
 				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Bus Filters", ItemEnum.ITEMPARTINTERACTIONPLANE.getItem(), itemRender, fontRenderer));
 		this.tabs.add(new WidgetGuiTab(this, 29, -28, 1,false,
 				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY, "Interaction Bus Inventory", Blocks.CHEST, itemRender, fontRenderer));
+		this.buttonList.add(this.shiftClickButton = new GuiClickModeButton(this,0,
+				this.guiLeft - 18, this.guiTop, 16, 16, ""));
 	}
 
 	@Override

@@ -48,6 +48,7 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerRibSync.class, PacketRibSync.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerMasterSync.class, PacketMasterSync.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerScrollServerToClient.class, PacketScrollServerToClient.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerClickModeServerToClient.class, PacketClickModeServerToClient.class, packetId++, Side.CLIENT);
 
 		// -- Client -> Server -- //
 		handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
@@ -58,11 +59,11 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerContainerWidgetSync.class, PacketContainerWidgetSync.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerScrollClientToServer.class, PacketScrollClientToServer.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerTabChange.class, PacketTabChange.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerClickModeClientToServer.class, PacketClickModeClientToServer.class, packetId++, Side.SERVER);
 	}
 
 	// send packet info to player
 	public static final void sendTo(IMessage message, EntityPlayerMP player) {
-
 		NetworkHandler.handler.sendTo(message, player);
 	}
 

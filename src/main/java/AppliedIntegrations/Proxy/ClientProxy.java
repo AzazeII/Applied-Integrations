@@ -115,7 +115,7 @@ public class ClientProxy extends CommonProxy {
 		// Register channel'sprite pair
 		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class),
 				// Sprite
-				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png"),
 
 				// Constructor
 				WidgetItemSlot.class.getConstructor(int.class, int.class),
@@ -131,7 +131,7 @@ public class ClientProxy extends CommonProxy {
 
 		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class),
 				// Sprite
-				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png"),
 
 				// Constructor
 				WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class, IWidgetHost.class),
@@ -157,7 +157,7 @@ public class ClientProxy extends CommonProxy {
 
 		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class),
 				// Sprite
-				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/channel_states.png"),
+				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png"),
 
 				// Constructor
 				WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class),

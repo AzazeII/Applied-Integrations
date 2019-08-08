@@ -3,7 +3,9 @@ import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Container.Sync.ITabContainer;
 import AppliedIntegrations.Container.slot.SlotFilter;
 import AppliedIntegrations.Container.slot.SlotToggle;
+import AppliedIntegrations.Gui.Part.Interaction.Buttons.ClickMode;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketClickModeServerToClient;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
@@ -28,9 +30,10 @@ import static AppliedIntegrations.Parts.Interaction.PartInteraction.EnumInteract
 /**
  * @Author Azazell
  */
-public class ContainerInteractionPlane extends ContainerWithUpgradeSlots implements IUpgradeHostContainer, ITabContainer {
+public class ContainerInteractionBus extends ContainerWithUpgradeSlots implements IUpgradeHostContainer, ITabContainer {
 	public final List<SlotFilter> filters = new ArrayList<>();
 	private static final int SLOT_AREA = 3;
+	public ClickMode mode = ClickMode.CLICK;
 	private boolean[] slotMatrix = {
 			false, false, false,
 			false, true, false,
@@ -39,7 +42,7 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 
 	private PartInteraction plane;
 
-	public ContainerInteractionPlane(EntityPlayer player, PartInteraction interaction) {
+	public ContainerInteractionBus(EntityPlayer player, PartInteraction interaction) {
 		super(player);
 		this.plane = interaction;
 
@@ -155,6 +158,7 @@ public class ContainerInteractionPlane extends ContainerWithUpgradeSlots impleme
 		super.syncHostWithGUI();
 		NetworkHandler.sendTo(new PacketFullSync((byte) plane.upgradeInventoryManager.filterSize, RedstoneMode.IGNORE,
 				plane.upgradeInventoryManager.redstoneControlled, plane), (EntityPlayerMP) player);
+		NetworkHandler.sendTo(new PacketClickModeServerToClient(plane, plane.fakePlayer.isSneaking()), (EntityPlayerMP) player);
 	}
 
 	@Override

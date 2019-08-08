@@ -61,16 +61,28 @@ public class WidgetGuiTab extends AIWidget {
 		return isTabSelected ? 32 : 0;
 	}
 
+	public String getTabName() {
+		return tabName;
+	}
+
+	public void mouseClicked() {
+		NetworkHandler.sendToServer(new PacketTabChange(this.hostGUI.getSyncHost(), tabEnum));
+		this.isTabSelected = true;
+	}
+
 	@Override
 	public void drawWidget() {
+
 		// Render widget background
 		Minecraft.getMinecraft().renderEngine.bindTexture(INV_TABS);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glDisable(GL11.GL_LIGHTING);
 		drawTexturedModalRect(xPosition, yPosition, 0, getTextureY(), width, getHeight());
 
 		// Render item
 		this.itemRenderer.renderItemAndEffectIntoGUI(stack, xPosition + ICON_OFFSET_X, yPosition + ICON_OFFSET_Y);
 		this.itemRenderer.renderItemOverlays(fontRenderer, stack, xPosition + ICON_OFFSET_X, yPosition + ICON_OFFSET_Y);
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	@Override
@@ -82,14 +94,5 @@ public class WidgetGuiTab extends AIWidget {
 	public boolean isMouseOverWidget(final int mouseX, final int mouseY) {
 		return AIGuiHelper.INSTANCE.isPointInGuiRegion(this.yPosition, this.xPosition,
 				getHeight() - 1, width - 1, mouseX, mouseY, this.hostGUI.getLeft(), this.hostGUI.getTop());
-	}
-
-	public String getTabName() {
-		return tabName;
-	}
-
-	public void mouseClicked() {
-		NetworkHandler.sendToServer(new PacketTabChange(this.hostGUI.getSyncHost(), tabEnum));
-		this.isTabSelected = true;
 	}
 }

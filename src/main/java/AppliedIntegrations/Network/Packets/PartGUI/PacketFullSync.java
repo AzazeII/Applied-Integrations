@@ -42,7 +42,7 @@ public class PacketFullSync extends AIPacket {
 
 		filterSize = buf.readByte();
 		redstoneControl = buf.readBoolean();
-		redstoneMode = RedstoneMode.values()[buf.readByte()];
+		redstoneMode = (RedstoneMode) readEnum(buf);
 	}
 
 	@Override
@@ -52,6 +52,6 @@ public class PacketFullSync extends AIPacket {
 
 		buf.writeByte(filterSize);
 		buf.writeBoolean(redstoneControl);
-		buf.writeByte(redstoneMode.ordinal());
+		writeEnum(redstoneMode, buf);
 	}
 }

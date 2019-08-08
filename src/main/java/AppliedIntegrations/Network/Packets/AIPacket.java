@@ -7,6 +7,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
@@ -42,6 +43,11 @@ public abstract class AIPacket implements IMessage {
 		buf.writeInt(world.provider.getDimension());
 	}
 
+	protected void writeEnum(Enum anum, ByteBuf buf) {
+		ByteBufUtils.writeUTF8String(buf, anum.getDeclaringClass().getName());
+		buf.writeInt(anum.ordinal());
+	}
+
 	protected void writeSyncHost(ISyncHost host, ByteBuf buf, boolean useWorld) {
 		buf.writeLong(host.getHostPos().toLong());
 		buf.writeInt(host.getHostSide().ordinal());
@@ -65,6 +71,15 @@ public abstract class AIPacket implements IMessage {
 		}
 
 		return host;
+	}
+
+	protected Enum readEnum(ByteBuf buf) {
+		try {
+			Class enumClass = Class.forName(ByteBufUtils.readUTF8String(buf));
+			return (Enum) enumClass.getEnumConstants()[buf.readInt()];
+		} catch(ClassNotFoundException ignored) {
+			return null;
+		}
 	}
 
 	private World readWorld(ByteBuf buf) {

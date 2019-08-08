@@ -1,7 +1,6 @@
 package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.api.ISyncHost;
 import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
 
 /**
  * @Author Azazell
@@ -21,18 +20,13 @@ public class PacketTabChange extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		try {
-			Class enumClass = Class.forName(ByteBufUtils.readUTF8String(buf));
-
-			tabEnum = (Enum) enumClass.getEnumConstants()[buf.readInt()];
-			syncHost = readSyncHost(buf);
-		} catch(ClassNotFoundException ignored) {}
+		tabEnum = readEnum(buf);
+		syncHost = readSyncHost(buf);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, tabEnum.getDeclaringClass().getName());
-		buf.writeInt(tabEnum.ordinal());
+		writeEnum(tabEnum, buf);
 		writeSyncHost(syncHost, buf, true);
 	}
 }

@@ -1,6 +1,4 @@
 package AppliedIntegrations.Gui;
-
-
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerAIPriority;
 import AppliedIntegrations.Container.part.*;
@@ -10,7 +8,11 @@ import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControll
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerCore;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
-import AppliedIntegrations.Gui.Part.*;
+import AppliedIntegrations.Gui.Part.GuiEnergyIO;
+import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
+import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
+import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
+import AppliedIntegrations.Gui.Part.Interaction.GuiInteractionBus;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
@@ -165,7 +167,7 @@ public class AIGuiHandler implements IGuiHandler {
 		} else if (gui == GuiInteraction) {
 			PartInteraction interaction = (PartInteraction) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
-			return new ContainerInteractionPlane(player, interaction);
+			return new ContainerInteractionBus(player, interaction);
 		}
 
 		return null;
@@ -211,7 +213,7 @@ public class AIGuiHandler implements IGuiHandler {
 		} else if (gui == GuiInteraction) {
 			PartInteraction interaction = (PartInteraction) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
-			return new GuiInteractionBus((ContainerInteractionPlane) getServerGuiElement(ID, player, world, x, y, z), player, interaction);
+			return new GuiInteractionBus((ContainerInteractionBus) getServerGuiElement(ID, player, world, x, y, z), player, interaction);
 		}
 
 		return null;

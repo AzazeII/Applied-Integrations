@@ -102,7 +102,7 @@ public class GuiEnergyStoragePart extends AIGui {
 		// Create widget @for_each row and @for_each column with zero index
 		for (int row = 0; row < GuiEnergyStoragePart.WIDGET_COLUMNS; row++) {
 			for (int column = 0; column < GuiEnergyStoragePart.WIDGET_ROWS; column++) {
-				getContainer().energySlotList.add(new WidgetEnergySlot(this, 0, WIDGET_X_POS + (AIWidget.WIDGET_SIZE * column) - 6, this.WIDGET_Y_POS + (AIWidget.WIDGET_SIZE * row) - 1, true));
+				getContainer().energySlotList.add(new WidgetEnergySlot(this, 0, WIDGET_X_POS + (AIWidget.WIDGET_SIZE * column) - 6, WIDGET_Y_POS + (AIWidget.WIDGET_SIZE * row) - 1, true));
 			}
 		}
 
