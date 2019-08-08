@@ -72,7 +72,6 @@ public class WidgetGuiTab extends AIWidget {
 
 	@Override
 	public void drawWidget() {
-
 		// Render widget background
 		Minecraft.getMinecraft().renderEngine.bindTexture(INV_TABS);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

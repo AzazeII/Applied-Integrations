@@ -5,6 +5,7 @@ import AppliedIntegrations.api.ISyncHost;
 import appeng.api.AEApi;
 import appeng.api.config.RedstoneMode;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.function.Predicate;
 
@@ -19,6 +20,14 @@ public class UpgradeInventoryManager implements IInventoryHost {
 		void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
 		                boolean fuzzyCompare, int upgradeSpeedCount);
 	}
+
+	private static final String KEY_FILTER_SIZE = "#FILTER_SIZE";
+	private static final String KEY_RED_CONTROLLED = "#RED_CONTROLLER";
+	private static final String KEY_INVERTED = "#INVERTED";
+	private static final String KEY_AUTO_CRAFTING = "#AUTO_CRAFTING";
+	private static final String KEY_FUZZY_COMPARE = "#FUZZY_COMPARE";
+	private static final String KEY_REDSTONE_MODE = "#REDSTONE_MODE";
+	private static final String KEY_SPEED_COUNT = "#UPGRADE_SPEED_COUNT";
 
 	private final IUpgradeInventoryManagerHost host;
 	public AIGridNodeInventory upgradeInventory;
@@ -42,6 +51,26 @@ public class UpgradeInventoryManager implements IInventoryHost {
 				return isItemValid.test(itemStack);
 			}
 		};
+	}
+
+	public void writeToNBT(NBTTagCompound nbt) {
+		nbt.setInteger(KEY_FILTER_SIZE, filterSize);
+		nbt.setInteger(KEY_SPEED_COUNT, upgradeSpeedCount);
+		nbt.setBoolean(KEY_RED_CONTROLLED, redstoneControlled);
+		nbt.setBoolean(KEY_INVERTED, inverted);
+		nbt.setBoolean(KEY_AUTO_CRAFTING, autoCrafting);
+		nbt.setBoolean(KEY_FUZZY_COMPARE, fuzzyCompare);
+		nbt.setByte(KEY_REDSTONE_MODE, (byte) redstoneMode.ordinal());
+	}
+
+	public void readFromNBT(NBTTagCompound nbt) {
+		filterSize = nbt.getInteger(KEY_FILTER_SIZE);
+		upgradeSpeedCount = nbt.getInteger(KEY_SPEED_COUNT);
+		redstoneControlled = nbt.getBoolean(KEY_RED_CONTROLLED);
+		inverted = nbt.getBoolean(KEY_INVERTED);
+		autoCrafting = nbt.getBoolean(KEY_AUTO_CRAFTING);
+		fuzzyCompare = nbt.getBoolean(KEY_FUZZY_COMPARE);
+		redstoneMode = RedstoneMode.values()[nbt.getByte(KEY_REDSTONE_MODE)];
 	}
 
 	@Override

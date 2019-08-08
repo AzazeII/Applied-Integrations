@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.Inventory.AIGridNodeInventory.validateStack;
-import static appeng.api.config.RedstoneMode.*;
+import static appeng.api.config.RedstoneMode.IGNORE;
 
 /**
  * @Author Azazell
@@ -203,12 +203,11 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			}
 		}
 
-		// Is the bus pulse controlled?
+		// Update last redstone if it changed
 		if (this.upgradeInventoryManager.redstoneMode == RedstoneMode.SIGNAL_PULSE) {
-			// Did the stateProp of the redstone change?
 			if (this.isReceivingRedstonePower() != this.lastRedstone) {
-				// Set the previous redstone stateProp
 				this.lastRedstone = this.isReceivingRedstonePower();
+				this.processTick(20);
 			}
 		}
 	}
@@ -291,21 +290,25 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		// Update gui
 		updateGui();
 
-		if (this.canDoWork()) {
-			// Calculate the amount to transfer per second
-			int transferAmountPerSecond = this.getTransferAmountPerSecond();
-
-			// Get transfer from ticks since last call, divided by one second multiplied by current transfer amount
-			int transferAmount = (int) (transferAmountPerSecond * (ticksSinceLastCall / 20.F));
-
-			// Normalize transfer
-			transferAmount = Math.min(transferAmount, MAXIMUM_TRANSFER_PER_SECOND);
-			transferAmount = Math.max(transferAmount, MINIMUM_TRANSFER_PER_SECOND);
-
-			return doWork(transferAmount, node);
+		if (this.canDoWork(upgradeInventoryManager.redstoneMode)) {
+			return processTick(ticksSinceLastCall);
 		}
 
 		return TickRateModulation.IDLE;
+	}
+
+	private TickRateModulation processTick(int ticksSinceLastCall) {
+		// Calculate the amount to transfer per second
+		int transferAmountPerSecond = this.getTransferAmountPerSecond();
+
+		// Get transfer from ticks since last call, divided by one second multiplied by current transfer amount
+		int transferAmount = (int) (transferAmountPerSecond * (ticksSinceLastCall / 20.F));
+
+		// Normalize transfer
+		transferAmount = Math.min(transferAmount, MAXIMUM_TRANSFER_PER_SECOND);
+		transferAmount = Math.max(transferAmount, MINIMUM_TRANSFER_PER_SECOND);
+
+		return doWork(transferAmount, getProxy().getNode());
 	}
 
 	private void updateGui() {
@@ -324,25 +327,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			notifyListenersOfFilterEnergyChange(i, filteredEnergies.get(i));
 			notifyListenersOfStateUpdate(filterSize, upgradeInventoryManager.redstoneControlled);
 		}
-	}
-
-	private boolean canDoWork() {
-
-		boolean canWork = true;
-
-		if (upgradeInventoryManager.redstoneMode == RedstoneMode.HIGH_SIGNAL) {
-			canWork = this.isReceivingRedstonePower();
-		}
-
-		if (upgradeInventoryManager.redstoneMode == LOW_SIGNAL) {
-			canWork = !this.isReceivingRedstonePower();
-		}
-
-		if (upgradeInventoryManager.redstoneMode == SIGNAL_PULSE) {
-			canWork = false;
-		}
-
-		return canWork;
 	}
 
 	protected int getTransferAmountPerSecond() {

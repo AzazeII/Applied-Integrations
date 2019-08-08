@@ -7,6 +7,7 @@ import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.grid.AEEnergyStack;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
+import appeng.api.config.RedstoneMode;
 import appeng.api.implementations.IPowerChannelState;
 import appeng.api.networking.GridFlags;
 import appeng.api.networking.IGridHost;
@@ -47,6 +48,9 @@ import java.util.EnumSet;
 import java.util.List;
 import java.util.Random;
 
+import static appeng.api.config.RedstoneMode.LOW_SIGNAL;
+import static appeng.api.config.RedstoneMode.SIGNAL_PULSE;
+
 /**
  * @Author Azazell
  */
@@ -65,9 +69,6 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	// tile representation of host
 	protected TileEntity hostTile;
-
-	// Node representation of host
-	protected IGridNode node;
 
 	// Side where host connected
 	private AEPartLocation cableSide;
@@ -143,6 +144,24 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 		// Get the tile entity we are facing
 		return world.getTileEntity(new BlockPos(x + this.cableSide.xOffset, y + this.cableSide.yOffset, z + this.cableSide.zOffset));
+	}
+
+	protected boolean canDoWork(RedstoneMode mode) {
+		boolean canWork = true;
+
+		if (mode == RedstoneMode.HIGH_SIGNAL) {
+			canWork = this.isReceivingRedstonePower();
+		}
+
+		if (mode == LOW_SIGNAL) {
+			canWork = !this.isReceivingRedstonePower();
+		}
+
+		if (mode == SIGNAL_PULSE) {
+			canWork = false;
+		}
+
+		return canWork;
 	}
 
 	@Override
@@ -453,9 +472,8 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 	}
 
 	public boolean isReceivingRedstonePower() {
-		// Check host not null
+		// Delegate call to host
 		if (this.host != null) {
-			// Get redstone stateProp
 			return this.host.hasRedstone(this.cableSide);
 		}
 

@@ -12,6 +12,7 @@ import AppliedIntegrations.api.IInventoryHost;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
+import appeng.api.config.RedstoneMode;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
@@ -46,6 +47,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.*;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.util.FakePlayer;
@@ -82,6 +84,7 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	private static final String KEY_ARMOR_INVENTORY = "#ARMOR_INVENTORY_KEY";
 	private static final String KEY_OFFHAND_INVENTORY = "#OFFHAND_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
+	private static final String KEY_SNEAKING = "#SNEAKING";
 
 	public FakePlayer fakePlayer;
 	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Bus Filter", MAX_FILTER_SIZE, 1);
@@ -97,14 +100,19 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Bus Upgrade Inventory", 4);
 	private UUID uniIdentifier;
+	private boolean lastRedstone;
+	private boolean sneaking;
 
 	public PartInteraction() {
 		super(PartEnum.InteractionPlane);
 	}
 
 	private void createFakePlayer() {
-		World hostWorld = getHostWorld();
+		if (fakePlayer != null) {
+			return;
+		}
 
+		World hostWorld = getHostWorld();
 		getProxy().getNode().updateState();
 
 		if (hostWorld instanceof WorldServer) {
@@ -131,6 +139,7 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 			}
 
 			// Configure fake player
+			fakePlayer.setSneaking(sneaking);
 			fakePlayer.onGround = true;
 			fakePlayer.connection = new NetHandlerPlayServer(FMLCommonHandler.instance().getMinecraftServerInstance(),
 					new NetworkManager(EnumPacketDirection.SERVERBOUND), fakePlayer) {
@@ -270,8 +279,17 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		}
 	}
 
-	public void setSneakingMode(ClickMode mode) {
-		this.fakePlayer.setSneaking(mode == ClickMode.SHIFT_CLICK);
+	private void processTick(@Nonnull IGridNode node) {
+		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
+
+		// Nullify player's main hand for this run
+		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
+
+		// Do click on entity(ies), item(s) and block(s)
+		click(fakePlayer, node, facingPos, this::onItemRightClick);
+		click(fakePlayer, node, facingPos, this::interactEntity);
+		click(fakePlayer, node, facingPos, this::interactBlock);
+		click(fakePlayer, node, facingPos, this::onItemUse);
 	}
 
 	@Override
@@ -303,6 +321,24 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	}
 
 	@Override
+	public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos posChanged) {
+		IGridNode node = getProxy().getNode();
+
+		// Process tick on redstone pulse
+		if (this.upgradeInventoryManager.redstoneMode == RedstoneMode.SIGNAL_PULSE) {
+			if (this.isReceivingRedstonePower() != this.lastRedstone) {
+				this.lastRedstone = this.isReceivingRedstonePower();
+
+				if (node == null || fakePlayer == null) {
+					return;
+				}
+
+				this.processTick(node);
+			}
+		}
+	}
+
+	@Override
 	public void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
 	                       boolean fuzzyCompare, int upgradeSpeedCount) {}
 
@@ -317,6 +353,10 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		this.mainInventory.readFromNBT(data.getTagList(KEY_MAIN_INVENTORY, 10));
 		this.armorInventory.readFromNBT(data.getTagList(KEY_ARMOR_INVENTORY, 10));
 		this.offhandInventory.readFromNBT(data.getTagList(KEY_OFFHAND_INVENTORY, 10));
+		this.sneaking = data.getBoolean(KEY_SNEAKING);
+
+		// Pass call to UIM
+		this.upgradeInventoryManager.readFromNBT(data);
 	}
 
 	@Override
@@ -330,6 +370,10 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		data.setTag(KEY_MAIN_INVENTORY, this.mainInventory.writeToNBT());
 		data.setTag(KEY_ARMOR_INVENTORY, this.armorInventory.writeToNBT());
 		data.setTag(KEY_OFFHAND_INVENTORY, this.offhandInventory.writeToNBT());
+		data.setBoolean(KEY_SNEAKING, this.fakePlayer.isSneaking());
+
+		// Pass call to UIM
+		this.upgradeInventoryManager.writeToNBT(data);
 	}
 
 	@Override
@@ -387,21 +431,12 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
-		if (fakePlayer == null) {
-			this.createFakePlayer();
-			return TickRateModulation.IDLE;
+		this.createFakePlayer();
+
+		// Process ticking request
+		if (this.canDoWork(upgradeInventoryManager.redstoneMode)) {
+			processTick(node);
 		}
-
-		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
-
-		// Nullify player's main hand for this run
-		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
-
-		// Do click on entity(ies), item(s) and block(s)
-		click(fakePlayer, node, facingPos, this::onItemRightClick);
-		click(fakePlayer, node, facingPos, this::interactEntity);
-		click(fakePlayer, node, facingPos, this::interactBlock);
-		click(fakePlayer, node, facingPos, this::onItemUse);
 
 		return SAME;
 	}
@@ -414,6 +449,10 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 
 	@Override
 	public void setEnumVal(Enum val) {
-		this.upgradeInventoryManager.acceptVal(val);
+		if (val instanceof ClickMode) {
+			this.fakePlayer.setSneaking(val == ClickMode.SHIFT_CLICK);
+		} else {
+			this.upgradeInventoryManager.acceptVal(val);
+		}
 	}
 }

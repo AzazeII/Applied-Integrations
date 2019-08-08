@@ -54,7 +54,7 @@ public class GuiClickModeButton extends AIGuiButton {
 
 		// Draw foreground
 		Minecraft.getMinecraft().renderEngine.bindTexture(states);
-		drawTexturedModalRect(x, y, 16 * 3, (mode == ClickMode.SHIFT_CLICK ? 16 : 0), 16, 16);
+		drawTexturedModalRect(x - 1, y, 16 * 3 - 1, (mode == ClickMode.SHIFT_CLICK ? 16 : 0), 16, 16);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
