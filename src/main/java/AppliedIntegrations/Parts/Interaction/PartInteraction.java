@@ -7,6 +7,7 @@ import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.api.IEnumHost;
 import AppliedIntegrations.api.IInventoryHost;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
@@ -64,7 +65,7 @@ import static net.minecraft.util.EnumHand.MAIN_HAND;
 /**
  * @Author Azazell
  */
-public class PartInteraction extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost{
+public class PartInteraction extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost, IEnumHost {
 	public enum EnumInteractionPlaneTabs {
 		PLANE_FAKE_PLAYER_FILTER,
 		PLANE_FAKE_PLAYER_INVENTORY
@@ -103,6 +104,8 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 
 	private void createFakePlayer() {
 		World hostWorld = getHostWorld();
+
+		getProxy().getNode().updateState();
 
 		if (hostWorld instanceof WorldServer) {
 			// Generate UUID if no UUID exists already
@@ -300,7 +303,8 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	}
 
 	@Override
-	public void doSync(int filterSize, boolean redstoneControlled, int upgradeSpeedCount) {}
+	public void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
+	                       boolean fuzzyCompare, int upgradeSpeedCount) {}
 
 	@Override
 	public void readFromNBT(final NBTTagCompound data) {
@@ -405,6 +409,11 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	@Nonnull
 	@Override
 	public TickingRequest getTickingRequest(@Nonnull IGridNode node) {
-		return new TickingRequest(1, 10, false, false);
+		return new TickingRequest(10, 10, false, false);
+	}
+
+	@Override
+	public void setEnumVal(Enum val) {
+		this.upgradeInventoryManager.acceptVal(val);
 	}
 }

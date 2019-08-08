@@ -1,11 +1,10 @@
 package AppliedIntegrations.Gui.Part.Interaction.Buttons;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Container.part.ContainerInteractionBus;
 import AppliedIntegrations.Gui.Buttons.AIGuiButton;
 import AppliedIntegrations.Gui.Part.Interaction.GuiInteractionBus;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PartGUI.PacketClickModeClientToServer;
+import AppliedIntegrations.Network.Packets.PacketEnum;
 import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import appeng.core.AppEng;
 import net.minecraft.client.Minecraft;
@@ -21,25 +20,24 @@ import java.util.List;
 public class GuiClickModeButton extends AIGuiButton {
 	private static final ResourceLocation states = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png");
 	private final PartInteraction bus;
-	private final ContainerInteractionBus container;
 	private final GuiInteractionBus owner;
+	public ClickMode mode = ClickMode.CLICK;
 
 	public GuiClickModeButton(GuiInteractionBus owner, int ID, int xPosition, int yPosition, int width, int height, String text) {
 		super(ID, xPosition, yPosition, width, height, text);
 		this.owner = owner;
-		this.bus = owner.interaction;
-		this.container = owner.getContainer();
+		this.bus = (PartInteraction) owner.getContainer().getSyncHost();
 	}
 
 	public void cycleMode() {
 		// Toggle click mode
-		if (container.mode == ClickMode.CLICK) {
-			container.mode = ClickMode.SHIFT_CLICK;
+		if (mode == ClickMode.CLICK) {
+			mode = ClickMode.SHIFT_CLICK;
 		} else {
-			container.mode = ClickMode.CLICK;
+			mode = ClickMode.CLICK;
 		}
 
-		NetworkHandler.sendToServer(new PacketClickModeClientToServer(container.mode, bus));
+		NetworkHandler.sendToServer(new PacketEnum(mode, bus));
 	}
 
 	@Override
@@ -56,7 +54,7 @@ public class GuiClickModeButton extends AIGuiButton {
 
 		// Draw foreground
 		Minecraft.getMinecraft().renderEngine.bindTexture(states);
-		drawTexturedModalRect(x, y, 16 * 3, (container.mode == ClickMode.SHIFT_CLICK ? 16 : 0), 16, 16);
+		drawTexturedModalRect(x, y, 16 * 3, (mode == ClickMode.SHIFT_CLICK ? 16 : 0), 16, 16);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
@@ -67,6 +65,6 @@ public class GuiClickModeButton extends AIGuiButton {
 		}
 
 		tooltip.add("Interaction bus click mode");
-		tooltip.add(container.mode.tip);
+		tooltip.add(mode.tip);
 	}
 }

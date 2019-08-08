@@ -7,8 +7,13 @@ import AppliedIntegrations.Gui.Part.GuiEnergyIO;
 import AppliedIntegrations.Gui.Part.Interaction.Buttons.GuiClickModeButton;
 import AppliedIntegrations.Gui.Widgets.WidgetGuiTab;
 import AppliedIntegrations.Items.ItemEnum;
-import AppliedIntegrations.Parts.Interaction.PartInteraction;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketEnum;
+import AppliedIntegrations.api.IEnumHost;
 import AppliedIntegrations.api.ISyncHost;
+import appeng.api.config.RedstoneMode;
+import appeng.api.config.Settings;
+import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,6 +23,7 @@ import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static AppliedIntegrations.Parts.Interaction.PartInteraction.EnumInteractionPlaneTabs;
@@ -28,14 +34,11 @@ import static AppliedIntegrations.Parts.Interaction.PartInteraction.EnumInteract
 public class GuiInteractionBus extends AIGui {
 	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.inventory.png");
 	private static final ResourceLocation TEXTURE_FILTER = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.png");
-	public PartInteraction interaction;
 	public EnumInteractionPlaneTabs currentTab = EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER;
 	private List<WidgetGuiTab> tabs = new ArrayList<>();
-	private GuiClickModeButton shiftClickButton;
 
-	public GuiInteractionBus(ContainerInteractionBus container, EntityPlayer player, PartInteraction interaction) {
+	public GuiInteractionBus(ContainerInteractionBus container, EntityPlayer player) {
 		super(container, player);
-		this.interaction = interaction;
 	}
 
 	public ContainerInteractionBus getContainer() {
@@ -60,30 +63,41 @@ public class GuiInteractionBus extends AIGui {
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
 		// Transfer click on button under mouse
-		if (btn == shiftClickButton && currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
-			shiftClickButton.cycleMode();
+		if (btn == getContainer().shiftClickButton && currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
+			getContainer().shiftClickButton.cycleMode();
+		}
+
+		if (btn == getContainer().redstoneControlButton) {
+			// Switch mode and sync with server
+			short ordinal = (short) getContainer().redstoneControlButton.getCurrentValue().ordinal();
+			getContainer().redstoneControlButton.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
+			NetworkHandler.sendToServer(new PacketEnum(getContainer().redstoneControlButton.getCurrentValue(),
+					(IEnumHost) getContainer().getSyncHost()));
 		}
 	}
 
 	@Override
 	public ISyncHost getSyncHost() {
-		return interaction;
+		return getContainer().getSyncHost();
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		this.interaction = (PartInteraction) host;
+		getContainer().setSyncHost(host);
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
 		this.tabs.add(new WidgetGuiTab(this, 0, -28, 4,true,
-				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Bus Filters", ItemEnum.ITEMPARTINTERACTIONPLANE.getItem(), itemRender, fontRenderer));
+				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER, "Interaction Bus Filters", ItemEnum.ITEMPARTINTERACTIONBUS.getItem(), itemRender, fontRenderer));
 		this.tabs.add(new WidgetGuiTab(this, 29, -28, 1,false,
 				EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY, "Interaction Bus Inventory", Blocks.CHEST, itemRender, fontRenderer));
-		this.buttonList.add(this.shiftClickButton = new GuiClickModeButton(this,0,
-				this.guiLeft - 18, this.guiTop, 16, 16, ""));
+		this.buttonList.add(getContainer().shiftClickButton = new GuiClickModeButton(this,0,
+				this.guiLeft - 18, this.guiTop + 8, 16, 16, ""));
+		this.buttonList.add(getContainer().redstoneControlButton = new GuiImgButton(this.guiLeft - 18, this.guiTop + 28,
+						Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE));
+		getContainer().redstoneControlButton.setVisibility(false);
 	}
 
 	@Override
@@ -159,6 +173,11 @@ public class GuiInteractionBus extends AIGui {
 		if (currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
 			this.fontRenderer.drawString(I18n.translateToLocal("ME Interaction Bus"), 9, 3, 4210752);
 			this.drawFilterSlotsBackground();
+		}
+
+		// Add tip from redstone control button
+		if (getContainer().redstoneControlButton.isMouseOver()) {
+			tooltip.addAll(Arrays.asList(getContainer().redstoneControlButton.getMessage().split("\n")));
 		}
 
 		// Draw tabs

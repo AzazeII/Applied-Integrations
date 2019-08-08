@@ -5,8 +5,8 @@ import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketEnum;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
-import AppliedIntegrations.Network.Packets.PartGUI.PacketAccessModeClientToServer;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -53,9 +53,6 @@ public class GuiEnergyStoragePart extends AIGui {
 
 	private static final int TITLE_Y_POS = 5; // (2)
 
-	/**
-	 * Player viewing this gui.
-	 */
 	private EntityPlayer player;
 
 	// Should gui render network tool slots?
@@ -64,12 +61,6 @@ public class GuiEnergyStoragePart extends AIGui {
 	// Owner of this GUI
 	private PartEnergyStorage storageBus;
 
-	/**
-	 * Creates the GUI.
-	 *
-	 * @param storageBus The host associated with the gui.
-	 * @param player     The inventory container.
-	 */
 	public GuiEnergyStoragePart(ContainerEnergyStorage CEI, final PartEnergyStorage storageBus, final EntityPlayer player) {
 		// Call super
 		super(CEI, player);
@@ -119,9 +110,6 @@ public class GuiEnergyStoragePart extends AIGui {
 		buttonList.add(getContainer().accessMode);
 	}
 
-	/**
-	 * Draws the gui background
-	 */
 	@Override
 	protected void drawGuiContainerBackgroundLayer(final float alpha, final int mouseX, final int mouseY) {
 		// Full white
@@ -174,7 +162,7 @@ public class GuiEnergyStoragePart extends AIGui {
 			}
 
 			// Notify server
-			NetworkHandler.sendToServer(new PacketAccessModeClientToServer((AccessRestriction) getContainer().accessMode.getCurrentValue(), storageBus));
+			NetworkHandler.sendToServer(new PacketEnum(getContainer().accessMode.getCurrentValue(), storageBus));
 		}
 
 		// Avoid null pointer exception in packet

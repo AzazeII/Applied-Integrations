@@ -3,13 +3,14 @@ import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Container.Sync.ITabContainer;
 import AppliedIntegrations.Container.slot.SlotFilter;
 import AppliedIntegrations.Container.slot.SlotToggle;
-import AppliedIntegrations.Gui.Part.Interaction.Buttons.ClickMode;
+import AppliedIntegrations.Gui.Part.Interaction.Buttons.GuiClickModeButton;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketClickModeServerToClient;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.RedstoneMode;
+import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -33,18 +34,19 @@ import static AppliedIntegrations.Parts.Interaction.PartInteraction.EnumInteract
 public class ContainerInteractionBus extends ContainerWithUpgradeSlots implements IUpgradeHostContainer, ITabContainer {
 	public final List<SlotFilter> filters = new ArrayList<>();
 	private static final int SLOT_AREA = 3;
-	public ClickMode mode = ClickMode.CLICK;
+	public GuiClickModeButton shiftClickButton;
+	public GuiImgButton redstoneControlButton;
 	private boolean[] slotMatrix = {
 			false, false, false,
 			false, true, false,
 			false, false, false
 	};
 
-	private PartInteraction plane;
+	public PartInteraction interaction;
 
 	public ContainerInteractionBus(EntityPlayer player, PartInteraction interaction) {
 		super(player);
-		this.plane = interaction;
+		this.interaction = interaction;
 
 		// Bind inventories
 		this.bindPlayerInventory(player.inventory, 102, 160);
@@ -107,7 +109,7 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 		for (Slot slot : this.inventorySlots) {
 			if (slot instanceof SlotToggle) {
 				((SlotToggle) slot).isEnabled =
-						(slot.inventory == plane.mainInventory || slot.inventory == plane.armorInventory || slot.inventory == plane.offhandInventory) != isEnabled;
+						(slot.inventory == interaction.mainInventory || slot.inventory == interaction.armorInventory || slot.inventory == interaction.offhandInventory) != isEnabled;
 			}
 		}
 
@@ -117,30 +119,30 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 
 	@Override
 	public ISyncHost getSyncHost() {
-		return plane;
+		return interaction;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		this.plane = (PartInteraction) host;
+		this.interaction = (PartInteraction) host;
 	}
 
 	@Override
 	public void updateState(boolean redstoneControl, RedstoneMode redstoneMode, byte filterSize) {
 		// Change slot matrix depending on filter size
-		if (plane.upgradeInventoryManager.filterSize == 0) {
+		if (interaction.upgradeInventoryManager.filterSize == 0) {
 			slotMatrix = new boolean[]{
 					false, false, false,
 					false, true, false,
 					false, false, false
 			};
-		} else if (plane.upgradeInventoryManager.filterSize == 1) {
+		} else if (interaction.upgradeInventoryManager.filterSize == 1) {
 			slotMatrix = new boolean[]{
 					false, true, false,
 					true, true, true,
 					false, true, false
 			};
-		} else if (plane.upgradeInventoryManager.filterSize >= 2) {
+		} else if (interaction.upgradeInventoryManager.filterSize >= 2) {
 			slotMatrix = new boolean[]{
 					true, true, true,
 					true, true, true,
@@ -151,14 +153,17 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 		for (SlotFilter filter : filters) {
 			filter.updateMatrix(slotMatrix);
 		}
+
+		redstoneControlButton.setVisibility(redstoneControl);
+		redstoneControlButton.set(redstoneMode);
 	}
 
 	@Override
 	protected void syncHostWithGUI() {
 		super.syncHostWithGUI();
-		NetworkHandler.sendTo(new PacketFullSync((byte) plane.upgradeInventoryManager.filterSize, RedstoneMode.IGNORE,
-				plane.upgradeInventoryManager.redstoneControlled, plane), (EntityPlayerMP) player);
-		NetworkHandler.sendTo(new PacketClickModeServerToClient(plane, plane.fakePlayer.isSneaking()), (EntityPlayerMP) player);
+		NetworkHandler.sendTo(new PacketFullSync((byte) interaction.upgradeInventoryManager.filterSize, RedstoneMode.IGNORE,
+				interaction.upgradeInventoryManager.redstoneControlled, interaction), (EntityPlayerMP) player);
+		NetworkHandler.sendTo(new PacketClickModeServerToClient(interaction, interaction.fakePlayer.isSneaking()), (EntityPlayerMP) player);
 	}
 
 	@Override

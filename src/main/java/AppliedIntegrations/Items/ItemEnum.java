@@ -42,7 +42,7 @@ public enum ItemEnum {
 	ITEMPARTTERMINAL(new ItemPartEnergyTerminal("energyTerminalPartItem"), AIConfig.enableEnergyFeatures),
 	ITEMPARTANNIHILATION(new ItemPartEnergyAnnihilation("energyAnnihilationPartItem"), AIConfig.enableEnergyFeatures),
 	ITEMPARTFORMATION(new ItemPartEnergyFormation("energyFormationPartItem"), AIConfig.enableEnergyFeatures),
-	ITEMPARTINTERACTIONPLANE(new ItemPartInteractionBus("interaction_bus"), AIConfig.enableInteractionPart),
+	ITEMPARTINTERACTIONBUS(new ItemPartInteractionBus("interaction_bus"), AIConfig.enableInteractionPart),
 
 	// Currently disabled,
 	// ITEMP2PSTARLIGHT(new ItemPartP2PStarlight("starlightP2PPartItem"), AstralLoader.enableStarlight()),

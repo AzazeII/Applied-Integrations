@@ -15,6 +15,7 @@ import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.api.IEnergyInterface;
+import AppliedIntegrations.api.IEnumHost;
 import AppliedIntegrations.api.IInventoryHost;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -71,7 +72,8 @@ import static java.util.Collections.singletonList;
 /**
  * @Author Azazell
  */
-public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHostExtended {
+public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTickable, IEnergyMachine, IInventoryHost, IPriorityHostExtended,
+		IEnumHost {
 
 	// Size of filter
 	public static final int FILTER_SIZE = 18;
@@ -126,14 +128,6 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 	protected PartEnergyStorage(PartEnum manaStorage, SecurityPermissions inject, SecurityPermissions extract) {
 
 		super(manaStorage);
-	}
-
-	public void setAccess(AccessRestriction access) {
-
-		this.access = access;
-
-		// Notify grid
-		this.postCellEvent();
 	}
 
 	public void postCellEvent() {
@@ -440,6 +434,12 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 	public AIGuiHandler.GuiEnum getGui() {
 
 		return GuiStoragePart;
+	}
+
+	@Override
+	public void setEnumVal(Enum val) {
+		this.access = (AccessRestriction) val;
+		this.postCellEvent();
 	}
 }
 

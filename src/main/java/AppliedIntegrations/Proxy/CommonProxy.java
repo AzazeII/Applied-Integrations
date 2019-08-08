@@ -14,33 +14,17 @@ import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.grid.EnergyStorageChannel;
 import AppliedIntegrations.tile.TileEnum;
 import appeng.api.AEApi;
+import appeng.api.config.Upgrades;
 import appeng.api.movable.IMovableRegistry;
-import appeng.api.recipes.IRecipeLoader;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 /**
  * @Author Azazell
  */
 public class CommonProxy {
-
-	private class InternalRecipeLoader implements IRecipeLoader {
-
-		@Override
-		public BufferedReader getFile(String path) throws Exception {
-
-			InputStream resourceAsStream = getClass().getResourceAsStream("/assets/appliedintegrations/recipes/" + path);
-			InputStreamReader reader = new InputStreamReader(resourceAsStream, "UTF-8");
-			return new BufferedReader(reader);
-		}
-	}
-
 	public void SidedPreInit() {
 		ItemEnum.register();
 
@@ -69,6 +53,23 @@ public class CommonProxy {
 
 	public void SidedInit(FMLInitializationEvent init) {
 		IntegrationsHelper.instance.registerTunnelTypes();
+
+		// Register items as upgradable
+		// Interaction bus
+		Upgrades.CAPACITY.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 2);
+		Upgrades.SPEED.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 4);
+		Upgrades.CRAFTING.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
+		Upgrades.FUZZY.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
+		Upgrades.REDSTONE.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
+
+		// IO buses
+		Upgrades.SPEED.registerItem(ItemEnum.ITEMPARTEXPORT.getStack(), 4);
+		Upgrades.CAPACITY.registerItem(ItemEnum.ITEMPARTEXPORT.getStack(), 2);
+		Upgrades.REDSTONE.registerItem(ItemEnum.ITEMPARTEXPORT.getStack(), 1);
+
+		Upgrades.SPEED.registerItem(ItemEnum.ITEMPARTIMPORT.getStack(), 4);
+		Upgrades.CAPACITY.registerItem(ItemEnum.ITEMPARTIMPORT.getStack(), 2);
+		Upgrades.REDSTONE.registerItem(ItemEnum.ITEMPARTIMPORT.getStack(), 1);
 
 		if (Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
 			BotaniaLoader.init();

@@ -1,9 +1,6 @@
 package AppliedIntegrations.Network;
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.Network.Handlers.HandlerCoordinateInit;
-import AppliedIntegrations.Network.Handlers.HandlerGuiShift;
-import AppliedIntegrations.Network.Handlers.HandlerPriorityChange;
-import AppliedIntegrations.Network.Handlers.HandlerTabChange;
+import AppliedIntegrations.Network.Handlers.*;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerMassChange;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerSingularitySync;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerVectorSync;
@@ -13,10 +10,7 @@ import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.Network.Packets.MultiController.*;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
-import AppliedIntegrations.Network.Packets.PacketGuiShift;
-import AppliedIntegrations.Network.Packets.PacketPriorityChange;
-import AppliedIntegrations.Network.Packets.PacketTabChange;
+import AppliedIntegrations.Network.Packets.*;
 import AppliedIntegrations.Network.Packets.PartGUI.*;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -52,14 +46,12 @@ public class NetworkHandler {
 
 		// -- Client -> Server -- //
 		handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
-		handler.registerMessage(HandlerAccessModeClientToServer.class, PacketAccessModeClientToServer.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerGuiShift.class, PacketGuiShift.class, packetId++, Side.SERVER);
-		handler.registerMessage(HandlerSyncReturn.class, PacketSyncReturn.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerEnum.class, PacketEnum.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerServerFeedback.class, PacketServerFeedback.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerContainerWidgetSync.class, PacketContainerWidgetSync.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerScrollClientToServer.class, PacketScrollClientToServer.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerTabChange.class, PacketTabChange.class, packetId++, Side.SERVER);
-		handler.registerMessage(HandlerClickModeClientToServer.class, PacketClickModeClientToServer.class, packetId++, Side.SERVER);
 	}
 
 	// send packet info to player

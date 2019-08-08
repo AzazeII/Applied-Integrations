@@ -28,7 +28,7 @@ public enum PartEnum {
 	//P2PStarlight(ItemEnum.ITEMP2PSTARLIGHT),
 	P2PMana(ItemEnum.ITEMP2PMANA),
 	P2PWill(ItemEnum.ITEMP2PWILL),
-	InteractionPlane(ItemEnum.ITEMPARTINTERACTIONPLANE);
+	InteractionPlane(ItemEnum.ITEMPARTINTERACTIONBUS);
 
 	/**
 	 * Cached enum values

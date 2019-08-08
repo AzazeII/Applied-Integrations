@@ -10,6 +10,7 @@ import AppliedIntegrations.Network.Packets.PartGUI.PacketTerminalUpdate;
 import AppliedIntegrations.Parts.AIRotatablePart;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.api.IEnumHost;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import appeng.api.config.Settings;
 import appeng.api.config.SortDir;
@@ -51,7 +52,8 @@ import static appeng.api.networking.ticking.TickRateModulation.SAME;
 /**
  * @Author Azazell
  */
-public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost, IConfigManagerHost, IGridTickable, IMEMonitorHandlerReceiver<IAEEnergyStack> {
+public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost, IConfigManagerHost, IGridTickable,
+		IMEMonitorHandlerReceiver<IAEEnergyStack>, IEnumHost {
 
 	public List<ContainerEnergyTerminal> listeners = new ArrayList<>();
 
@@ -234,13 +236,13 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	}
 
-	public void setSortMode(SortOrder mode) {
-
-		this.sortingOrder = mode;
-	}
-
 	public SortOrder getSortOrder() {
 
 		return this.sortingOrder;
+	}
+
+	@Override
+	public void setEnumVal(Enum val) {
+		this.sortingOrder = (SortOrder) val;
 	}
 }

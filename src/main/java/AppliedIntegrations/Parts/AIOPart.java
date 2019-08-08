@@ -8,6 +8,7 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Utils.ChangeHandler;
+import AppliedIntegrations.api.IEnumHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import appeng.api.config.RedstoneMode;
@@ -43,7 +44,8 @@ import static appeng.api.config.RedstoneMode.*;
  * @Author Azazell
  */
 
-public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMachine, IPriorityHostExtended, UpgradeInventoryManager.IUpgradeInventoryManagerHost {
+public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMachine, IPriorityHostExtended,
+		UpgradeInventoryManager.IUpgradeInventoryManagerHost, IEnumHost {
 	// Size of filter
 	public final static int MAX_FILTER_SIZE = 9;
 
@@ -69,8 +71,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	private final static int BASE_SLOT_INDEX = 4;
 
-	private static final RedstoneMode DEFAULT_REDSTONE_MODE = IGNORE;
-
 	private static final String NBT_KEY_REDSTONE_MODE = "redstoneMode";
 
 	private static final String NBT_KEY_FILTER_NUMBER = "EnergyFilter#";
@@ -86,9 +86,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	// list of all container listeners
 	private List<ContainerPartEnergyIOBus> listeners = new ArrayList<ContainerPartEnergyIOBus>();
-
-	// Current mode
-	public RedstoneMode redstoneMode = AIOPart.DEFAULT_REDSTONE_MODE;
 
 	public byte filterSize;
 
@@ -119,7 +116,8 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 
 	@Override
-	public void doSync(int filterSize, boolean redstoneControlled, int upgradeSpeedCount) {
+	public void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
+	                       boolean fuzzyCompare, int upgradeSpeedCount) {
 		// Request full state update
 		notifyListenersOfStateUpdate((byte) filterSize, redstoneControlled);
 	}
@@ -127,7 +125,8 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled) {
 
 		if (player != null) {
-			NetworkHandler.sendTo(new PacketFullSync(filterSize, redstoneMode, redstoneControlled, this), (EntityPlayerMP) this.player);
+			NetworkHandler.sendTo(new PacketFullSync(filterSize, upgradeInventoryManager.
+					redstoneMode, redstoneControlled, this), (EntityPlayerMP) this.player);
 		}
 	}
 
@@ -205,7 +204,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		}
 
 		// Is the bus pulse controlled?
-		if (this.redstoneMode == RedstoneMode.SIGNAL_PULSE) {
+		if (this.upgradeInventoryManager.redstoneMode == RedstoneMode.SIGNAL_PULSE) {
 			// Did the stateProp of the redstone change?
 			if (this.isReceivingRedstonePower() != this.lastRedstone) {
 				// Set the previous redstone stateProp
@@ -272,8 +271,8 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 			if (saveType == PartItemStack.WORLD) {
 				// Write the redstone mode
-				if (this.redstoneMode != DEFAULT_REDSTONE_MODE) {
-					data.setInteger(NBT_KEY_REDSTONE_MODE, this.redstoneMode.ordinal());
+				if (this.upgradeInventoryManager.redstoneMode != IGNORE) {
+					data.setInteger(NBT_KEY_REDSTONE_MODE, this.upgradeInventoryManager.redstoneMode.ordinal());
 				}
 
 				data.setTag("upgradeInventoryManager", this.upgradeInventoryManager.upgradeInventory.writeToNBT());
@@ -331,15 +330,15 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 		boolean canWork = true;
 
-		if (redstoneMode == RedstoneMode.HIGH_SIGNAL) {
+		if (upgradeInventoryManager.redstoneMode == RedstoneMode.HIGH_SIGNAL) {
 			canWork = this.isReceivingRedstonePower();
 		}
 
-		if (redstoneMode == LOW_SIGNAL) {
+		if (upgradeInventoryManager.redstoneMode == LOW_SIGNAL) {
 			canWork = !this.isReceivingRedstonePower();
 		}
 
-		if (redstoneMode == SIGNAL_PULSE) {
+		if (upgradeInventoryManager.redstoneMode == SIGNAL_PULSE) {
 			canWork = false;
 		}
 
@@ -403,8 +402,9 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 		return AIGuiHandler.GuiEnum.GuiIOPart;
 	}
 
-	public void setRedstoneMode(RedstoneMode mode) {
-		this.redstoneMode = mode;
-		this.upgradeInventoryManager.redstoneControlled = mode != IGNORE;
+	@Override
+	public void setEnumVal(Enum val) {
+		this.upgradeInventoryManager.acceptVal(val);
+		this.upgradeInventoryManager.redstoneControlled = val != IGNORE;
 	}
 }

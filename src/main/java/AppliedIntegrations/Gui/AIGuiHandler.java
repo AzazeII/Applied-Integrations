@@ -213,7 +213,7 @@ public class AIGuiHandler implements IGuiHandler {
 		} else if (gui == GuiInteraction) {
 			PartInteraction interaction = (PartInteraction) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
-			return new GuiInteractionBus((ContainerInteractionBus) getServerGuiElement(ID, player, world, x, y, z), player, interaction);
+			return new GuiInteractionBus((ContainerInteractionBus) getServerGuiElement(ID, player, world, x, y, z), player);
 		}
 
 		return null;

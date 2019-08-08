@@ -18,7 +18,7 @@ public class HandlerClickModeServerToClient implements IMessageHandler<PacketCli
 				ContainerInteractionBus CIB = (ContainerInteractionBus) container;
 
 				if (CIB.getSyncHost().compareTo(message.bus, true)) {
-					CIB.mode = message.mode;
+					CIB.shiftClickButton.mode = message.mode;
 				}
 			}
 		});

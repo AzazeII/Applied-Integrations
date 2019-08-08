@@ -10,7 +10,7 @@ import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PartGUI.PacketSyncReturn;
+import AppliedIntegrations.Network.Packets.PacketEnum;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.api.IEnergySelectorContainer;
 import AppliedIntegrations.api.ISyncHost;
@@ -160,7 +160,7 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 			castContainer().updateStacksPrecise(sorted);
 
 			// Send packet
-			NetworkHandler.sendToServer(new PacketSyncReturn(castContainer().sortButton.getCurrentValue(), this.part));
+			NetworkHandler.sendToServer(new PacketEnum(castContainer().sortButton.getCurrentValue(), this.part));
 		}
 	}
 

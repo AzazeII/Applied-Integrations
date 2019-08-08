@@ -5,8 +5,8 @@ import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
 import AppliedIntegrations.Gui.Widgets.AIWidget;
 import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PacketEnum;
 import AppliedIntegrations.Network.Packets.PacketGuiShift;
-import AppliedIntegrations.Network.Packets.PartGUI.PacketSyncReturn;
 import AppliedIntegrations.Parts.Energy.PartEnergyExport;
 import AppliedIntegrations.Parts.Energy.PartEnergyImport;
 import AppliedIntegrations.api.ISyncHost;
@@ -71,13 +71,9 @@ public class GuiEnergyIO extends AIGui {
 		addPriorityButton();
 
 		// Add redstone control button
-		getContainer().redstoneControlBtn = new GuiImgButton(this.guiLeft - 18, this.guiTop + 8, Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
-
-		// Set visible to false
+		this.buttonList.add(getContainer().redstoneControlBtn = new GuiImgButton(this.guiLeft - 18, this.guiTop + 8,
+				Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE));
 		getContainer().redstoneControlBtn.setVisibility(false);
-
-		// Add to button list
-		buttonList.add(getContainer().redstoneControlBtn);
 
 		// Don't add slots if energy slot list isn't empty
 		if (!getContainer().energySlotList.isEmpty()) {
@@ -103,7 +99,6 @@ public class GuiEnergyIO extends AIGui {
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float p_146976_1_, int p_146976_2_, int p_146976_3_) {
-
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.texture);
@@ -231,7 +226,7 @@ public class GuiEnergyIO extends AIGui {
 			getContainer().redstoneControlBtn.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
 
 			// Send packet to client
-			NetworkHandler.sendToServer(new PacketSyncReturn(getContainer().redstoneControlBtn.getCurrentValue(), getContainer().part));
+			NetworkHandler.sendToServer(new PacketEnum(getContainer().redstoneControlBtn.getCurrentValue(), getContainer().part));
 		}
 	}
 }
