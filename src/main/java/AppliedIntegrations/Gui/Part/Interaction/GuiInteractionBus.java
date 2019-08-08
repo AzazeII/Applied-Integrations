@@ -29,7 +29,7 @@ public class GuiInteractionBus extends AIGui {
 	private static final ResourceLocation TEXTURE_INVENTORY = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.inventory.png");
 	private static final ResourceLocation TEXTURE_FILTER = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/interaction.bus.png");
 	public PartInteraction interaction;
-	private EnumInteractionPlaneTabs currentTab = EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER;
+	public EnumInteractionPlaneTabs currentTab = EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER;
 	private List<WidgetGuiTab> tabs = new ArrayList<>();
 	private GuiClickModeButton shiftClickButton;
 
@@ -60,7 +60,7 @@ public class GuiInteractionBus extends AIGui {
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
 		// Transfer click on button under mouse
-		if (btn == shiftClickButton) {
+		if (btn == shiftClickButton && currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
 			shiftClickButton.cycleMode();
 		}
 	}

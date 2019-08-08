@@ -22,9 +22,11 @@ public class GuiClickModeButton extends AIGuiButton {
 	private static final ResourceLocation states = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png");
 	private final PartInteraction bus;
 	private final ContainerInteractionBus container;
+	private final GuiInteractionBus owner;
 
 	public GuiClickModeButton(GuiInteractionBus owner, int ID, int xPosition, int yPosition, int width, int height, String text) {
 		super(ID, xPosition, yPosition, width, height, text);
+		this.owner = owner;
 		this.bus = owner.interaction;
 		this.container = owner.getContainer();
 	}
@@ -42,6 +44,10 @@ public class GuiClickModeButton extends AIGuiButton {
 
 	@Override
 	public void drawButton(@Nonnull Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		if (owner.currentTab != PartInteraction.EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
+			return;
+		}
+
 		// Draw background
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
@@ -56,6 +62,10 @@ public class GuiClickModeButton extends AIGuiButton {
 
 	@Override
 	public void getTooltip(List<String> tooltip) {
+		if (owner.currentTab != PartInteraction.EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
+			return;
+		}
+
 		tooltip.add("Interaction bus click mode");
 		tooltip.add(container.mode.tip);
 	}
