@@ -119,14 +119,15 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 	public void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
 	                       boolean fuzzyCompare, int upgradeSpeedCount) {
 		// Request full state update
-		notifyListenersOfStateUpdate((byte) filterSize, redstoneControlled);
+		notifyListenersOfStateUpdate();
 	}
 
-	private void notifyListenersOfStateUpdate(byte filterSize, boolean redstoneControlled) {
+	private void notifyListenersOfStateUpdate() {
 
 		if (player != null) {
-			NetworkHandler.sendTo(new PacketFullSync(filterSize, upgradeInventoryManager.
-					redstoneMode, redstoneControlled, this), (EntityPlayerMP) this.player);
+			NetworkHandler.sendTo(new PacketFullSync(upgradeInventoryManager.filterSize, upgradeInventoryManager.
+					redstoneMode, upgradeInventoryManager.fuzzyMode, upgradeInventoryManager.redstoneControlled,
+					upgradeInventoryManager.fuzzyCompare, this), (EntityPlayerMP) this.player);
 		}
 	}
 
@@ -325,7 +326,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			}));
 
 			notifyListenersOfFilterEnergyChange(i, filteredEnergies.get(i));
-			notifyListenersOfStateUpdate(filterSize, upgradeInventoryManager.redstoneControlled);
+			notifyListenersOfStateUpdate();
 		}
 	}
 

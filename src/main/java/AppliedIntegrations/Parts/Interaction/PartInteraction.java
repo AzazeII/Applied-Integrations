@@ -28,6 +28,7 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
+import appeng.parts.automation.PartExportBus;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.mojang.authlib.GameProfile;

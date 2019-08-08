@@ -9,6 +9,7 @@ import AppliedIntegrations.Network.Packets.PartGUI.PacketClickModeServerToClient
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
+import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -36,6 +37,7 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	private static final int SLOT_AREA = 3;
 	public GuiClickModeButton shiftClickButton;
 	public GuiImgButton redstoneControlButton;
+	public GuiImgButton fuzzyModeButton;
 	private boolean[] slotMatrix = {
 			false, false, false,
 			false, true, false,
@@ -128,7 +130,7 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	}
 
 	@Override
-	public void updateState(boolean redstoneControl, RedstoneMode redstoneMode, byte filterSize) {
+	public void updateState(boolean redstoneControl, boolean compareFuzzy, FuzzyMode fuzzyMode, RedstoneMode redstoneMode, byte filterSize) {
 		// Change slot matrix depending on filter size
 		if (interaction.upgradeInventoryManager.filterSize == 0) {
 			slotMatrix = new boolean[]{
@@ -156,13 +158,16 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 
 		redstoneControlButton.setVisibility(redstoneControl);
 		redstoneControlButton.set(redstoneMode);
+		fuzzyModeButton.setVisibility(compareFuzzy);
+		fuzzyModeButton.set(fuzzyMode);
 	}
 
 	@Override
 	protected void syncHostWithGUI() {
 		super.syncHostWithGUI();
 		NetworkHandler.sendTo(new PacketFullSync((byte) interaction.upgradeInventoryManager.filterSize, interaction.upgradeInventoryManager.redstoneMode,
-				interaction.upgradeInventoryManager.redstoneControlled, interaction), (EntityPlayerMP) player);
+				interaction.upgradeInventoryManager.fuzzyMode, interaction.upgradeInventoryManager.redstoneControlled,
+				interaction.upgradeInventoryManager.fuzzyCompare, interaction), (EntityPlayerMP) player);
 		NetworkHandler.sendTo(new PacketClickModeServerToClient(interaction, interaction.fakePlayer.isSneaking()), (EntityPlayerMP) player);
 	}
 
