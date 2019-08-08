@@ -133,19 +133,19 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	public void updateState(boolean redstoneControl, boolean compareFuzzy, FuzzyMode fuzzyMode, RedstoneMode redstoneMode, byte filterSize) {
 		// Change slot matrix depending on filter size
 		if (interaction.upgradeInventoryManager.filterSize == 0) {
-			slotMatrix = new boolean[]{
+			slotMatrix = new boolean[] {
 					false, false, false,
 					false, true, false,
 					false, false, false
 			};
 		} else if (interaction.upgradeInventoryManager.filterSize == 1) {
-			slotMatrix = new boolean[]{
+			slotMatrix = new boolean[] {
 					false, true, false,
 					true, true, true,
 					false, true, false
 			};
 		} else if (interaction.upgradeInventoryManager.filterSize >= 2) {
-			slotMatrix = new boolean[]{
+			slotMatrix = new boolean[] {
 					true, true, true,
 					true, true, true,
 					true, true, true

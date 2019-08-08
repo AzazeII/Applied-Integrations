@@ -64,7 +64,7 @@ public class GuiClickModeButton extends AIGuiButton {
 			return;
 		}
 
-		tooltip.add("Interaction bus click mode");
+		tooltip.add("Click mode");
 		tooltip.add(mode.tip);
 	}
 }
