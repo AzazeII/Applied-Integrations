@@ -131,7 +131,7 @@ dependencies {
 
     // Minecraft libraries(mods):
     compile "mezz.jei:jei_1.12.2:4.13.0.219"
-    compile "appeng:appliedenergistics2:rv6-stable-6"
+    compile "appeng:appliedenergistics2:rv6-stable-7"
     compile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
     compile "mekanism:Mekanism:1.12.2:9.4.13.349"
     compile "teamroots.embers:EmbersRekindled:1.13"

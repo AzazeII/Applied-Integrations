@@ -6,7 +6,6 @@ import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
-import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.api.IEnumHost;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -44,8 +43,7 @@ import static appeng.api.config.RedstoneMode.IGNORE;
  * @Author Azazell
  */
 
-public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMachine, IPriorityHostExtended,
-		UpgradeInventoryManager.IUpgradeInventoryManagerHost, IEnumHost {
+public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMachine, IPriorityHostExtended, IEnumHost {
 	// Size of filter
 	public final static int MAX_FILTER_SIZE = 9;
 
@@ -95,7 +93,7 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 	private int priority = 0;
 
-	private UpgradeInventoryManager upgradeInventoryManager = new UpgradeInventoryManager(this, "ME Energy Export/Import Bus", 4, (stack) -> validateStack(stack));
+	public UpgradeInventoryManager upgradeInventoryManager = new UpgradeInventoryManager(this, "ME Energy Export/Import Bus", 4, (stack) -> validateStack(stack));
 
 	public AIOPart(final PartEnum associatedPart) {
 
@@ -111,21 +109,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 			// Fill handler list
 			filteredEnergiesChangeHandler.add(new ChangeHandler<>());
-		}
-	}
-
-
-	@Override
-	public void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
-	                       boolean fuzzyCompare, int upgradeSpeedCount) {
-		// Request full state update
-		notifyListenersOfStateUpdate();
-	}
-
-	private void notifyListenersOfStateUpdate() {
-
-		if (player != null) {
-			NetworkHandler.sendTo(new PacketFullSync(upgradeInventoryManager, this), (EntityPlayerMP) this.player);
 		}
 	}
 
@@ -324,7 +307,6 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			}));
 
 			notifyListenersOfFilterEnergyChange(i, filteredEnergies.get(i));
-			notifyListenersOfStateUpdate();
 		}
 	}
 

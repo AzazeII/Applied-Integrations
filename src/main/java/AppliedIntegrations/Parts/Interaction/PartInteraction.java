@@ -37,7 +37,6 @@ import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.GameProfile;
-import jdk.nashorn.internal.runtime.ScriptObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -74,8 +73,7 @@ import static net.minecraft.util.EnumHand.MAIN_HAND;
 /**
  * @Author Azazell
  */
-public class PartInteraction extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost, IEnumHost,
-															ICraftingRequester {
+public class PartInteraction extends AIPart implements IGridTickable, IInventoryHost, IEnumHost, ICraftingRequester {
 	public enum EnumInteractionPlaneTabs {
 		PLANE_FAKE_PLAYER_FILTER,
 		PLANE_FAKE_PLAYER_INVENTORY
@@ -198,17 +196,19 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 				jobs.put(input, craftingGrid.beginCraftingJob(getHostWorld(), getProxy().getGrid(),
 						src, input, null));
 			} else {
-				ICraftingJob job = futureJob.get();
+				ICraftingJob job = futureJob.isDone() ? futureJob.get() : null;
 
 				if (job != null) {
 					ICraftingLink link = craftingGrid.submitJob(job, this, null, false, src);
 
 					links.put(input, link);
-					methods.put(link, method);
 					jobs.put(input, null);
+					methods.put(link, method);
 				}
 			}
-		} catch(GridAccessException | InterruptedException | ExecutionException ignored) {}
+		} catch(GridAccessException | InterruptedException | ExecutionException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void interactBlock(FakePlayer player, BlockPos facingPos) {
@@ -266,7 +266,7 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, List<ItemStack> list, BiConsumer<FakePlayer, BlockPos> method) {
 		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
 		for (ItemStack stack : list) {
-			// Don't operate with empty stack unless there is inverter card
+			// Don't operate with empty stack
 			if (stack.isEmpty()) {
 				continue;
 			}
@@ -295,7 +295,9 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 						requestCraft(input, method);
 					}
 				}
-			} catch(GridAccessException ignored) {}
+			} catch(GridAccessException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -411,10 +413,6 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 			}
 		}
 	}
-
-	@Override
-	public void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
-	                       boolean fuzzyCompare, int upgradeSpeedCount) {}
 
 	@Override
 	public void readFromNBT(final NBTTagCompound data) {
@@ -543,13 +541,14 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	@Override
 	public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
 		try {
+			// Modulate click with crafted items(honestly it is always only one item :D)
 			BiConsumer<FakePlayer, BlockPos> method = methods.get(link);
 			IMEMonitor<IAEItemStack> inventory =
 					getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 			modulateClick(getHostPos().offset(getHostSide().getFacing()), method, inventory, items);
-		} catch(GridAccessException ignored) {}
-
-		methods.put(link, null);
+		} catch(GridAccessException e) {
+			e.printStackTrace();
+		}
 
 		return null;
 	}

@@ -17,12 +17,6 @@ import static net.minecraft.init.Items.AIR;
  * @Author Azazell
  */
 public class UpgradeInventoryManager implements IInventoryHost {
-	public interface IUpgradeInventoryManagerHost extends ISyncHost {
-		// Send data to client
-		void syncClient(int filterSize, boolean redstoneControlled, boolean autoCrafting, boolean inverted,
-		                boolean fuzzyCompare, int upgradeSpeedCount);
-	}
-
 	private static final String KEY_FILTER_SIZE = "#FILTER_SIZE";
 	private static final String KEY_RED_CONTROLLED = "#RED_CONTROLLER";
 	private static final String KEY_INVERTED = "#INVERTED";
@@ -32,7 +26,7 @@ public class UpgradeInventoryManager implements IInventoryHost {
 	private static final String KEY_FUZZY_MODE = "#FUZZY_MODE";
 	private static final String KEY_SPEED_COUNT = "#UPGRADE_SPEED_COUNT";
 
-	private final IUpgradeInventoryManagerHost host;
+	private final ISyncHost host;
 	public AIGridNodeInventory upgradeInventory;
 	public byte filterSize;
 	public boolean redstoneControlled;
@@ -44,11 +38,11 @@ public class UpgradeInventoryManager implements IInventoryHost {
 	public FuzzyMode fuzzyMode = FuzzyMode.IGNORE_ALL;
 	public YesNo craftOnly = YesNo.NO;
 
-	public UpgradeInventoryManager(IUpgradeInventoryManagerHost host, String name, int size) {
+	public UpgradeInventoryManager(ISyncHost host, String name, int size) {
 		this(host, name, size, (stack) -> true);
 	}
 
-	public UpgradeInventoryManager(IUpgradeInventoryManagerHost host, String name, int size, Predicate<ItemStack> isItemValid) {
+	public UpgradeInventoryManager(ISyncHost host, String name, int size, Predicate<ItemStack> isItemValid) {
 		this.host = host;
 		this.upgradeInventory = new AIGridNodeInventory(name, size, 1, this) {
 			@Override
@@ -120,9 +114,6 @@ public class UpgradeInventoryManager implements IInventoryHost {
 				}
 			}
 		}
-
-		// Sync data
-		host.syncClient(filterSize, redstoneControlled, autoCrafting, inverted, fuzzyCompare, upgradeSpeedCount);
 	}
 
 	public void acceptVal(Enum val) {

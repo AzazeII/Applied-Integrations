@@ -2,6 +2,8 @@ package AppliedIntegrations.Container.part;
 import AppliedIntegrations.Container.ContainerWithUpgradeSlots;
 import AppliedIntegrations.Container.Sync.IFilterContainer;
 import AppliedIntegrations.Gui.MultiController.FilterSlots.WidgetEnergySlot;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketFullSync;
 import AppliedIntegrations.Parts.AIOPart;
 import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.EnergyStack;
@@ -11,6 +13,7 @@ import appeng.api.config.RedstoneMode;
 import appeng.api.config.YesNo;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -57,6 +60,12 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implemen
 
 		// Remove listener
 		this.part.removeListener(this);
+	}
+
+	@Override
+	protected void syncHostWithGUI() {
+		super.syncHostWithGUI();
+		NetworkHandler.sendTo(new PacketFullSync(part.upgradeInventoryManager, part), (EntityPlayerMP) player);
 	}
 
 	@Override
