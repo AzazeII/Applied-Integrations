@@ -11,6 +11,7 @@ import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
+import appeng.api.config.YesNo;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
@@ -131,7 +132,8 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	}
 
 	@Override
-	public void updateState(boolean redstoneControl, boolean compareFuzzy, FuzzyMode fuzzyMode, RedstoneMode redstoneMode, byte filterSize) {
+	public void updateState(boolean redstoneControl, boolean compareFuzzy, boolean autoCrafting, RedstoneMode redstoneMode, FuzzyMode fuzzyMode,
+	                        YesNo craftOnly, byte filterSize) {
 		// Change slot matrix depending on filter size
 		if (interaction.upgradeInventoryManager.filterSize == 0) {
 			slotMatrix = new boolean[] {
@@ -161,16 +163,14 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 		redstoneControlButton.set(redstoneMode);
 		fuzzyModeButton.setVisibility(compareFuzzy);
 		fuzzyModeButton.set(fuzzyMode);
+		craftingModeButton.setVisibility(autoCrafting);
+		craftingModeButton.set(craftOnly);
 	}
 
 	@Override
 	protected void syncHostWithGUI() {
 		super.syncHostWithGUI();
-		NetworkHandler.sendTo(new PacketFullSync(interaction.upgradeInventoryManager.filterSize, interaction.upgradeInventoryManager.redstoneMode,
-				interaction.upgradeInventoryManager.fuzzyMode, interaction.upgradeInventoryManager.craftOnly,
-				interaction.upgradeInventoryManager.redstoneControlled,
-				interaction.upgradeInventoryManager.fuzzyCompare,
-				interaction.upgradeInventoryManager.autoCrafting, interaction), (EntityPlayerMP) player);
+		NetworkHandler.sendTo(new PacketFullSync(interaction.upgradeInventoryManager, interaction), (EntityPlayerMP) player);
 		NetworkHandler.sendTo(new PacketClickModeServerToClient(interaction, interaction.fakePlayer.isSneaking()), (EntityPlayerMP) player);
 	}
 

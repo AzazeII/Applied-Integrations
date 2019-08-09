@@ -8,6 +8,7 @@ import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
+import appeng.api.config.YesNo;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -83,7 +84,8 @@ public class ContainerPartEnergyIOBus extends ContainerWithUpgradeSlots implemen
 	}
 
 	@Override
-	public void updateState(boolean redstoneControl, boolean compareFuzzy, FuzzyMode fuzzyMode, RedstoneMode redstoneMode, byte filterSize) {
+	public void updateState(boolean redstoneControl, boolean compareFuzzy, boolean autoCrafting,
+	                        RedstoneMode redstoneMode, FuzzyMode fuzzyMode, YesNo craftOnly, byte filterSize) {
 		// Set filter matrix, from filter size
 		if (filterSize == 0) {
 			// Update matrix

@@ -1,5 +1,7 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
+import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Network.Packets.AIPacket;
+import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
@@ -23,21 +25,18 @@ public class PacketFullSync extends AIPacket {
 	public YesNo craftOnly;
 	public RedstoneMode redstoneMode;
 
-	public PacketFullSync() {
+	public PacketFullSync() { }
 
-	}
+	public PacketFullSync(UpgradeInventoryManager upgradeInventoryManager, ISyncHost interaction) {
+		this.filterSize = upgradeInventoryManager.filterSize;
+		this.redstoneControl = upgradeInventoryManager.redstoneControlled;
+		this.autoCrafting = upgradeInventoryManager.autoCrafting;
+		this.redstoneMode = upgradeInventoryManager.redstoneMode;
+		this.compareFuzzy = upgradeInventoryManager.fuzzyCompare;
+		this.fuzzyMode = upgradeInventoryManager.fuzzyMode;
+		this.craftOnly = upgradeInventoryManager.craftOnly;
 
-	public PacketFullSync(byte filterSize, RedstoneMode redstoneMode, FuzzyMode fuzzyMode, YesNo craftOnly, boolean redstoneControlled, boolean compareFuzzy,
-	                      boolean autoCrafting, ISyncHost host) {
-		this.filterSize = filterSize;
-		this.redstoneControl = redstoneControlled;
-		this.autoCrafting = autoCrafting;
-		this.redstoneMode = redstoneMode;
-		this.compareFuzzy = compareFuzzy;
-		this.fuzzyMode = fuzzyMode;
-		this.craftOnly = craftOnly;
-
-		this.part = host;
+		this.part = interaction;
 	}
 
 	@Override
@@ -46,9 +45,11 @@ public class PacketFullSync extends AIPacket {
 		part = readSyncHostClient(buf);
 
 		filterSize = buf.readByte();
+
 		redstoneControl = buf.readBoolean();
 		compareFuzzy = buf.readBoolean();
 		autoCrafting = buf.readBoolean();
+
 		redstoneMode = (RedstoneMode) readEnum(buf);
 		fuzzyMode = (FuzzyMode) readEnum(buf);
 		craftOnly = (YesNo) readEnum(buf);
@@ -60,9 +61,11 @@ public class PacketFullSync extends AIPacket {
 		writeSyncHost(part, buf, false);
 
 		buf.writeByte(filterSize);
+
 		buf.writeBoolean(redstoneControl);
 		buf.writeBoolean(compareFuzzy);
 		buf.writeBoolean(autoCrafting);
+
 		writeEnum(redstoneMode, buf);
 		writeEnum(fuzzyMode, buf);
 		writeEnum(craftOnly, buf);

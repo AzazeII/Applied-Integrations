@@ -17,9 +17,11 @@ import appeng.api.config.Settings;
 import appeng.api.config.YesNo;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
 import org.lwjgl.opengl.GL11;
@@ -60,6 +62,10 @@ public class GuiInteractionBus extends AIGui {
 				drawTexturedModalRect(x, y, 79, 39, 18, 18);
 			}
 		}
+	}
+
+	private void playClickSound() {
+		mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(SoundEvents.UI_BUTTON_CLICK, 1.0F));
 	}
 
 	@Override
@@ -108,6 +114,7 @@ public class GuiInteractionBus extends AIGui {
 		for (WidgetGuiTab tab : tabs) {
 			if (tab.isMouseOverWidget(mouseX, mouseY)) {
 				currentTab = (EnumInteractionPlaneTabs) tab.tabEnum;
+				playClickSound();
 				tab.mouseClicked();
 
 				// Make other tabs unselected
@@ -125,6 +132,7 @@ public class GuiInteractionBus extends AIGui {
 			getContainer().redstoneControlButton.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
 			NetworkHandler.sendToServer(new PacketEnum(getContainer().redstoneControlButton.getCurrentValue(),
 					(IEnumHost) getContainer().getSyncHost()));
+			playClickSound();
 		}
 
 		if(getContainer().fuzzyModeButton.isMouseOver()) {
@@ -133,14 +141,15 @@ public class GuiInteractionBus extends AIGui {
 			getContainer().fuzzyModeButton.set(ordinal == 4 ? FuzzyMode.IGNORE_ALL : FuzzyMode.values()[ordinal + 1]);
 			NetworkHandler.sendToServer(new PacketEnum(getContainer().fuzzyModeButton.getCurrentValue(),
 					(IEnumHost) getContainer().getSyncHost()));
+			playClickSound();
 		}
 
 		if(getContainer().craftingModeButton.isMouseOver()) {
 			// Switch mode and sync with server
-			short ordinal = (short) getContainer().craftingModeButton.getCurrentValue().ordinal();
-			getContainer().craftingModeButton.set(ordinal == 2 ? YesNo.YES : YesNo.values()[ordinal + 1]);
+			getContainer().craftingModeButton.set(getContainer().craftingModeButton.getCurrentValue() == YesNo.NO ? YesNo.YES : YesNo.NO);
 			NetworkHandler.sendToServer(new PacketEnum(getContainer().craftingModeButton.getCurrentValue(),
 					(IEnumHost) getContainer().getSyncHost()));
+			playClickSound();
 		}
 	}
 
@@ -211,7 +220,7 @@ public class GuiInteractionBus extends AIGui {
 				tooltip.addAll(Arrays.asList(getContainer().fuzzyModeButton.getMessage().split("\n")));
 			}
 
-			if (getContainer().fuzzyModeButton.isMouseOver()) {
+			if (getContainer().craftingModeButton.isMouseOver()) {
 				tooltip.addAll(Arrays.asList(getContainer().craftingModeButton.getMessage().split("\n")));
 			}
 		}

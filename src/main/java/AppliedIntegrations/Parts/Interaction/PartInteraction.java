@@ -14,6 +14,11 @@ import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.RedstoneMode;
 import appeng.api.networking.IGridNode;
+import appeng.api.networking.crafting.ICraftingGrid;
+import appeng.api.networking.crafting.ICraftingJob;
+import appeng.api.networking.crafting.ICraftingLink;
+import appeng.api.networking.crafting.ICraftingRequester;
+import appeng.api.networking.energy.IEnergyGrid;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
@@ -30,7 +35,9 @@ import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
+import com.google.common.collect.ImmutableSet;
 import com.mojang.authlib.GameProfile;
+import jdk.nashorn.internal.runtime.ScriptObject;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -55,10 +62,9 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.function.BiConsumer;
 
 import static appeng.api.networking.ticking.TickRateModulation.SAME;
@@ -68,7 +74,8 @@ import static net.minecraft.util.EnumHand.MAIN_HAND;
 /**
  * @Author Azazell
  */
-public class PartInteraction extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost, IEnumHost {
+public class PartInteraction extends AIPart implements IGridTickable, UpgradeInventoryManager.IUpgradeInventoryManagerHost, IInventoryHost, IEnumHost,
+															ICraftingRequester {
 	public enum EnumInteractionPlaneTabs {
 		PLANE_FAKE_PLAYER_FILTER,
 		PLANE_FAKE_PLAYER_INVENTORY
@@ -99,6 +106,9 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 	public AIGridNodeInventory offhandInventory =
 			new AIGridNodeInventory("Interaction Bus Offhand Inventory", 1, 64, this);
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Bus Upgrade Inventory", 4);
+	private HashMap<IAEItemStack, Future<ICraftingJob>> jobs = new HashMap<>();
+	private HashMap<IAEItemStack, ICraftingLink> links = new HashMap<>();
+	private HashMap<ICraftingLink, BiConsumer<FakePlayer, BlockPos>> methods = new HashMap<>();
 
 	private UUID uniIdentifier;
 	private boolean lastRedstone;
@@ -177,6 +187,30 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		}
 	}
 
+	private void requestCraft(IAEItemStack input, BiConsumer<FakePlayer, BlockPos> method) {
+		try {
+			// Get crafting grid and submit or begin crafting job for input
+			ICraftingGrid craftingGrid = getProxy().getCrafting();
+			Future<ICraftingJob> futureJob = jobs.get(input);
+			MachineSource src = new MachineSource(this);
+
+			if (futureJob == null) {
+				jobs.put(input, craftingGrid.beginCraftingJob(getHostWorld(), getProxy().getGrid(),
+						src, input, null));
+			} else {
+				ICraftingJob job = futureJob.get();
+
+				if (job != null) {
+					ICraftingLink link = craftingGrid.submitJob(job, this, null, false, src);
+
+					links.put(input, link);
+					methods.put(link, method);
+					jobs.put(input, null);
+				}
+			}
+		} catch(GridAccessException | InterruptedException | ExecutionException ignored) {}
+	}
+
 	private void interactBlock(FakePlayer player, BlockPos facingPos) {
 		ItemStack itemStack = player.getHeldItemMainhand();
 
@@ -242,22 +276,37 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 			// Simulate operations
 			IStorageGrid cache = node.getGrid().getCache(IStorageGrid.class);
 			IMEMonitor<IAEItemStack> inventory = cache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-			AEItemStack input = AEItemStack.fromItemStack(player.getHeldItemMainhand());
+			IAEItemStack input = AEItemStack.fromItemStack(player.getHeldItemMainhand());
 			IAEItemStack extracted = inventory.extractItems(input, Actionable.SIMULATE, new MachineSource(this));
 
 			try {
-				double extractedAEPower = getProxy().getEnergy().extractAEPower(AE_DRAIN_PER_OPERATION, Actionable.SIMULATE, PowerMultiplier.CONFIG);
-				if (extracted != null && extractedAEPower != 0) {
-					// Modulate operations
-					getProxy().getEnergy().extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
-					inventory.extractItems(extracted, Actionable.MODULATE, new MachineSource(this));
+				IEnergyGrid energy = getProxy().getEnergy();
 
-					// Click using given method
-					method.accept(player, facingPos);
-					injectClickResult(player, inventory);
+				// Try extract energy for this operation and modulate item extraction
+				double extractedAEPower = getProxy().getEnergy().extractAEPower(AE_DRAIN_PER_OPERATION, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+				if (extractedAEPower != 0) {
+					if (extracted != null) {
+						// Modulate click
+						energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
+						modulateClick(facingPos, method, inventory, extracted);
+					} else if (upgradeInventoryManager.autoCrafting) {
+						// Request craft and then modulate click when crafting is done
+						energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
+						requestCraft(input, method);
+					}
 				}
 			} catch(GridAccessException ignored) {}
 		}
+	}
+
+	private void modulateClick(BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method,
+	                           IMEMonitor<IAEItemStack> inventory, IAEItemStack extracted) {
+		// Modulate operations
+		inventory.extractItems(extracted, Actionable.MODULATE, new MachineSource(this));
+
+		// Click using given method
+		method.accept(fakePlayer, facingPos);
+		injectClickResult(fakePlayer, inventory);
 	}
 
 	@Nonnull
@@ -322,6 +371,7 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		drops.addAll(Arrays.asList(mainInventory.slots));
 		drops.addAll(Arrays.asList(armorInventory.slots));
 		drops.addAll(Arrays.asList(offhandInventory.slots));
+		drops.addAll(Arrays.asList(upgradeInventoryManager.upgradeInventory.slots));
 	}
 
 	@Override
@@ -478,5 +528,29 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		} else {
 			this.upgradeInventoryManager.acceptVal(val);
 		}
+	}
+
+	@Override
+	public ImmutableSet<ICraftingLink> getRequestedJobs() {
+		return ImmutableSet.copyOf(links.values());
+	}
+
+	@Override
+	public void jobStateChange(ICraftingLink link) {
+		links.values().remove(link);
+	}
+
+	@Override
+	public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
+		try {
+			BiConsumer<FakePlayer, BlockPos> method = methods.get(link);
+			IMEMonitor<IAEItemStack> inventory =
+					getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
+			modulateClick(getHostPos().offset(getHostSide().getFacing()), method, inventory, items);
+		} catch(GridAccessException ignored) {}
+
+		methods.put(link, null);
+
+		return null;
 	}
 }

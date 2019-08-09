@@ -25,8 +25,8 @@ public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFu
 				// Compare sync hosts
 				if (upgradeHostContainer.getSyncHost().compareTo(message.part, true)) {
 					// Update each state
-					upgradeHostContainer.updateState(message.redstoneControl, message.compareFuzzy, message.fuzzyMode,
-							message.redstoneMode, message.filterSize);
+					upgradeHostContainer.updateState(message.redstoneControl, message.compareFuzzy, message.autoCrafting,
+							message.redstoneMode, message.fuzzyMode, message.craftOnly, message.filterSize);
 				}
 			}
 		});
