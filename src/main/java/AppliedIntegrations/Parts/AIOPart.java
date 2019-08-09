@@ -126,8 +126,9 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 
 		if (player != null) {
 			NetworkHandler.sendTo(new PacketFullSync(upgradeInventoryManager.filterSize, upgradeInventoryManager.
-					redstoneMode, upgradeInventoryManager.fuzzyMode, upgradeInventoryManager.redstoneControlled,
-					upgradeInventoryManager.fuzzyCompare, this), (EntityPlayerMP) this.player);
+					redstoneMode, upgradeInventoryManager.fuzzyMode, upgradeInventoryManager.craftOnly,
+					upgradeInventoryManager.redstoneControlled,
+					upgradeInventoryManager.fuzzyCompare, upgradeInventoryManager.autoCrafting, this), (EntityPlayerMP) this.player);
 		}
 	}
 

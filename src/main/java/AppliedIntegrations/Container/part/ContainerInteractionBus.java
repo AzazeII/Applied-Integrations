@@ -38,6 +38,7 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	public GuiClickModeButton shiftClickButton;
 	public GuiImgButton redstoneControlButton;
 	public GuiImgButton fuzzyModeButton;
+	public GuiImgButton craftingModeButton;
 	private boolean[] slotMatrix = {
 			false, false, false,
 			false, true, false,
@@ -165,9 +166,11 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	@Override
 	protected void syncHostWithGUI() {
 		super.syncHostWithGUI();
-		NetworkHandler.sendTo(new PacketFullSync((byte) interaction.upgradeInventoryManager.filterSize, interaction.upgradeInventoryManager.redstoneMode,
-				interaction.upgradeInventoryManager.fuzzyMode, interaction.upgradeInventoryManager.redstoneControlled,
-				interaction.upgradeInventoryManager.fuzzyCompare, interaction), (EntityPlayerMP) player);
+		NetworkHandler.sendTo(new PacketFullSync(interaction.upgradeInventoryManager.filterSize, interaction.upgradeInventoryManager.redstoneMode,
+				interaction.upgradeInventoryManager.fuzzyMode, interaction.upgradeInventoryManager.craftOnly,
+				interaction.upgradeInventoryManager.redstoneControlled,
+				interaction.upgradeInventoryManager.fuzzyCompare,
+				interaction.upgradeInventoryManager.autoCrafting, interaction), (EntityPlayerMP) player);
 		NetworkHandler.sendTo(new PacketClickModeServerToClient(interaction, interaction.fakePlayer.isSneaking()), (EntityPlayerMP) player);
 	}
 

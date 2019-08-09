@@ -5,6 +5,7 @@ import AppliedIntegrations.api.ISyncHost;
 import appeng.api.AEApi;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
+import appeng.api.config.YesNo;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -41,6 +42,7 @@ public class UpgradeInventoryManager implements IInventoryHost {
 	public boolean autoCrafting;
 	public RedstoneMode redstoneMode = RedstoneMode.IGNORE;
 	public FuzzyMode fuzzyMode = FuzzyMode.IGNORE_ALL;
+	public YesNo craftOnly = YesNo.NO;
 
 	public UpgradeInventoryManager(IUpgradeInventoryManagerHost host, String name, int size) {
 		this(host, name, size, (stack) -> true);
@@ -128,6 +130,8 @@ public class UpgradeInventoryManager implements IInventoryHost {
 			redstoneMode = (RedstoneMode) val;
 		} else if (val instanceof FuzzyMode) {
 			fuzzyMode = (FuzzyMode) val;
+		} else if (val instanceof YesNo) {
+			craftOnly = (YesNo) val;
 		}
 	}
 }

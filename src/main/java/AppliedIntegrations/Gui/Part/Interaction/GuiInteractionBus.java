@@ -14,6 +14,7 @@ import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
 import appeng.api.config.Settings;
+import appeng.api.config.YesNo;
 import appeng.client.gui.widgets.GuiImgButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -92,8 +93,11 @@ public class GuiInteractionBus extends AIGui {
 						Settings.REDSTONE_CONTROLLED, RedstoneMode.IGNORE);
 		getContainer().fuzzyModeButton = new GuiImgButton(this.guiLeft - 18, this.guiTop + 48,
 						Settings.FUZZY_MODE, FuzzyMode.IGNORE_ALL);
+		getContainer().craftingModeButton = new GuiImgButton(this.guiLeft - 18, this.guiTop + 68,
+						Settings.CRAFT_ONLY, YesNo.NO);
 		getContainer().redstoneControlButton.setVisibility(false);
 		getContainer().fuzzyModeButton.setVisibility(false);
+		getContainer().craftingModeButton.setVisibility(false);
 	}
 
 	@Override
@@ -128,6 +132,14 @@ public class GuiInteractionBus extends AIGui {
 			short ordinal = (short) getContainer().fuzzyModeButton.getCurrentValue().ordinal();
 			getContainer().fuzzyModeButton.set(ordinal == 4 ? FuzzyMode.IGNORE_ALL : FuzzyMode.values()[ordinal + 1]);
 			NetworkHandler.sendToServer(new PacketEnum(getContainer().fuzzyModeButton.getCurrentValue(),
+					(IEnumHost) getContainer().getSyncHost()));
+		}
+
+		if(getContainer().craftingModeButton.isMouseOver()) {
+			// Switch mode and sync with server
+			short ordinal = (short) getContainer().craftingModeButton.getCurrentValue().ordinal();
+			getContainer().craftingModeButton.set(ordinal == 2 ? YesNo.YES : YesNo.values()[ordinal + 1]);
+			NetworkHandler.sendToServer(new PacketEnum(getContainer().craftingModeButton.getCurrentValue(),
 					(IEnumHost) getContainer().getSyncHost()));
 		}
 	}
@@ -170,8 +182,10 @@ public class GuiInteractionBus extends AIGui {
 
 			drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize + 75);
 			drawTexturedModalRect(this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0, GUI_UPGRADES_WIDTH, GuiEnergyIO.GUI_UPGRADES_HEIGHT);
+
 			getContainer().redstoneControlButton.drawButton(mc, mouseX, mouseY, partialTicks);
 			getContainer().fuzzyModeButton.drawButton(mc, mouseX, mouseY, partialTicks);
+			getContainer().craftingModeButton.drawButton(mc, mouseX, mouseY, partialTicks);
 		} else {
 			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_INVENTORY);
 
@@ -195,6 +209,10 @@ public class GuiInteractionBus extends AIGui {
 
 			if (getContainer().fuzzyModeButton.isMouseOver()) {
 				tooltip.addAll(Arrays.asList(getContainer().fuzzyModeButton.getMessage().split("\n")));
+			}
+
+			if (getContainer().fuzzyModeButton.isMouseOver()) {
+				tooltip.addAll(Arrays.asList(getContainer().craftingModeButton.getMessage().split("\n")));
 			}
 		}
 

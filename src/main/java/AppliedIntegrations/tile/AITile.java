@@ -182,7 +182,7 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	}
 
 	@Override
-	public IGridNode getGridNode(AEPartLocation dir) {
+	public IGridNode getGridNode(@Nonnull AEPartLocation dir) {
 		// Check not null
 		if (getProxy().getNode() == null) {
 			// Load node

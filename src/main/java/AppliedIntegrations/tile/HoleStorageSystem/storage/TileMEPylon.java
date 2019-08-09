@@ -31,7 +31,7 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IFluidStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
-import appeng.api.util.AEPartLocation;
+import appeng.me.GridAccessException;
 import appeng.util.Platform;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.state.IBlockState;
@@ -130,7 +130,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 			}
 
 			// Check if active
-			if (getGridNode() != null && getGridNode().isActive()) {
+			if (node.isActive()) {
 				// Check if has no handled singularity
 				if (!hasSingularity()) {
 					tryToGetSingularity();
@@ -138,7 +138,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 					// Check if time not passed yet
 					if (!drainHandler.hasTimePassed(world, DRAIN_LASTS_SECONDS)) {
 						// Consume energy for data transmitting, over beam
-						IEnergyGrid energyGrid = getGridNode().getGrid().getCache(IEnergyGrid.class);
+						IEnergyGrid energyGrid = node.getGrid().getCache(IEnergyGrid.class);
 
 						// Simulate drain, and check if grid has enough energy
 						double drain = energyGrid.extractAEPower(beamDrain, Actionable.SIMULATE, PowerMultiplier.CONFIG);
@@ -159,13 +159,13 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 			}
 
 			// Check if node was active
-			if (!syncActive && getGridNode().isActive()) {
+			if (!syncActive && node.isActive()) {
 				// Node wasn't active, but now it is active
 				// Fire new cell array update event!
 				postCellInventoryEvent();
 				// Update sync
 				syncActive = true;
-			} else if (syncActive && !getGridNode().isActive()) {
+			} else if (syncActive && !node.isActive()) {
 				// Node was active, but now it not
 				// Fire new cell array update event!
 				postCellInventoryEvent();
@@ -233,19 +233,16 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 
 		// Update time handler
 		this.drainHandler.updateData(this.getWorld());
-	}	public void postCellInventoryEvent() {
-		// Get node
-		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
-		// Check notNull
-		if (node != null) {
+	}
+
+	public void postCellInventoryEvent() {
+		try {
 			// Get grid
-			IGrid grid = node.getGrid();
-			// Check not null
-			if (grid != null) {
-				// Post update
-				grid.postEvent(new MENetworkCellArrayUpdate());
-			}
-		}
+			IGrid grid = getProxy().getGrid();
+
+			// Post update
+			grid.postEvent(new MENetworkCellArrayUpdate());
+		} catch (GridAccessException ignored) {}
 	}
 
 	@Override

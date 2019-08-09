@@ -28,7 +28,6 @@ import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
-import appeng.parts.automation.PartExportBus;
 import appeng.util.Platform;
 import appeng.util.item.AEItemStack;
 import com.mojang.authlib.GameProfile;
@@ -56,6 +55,7 @@ import net.minecraftforge.common.util.FakePlayerFactory;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -98,8 +98,8 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 
 	public AIGridNodeInventory offhandInventory =
 			new AIGridNodeInventory("Interaction Bus Offhand Inventory", 1, 64, this);
-
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Bus Upgrade Inventory", 4);
+
 	private UUID uniIdentifier;
 	private boolean lastRedstone;
 	private boolean sneaking;
@@ -229,9 +229,9 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		return getHostWorld().rayTraceBlocks(position, direction, true, false, false);
 	}
 
-	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method) {
+	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, List<ItemStack> list, BiConsumer<FakePlayer, BlockPos> method) {
 		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
-		for (ItemStack stack : filterInventory.slots) {
+		for (ItemStack stack : list) {
 			// Don't operate with empty stack unless there is inverter card
 			if (stack.isEmpty()) {
 				continue;
@@ -260,6 +260,21 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		}
 	}
 
+	@Nonnull
+	private List<ItemStack> getFuzzyComparedItemList(IGridNode node, ItemStack[] slots) throws GridAccessException {
+		// Get stack list from ae inventory, add each fuzzy compared(to original item stack) item stack to return list
+		IMEMonitor<IAEItemStack> inv = this.getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel( IItemStorageChannel.class ) );
+
+		List<ItemStack> ret = new ArrayList<>();
+		for (ItemStack stack : slots) {
+			for (IAEItemStack fuzzyStack : inv.getStorageList().findFuzzy(AEItemStack.fromItemStack(stack), upgradeInventoryManager.fuzzyMode)) {
+				ret.add(fuzzyStack.getDefinition());
+			}
+		}
+
+		return ret;
+	}
+
 	private void injectClickResult(FakePlayer player, IMEMonitor<IAEItemStack> inventory) {
 		IAEItemStack aeStack = AEItemStack.fromItemStack(player.getHeldItem(MAIN_HAND));
 
@@ -286,11 +301,19 @@ public class PartInteraction extends AIPart implements IGridTickable, UpgradeInv
 		// Nullify player's main hand for this run
 		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
 
-		// Do click on entity(ies), item(s) and block(s)
-		click(fakePlayer, node, facingPos, this::onItemRightClick);
-		click(fakePlayer, node, facingPos, this::interactEntity);
-		click(fakePlayer, node, facingPos, this::interactBlock);
-		click(fakePlayer, node, facingPos, this::onItemUse);
+		try {
+			// Get fuzzy compared list of items from ME inventory
+			List<ItemStack> list = upgradeInventoryManager.fuzzyCompare ? getFuzzyComparedItemList(node, filterInventory.slots) :
+					Arrays.asList(filterInventory.slots);
+
+			// Do click on entity(ies), item(s) and block(s)
+			click(fakePlayer, node, facingPos, list, this::onItemRightClick);
+			click(fakePlayer, node, facingPos, list, this::interactEntity);
+			click(fakePlayer, node, facingPos, list, this::interactBlock);
+			click(fakePlayer, node, facingPos, list, this::onItemUse);
+		} catch(GridAccessException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
