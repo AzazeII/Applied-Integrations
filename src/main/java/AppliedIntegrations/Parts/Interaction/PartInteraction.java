@@ -32,7 +32,6 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
-import appeng.helpers.MultiCraftingTracker;
 import appeng.helpers.NonNullArrayIterator;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
@@ -110,7 +109,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 	private Future<ICraftingJob>[] jobs = new Future[4];
 	private ICraftingLink[] links = new ICraftingLink[4];
-	private HashMap<ICraftingLink, BiConsumer<FakePlayer, BlockPos>> methods = new HashMap<>();
+	private HashMap<ICraftingLink, BiConsumer<FakePlayer, BlockPos>> jobMethodMap = new HashMap<>();
 
 	private UUID uniIdentifier;
 	private boolean lastRedstone;
@@ -121,7 +120,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	}
 
 	private void createFakePlayer() {
-		MultiCraftingTracker f;
 		if (fakePlayer != null) {
 			return;
 		}
@@ -190,7 +188,8 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		}
 	}
 
-	private void requestCraft(int craftingIndex, IAEItemStack input, BiConsumer<FakePlayer, BlockPos> method) {
+	private void requestCraft(int craftingIndex, BiConsumer<FakePlayer, BlockPos> method, IAEItemStack input)
+			throws ExecutionException, InterruptedException {
 		try {
 			// Get crafting grid and submit or begin crafting job for input
 			ICraftingGrid craftingGrid = getProxy().getCrafting();
@@ -204,14 +203,18 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 				ICraftingJob job = futureJob.isDone() ? futureJob.get() : null;
 
 				if (job != null) {
-					ICraftingLink link = craftingGrid.submitJob(job, this, null, false, src);
+					ICraftingLink link = craftingGrid.submitJob(job, this, null, false, new MachineSource(this));
+
+					if (link == null) {
+						return;
+					}
 
 					links[craftingIndex] = link;
 					jobs[craftingIndex] = null;
-					methods.put(link, method);
+					jobMethodMap.put(link, method);
 				}
 			}
-		} catch(GridAccessException | InterruptedException | ExecutionException e) {
+		} catch(GridAccessException e) {
 			e.printStackTrace();
 		}
 	}
@@ -269,25 +272,28 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	}
 
 	private void click(int craftingIndex, FakePlayer player, IGridNode node, BlockPos facingPos, List<ItemStack> list, BiConsumer<FakePlayer, BlockPos> method) {
-		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
-		for (ItemStack stack : list) {
-			// Don't operate with empty stack
-			if (stack.isEmpty()) {
-				continue;
-			}
+		try {
+			// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
+			for (ItemStack stack : list) {
+				// Don't operate with empty stack
+				if (stack.isEmpty()) {
+					continue;
+				}
 
-			player.setHeldItem(MAIN_HAND, stack.copy());
+				player.setHeldItem(MAIN_HAND, stack.copy());
 
-			// Simulate operations
-			IStorageGrid cache = node.getGrid().getCache(IStorageGrid.class);
-			IMEMonitor<IAEItemStack> inventory = cache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
-			IAEItemStack input = AEItemStack.fromItemStack(player.getHeldItemMainhand());
+				// Simulate operations
+				IStorageGrid cache = node.getGrid().getCache(IStorageGrid.class);
+				IMEMonitor<IAEItemStack> inventory = cache.getInventory(AEApi.instance().storage().getStorageChannel(
+						IItemStorageChannel.class));
+				IAEItemStack input = AEItemStack.fromItemStack(player.getHeldItemMainhand());
 
-			try {
 				IEnergyGrid energy = getProxy().getEnergy();
 
 				// Try extract energy for this operation and modulate item extraction
-				double extractedAEPower = getProxy().getEnergy().extractAEPower(AE_DRAIN_PER_OPERATION, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+				double extractedAEPower = getProxy().getEnergy().extractAEPower(AE_DRAIN_PER_OPERATION,
+						Actionable.SIMULATE,
+						PowerMultiplier.CONFIG);
 
 				if (extractedAEPower != 0) {
 					// Call auto crafting if craftOnly is set to yes and even if there is stored items in system
@@ -301,17 +307,17 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 						} else if (upgradeInventoryManager.autoCrafting) {
 							// Request craft and then modulate click when crafting is done
 							energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
-							requestCraft(craftingIndex, input, method);
+							requestCraft(craftingIndex, method, input);
 						}
 					} else if (upgradeInventoryManager.craftOnly == YesNo.YES) {
 						// Request craft and then modulate click when crafting is done
 						energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
-						requestCraft(craftingIndex, input, method);
+						requestCraft(craftingIndex, method, input);
 					}
 				}
-			} catch(GridAccessException e) {
-				e.printStackTrace();
 			}
+		} catch(GridAccessException | ExecutionException | InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -553,7 +559,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		for(int i = 0; i < links.length; i++) {
 			if (links[i] == link) {
 				links[i] = null;
-				return;
 			}
 		}
 	}
@@ -562,10 +567,16 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
 		try {
 			// Modulate click with crafted items(honestly it is always only one item :D)
-			BiConsumer<FakePlayer, BlockPos> method = methods.get(link);
+			BiConsumer<FakePlayer, BlockPos> method = jobMethodMap.get(link);
+
+			if (method == null) {
+				return null;
+			}
+
 			IMEMonitor<IAEItemStack> inventory =
 					getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 			modulateClick(getHostPos().offset(getHostSide().getFacing()), method, inventory, items);
+			jobMethodMap.put(link, null);
 		} catch(GridAccessException e) {
 			e.printStackTrace();
 		}

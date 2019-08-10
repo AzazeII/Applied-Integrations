@@ -25,6 +25,7 @@ public class UpgradeInventoryManager implements IInventoryHost {
 	private static final String KEY_REDSTONE_MODE = "#REDSTONE_MODE";
 	private static final String KEY_FUZZY_MODE = "#FUZZY_MODE";
 	private static final String KEY_SPEED_COUNT = "#UPGRADE_SPEED_COUNT";
+	private static final String KEY_CRAFT_ONLY = "#CRAFT_ONLY";
 
 	private final ISyncHost host;
 	public AIGridNodeInventory upgradeInventory;
@@ -61,6 +62,7 @@ public class UpgradeInventoryManager implements IInventoryHost {
 		nbt.setBoolean(KEY_FUZZY_COMPARE, fuzzyCompare);
 		nbt.setByte(KEY_REDSTONE_MODE, (byte) redstoneMode.ordinal());
 		nbt.setByte(KEY_FUZZY_MODE, (byte) fuzzyMode.ordinal());
+		nbt.setByte(KEY_CRAFT_ONLY, (byte) craftOnly.ordinal());
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
@@ -72,6 +74,7 @@ public class UpgradeInventoryManager implements IInventoryHost {
 		fuzzyCompare = nbt.getBoolean(KEY_FUZZY_COMPARE);
 		redstoneMode = RedstoneMode.values()[nbt.getByte(KEY_REDSTONE_MODE)];
 		fuzzyMode = FuzzyMode.values()[nbt.getByte(KEY_FUZZY_MODE)];
+		craftOnly = YesNo.values()[nbt.getByte(KEY_CRAFT_ONLY)];
 	}
 
 	@Override
