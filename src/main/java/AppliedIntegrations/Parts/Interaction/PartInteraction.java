@@ -13,6 +13,7 @@ import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.config.PowerMultiplier;
 import appeng.api.config.RedstoneMode;
+import appeng.api.config.YesNo;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingJob;
@@ -31,6 +32,8 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
+import appeng.helpers.MultiCraftingTracker;
+import appeng.helpers.NonNullArrayIterator;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
@@ -104,8 +107,9 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	public AIGridNodeInventory offhandInventory =
 			new AIGridNodeInventory("Interaction Bus Offhand Inventory", 1, 64, this);
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Bus Upgrade Inventory", 4);
-	private HashMap<IAEItemStack, Future<ICraftingJob>> jobs = new HashMap<>();
-	private HashMap<IAEItemStack, ICraftingLink> links = new HashMap<>();
+
+	private Future<ICraftingJob>[] jobs = new Future[4];
+	private ICraftingLink[] links = new ICraftingLink[4];
 	private HashMap<ICraftingLink, BiConsumer<FakePlayer, BlockPos>> methods = new HashMap<>();
 
 	private UUID uniIdentifier;
@@ -117,6 +121,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	}
 
 	private void createFakePlayer() {
+		MultiCraftingTracker f;
 		if (fakePlayer != null) {
 			return;
 		}
@@ -185,24 +190,24 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		}
 	}
 
-	private void requestCraft(IAEItemStack input, BiConsumer<FakePlayer, BlockPos> method) {
+	private void requestCraft(int craftingIndex, IAEItemStack input, BiConsumer<FakePlayer, BlockPos> method) {
 		try {
 			// Get crafting grid and submit or begin crafting job for input
 			ICraftingGrid craftingGrid = getProxy().getCrafting();
-			Future<ICraftingJob> futureJob = jobs.get(input);
+			Future<ICraftingJob> futureJob = jobs[craftingIndex];
 			MachineSource src = new MachineSource(this);
 
 			if (futureJob == null) {
-				jobs.put(input, craftingGrid.beginCraftingJob(getHostWorld(), getProxy().getGrid(),
-						src, input, null));
+				jobs[craftingIndex] = craftingGrid.beginCraftingJob(getHostWorld(), getProxy().getGrid(),
+						src, input, null);
 			} else {
 				ICraftingJob job = futureJob.isDone() ? futureJob.get() : null;
 
 				if (job != null) {
 					ICraftingLink link = craftingGrid.submitJob(job, this, null, false, src);
 
-					links.put(input, link);
-					jobs.put(input, null);
+					links[craftingIndex] = link;
+					jobs[craftingIndex] = null;
 					methods.put(link, method);
 				}
 			}
@@ -263,7 +268,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		return getHostWorld().rayTraceBlocks(position, direction, true, false, false);
 	}
 
-	private void click(FakePlayer player, IGridNode node, BlockPos facingPos, List<ItemStack> list, BiConsumer<FakePlayer, BlockPos> method) {
+	private void click(int craftingIndex, FakePlayer player, IGridNode node, BlockPos facingPos, List<ItemStack> list, BiConsumer<FakePlayer, BlockPos> method) {
 		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
 		for (ItemStack stack : list) {
 			// Don't operate with empty stack
@@ -277,22 +282,31 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 			IStorageGrid cache = node.getGrid().getCache(IStorageGrid.class);
 			IMEMonitor<IAEItemStack> inventory = cache.getInventory(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class));
 			IAEItemStack input = AEItemStack.fromItemStack(player.getHeldItemMainhand());
-			IAEItemStack extracted = inventory.extractItems(input, Actionable.SIMULATE, new MachineSource(this));
 
 			try {
 				IEnergyGrid energy = getProxy().getEnergy();
 
 				// Try extract energy for this operation and modulate item extraction
 				double extractedAEPower = getProxy().getEnergy().extractAEPower(AE_DRAIN_PER_OPERATION, Actionable.SIMULATE, PowerMultiplier.CONFIG);
+
 				if (extractedAEPower != 0) {
-					if (extracted != null) {
-						// Modulate click
-						energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
-						modulateClick(facingPos, method, inventory, extracted);
-					} else if (upgradeInventoryManager.autoCrafting) {
+					// Call auto crafting if craftOnly is set to yes and even if there is stored items in system
+					if (!upgradeInventoryManager.autoCrafting || upgradeInventoryManager.craftOnly == YesNo.NO) {
+						IAEItemStack extractedInput = inventory.extractItems(input, Actionable.SIMULATE, new MachineSource(this));
+
+						if (extractedInput != null) {
+							// Modulate click
+							energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
+							modulateClick(facingPos, method, inventory, extractedInput);
+						} else if (upgradeInventoryManager.autoCrafting) {
+							// Request craft and then modulate click when crafting is done
+							energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
+							requestCraft(craftingIndex, input, method);
+						}
+					} else if (upgradeInventoryManager.craftOnly == YesNo.YES) {
 						// Request craft and then modulate click when crafting is done
 						energy.extractAEPower(extractedAEPower, Actionable.MODULATE, PowerMultiplier.CONFIG);
-						requestCraft(input, method);
+						requestCraft(craftingIndex, input, method);
 					}
 				}
 			} catch(GridAccessException e) {
@@ -312,7 +326,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	}
 
 	@Nonnull
-	private List<ItemStack> getFuzzyComparedItemList(IGridNode node, ItemStack[] slots) throws GridAccessException {
+	private List<ItemStack> getFuzzyComparedItemList(ItemStack[] slots) throws GridAccessException {
 		// Get stack list from ae inventory, add each fuzzy compared(to original item stack) item stack to return list
 		IMEMonitor<IAEItemStack> inv = this.getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel( IItemStorageChannel.class ) );
 
@@ -354,14 +368,14 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 		try {
 			// Get fuzzy compared list of items from ME inventory
-			List<ItemStack> list = upgradeInventoryManager.fuzzyCompare ? getFuzzyComparedItemList(node, filterInventory.slots) :
+			List<ItemStack> list = upgradeInventoryManager.fuzzyCompare ? getFuzzyComparedItemList(filterInventory.slots) :
 					Arrays.asList(filterInventory.slots);
 
 			// Do click on entity(ies), item(s) and block(s)
-			click(fakePlayer, node, facingPos, list, this::onItemRightClick);
-			click(fakePlayer, node, facingPos, list, this::interactEntity);
-			click(fakePlayer, node, facingPos, list, this::interactBlock);
-			click(fakePlayer, node, facingPos, list, this::onItemUse);
+			click(0, fakePlayer, node, facingPos, list, this::onItemRightClick);
+			click(1, fakePlayer, node, facingPos, list, this::interactEntity);
+			click(2, fakePlayer, node, facingPos, list, this::interactBlock);
+			click(3, fakePlayer, node, facingPos, list, this::onItemUse);
 		} catch(GridAccessException e) {
 			e.printStackTrace();
 		}
@@ -405,7 +419,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 			if (this.isReceivingRedstonePower() != this.lastRedstone) {
 				this.lastRedstone = this.isReceivingRedstonePower();
 
-				if (node == null || fakePlayer == null) {
+				if (node == null || fakePlayer == null || !lastRedstone) {
 					return;
 				}
 
@@ -530,12 +544,18 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 	@Override
 	public ImmutableSet<ICraftingLink> getRequestedJobs() {
-		return ImmutableSet.copyOf(links.values());
+		return ImmutableSet.copyOf(new NonNullArrayIterator<>(links));
 	}
 
 	@Override
 	public void jobStateChange(ICraftingLink link) {
-		links.values().remove(link);
+		// Find link and remove it
+		for(int i = 0; i < links.length; i++) {
+			if (links[i] == link) {
+				links[i] = null;
+				return;
+			}
+		}
 	}
 
 	@Override
