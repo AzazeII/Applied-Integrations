@@ -1,19 +1,18 @@
 package AppliedIntegrations.tile.LogicBus;
-
-
 import AppliedIntegrations.Utils.MultiBlockUtils;
 import AppliedIntegrations.api.Multiblocks.BlockType;
 import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.IAIMultiBlock;
 import AppliedIntegrations.tile.IMaster;
 import AppliedIntegrations.tile.Patterns.AIPatterns;
+import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.networking.IGridNode;
 import appeng.api.storage.IMEInventory;
+import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
-import appeng.util.item.AEItemStack;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -100,7 +99,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 			IMEInventory<IAEItemStack> inventory = getOuterGridInventory();
 
 			if (inventory != null) {
-				inventory.injectItems(AEItemStack.fromItemStack(new ItemStack(Items.REDSTONE)), Actionable.MODULATE, new MachineSource(this));
+				inventory.injectItems(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(new ItemStack(Items.REDSTONE)), Actionable.MODULATE, new MachineSource(this));
 			}
 		}
 	}

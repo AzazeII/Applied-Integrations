@@ -6,10 +6,11 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.tile.AITile;
+import appeng.api.AEApi;
+import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.util.AEColor;
 import appeng.api.util.IOrientable;
 import appeng.util.Platform;
-import appeng.util.item.AEItemStack;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -166,7 +167,7 @@ public class TileMultiControllerTerminal extends AITile implements IOrientable {
 			// Check if widget is under mouse
 			if (widget.isMouseOverWidget(x, y)) {
 				// Update stack
-				widget.setAEStack(AEItemStack.fromItemStack(stack));
+				widget.setAEStack(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(stack));
 			}
 		}));
 	}

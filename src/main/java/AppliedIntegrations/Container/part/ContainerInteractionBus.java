@@ -171,7 +171,9 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	protected void syncHostWithGUI() {
 		super.syncHostWithGUI();
 		NetworkHandler.sendTo(new PacketFullSync(interaction.upgradeInventoryManager, interaction), (EntityPlayerMP) player);
-		NetworkHandler.sendTo(new PacketClickModeServerToClient(interaction, interaction.fakePlayer.isSneaking()), (EntityPlayerMP) player);
+		if (interaction.fakePlayer != null) {
+			NetworkHandler.sendTo(new PacketClickModeServerToClient(interaction, interaction.fakePlayer.isSneaking()), (EntityPlayerMP) player);
+		}
 	}
 
 	@Override

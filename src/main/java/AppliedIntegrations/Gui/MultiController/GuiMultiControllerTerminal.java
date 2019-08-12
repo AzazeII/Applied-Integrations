@@ -18,15 +18,16 @@ import AppliedIntegrations.api.ISyncHost;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerTerminal;
+import appeng.api.AEApi;
 import appeng.api.config.IncludeExclude;
 import appeng.api.config.SecurityPermissions;
 import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.container.slot.SlotFake;
 import appeng.core.localization.GuiText;
 import appeng.fluids.util.AEFluidInventory;
 import appeng.util.Platform;
-import appeng.util.item.AEItemStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -276,7 +277,7 @@ public class GuiMultiControllerTerminal extends AIGui implements IWidgetHost {
 				// Check if slot wrapper of widget is given slot
 				if (slot == widget.getSlotWrapper()) {
 					// Get stack in player hand and update widget stack
-					widget.setAEStack(AEItemStack.fromItemStack(player.inventory.getItemStack()));
+					widget.setAEStack(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(player.inventory.getItemStack()));
 
 					// Sync with server
 					NetworkHandler.sendToServer(new PacketContainerWidgetSync(player.inventory.getItemStack(), getContainer().terminal,

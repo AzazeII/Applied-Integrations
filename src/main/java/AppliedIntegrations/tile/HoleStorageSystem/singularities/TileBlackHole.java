@@ -301,7 +301,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 						// Delete this object forever
 						world.setBlockToAir(blockPos);
 						// Add mass
-						addStack(AEItemStack.fromItemStack(new ItemStack(world.getBlockState(pos).getBlock())), Actionable.MODULATE);
+						addStack(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(new ItemStack(world.getBlockState(pos).getBlock())), Actionable.MODULATE);
 					}
 
 					// Check if range to this block is lest or equal to break range

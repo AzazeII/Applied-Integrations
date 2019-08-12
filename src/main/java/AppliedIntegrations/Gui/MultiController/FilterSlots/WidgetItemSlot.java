@@ -1,13 +1,12 @@
 package AppliedIntegrations.Gui.MultiController.FilterSlots;
-
-
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Inventory.AIGridNodeItemHandler;
 import AppliedIntegrations.api.Storage.IChannelContainerWidget;
+import appeng.api.AEApi;
+import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IAEStack;
 import appeng.container.slot.SlotFakeTypeOnly;
-import appeng.util.item.AEItemStack;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
@@ -39,8 +38,7 @@ public class WidgetItemSlot implements IChannelContainerWidget<IAEItemStack> {
 
 	@Override
 	public IAEItemStack getAEStack() {
-
-		return AEItemStack.fromItemStack(innerSlot.getStack());
+		return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(innerSlot.getStack());
 	}
 
 	@Override
