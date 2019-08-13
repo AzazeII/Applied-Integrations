@@ -18,7 +18,6 @@ import appeng.api.networking.crafting.ICraftingGrid;
 import appeng.api.networking.crafting.ICraftingJob;
 import appeng.api.networking.crafting.ICraftingLink;
 import appeng.api.networking.crafting.ICraftingRequester;
-import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.networking.ticking.IGridTickable;
 import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.networking.ticking.TickingRequest;
@@ -28,6 +27,7 @@ import appeng.api.parts.PartItemStack;
 import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
+import appeng.api.storage.data.IItemList;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
 import appeng.helpers.NonNullArrayIterator;
@@ -106,6 +106,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	private Future<ICraftingJob>[] jobs = new Future[4];
 	private ICraftingLink[] links = new ICraftingLink[4];
 	private HashMap<ICraftingLink, BiConsumer<FakePlayer, BlockPos>> jobMethodMap = new HashMap<>();
+	private List<ItemStack> injectionQueue = new ArrayList<>();
 
 	private UUID uniIdentifier;
 	private boolean lastRedstone;
@@ -273,9 +274,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 			}
 
 			// Simulate operations
-			IStorageGrid cache = node.getGrid().getCache(IStorageGrid.class);
-			IMEMonitor<IAEItemStack> inventory = cache.getInventory(AEApi.instance().storage().getStorageChannel(
-					IItemStorageChannel.class));
+			IMEMonitor<IAEItemStack> inventory = getMEInventory();
 			IAEItemStack input = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(player.getHeldItemMainhand());
 			boolean beginJob = false;
 
@@ -284,7 +283,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 				IAEItemStack extractedInput = inventory.extractItems(input, Actionable.SIMULATE, new MachineSource(this));
 
 				if (extractedInput != null) {
-					modulateClick(facingPos, method, inventory, extractedInput);
+					modulateClick(facingPos, method, inventory, extractedInput, true);
 				} else if (upgradeInventoryManager.autoCrafting) {
 					beginJob = true;
 				}
@@ -304,13 +303,22 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	}
 
 	private void modulateClick(BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method,
-	                           IMEMonitor<IAEItemStack> inventory, IAEItemStack extracted) throws GridAccessException {
+	                           IMEMonitor<IAEItemStack> inventory, IAEItemStack extracted, boolean directInjection) throws GridAccessException {
 		// Modulate operations
 		inventory.extractItems(extracted, Actionable.MODULATE, new MachineSource(this));
 
 		// Click using given method
 		method.accept(fakePlayer, facingPos);
-		injectClickResult(fakePlayer, inventory);
+
+		// Directly inject click results or add it to injection list
+		if (directInjection) {
+			injectClickResult(fakePlayer.getHeldItemMainhand(), inventory);
+		} else {
+			// We need to add injection results to queue if #modulateClick is called from #injectClickResults.
+			// If injection is called directly to #injectClickResult then simulation WILL NEVER return null value(so, it will never simulate
+			// injection into ME system)
+			addClickResultsToQueue(fakePlayer);
+		}
 	}
 
 	@Nonnull
@@ -328,9 +336,18 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		return ret;
 	}
 
-	private void injectClickResult(FakePlayer player, IMEMonitor<IAEItemStack> inventory) throws GridAccessException {
-		IAEItemStack aeStack = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(
-				player.getHeldItem(MAIN_HAND));
+	private void addClickResultsToQueue(FakePlayer player) {
+		ItemStack stack = player.getHeldItem(MAIN_HAND);
+
+		if (stack.isEmpty()) {
+			return;
+		}
+
+		injectionQueue.add(stack);
+	}
+
+	private void injectClickResult(ItemStack stack, IMEMonitor<IAEItemStack> inventory) throws GridAccessException {
+		IAEItemStack aeStack = AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(stack);
 
 		if (aeStack == null || aeStack.getDefinition().isEmpty()) {
 			return;
@@ -349,32 +366,28 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		}
 	}
 
-	private void processTick(@Nonnull IGridNode node) {
+	private void processTick(@Nonnull IGridNode node) throws GridAccessException {
 		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
 
 		// Nullify player's main hand for this run
 		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
 
-		try {
-			// Get fuzzy compared list of items from ME inventory
-			List<ItemStack> list = upgradeInventoryManager.fuzzyCompare ? getFuzzyComparedItemList(filterInventory.slots) :
-					Arrays.asList(filterInventory.slots);
+		// Get fuzzy compared list of items from ME inventory
+		List<ItemStack> list = upgradeInventoryManager.fuzzyCompare ? getFuzzyComparedItemList(filterInventory.slots) : Arrays.asList(
+				filterInventory.slots);
 
-			// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
-			for (ItemStack stack : list) {
-				// Don't operate with empty stack
-				if (stack.isEmpty()) {
-					continue;
-				}
-
-				// Do click on entity(ies), item(s) and block(s)
-				click(0, stack, fakePlayer, node, facingPos, this::onItemRightClick);
-				click(1, stack, fakePlayer, node, facingPos, this::interactEntity);
-				click(2, stack, fakePlayer, node, facingPos, this::interactBlock);
-				click(3, stack, fakePlayer, node, facingPos, this::onItemUse);
+		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
+		for (ItemStack stack : list) {
+			// Don't operate with empty stack
+			if (stack.isEmpty()) {
+				continue;
 			}
-		} catch(GridAccessException e) {
-			e.printStackTrace();
+
+			// Do click on entity(ies), item(s) and block(s)
+			click(0, stack, fakePlayer, node, facingPos, this::onItemRightClick);
+			click(1, stack, fakePlayer, node, facingPos, this::interactEntity);
+			click(2, stack, fakePlayer, node, facingPos, this::interactBlock);
+			click(3, stack, fakePlayer, node, facingPos, this::onItemUse);
 		}
 	}
 
@@ -411,17 +424,21 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	public void onNeighborChanged(IBlockAccess iBlockAccess, BlockPos blockPos, BlockPos posChanged) {
 		IGridNode node = getProxy().getNode();
 
-		// Process tick on redstone pulse
-		if (this.upgradeInventoryManager.redstoneMode == RedstoneMode.SIGNAL_PULSE) {
-			if (this.isReceivingRedstonePower() != this.lastRedstone) {
-				this.lastRedstone = this.isReceivingRedstonePower();
+		try {
+			// Process tick on redstone pulse
+			if (this.upgradeInventoryManager.redstoneMode == RedstoneMode.SIGNAL_PULSE) {
+				if (this.isReceivingRedstonePower() != this.lastRedstone) {
+					this.lastRedstone = this.isReceivingRedstonePower();
 
-				if (node == null || fakePlayer == null || !lastRedstone) {
-					return;
+					if (node == null || fakePlayer == null || !lastRedstone) {
+						return;
+					}
+
+					this.processTick(node);
 				}
-
-				this.processTick(node);
 			}
+		} catch(GridAccessException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -516,12 +533,30 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
 		this.createFakePlayer();
 
-		// Process ticking request
-		if (this.canDoWork(upgradeInventoryManager.redstoneMode)) {
-			processTick(node);
+		try {
+			// Inject all items from queue
+			for (ItemStack stackToInject : injectionQueue) {
+				 injectClickResult(stackToInject, getMEInventory());
+			}
+
+			injectionQueue.clear();
+
+			IItemList<IAEItemStack> list = getMEInventory().getStorageList();
+
+			// Process ticking request
+			if (this.canDoWork(upgradeInventoryManager.redstoneMode)) {
+				processTick(node);
+			}
+		} catch(GridAccessException e) {
+			e.printStackTrace();
 		}
 
 		return SAME;
+	}
+
+	private IMEMonitor<IAEItemStack> getMEInventory() throws GridAccessException {
+		return getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(
+				IItemStorageChannel.class));
 	}
 
 	@Nonnull
@@ -566,7 +601,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 			IMEMonitor<IAEItemStack> inventory = this.getProxy().getStorage().getInventory(
 							AEApi.instance().storage().getStorageChannel( IItemStorageChannel.class ) );
-			modulateClick(getHostPos().offset(getHostSide().getFacing()), method, inventory, items);
+			modulateClick(getHostPos().offset(getHostSide().getFacing()), method, inventory, items, false);
 			jobMethodMap.remove(link);
 		} catch(GridAccessException e) {
 			e.printStackTrace();
