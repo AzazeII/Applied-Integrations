@@ -29,7 +29,6 @@ import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.util.AECableType;
 import appeng.api.util.AEPartLocation;
-import appeng.helpers.NonNullArrayIterator;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 import appeng.util.Platform;
@@ -82,6 +81,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 	private static final int FAKE_PLAYER_INVENTORY_SIZE = 36;
 	private static final int FAKE_PLAYER_ARMOR_INVENTORY_SIZE = 4;
+	private static final int ROUNDS_COUNT = 4;
 
 	private static final String KEY_FILTER_INVENTORY = "#FILTER_INVENTORY_KEY";
 	private static final String KEY_MAIN_INVENTORY = "#MAIN_INVENTORY_KEY";
@@ -89,7 +89,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	private static final String KEY_OFFHAND_INVENTORY = "#OFFHAND_INVENTORY_KEY";
 	private static final String KEY_UPGRADE_INVENTORY = "#UPGRADE_INVENTORY_KEY";
 	private static final String KEY_SNEAKING = "#SNEAKING";
-
 	public FakePlayer fakePlayer;
 	public AIGridNodeInventory filterInventory = new AIGridNodeInventory("Interaction Bus Filter", MAX_FILTER_SIZE, 1);
 
@@ -103,8 +102,8 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 			new AIGridNodeInventory("Interaction Bus Offhand Inventory", 1, 64, this);
 	public UpgradeInventoryManager upgradeInventoryManager =  new UpgradeInventoryManager(this, "Interaction Bus Upgrade Inventory", 4);
 
-	private Future<ICraftingJob>[] jobs = new Future[4];
-	private ICraftingLink[] links = new ICraftingLink[4];
+	private ArrayList<Future<ICraftingJob>> jobs = new ArrayList<>();
+	private ArrayList<ICraftingLink> links = new ArrayList<>();
 	private HashMap<ICraftingLink, BiConsumer<FakePlayer, BlockPos>> jobMethodMap = new HashMap<>();
 	private List<Pair<BiConsumer<FakePlayer, BlockPos>, IAEItemStack>> clickModulationQueue = new ArrayList<>();
 
@@ -114,6 +113,12 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 	public PartInteraction() {
 		super(PartEnum.InteractionPlane);
+
+		// Pre-fill crafting lists with nulls
+		for (int i = 0; i < ROUNDS_COUNT * MAX_FILTER_SIZE; i++) {
+			jobs.add(null);
+			links.add(null);
+		}
 	}
 
 	private void createFakePlayer() {
@@ -187,7 +192,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 	private void startJob(int craftingIndex, IAEItemStack input, ICraftingGrid craftingGrid,
 	                      MachineSource src) throws GridAccessException {
-		jobs[craftingIndex] = craftingGrid.beginCraftingJob(getHostWorld(), getProxy().getGrid(), src, input, null);
+		jobs.set(craftingIndex, craftingGrid.beginCraftingJob(getHostWorld(), getProxy().getGrid(), src, input, null));
 	}
 
 	private void submitJob(int craftingIndex, BiConsumer<FakePlayer, BlockPos> method, ICraftingGrid craftingGrid,
@@ -201,8 +206,8 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 				return;
 			}
 
-			links[craftingIndex] = link;
-			jobs[craftingIndex] = null;
+			links.set(craftingIndex, link);
+			jobs.set(craftingIndex, null);
 			jobMethodMap.put(link, method);
 		}
 	}
@@ -259,14 +264,13 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		return getHostWorld().rayTraceBlocks(position, direction, true, false, false);
 	}
 
-	private void click(int craftingIndex, ItemStack stack, FakePlayer player, IGridNode node, BlockPos facingPos,
-	                   BiConsumer<FakePlayer, BlockPos> method) {
+	private void click(int craftingIndex, ItemStack stack, FakePlayer player, BlockPos facingPos, BiConsumer<FakePlayer, BlockPos> method) {
 		try {
 			player.setHeldItem(MAIN_HAND, stack.copy());
 
 			// Try to submit done crafting jobs
 			ICraftingGrid craftingGrid = getProxy().getCrafting();
-			Future<ICraftingJob> futureJob = jobs[craftingIndex];
+			Future<ICraftingJob> futureJob = jobs.get(craftingIndex);
 			boolean hasJob = futureJob != null;
 
 			if (hasJob) {
@@ -349,7 +353,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		}
 	}
 
-	private void processTick(@Nonnull IGridNode node) throws GridAccessException {
+	private void processTick() throws GridAccessException {
 		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
 
 		// Nullify player's main hand for this run
@@ -360,18 +364,26 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 				filterInventory.slots);
 
 		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
-		for (ItemStack stack : list) {
+		for (int i = 0; i < list.size(); i++) {
+			ItemStack stack = list.get(i);
+
 			// Don't operate with empty stack
 			if (stack.isEmpty()) {
 				continue;
 			}
 
 			// Do click on entity(ies), item(s) and block(s)
-			click(0, stack, fakePlayer, node, facingPos, this::onItemRightClick);
-			click(1, stack, fakePlayer, node, facingPos, this::interactEntity);
-			click(2, stack, fakePlayer, node, facingPos, this::interactBlock);
-			click(3, stack, fakePlayer, node, facingPos, this::onItemUse);
+			// Formula for index: list index * click index + list index
+			click(i, stack, fakePlayer, facingPos, this::onItemRightClick);
+			click(i * 2, stack, fakePlayer, facingPos, this::interactEntity);
+			click(i * 2 + i, stack, fakePlayer, facingPos, this::interactBlock);
+			click(i * 3 + i, stack, fakePlayer, facingPos, this::onItemUse);
 		}
+	}
+
+	private IMEMonitor<IAEItemStack> getMEInventory() throws GridAccessException {
+		return getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(
+				IItemStorageChannel.class));
 	}
 
 	@Override
@@ -417,7 +429,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 						return;
 					}
 
-					this.processTick(node);
+					this.processTick();
 				}
 			}
 		} catch(GridAccessException e) {
@@ -519,7 +531,7 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		try {
 			// Process ticking request
 			if (this.canDoWork(upgradeInventoryManager.redstoneMode)) {
-				processTick(node);
+				this.processTick();
 			}
 
 			// Modulate injection&click for each method~item tuple in queue
@@ -535,11 +547,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		}
 
 		return SAME;
-	}
-
-	private IMEMonitor<IAEItemStack> getMEInventory() throws GridAccessException {
-		return getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(
-				IItemStorageChannel.class));
 	}
 
 	@Nonnull
@@ -559,15 +566,19 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 	@Override
 	public ImmutableSet<ICraftingLink> getRequestedJobs() {
-		return ImmutableSet.copyOf(new NonNullArrayIterator<>(links));
+		List<ICraftingLink> nonnullLinks = new ArrayList<>(links);
+		nonnullLinks.removeAll(Collections.singletonList(null));
+
+		// Create immutable list of links without nulls
+		return ImmutableSet.copyOf(nonnullLinks);
 	}
 
 	@Override
 	public void jobStateChange(ICraftingLink link) {
 		// Find link and remove it
-		for(int i = 0; i < links.length; i++) {
-			if (links[i] == link) {
-				links[i] = null;
+		for(int i = 0; i < links.size(); i++) {
+			if (links.get(i) == link) {
+				links.set(i, null);
 			}
 		}
 	}

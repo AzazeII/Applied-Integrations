@@ -57,7 +57,6 @@ public class CommonProxy {
 		// Register items as upgradable
 		// Interaction bus
 		Upgrades.CAPACITY.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 2);
-		Upgrades.SPEED.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 4);
 		Upgrades.CRAFTING.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
 		Upgrades.FUZZY.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
 		Upgrades.REDSTONE.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
