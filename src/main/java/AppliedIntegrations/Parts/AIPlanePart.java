@@ -14,6 +14,7 @@ import appeng.client.EffectType;
 import appeng.core.AppEng;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -62,9 +63,10 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
 		return 0;
 	}
-	 @Nonnull
+
+	@Nonnull
 	@Override
-	public TickingRequest getTickingRequest(IGridNode iGridNode) {
+	public TickingRequest getTickingRequest(@Nonnull IGridNode iGridNode) {
 		return new TickingRequest(1, 1, false, false);
 	}
 
@@ -75,12 +77,15 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 		World world = this.hostTile.getWorld();
 
 		// Get our location
-		int x = this.hostTile.getPos().getX();
-		int y = this.hostTile.getPos().getY();
-		int z = this.hostTile.getPos().getZ();
+		AEPartLocation hostSide = getHostSide();
+		BlockPos offset = this.hostTile.getPos().offset(hostSide.getFacing());
+
+		int x = offset.getX();
+		int y = offset.getY();
+		int z = offset.getZ();
 
 		// Get box
-		AxisAlignedBB bb = new AxisAlignedBB(x - 1.0, y - 1.0, z - 1.0, x + 1.0, y + 1.0, z + 1.0);
+		AxisAlignedBB bb = new AxisAlignedBB(x, y, z, x + 0.5, y + 0.5, z + 0.5);
 
 		// Get current entities
 		currentEntities = world.getEntitiesWithinAABB(Entity.class, bb);
@@ -108,9 +113,8 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
 	protected void spawnLightning(Entity workingEntity) {
 		// If time passed
-		if (lightningHandler.hasTimePassed(getHostTile().getWorld(), 1))
-		// Spawn effect
-		{
+		if (lightningHandler.hasTimePassed(getHostTile().getWorld(), 1)) {
+			// Spawn effect
 			AppEng.proxy.spawnEffect(EffectType.Lightning, hostTile.getWorld(), workingEntity.posX, workingEntity.posY, workingEntity.posZ, null);
 		}
 	}

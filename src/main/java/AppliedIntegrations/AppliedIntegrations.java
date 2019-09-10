@@ -26,7 +26,7 @@ import net.minecraftforge.fml.relauncher.Side;
 public class AppliedIntegrations {
 	public static final String version = "8.0.16";
 
-	public static final String phase = "alpha";
+	public static final String phase = "beta";
 
 	public static final String modid = "appliedintegrations";
 

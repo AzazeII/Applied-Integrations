@@ -27,7 +27,7 @@ public class TileMETurretRenderer extends AITileRenderer<TileMETurretFoundation>
 		glVertex3d(0, 0, 0);
 
 		// Get substracted vector
-		BlockPos substracted = te.renderingDirection.add(0.5, 0.5, 0.5).
+		BlockPos substracted = te.direction.add(0.5, 0.5, 0.5).
 				subtract(te.getPos().add(0.5, 0.5, 0.5));
 
 		// Add vertex B

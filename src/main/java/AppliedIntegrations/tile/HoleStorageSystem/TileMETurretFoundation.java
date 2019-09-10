@@ -48,12 +48,11 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 	public TileMETurretFoundation(){
 		super();
-
 		this.getProxy().setValidSides(of(DOWN));
 	}
 
 	// Direction for rendering turret tower
-	public BlockPos renderingDirection = new BlockPos(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+	public BlockPos direction = new BlockPos(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 
 	private ItemList storedAmmo = new ItemList();
 
@@ -63,10 +62,10 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 			// Call only on server
 			if (Platform.isServer()) {
 				// Update only on server
-				this.renderingDirection = p.getPosition();
+				this.direction = p.getPosition();
 
 				// Notify client
-				NetworkHandler.sendToAllInRange(new PacketVectorSync(this.renderingDirection, this.getPos()), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+				NetworkHandler.sendToAllInRange(new PacketVectorSync(this.direction, this.getPos()), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
 
 				// True result
 				return true;
@@ -83,7 +82,6 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 	@Override
 	public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> iStorageChannel) {
-
 		if (!getGridNode().isActive()) {
 			return new ArrayList<>();
 		}

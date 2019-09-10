@@ -103,26 +103,20 @@ public class StackCapabilityHelper {
 		// Get item
 		Item item = operatedStack.getItem();
 
-		if (!IntegrationsHelper.instance.isLoaded(energy, true)) {
-			return 0;
-		}
-
 		// RF Capability
-		if (item instanceof IEnergyContainerItem && energy == RF) {
+		if (IntegrationsHelper.instance.isLoaded(RF, true) && item instanceof IEnergyContainerItem && energy == RF) {
 			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
 
 			return rfContainer.receiveEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
 		}
 
 		// EU Capability
-		if (item instanceof IElectricItem && energy == EU) {
+		if (IntegrationsHelper.instance.isLoaded(EU, true) && item instanceof IElectricItem && energy == EU) {
 			IElectricItem euContainer = (IElectricItem) item;
-
-			;
 		}
 
 		// Joule Capability
-		if (item instanceof IEnergizedItem && energy == J) {
+		if ((IntegrationsHelper.instance.isLoaded(J, true) && item instanceof IEnergizedItem && energy == J)) {
 			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
 			int before = (int) jouleContainer.getEnergy(operatedStack);

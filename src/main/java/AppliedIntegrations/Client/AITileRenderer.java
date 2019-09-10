@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import org.lwjgl.opengl.GL11;
 
 import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
 import static org.lwjgl.opengl.GL11.GL_QUADS;
@@ -117,10 +118,10 @@ public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRende
 		int light = Minecraft.getMinecraft().world.getCombinedLight(te.getPos(), 0);
 
 		// Get light UV
-		float lightU = 240; // U
-		float lightV = 240; // V
+		int u = light % 65536; // U
+		int v = light / 65536; // V
 
-		// Set ambient
-		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightU, lightV);
+		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 15 * 16, 15 * 16);
+		GL11.glColor3f(1.0F, 1.0F, 1.0F);
 	}
 }

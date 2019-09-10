@@ -1,6 +1,4 @@
 package AppliedIntegrations.Parts.Energy;
-
-
 import AppliedIntegrations.Helpers.Energy.StackCapabilityHelper;
 import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.PartEnum;
@@ -29,7 +27,7 @@ import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
 
-import static appeng.api.config.Actionable.SIMULATE;
+import static appeng.api.config.Actionable.MODULATE;
 import static java.util.Collections.singletonList;
 
 /**
@@ -113,7 +111,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 			public IAEStack injectItems(IAEStack input, Actionable type, IActionSource src) {
 				// Check not null
 				if (input == null) {
-					return input;
+					return null;
 				}
 
 				// Check has list
@@ -122,7 +120,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 				}
 
 				// Check smaller or equal to Integer.MAX_VALUE
-				if (input.getStackSize() <= Integer.MAX_VALUE) {
+				if (input.getStackSize() > Integer.MAX_VALUE) {
 					return input;
 				}
 
@@ -133,54 +131,17 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 				int request = (int) input.getStackSize();
 
 				// Iterate over all entities
-				for (Entity workingEntity : currentEntities) {// Check if entity is item
+				for (Entity workingEntity : currentEntities) {
+					// Check if entity is item
 					if (workingEntity instanceof EntityItem) {
-						// Check if stack belongs to one of capabilities
-						StackCapabilityHelper helper = new StackCapabilityHelper(((EntityItem) workingEntity).getItem());
-
-						// Iterate over all energy types
-						for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-							// Check if stack has capability
-							if (helper.hasCapability(energy)) {
-								// Simulate extraction
-								int injected = helper.injectEnergy(energy, request, SIMULATE);
-
-								// Modulate injection
-								if (injected > 0) {
-									// Spawn lightning
-									spawnLightning(workingEntity);
-								}
-
-								// Add to summary
-								amountInjected += injected;
-							}
-						}
+						amountInjected += fillStack(((EntityItem) workingEntity).getItem(), workingEntity, request);
 					} else if (workingEntity instanceof EntityPlayer) {
 						// Get player from working entity
 						EntityPlayer player = (EntityPlayer) workingEntity;
 
 						// Scan player's inventory
 						for (ItemStack stack : player.inventory.mainInventory) {
-							// Check if stack belongs to one of capabilities
-							StackCapabilityHelper helper = new StackCapabilityHelper(stack);
-
-							// Iterate over all energy types
-							for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-								// Check if stack has capability
-								if (helper.hasCapability(energy)) {
-									// Simulate extraction
-									int injected = helper.injectEnergy(energy, request, SIMULATE);
-
-									// Modulate injection
-									if (injected > 0) {
-										// Spawn lightning
-										spawnLightning(workingEntity);
-									}
-
-									// Add to summary
-									amountInjected += injected;
-								}
-							}
+							amountInjected += fillStack(stack, workingEntity, request);
 						}
 					}
 				}
@@ -209,10 +170,33 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 
 			@Override
 			public IStorageChannel getChannel() {
-
 				return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 			}
 		});
+	}
+
+	private int fillStack(ItemStack stack, Entity ent, int request) {
+		// Check if stack belongs to one of capabilities
+		StackCapabilityHelper helper = new StackCapabilityHelper(stack);
+
+		// Iterate over all energy types
+		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
+			// Check if stack has capability
+			if (helper.hasCapability(energy)) {
+				// Simulate extraction
+				int injected = helper.injectEnergy(energy, request, MODULATE);
+
+				// Modulate injection
+				if (injected > 0) {
+					// Spawn lightning
+					spawnLightning(ent);
+				}
+
+				return injected;
+			}
+		}
+
+		return 0;
 	}
 
 	@Override
@@ -224,11 +208,11 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 	@Override
 	public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
 		// Check if inventory not null
-		if (iCellInventory != null)
-		// Persist inventory
-		{
+		if (iCellInventory != null) {
+			// Persist inventory
 			iCellInventory.persist();
 		}
+
 		// Mark dirty
 		getHostTile().getWorld().markChunkDirty(getHostTile().getPos(), getHostTile());
 	}

@@ -49,22 +49,52 @@ public class MultiControllerRibRenderer extends AITileFullRenderer<TileMultiCont
 		bindTileTexture(te);
 
 		// Quad #1 (x - static) EAST
-		drawQuadWithUV(new float[][]{{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {0.5F, 0.5F, -0.5F}, {0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, EAST));
+		drawQuadWithUV(new float[][]{
+				{0.5F, -0.5F, 0.5F},
+				{0.5F, 0.5F, 0.5F},
+				{0.5F, 0.5F, -0.5F},
+				{0.5F, -0.5F, -0.5F}
+		}, translateAxisToUV(te, EAST));
 
 		// Quad #2 (-x - static) WEST
-		drawQuadWithUV(new float[][]{{-0.5F, -0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, WEST));
+		drawQuadWithUV(new float[][]{
+				{-0.5F, -0.5F, 0.5F},
+				{-0.5F, 0.5F, 0.5F},
+				{-0.5F, 0.5F, -0.5F},
+				{-0.5F, -0.5F, -0.5F}
+		}, translateAxisToUV(te, WEST));
 
 		// Quad #3 (y - static) UP
-		drawQuadWithUV(new float[][]{{0.5F, 0.5F, -0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, -0.5F},}, translateAxisToUV(te, UP));
+		drawQuadWithUV(new float[][]{
+				{0.5F, 0.5F, -0.5F},
+				{0.5F, 0.5F, 0.5F},
+				{-0.5F, 0.5F, 0.5F},
+				{-0.5F, 0.5F, -0.5F}
+		}, translateAxisToUV(te, UP));
 
 		// Quad #4 (-y - static) DOWN
-		drawQuadWithUV(new float[][]{{0.5F, -0.5F, -0.5F}, {0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F}, {-0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, DOWN));
+		drawQuadWithUV(new float[][]{
+				{0.5F, -0.5F, -0.5F},
+				{0.5F, -0.5F, 0.5F},
+				{-0.5F, -0.5F, 0.5F},
+				{-0.5F, -0.5F, -0.5F}
+		}, translateAxisToUV(te, DOWN));
 
 		// Quad #5 (z - static) SOUTH
-		drawQuadWithUV(new float[][]{{0.5F, -0.5F, 0.5F}, {0.5F, 0.5F, 0.5F}, {-0.5F, 0.5F, 0.5F}, {-0.5F, -0.5F, 0.5F},}, translateAxisToUV(te, SOUTH));
+		drawQuadWithUV(new float[][]{
+				{0.5F, -0.5F, 0.5F},
+				{0.5F, 0.5F, 0.5F},
+				{-0.5F, 0.5F, 0.5F},
+				{-0.5F, -0.5F, 0.5F}
+		}, translateAxisToUV(te, SOUTH));
 
 		// Quad #6 (-z - static) NORTH
-		drawQuadWithUV(new float[][]{{0.5F, -0.5F, -0.5F}, {0.5F, 0.5F, -0.5F}, {-0.5F, 0.5F, -0.5F}, {-0.5F, -0.5F, -0.5F},}, translateAxisToUV(te, NORTH));
+		drawQuadWithUV(new float[][]{
+				{0.5F, -0.5F, -0.5F},
+				{0.5F, 0.5F, -0.5F},
+				{-0.5F, 0.5F, -0.5F},
+				{-0.5F, -0.5F, -0.5F}
+		}, translateAxisToUV(te, NORTH));
 
 		// Enable lighting
 		GlStateManager.enableLighting();

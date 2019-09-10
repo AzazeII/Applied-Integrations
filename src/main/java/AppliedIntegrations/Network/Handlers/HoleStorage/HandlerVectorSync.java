@@ -17,7 +17,7 @@ public class HandlerVectorSync implements IMessageHandler<PacketVectorSync, Pack
 		// Update client sided tile
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			TileMETurretFoundation te = (TileMETurretFoundation) Minecraft.getMinecraft().world.getTileEntity(message.tile);
-			te.renderingDirection = message.vecA;
+			te.direction = message.vecA;
 		});
 
 		return null;
