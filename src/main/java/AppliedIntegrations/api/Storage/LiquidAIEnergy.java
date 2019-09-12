@@ -14,10 +14,10 @@ import java.util.function.Consumer;
 public class LiquidAIEnergy extends Fluid {
 
 	// Energies mapped by tag
-	public static LinkedHashMap<String, LiquidAIEnergy> energies = new LinkedHashMap<String, LiquidAIEnergy>();
+	public static LinkedHashMap<String, LiquidAIEnergy> energies = new LinkedHashMap<>();
 
 	// Energies mapped by index
-	public static LinkedHashMap<Integer, LiquidAIEnergy> linkedIndexMap = new LinkedHashMap<Integer, LiquidAIEnergy>();
+	public static LinkedHashMap<Integer, LiquidAIEnergy> linkedIndexMap = new LinkedHashMap<>();
 
 	private String tag;
 
@@ -34,7 +34,6 @@ public class LiquidAIEnergy extends Fluid {
 	}
 
 	public LiquidAIEnergy(String modid, Integer index, String tag, ResourceLocation image) {
-
 		super(tag, image, image);
 
 		// Check if energy is already registered
@@ -55,10 +54,10 @@ public class LiquidAIEnergy extends Fluid {
 		this.index = index;
 
 		// Map energy by index
-		LiquidAIEnergy.linkedIndexMap.put(index, this);
+		linkedIndexMap.put(index, this);
 
 		// Map energy by tag
-		LiquidAIEnergy.energies.put(tag, this);
+		energies.put(tag, this);
 	}
 
 	// Get energy from it's tag

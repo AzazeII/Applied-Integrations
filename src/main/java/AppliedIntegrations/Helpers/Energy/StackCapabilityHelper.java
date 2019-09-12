@@ -65,26 +65,26 @@ public class StackCapabilityHelper {
 		}
 
 		// RF Capability
-		if (item instanceof IEnergyContainerItem && energy == RF) {
+		if (energy == RF && item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
 
 			return rfContainer.extractEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
 		}
 
 		// EU Capability
-		if (item instanceof IElectricItem && energy == EU) {
+		if (energy == EU && item instanceof IElectricItem) {
 			IElectricItem euContainer = (IElectricItem) item;
 
 			;
 		}
 
 		// Joule Capability
-		if (item instanceof IEnergizedItem && energy == J) {
+		if (energy == J && item instanceof IEnergizedItem) {
 			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
 			int before = (int) jouleContainer.getEnergy(operatedStack);
 
-			jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) + energyTransfer);
+			jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) - energyTransfer);
 
 			int current = (int) jouleContainer.getEnergy(operatedStack);
 
@@ -92,7 +92,7 @@ public class StackCapabilityHelper {
 				jouleContainer.setEnergy(operatedStack, before);
 			}
 
-			return (int) jouleContainer.getEnergy(operatedStack) - current;
+			return before - current;
 		}
 
 		// Nothing extracted
