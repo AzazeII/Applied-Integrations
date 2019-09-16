@@ -8,13 +8,11 @@ import AppliedIntegrations.Container.tile.MultiController.ContainerMultiControll
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerCore;
 import AppliedIntegrations.Gui.MultiController.GuiMultiControllerTerminal;
-import AppliedIntegrations.Gui.Part.GuiEnergyIO;
-import AppliedIntegrations.Gui.Part.GuiEnergyInterface;
-import AppliedIntegrations.Gui.Part.GuiEnergyStoragePart;
-import AppliedIntegrations.Gui.Part.GuiEnergyTerminalDuality;
+import AppliedIntegrations.Gui.Part.*;
 import AppliedIntegrations.Gui.Part.Interaction.GuiInteractionBus;
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Parts.AIOPart;
+import AppliedIntegrations.Parts.Energy.PartEnergyFormation;
 import AppliedIntegrations.Parts.Energy.PartEnergyStorage;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.Parts.Interaction.PartInteraction;
@@ -49,7 +47,8 @@ public class AIGuiHandler implements IGuiHandler {
 		GuiServerTerminal,
 		GuiLogicBus,
 		GuiAIPriority,
-		GuiIOPart
+		GuiIOPart,
+		GuiFormationPlane
 	}
 
 	public static void open(@Nonnull GuiEnum gui, @Nonnull EntityPlayer player, @Nonnull AEPartLocation side, @Nonnull BlockPos pos) {
@@ -168,6 +167,10 @@ public class AIGuiHandler implements IGuiHandler {
 			PartInteraction interaction = (PartInteraction) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
 
 			return new ContainerInteractionBus(player, interaction);
+		} else if (gui == GuiFormationPlane) {
+			PartEnergyFormation plane = (PartEnergyFormation) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
+
+			return new ContainerEnergyFormation(plane, player);
 		}
 
 		return null;
@@ -211,9 +214,9 @@ public class AIGuiHandler implements IGuiHandler {
 		} else if (gui == GuiServerStorage) {
 			return new GuiMultiControllerCore((ContainerMultiControllerCore) getServerGuiElement(ID, player, world, x, y, z), player);
 		} else if (gui == GuiInteraction) {
-			PartInteraction interaction = (PartInteraction) Utils.getPartByParams(new BlockPos(x, y, z), side.getFacing(), world);
-
 			return new GuiInteractionBus((ContainerInteractionBus) getServerGuiElement(ID, player, world, x, y, z), player);
+		}else if (gui == GuiFormationPlane) {
+			return new GuiEnergyFormation((ContainerEnergyFormation) getServerGuiElement(ID, player, world, x, y, z), player);
 		}
 
 		return null;

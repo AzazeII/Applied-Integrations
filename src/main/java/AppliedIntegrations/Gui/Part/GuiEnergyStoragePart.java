@@ -35,25 +35,23 @@ import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
 public class GuiEnergyStoragePart extends AIGui {
 
 	// Widget constants
-	private static final int WIDGET_COLUMNS = 2; // (1)
+	public static final int WIDGET_COLUMNS = 2; // (1)
 
-	private static final int WIDGET_ROWS = 9; // (2)
+	public static final int WIDGET_ROWS = 9; // (2)
 
-	private static final int WIDGET_X_POS = 13; // (3)
+	public static final int WIDGET_X_POS = 13; // (3)
 
-	private static final int WIDGET_Y_POS = 29; // (4)
+	public static final int WIDGET_Y_POS = 29; // (4)
 
 	// Network tool constants
 	private static final int GUI_WIDTH_NETWORK_TOOL = 246; // (1)
 
-	private static final int GUI_WIDTH_NO_TOOL = 210; // (2)
+	public static final int GUI_WIDTH_NO_TOOL = 210; // (2)
 
 	// Tittle constants
-	private static final int TITLE_X_POS = 6; // (1)
+	public static final int TITLE_X_POS = 6; // (1)
 
-	private static final int TITLE_Y_POS = 5; // (2)
-
-	private EntityPlayer player;
+	public static final int TITLE_Y_POS = 5; // (2)
 
 	// Should gui render network tool slots?
 	private boolean hasNetworkTool;
@@ -64,9 +62,6 @@ public class GuiEnergyStoragePart extends AIGui {
 	public GuiEnergyStoragePart(ContainerEnergyStorage CEI, final PartEnergyStorage storageBus, final EntityPlayer player) {
 		// Call super
 		super(CEI, player);
-
-		// Set the player
-		this.player = player;
 
 		// Set the storage bus
 		this.storageBus = storageBus;
@@ -184,6 +179,7 @@ public class GuiEnergyStoragePart extends AIGui {
 
 		// Draw the title
 		this.fontRenderer.drawString(I18n.translateToLocal("ME Energy Storage Bus"), GuiEnergyStoragePart.TITLE_X_POS, GuiEnergyStoragePart.TITLE_Y_POS, 0x000000);
+		this.fontRenderer.drawString(I18n.translateToLocal("Inventory"), 8, this.ySize - 96 + 3, 4210752);
 
 		WidgetEnergySlot slotUnderMouse = null;
 
@@ -213,6 +209,7 @@ public class GuiEnergyStoragePart extends AIGui {
 			slotUnderMouse.getTooltip(this.tooltip);
 		}
 	}
+
 	@Override
 	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
 		// Call super

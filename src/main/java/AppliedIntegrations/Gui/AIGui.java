@@ -40,7 +40,7 @@ public abstract class AIGui extends GuiContainer implements IWidgetHost {
 
 	protected GuiTabButton priorityButton;
 
-	private EntityPlayer player;
+	public EntityPlayer player;
 
 	public AIGui(final Container container, EntityPlayer player) {
 

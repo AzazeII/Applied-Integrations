@@ -1,6 +1,8 @@
 package AppliedIntegrations.Parts.Energy;
+import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.Energy.StackCapabilityHelper;
 import AppliedIntegrations.Parts.AIPlanePart;
+import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
@@ -17,11 +19,14 @@ import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
+import appeng.util.Platform;
 import appeng.util.item.ItemList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
@@ -33,7 +38,9 @@ import static java.util.Collections.singletonList;
 /**
  * @Author Azazell
  */
-public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
+public class PartEnergyFormation extends AIPlanePart implements ICellContainer, IEnergyMachine {
+	public final List<LiquidAIEnergy> filteredEnergies = new LinkedList<>();
+
 	public PartEnergyFormation() {
 
 		super(PartEnum.EnergyFormation);
@@ -50,6 +57,22 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 			}
 		}
 		return PartModelEnum.FORMATION_OFF;
+	}
+
+	@Override
+	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+		// Activation logic is server sided
+		if (Platform.isServer()) {
+			if (!player.isSneaking()) {
+				// Open gui
+				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiFormationPlane, player, getHostSide(), getHostTile().getPos());
+
+				// Render click
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	@Override
@@ -215,5 +238,10 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer {
 
 		// Mark dirty
 		getHostTile().getWorld().markChunkDirty(getHostTile().getPos(), getHostTile());
+	}
+
+	@Override
+	public void updateFilter(LiquidAIEnergy energy, int index) {
+		filteredEnergies.set(index, energy);
 	}
 }
