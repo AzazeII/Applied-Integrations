@@ -59,12 +59,12 @@ public class GuiEnergyFormation extends AIGui {
 
 	@Override
 	public ISyncHost getSyncHost() {
-		return plane;
+		return getContainer().getSyncHost();
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		plane = (PartEnergyFormation) host;
+		getContainer().setSyncHost(host);
 	}
 
 	@Override
@@ -107,6 +107,12 @@ public class GuiEnergyFormation extends AIGui {
 
 			// Draw the widget
 			currentWidget.drawWidget();
+		}
+
+		// Should we get the tooltip from the slot?
+		if (slotUnderMouse != null) {
+			// Add the tooltip from the widget
+			slotUnderMouse.getTooltip(this.tooltip);
 		}
 	}
 

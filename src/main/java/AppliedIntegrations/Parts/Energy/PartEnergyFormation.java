@@ -1,10 +1,14 @@
 package AppliedIntegrations.Parts.Energy;
+import AppliedIntegrations.Container.part.ContainerEnergyFormation;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.Energy.StackCapabilityHelper;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketFilterServerToClient;
 import AppliedIntegrations.Parts.AIPlanePart;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Parts.PartEnum;
 import AppliedIntegrations.Parts.PartModelEnum;
+import AppliedIntegrations.Utils.ChangeHandler;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
@@ -24,14 +28,17 @@ import appeng.util.item.ItemList;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.Vec3d;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static AppliedIntegrations.Parts.Energy.PartEnergyStorage.FILTER_SIZE;
 import static appeng.api.config.Actionable.MODULATE;
 import static java.util.Collections.singletonList;
 
@@ -40,10 +47,21 @@ import static java.util.Collections.singletonList;
  */
 public class PartEnergyFormation extends AIPlanePart implements ICellContainer, IEnergyMachine {
 	public final List<LiquidAIEnergy> filteredEnergies = new LinkedList<>();
+	private List<ChangeHandler<LiquidAIEnergy>> filteredEnergiesChangeHandler = new ArrayList<>();
+	private boolean updateRequested;
+	public List<ContainerEnergyFormation> linkedListeners = new ArrayList<>();
 
 	public PartEnergyFormation() {
-
 		super(PartEnum.EnergyFormation);
+
+		// Iterate until filter size
+		for (int index = 0; index < FILTER_SIZE; index++) {
+			// Fill vector
+			this.filteredEnergies.add(null);
+
+			// Fill list
+			this.filteredEnergiesChangeHandler.add(new ChangeHandler<>());
+		}
 	}
 
 	@Override
@@ -67,6 +85,8 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 				// Open gui
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiFormationPlane, player, getHostSide(), getHostTile().getPos());
 
+				updateRequested = true;
+
 				// Render click
 				return true;
 			}
@@ -77,7 +97,31 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 
 	@Override
 	protected void doWork(int ticksSinceLastCall) {
+		// Iterate over all listeners
+		for (ContainerEnergyFormation listener : linkedListeners) {
+			// Iterate over all filtered energies
+			for (int i = 0; i < FILTER_SIZE; i++) {
+				// Create effectively final variable
+				int finalI = i;
 
+				// Create on change event
+				filteredEnergiesChangeHandler.get(i).onChange(filteredEnergies.get(i), (energy -> {
+					// Sync with client
+					NetworkHandler.sendTo(new PacketFilterServerToClient(energy, finalI, this),
+							(EntityPlayerMP) listener.player);
+				}));
+
+				// Check if update was requested
+				if (updateRequested) {
+					// Sync with client
+					NetworkHandler.sendTo(new PacketFilterServerToClient(filteredEnergies.get(i), finalI, this),
+							(EntityPlayerMP) listener.player);
+				}
+			}
+		}
+
+		// Reset update request
+		updateRequested = false;
 	}
 
 	@Override

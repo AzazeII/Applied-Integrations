@@ -25,6 +25,7 @@ public class ContainerEnergyFormation extends ContainerWithUpgradeSlots implemen
 	public ContainerEnergyFormation(PartEnergyFormation plane, EntityPlayer player) {
 		super(player);
 		this.plane = plane;
+		this.plane.linkedListeners.add(this);
 		this.bindPlayerInventory(player.inventory, PLAYER_INV_POSITION_Y + 67, HOTBAR_INV_POSITION_Y + 67);
 	}
 
