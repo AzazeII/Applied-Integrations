@@ -21,7 +21,6 @@ import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
-import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.util.Platform;
 import appeng.util.item.ItemList;
@@ -38,6 +37,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import static AppliedIntegrations.Inventory.Handlers.HandlerEnergyStorageBusContainer.listContainsNonNullValues;
 import static AppliedIntegrations.Parts.Energy.PartEnergyStorage.FILTER_SIZE;
 import static appeng.api.config.Actionable.MODULATE;
 import static java.util.Collections.singletonList;
@@ -137,7 +137,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 		}
 
 		// Return only one handler for tile
-		return singletonList(new IMEInventoryHandler() {
+		return singletonList(new IMEInventoryHandler<IAEEnergyStack>() {
 			@Override
 			public AccessRestriction getAccess() {
 
@@ -145,13 +145,13 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 			}
 
 			@Override
-			public boolean isPrioritized(IAEStack input) {
+			public boolean isPrioritized(IAEEnergyStack input) {
 				// TODO: 2019-03-31 Priority
 				return false;
 			}
 
 			@Override
-			public boolean canAccept(IAEStack input) {
+			public boolean canAccept(IAEEnergyStack input) {
 
 				return input instanceof IAEEnergyStack;
 			}
@@ -175,10 +175,14 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 			}
 
 			@Override
-			public IAEStack injectItems(IAEStack input, Actionable type, IActionSource src) {
+			public IAEEnergyStack injectItems(IAEEnergyStack input, Actionable type, IActionSource src) {
 				// Check not null
 				if (input == null) {
 					return null;
+				}
+
+				if (!listContainsNonNullValues(filteredEnergies) && !filteredEnergies.contains(input.getEnergy())) {
+					return input;
 				}
 
 				// Check has list
@@ -224,7 +228,7 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 			}
 
 			@Override
-			public IAEStack extractItems(IAEStack request, Actionable mode, IActionSource src) {
+			public IAEEnergyStack extractItems(IAEEnergyStack request, Actionable mode, IActionSource src) {
 				// No items can be extracted
 				return null;
 			}

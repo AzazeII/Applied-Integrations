@@ -39,7 +39,7 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 		this.owner = owner;
 	}
 
-	private boolean listContainsNonNullValues(List<LiquidAIEnergy> filteredEnergies) {
+	public static boolean listContainsNonNullValues(List<LiquidAIEnergy> filteredEnergies) {
 		// Create stream from list and check if each element is null trough Objects::isNull predicate
 		return filteredEnergies.stream().allMatch(Objects::isNull);
 	}
