@@ -2,7 +2,6 @@
   "ae2_uvl_marker": true,
   "textures": {
     "indicator": "appliedenergistics2:parts/monitor_sides_status_off",
-    "front": "appliedintegrations:blocks/parts/energy.formation.face"
   },
   "elements": [
     {

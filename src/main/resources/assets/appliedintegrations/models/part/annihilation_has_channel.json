@@ -1,7 +1,8 @@
 {
   "ae2_uvl_marker": true,
   "textures": {
-    "indicator": "appliedenergistics2:parts/monitor_sides_status_off"
+    "indicator": "appliedenergistics2:parts/monitor_sides_status_off",
+    "frontOn": "appliedintegrations:blocks/parts/energy.annihilation.face.on"
   },
   "elements": [
     {
@@ -47,6 +48,38 @@
             "sky": 0.007,
             "block": 0.007
           }
+        }
+      }
+    },
+    {
+      "from": [
+        15,
+        15,
+        0
+      ],
+      "to": [
+        1,
+        1,
+        1
+      ],
+      "faces": {
+        "down": {
+          "texture": "#staticSides"
+        },
+        "up": {
+          "texture": "#staticSides"
+        },
+        "north": {
+          "texture": "#frontOn"
+        },
+        "east": {
+          "texture": "#staticSides"
+        },
+        "south": {
+          "texture": "#back"
+        },
+        "west": {
+          "texture": "#staticSides"
         }
       }
     }
