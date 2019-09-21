@@ -1,6 +1,8 @@
 {
   "ae2_uvl_marker": true,
   "textures": {
+    "back": "appliedenergistics2:parts/transition_plane_back",
+    "staticSides": "appliedenergistics2:parts/export_bus_sides",
     "indicator": "appliedenergistics2:parts/monitor_sides_status_off",
     "frontOn": "appliedintegrations:blocks/parts/energy.annihilation.face.on"
   },
