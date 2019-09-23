@@ -17,7 +17,6 @@ import java.util.List;
  * @Design Megatech
  */
 public class MaterialEncorium extends AIItemRegistrable implements IBotaniaIntegrated {
-
 	private String percent;
 
 	public MaterialEncorium(String registry, String damage) {
@@ -29,7 +28,6 @@ public class MaterialEncorium extends AIItemRegistrable implements IBotaniaInteg
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
-
 		if (!percent.equals("100%")) {
 			lines.add(percent);
 		}

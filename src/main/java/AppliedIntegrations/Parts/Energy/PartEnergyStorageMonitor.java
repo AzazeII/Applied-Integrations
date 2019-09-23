@@ -1,5 +1,4 @@
 package AppliedIntegrations.Parts.Energy;
-
 import AppliedIntegrations.Helpers.Energy.Utils;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Parts.AIRotatablePart;
@@ -142,6 +141,11 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		}
 
 		return super.readFromStream(data) || redraw;
+	}
+
+	@Override
+	public boolean requireDynamicRender() {
+		return true;
 	}
 
 	@Override
