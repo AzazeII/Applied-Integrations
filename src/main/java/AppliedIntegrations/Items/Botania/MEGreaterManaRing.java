@@ -1,4 +1,4 @@
-package AppliedIntegrations.Items.Botania;
+/*package AppliedIntegrations.Items.Botania;
 
 
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
@@ -9,7 +9,8 @@ import net.minecraftforge.fml.common.Optional;
 @Optional.InterfaceList(value = {@Optional.Interface(iface = "vazkii.botania.api.mana.IManaItem", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.mana.IManaTooltipDisplay", modid = "botania", striprefs = true), @Optional.Interface(iface = "vazkii.botania.api.item.ICosmeticAttachable", modid = "botania", striprefs = true), @Optional.Interface(iface = "baubles.api.IBauble", modid = "baubles", striprefs = true), @Optional.Interface(iface = "baubles.api.BaubleType", modid = "baubles", striprefs = true)})
 /**
  * @Author Azazell
- */ public class MEGreaterManaRing extends MEManaRing implements IBotaniaIntegrated {
+ */
+/*public class MEGreaterManaRing extends MEManaRing implements IBotaniaIntegrated {
 	public MEGreaterManaRing(String registry) {
 
 		super(registry);
@@ -23,7 +24,6 @@ import net.minecraftforge.fml.common.Optional;
 
 	@Override
 	public boolean canHandle(ItemStack itemStack) {
-
 		return itemStack.getItem() == ItemEnum.ITEMMANAWIRELESSGREATRING.getItem();
 	}
-}
+}*/
