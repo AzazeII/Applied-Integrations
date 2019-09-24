@@ -73,8 +73,9 @@ public class EnergyList implements IItemList<IAEEnergyStack> {
 
 	@Override
 	public IAEEnergyStack getFirstItem() {
+		Iterator<IAEEnergyStack> iterator = iterator();
 
-		return iterator().hasNext() ? iterator().next() : null;
+		return iterator.hasNext() ? iterator.next() : null;
 	}
 
 	@Override
