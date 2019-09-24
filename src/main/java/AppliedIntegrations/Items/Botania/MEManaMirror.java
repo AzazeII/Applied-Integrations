@@ -16,13 +16,15 @@ import appeng.api.networking.IGrid;
 import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.storage.IStorageGrid;
+import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEMonitor;
+import appeng.api.storage.IStorageChannel;
+import appeng.api.storage.data.IItemList;
 import appeng.api.util.IConfigManager;
 import appeng.core.localization.GuiText;
 import appeng.me.helpers.BaseActionSource;
 import appeng.util.Platform;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -49,7 +51,6 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 	private final double capacity = 16000;
 
 	private double storage;
-	private static final String TAG_MANA = "mana";
 	private static final String TAG_KEY = "encryptionKey";
 
 	private final int manaCapacity = 500000;
@@ -60,13 +61,17 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 		AEApi.instance().registries().wireless().registerWirelessHandler(this);
 	}
 
-	@Override
-	public void onUpdate(ItemStack stack, World w, Entity e, int par4, boolean par5) {
-		// Don't do any operations if we don't have enough mana capacity
-		if (getMaxMana(stack) - getMana(stack) < BASE_MANA_REQUEST.getStackSize()) {
-			return;
-		}
+	private IStorageChannel<IAEManaStack> getChannel() {
+		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
+	}
 
+	private IMEMonitor<IAEManaStack> getManaInventory(IGrid targetGrid) {
+		IStorageGrid storage = targetGrid.getCache(IStorageGrid.class);
+
+		return storage.getInventory(getChannel());
+	}
+
+	private IGrid getGrid(ItemStack stack) {
 		ILocatable obj = null;
 
 		try {
@@ -82,26 +87,10 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 			final IGrid targetGrid = n.getGrid();
 
 			// Extract mana from network and inject into stack
-			doWork(stack, targetGrid);
-		}
-	}
-
-	private void doWork(ItemStack stack, IGrid targetGrid) {
-		IAEManaStack extracted = getManaInventory(targetGrid).extractItems(BASE_MANA_REQUEST, Actionable.MODULATE, new BaseActionSource());
-
-		// Check not null
-		if (extracted == null) {
-			return;
+			return targetGrid;
 		}
 
-		// Inject extracted amount
-		addMana(stack, (int) extracted.getStackSize());
-	}
-
-	private IMEMonitor<IAEManaStack> getManaInventory(IGrid targetGrid) {
-		IStorageGrid storage = targetGrid.getCache(IStorageGrid.class);
-
-		return storage.getInventory(AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class));
+		return null;
 	}
 
 	@Override
@@ -119,20 +108,24 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
+		// Add stored energy quantity
 		lines.add(I18n.translateToLocal("Energy Stored") + ": " + this.getAECurrentPower(stack) + " - " + (this.getAECurrentPower(stack) / this.getAEMaxPower(stack)) * 100 + "%");
+
+		// Add GUI tip of linked or unlinked terminal
 		if (stack.hasTagCompound()) {
+			// Read key from tag
 			final NBTTagCompound tag = Platform.openNbtData(stack);
 			if (tag != null) {
 				final String encKey = tag.getString(TAG_KEY);
 
-				if (encKey == null || encKey.isEmpty()) {
+				if (encKey.isEmpty()) {
 					lines.add(GuiText.Unlinked.getLocal());
 				} else {
 					lines.add(GuiText.Linked.getLocal());
 				}
 			}
 		} else {
-			lines.add(I18n.translateToLocal("AppEng.GuiITooltip.Unlinked"));
+			lines.add(I18n.translateToLocal(GuiText.Unlinked.getLocal()));
 		}
 	}
 
@@ -147,7 +140,6 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 
 	@Override
 	public double extractAEPower(ItemStack itemStack, double v, Actionable actionable) {
-
 		double extracted = Math.min(storage - v, capacity);
 		if (actionable == Actionable.MODULATE) {
 			storage = extracted;
@@ -171,14 +163,28 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 	}
 
 	@Override
-	public int getMana(ItemStack itemStack) {
-		NBTTagCompound tagCompound = itemStack.getTagCompound();
+	public int getMana(ItemStack stack) {
+		// Tunnel network mana to this method
+		IGrid grid = getGrid(stack);
 
-		if (tagCompound == null) {
+		if (grid == null) {
 			return 0;
 		}
 
-		return tagCompound.hasKey(TAG_MANA) ? tagCompound.getInteger(TAG_MANA) : 0;
+		// Read mana quantity from inventory into new mana list
+		IMEInventory<IAEManaStack> inventory = getManaInventory(grid);
+		IItemList<IAEManaStack> list = getChannel().createList();
+
+		inventory.getAvailableItems(list);
+
+		// Get first and only(since we have only one type of mana) stack
+		IAEManaStack manaStack = list.getFirstItem();
+
+		if (manaStack != null) {
+			return (int) manaStack.getStackSize();
+		}
+
+		return 0;
 	}
 
 	@Override
@@ -187,102 +193,86 @@ public class MEManaMirror extends AIItemRegistrable implements IWirelessTermHand
 	}
 
 	@Override
-	public void addMana(ItemStack itemStack, int i) {
-		// Get mana from tag
-		int currentMana = getMana(itemStack);
+	public void addMana(ItemStack stack, int mana) {
+		// Tunnel network mana to this method
+		IGrid grid = getGrid(stack);
 
-		// Do operation with mana
-		currentMana += i;
-		if (currentMana > getMaxMana(itemStack)) {
-			currentMana = getMaxMana(itemStack);
-		}
-		if (currentMana < 0) {
-			currentMana = 0;
+		if (grid == null) {
+			return;
 		}
 
-		// Apply operations
-		itemStack.getTagCompound().setInteger(TAG_MANA, currentMana);
+		// Read mana quantity from inventory into new mana list
+		IMEInventory<IAEManaStack> inventory = getManaInventory(grid);
+
+		// Inject or extract mana if it's value is negative
+		if (mana < 0) {
+			inventory.extractItems(getChannel().createStack(Math.abs(mana)), Actionable.MODULATE, new BaseActionSource());
+		} else if (mana > 0) {
+			inventory.injectItems(getChannel().createStack(Math.abs(mana)), Actionable.MODULATE, new BaseActionSource());
+		}
 	}
 
 	@Override
 	public boolean canReceiveManaFromPool(ItemStack itemStack, TileEntity tileEntity) {
-
 		return false;
 	}
 
 	@Override
 	public boolean canReceiveManaFromItem(ItemStack itemStack, ItemStack itemStack1) {
-
 		return false;
 	}
 
 	@Override
 	public boolean canExportManaToPool(ItemStack itemStack, TileEntity tileEntity) {
-
 		return true;
 	}
 
 	@Override
 	public boolean canExportManaToItem(ItemStack itemStack, ItemStack itemStack1) {
-
 		return true;
 	}
 
 	@Override
 	public boolean isNoExport(ItemStack itemStack) {
-
 		return false;
 	}
 
 	@Override
 	public float getManaFractionForDisplay(ItemStack itemStack) {
-
 		return (float) getMana(itemStack) / (float) getMaxMana(itemStack);
 	}
 
 	@Override
-	public String getEncryptionKey(ItemStack itemStack) {
-		NBTTagCompound tagCompound = itemStack.getTagCompound();
+	public String getEncryptionKey(ItemStack stack) {
+		NBTTagCompound tag = Platform.openNbtData(stack);
 
-		if (tagCompound == null) {
-			return "";
-		}
-
-		return tagCompound.hasKey(TAG_KEY) ? tagCompound.getString(TAG_KEY) : "";
+		return tag.hasKey(TAG_KEY) ? tag.getString(TAG_KEY) : "";
 	}
 
 	@Override
-	public void setEncryptionKey(ItemStack itemStack, String s, String s1) {
-		NBTTagCompound tagCompound = itemStack.getTagCompound();
+	public void setEncryptionKey(ItemStack stack, String s, String s1) {
+		NBTTagCompound tag = Platform.openNbtData(stack);
 
-		if (tagCompound == null) {
-			return;
-		}
-
-		tagCompound.setString(TAG_KEY, s);
+		tag.setString(TAG_KEY, s);
 	}
 
 	@Override
 	public boolean canHandle(ItemStack itemStack) {
-
 		return itemStack.getItem() == ItemEnum.ITEMMANAWIRELESSMIRROR.getItem();
 	}
 
 	@Override
 	public boolean usePower(EntityPlayer entityPlayer, double v, ItemStack itemStack) {
-
 		return this.extractAEPower(itemStack, v, Actionable.MODULATE) >= v - 0.5;
 	}
 
 	@Override
 	public boolean hasPower(EntityPlayer entityPlayer, double v, ItemStack itemStack) {
-
 		return getAECurrentPower(itemStack) >= v;
 	}
 
 	@Override
 	public IConfigManager getConfigManager(ItemStack itemStack) {
-
 		return null;
 	}
 }

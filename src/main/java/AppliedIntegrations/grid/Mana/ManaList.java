@@ -71,8 +71,9 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public IAEManaStack getFirstItem() {
+		Iterator<IAEManaStack> iterator = iterator();
 
-		return iterator().hasNext() ? iterator().next() : null;
+		return iterator.hasNext() ? iterator.next() : null;
 	}
 
 	@Override
@@ -83,8 +84,7 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public Iterator<IAEManaStack> iterator() {
-
-		return new ManaIterator<IAEManaStack>(this.records.values().iterator());
+		return new ManaIterator<>(this.records.values().iterator());
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class ManaStorageChannel implements IManaStorageChannel {
 	public IAEManaStack createStack(@Nonnull Object o) {
 
 		if (o instanceof Integer) {
-			return new AEManaStack(((Integer) o).intValue());
+			return new AEManaStack((Integer) o);
 		} else if (o instanceof AEManaStack) {
 			return ((AEManaStack) o).copy();
 		}

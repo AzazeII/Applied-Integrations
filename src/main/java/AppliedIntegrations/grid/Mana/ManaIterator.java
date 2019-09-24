@@ -21,7 +21,6 @@ public class ManaIterator<T extends IAEStack> implements Iterator<T> {
 
 	@Override
 	public boolean hasNext() {
-
 		while (this.parent.hasNext()) {
 			this.next = this.parent.next();
 			if (this.next.isMeaningful()) {
@@ -37,7 +36,6 @@ public class ManaIterator<T extends IAEStack> implements Iterator<T> {
 
 	@Override
 	public T next() {
-
 		if (this.next == null) {
 			throw new NoSuchElementException();
 		}
