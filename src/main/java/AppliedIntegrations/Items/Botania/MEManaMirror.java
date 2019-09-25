@@ -15,8 +15,14 @@ import appeng.api.storage.IMEMonitor;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IItemList;
 import appeng.me.helpers.BaseActionSource;
+import appeng.util.Platform;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 import vazkii.botania.api.mana.IManaItem;
 import vazkii.botania.api.mana.IManaTooltipDisplay;
@@ -28,6 +34,11 @@ import vazkii.botania.api.mana.IManaTooltipDisplay;
  */
 public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemPowerStorage, INetworkEncodable, IBotaniaIntegrated, IManaItem, IManaTooltipDisplay {
 	private static final double ENERGY_CONSUMPTION_PER_MANA = 0.005;
+
+	private static final String TAG_X = "#pos_X";
+	private static final String TAG_Y = "#pos_Y";
+	private static final String TAG_Z = "#pos_Z";
+	private static final String TAG_W = "#world";
 
 	public MEManaMirror(String registry) {
 		super(registry);
@@ -44,12 +55,36 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 		return storage.getInventory(getChannel());
 	}
 
+	private boolean cantDoWork(ItemStack stack, IGrid grid) {
+		NBTTagCompound tag = Platform.openNbtData(stack);
+		return isNotInRange(stack, grid, new BlockPos(tag.getDouble(TAG_X), tag.getDouble(TAG_Y), tag.getDouble(TAG_Z)), tag.getInteger(TAG_W));
+	}
+
+	@Override
+	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		if (entityIn instanceof EntityPlayer) {
+			// Cast player and open tag
+			EntityPlayer player = (EntityPlayer) entityIn;
+			NBTTagCompound tag = Platform.openNbtData(stack);
+
+			// Here we update x,y,z and world of our player for range check
+			tag.setDouble(TAG_X, player.posX);
+			tag.setDouble(TAG_Y, player.posY);
+			tag.setDouble(TAG_Z, player.posZ);
+			tag.setInteger(TAG_W, player.world.provider.getDimension());
+		}
+	}
+
 	@Override
 	public int getMana(ItemStack stack) {
 		// Tunnel network mana to this method
 		IGrid grid = getGrid(stack);
 
 		if (grid == null) {
+			return 0;
+		}
+
+		if (cantDoWork(stack, grid)) {
 			return 0;
 		}
 
@@ -77,6 +112,10 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 		IGrid grid = getGrid(stack);
 
 		if (grid == null) {
+			return;
+		}
+
+		if (cantDoWork(stack, grid)) {
 			return;
 		}
 
