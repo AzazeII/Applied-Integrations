@@ -2,6 +2,7 @@ package AppliedIntegrations.Items;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
+import appeng.api.config.PowerUnits;
 import appeng.api.features.ILocatable;
 import appeng.api.features.INetworkEncodable;
 import appeng.api.features.IWirelessTermHandler;
@@ -13,22 +14,32 @@ import appeng.api.networking.IMachineSet;
 import appeng.api.networking.security.IActionHost;
 import appeng.api.util.DimensionalCoord;
 import appeng.api.util.IConfigManager;
+import appeng.capabilities.Capabilities;
 import appeng.core.localization.GuiText;
+import appeng.items.tools.powered.ToolWirelessTerminal;
 import appeng.tile.networking.TileWireless;
 import appeng.util.Platform;
+import net.darkhax.tesla.api.ITeslaConsumer;
+import net.darkhax.tesla.api.ITeslaHolder;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import net.minecraftforge.energy.IEnergyStorage;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.text.MessageFormat;
 import java.util.List;
 
@@ -36,6 +47,98 @@ import java.util.List;
  * @Author Azazell
  */
 public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWirelessTermHandler, INetworkEncodable, IAEItemPowerStorage {
+	// Make other mods be able to interact with our AE storage
+	private static class EnergyTerminalCapabilityDelegate implements ICapabilityProvider, IEnergyStorage {
+		private final ItemStack is;
+
+		private final IAEItemPowerStorage item;
+
+		private final Object teslaAdapter;
+
+		EnergyTerminalCapabilityDelegate(ItemStack is, IAEItemPowerStorage item ) {
+			this.is = is;
+			this.item = item;
+
+			// Initialize tesla adapter if needed
+			if( Capabilities.TESLA_CONSUMER != null || Capabilities.TESLA_HOLDER != null ) {
+				this.teslaAdapter = new TeslaPowerDelegate();
+			} else {
+				this.teslaAdapter = null;
+			}
+		}
+
+		@Override
+		public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing ) {
+			return capability == Capabilities.FORGE_ENERGY || capability == Capabilities.TESLA_CONSUMER || capability == Capabilities.TESLA_HOLDER;
+		}
+
+		@SuppressWarnings( "unchecked" )
+		@Override
+		public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing ) {
+			// Give forge energy or tesla capability
+			if( capability == Capabilities.FORGE_ENERGY ) {
+				return (T) this;
+			} else if( capability == Capabilities.TESLA_CONSUMER || capability == Capabilities.TESLA_HOLDER ) {
+				return (T) this.teslaAdapter;
+			}
+			return null;
+		}
+
+		@Override
+		public int receiveEnergy( int maxReceive, boolean simulate ) {
+			// Convert energy to AE and receive it
+			final double convertedOffer = PowerUnits.RF.convertTo( PowerUnits.AE, maxReceive );
+			final double overflow = this.item.injectAEPower( this.is, convertedOffer, simulate ? Actionable.SIMULATE : Actionable.MODULATE );
+
+			return maxReceive - (int) PowerUnits.AE.convertTo( PowerUnits.RF, overflow );
+		}
+
+		@Override
+		public int extractEnergy( int maxExtract, boolean simulate ) {
+			return 0; // Ignored for terminal
+		}
+
+		@Override
+		public int getEnergyStored() {
+			return (int) PowerUnits.AE.convertTo( PowerUnits.RF, this.item.getAECurrentPower( this.is ) );
+		}
+
+		@Override
+		public int getMaxEnergyStored() {
+			return (int) PowerUnits.AE.convertTo( PowerUnits.RF, this.item.getAEMaxPower( this.is ) );
+		}
+
+		@Override
+		public boolean canExtract()
+		{
+			return false;
+		}
+
+		@Override
+		public boolean canReceive()
+		{
+			return true;
+		}
+
+		// Our delegate for tesla power
+		private class TeslaPowerDelegate implements ITeslaConsumer, ITeslaHolder {
+			@Override
+			public long givePower( long power, boolean simulated ) {
+				return EnergyTerminalCapabilityDelegate.this.receiveEnergy( (int) power, simulated );
+			}
+
+			@Override
+			public long getStoredPower() {
+				return EnergyTerminalCapabilityDelegate.this.getEnergyStored();
+			}
+
+			@Override
+			public long getCapacity() {
+				return EnergyTerminalCapabilityDelegate.this.getMaxEnergyStored();
+			}
+		}
+	}
+
 	private static final String TAG_KEY = "#encryption_key";
 	private static final String TAG_ENERGY = "#energy_stored";
 
@@ -70,7 +173,7 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 
 	protected boolean isNotInRange(ItemStack stack, IGrid grid, BlockPos pos, int worldID) {
 		// Open tag
-		NBTTagCompound tag = Platform.openNbtData(stack);
+		NBTTagCompound tag = Platform.openNbtData(stack);ToolWirelessTerminal t;
 
 		// Maximize both ranges
 		tag.setDouble(TAG_RANGE, Double.MAX_VALUE);
@@ -149,7 +252,7 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 	@Override
 	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
 		// Calculate energy percentage
-		double percent = getAECurrentPower(stack) / getAEMaxPower(stack) * 100;
+		double percent = getAECurrentPower(stack) / getAEMaxPower(stack);
 
 		// Add stored energy quantity
 		lines.add(GuiText.StoredEnergy.getLocal() + ": " + MessageFormat.format( " {0,number,#} ", getAECurrentPower(stack) )
@@ -273,5 +376,10 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 	@Override
 	public IConfigManager getConfigManager(ItemStack itemStack) {
 		return null;
+	}
+
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, NBTTagCompound nbt ) {
+		return new EnergyTerminalCapabilityDelegate(stack, this);
 	}
 }
