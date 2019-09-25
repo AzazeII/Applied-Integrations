@@ -6,12 +6,9 @@ import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
-import appeng.api.features.ILocatable;
 import appeng.api.features.INetworkEncodable;
 import appeng.api.implementations.items.IAEItemPowerStorage;
 import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
-import appeng.api.networking.security.IActionHost;
 import appeng.api.networking.storage.IStorageGrid;
 import appeng.api.storage.IMEInventory;
 import appeng.api.storage.IMEMonitor;
@@ -47,25 +44,6 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 		return storage.getInventory(getChannel());
 	}
 
-	private IGrid getGrid(ItemStack stack) {
-		ILocatable obj = null;
-
-		try {
-			// Get object from parsed long from nbt tag
-			obj = AEApi.instance().registries().locatable().getLocatableBy( Long.parseLong( getEncryptionKey(stack) ));
-		} catch( final NumberFormatException err ) {
-			// :P
-		}
-
-		if( obj instanceof IActionHost) {
-			// Now use object as medium for accessing to grid
-			final IGridNode n = ( (IActionHost) obj ).getActionableNode();
-			return n.getGrid();
-		}
-
-		return null;
-	}
-
 	@Override
 	public int getMana(ItemStack stack) {
 		// Tunnel network mana to this method
@@ -96,6 +74,12 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 
 	@Override
 	public void addMana(ItemStack stack, int mana) {
+		IGrid grid = getGrid(stack);
+
+		if (grid == null) {
+			return;
+		}
+
 		// Extract energy for operation
 		double extracted = extractAEPower(stack, Math.abs(mana) * ENERGY_CONSUMPTION_PER_MANA, Actionable.SIMULATE);
 
@@ -108,16 +92,10 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 			mana = (mana < 0 ? -1 : 1) * (int) (extracted / ENERGY_CONSUMPTION_PER_MANA);
 
 			// Tunnel network mana to this method
-			IGrid grid = getGrid(stack);
-
-			if (grid == null) {
-				return;
-			}
-
 			// Read mana quantity from inventory into new mana list
 			IMEInventory<IAEManaStack> inventory = getManaInventory(grid);
 
-			// Inject or extract mana if it's value is negative
+			// Inject (or extract if it's value is negative) mana
 			if (mana < 0) {
 				inventory.extractItems(getChannel().createStack(Math.abs(mana)), Actionable.MODULATE, new BaseActionSource());
 			} else if (mana > 0) {

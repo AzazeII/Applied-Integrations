@@ -68,12 +68,10 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 				final SelectedPart part = ((IPartHost) te).selectPart(mop.hitVec);
 
 				// Check not null (host)
-				if (part != null && part.part != null)
-				// Check not null (node)
-				{
-					if (part.part.getGridNode() != null)
-					// Update node
-					{
+				if (part != null && part.part != null) {
+					// Check not null (node)
+					if (part.part.getGridNode() != null) {
+						// Update node
 						node = part.part.getGridNode();
 					}
 				}
@@ -84,9 +82,8 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 				IGridHost host = (IGridHost) te;
 
 				// Check not null
-				if ((host.getGridNode(INTERNAL) != null))
-				// Update node
-				{
+				if ((host.getGridNode(INTERNAL) != null)) {
+					// Update node
 					node = host.getGridNode(INTERNAL);
 				}
 			}
@@ -111,6 +108,7 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 		if (!success) {
 			return EnumActionResult.FAIL;
 		}
+
 		return EnumActionResult.SUCCESS;
 	}
 
@@ -129,24 +127,20 @@ public class GraphTool extends AIItemRegistrable implements IMouseWheelItem {
 			// Check for up scroll
 			if (up) {
 				// Check if it is last mode
-				if (mode == P2P_LINKS)
-				// Switch to 1st
-				{
+				if (mode == P2P_LINKS) {
+					// Switch to 1st
 					mode = GraphToolMode.values()[0];
-				} else
-				// Switch mode to next
-				{
+				} else {
+					// Switch mode to next
 					mode = GraphToolMode.values()[mode.ordinal() + 1];
 				}
 			} else {
 				// Check if it is first mode
-				if (mode == GraphToolMode.values()[0])
-				// Switch to last
-				{
+				if (mode == GraphToolMode.values()[0]) {
+					// Switch to last
 					mode = P2P_LINKS;
-				} else
-				// Switch mode to previous
-				{
+				} else {
+					// Switch mode to previous
 					mode = GraphToolMode.values()[mode.ordinal() - 1];
 				}
 			}

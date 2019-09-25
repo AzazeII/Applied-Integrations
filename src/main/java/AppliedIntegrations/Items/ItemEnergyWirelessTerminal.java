@@ -2,11 +2,19 @@ package AppliedIntegrations.Items;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
+import appeng.api.features.ILocatable;
 import appeng.api.features.INetworkEncodable;
 import appeng.api.features.IWirelessTermHandler;
 import appeng.api.implementations.items.IAEItemPowerStorage;
+import appeng.api.implementations.tiles.IWirelessAccessPoint;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.IMachineSet;
+import appeng.api.networking.security.IActionHost;
+import appeng.api.util.DimensionalCoord;
 import appeng.api.util.IConfigManager;
 import appeng.core.localization.GuiText;
+import appeng.tile.networking.TileWireless;
 import appeng.util.Platform;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +23,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,11 +38,88 @@ import java.util.List;
 public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWirelessTermHandler, INetworkEncodable, IAEItemPowerStorage {
 	private static final String TAG_KEY = "#encryption_key";
 	private static final String TAG_ENERGY = "#energy_stored";
+
+	private static final String TAG_SQUARED_RANGE = "#squared_range";
+	private static final String TAG_RANGE = "#range";
+
 	protected final double capacity = 1600000;
 
 	public ItemEnergyWirelessTerminal(String name) {
 		super(name);
 		this.setMaxStackSize(1);
+	}
+
+	protected IGrid getGrid(ItemStack stack) {
+		ILocatable obj = null;
+
+		try {
+			// Get object from parsed long from nbt tag
+			obj = AEApi.instance().registries().locatable().getLocatableBy( Long.parseLong( getEncryptionKey(stack) ));
+		} catch( final NumberFormatException err ) {
+			// :P
+		}
+
+		if( obj instanceof IActionHost) {
+			// Now use object as medium for accessing to grid
+			final IGridNode n = ( (IActionHost) obj ).getActionableNode();
+			return n.getGrid();
+		}
+
+		return null;
+	}
+
+	protected boolean isNotInRange(ItemStack stack, IGrid grid, BlockPos pos, int worldID) {
+		// Open tag
+		NBTTagCompound tag = Platform.openNbtData(stack);
+
+		// Maximize both ranges
+		tag.setDouble(TAG_RANGE, Double.MAX_VALUE);
+		tag.setDouble(TAG_SQUARED_RANGE, Double.MAX_VALUE);
+
+		if( grid != null ) {
+			// Try to find nearest wireless access point
+			final IMachineSet tw = grid.getMachines( TileWireless.class );
+
+			IWirelessAccessPoint wap = null;
+
+			// Test each WAP in network
+			for( final IGridNode n : tw ) {
+				final IWirelessAccessPoint point = (IWirelessAccessPoint) n.getMachine();
+				if( this.isWapInRange( point, tag, pos, worldID ) ) {
+					wap = point;
+				}
+			}
+
+			return wap == null;
+		}
+
+		return true;
+	}
+
+	private boolean isWapInRange(final IWirelessAccessPoint wap, NBTTagCompound tag, BlockPos pos, int worldID) {
+		// Calculate squared range limit and get location of WAP
+		double rangeLimit = wap.getRange();
+		rangeLimit *= rangeLimit;
+		DimensionalCoord dc = wap.getLocation();
+
+		if( dc.getWorld().provider.getDimension() == worldID ) {
+			// Calculate vector difference between WAP and player
+			final double offX = dc.x - pos.getX();
+			final double offY = dc.y - pos.getY();
+			final double offZ = dc.z - pos.getZ();
+
+			final double r = offX * offX + offY * offY + offZ * offZ;
+			if( r < rangeLimit && tag.getDouble(TAG_SQUARED_RANGE) > r ) {
+				if( wap.isActive() ) {
+					tag.setDouble(TAG_SQUARED_RANGE, r);
+					tag.setDouble(TAG_RANGE, Math.sqrt(r));
+
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	@SideOnly(Side.CLIENT)
