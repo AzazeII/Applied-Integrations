@@ -67,7 +67,6 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 
 	@Override
 	public int getBytes(@Nonnull ItemStack itemStack) {
-
 		return maxBytes;
 	}
 

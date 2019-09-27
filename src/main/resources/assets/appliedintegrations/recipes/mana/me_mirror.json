@@ -1,0 +1,26 @@
+{
+	"result": {
+		"item": "appliedintegrations:me_mana_mirror"
+	},
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"r",
+		"lml",
+		"c"
+	],
+	"key": {
+		"m": {
+			"item": "botania:manamirror"
+		},
+		"c": {
+			"item": "appliedenergistics2:dense_energy_cell"
+		},
+		"r": {
+			"type": "appliedenergistics2:part",
+			"part": "material.wireless"
+		},
+		"l": {
+			"item": "appliedintegrations:encorium"
+		}
+	}
+}

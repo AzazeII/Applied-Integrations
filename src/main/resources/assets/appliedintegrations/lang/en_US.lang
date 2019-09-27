@@ -96,16 +96,8 @@ item.advancedWrench.name=Advanced Network Tool
 
 Energy Stored=Energy Stored
 
-item.encorium0.name=Linkorium Crystal
-item.encorium1.name=Linkorium Crystal
-item.encorium2.name=Linkorium Crystal
-item.encorium3.name=Linkorium Crystal
-item.encorium4.name=Linkorium Crystal
-item.encorium5.name=Linkorium Crystal
-item.encorium6.name=Linkorium Crystal
-item.encorium7.name=Linkorium Crystal
-item.encorium8.name=Linkorium Crystal
-item.encorium9.name=Linkorium Crystal
+item.encorium.name=Linkorium Crystal
+item.encorium_seed.name=Linkorium Crystal Seed
 
 part_p2p_starlight=P2P Tunnel - Starlight
 

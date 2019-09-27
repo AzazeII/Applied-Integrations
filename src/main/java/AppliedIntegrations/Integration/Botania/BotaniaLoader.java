@@ -67,24 +67,14 @@ public class BotaniaLoader {
 
 		if (fluixOptional.isPresent()) {
 			ItemStack fluixStack = fluixOptional.get();
-			BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixStack);
+			BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.ITEMENCORIUMSEED.getItem(), 1, 0), fluixStack);
 		}
 
 		if (pureFluixOptional.isPresent()) {
 			ItemStack fluixPureStack = pureFluixOptional.get();
-			BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), fluixPureStack);
+			BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.ITEMENCORIUMSEED.getItem(), 1, 0), fluixPureStack);
 		}
 		/*------------------------------------------Elven Trade------------------------------------------*/
-
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(1), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(0), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(2), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(1), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(3), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(2), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(4), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(3), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(5), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(4), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(6), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(5), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(7), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(6), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(8), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(7), 1, 0), 1000);
-		BotaniaAPI.registerManaInfusionRecipe(new ItemStack(ItemEnum.encoriumVariants.get(9), 1, 0), new ItemStack(ItemEnum.encoriumVariants.get(8), 1, 0), 1000);
 	}
 
 	public static void initChannelHandlers(AIApi instance) throws NoSuchMethodException {

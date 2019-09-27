@@ -5,10 +5,7 @@ import AppliedIntegrations.Integration.BloodMagic.BloodMagicLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
-import AppliedIntegrations.Items.Botania.MEManaMirror;
-import AppliedIntegrations.Items.Botania.ManaAnnihilationCore;
-import AppliedIntegrations.Items.Botania.ManaFormationCore;
-import AppliedIntegrations.Items.Botania.MaterialEncorium;
+import AppliedIntegrations.Items.Botania.*;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.ItemPartInteractionBus;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
@@ -19,16 +16,12 @@ import AppliedIntegrations.Items.Part.P2P.ItemPartP2PWill;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageCell;
 import AppliedIntegrations.Items.StorageCells.EnergyStorageComponent;
 import AppliedIntegrations.Items.StorageCells.ManaStorageCell;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.LinkedList;
 
 /**
  * @Author Azazell
@@ -61,6 +54,8 @@ public enum ItemEnum {
 	ITEMMANAWIRELESSMIRROR(new MEManaMirror("me_mana_mirror"), BotaniaLoader.enableBotania()),
 	//ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring"), BotaniaLoader.enableBotania()), Disabled, these rings are useless because they both act just like mana mirror
 	//ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), BotaniaLoader.enableBotania()),
+	ITEMENCORIUMSEED(new MaterialEncoriumSeed("encorium_seed"), BotaniaLoader.enableBotania()),
+	ITEMENCROIUM(new MaterialEncorium("encorium"), BotaniaLoader.enableBotania()),
 	// & ------------------------------------MANA------------------------------------ &
 
 	ITEMENERGYWIRELESSTERMINAL(new ItemEnergyWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),
@@ -104,9 +99,6 @@ public enum ItemEnum {
 	ENERGYSTORAGECOMPONENT_4096k(new EnergyStorageComponent("EnergyStorageComponent_4096k"), AIConfig.enableEnergyFeatures),
 	ENERGYSTORAGECOMPONENT_16384k(new EnergyStorageComponent("EnergyStorageComponent_16384k"), AIConfig.enableEnergyFeatures);*/
 	// & ------------------------------------COMPONENTS------------------------------------ &
-
-	public static LinkedList<MaterialEncorium> encoriumVariants = new LinkedList<>();
-
 	private boolean enabled;
 
 	private Item item;
@@ -130,19 +122,6 @@ public enum ItemEnum {
 				ForgeRegistries.ITEMS.register(itemEnum.item);
 			}
 		}
-
-		if (BotaniaLoader.enableBotania()) {
-			for (int i = 0; i < 10; i++) {
-				MaterialEncorium mat = new MaterialEncorium("encorium" + i, (i + 1) * 10 + "%");
-
-				if (i != 0) {
-					mat.setCreativeTab(null);
-				}
-
-				ForgeRegistries.ITEMS.register(mat);
-				encoriumVariants.add(mat);
-			}
-		}
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -153,12 +132,6 @@ public enum ItemEnum {
 					AIItemRegistrable registrableItem = (AIItemRegistrable) item.item;
 					registrableItem.registerModel();
 				}
-			}
-		}
-
-		if (BotaniaLoader.enableBotania()) {
-			for (MaterialEncorium mat : encoriumVariants) {
-				Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(mat, 0, new ModelResourceLocation(mat.getRegistryName(), "inventory"));
 			}
 		}
 	}

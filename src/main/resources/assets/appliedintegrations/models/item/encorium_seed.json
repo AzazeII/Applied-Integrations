@@ -1,0 +1,16 @@
+{
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "appliedintegrations:items/encorium0"
+	},
+	"overrides": [
+		{ "predicate": { "growth": 0.1 }, "model": "appliedintegrations:item/encorium_seed1" },
+		{ "predicate": { "growth": 0.2 }, "model": "appliedintegrations:item/encorium_seed2" },
+		{ "predicate": { "growth": 0.3 }, "model": "appliedintegrations:item/encorium_seed3" },
+		{ "predicate": { "growth": 0.4 }, "model": "appliedintegrations:item/encorium_seed4" },
+		{ "predicate": { "growth": 0.5 }, "model": "appliedintegrations:item/encorium_seed5" },
+		{ "predicate": { "growth": 0.6 }, "model": "appliedintegrations:item/encorium_seed6" },
+		{ "predicate": { "growth": 0.7 }, "model": "appliedintegrations:item/encorium_seed7" },
+		{ "predicate": { "growth": 0.8 }, "model": "appliedintegrations:item/encorium_seed8" }
+	]
+}
