@@ -1,0 +1,11 @@
+{
+	"result": {
+		"item": "appliedintegrations:einterface"
+	},
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "appliedintegrations:energyinterfacepartitem"
+		}
+	]
+}

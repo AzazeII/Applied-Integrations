@@ -1,0 +1,31 @@
+{
+	"result": {
+		"item": "appliedintegrations:mana_annihilation_core",
+		"count": 2
+	},
+	"type": "appliedenergistics2:part_shaped",
+	"pattern": [
+		"   ",
+		"qdp",
+		"   "
+	],
+	"key": {
+		"q": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "gemQuartz"
+			},
+			{
+				"type": "appliedenergistics2:part",
+				"part": "material.purified_nether_quartz_crystal"
+			}
+		],
+		"d": {
+			"item": "appliedintegrations:encorium_dust"
+		},
+		"p": {
+			"type": "appliedenergistics2:part",
+			"part": "material.logic_processor"
+		}
+	}
+}

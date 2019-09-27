@@ -1,4 +1,4 @@
-package AppliedIntegrations.Items.Botania;
+package AppliedIntegrations.Items.Botania.Encorium;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.AIItemRegistrable;
 import AppliedIntegrations.Items.ItemEnum;
@@ -93,7 +93,7 @@ public class MaterialEncoriumSeed extends AIItemRegistrable implements IBotaniaI
 		final int newDamage = getProgress(is) + 1;
 
 		if (newDamage == SINGLE_STEP) {
-			return new ItemStack(ItemEnum.ITEMENCROIUM.getItem());
+			return new ItemStack(ItemEnum.ITEMENCORIUM.getItem());
 		}
 
 		if (newDamage > SINGLE_STEP * 2) {

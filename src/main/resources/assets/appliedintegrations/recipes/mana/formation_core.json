@@ -1,0 +1,35 @@
+{
+	"result": {
+		"item": "appliedintegrations:mana_formation_core",
+		"count": 2
+	},
+	"type": "appliedenergistics2:part_shaped",
+	"pattern": [
+		"   ",
+		"cdp",
+		"   "
+	],
+	"key": {
+		"c": [
+			{
+				"type": "forge:ore_dict",
+				"ore": "crystalCertusQuartz"
+			},
+			{
+				"type": "appliedenergistics2:part",
+				"part": "material.certus_quartz_crystal_charged"
+			},
+			{
+				"type": "appliedenergistics2:part",
+				"part": "material.purified_certus_quartz_crystal"
+			}
+		],
+		"d": {
+			"item": "appliedintegrations:encorium_dust"
+		},
+		"p": {
+			"type": "appliedenergistics2:part",
+			"part": "material.logic_processor"
+		}
+	}
+}

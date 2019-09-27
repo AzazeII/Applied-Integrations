@@ -13,12 +13,14 @@ import AppliedIntegrations.grid.Mana.ManaStorageChannel;
 import AppliedIntegrations.tile.MultiController.TileMultiControllerCore;
 import AppliedIntegrations.tile.MultiController.helpers.Matter.FilteredMultiControllerPortManaHandler;
 import appeng.api.AEApi;
+import appeng.api.features.IGrinderRecipe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 import org.apache.commons.lang3.tuple.Pair;
 import vazkii.botania.api.BotaniaAPI;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedHashMap;
 import java.util.Optional;
 
@@ -75,6 +77,48 @@ public class BotaniaLoader {
 			BotaniaAPI.registerElvenTradeRecipe(new ItemStack(ItemEnum.ITEMENCORIUMSEED.getItem(), 1, 0), fluixPureStack);
 		}
 		/*------------------------------------------Elven Trade------------------------------------------*/
+
+		// Linkorium dust
+		AEApi.instance().registries().grinder().addRecipe(new IGrinderRecipe() {
+			@Nonnull
+			@Override
+			public ItemStack getInput() {
+				return ItemEnum.ITEMENCORIUM.getStack();
+			}
+
+			@Nonnull
+			@Override
+			public ItemStack getOutput() {
+				return ItemEnum.ITEMENCORIUMDUST.getStack();
+			}
+
+			@Nonnull
+			@Override
+			public Optional<ItemStack> getOptionalOutput() {
+				return Optional.empty();
+			}
+
+			@Override
+			public Optional<ItemStack> getSecondOptionalOutput() {
+				return Optional.empty();
+			}
+
+			@Nonnull
+			@Override
+			public float getOptionalChance() {
+				return 0;
+			}
+
+			@Override
+			public float getSecondOptionalChance() {
+				return 0;
+			}
+
+			@Override
+			public int getRequiredTurns() {
+				return 8;
+			}
+		});
 	}
 
 	public static void initChannelHandlers(AIApi instance) throws NoSuchMethodException {

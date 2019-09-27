@@ -150,6 +150,8 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 	public ItemEnergyWirelessTerminal(String name) {
 		super(name);
 		this.setMaxStackSize(1);
+
+		AEApi.instance().registries().wireless().registerWirelessHandler(this);
 	}
 
 	protected IGrid getGrid(ItemStack stack) {

@@ -1,0 +1,29 @@
+{
+	"result": {
+		"item": "appliedintegrations:manainterfacepartitem"
+	},
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"IRI",
+		"FEA",
+		"IRI"
+	],
+	"key": {
+		"I": {
+			"item": "minecraft:iron_ingot"
+		},
+		"R": {
+			"item": "botania:livingwood",
+			"data": 0
+		},
+		"F": {
+			"item": "appliedintegrations:mana_formation_core"
+		},
+		"E": {
+			"item": "botania:manatablet"
+		},
+		"A": {
+			"item": "appliedintegrations:mana_annihilation_core"
+		}
+	}
+}

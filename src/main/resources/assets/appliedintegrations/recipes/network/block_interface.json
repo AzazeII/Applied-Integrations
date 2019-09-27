@@ -1,4 +1,7 @@
 {
+  "result": {
+    "item": "appliedintegrations:einterface"
+  },
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "IRI",
@@ -23,8 +26,5 @@
       "item": "appliedenergistics2:material",
       "data": 44
     }
-  },
-  "result": {
-    "item": "appliedintegrations:einterface"
   }
 }

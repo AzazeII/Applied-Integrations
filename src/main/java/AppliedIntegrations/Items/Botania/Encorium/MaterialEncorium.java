@@ -1,4 +1,4 @@
-package AppliedIntegrations.Items.Botania;
+package AppliedIntegrations.Items.Botania.Encorium;
 import AppliedIntegrations.Integration.Botania.IBotaniaIntegrated;
 import AppliedIntegrations.Items.AIItemRegistrable;
 

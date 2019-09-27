@@ -5,7 +5,12 @@ import AppliedIntegrations.Integration.BloodMagic.BloodMagicLoader;
 import AppliedIntegrations.Integration.Botania.BotaniaLoader;
 import AppliedIntegrations.Integration.Embers.EmberLoader;
 import AppliedIntegrations.Items.AdvancedNetworkTool.AdvancedNetworkTool;
-import AppliedIntegrations.Items.Botania.*;
+import AppliedIntegrations.Items.Botania.Encorium.MaterialEncorium;
+import AppliedIntegrations.Items.Botania.Encorium.MaterialEncoriumDust;
+import AppliedIntegrations.Items.Botania.Encorium.MaterialEncoriumSeed;
+import AppliedIntegrations.Items.Botania.MEManaMirror;
+import AppliedIntegrations.Items.Botania.ManaAnnihilationCore;
+import AppliedIntegrations.Items.Botania.ManaFormationCore;
 import AppliedIntegrations.Items.Part.Energy.*;
 import AppliedIntegrations.Items.Part.ItemPartInteractionBus;
 import AppliedIntegrations.Items.Part.Mana.ItemPartManaInterface;
@@ -55,7 +60,8 @@ public enum ItemEnum {
 	//ITEMMANAWIRELESSRING(new MEManaRing("me_mana_ring"), BotaniaLoader.enableBotania()), Disabled, these rings are useless because they both act just like mana mirror
 	//ITEMMANAWIRELESSGREATRING(new MEGreaterManaRing("me_greater_mana_ring"), BotaniaLoader.enableBotania()),
 	ITEMENCORIUMSEED(new MaterialEncoriumSeed("encorium_seed"), BotaniaLoader.enableBotania()),
-	ITEMENCROIUM(new MaterialEncorium("encorium"), BotaniaLoader.enableBotania()),
+	ITEMENCORIUMDUST(new MaterialEncoriumDust("encorium_dust"), BotaniaLoader.enableBotania()),
+	ITEMENCORIUM(new MaterialEncorium("encorium"), BotaniaLoader.enableBotania()),
 	// & ------------------------------------MANA------------------------------------ &
 
 	ITEMENERGYWIRELESSTERMINAL(new ItemEnergyWirelessTerminal("wireless_energy_terminal"), AIConfig.enableEnergyFeatures),

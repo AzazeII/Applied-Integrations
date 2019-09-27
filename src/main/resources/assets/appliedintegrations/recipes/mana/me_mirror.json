@@ -4,9 +4,9 @@
 	},
 	"type": "forge:ore_shaped",
 	"pattern": [
-		"r",
-		"lml",
-		"c"
+		" r ",
+		"amf",
+		" c "
 	],
 	"key": {
 		"m": {
@@ -19,8 +19,11 @@
 			"type": "appliedenergistics2:part",
 			"part": "material.wireless"
 		},
-		"l": {
-			"item": "appliedintegrations:encorium"
+		"a": {
+			"item": "appliedintegrations:mana_annihilation_core"
+		},
+		"f": {
+			"item": "appliedintegrations:mana_formation_core"
 		}
 	}
 }

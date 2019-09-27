@@ -81,6 +81,7 @@ item.wireless_energy_terminal.name=МЭ Беспроводной Термина�
 item.appliedintegrationsitem.chaos.manipulator.name=Инструмент Манипуляции МЭ Сети
 
 item.encorium.name=Линкорьевый Кристалл
+item.encorium_dust.name=Пыль Линкория
 item.encorium_seed.name=Семя Ликорьевого Кристалла
 
 Used=Использовано

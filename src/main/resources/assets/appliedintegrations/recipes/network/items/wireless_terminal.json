@@ -1,0 +1,23 @@
+{
+	"result": {
+		"item": "appliedintegrations:wireless_energy_terminal"
+	},
+	"type": "forge:ore_shaped",
+	"pattern": [
+		"R",
+		"T",
+		"C"
+	],
+	"key": {
+		"R": {
+			"type": "appliedenergistics2:part",
+			"part": "material.wireless"
+		},
+		"T": {
+			"item": "appliedintegrations:energyterminalpartitem"
+		},
+		"C": {
+			"item": "appliedenergistics2:dense_energy_cell"
+		}
+	}
+}

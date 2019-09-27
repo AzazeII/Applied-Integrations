@@ -21,6 +21,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
@@ -42,7 +45,6 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 
 	public MEManaMirror(String registry) {
 		super(registry);
-		AEApi.instance().registries().wireless().registerWirelessHandler(this);
 	}
 
 	private IStorageChannel<IAEManaStack> getChannel() {
@@ -58,6 +60,11 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 	private boolean cantDoWork(ItemStack stack, IGrid grid) {
 		NBTTagCompound tag = Platform.openNbtData(stack);
 		return isNotInRange(stack, grid, new BlockPos(tag.getDouble(TAG_X), tag.getDouble(TAG_Y), tag.getDouble(TAG_Z)), tag.getInteger(TAG_W));
+	}
+
+	@Override
+	public ActionResult<ItemStack> onItemRightClick(final World w, final EntityPlayer player, final EnumHand hand) {
+		return new ActionResult<>(EnumActionResult.PASS, player.getHeldItem(hand));
 	}
 
 	@Override

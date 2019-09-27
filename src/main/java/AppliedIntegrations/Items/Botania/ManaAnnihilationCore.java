@@ -9,7 +9,6 @@ import AppliedIntegrations.Items.AIItemRegistrable;
  */
 public class ManaAnnihilationCore extends AIItemRegistrable implements IBotaniaIntegrated {
 	public ManaAnnihilationCore(String mana_annihilation_core) {
-
 		super(mana_annihilation_core);
 	}
 }
