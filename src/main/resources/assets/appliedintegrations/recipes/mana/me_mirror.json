@@ -5,7 +5,7 @@
 	"type": "forge:ore_shaped",
 	"pattern": [
 		" r ",
-		"amf",
+		"fma",
 		" c "
 	],
 	"key": {

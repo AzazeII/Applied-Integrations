@@ -20,7 +20,7 @@ public abstract class AIRotatablePart extends AIPart {
 	private static final String NBT_KEY_ROT_DIR = "partRotation";
 
 	// Rotation value. Each byte gives +90 degree to rotation
-	private byte renderRotation = 0;
+	protected byte renderRotation = 0;
 
 	public AIRotatablePart(final PartEnum associatedPart) {
 
@@ -33,8 +33,8 @@ public abstract class AIRotatablePart extends AIPart {
 		super.readFromNBT(data);
 
 		// Read rotation
-		if (data.hasKey(this.NBT_KEY_ROT_DIR)) {
-			this.renderRotation = data.getByte(this.NBT_KEY_ROT_DIR);
+		if (data.hasKey(NBT_KEY_ROT_DIR)) {
+			this.renderRotation = data.getByte(NBT_KEY_ROT_DIR);
 		}
 	}
 
@@ -60,7 +60,7 @@ public abstract class AIRotatablePart extends AIPart {
 		// Did the rotaion change?
 		if (this.renderRotation != streamRot) {
 			this.renderRotation = streamRot;
-			redraw |= true;
+			redraw = true;
 		}
 
 		return redraw;

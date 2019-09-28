@@ -27,24 +27,31 @@ import appeng.util.IWideReadableNumberConverter;
 import appeng.util.Platform;
 import appeng.util.ReadableNumberConverter;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
 import static appeng.parts.reporting.PartStorageMonitor.*;
-import static net.minecraft.client.renderer.vertex.DefaultVertexFormats.POSITION_TEX;
-import static org.lwjgl.opengl.GL11.GL_QUADS;
 
 /**
  * @Author Azazell
@@ -61,6 +68,8 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	private static final String KEY_IS_LOCKED = "#IS_LOCKED";
 	private static final String KEY_STACK_TAG = "#STACK_TAG";
+	private static final String KEY_HAS_STACK = "#HAS_STACK";
+
 	private static final IWideReadableNumberConverter NUMBER_CONVERTER = ReadableNumberConverter.INSTANCE;
 
 	private String lastHumanReadableText;
@@ -93,54 +102,93 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	private void queryStackUpdate() throws GridAccessException {
 		// Check not null
-		if( currentStack == null ) {
+		if (currentStack == null) {
 			return;
 		}
 
 		// Find stack from grid inventory
-		IAEEnergyStack output = getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class))
-				.getStorageList().findPrecise( currentStack );
+		IAEEnergyStack output = getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(
+				IEnergyStorageChannel.class)).getStorageList().findPrecise(currentStack);
 
 		// Replace stack size with stack size of stack from inventory
-		currentStack.setStackSize( output == null ? 0 : output.getStackSize() );
+		currentStack.setStackSize(output == null ? 0 : output.getStackSize());
 	}
 
-	@Override // Server side
-	public void writeToStream( final ByteBuf data ) throws IOException {
-		super.writeToStream( data );
+	@SideOnly(Side.CLIENT)
+	private void renderEnergy(Tessellator tess, IAEEnergyStack energyStack) {
+		try {
+			// Bind lighting ambient
+			int light = 16 << 20 | 16 << 4;
+			int lightU = light % 65536;
+			int lightV = light / 65536;
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
+					lightU * 0.8F, lightV * 0.8F);
 
-		// Write is locked value
-		data.writeBoolean(isLocked);
+			// Configure GL constants
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
-		// Write has stack
-		data.writeBoolean(currentStack != null);
+			GlStateManager.disableLighting();
+			GlStateManager.disableRescaleNormal();
 
-		// Check not null
-		if (currentStack == null)
-			return;
+			// Get sprite
+			Minecraft mc = Minecraft.getMinecraft();
+			ResourceLocation liquidEnergyFluidStill = energyStack.getEnergy().getStill();
+
+			if (liquidEnergyFluidStill != null) {
+				TextureMap textureMap = mc.getTextureMapBlocks();
+				TextureAtlasSprite icon = textureMap.getAtlasSprite(liquidEnergyFluidStill.toString());
+
+				mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
+				// Draw sprite
+				BufferBuilder buffer = tess.getBuffer();
+				buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+				try {
+					buffer.pos(0, 16, 0).tex(icon.getMinU(), icon.getMaxV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+					buffer.pos(16, 16, 0).tex(icon.getMaxU(), icon.getMaxV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+					buffer.pos(16, 0, 0).tex(icon.getMaxU(), icon.getMinV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+					buffer.pos(0, 0, 0).tex(icon.getMinU(), icon.getMinV()).color(1.0f, 1.0f, 1.0f, 1.0f).endVertex();
+				} finally {
+					tess.draw();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void writeToStream(final ByteBuf stream) throws IOException {
+		// Call super
+		super.writeToStream(stream);
 
 		// Write stack
-		currentStack.writeToPacket(data);
-	}
+		boolean hasStack = currentStack != null;
 
-	@Override // Client side
-	public boolean readFromStream( final ByteBuf data ) throws IOException {
-		// Read is locked
-		boolean isLocked = data.readBoolean();
-
-		// Track change in current and written is locked data
-		boolean redraw = isLocked != this.isLocked;
-
-		// Check if stack exists
-		if (data.readBoolean()) {
-			// Read stack
-			this.currentStack = AEEnergyStack.fromPacket(data);
-		} else {
-			// Nullify stack
-			this.currentStack = null;
+		stream.writeBoolean(hasStack);
+		if (hasStack) {
+			currentStack.writeToPacket(stream);
 		}
 
-		return super.readFromStream(data) || redraw;
+		// Write lock state
+		stream.writeBoolean(isLocked);
+	}
+
+	@Override
+	public boolean readFromStream(final ByteBuf stream) throws IOException {
+		// Pre-read data from stream
+		boolean readFromStream = super.readFromStream(stream);
+
+		// Read stack
+		if (stream.readBoolean()) {
+			currentStack = AEEnergyStack.fromPacket(stream);
+		}
+
+		// Read lock state
+		isLocked = stream.readBoolean();
+
+		return readFromStream;
 	}
 
 	@Override
@@ -166,25 +214,28 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		GlStateManager.translate( x + 0.5, y + 0.5, z + 0.5 );
 
 		// Move to current facing
-		TesrRenderHelper.moveToFace( getHostSide().getFacing() );
+		EnumFacing facing = getHostSide().getFacing();
+		TesrRenderHelper.moveToFace(facing);
+		TesrRenderHelper.rotateToFace(facing, renderRotation );
 
-		// Get tesselator
-		Tessellator tessellator = Tessellator.getInstance();
+		final long stackSize = currentStack.getStackSize();
+		final String renderedStackSize = NUMBER_CONVERTER.toWideReadableForm( stackSize );
 
-		// Get buffered builder
-		BufferBuilder builder = tessellator.getBuffer();
+		// Render the energy amount
+		final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+		final int width = fr.getStringWidth( renderedStackSize );
 
-		// Begin drawing quads
-		builder.begin(GL_QUADS, POSITION_TEX);
+		// Translate
+		GlStateManager.translate( 0.0f, 0.17f, 0 );
+		GlStateManager.scale( 1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f );
+		GlStateManager.translate( -0.5f * width, 0.0f, 0.5f );
 
-		// Energy quad
-		builder.pos(-0.2, -0.2, 0).endVertex(); // 1.
-		builder.pos(-0.2, 0.2, 0).endVertex(); // 2.
-		builder.pos(0.2, -0.2, 0).endVertex(); // 3.
-		builder.pos(0.2, 0.2, 0).endVertex(); // 4.
+		// Call renderer
+		fr.drawString( renderedStackSize, 0, 0, 0 );
+		GlStateManager.translate(0, -0.5f, 0);
 
-		// End drawing
-		tessellator.draw();
+		// Render our energy
+		renderEnergy(Tessellator.getInstance(), currentStack);
 
 		// Isolate changes
 		GlStateManager.popMatrix();
@@ -233,7 +284,8 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		NBTTagCompound stackTag = new NBTTagCompound();
 
 		// Check not null
-		if (currentStack != null) {
+		data.setBoolean(KEY_HAS_STACK, currentStack != null && currentStack.getEnergy() != null);
+		if (currentStack != null && currentStack.getEnergy() != null) {
 			// Write stack to sub-nbt tag
 			currentStack.writeToNBT(stackTag);
 		}
@@ -248,7 +300,9 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		super.readFromNBT(data);
 
 		// Read data from nbt
-		currentStack = AEEnergyStack.fromNBT(data.getCompoundTag(KEY_STACK_TAG)); // 1. Sub stack tag & Stack
+		if (data.getBoolean(KEY_HAS_STACK)) {
+			currentStack = AEEnergyStack.fromNBT(data.getCompoundTag(KEY_STACK_TAG)); // 1. Sub stack tag & Stack
+		}
 		isLocked = data.getBoolean(KEY_IS_LOCKED); // 2. Is locked
 	}
 
@@ -280,9 +334,11 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	}
 
 	@Override
-	public boolean onShiftActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
+	public boolean onShiftActivate(EntityPlayer player, EnumHand hand, Vec3d vec3d) {
+		World hostWorld = getHostWorld();
+
 		// Ignored on client && Ignored if player has held item
-		if( getHostWorld().isRemote ||  !player.getHeldItem( enumHand ).isEmpty() ) {
+		if( hostWorld.isRemote ||  !player.getHeldItem( hand ).isEmpty() ) {
 			return true;
 		}
 
@@ -295,11 +351,12 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		this.isLocked = !this.isLocked;
 
 		// Notify player
-		player.sendMessage( ( this.isLocked ? PlayerMessages.isNowLocked : PlayerMessages.isNowUnlocked ).get() );
+		player.sendMessage((this.isLocked ? PlayerMessages.isNowLocked : PlayerMessages.isNowUnlocked).get());
 
 		// Mark for save & update
 		this.getHost().markForSave(); // 1. Save
 		this.getHost().markForUpdate(); // 2. Update
+
 		return true;
 	}
 

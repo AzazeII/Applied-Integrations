@@ -15,24 +15,20 @@ public class EnergyStack implements IEnergyStack {
 	private LiquidAIEnergy energy;
 
 	public EnergyStack(LiquidAIEnergy energy, long amount) {
-
 		this.energy = energy;
 		this.amount = amount;
 	}
 
 	private EnergyStack(EnergyStack old) {
-
 		this.energy = old.getEnergy();
 		this.amount = old.getAmount();
 	}
 
 	public long getAmount() {
-
 		return this.amount;
 	}
 
 	public void setAmount(long amount) {
-
 		this.amount = amount;
 	}
 
@@ -41,7 +37,6 @@ public class EnergyStack implements IEnergyStack {
 	}
 
 	public static EnergyStack readFromNBT(NBTTagCompound tag) {
-
 		if (tag != null && !tag.hasNoTags()) {
 			EnergyStack stack = new EnergyStack();
 			stack.read(tag);
@@ -58,29 +53,24 @@ public class EnergyStack implements IEnergyStack {
 
 	@Override
 	public long adjustStackSize(long delta) {
-
 		return 0;
 	}
 
 	public EnergyStack copy() {
-
 		return new EnergyStack(this);
 	}
 
 	public LiquidAIEnergy getEnergy() {
-
 		return energy;
 	}
 
 	@Override
 	public void setEnergy(@Nullable LiquidAIEnergy energy) {
-
 		this.energy = energy;
 	}
 
 	@Override
 	public String getEnergyName() {
-
 		if (energy != null) {
 			return energy.getEnergyName();
 		}
@@ -90,38 +80,32 @@ public class EnergyStack implements IEnergyStack {
 	@Nonnull
 	@Override
 	public String getEnergyName(@Nullable EntityPlayer player) {
-
 		return getEnergyName();
 	}
 
 	@Nonnull
 	@Override
 	public String getChatColor() {
-
 		return "red";
 	}
 
 	@Override
 	public long getStackSize() {
-
 		return amount;
 	}
 
 	@Override
 	public void setStackSize(long size) {
-
 		amount = size;
 	}
 
 	@Override
 	public boolean hasEnergy() {
-
 		return amount > 0 && energy != null;
 	}
 
 	@Override
 	public boolean isEmpty() {
-
 		return amount == 0 || energy == null;
 	}
 

@@ -1,0 +1,17 @@
+{
+	"result": {
+		"item": "appliedintegrations:manastoragepartitem"
+	},
+	"type": "forge:ore_shapeless",
+	"ingredients": [
+		{
+			"item": "minecraft:sticky_piston"
+		},
+		{
+			"item": "appliedintegrations:manainterfacepartitem"
+		},
+		{
+			"item": "minecraft:piston"
+		}
+	]
+}
