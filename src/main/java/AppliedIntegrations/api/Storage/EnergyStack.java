@@ -46,7 +46,6 @@ public class EnergyStack implements IEnergyStack {
 	}
 
 	public void read(NBTTagCompound tag) {
-
 		this.energy = LiquidAIEnergy.getEnergy(tag.getString("Energy"));
 		this.amount = tag.getLong("Amount");
 	}

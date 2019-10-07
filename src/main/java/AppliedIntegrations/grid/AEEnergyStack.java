@@ -15,10 +15,11 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * @Author Azazell
  */
 public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack> {
-	private static final String KEY_ENERGY = "#Energy";
-	private static final String KEY_AMOUNT = "#Amount";
-	private static final String KEY_REQUESTABLE = "#Amount_Requestable";
-	private static final String KEY_CRAFTABLE = "#Amount_Craftable";
+	private static String KEY_ENERGY = "Energy";
+	private static String KEY_COUNT = "Count";
+	private static String KEY_AMOUNT = "Amount";
+	private static String KEY_REQ = "Req";
+	private static String KEY_CRAFT = "Craft";
 	private LiquidAIEnergy energy;
 
 	private long stackSize;
@@ -64,12 +65,16 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 	}
 
 	public static IAEEnergyStack fromNBT(NBTTagCompound t) {
-		AEEnergyStack stack = new AEEnergyStack(LiquidAIEnergy.energies.get(t.getString(KEY_ENERGY)), t.getLong(KEY_AMOUNT));
+		EnergyStack stack = EnergyStack.readFromNBT(t);
+		if (stack == null) {
+			return null;
+		}
 
-		stack.setCountRequestable(t.getLong(KEY_REQUESTABLE));
-		stack.setCraftable(t.getBoolean(KEY_CRAFTABLE));
-
-		return stack;
+		AEEnergyStack ae = AEEnergyStack.fromStack(stack);
+		ae.setStackSize(t.getLong(KEY_AMOUNT));
+		ae.setCountRequestable(t.getLong(KEY_REQ));
+		ae.setCraftable(t.getBoolean(KEY_CRAFT));
+		return new AEEnergyStack(stack.getEnergy(), stack.getAmount());
 	}
 
 	public static AEEnergyStack fromStack(EnergyStack stack) {
@@ -160,9 +165,10 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 	@Override
 	public void writeToNBT(NBTTagCompound t) {
 		t.setString(KEY_ENERGY, this.getEnergy().getTag());
+		t.setByte(KEY_COUNT, (byte) 0);
 		t.setLong(KEY_AMOUNT, this.getStackSize());
-		t.setLong(KEY_REQUESTABLE, this.getCountRequestable());
-		t.setBoolean(KEY_CRAFTABLE, this.isCraftable());
+		t.setLong(KEY_REQ, this.getCountRequestable());
+		t.setBoolean(KEY_CRAFT, this.isCraftable());
 	}
 
 	@Override

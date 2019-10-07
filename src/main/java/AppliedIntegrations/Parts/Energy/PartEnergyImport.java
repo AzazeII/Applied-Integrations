@@ -67,15 +67,14 @@ public class PartEnergyImport extends AIOPart {
 
 			// Check if tile can operate given energy
 			if (helper.operatesEnergy(energy)) {
-
 				// Simulate injection
 				int injected = injectEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
 
-				// Create helper
-				helper.extractEnergy(injected, false, energy);
+				// Modulate extraction
+				int extracted = helper.extractEnergy(injected, false, energy);
 
 				// Modulate injection
-				injectEnergy(new EnergyStack(energy, injected), Actionable.MODULATE);
+				injectEnergy(new EnergyStack(energy, extracted), Actionable.MODULATE);
 
 				// Check if energy was actually injected
 				if (injected > 0) {

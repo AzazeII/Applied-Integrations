@@ -170,7 +170,7 @@ public class Utils {
 	}
 
 	public static AIPart getPartByParams(@Nonnull BlockPos pos, @Nonnull EnumFacing side, @Nonnull World world) {
-		return (AIPart) (((IPartHost) world.getTileEntity(pos)).getPart(side)); // -1, 64, 3
+		return (AIPart) (((IPartHost) world.getTileEntity(pos)).getPart(side));
 	}
 
 	public static IAEManaStack getManaFromItemStack(ItemStack itemStack) {
