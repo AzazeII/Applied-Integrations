@@ -46,7 +46,6 @@ public class PartEnergyImport extends AIOPart {
 
 	@Override
 	public int getLightLevel() {
-
 		return 0;
 	}
 
