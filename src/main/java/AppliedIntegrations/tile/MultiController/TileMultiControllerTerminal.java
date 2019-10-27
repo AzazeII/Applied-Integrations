@@ -37,7 +37,6 @@ public class TileMultiControllerTerminal extends AITile implements IOrientable {
 	public AIGridNodeInventory editorInv = new AIGridNodeInventory("Network Card Editor", 1, 1) {
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-
 			return itemstack.getItem() instanceof NetworkCard;
 		}
 	};

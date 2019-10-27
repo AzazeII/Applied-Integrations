@@ -3,8 +3,14 @@ import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.tile.AITile;
 import appeng.api.AEApi;
+import appeng.api.IAppEngApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
+import appeng.api.networking.IGrid;
+import appeng.api.networking.IGridNode;
+import appeng.api.networking.events.MENetworkCellArrayUpdate;
+import appeng.api.networking.events.MENetworkChannelsChanged;
+import appeng.api.networking.events.MENetworkEventSubscribe;
 import appeng.api.networking.security.IActionSource;
 import appeng.api.storage.ICellContainer;
 import appeng.api.storage.ICellInventory;
@@ -13,12 +19,18 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
+import appeng.api.util.AEPartLocation;
 import appeng.util.Platform;
 import appeng.util.item.ItemList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import javax.annotation.Nullable;
@@ -39,10 +51,15 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		PaintBall(1),
 		Singularity(25);
 
+		final TimeHandler cooldownHandler = new TimeHandler();
 		int cooldown;
 
 		Ammo(int cooldown) {
 			this.cooldown = cooldown;
+		}
+
+		public boolean hasCooldownPassed(World w) {
+			return cooldownHandler.hasTimePassed(w, cooldown);
 		}
 	}
 
@@ -54,6 +71,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 	// Direction for rendering turret tower
 	public BlockPos direction = new BlockPos(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 
+	private Ammo ammo = Ammo.MatterBall;
 	private ItemList storedAmmo = new ItemList();
 
 	public boolean activate(EnumHand hand, EntityPlayer p) {
@@ -61,18 +79,73 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		if (hand == EnumHand.MAIN_HAND) {
 			// Call only on server
 			if (Platform.isServer()) {
-				// Update only on server
-				this.direction = p.getPosition();
-
-				// Notify client
-				NetworkHandler.sendToAllInRange(new PacketVectorSync(this.direction, this.getPos()), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
-
-				// True result
+				setDirection(p.getPosition());
 				return true;
 			}
 		}
 
 		return false;
+	}
+
+	private void setDirection(BlockPos pos) {
+		// Normalize vector
+		this.direction = pos;
+
+		// Notify client
+		NetworkHandler.sendToAllInRange(new PacketVectorSync(this.direction, this.getPos()),
+				new NetworkRegistry.TargetPoint(world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 64));
+	}
+
+	@MENetworkEventSubscribe
+	public void updateChannels(final MENetworkChannelsChanged changedChannels) {
+		// Get node
+		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
+		// Check notNull
+		if (node != null) {
+			// Get grid
+			IGrid grid = node.getGrid();
+
+			// Post update
+			grid.postEvent(new MENetworkCellArrayUpdate());
+		}
+	}
+
+	@Override
+	public void update() {
+		super.update();
+
+		// Only shoot materballs. Singularities are for storage system
+		if (!ammo.hasCooldownPassed(world) || ammo == Ammo.Singularity) {
+			return;
+		}
+
+		// Get matterball implementation
+		IAppEngApi instance = AEApi.instance();
+		Optional<ItemStack> maybeMatterBall = instance.definitions().materials().matterBall().maybeStack(1);
+		IAEItemStack matterBall = null;
+		if (maybeMatterBall.isPresent()) {
+			matterBall = instance.storage().getStorageChannel(IItemStorageChannel.class).createStack(maybeMatterBall.get());
+		}
+
+		IAEItemStack storageEntry = storedAmmo.findPrecise(matterBall);
+		if (matterBall == null || storageEntry == null) {
+			return;
+		}
+
+		// Scan for entities in range
+		List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-10, -10, -10), pos.add(10, 10, 10)));
+		for (EntityLivingBase ent : ents) {
+			// Don't attack players
+			if (ent instanceof EntityPlayer) {
+				continue;
+			}
+
+			// Attacking entity
+			setDirection(ent.getPosition());
+			ent.attackEntityFrom(DamageSource.causeIndirectDamage(ent, ent), 1F);
+			storageEntry.setStackSize(storageEntry.getStackSize() - 1);
+			return;
+		}
 	}
 
 	@Override
@@ -117,37 +190,31 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 				@Override
 				public IAEItemStack extractItems(IAEItemStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
-
 					return null;
 				}
 
 				@Override
 				public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> iItemList) {
-
-					return null;
+					return storedAmmo;
 				}
 
 				@Override
 				public IStorageChannel<IAEItemStack> getChannel() {
-
 					return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 				}
 
 				@Override
 				public AccessRestriction getAccess() {
-
 					return AccessRestriction.READ_WRITE;
 				}
 
 				@Override
 				public boolean isPrioritized(IAEItemStack iaeItemStack) {
-
 					return false;
 				}
 
 				@Override
 				public boolean canAccept(IAEItemStack iaeItemStack) {
-
 					// Get item stack's item
 					Item item = iaeItemStack.getItem();
 
@@ -156,7 +223,6 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 					Optional<Item> optionalBlackHoleBall = AEApi.instance().definitions().materials().matterBall().maybeItem();
 
 					return (optionalBlackHoleBall.isPresent() && item == optionalBlackHoleBall.get()) ||
-
 							(optionalMatterBall.isPresent()) && item == optionalMatterBall.get();
 				}
 
@@ -185,7 +251,6 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 	@Override
 	public int getPriority() {
-
 		return 0;
 	}
 

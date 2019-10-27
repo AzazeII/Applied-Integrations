@@ -497,20 +497,11 @@ public abstract class AIPart implements IPart, IGridHost, IActionHost, IPowerCha
 
 	@MENetworkEventSubscribe
 	public final void setPower(final MENetworkPowerStatusChange event) {
-
 		this.updateStatus();
-	}
-
-	public void setupPartFromItem(final ItemStack itemPart) {
-
-		if (itemPart.hasTagCompound()) {
-			this.readFromNBT(itemPart.getTagCompound());
-		}
 	}
 
 	@MENetworkEventSubscribe
 	public void updateChannels(final MENetworkChannelsChanged event) {
-
 		this.updateStatus();
 	}
 

@@ -35,7 +35,6 @@ public class TimeHandler {
 	}
 
 	public void updateData(World w) {
-
 		lastTime = w.getTotalWorldTime();
 	}
 }

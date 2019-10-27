@@ -130,7 +130,7 @@ public class PartEnergyStorage extends AIPart implements ICellContainer, IGridTi
 		super(manaStorage);
 	}
 
-	public void postCellEvent() {
+	private void postCellEvent() {
 		// Get node
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 		// Check notNull
