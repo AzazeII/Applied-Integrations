@@ -23,11 +23,9 @@ public enum EntityEnum {
 
 	private Class<? extends Render> renderClazz;
 
-	@SuppressWarnings("unchecked")
 	EntityEnum(Class<? extends Entity> entity, Class<? extends Render> renderer) {
-
-		clazz = entity;
-		renderClazz = renderer;
+		this.clazz = entity;
+		this.renderClazz = renderer;
 	}
 
 	public static void register() {

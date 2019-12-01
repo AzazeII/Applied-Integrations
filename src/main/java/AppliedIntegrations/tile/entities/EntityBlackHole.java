@@ -12,7 +12,6 @@ import net.minecraft.world.World;
  */
 public class EntityBlackHole extends EntitySnowball {
 	public EntityBlackHole(World world, double x, double y, double z) {
-
 		super(world, x, y, z);
 	}
 

@@ -27,6 +27,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -46,16 +47,34 @@ import static net.minecraft.util.EnumFacing.DOWN;
  * @Author Azazell
  */
 public class TileMETurretFoundation extends AITile implements ICellContainer {
-	private enum Ammo {
-		MatterBall(1),
-		PaintBall(1),
-		Singularity(25);
+	public enum Ammo {
+		MatterBall(1, AEApi.instance().definitions().materials().matterBall().maybeStack(1).get()),
+		Singularity(25, AEApi.instance().definitions().materials().singularity().maybeStack(1).get());
 
 		final TimeHandler cooldownHandler = new TimeHandler();
 		int cooldown;
+		ItemStack stack;
 
-		Ammo(int cooldown) {
+		Ammo(int cooldown, ItemStack stack) {
 			this.cooldown = cooldown;
+			this.stack = stack;
+		}
+
+		public static Ammo fromStack(IAEItemStack input) {
+			// Get first ammo compared by item and metadata of stack to item and metadata of input
+			for (Ammo ammo : values()) {
+				final ItemStack stack = ammo.getStack();
+				final ItemStack definition = input.getDefinition();
+				if (stack.getItem().equals(definition.getItem()) && stack.getMetadata() == definition.getMetadata()) {
+					return ammo;
+				}
+			}
+
+			return null;
+		}
+
+		private ItemStack getStack() {
+			return stack;
 		}
 
 		public boolean hasCooldownPassed(World w) {
@@ -68,11 +87,46 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		this.getProxy().setValidSides(of(DOWN));
 	}
 
-	// Direction for rendering turret tower
+	// Directions for rendering turret tower
+	private int holesTrajectoryAngle = 20;
 	public BlockPos direction = new BlockPos(pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+	public BlockPos blackHolePos = addAngleToVector(direction, holesTrajectoryAngle, EnumFacing.Axis.Y);
+	public BlockPos whiteHolePos = addAngleToVector(direction, -holesTrajectoryAngle, EnumFacing.Axis.Y);
 
-	private Ammo ammo = Ammo.MatterBall;
+	public Ammo ammo = Ammo.MatterBall;
 	private ItemList storedAmmo = new ItemList();
+
+	public static BlockPos addAngleToVector(BlockPos pos, int angle, EnumFacing.Axis aroundAxis) {
+		final double sin = Math.sin(angle);
+		final double cos = Math.cos(angle);
+
+		// Rotating position around X, Y or Z using following formulas:
+		/*
+		X--------------------------
+	    |         x        |   |x'|
+	    | y cos θ − z sin θ| = |y'|
+	    | y sin θ + z cos θ|   |z'|
+
+	    Y--------------------------
+	    | x cos θ + z sin θ|   |x'|
+		|        y         | = |y'|
+		|−x sin θ + z cos θ|   |z'|
+
+		Z--------------------------
+		| x cos θ − y sin θ|   |x'|
+		| x sin θ + y cos θ| = |y'|
+		|         z        |   |z'|
+		 */
+		if (aroundAxis == EnumFacing.Axis.X) {
+			return new BlockPos(pos.getX(), pos.getY() * cos - pos.getZ() * sin, pos.getY() * sin + pos.getZ() * cos);
+		} else if (aroundAxis == EnumFacing.Axis.Y) {
+			return new BlockPos(pos.getX() * cos + pos.getZ() * sin, pos.getY(), -pos.getX() * sin + pos.getZ() * cos);
+		} else if (aroundAxis == EnumFacing.Axis.Z) {
+			return new BlockPos(pos.getX() * cos - pos.getY() * sin, pos.getX() * sin + pos.getY() * cos, pos.getZ());
+		}
+
+		return pos;
+	}
 
 	public boolean activate(EnumHand hand, EntityPlayer p) {
 		// Only call when player clicking with right hand
@@ -88,11 +142,13 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 	}
 
 	private void setDirection(BlockPos pos) {
-		// Normalize vector
-		this.direction = pos;
+		// Normalize vector. Make direction relative to our pos +0.5
+		this.direction = pos.subtract(getHostPos());
+		this.blackHolePos = addAngleToVector(direction, holesTrajectoryAngle, EnumFacing.Axis.Y);
+		this.whiteHolePos = addAngleToVector(direction, -holesTrajectoryAngle, EnumFacing.Axis.Y);
 
 		// Notify client
-		NetworkHandler.sendToAllInRange(new PacketVectorSync(this.direction, this.getPos()),
+		NetworkHandler.sendToAllInRange(new PacketVectorSync(this.direction, this.blackHolePos, this.whiteHolePos, this.ammo, this.getPos()),
 				new NetworkRegistry.TargetPoint(world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 64));
 	}
 
@@ -115,36 +171,44 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		super.update();
 
 		// Only shoot materballs. Singularities are for storage system
-		if (!ammo.hasCooldownPassed(world) || ammo == Ammo.Singularity) {
+		if (!ammo.hasCooldownPassed(world)) {
 			return;
 		}
 
-		// Get matterball implementation
-		IAppEngApi instance = AEApi.instance();
-		Optional<ItemStack> maybeMatterBall = instance.definitions().materials().matterBall().maybeStack(1);
-		IAEItemStack matterBall = null;
-		if (maybeMatterBall.isPresent()) {
-			matterBall = instance.storage().getStorageChannel(IItemStorageChannel.class).createStack(maybeMatterBall.get());
-		}
+		if (ammo == Ammo.Singularity) {
+			// Singularity storage system starts here
+			final World hostWorld = getHostWorld();
+			if (hostWorld.isBlockPowered(getHostPos())) {
 
-		IAEItemStack storageEntry = storedAmmo.findPrecise(matterBall);
-		if (matterBall == null || storageEntry == null) {
-			return;
-		}
-
-		// Scan for entities in range
-		List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-10, -10, -10), pos.add(10, 10, 10)));
-		for (EntityLivingBase ent : ents) {
-			// Don't attack players
-			if (ent instanceof EntityPlayer) {
-				continue;
+			}
+		} else {
+			// Getting matterball implementation
+			IAppEngApi instance = AEApi.instance();
+			Optional<ItemStack> maybeMatterBall = instance.definitions().materials().matterBall().maybeStack(1);
+			IAEItemStack matterBall = null;
+			if (maybeMatterBall.isPresent()) {
+				matterBall = instance.storage().getStorageChannel(IItemStorageChannel.class).createStack(maybeMatterBall.get());
 			}
 
-			// Attacking entity
-			setDirection(ent.getPosition());
-			ent.attackEntityFrom(DamageSource.causeIndirectDamage(ent, ent), 1F);
-			storageEntry.setStackSize(storageEntry.getStackSize() - 1);
-			return;
+			IAEItemStack storageEntry = storedAmmo.findPrecise(matterBall);
+			if (matterBall == null || storageEntry == null) {
+				return;
+			}
+
+			// Scan for entities in range
+			List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-10, -10, -10), pos.add(10, 10, 10)));
+			for (EntityLivingBase ent : ents) {
+				// Don't attack players
+				if (ent instanceof EntityPlayer) {
+					continue;
+				}
+
+				// Attacking entity
+				setDirection(ent.getPosition());
+				ent.attackEntityFrom(DamageSource.GENERIC, 1F);
+				storageEntry.setStackSize(storageEntry.getStackSize() - 1);
+				return;
+			}
 		}
 	}
 
@@ -161,7 +225,6 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 		if (iStorageChannel == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class)) {
 			return singletonList(new IMEInventoryHandler<IAEItemStack>() {
-
 				@Override
 				public IAEItemStack injectItems(IAEItemStack input, Actionable actionable, IActionSource iActionSource) {
 					// Check not null
@@ -182,6 +245,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 					// Modulate inject
 					if (actionable == Actionable.MODULATE) {
 						// Add stack
+						ammo = Ammo.fromStack(input);
 						storedAmmo.add(input);
 					}
 
@@ -220,7 +284,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 					// Get optional items
 					Optional<Item> optionalMatterBall = AEApi.instance().definitions().materials().matterBall().maybeItem();
-					Optional<Item> optionalBlackHoleBall = AEApi.instance().definitions().materials().matterBall().maybeItem();
+					Optional<Item> optionalBlackHoleBall = AEApi.instance().definitions().materials().singularity().maybeItem();
 
 					return (optionalBlackHoleBall.isPresent() && item == optionalBlackHoleBall.get()) ||
 							(optionalMatterBall.isPresent()) && item == optionalMatterBall.get();

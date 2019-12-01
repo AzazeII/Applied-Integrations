@@ -1,6 +1,4 @@
 package AppliedIntegrations.tile.HoleStorageSystem.render;
-
-
 import AppliedIntegrations.Client.AITileRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
 import net.minecraft.client.renderer.GlStateManager;
@@ -12,38 +10,37 @@ import static org.lwjgl.opengl.GL11.*;
  * @Author Azazell
  */
 public class TileMETurretRenderer extends AITileRenderer<TileMETurretFoundation> {
-
 	@Override
 	public void render(TileMETurretFoundation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		// Pass preparing to super() function
+		// Pass preparing to super function
 		prepareMatrix(x, y, z);
-
-		// Scale render
 		GlStateManager.scale(3, 3, 3);
 
-		// Start drawing lines
 		glBegin(GL_LINES);
-		// Add vertex A
-		glVertex3d(0, 0, 0);
+		if (te.ammo != TileMETurretFoundation.Ammo.Singularity) {
+			// Simple direction line
+			final BlockPos direction = te.direction;
+			glVertex3d(0, 0, 0);
+			glVertex3d(direction.getX(), direction.getY(), direction.getZ());
+		} else {
+			// Rendering white/black hole trajectory lines
+			final BlockPos blackHolePos = te.blackHolePos;
+			glColor3d(0,0,0);
+			glVertex3d(0, 0, 0);
+			glVertex3d(blackHolePos.getX(), blackHolePos.getY(), blackHolePos.getZ());
 
-		// Add vertex B
-		BlockPos substract = te.direction.add(0.5, 0.5, 0.5).subtract(te.getPos().add(0.5, 0.5, 0.5));
-		glVertex3d(substract.getX(), substract.getY(), substract.getZ());
-
-		// End drawing
+			final BlockPos whiteHolePos = te.whiteHolePos;
+			glColor3d(1,1,1);
+			glVertex3d(0, 0, 0);
+			glVertex3d(whiteHolePos.getX(), whiteHolePos.getY(), whiteHolePos.getZ());
+		}
 		glEnd();
 
-		// Re-enable all states of Opengl:
-		// Cull
+		// Re-enable all states of after super function
 		GlStateManager.enableCull();
-		// Enable lighting
 		GlStateManager.enableLighting();
-		// texture2d
 		GlStateManager.enableTexture2D();
-		// Repick color
 		GlStateManager.color(1, 1, 1);
-
-		// End drawing
 		GlStateManager.popMatrix();
 	}
 }
