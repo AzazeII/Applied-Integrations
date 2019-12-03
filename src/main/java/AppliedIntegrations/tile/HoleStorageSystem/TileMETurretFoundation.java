@@ -2,12 +2,10 @@ package AppliedIntegrations.tile.HoleStorageSystem;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.tile.AITile;
+import AppliedIntegrations.tile.entities.EntityBlackHole;
 import appeng.api.AEApi;
-import appeng.api.IAppEngApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.networking.IGrid;
-import appeng.api.networking.IGridNode;
 import appeng.api.networking.events.MENetworkCellArrayUpdate;
 import appeng.api.networking.events.MENetworkChannelsChanged;
 import appeng.api.networking.events.MENetworkEventSubscribe;
@@ -19,7 +17,6 @@ import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
 import appeng.api.storage.data.IAEItemStack;
 import appeng.api.storage.data.IItemList;
-import appeng.api.util.AEPartLocation;
 import appeng.util.Platform;
 import appeng.util.item.ItemList;
 import net.minecraft.entity.EntityLivingBase;
@@ -152,18 +149,19 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 				new NetworkRegistry.TargetPoint(world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 64));
 	}
 
+	private IAEItemStack getStoredAmmo(Ammo ammo) {
+		return storedAmmo.findPrecise(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(ammo.stack));
+	}
+
 	@MENetworkEventSubscribe
 	public void updateChannels(final MENetworkChannelsChanged changedChannels) {
-		// Get node
-		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
-		// Check notNull
-		if (node != null) {
-			// Get grid
-			IGrid grid = node.getGrid();
+		postGridEvent(new MENetworkCellArrayUpdate());
+	}
 
-			// Post update
-			grid.postEvent(new MENetworkCellArrayUpdate());
-		}
+	@Override
+	public void createProxyNode() {
+		super.createProxyNode();
+		postGridEvent(new MENetworkCellArrayUpdate());
 	}
 
 	@Override
@@ -175,28 +173,25 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 			return;
 		}
 
-		if (ammo == Ammo.Singularity) {
-			// Singularity storage system starts here
-			final World hostWorld = getHostWorld();
-			if (hostWorld.isBlockPowered(getHostPos())) {
+		// Don't function without ammo
+		IAEItemStack storageEntry = getStoredAmmo(ammo);
+		if (storageEntry == null) {
+			return;
+		}
 
+		final World hostWorld = getHostWorld();
+		if (ammo == Ammo.Singularity) {
+			// Singularity storage system starts here. We need even amount of singularities for storage system
+			if (hostWorld.isBlockPowered(getHostPos()) && storageEntry.getStackSize() % 2 == 0) {
+				// Add 1/10 velocity from final destination
+				final EntityBlackHole entity = new EntityBlackHole(hostWorld, getHostPos());
+				entity.addVelocity(blackHolePos.getX() / 10f, blackHolePos.getY() / 10f, blackHolePos.getZ() / 10f);
+				hostWorld.spawnEntity(entity);
+				storageEntry.setStackSize(storageEntry.getStackSize() - 1);
 			}
 		} else {
-			// Getting matterball implementation
-			IAppEngApi instance = AEApi.instance();
-			Optional<ItemStack> maybeMatterBall = instance.definitions().materials().matterBall().maybeStack(1);
-			IAEItemStack matterBall = null;
-			if (maybeMatterBall.isPresent()) {
-				matterBall = instance.storage().getStorageChannel(IItemStorageChannel.class).createStack(maybeMatterBall.get());
-			}
-
-			IAEItemStack storageEntry = storedAmmo.findPrecise(matterBall);
-			if (matterBall == null || storageEntry == null) {
-				return;
-			}
-
 			// Scan for entities in range
-			List<EntityLivingBase> ents = world.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-10, -10, -10), pos.add(10, 10, 10)));
+			List<EntityLivingBase> ents = hostWorld.getEntitiesWithinAABB(EntityLivingBase.class, new AxisAlignedBB(pos.add(-10, -10, -10), pos.add(10, 10, 10)));
 			for (EntityLivingBase ent : ents) {
 				// Don't attack players
 				if (ent instanceof EntityPlayer) {

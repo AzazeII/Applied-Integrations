@@ -1,8 +1,8 @@
 package AppliedIntegrations.Network.Packets;
 import AppliedIntegrations.Gui.Hosts.IPriorityHostExtended;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @Author Azazell
@@ -25,12 +25,18 @@ public class PacketPriorityChange extends AIPacket {
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.host = (IPriorityHostExtended) readSyncHost(buf);
-		ByteBufUtils.readUTF8String(buf);
+
+		final byte[] bytes = new byte[buf.readInt()];
+		buf.readBytes(bytes);
+		this.text = new String(bytes, UTF_8);
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		writeSyncHost(host, buf,true);
-		ByteBufUtil.writeUtf8(buf, text);
+
+		final byte[] bytes = text.getBytes(UTF_8);
+		buf.writeInt(bytes.length);
+		buf.writeBytes(bytes);
 	}
 }

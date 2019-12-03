@@ -98,7 +98,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 			port.postCellInventoryEvent();
 
 			// Notify grid of current port about crafting update
-			port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
+			port.postGridEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
 		}
 
 		@Override
@@ -163,10 +163,10 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 					port.postCellInventoryEvent();
 
 					// Notify grid of current port about crafting update
-					port.postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
+					port.postGridEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(id), getGridNode()));
 
 					// Notify grid of current port about cpu update
-					port.postCellEvent(new MENetworkCraftingCpuChange(getGridNode()));
+					port.postGridEvent(new MENetworkCraftingCpuChange(getGridNode()));
 				}
 			}
 		}
@@ -333,7 +333,7 @@ public class TileMultiControllerCore extends AITile implements IAIMultiBlock, IM
 				postCellInventoryEvent(portMap.get(side).get(portID).requestNetwork());
 
 				// Notify grid of current port about crafting update
-				postCellEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(portID), getGridNode()));
+				postGridEvent(new MENetworkCraftingPatternChange(portCraftingHandlers.get(side).get(portID), getGridNode()));
 			}
 		}
 

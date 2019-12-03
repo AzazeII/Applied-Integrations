@@ -27,7 +27,6 @@ public class PacketMassChange extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		pos = readPos(buf);
 		singularity = (ISingularity) readSyncHostClient(buf);
 	}

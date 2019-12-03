@@ -60,10 +60,10 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 	public void postCellInventoryEvent() {
 		// Pass call to overridden function
-		postCellEvent(new MENetworkCellArrayUpdate());
+		postGridEvent(new MENetworkCellArrayUpdate());
 	}
 
-	public void postCellEvent(MENetworkEvent event) {
+	public void postGridEvent(MENetworkEvent event) {
 		// Get node
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
 
@@ -73,11 +73,11 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 			IGrid grid = node.getGrid();
 
 			// Post update
-			postCellEvent(grid, event);
+			postGridEvent(grid, event);
 		}
 	}
 
-	public void postCellEvent(IGrid iGrid, MENetworkEvent event) {
+	public void postGridEvent(IGrid iGrid, MENetworkEvent event) {
 		// Check not null
 		if (iGrid == null) {
 			return;
@@ -94,7 +94,7 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 		}
 
 		// Pass call to overridden function
-		postCellEvent(iGrid, new MENetworkCellArrayUpdate());
+		postGridEvent(iGrid, new MENetworkCellArrayUpdate());
 	}
 
 	public void createProxyNode() {
