@@ -66,13 +66,13 @@ only white and black hole can be entagled
  AIApi.instance().addHandlersForMEPylon(#yourHandlerForBlackHole#.class, #yourHandlerForWhiteHole#.class,   AEApi.instance().storage().getStorageChannel(#yourStorageChannel#.class));  
  
  black and white hole handlers must extend  
- com.azazell.AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler<#your IAEStack#>
+ AppliedIntegrations.api.Storage.helpers.WhiteHoleSingularityInventoryHandler<#your IAEStack#>
  or  
- com.azazell.AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler<#your IAEStack#>
+ AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler<#your IAEStack#>
 
 
 # Thanks for: 
-Algorithm X2, for creating great mod and great API.  
+Algorithm X2, for creating great mod - Applied energistics and it's great API.  
 Megatech & Jur012, for some textures.  
 DurableBasic, for suggesting some great ideas for mod.  
 
