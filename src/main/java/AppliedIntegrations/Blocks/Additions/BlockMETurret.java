@@ -48,14 +48,11 @@ public class BlockMETurret extends BlockAIRegistrable {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
 		TileEntity tile = world.getTileEntity(pos);
-		if (!p.isSneaking()) {
-			// Pass activated to tile entity ( nothing new :) )
-			if (tile instanceof TileMETurretFoundation) {
-				// Pass activate to tile
-				return ((TileMETurretFoundation) tile).activate(hand, p);
-			}
+
+		// Pass activated to tile entity ( nothing new except we don't ignore sneaking:) )
+		if (tile instanceof TileMETurretFoundation) {
+			return ((TileMETurretFoundation) tile).activate(hand, p);
 		}
 		return false;
 	}

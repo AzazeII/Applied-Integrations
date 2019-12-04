@@ -2,7 +2,7 @@ package AppliedIntegrations.tile.HoleStorageSystem.render;
 
 
 import AppliedIntegrations.AppliedIntegrations;
-import AppliedIntegrations.tile.entities.EntityBlackHole;
+import AppliedIntegrations.tile.entities.EntitySingularity;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -14,16 +14,14 @@ import javax.annotation.Nullable;
 /**
  * @Author Azazell
  */
-public class EntityBlackHoleRenderer extends Render<EntityBlackHole> {
+public class EntityBlackHoleRenderer extends Render<EntitySingularity> {
 	public EntityBlackHoleRenderer(RenderManager renderManager) {
-
 		super(renderManager);
 	}
 
 	@Override
-	public void doRender(EntityBlackHole te, double x, double y, double z, float entityYaw, float partialTicks) {
-		// Successfully copied from TileSingularityRenderer, E..Z..
-
+	public void doRender(EntitySingularity te, double x, double y, double z, float entityYaw, float partialTicks) {
+		// Successfully copied from TileSingularityRenderer, Z..
 		// Now the fun begins :upside_down:
 		// Save matrix to stack
 		GlStateManager.pushMatrix();
@@ -58,8 +56,7 @@ public class EntityBlackHoleRenderer extends Render<EntityBlackHole> {
 
 	@Nullable
 	@Override
-	protected ResourceLocation getEntityTexture(EntityBlackHole entity) {
-
+	protected ResourceLocation getEntityTexture(EntitySingularity entity) {
 		return new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/black.png");
 	}
 }

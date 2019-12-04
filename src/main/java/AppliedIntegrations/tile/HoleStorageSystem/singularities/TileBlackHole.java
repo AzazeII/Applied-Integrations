@@ -1,6 +1,4 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
-
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
@@ -14,6 +12,7 @@ import AppliedIntegrations.grid.Mana.AEManaStack;
 import AppliedIntegrations.grid.Mana.ManaList;
 import AppliedIntegrations.tile.HoleStorageSystem.Anomalies.AnomalyEnum;
 import AppliedIntegrations.tile.HoleStorageSystem.TimeHandler;
+import AppliedIntegrations.tile.entities.EntitySingularity;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.storage.IStorageChannel;
@@ -91,10 +90,9 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	private List<IPylon> listeners = new ArrayList<>();
 
-	private TileWhiteHole entangledHole = null;
-
+	private EntitySingularity entangledHoleEntity = null;
+	private TileWhiteHole entangledHole;
 	static {
-
 		// Size factor filling
 		sizeFactor.put(81280L, 1.2F);
 		sizeFactor.put(325120L, 1.3F);
@@ -122,7 +120,6 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	@Override
 	public void invalidate() {
-
 		super.invalidate();
 
 		// Iterate over listeners
@@ -134,9 +131,8 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	@Override
 	public void update() {
-
 		if (Platform.isServer()) {
-			// Modulate gravity
+			// Modulate block gravity only on server
 			modulateBlockGravity();
 		}
 
@@ -147,6 +143,13 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 			// Trigger factor
 			lastGrowth = getGrowthFactor();
+		}
+
+		// Check if we have linked entity.
+		if (entangledHoleEntity != null && entangledHoleEntity.isDead && entangledHoleEntity.getBornSingularity() != null) {
+			// If entity is dead, then we need to find singularity tile on it's position
+			entangledHole = (TileWhiteHole) entangledHoleEntity.getBornSingularity();
+			entangledHoleEntity = null;
 		}
 
 		// Modulate all sided gravity
@@ -191,7 +194,6 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	   8. 2048 - *10
    */
 	private Float getGrowthFactor() {
-
 		Float sizeFactorVal = 1F;
 		Byte typeFactorVal = 1;
 
@@ -234,12 +236,10 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	}
 
 	public double getMaxDestructionRange() {
-
 		return Math.cbrt(Math.cbrt(mass)) * getGrowthFactor();
 	}
 
 	public List<BlockPos> getBlocksInRadius(double radius) {
-
 		// list of positions
 		List<BlockPos> blockPositions = new ArrayList<>();
 
@@ -401,27 +401,23 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	@Override
 	@SideOnly(CLIENT)
 	public void setMassFromServer(long mass) {
-
 		this.mass = mass;
 	}
 
 	@Override
 	public long getMass() {
-
 		return mass;
 	}
 
 	@Override
 	public boolean isEntangled() {
-
 		return entangledHole != null;
 	}
 
 	@Override
-	public void setEntangledHole(ISingularity singularity) {
-
+	public void setEntangledHoleEntity(EntitySingularity singularity) {
 		AILog.chatLog("Setting entangled singularity to " + singularity.toString());
-		entangledHole = (TileWhiteHole) singularity;
+		entangledHoleEntity = singularity;
 	}
 
 	@Override
@@ -460,7 +456,6 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	// Returns gravity force between two vectors, assuming posB mass is 1
 	private double getGravityForceBetween(Vec3d posA, Vec3d posB) {
-
 		double radiusSquare = Math.pow(posA.squareDistanceTo(posB), 2);
 
 		return (gravitationalConst * mass * 0.1 / radiusSquare);
@@ -473,15 +468,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	}
 
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
-
-		if (hand == EnumHand.MAIN_HAND) {
-			if (Platform.isServer()) {
-				if (!p.isSneaking()) {
-					AnomalyEnum.EntangleHoles.action.accept(this);
-				}
-			}
-		}
-		return true;
+		return false;
 	}
 
 	@Override

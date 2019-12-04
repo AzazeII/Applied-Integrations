@@ -1,17 +1,11 @@
 package AppliedIntegrations.tile.HoleStorageSystem.Anomalies;
-
-
-import AppliedIntegrations.Blocks.Additions.BlockWhiteHole;
 import AppliedIntegrations.Helpers.Energy.CapabilityHelper;
-import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
-import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import appeng.api.config.Actionable;
 import appeng.api.util.AEPartLocation;
-import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
@@ -77,46 +71,6 @@ public enum AnomalyEnum {
 					// Extract all energy types from this tile
 					t.addStack(AEEnergyStack.fromStack(new EnergyStack(RF, helper.extractAllStored(22000))), Actionable.MODULATE);
 				}
-			}
-		}
-	}),
-
-	// Entangles two holes together
-	EntangleHoles((t) -> {
-		// Get positions
-		List<BlockPos> positions = t.getBlocksInRadius(t.getMaxDestructionRange() * 1.5);
-
-		// Check not entangled yet
-		if (t.isEntangled()) {
-			return;
-		}
-
-		// Iterate over all positions
-		for (BlockPos pos : positions) {
-			// Get block
-			Block block = t.getWorld().getBlockState(pos).getBlock();
-
-			// Check if block is white hole
-			if (block instanceof BlockWhiteHole) {
-				AILog.chatLog("Found white hole");
-				// Get white hole
-				TileWhiteHole whiteHole = (TileWhiteHole) t.getWorld().getTileEntity(pos);
-
-				// Check not null
-				if (whiteHole == null) {
-					continue;
-				}
-
-				// Check if white and black hole not entangled yet
-				if (whiteHole.isEntangled())
-				// break
-				{
-					continue;
-				}
-
-				// Entangle
-				whiteHole.setEntangledHole(t);
-				t.setEntangledHole(whiteHole);
 			}
 		}
 	}),

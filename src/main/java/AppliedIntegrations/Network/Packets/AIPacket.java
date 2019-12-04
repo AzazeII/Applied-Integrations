@@ -5,6 +5,7 @@ import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.util.AEPartLocation;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
@@ -35,8 +36,18 @@ public abstract class AIPacket implements IMessage {
 		buf.writeLong(pos.toLong());
 	}
 
+	protected void writeVec(Vec3d vec, ByteBuf buf) {
+		buf.writeDouble(vec.x);
+		buf.writeDouble(vec.y);
+		buf.writeDouble(vec.z);
+	}
+
 	protected BlockPos readPos(ByteBuf buf) {
 		return BlockPos.fromLong(buf.readLong());
+	}
+
+	protected Vec3d readVec(ByteBuf buf) {
+		return new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble());
 	}
 
 	private void writeWorld(ByteBuf buf, World world) {

@@ -2,6 +2,7 @@ package AppliedIntegrations.api.BlackHoleSystem;
 
 
 import AppliedIntegrations.api.ISyncHost;
+import AppliedIntegrations.tile.entities.EntitySingularity;
 import appeng.api.config.Actionable;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.data.IAEStack;
@@ -80,7 +81,7 @@ public interface ISingularity extends ISyncHost {
 	 *
 	 * @param singularity Singularity to link with this
 	 */
-	void setEntangledHole(ISingularity singularity);
+	void setEntangledHoleEntity(EntitySingularity singularity);
 
 	/**
 	 * @param pylon New event listener

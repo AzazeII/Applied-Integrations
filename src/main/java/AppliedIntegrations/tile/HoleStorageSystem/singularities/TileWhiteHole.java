@@ -1,6 +1,4 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
-
-
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.BlackHoleSystem.IPylon;
@@ -9,6 +7,7 @@ import AppliedIntegrations.api.Botania.IManaStorageChannel;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.grid.EnergyList;
 import AppliedIntegrations.grid.Mana.ManaList;
+import AppliedIntegrations.tile.entities.EntitySingularity;
 import appeng.api.AEApi;
 import appeng.api.config.Actionable;
 import appeng.api.storage.IStorageChannel;
@@ -24,6 +23,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Loader;
@@ -37,16 +37,15 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 /**
  * @Author Azazell
  */
-public class TileWhiteHole extends TileEntity implements ISingularity {
-
+public class TileWhiteHole extends TileEntity implements ISingularity, ITickable {
 	public long mass;
 
-	private TileBlackHole entangledHole = null;
+	private TileBlackHole entangledHole;
+	private EntitySingularity entangledHoleEntity = null;
 
 	private List<IPylon> listeners = new ArrayList<>();
 
 	public TileWhiteHole() {
-
 		mass = (long) (Math.random() * 2048);
 	}
 
@@ -57,13 +56,11 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 	}
 
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
-
 		return false;
 	}
 
 	@Override
 	public void invalidate() {
-
 		super.invalidate();
 
 		// Iterate over listeners
@@ -74,8 +71,17 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 	}
 
 	@Override
-	public void addMass(long l) {
+	public void update() {
+		// Check if we have linked entity.
+		if (entangledHoleEntity != null && entangledHoleEntity.isDead && entangledHoleEntity.getBornSingularity() != null) {
+			// If entity is dead, then we need to find singularity tile on it's position
+			entangledHole = (TileBlackHole) entangledHoleEntity.getBornSingularity();
+			entangledHoleEntity = null;
+		}
+	}
 
+	@Override
+	public void addMass(long l) {
 		mass -= l;
 	}
 
@@ -120,9 +126,8 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 					Return.setStackSize(pStack.getStackSize());
 
 					// Modulate extraction
-					if (actionable == Actionable.MODULATE)
-					// Decrease current stack size
-					{
+					if (actionable == Actionable.MODULATE) {
+						// Decrease current stack size
 						pStack.setStackSize(0);
 					}
 				} else {
@@ -130,9 +135,8 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 					Return.setStackSize(size);
 
 					// Modulate extraction
-					if (actionable == Actionable.MODULATE)
-					// Set current stack size to current stack size - #Var: size
-					{
+					if (actionable == Actionable.MODULATE) {
+						// Set current stack size to current stack size - #Var: size
 						pStack.setStackSize(pStack.getStackSize() - size);
 					}
 				}
@@ -152,27 +156,23 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 	@Override
 	public IItemList<?> getList(IStorageChannel chan) {
 		// Check channel
-		if (chan == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class))
-		// If not entangled -> return empty list, else return entangled hole's list
-		{
+		if (chan == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class)) {
+			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new ItemList() : entangledHole.getList(chan);
 		}
 
-		if (chan == AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class))
-		// If not entangled -> return empty list, else return entangled hole's list
-		{
+		if (chan == AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class)) {
+			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new FluidList() : entangledHole.getList(chan);
 		}
 
-		if (AIConfig.enableEnergyFeatures && chan == AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class))
-		// If not entangled -> return empty list, else return entangled hole's list
-		{
+		if (AIConfig.enableEnergyFeatures && chan == AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class)) {
+			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new EnergyList() : entangledHole.getList(chan);
 		}
 
-		if (AIConfig.enableManaFeatures && Loader.isModLoaded("botania") && chan == AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class))
-		// If not entangled -> return empty list, else return entangled hole's list
-		{
+		if (AIConfig.enableManaFeatures && Loader.isModLoaded("botania") && chan == AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class)) {
+			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new ManaList() : entangledHole.getList(chan);
 		}
 
@@ -182,31 +182,28 @@ public class TileWhiteHole extends TileEntity implements ISingularity {
 	@Override
 	@SideOnly(CLIENT)
 	public void setMassFromServer(long mass) {
-
 		this.mass = mass;
 	}
 
 	@Override
 	public long getMass() {
-
 		return mass;
 	}
 
 	@Override
 	public boolean isEntangled() {
-
 		return entangledHole != null;
 	}
 
 	@Override
-	public void setEntangledHole(ISingularity singularity) {
-
+	public void setEntangledHoleEntity(EntitySingularity singularity) {
 		AILog.chatLog("Setting entangled singularity to " + singularity.toString());
-		entangledHole = (TileBlackHole) singularity;
+		entangledHoleEntity = singularity;
 
 		// Update cell array
-		for (IPylon pylon : listeners)
+		for (IPylon pylon : listeners) {
 			pylon.postCellInventoryEvent();
+		}
 	}
 
 	@Override

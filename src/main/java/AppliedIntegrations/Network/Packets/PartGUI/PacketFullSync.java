@@ -1,7 +1,6 @@
 package AppliedIntegrations.Network.Packets.PartGUI;
 import AppliedIntegrations.Inventory.Manager.UpgradeInventoryManager;
 import AppliedIntegrations.Network.Packets.AIPacket;
-import AppliedIntegrations.Parts.Interaction.PartInteraction;
 import AppliedIntegrations.api.ISyncHost;
 import appeng.api.config.FuzzyMode;
 import appeng.api.config.RedstoneMode;
