@@ -2,7 +2,7 @@ package AppliedIntegrations.tile.HoleStorageSystem.storage;
 import AppliedIntegrations.AIConfig;
 import AppliedIntegrations.Blocks.Additions.BlockBlackHole;
 import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketPylonSingularitySync;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.BlackHoleSystem.IPylon;
@@ -100,7 +100,7 @@ public class TileMEPylon extends AITile implements ICellContainer, IGridTickable
 
 	private void notifyClient() {
 		// Notify client
-		NetworkHandler.sendToAllInRange(new PacketSingularitySync(this.operatedTile, getBeamState(), shouldDrain, this.getPos()), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
+		NetworkHandler.sendToAllInRange(new PacketPylonSingularitySync(this.operatedTile, getBeamState(), shouldDrain, this.getPos()), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
 	}
 
 	@Nonnull

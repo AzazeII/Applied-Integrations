@@ -2,12 +2,14 @@ package AppliedIntegrations.Network;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Network.Handlers.*;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerMassChange;
+import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerSingularitiesEntangle;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerSingularitySync;
 import AppliedIntegrations.Network.Handlers.HoleStorage.HandlerVectorSync;
 import AppliedIntegrations.Network.Handlers.MultiController.*;
 import AppliedIntegrations.Network.Handlers.PartGUI.*;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketMassChange;
-import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitySync;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketPylonSingularitySync;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitiesEntangle;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.Network.Packets.MultiController.*;
 import AppliedIntegrations.Network.Packets.*;
@@ -35,7 +37,7 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerCoordinateInit.class, PacketCoordinateInit.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerVectorSync.class, PacketVectorSync.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerMassChange.class, PacketMassChange.class, packetId++, Side.CLIENT);
-		handler.registerMessage(HandlerSingularitySync.class, PacketSingularitySync.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerSingularitySync.class, PacketPylonSingularitySync.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerAccessModeServerToClient.class, PacketAccessModeServerToClient.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerTerminalUpdate.class, PacketTerminalUpdate.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerPriorityChange.class, PacketPriorityChange.class, packetId++, Side.CLIENT);
@@ -43,6 +45,7 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerMasterSync.class, PacketMasterSync.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerScrollServerToClient.class, PacketScrollServerToClient.class, packetId++, Side.CLIENT);
 		handler.registerMessage(HandlerClickModeServerToClient.class, PacketClickModeServerToClient.class, packetId++, Side.CLIENT);
+		handler.registerMessage(HandlerSingularitiesEntangle.class, PacketSingularitiesEntangle.class, packetId++, Side.CLIENT);
 
 		// -- Client -> Server -- //
 		handler.registerMessage(HandlerClientToServerFilter.class, PacketClientToServerFilter.class, packetId++, Side.SERVER);
@@ -54,28 +57,23 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerTabChange.class, PacketTabChange.class, packetId++, Side.SERVER);
 	}
 
-	// send packet info to player
-	public static final void sendTo(IMessage message, EntityPlayerMP player) {
+	public static void sendTo(IMessage message, EntityPlayerMP player) {
 		NetworkHandler.handler.sendTo(message, player);
 	}
 
-	public static final void sendToDimension(IMessage message, int dimensionId) {
-
+	public static void sendToDimension(IMessage message, int dimensionId) {
 		NetworkHandler.handler.sendToDimension(message, dimensionId);
 	}
 
-	public static final void sendToAllInRange(IMessage message, NetworkRegistry.TargetPoint range) {
-
+	public static void sendToAllInRange(IMessage message, NetworkRegistry.TargetPoint range) {
 		NetworkHandler.handler.sendToAllAround(message, range);
 	}
 
-	public static final void sendToServer(IMessage message) {
-
+	public static void sendToServer(IMessage message) {
 		NetworkHandler.handler.sendToServer(message);
 	}
 
-	public static final void sendToAll(IMessage message) {
-
+	public static void sendToAll(IMessage message) {
 		NetworkHandler.handler.sendToAll(message);
 	}
 }

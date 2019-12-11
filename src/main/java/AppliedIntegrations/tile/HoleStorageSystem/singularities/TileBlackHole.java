@@ -91,7 +91,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	private List<IPylon> listeners = new ArrayList<>();
 
 	private EntitySingularity entangledHoleEntity = null;
-	private TileWhiteHole entangledHole;
+	public TileWhiteHole entangledHole;
 	static {
 		// Size factor filling
 		sizeFactor.put(81280L, 1.2F);

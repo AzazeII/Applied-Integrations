@@ -12,14 +12,14 @@ import static org.lwjgl.opengl.GL11.*;
 public class TileMETurretRenderer extends AITileRenderer<TileMETurretFoundation> {
 	@Override
 	public void render(TileMETurretFoundation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		// Pass preparing to super function
-		prepareMatrix(x, y, z);
+		// Pass preparing to super function. Increase Y by one moving renderer to turret head
+		prepareMatrix(x, y + 1, z);
 		GlStateManager.scale(3, 3, 3);
 
 		glBegin(GL_LINES);
 		if (te.ammo != TileMETurretFoundation.Ammo.Singularity) {
 			// Simple direction line
-			final Vec3d direction = te.direction;
+			final Vec3d direction = te.direction.add(new Vec3d(0,1,0));
 			glVertex3d(0, 0, 0);
 			glVertex3d(direction.x, direction.y, direction.z);
 		} else {

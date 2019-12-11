@@ -140,7 +140,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 	}
 
 	private void setDirection(Vec3d pos, boolean inverse) {
-		// Normalize vector to unit vector. Make direction relative to our pos
+		// Normalize vector to unit vector. Make direction relative to our pos +y:1
 		this.direction = VectorUtils.getUnitVector(pos.subtract(VectorUtils.getFractionalVector(getHostPos())));
 
 		// Calculate black/white hole positions from facing of player to our pos
@@ -232,8 +232,8 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 			// Singularity storage system starts here. We need even amount of singularities for storage system
 			if (hostWorld.isBlockPowered(getHostPos()) && storageEntry.getStackSize() >= 2) {
 				// Add our unit vector as velocity to both entities
-				final EntitySingularity blackSingularity = new EntitySingularity(hostWorld, getHostPos().add(VectorUtils.toIntegerVector(blackHolePos)), BlocksEnum.BlackHole);
-				final EntitySingularity whiteSingularity = new EntitySingularity(hostWorld, getHostPos().add(VectorUtils.toIntegerVector(whiteHolePos)), BlocksEnum.WhiteHole);
+				final EntitySingularity blackSingularity = new EntitySingularity(hostWorld, getHostPos().add(VectorUtils.toIntegerVector(blackHolePos)).add(0,1,0), BlocksEnum.BlackHole);
+				final EntitySingularity whiteSingularity = new EntitySingularity(hostWorld, getHostPos().add(VectorUtils.toIntegerVector(whiteHolePos)).add(0,1,0), BlocksEnum.WhiteHole);
 				blackSingularity.addVelocity(blackHolePos.x, blackHolePos.y, blackHolePos.z);
 				whiteSingularity.addVelocity(whiteHolePos.x, whiteHolePos.y, whiteHolePos.z);
 

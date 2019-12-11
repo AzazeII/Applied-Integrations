@@ -1,5 +1,7 @@
 package AppliedIntegrations.tile.HoleStorageSystem.singularities;
 import AppliedIntegrations.AIConfig;
+import AppliedIntegrations.Network.NetworkHandler;
+import AppliedIntegrations.Network.Packets.HoleStorage.PacketSingularitiesEntangle;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.BlackHoleSystem.IPylon;
 import AppliedIntegrations.api.BlackHoleSystem.ISingularity;
@@ -40,7 +42,7 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
 public class TileWhiteHole extends TileEntity implements ISingularity, ITickable {
 	public long mass;
 
-	private TileBlackHole entangledHole;
+	public TileBlackHole entangledHole;
 	private EntitySingularity entangledHoleEntity = null;
 
 	private List<IPylon> listeners = new ArrayList<>();
@@ -72,11 +74,16 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 
 	@Override
 	public void update() {
-		// Check if we have linked entity.
-		if (entangledHoleEntity != null && entangledHoleEntity.isDead && entangledHoleEntity.getBornSingularity() != null) {
-			// If entity is dead, then we need to find singularity tile on it's position
+		// Completely ignore on client, used on server only for initializing linked hole
+		if (world.isRemote) {
+			return;
+		}
+
+		if (entangledHoleEntity != null && entangledHoleEntity.isDead && entangledHoleEntity.getBornSingularity() != null && entangledHole == null) {
+			// If entity is dead, then it's already transformed into tile, so we can find linked black hole
 			entangledHole = (TileBlackHole) entangledHoleEntity.getBornSingularity();
 			entangledHoleEntity = null;
+			NetworkHandler.sendToAll(new PacketSingularitiesEntangle(entangledHole, this));
 		}
 	}
 

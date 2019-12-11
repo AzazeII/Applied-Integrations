@@ -10,7 +10,7 @@ import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
  * @Author Azazell
  * @Side Server -> Client
  */
-public class PacketSingularitySync extends AIPacket {
+public class PacketPylonSingularitySync extends AIPacket {
 
 	public boolean shouldDrain;
 
@@ -20,12 +20,11 @@ public class PacketSingularitySync extends AIPacket {
 
 	public float beamState;
 
-	public PacketSingularitySync() {
+	public PacketPylonSingularitySync() {
 
 	}
 
-	public PacketSingularitySync(ISingularity operatedTile, float beamState, boolean shouldDrain, BlockPos pos) {
-
+	public PacketPylonSingularitySync(ISingularity operatedTile, float beamState, boolean shouldDrain, BlockPos pos) {
 		this.pos = pos;
 		this.operatedTile = operatedTile;
 		this.beamState = beamState;
@@ -34,7 +33,6 @@ public class PacketSingularitySync extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		pos = readPos(buf);
 		beamState = buf.readFloat();
 		shouldDrain = buf.readBoolean();
@@ -48,7 +46,6 @@ public class PacketSingularitySync extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
 		writePos(pos, buf);
 		buf.writeFloat(beamState);
 		buf.writeBoolean(shouldDrain);

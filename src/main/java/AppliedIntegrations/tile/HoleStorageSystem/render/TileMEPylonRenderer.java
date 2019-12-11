@@ -50,13 +50,11 @@ public class TileMEPylonRenderer extends TileEntitySpecialRenderer<TileMEPylon> 
 			GlStateManager.disableCull();
 
 			// Get color based on current hole
-			if (te.operatedTile instanceof TileBlackHole)
-			// Set color to black
-			{
+			if (te.operatedTile instanceof TileBlackHole) {
+				// Set color to black
 				GlStateManager.color(0, 0, 0, 1);
-			} else
-			// Set color to white
-			{
+			} else {
+				// Set color to white
 				GlStateManager.color(1, 1, 1, 1);
 			}
 
@@ -106,9 +104,8 @@ public class TileMEPylonRenderer extends TileEntitySpecialRenderer<TileMEPylon> 
 
 			// Check if beam is decreasing
 			if (!te.drainsEnergy()) {
-				if (workingRadius >= 0)
-				// Slightly decrease radius
-				{
+				if (workingRadius >= 0) {
+					// Slightly decrease radius
 					workingRadius -= 0.002;
 				}
 			} else {
@@ -122,6 +119,7 @@ public class TileMEPylonRenderer extends TileEntitySpecialRenderer<TileMEPylon> 
 				if (facing.getAxis() == X) {
 					c.draw(workingRadius, workingRadius, Math.abs(vec.getX()), 16, 16);
 				}
+
 				if (facing.getAxis() == Z) {
 					c.draw(workingRadius, workingRadius, Math.abs(vec.getZ()), 16, 16);
 				}
@@ -140,6 +138,7 @@ public class TileMEPylonRenderer extends TileEntitySpecialRenderer<TileMEPylon> 
 			if (facing.getAxis() == X) {
 				glRotatef(90, 0, 0, 1);
 			}
+
 			if (facing.getAxis() == Z) {
 				glRotatef(90, 1, 0, 0);
 			}

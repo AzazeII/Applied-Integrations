@@ -15,9 +15,9 @@ import AppliedIntegrations.api.AIApi;
 import AppliedIntegrations.api.Storage.IEnergyStorageChannel;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.tile.HoleStorageSystem.TileMETurretFoundation;
+import AppliedIntegrations.tile.HoleStorageSystem.render.TileBlackHoleRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.render.TileMEPylonRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.render.TileMETurretRenderer;
-import AppliedIntegrations.tile.HoleStorageSystem.render.TileSingularityRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.render.TileWhiteHoleRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
@@ -79,7 +79,7 @@ public class ClientProxy extends CommonProxy {
 
 		if (AIConfig.enableBlackHoleStorage) {
 			// Register custom renderers
-			ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileSingularityRenderer()); // (1)
+			ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileBlackHoleRenderer()); // (1)
 			ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer()); // (2)
 			ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer()); // (3)
 			ClientRegistry.bindTileEntitySpecialRenderer(TileMETurretFoundation.class, new TileMETurretRenderer()); // (4)

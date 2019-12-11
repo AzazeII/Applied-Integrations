@@ -11,7 +11,7 @@ import java.awt.*;
 /**
  * @Author Azazell
  */
-public class TileSingularityRenderer extends AITileRenderer<TileBlackHole> {
+public class TileBlackHoleRenderer extends AITileRenderer<TileBlackHole> {
 
 	private Sphere sphere = new Sphere();
 
@@ -25,22 +25,17 @@ public class TileSingularityRenderer extends AITileRenderer<TileBlackHole> {
 
 		// Pass preparing to super() function
 		prepareMatrix(x, y, z);
-
-		// Set color to black
 		GlStateManager.color(getColor().getRed(), getColor().getGreen(), getColor().getBlue(), 1);
-
-		// Change drawing scale
 		GlStateManager.scale(radius, radius, radius);
+		GlStateManager.disableFog();
 
 		// Draw sphere
 		sphere.draw((float) 0.53, 16, 16);
-
-		// Re-enable all states of Opengl:
+		GlStateManager.enableFog();
 		pushMatrix(x, y, z);
 	}
 
 	private Color getColor() {
-		// Color of singularity, moved here because of IntelIJIdea feature with color picker
 		return new Color(0, 0, 0);
 	}
 }
