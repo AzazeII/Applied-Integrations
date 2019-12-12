@@ -44,17 +44,14 @@ public class AILog {
 	}
 
 	public static void chatLog(final String message) {
-
 		Minecraft.getMinecraft().player.sendChatMessage(message);
 	}
 
 	public static void info(final String message, Object... params) {
-
 		log.info(message, params);
 	}
 
 	public static void debugObject(Object obj, boolean useChatLog) {
-
 		for (Field f : obj.getClass().getFields()) {
 			try {
 				if (useChatLog) {

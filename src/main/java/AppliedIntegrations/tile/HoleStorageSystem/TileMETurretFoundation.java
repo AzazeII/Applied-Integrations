@@ -3,18 +3,14 @@ import AppliedIntegrations.Blocks.BlocksEnum;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.HoleStorage.PacketVectorSync;
 import AppliedIntegrations.Utils.VectorUtils;
-import AppliedIntegrations.tile.AITile;
 import AppliedIntegrations.tile.entities.EntitySingularity;
 import appeng.api.AEApi;
 import appeng.api.config.AccessRestriction;
 import appeng.api.config.Actionable;
-import appeng.api.networking.events.MENetworkCellArrayUpdate;
-import appeng.api.networking.events.MENetworkChannelsChanged;
-import appeng.api.networking.events.MENetworkEventSubscribe;
-import appeng.api.networking.events.MENetworkPowerStatusChange;
+import appeng.api.networking.IGridNode;
 import appeng.api.networking.security.IActionSource;
+import appeng.api.networking.ticking.TickRateModulation;
 import appeng.api.storage.ICellContainer;
-import appeng.api.storage.ICellInventory;
 import appeng.api.storage.IMEInventoryHandler;
 import appeng.api.storage.IStorageChannel;
 import appeng.api.storage.channels.IItemStorageChannel;
@@ -36,7 +32,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -50,7 +46,7 @@ import static net.minecraft.util.EnumFacing.DOWN;
 /**
  * @Author Azazell
  */
-public class TileMETurretFoundation extends AITile implements ICellContainer {
+public class TileMETurretFoundation extends AITileStorageCell implements ICellContainer {
 	public enum Ammo {
 		MatterBall(1, AEApi.instance().definitions().materials().matterBall().maybeStack(1).get()),
 		Singularity(25, AEApi.instance().definitions().materials().singularity().maybeStack(1).get());
@@ -121,6 +117,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 
 	public Ammo ammo = Ammo.MatterBall;
 	private ItemList storedAmmo = new ItemList();
+	private boolean notifyClientAboutVectoryChange;
 
 	public TileMETurretFoundation(){
 		super();
@@ -150,24 +147,11 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		final int id = facing.ordinal();
 		this.blackHolePos = inverse ? BLACK_HOLE_VECTORS[id] : WHITE_HOLE_VECTORS[id];
 		this.whiteHolePos = inverse ? WHITE_HOLE_VECTORS[id] : BLACK_HOLE_VECTORS[id];
-
-		// Notify client
-		NetworkHandler.sendToAllInRange(new PacketVectorSync(this.direction, this.blackHolePos, this.whiteHolePos, this.ammo, this.getPos()),
-				new NetworkRegistry.TargetPoint(world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 64));
+		this.notifyClientAboutVectoryChange = true;
 	}
 
 	private IAEItemStack getStoredAmmo(Ammo ammo) {
 		return storedAmmo.findPrecise(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(ammo.stack));
-	}
-
-	@MENetworkEventSubscribe
-	public void updateChannels(final MENetworkChannelsChanged changedChannels) {
-		postGridEvent(new MENetworkCellArrayUpdate());
-	}
-
-	@MENetworkEventSubscribe
-	public final void setPower(final MENetworkPowerStatusChange event) {
-		postGridEvent(new MENetworkCellArrayUpdate());
 	}
 
 	@Override
@@ -193,7 +177,7 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 				NBTTagCompound stackCompound = new NBTTagCompound();
 				stack.writeToNBT(stackCompound);
 				compound.setTag(KEY_SUB + i, stackCompound);
-				amount = i;
+				amount++;
 			} else {
 				break;
 			}
@@ -207,24 +191,27 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		return super.writeToNBT(compound);
 	}
 
+	@Nonnull
 	@Override
-	public void createProxyNode() {
-		super.createProxyNode();
-	}
-
-	@Override
-	public void update() {
-		super.update();
+	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
+		TickRateModulation superTickRate = super.tickingRequest(node, ticksSinceLastCall);
 
 		// Only shoot materballs. Singularities are for storage system
 		if (!ammo.hasCooldownPassed(world)) {
-			return;
+			return superTickRate;
 		}
 
 		// Don't function without ammo
 		IAEItemStack storageEntry = getStoredAmmo(ammo);
 		if (storageEntry == null) {
-			return;
+			return superTickRate;
+		}
+
+		// Client notification performed here because when we set direction from NBT read world isn't initialized yet
+		if (notifyClientAboutVectoryChange && Platform.isServer()) {
+			NetworkHandler.sendToAllInRange(new PacketVectorSync(this.direction, this.blackHolePos, this.whiteHolePos, this.ammo, this.getPos()),
+					new NetworkRegistry.TargetPoint(world.provider.getDimension(), this.pos.getX(), this.pos.getY(), this.pos.getZ(), 64));
+			notifyClientAboutVectoryChange = false;
 		}
 
 		final World hostWorld = getHostWorld();
@@ -258,14 +245,11 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 				setDirection(new Vec3d(ent.posX, ent.posY, ent.posZ), false);
 				ent.attackEntityFrom(DamageSource.GENERIC, 1F);
 				storageEntry.setStackSize(storageEntry.getStackSize() - 1);
-				return;
+				return superTickRate;
 			}
 		}
-	}
 
-	@Override
-	public void blinkCell(int i) {
-
+		return superTickRate;
 	}
 
 	@Override
@@ -362,15 +346,5 @@ public class TileMETurretFoundation extends AITile implements ICellContainer {
 		}
 
 		return new ArrayList<>();
-	}
-
-	@Override
-	public int getPriority() {
-		return 0;
-	}
-
-	@Override
-	public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
-
 	}
 }

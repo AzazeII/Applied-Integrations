@@ -150,9 +150,10 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 			// If entity is dead, then we need to find singularity tile on it's position
 			entangledHole = (TileWhiteHole) entangledHoleEntity.getBornSingularity();
 			entangledHoleEntity = null;
+
+			// Don't send entangle packet since it's already sent by white hole at this moment
 		}
 
-		// Modulate all sided gravity
 		//modulateLivingGravity();
 	}
 

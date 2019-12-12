@@ -19,6 +19,7 @@ public class HandlerSingularitiesEntangle implements IMessageHandler<PacketSingu
 			// Link two holes together allowing render to draw line between them
 			message.whiteHole.entangledHole = message.blackHole;
 			message.blackHole.entangledHole = message.whiteHole;
+			message.whiteHole.notifyClientAboutSingularitiesEntangle = true;
 		});
 		return null;
 	}

@@ -1,20 +1,13 @@
 package AppliedIntegrations.tile.HoleStorageSystem.render;
-
-
-import AppliedIntegrations.Client.AITileRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileBlackHole;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.util.glu.Sphere;
 
 import java.awt.*;
 
 /**
  * @Author Azazell
  */
-public class TileBlackHoleRenderer extends AITileRenderer<TileBlackHole> {
-
-	private Sphere sphere = new Sphere();
-
+public class TileBlackHoleRenderer extends TileSingularityRenderer<TileBlackHole> {
 	@Override
 	public void render(TileBlackHole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		// Now the fun begins :upside_down:
@@ -31,6 +24,12 @@ public class TileBlackHoleRenderer extends AITileRenderer<TileBlackHole> {
 
 		// Draw sphere
 		sphere.draw((float) 0.53, 16, 16);
+
+		// Check if we have entangled singularity, so we need to render our entanglement
+		if (te.entangledHole != null) {
+			renderLinkage(te.entangledHole, te);
+		}
+
 		GlStateManager.enableFog();
 		pushMatrix(x, y, z);
 	}

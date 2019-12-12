@@ -1,19 +1,11 @@
 package AppliedIntegrations.tile.HoleStorageSystem.render;
-import AppliedIntegrations.Client.AITileRenderer;
 import AppliedIntegrations.tile.HoleStorageSystem.singularities.TileWhiteHole;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.math.BlockPos;
-import org.lwjgl.util.glu.Sphere;
-
-import static org.lwjgl.opengl.GL11.*;
 
 /**
  * @Author Azazell
  */
-public class TileWhiteHoleRenderer extends AITileRenderer<TileWhiteHole> {
-
-	private Sphere sphere = new Sphere();
-
+public class TileWhiteHoleRenderer extends TileSingularityRenderer<TileWhiteHole> {
 	@Override
 	public void render(TileWhiteHole te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
 		// Now the fun begins :upside_down:
@@ -33,13 +25,7 @@ public class TileWhiteHoleRenderer extends AITileRenderer<TileWhiteHole> {
 
 		// Check if we have entangled singularity, so we need to render our entanglement
 		if (te.entangledHole != null) {
-			glBegin(GL_LINES);
-			BlockPos relativePos = te.entangledHole.getHostPos().subtract(te.getHostPos());
-
-			glColor3d(0,40 / 255f, 120 / 255f);
-			glVertex3d(0,0,0);
-			glVertex3d(relativePos.getX(), relativePos.getY(), relativePos.getZ());
-			glEnd();
+			renderLinkage(te.entangledHole, te);
 		}
 
 		// Re-enable all states of Opengl:

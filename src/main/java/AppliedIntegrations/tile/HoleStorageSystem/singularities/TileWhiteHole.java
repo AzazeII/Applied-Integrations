@@ -20,6 +20,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.storage.data.IItemList;
 import appeng.api.util.AEPartLocation;
 import appeng.fluids.util.FluidList;
+import appeng.util.Platform;
 import appeng.util.item.ItemList;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -46,6 +47,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 	private EntitySingularity entangledHoleEntity = null;
 
 	private List<IPylon> listeners = new ArrayList<>();
+	public boolean notifyClientAboutSingularitiesEntangle;
 
 	public TileWhiteHole() {
 		mass = (long) (Math.random() * 2048);
@@ -74,16 +76,21 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 
 	@Override
 	public void update() {
-		// Completely ignore on client, used on server only for initializing linked hole
-		if (world.isRemote) {
+		if (Platform.isClient()) {
 			return;
+		}
+
+		// This notification will be performed in next tick after holes linking
+		if (notifyClientAboutSingularitiesEntangle) {
+			NetworkHandler.sendToAll(new PacketSingularitiesEntangle(entangledHole, this));
+			notifyClientAboutSingularitiesEntangle = false;
 		}
 
 		if (entangledHoleEntity != null && entangledHoleEntity.isDead && entangledHoleEntity.getBornSingularity() != null && entangledHole == null) {
 			// If entity is dead, then it's already transformed into tile, so we can find linked black hole
 			entangledHole = (TileBlackHole) entangledHoleEntity.getBornSingularity();
 			entangledHoleEntity = null;
-			NetworkHandler.sendToAll(new PacketSingularitiesEntangle(entangledHole, this));
+			notifyClientAboutSingularitiesEntangle = true;
 		}
 	}
 
