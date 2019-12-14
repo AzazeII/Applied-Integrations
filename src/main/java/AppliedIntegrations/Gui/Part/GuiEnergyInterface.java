@@ -135,7 +135,7 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 				List<String> tip = new ArrayList<String>();
 
 				// Check if slot has energy stack
-				if (slot.getCurrentStack() != null) {
+				if (slot.getCurrentStack() != null && !slot.getStackTip().equals("")) {
 					tip.add(slot.getStackTip());
 					drawHoveringText(tip, mouseX, mouseY, fontRenderer);
 				}

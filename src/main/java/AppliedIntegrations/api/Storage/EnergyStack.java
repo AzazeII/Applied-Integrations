@@ -66,7 +66,7 @@ public class EnergyStack implements IEnergyStack {
 		if (energy != null) {
 			return energy.getEnergyName();
 		}
-		return "null";
+		return "";
 	}
 
 	@Override
@@ -112,6 +112,6 @@ public class EnergyStack implements IEnergyStack {
 		if (energy != null) {
 			return this.energy.getTag();
 		}
-		return "null";
+		return "";
 	}
 }

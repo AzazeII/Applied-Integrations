@@ -394,11 +394,8 @@ public class GuiMultiControllerTerminal extends AIGui implements IWidgetHost {
 				List<String> tip = new ArrayList<>();
 
 				// Check if slot has energy stack
-				if (slot.getAEStack() != null) {
-					// Add entry in list
+				if (slot.getAEStack() != null && !slot.getStackTip().equals("")) {
 					tip.add(slot.getStackTip());
-
-					// Draw tooltip
 					drawHoveringText(tip, mX, mY, fontRenderer);
 				}
 			}

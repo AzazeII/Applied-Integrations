@@ -20,12 +20,10 @@ public abstract class EnergyWidget extends AIWidget {
 	}
 
 	public EnergyStack getCurrentStack() {
-
 		return currentStack;
 	}
 
 	public void setCurrentStack(@Nonnull EnergyStack currentStack) {
-
 		this.currentStack = currentStack;
 	}
 
