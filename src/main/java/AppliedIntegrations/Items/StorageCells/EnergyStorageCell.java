@@ -41,7 +41,6 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
-
 		ICellInventoryHandler<IAEEnergyStack> inventoryHandler = AEApi.instance().registries().cell().getCellInventory(stack, null, this.getChannel());
 		AEApi.instance().client().addCellInformation(inventoryHandler, lines);
 
@@ -53,9 +52,10 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 			// Get the list of stored energies
 			IItemList<IAEEnergyStack> cellEnergies = inventoryHandler.getAvailableItems(getChannel().createList());
 			for (IAEEnergyStack currentStack : cellEnergies) {
-				if (currentStack != null) {
+				final String energyName = currentStack.getStack().getEnergyName();
+				if (!energyName.equals("null")) {
 					// Add to the list
-					String energyInfo = TextFormatting.RED.toString() + currentStack.getStack().getEnergyName() + " x " + currentStack.getStackSize();
+					String energyInfo = TextFormatting.RED.toString() + energyName + " x " + currentStack.getStackSize();
 					lines.add(energyInfo.toUpperCase());
 				}
 			}

@@ -118,7 +118,6 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float pOpacity) {
-		// Clear tip
 		tooltip.clear();
 
 		// Draw screen
@@ -126,24 +125,18 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 
 		// Draw current tip
 		drawHoveringText(tooltip, mouseX, mouseY, fontRenderer);
-
 		if (AIGuiHelper.INSTANCE.isPointInGuiRegion(this.guiLeft - 18, this.guiTop + 8, 16, 16, mouseX, mouseY, this.guiLeft, this.guiTop)) {
 			drawHoveringText(buttonTooltip, mouseX, mouseY, fontRenderer);
 		}
 
 		// Iterate over all energy widgets
 		for (WidgetEnergySlot slot : getContainer().energySlotList) {
-			// Check if mouse over widget
 			if (slot.isMouseOverWidget(mouseX, mouseY)) {
-				// Create tooltip list
 				List<String> tip = new ArrayList<String>();
 
 				// Check if slot has energy stack
 				if (slot.getCurrentStack() != null) {
-					// Add entry in list
-					tip.add(slot.getCurrentStack().getEnergyName());
-
-					// Draw tooltip
+					tip.add(slot.getStackTip());
 					drawHoveringText(tip, mouseX, mouseY, fontRenderer);
 				}
 			}

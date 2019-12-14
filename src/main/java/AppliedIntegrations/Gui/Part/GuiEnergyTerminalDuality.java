@@ -167,9 +167,10 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		// Check not null
-		if (castContainer().selectedStack.getEnergy() != null) {
+		final LiquidAIEnergy energy = castContainer().selectedStack.getEnergy();
+		if (energy != null && energy.getEnergyName() != null) {
 			// Draw energy name
-			this.fontRenderer.drawString("Energy: " + castContainer().selectedStack.getEnergy().getEnergyName(), 45, 101, 0);
+			this.fontRenderer.drawString("Energy: " + energy.getEnergyName(), 45, 101, 0);
 		}
 
 		// Check stack size greater than zero

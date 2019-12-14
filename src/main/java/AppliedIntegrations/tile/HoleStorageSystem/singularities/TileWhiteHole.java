@@ -54,7 +54,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 	}
 
 	public double getHoleRadius() {
-		// White hole's mass is opposite of black hole's mass, so when black hole grow, then white hole shrink
+		// White hole's mass is opposite of black hole's mass, so when black hole grows, white hole shrinks
 		double lightSpeed = 3;
 		return Math.max(Math.cbrt(Math.cbrt(2 * 6.7 * mass / Math.pow(lightSpeed, 2))), 0.3);
 	}
@@ -122,46 +122,44 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 			IAEItemStack pStack = entangledHole.storedItems.findPrecise((IAEItemStack) stack);
 
 			// Create copy
-			IAEItemStack Return = pStack.copy();
+			IAEItemStack addStackReturn = pStack.copy();
 
-			// Check if stack exists in list
-			if (pStack != null) {
-				// get stack size
-				long size = pStack.getStackSize();
+			// Get stack size
+			long size = pStack.getStackSize();
 
-				// Check size greater than 0
-				if (size <= 0) {
-					return null;
+			// Check size greater than 0
+			if (size <= 0) {
+				return null;
+			}
+
+			// Check if size greater then requested
+			if (pStack.getStackSize() <= size) {
+				// Set stack size to current stack size
+				addStackReturn.setStackSize(pStack.getStackSize());
+
+				// Modulate extraction
+				if (actionable == Actionable.MODULATE) {
+					// Decrease current stack size
+					pStack.setStackSize(0);
 				}
+			} else {
+				// Set stack size to new size
+				addStackReturn.setStackSize(size);
 
-				// Check if size greater then requested
-				if (pStack.getStackSize() <= size) {
-					// Set stack size to current stack size
-					Return.setStackSize(pStack.getStackSize());
-
-					// Modulate extraction
-					if (actionable == Actionable.MODULATE) {
-						// Decrease current stack size
-						pStack.setStackSize(0);
-					}
-				} else {
-					// Set stack size to #Var: size
-					Return.setStackSize(size);
-
-					// Modulate extraction
-					if (actionable == Actionable.MODULATE) {
-						// Set current stack size to current stack size - #Var: size
-						pStack.setStackSize(pStack.getStackSize() - size);
-					}
+				// Modulate extraction
+				if (actionable == Actionable.MODULATE) {
+					// Set current stack size to current stack size - #Var: size
+					pStack.setStackSize(pStack.getStackSize() - size);
 				}
 			}
 
 			// Update cell array
-			for (IPylon pylon : listeners)
+			for (IPylon pylon : listeners) {
 				pylon.postCellInventoryEvent();
+			}
 
 			// Return stack
-			return Return;
+			return addStackReturn;
 		}
 
 		return null;

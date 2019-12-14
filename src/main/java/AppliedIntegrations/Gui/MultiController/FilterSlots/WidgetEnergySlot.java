@@ -25,7 +25,6 @@ import javax.annotation.Nonnull;
  */
 @SideOnly(Side.CLIENT)
 public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAEEnergyStack> {
-
 	public int id;
 
 	public boolean shouldRender;
@@ -107,9 +106,10 @@ public class WidgetEnergySlot extends EnergyWidget implements IChannelWidget<IAE
 	@Override
 	public String getStackTip() {
 		// Check not null
-		if (getAEStack() != null) {
-			return getAEStack().getEnergy().getEnergyName();
+		final String energyName = getAEStack().getEnergy().getEnergyName();
+		if (getAEStack() != null && energyName != null) {
+			return energyName;
 		}
-		return "";
+		return "null";
 	}
 }
