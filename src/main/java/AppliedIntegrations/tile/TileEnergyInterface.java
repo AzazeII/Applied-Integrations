@@ -3,8 +3,6 @@ import AppliedIntegrations.Container.part.ContainerEnergyInterface;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.EnergyInterfaceDuality;
 import AppliedIntegrations.Inventory.AIGridNodeInventory;
-import AppliedIntegrations.Network.NetworkHandler;
-import AppliedIntegrations.Network.Packets.PacketCoordinateInit;
 import AppliedIntegrations.Parts.IEnergyMachine;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.*;
@@ -22,7 +20,6 @@ import appeng.api.util.INetworkToolAgent;
 import appeng.me.GridAccessException;
 import appeng.util.Platform;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -36,6 +33,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
+import static appeng.api.util.AEPartLocation.INTERNAL;
 
 /**
  * @Author Azazell
@@ -280,13 +278,13 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	@Override
 	public void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side) {
 		if (energy == RF) {
-			RFStorage.put(side, new EnergyInterfaceStorage(this, capacity, capacity / 2));
+			RFStorage.put(side, new EnergyInterfaceStorage(this, side, energy, capacity, capacity / 2));
 		}
 		if (energy == EU) {
-			EUStorage.put(side, new EnergyInterfaceStorage(this, (int) (capacity * 0.25), capacity * 2));
+			EUStorage.put(side, new EnergyInterfaceStorage(this, side, energy, (int) (capacity * 0.25), capacity * 2));
 		}
 		if (energy == J) {
-			JOStorage.put(side, new JouleInterfaceStorage(this, capacity * 2));
+			JOStorage.put(side, new JouleInterfaceStorage(this, side, capacity * 2));
 		}
 	}
 
@@ -311,54 +309,28 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public TileEntity getFacingTile(EnumFacing side) {
-
 		return null;
 	}
 
 	@Override
 	public List<ContainerEnergyInterface> getListeners() {
-
 		return containers;
 	}
 
 	@Override
-	public void update() {
+	public void setLastInjectedEnergy(AEPartLocation side, LiquidAIEnergy energy) {
+		barMap.put(side, energy);
+	}
 
+	@Override
+	public void update() {
 		super.update();
 
 		// Iterate for each side of part location
 		for (AEPartLocation side : AEPartLocation.values()) {
-			// Place bar counter here, because we have not one, but six bars
-			int barCounter = 0;
-
-			// Iterate for each energy
-			for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-				// Check if storage for given side and energy not null
-				if (getEnergyStorage(energy, side) != null) {
-					// Check if storage from given side and energy has any stored energy
-					if (getEnergyStorage(energy, side).getStored().doubleValue() > 0) {
-						// Put put energy in bar map
-						barMap.put(side, energy);
-
-						// Notify client
-						duality.notifyListenersOfBarFilterChange(barMap.get(side));
-
-						// Add to counter
-						barCounter += 1;
-					}
-				}
-			}
-
-			// Check if bar counter equal to 0
-			if (barCounter == 0) {
-				// Put null in this bar map entry
-				barMap.put(side, null);
-			}
-
-			// Notify container and gui
 			if (barMap.get(side) != null) {
-				// Bar Filter With Gui
 				duality.notifyListenersOfEnergyBarChange(barMap.get(side), side);
+				duality.notifyListenersOfBarFilterChange(barMap.get(side));
 			}
 		}
 
@@ -376,20 +348,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 		}
 	}
 
-	private void initGuiCoordinates() {
-		// Iterate for each listener
-		for (ContainerEnergyInterface listener : this.containers) {
-			// Check not null
-			if (listener != null) {
-				// Send packet init
-				NetworkHandler.sendTo(new PacketCoordinateInit(this), (EntityPlayerMP) listener.player);
-
-				// Toggle request
-				updateRequested = false;
-			}
-		}
-	}
-
 	@Override
 	public void updateFilter(LiquidAIEnergy energyInArray, int index) {
 		// Update filtered energy
@@ -399,11 +357,11 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	@Override
 	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> iStorageChannel) {
 		// Getting Node
-		if (getGridNode(AEPartLocation.INTERNAL) == null) {
+		if (getGridNode(INTERNAL) == null) {
 			return null;
 		}
 		// Getting net of node
-		IGrid grid = getGridNode(AEPartLocation.INTERNAL).getGrid();
+		IGrid grid = getGridNode(INTERNAL).getGrid();
 		// Cache of net
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 		// fluidInventory of cache
@@ -412,7 +370,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public boolean showNetworkInfo(RayTraceResult rayTraceResult) {
-
 		return false;
 	}
 }

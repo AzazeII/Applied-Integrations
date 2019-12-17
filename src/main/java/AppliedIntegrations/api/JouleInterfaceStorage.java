@@ -1,6 +1,8 @@
 package AppliedIntegrations.api;
 
+import AppliedIntegrations.grid.Implementation.AIEnergy;
 import appeng.api.config.Actionable;
+import appeng.api.util.AEPartLocation;
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyOutputter;
 import mekanism.api.energy.IStrictEnergyStorage;
@@ -15,22 +17,21 @@ import net.minecraftforge.fml.common.Optional;
  * @Author Azazell
  */
 public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, INBTStorage, IStrictEnergyStorage, IStrictEnergyOutputter, IStrictEnergyAcceptor {
-
 	private final double capacity;
-
-	private IEnergyInterface energyInterface;
+	private final AEPartLocation side;
+	private IEnergyInterface owner;
 
 	private double storage;
 
-	public JouleInterfaceStorage(IEnergyInterface iEnergyInterface, int capacity) {
-
-		this.energyInterface = iEnergyInterface;
+	public JouleInterfaceStorage(IEnergyInterface iEnergyInterface, AEPartLocation side, int capacity) {
+		this.owner = iEnergyInterface;
 		this.capacity = capacity;
+		this.side = side;
 	}
 
 	@Override
 	public void modifyEnergyStored(int i) {
-
+		this.owner.setLastInjectedEnergy(side, AIEnergy.J);
 		if (storage + i < capacity) {
 			storage += i;
 		}
@@ -38,24 +39,22 @@ public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, 
 
 	@Override
 	public Class<Double> getTypeClass() {
-
 		return Double.class;
 	}
 
 	@Override
 	public Double getStored() {
-
 		return storage;
 	}
 
 	@Override
 	public Double getMaxStored() {
-
 		return capacity;
 	}
 
 	@Override
 	public Double receive(Double value, Actionable action) {
+		this.owner.setLastInjectedEnergy(side, AIEnergy.J);
 		double energyReceived = Math.min(capacity - storage, value);
 
 		if (action == Actionable.MODULATE) {
@@ -93,12 +92,12 @@ public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, 
 
 	@Override
 	public double acceptEnergy(EnumFacing enumFacing, double v, boolean b) {
+		this.owner.setLastInjectedEnergy(side, AIEnergy.J);
 		return receive(v, b ? Actionable.SIMULATE : Actionable.MODULATE);
 	}
 
 	@Override
 	public boolean canReceiveEnergy(EnumFacing enumFacing) {
-
 		return true;
 	}
 
@@ -109,25 +108,21 @@ public class JouleInterfaceStorage implements IInterfaceStorageDuality<Double>, 
 
 	@Override
 	public boolean canOutputEnergy(EnumFacing enumFacing) {
-
 		return true;
 	}
 
 	@Override
 	public double getEnergy() {
-
 		return getStored();
 	}
 
 	@Override
 	public void setEnergy(double v) {
-
 		storage = Math.min(v, capacity);
 	}
 
 	@Override
 	public double getMaxEnergy() {
-
 		return getMaxStored();
 	}
 }

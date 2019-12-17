@@ -125,7 +125,6 @@ public class ContainerEnergyInterface extends ContainerWithUpgradeSlots implemen
 
 		if (part != null) {
 			this.part.removeListener(this);
-			this.part.setRealContainer(null);
 		}
 	}
 

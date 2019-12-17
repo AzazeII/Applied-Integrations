@@ -21,12 +21,14 @@ import java.util.List;
  */
 public interface IEnergyInterface extends IEnergyInterfaceDuality, INetworkManipulator, ISyncHost {
 	void initEnergyStorage(LiquidAIEnergy energy, AEPartLocation side);
-
 	int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric);
-
 	TileEntity getFacingTile(EnumFacing side);
-
 	List<ContainerEnergyInterface> getListeners();
+
+	/**
+	 * Setter used by interface dualities to notify owner about new injected energy.
+	 */
+	void setLastInjectedEnergy(AEPartLocation side, LiquidAIEnergy energy);
 
 	/**
 	 * @return Outer grid inventory of this host. Used by AppliedIntegrations.Inventory.Handlers#HandlerEnergyStorageBusInterface

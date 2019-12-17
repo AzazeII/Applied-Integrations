@@ -36,11 +36,7 @@ import static appeng.api.config.Actionable.SIMULATE;
  * Class handler for both tile interface, and host interface
  */
 public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
-
-	public boolean debug;
-
 	private IEnergyInterface owner;
-
 	private List<LiquidAIEnergy> initializedStorages = new LinkedList<>();
 
 	public EnergyInterfaceDuality(IEnergyInterface owner) {
@@ -59,12 +55,9 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 	public <T> T getCapability(Capability<T> capability, AEPartLocation side) {
 		if (capability == Capabilities.FORGE_ENERGY) {
-			// FE (RF) Capability
 			return (T) this.getEnergyStorage(RF, side);
-			// Ember capability
 		} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
 			return (T) this.getEnergyStorage(J, side);
-			// EU capability
 		}
 		return null;
 	}
@@ -74,19 +67,15 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		if (capability == Capabilities.FORGE_ENERGY) {
 			return true;
 		} else if (IntegrationsHelper.instance.isLoaded(J, false)) {
-			if (capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
-				return true;
-			}
+			return capability == mekanism.common.capabilities.Capabilities.ENERGY_STORAGE_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_ACCEPTOR_CAPABILITY || capability == mekanism.common.capabilities.Capabilities.ENERGY_OUTPUTTER_CAPABILITY;
 		}
 		return false;
 	}
 
 	public void initStorage(AEPartLocation side) {
-		// Iterate for each energy
+		// Initialize every energy storage on this side
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			// Check if storage is initialized
 			if (IntegrationsHelper.instance.isLoaded(energy, false)) {
-				// Update energy
 				owner.initEnergyStorage(energy, side);
 			}
 		}
@@ -94,16 +83,11 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 	// Synchronize data with all listeners
 	public void notifyListenersOfEnergyBarChange(LiquidAIEnergy energy, AEPartLocation energySide) {
-		// Iterate for each container listener of host
+		// Notify every listener about new energy bar value
 		for (ContainerEnergyInterface listener : owner.getListeners()) {
-			// Check not null
 			if (listener != null) {
-				// Get host tile
 				TileEntity hostTile = owner instanceof PartEnergyInterface ? ((PartEnergyInterface) owner).getHostTile() : (TileEnergyInterface) owner;
-
-				// Check not null
 				if (hostTile != null) {
-					// Send packet
 					NetworkHandler.sendTo(new PacketProgressBar(owner, energySide, getEnergyStorage(energy, energySide).getStored()),
 							(EntityPlayerMP) listener.player);
 				}
@@ -112,7 +96,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	public void notifyListenersOfBarFilterChange(LiquidAIEnergy bar) {
-
+		// Notify every listener about new filter value
 		for (ContainerEnergyInterface listener : owner.getListeners()) {
 			if (listener != null) {
 				NetworkHandler.sendTo(new PacketBarChange(bar, owner), (EntityPlayerMP) listener.player);
@@ -131,7 +115,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 	@Override
 	public double getMaxTransfer(AEPartLocation side) {
-
 		return owner.getMaxTransfer(side);
 	}
 
@@ -147,48 +130,31 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 
 	@Override
 	public void doInjectDualityWork(Actionable action) throws NullNodeConnectionException, GridAccessException {
-
 		IGridNode node = owner.getGridNode();
 		if (node == null) {
 			throw new NullNodeConnectionException();
 		}
 
-		// Iterate over all sides(only for interface block)
+		// Iterate for all sides and check for stored energy for injection into network
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			// Is it modulate, or simulate?
 			if (action == Actionable.MODULATE) {
-				// Iterate over allowed energy type
 				for (EnumCapabilityType energyType : EnumCapabilityType.values) {
-					// Get energy from type
 					LiquidAIEnergy energy = energyType.energy;
-					// Check if storage available;
 					if (isStorageInitialized(energy)) {
-						// Get storage
 						IInterfaceStorageDuality energyStorage = getEnergyStorage(energy, side);
-
-						// Split value to integer
 						int stored = energyStorage.getStored().intValue();
 
-						// Check if there is energy exists and energy not filtered
+						// Simulate energy injection into network and extract injected amount from storage
 						if (stored > 0 && this.getFilteredEnergy(side) != energy) {
-							// Find minimum value between energy stored and max transfer
 							int valuedReceive = (int) Math.min(stored, this.getMaxTransfer(side));
-
-							// Find amount of energy that can be inje¡cted
 							int injectedAmount = owner.injectEnergy(new EnergyStack(energy, valuedReceive), SIMULATE);
-
-							// Check if any energy was injected
 							if (injectedAmount > 0) {
-								// Find amount of energy that can be extracted
 								int extractedAmount = energyStorage.extract(energyStorage.toNativeValue(injectedAmount),
 										SIMULATE).intValue();
 
-								// Check if any energy was extracted
 								if (extractedAmount > 0) {
-									// Inject energy in ME Network
+									owner.setLastInjectedEnergy(side, energy);
 									owner.injectEnergy(new EnergyStack(energy, extractedAmount), MODULATE);
-
-									// Drain extracted amount from network
 									energyStorage.extract(energyStorage.toNativeValue(extractedAmount), MODULATE);
 								}
 							}
@@ -196,9 +162,9 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 					}
 				}
 			}
+
 			if (!(owner instanceof TileEnergyInterface)) {
 				// Break if owner is partEnergyInterface (iterate only one time)
-				debug = false;
 				break;
 			}
 		}
