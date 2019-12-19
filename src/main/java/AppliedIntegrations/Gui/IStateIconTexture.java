@@ -10,38 +10,28 @@ import javax.annotation.Nonnull;
  */
 public interface IStateIconTexture {
 	/**
-	 * Height of the icon.
-	 *
-	 * @return
+	 * @return Height of the icon.
 	 */
 	int getHeight();
 
 	/**
-	 * Texture the icon is in.
-	 *
-	 * @return
+	 * @return Texture the icon is in.
 	 */
 	@Nonnull
 	ResourceLocation getTexture();
 
 	/**
-	 * U coordinate of the icon.
-	 *
-	 * @return
+	 * @return U coordinate of the icon.
 	 */
 	int getU();
 
 	/**
-	 * V coordinate of the icon.
-	 *
-	 * @return
+	 * @return V coordinate of the icon.
 	 */
 	int getV();
 
 	/**
-	 * Width of the icon.
-	 *
-	 * @return
+	 * @return Width of the icon.
 	 */
 	int getWidth();
 }
