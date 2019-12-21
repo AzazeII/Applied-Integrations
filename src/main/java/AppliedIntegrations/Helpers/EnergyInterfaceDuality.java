@@ -223,10 +223,9 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 								owner.extractEnergy(new EnergyStack(filteredEnergy, extractedAmount),
 										MODULATE);
 
-								// Unlike the "binary" energy storage, the real (physical) storage should not have high transfer values, like 500k RF/t
+								// Unlike the "binary" energy storage, the real (in-world) storage should not have high transfer values, like 500k RF/t
 								// Otherwise it will be really OP
-								transferEnergy(filteredEnergy,
-										Math.min(stored, Math.min((int) getMaxTransfer(side), 50000)),
+								transferEnergy(filteredEnergy, Math.min(stored, Math.min((int) getMaxTransfer(side), 50000)),
 										side.getFacing().getOpposite());
 							}
 						}
@@ -243,7 +242,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		}
 	}
 
-	private void transferEnergy(LiquidAIEnergy filteredEnergy, int Amount, EnumFacing side) {
+	private void transferEnergy(LiquidAIEnergy filteredEnergy, int amount, EnumFacing side) {
 		TileEntity tile = owner.getFacingTile(side);
 
 		if (tile == null) {
@@ -258,9 +257,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 			if (tile.hasCapability(type.getInputCapability(), side)) {
 				CapabilityHelper capabilityHelper = new CapabilityHelper(tile, AEPartLocation.fromFacing(side));
 				getEnergyStorage(filteredEnergy,
-						AEPartLocation.fromFacing(side)).modifyEnergyStored(-capabilityHelper.receiveEnergy(Amount,
-						false,
-						filteredEnergy));
+						AEPartLocation.fromFacing(side)).modifyEnergyStored(-capabilityHelper.receiveEnergy(amount, false, filteredEnergy));
 			}
 		}
 	}

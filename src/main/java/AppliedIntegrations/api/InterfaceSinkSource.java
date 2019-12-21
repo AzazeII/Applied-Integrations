@@ -61,7 +61,15 @@ public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceSt
 	@Override
 	public Double receive(Double value, Actionable action) {
 		this.owner.setLastInjectedEnergy(side, EU);
-		return injectEnergy(null, value, 4);
+		double storedBefore = getEnergyStored();
+		double injectedAmount = injectEnergy(null, value, 4);
+
+		// We need to put back stored amount if we are simulating inject
+		if (action == Actionable.SIMULATE) {
+			setEnergyStored(storedBefore);
+		}
+
+		return injectedAmount;
 	}
 
 	@Override
@@ -69,6 +77,11 @@ public class InterfaceSinkSource extends BasicSinkSource implements IInterfaceSt
 		double storedBefore = getEnergyStored();
 		drawEnergy(value);
 		double storedAfter = getEnergyStored();
+
+		// On simulation we need to put energy back and return measured amount
+		if (action == Actionable.SIMULATE) {
+			setEnergyStored(storedBefore);
+		}
 
 		return storedBefore - storedAfter;
 	}

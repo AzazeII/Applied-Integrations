@@ -135,31 +135,19 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 
 		super.onButtonClicked(btn, mouseButton);
 
-		// Check if click was performed on sort mode button
+		// Toggle sort button and sync it's val with server
 		if (btn == castContainer().sortButton) {
-			// Get current mode ordinal
 			byte ordinal = (byte) castContainer().sortButton.getCurrentValue().ordinal();
-
-			// Switch to next mode
 			castContainer().sortButton.set(ordinal == 3 ? SortOrder.NAME : SortOrder.values()[ordinal + 1]);
-
-			// Change sorting mode
 			castContainer().sortMode = (SortOrder) castContainer().sortButton.getCurrentValue();
 
-			// Create sorted list from current list
 			List<IAEEnergyStack> sorted = castContainer().sorter.sortedCopy(castContainer().list);
-
-			// Clear current list
 			castContainer().list = new EnergyList();
 
-			// Iterate for each entry of sorted copy of list
-			// Add entry in order of list
 			sorted.forEach(castContainer().list::add);
-
-			// Call update function
 			castContainer().updateStacksPrecise(sorted);
 
-			// Send packet
+			// Sync with client
 			NetworkHandler.sendToServer(new PacketEnum(castContainer().sortButton.getCurrentValue(), this.part));
 		}
 	}
