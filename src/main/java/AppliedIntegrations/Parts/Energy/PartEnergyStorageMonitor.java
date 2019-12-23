@@ -382,9 +382,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		if( !this.isLocked ) {
 			// Get held stack
 			ItemStack maybeEnergyStack = player.getHeldItem( enumHand );
-
-			// Convert to energy
-			LiquidAIEnergy energy = Utils.getEnergyFromItemStack(maybeEnergyStack);
+			LiquidAIEnergy energy = Utils.getEnergyFromItemStack(maybeEnergyStack, getHostWorld());
 
 			// Check if held stack represents any energy
 			if (energy == null) {

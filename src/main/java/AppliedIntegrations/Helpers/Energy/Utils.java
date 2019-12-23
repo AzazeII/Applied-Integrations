@@ -17,6 +17,7 @@ import appeng.api.storage.data.IAEStack;
 import appeng.api.util.AEPartLocation;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import ic2.api.item.IElectricItem;
+import ic2.api.tile.IEnergyStorage;
 import mekanism.api.energy.IEnergizedItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
@@ -38,9 +39,8 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
  */
 @Optional.InterfaceList(value = {@Optional.Interface(iface = "teamroots.embers.api.item.IEmberChargedTool", modid = "embers", striprefs = true), @Optional.Interface(iface = "ic2.api.item.IElectricItem", modid = "ic2", striprefs = true), @Optional.Interface(iface = "mekanism.api.energy.IEnergizedItem", modid = "mekanism", striprefs = true)})
 public class Utils {
-	public static IAEStack<IAEEnergyStack> getEnergyStackFromItemStack(ItemStack itemStack) {
-		// Get energy stack
-		EnergyStack stack = new EnergyStack(getEnergyFromItemStack(itemStack), 1);
+	public static IAEStack<IAEEnergyStack> getEnergyStackFromItemStack(ItemStack itemStack, World world) {
+		EnergyStack stack = new EnergyStack(getEnergyFromItemStack(itemStack, world), 1);
 
 		// Check not null and meaningful
 		if (stack.getEnergy() == null) {
@@ -50,7 +50,7 @@ public class Utils {
 		return AEEnergyStack.fromStack(stack);
 	}
 
-	public static LiquidAIEnergy getEnergyFromItemStack(ItemStack itemStack) {
+	public static LiquidAIEnergy getEnergyFromItemStack(ItemStack itemStack, World world) {
 		if (itemStack == null) {
 			return null;
 		}
@@ -63,7 +63,14 @@ public class Utils {
 		} else if (item instanceof ItemBlock) {
 			Block blk = ((ItemBlock) item).getBlock();
 			if (blk.hasTileEntity(blk.getDefaultState())) {
-				return getEnergyFromContainer(blk.createTileEntity(null, blk.getDefaultState()));
+				final TileEntity tileEntity = blk.createTileEntity(world, blk.getDefaultState());
+
+				// Double validate tile nonnull since SOME MODS(looking on IC2) sometime initialize it by null
+				if (tileEntity != null) {
+					return getEnergyFromContainer(tileEntity);
+				}
+
+				return null;
 			}
 		}
 
@@ -117,14 +124,18 @@ public class Utils {
 			if (EnumCapabilityType.fromEnergy(energy) != null) {
 				// Record type
 				EnumCapabilityType type = EnumCapabilityType.fromEnergy(energy);
-
-				// Check not null
 				if (type == null) {
 					continue;
 				}
 
-				// Check not null
 				if (type.getCapabilityWithModCheck() == null) {
+					// Check if it's EU which is special case because it has no 1.12.2 capability
+					if (type == EnumCapabilityType.EU) {
+						if (tile instanceof IEnergyStorage) {
+							return type.energy;
+						}
+					}
+
 					continue;
 				}
 
@@ -143,13 +154,11 @@ public class Utils {
 	}
 
 	private static LiquidAIEnergy getEnergyFromItem(Item item) {
-		// Check for EU Api loaded, and item can handle EU
+		// For RF one we need to actually check for loaded COFH|API, so FE determination is for top-layer methods under this
 		if (IntegrationsHelper.instance.isLoaded(EU, false) && item instanceof IElectricItem) {
 			return EU;
-			// Check for joule api loaded, and item can handle J
 		} else if (IntegrationsHelper.instance.isLoaded(J, false) && item instanceof IEnergizedItem) {
 			return J;
-			// Check for Ember api loaded, and item can handle Ember
 		} else if (IntegrationsHelper.instance.isLoaded(RF, true) && item instanceof IEnergyContainerItem) {
 			return RF;
 		}

@@ -45,7 +45,7 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	private IEnergyInterface energyInterface;
 	private EntityPlayer player;
 
-	public GuiEnergyInterface(ContainerEnergyInterface container, IEnergyInterface energyInterface, EntityPlayer player) {
+	public GuiEnergyInterface(ContainerEnergyInterface container, EntityPlayer player) {
 		super(container, player);
 
 		this.player = player;
@@ -194,7 +194,7 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 		// When mouse clicked GUI will try to find slot(s) over mouse and populate click on them(if any)
 		getContainer().energySlotList.forEach((energySlot) -> {
 			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
-				LiquidAIEnergy energyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack());
+				LiquidAIEnergy energyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack(), energyInterface.getHostWorld());
 
 				try {
 					energySlot.onMouseClicked(new EnergyStack(energyItem, 1));

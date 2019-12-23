@@ -78,9 +78,8 @@ public class EnumCapabilityType {
 	 */
 	public Capability getInputCapability() {
 		// Check energy api loaded
-		if (IntegrationsHelper.instance.isLoaded(this.energy, false))
-		// Check not null and not empty
-		{
+		if (IntegrationsHelper.instance.isLoaded(this.energy, false)) {
+			// Check not null and not empty
 			if (capabilities != null && !capabilities.isEmpty()) {
 				return capabilities.firstElement();
 			}
@@ -94,10 +93,8 @@ public class EnumCapabilityType {
 	 * @return null or capabilities of this type
 	 */
 	public Vector<Capability> getCapabilityWithModCheck() {
-
-		if (IntegrationsHelper.instance.isLoaded(this.energy, false))
-		// Check not null and not empty
-		{
+		if (IntegrationsHelper.instance.isLoaded(this.energy, false)) {
+			// Check not null and not empty
 			if (capabilities != null && !capabilities.isEmpty()) {
 				return this.capabilities;
 			}
@@ -112,9 +109,8 @@ public class EnumCapabilityType {
 	 */
 	public Capability getOutputCapabilities() {
 		// Check energy api loaded
-		if (IntegrationsHelper.instance.isLoaded(this.energy, false))
-		// Check not null and not empty
-		{
+		if (IntegrationsHelper.instance.isLoaded(this.energy, false)) {
+			// Check not null and not empty
 			if (capabilities != null && !capabilities.isEmpty()) {
 				return capabilities.lastElement();
 			}

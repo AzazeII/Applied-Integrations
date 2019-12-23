@@ -43,7 +43,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 	private static final int INPUT_POSITION_X = 8;
 	// Y of input
 	private static final int INPUT_POSITION_Y = OUTPUT_POSITION_Y;
-	private static int OUTPUT_INV_INDEX = 38, INPUT_INV_INDEX = 37;
+	private static int INPUT_INV_INDEX = 37;
 
 	public EntityPlayer player;
 	private PartEnergyTerminal terminal;
@@ -63,8 +63,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 			64) {
 		@Override
 		public boolean isItemValidForSlot(final int slotID, final ItemStack itemStack) {
-
-			return Utils.getEnergyFromItemStack(itemStack) != null;
+			return Utils.getEnergyFromItemStack(itemStack, terminal.getHostWorld()) != null;
 		}
 	};
 

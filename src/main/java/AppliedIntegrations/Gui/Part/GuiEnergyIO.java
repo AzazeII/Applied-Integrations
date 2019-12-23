@@ -36,21 +36,13 @@ import static AppliedIntegrations.Helpers.Energy.Utils.getEnergyFromItemStack;
 @SideOnly(Side.CLIENT)
 public class GuiEnergyIO extends AIGui {
 	private static final int FILTER_GRID_SIZE = 3;
-
 	private static final int WIDGET_X_POSITION = 61;
-
 	private static final int WIDGET_Y_POSITION = 21;
-
 	private static final int GUI_MAIN_WIDTH = 176;
-
 	private static final int GUI_UPGRADES_WIDTH = 35;
-
 	public static final int GUI_UPGRADES_HEIGHT = 86;
-
 	public EntityPlayer player;
-
 	private String stringName;
-
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.io.bus.png");
 
 	public GuiEnergyIO(Container container, EntityPlayer player) {
@@ -203,7 +195,7 @@ public class GuiEnergyIO extends AIGui {
 		for (WidgetEnergySlot slot : getContainer().energySlotList) {
 			if (slot.isMouseOverWidget(mouseX, mouseY)) {
 				// Get the Energy of the currently held item
-				LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
+				LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack(), getContainer().part.getHostWorld());
 
 				// Check if item energy not equal to energy in slot
 				if (slot.getCurrentStack() != null && slot.getCurrentStack().getEnergy() == itemEnergy) {
@@ -212,7 +204,6 @@ public class GuiEnergyIO extends AIGui {
 
 				// Call mouse click function
 				slot.onMouseClicked(new EnergyStack(itemEnergy, 0));
-
 				break;
 			}
 		}

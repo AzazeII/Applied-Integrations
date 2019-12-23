@@ -28,7 +28,6 @@ public class PartEnergyExport extends AIOPart {
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
-
 		bch.addBox(4, 4, 12, 12, 12, 14);
 		bch.addBox(5, 5, 14, 11, 11, 15);
 		bch.addBox(6, 6, 15, 10, 10, 16);
@@ -45,25 +44,18 @@ public class PartEnergyExport extends AIOPart {
 		// Create helper
 		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getHostSide().getOpposite());
 
-		// Iterate over all energies
+		// Try to extract all filtered energies from network and put them nto container next to us
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			// Check if we are filtering this energy
 			if (filteredEnergies.contains(energy)) {
-				// Check if tile can operate given energy
 				if (helper.operatesEnergy(energy)) {
-
-					// Simulate extraction
 					int extracted = extractEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
-
-					// Simulate energy receive
 					int received = helper.receiveEnergy(extracted, true, energy);
 
 					// Modulate extraction & insertion
 					extractEnergy(new EnergyStack(energy, helper.receiveEnergy(received, false, energy)), Actionable.MODULATE);
 
-					// Check if energy was actually extracted
 					if (extracted > 0) {
-						// Tick faster
+						// tick faster after successfull energy extraction
 						return TickRateModulation.FASTER;
 					}
 				}

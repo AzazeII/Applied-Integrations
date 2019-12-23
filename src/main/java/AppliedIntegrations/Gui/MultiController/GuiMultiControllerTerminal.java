@@ -51,15 +51,10 @@ import static AppliedIntegrations.tile.MultiController.TileMultiControllerTermin
  */
 public class GuiMultiControllerTerminal extends AIGui implements IWidgetHost {
 	private static final int GUI_WIDTH = 192;
-
 	private static final int GUI_HEIGH = 256;
-
 	public EntityPlayer player;
-
 	private GuiSecurityPermissionsButton securityPermissionButton;
-
 	private GuiStorageChannelButton storageChannelButton;
-
 	private GuiListTypeButton listTypeButton;
 	private ChangeHandler<ItemStack> cardChangeUpdateHandler = new ChangeHandler<>();
 
@@ -73,21 +68,19 @@ public class GuiMultiControllerTerminal extends AIGui implements IWidgetHost {
 	 * Contains maps of modes linked to given storage channel from given security permissions
 	 */
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> permissionChannelModeMap = new LinkedHashMap<>();
-
 	private LinkedHashMap<SecurityPermissions, AEFluidInventory> tanks = new LinkedHashMap<>();
-
 	private ResourceLocation texture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/multi_controller_terminal.png");
 
 	public GuiMultiControllerTerminal(ContainerMultiControllerTerminal container, EntityPlayer player) {
-
 		super(container, player);
 
 		this.player = player;
 
 		// Iterate until i = size
-		for (int i = 0; i < GuiSecurityPermissionsButton.getPermissionList().size(); i++)
+		for (int i = 0; i < GuiSecurityPermissionsButton.getPermissionList().size(); i++) {
 			// Put new inv in tanks
 			tanks.put(GuiSecurityPermissionsButton.getPermissionList().get(i), new AEFluidInventory(null, 27));
+		}
 	}
 
 	public IncludeExclude getIncludeExcludeMode() {
@@ -476,7 +469,8 @@ public class GuiMultiControllerTerminal extends AIGui implements IWidgetHost {
 			// Check if mouse is over widget
 			if (widget.isMouseOverWidget(mouseX, mouseY)) {
 				// Update stack
-				widget.setAEStack(Objects.requireNonNull(AIApi.instance()).getAEStackFromItemStack(storageChannelButton.getChannel(), player.inventory.getItemStack()));
+				widget.setAEStack(Objects.requireNonNull(AIApi.instance()).getAEStackFromItemStack(storageChannelButton.getChannel(),
+						player.inventory.getItemStack(), getContainer().terminal.getHostWorld()));
 
 				// Encode card tag
 				encodeCardTag();

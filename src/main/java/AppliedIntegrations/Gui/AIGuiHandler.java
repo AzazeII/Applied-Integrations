@@ -187,7 +187,7 @@ public class AIGuiHandler implements IGuiHandler {
 		if (gui == GuiEnum.GuiInterface) {
 			ISyncHost host = Utils.getSyncHostByParams(new BlockPos(x, y, z), side, world);
 
-			return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(ID, player, world, x, y, z), (IEnergyInterface) host, player);
+			return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(ID, player, world, x, y, z), player);
 		} else if (gui == GuiEnum.GuiLogicBus) {
 			// Find tile candidate for core
 			TileEntity maybeCore = world.getTileEntity(new BlockPos(x, y, z));

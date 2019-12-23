@@ -124,7 +124,7 @@ public class ClientProxy extends CommonProxy {
 				FilteredMultiControllerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
 				// Converter and UV
-				(AEItemStack::fromItemStack), Pair.of(0, 0),
+				((stack1, world) -> AEItemStack.fromItemStack(stack1)), Pair.of(0, 0),
 
 				// Encoder and decoder
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEItemStack::fromNBT)); // (1) Item channel
@@ -140,7 +140,7 @@ public class ClientProxy extends CommonProxy {
 				FilteredMultiControllerPortFluidHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
 				// Converter and UV
-				(stack) -> {
+				(stack, world) -> {
 					// Get stack
 					FluidStack fluidStack = FluidUtil.getFluidContained(stack);
 
@@ -165,10 +165,8 @@ public class ClientProxy extends CommonProxy {
 				// Handler
 				FilteredMultiControllerPortEnergyHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
-				// Converter and UV
+				// Converters and UV
 				Utils::getEnergyStackFromItemStack, Pair.of(0, 16),
-
-				// Encoder and decoder
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEEnergyStack::fromNBT)); // (3) Energy channel
 
 		// Check if botania is loaded and integrations is enabled

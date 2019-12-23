@@ -134,7 +134,7 @@ public class BotaniaLoader {
 				FilteredMultiControllerPortManaHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
 
 				// Converter and UV
-				Utils::getManaFromItemStack, Pair.of(32, 0),
+				(itemStack, world) -> Utils.getManaFromItemStack(itemStack), Pair.of(32, 0),
 
 				// Encoder and decoder
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEManaStack::fromNBT));

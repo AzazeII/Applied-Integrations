@@ -11,6 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.annotation.Nullable;
@@ -28,8 +29,7 @@ public abstract class AIApi {
 	 */
 	@FunctionalInterface
 	public interface IStackConverter {
-
-		IAEStack<?> convert(ItemStack stack) throws IOException;
+		IAEStack<?> convert(ItemStack stack, World world) throws IOException;
 	}
 
 	/**
@@ -78,7 +78,6 @@ public abstract class AIApi {
 	 * @param widgetConstructor map value #2
 	 * @param UV                map value #3 U, V for sprite
 	 * @param coderPair         map value #4
-	 * @param handler
 	 */
 	public abstract void addChannelToServerFilterList(IStorageChannel<? extends IAEStack<?>> channel, ResourceLocation sprite, Constructor<? extends IChannelWidget> widgetConstructor, Constructor<? extends FilteredMultiControllerPortHandler> handler, IStackConverter lambda, Pair<Integer, Integer> UV, Pair<IStackEncoder, IStackDecoder> coderPair);
 
@@ -104,12 +103,13 @@ public abstract class AIApi {
 	public abstract IStackDecoder getStackDecoder(IStorageChannel<? extends IAEStack<?>> chan);
 
 	/**
-	 * @param itemStack Itemstack to convert
 	 * @param chan      Key for convertor
+	 * @param itemStack Itemstack to convert
+	 * @param world     World where this operation is performed. Needed for case when stack stores block with tile
 	 * @return Converted stack
 	 */
 	@Nullable
-	public abstract IAEStack<?> getAEStackFromItemStack(IStorageChannel<? extends IAEStack<?>> chan, ItemStack itemStack);
+	public abstract IAEStack<?> getAEStackFromItemStack(IStorageChannel<? extends IAEStack<?>> chan, ItemStack itemStack, World world);
 
 	/**
 	 * @return ME inventory handler from given channel

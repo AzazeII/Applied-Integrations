@@ -218,7 +218,7 @@ public class GuiEnergyStoragePart extends AIGui {
 		for (WidgetEnergySlot energySlot : getContainer().energySlotList) {
 			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
 				// Get the Energy of the currently held item
-				LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack());
+				LiquidAIEnergy itemEnergy = getEnergyFromItemStack(player.inventory.getItemStack(), storageBus.getHostWorld());
 
 				if (energySlot.getCurrentStack() == null || energySlot.getCurrentStack().getEnergy() == itemEnergy) {
 					return;

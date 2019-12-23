@@ -1,12 +1,9 @@
 package AppliedIntegrations.Helpers.Energy;
-
-
 import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.Utils.AILog;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.EnumCapabilityType;
 import appeng.api.util.AEPartLocation;
-import ic2.api.energy.tile.IEnergySink;
 import mekanism.api.energy.IStrictEnergyAcceptor;
 import mekanism.api.energy.IStrictEnergyOutputter;
 import mekanism.api.energy.IStrictEnergyStorage;
@@ -37,7 +34,6 @@ public class CapabilityHelper {
 	private Vector<Capability> capabilities = new Vector<>();
 
 	public CapabilityHelper(TileEntity capabilityHandler, AEPartLocation side) {
-
 		this.capabilityHandler = capabilityHandler;
 		this.side = side;
 
@@ -58,11 +54,10 @@ public class CapabilityHelper {
 
 	/**
 	 * @param energy energy to check capability for
-	 * @return Pair of number represeting max storaga, and number type;
+	 * @return Pair of number represeting max storage, and number type;
 	 * Allowed types: integer, double, long
 	 */
 	public int getMaxStored(LiquidAIEnergy energy) {
-
 		for (Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
 			if (capabilities.contains(capability)) {
 				if (capability == CapabilityEnergy.ENERGY) {
@@ -80,9 +75,9 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
-			// sink = (IEnergySink)capabilityHandler;
-			// sink.getDemandedEnergy());
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+			ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+			return iEnergyStorage.getCapacity();
 		}
 
 		return 0;
@@ -90,6 +85,7 @@ public class CapabilityHelper {
 
 	public int receiveEnergy(Number val, boolean simulate, LiquidAIEnergy energy) {
 		// Iterate for each capability from energy
+		final int intVal = val.intValue();
 		for (Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
 			// Check if our capabilities contains this capability
 			if (capabilities.contains(capability)) {
@@ -99,7 +95,7 @@ public class CapabilityHelper {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 
 					// Receive energy
-					return energyStorageCapability.receiveEnergy(val.intValue(), simulate);
+					return energyStorageCapability.receiveEnergy(intVal, simulate);
 				} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == Capabilities.ENERGY_ACCEPTOR_CAPABILITY) {
 					// Create joule storage
 					IStrictEnergyAcceptor storage = (IStrictEnergyAcceptor) capabilityHandler.getCapability(capability, side.getFacing());
@@ -116,9 +112,20 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
-			// sink = (IEnergySink)capabilityHandler;
-			// sink.getDemandedEnergy());
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+			ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+
+			// Don't check for enough energy as we did in extract. IC2 api does it for us
+			int storedBefore = iEnergyStorage.getStored();
+			iEnergyStorage.addEnergy(intVal);
+			int storedAfter = iEnergyStorage.getStored();
+
+			// Return energy back if it was simulation
+			if (simulate) {
+				iEnergyStorage.setStored(storedBefore);
+			}
+
+			return storedAfter - storedBefore;
 		}
 
 		return 0;
@@ -150,6 +157,7 @@ public class CapabilityHelper {
 		}
 
 		// Iterate over all capabilities from this energy
+		final int intVal = val.intValue();
 		for (Capability capability : EnumCapabilityType.fromEnergy(energy).capabilities) {
 			// Check if tile has this capability
 			if (capabilities.contains(capability)) {
@@ -159,7 +167,7 @@ public class CapabilityHelper {
 					IEnergyStorage energyStorageCapability = (IEnergyStorage) capabilityHandler.getCapability(capability, side.getFacing());
 
 					// Extract energy
-					return energyStorageCapability.extractEnergy(val.intValue(), simulate);
+					return energyStorageCapability.extractEnergy(intVal, simulate);
 
 				// Check if capability belong to Ember system
 				} else if (IntegrationsHelper.instance.isLoaded(J, false) && capability == Capabilities.ENERGY_OUTPUTTER_CAPABILITY) {
@@ -180,9 +188,24 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
-			// sink = (IEnergySink)capabilityHandler;
-			// sink.getDemandedEnergy());
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+			ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+
+			// Check if we got enough energy to extract
+			if (iEnergyStorage.getStored() < intVal) {
+				return 0;
+			}
+
+			int storedBefore = iEnergyStorage.getStored();
+			iEnergyStorage.addEnergy(-intVal);
+			int storedAfter = iEnergyStorage.getStored();
+
+			// Return energy back if it was simulation
+			if (simulate) {
+				iEnergyStorage.setStored(storedBefore);
+			}
+
+			return storedAfter - storedBefore;
 		}
 
 		return 0;
@@ -219,29 +242,30 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof IEnergySink) {
-			IEnergySink sink = (IEnergySink) capabilityHandler;
-			return 0;
+		if (IntegrationsHelper.instance.isLoaded(EU, false) && capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+			ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+			return iEnergyStorage.getStored();
 		}
 
 		return 0;
 	}
 
 	public boolean operatesEnergy(LiquidAIEnergy energy) {
-		// Check not null
 		if (EnumCapabilityType.fromEnergy(energy) == null) {
 			return false;
 		}
 
-		// Get vector
-		Vector<Capability> capabilities = EnumCapabilityType.fromEnergy(energy).getCapabilityWithModCheck();
+		// Special case for my favorite(haha) IC2...
+		if (energy == EU && IntegrationsHelper.instance.isLoaded(EU, false)
+				&& capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+			return true;
+		}
 
-		// Check not null
+		Vector<Capability> capabilities = EnumCapabilityType.fromEnergy(energy).getCapabilityWithModCheck();
 		if (capabilities == null) {
 			return false;
 		}
 
-		//Iterate over it's capabilities
 		return this.capabilities.contains(capabilities.firstElement());
 	}
 }

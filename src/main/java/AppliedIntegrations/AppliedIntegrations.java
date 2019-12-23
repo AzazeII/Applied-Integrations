@@ -24,7 +24,7 @@ import net.minecraftforge.fml.relauncher.Side;
  */
 @Mod(modid = AppliedIntegrations.modid, name = "Applied Integrations", version = AppliedIntegrations.version, dependencies = "required-after:appliedenergistics2")
 public class AppliedIntegrations {
-	public static final String version = "8.0.16.4";
+	public static final String version = "8.0.16.5";
 
 	public static final String phase = "beta";
 

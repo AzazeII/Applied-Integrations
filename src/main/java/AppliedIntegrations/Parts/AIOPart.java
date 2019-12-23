@@ -20,6 +20,7 @@ import appeng.api.parts.PartItemStack;
 import appeng.api.util.AECableType;
 import appeng.core.sync.GuiBridge;
 import appeng.util.Platform;
+import ic2.api.tile.IEnergyStorage;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static AppliedIntegrations.Inventory.AIGridNodeInventory.validateStack;
+import static AppliedIntegrations.grid.EnumCapabilityType.EU;
 import static appeng.api.config.RedstoneMode.IGNORE;
 
 /**
@@ -173,15 +175,18 @@ public abstract class AIOPart extends AIPart implements IGridTickable, IEnergyMa
 			return;
 		}
 
-		// Iterate over all capability types
 		for (EnumCapabilityType type : EnumCapabilityType.values) {
-			// Iterate over all capabilities
 			for (Capability capability : type.capabilities) {
-				// Check if tile has one of type's capabilities
 				if (tileEntity.hasCapability(capability, getHostSide().getFacing().getOpposite())) {
-					// Update adjacent storage
 					this.adjacentEnergyStorage = tileEntity;
+					break;
 				}
+			}
+
+			// *****Note here we are checking for IEneergyStorage from IC2, not COFH or FE*****
+			if (type == EU && tileEntity instanceof IEnergyStorage) {
+				this.adjacentEnergyStorage = tileEntity;
+				break;
 			}
 		}
 
