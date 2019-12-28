@@ -87,12 +87,16 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) &&
-				capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
-			ic2.core.block.machine.tileentity.TileEntityElectricMachine
-					electricMachine = (ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
-			Energy capability = electricMachine.getComponent(Energy.class);
-			return (int) capability.getCapacity();
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
+			if (capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
+				ic2.core.block.machine.tileentity.TileEntityElectricMachine electricMachine =
+						(ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
+				Energy capability = electricMachine.getComponent(Energy.class);
+				return (int) capability.getCapacity();
+			} else if (capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+				ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+				return iEnergyStorage.getCapacity();
+			}
 		}
 
 		return 0;
@@ -129,12 +133,15 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) &&
-				capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
-			ic2.core.block.machine.tileentity.TileEntityElectricMachine
-					electricMachine = (ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
-			Energy capability = electricMachine.getComponent(Energy.class);
-			return (int) capability.getEnergy();
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
+			if (capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
+				ic2.core.block.machine.tileentity.TileEntityElectricMachine electricMachine = (ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
+				Energy capability = electricMachine.getComponent(Energy.class);
+				return (int) capability.getEnergy();
+			} else if (capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+				ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+				return iEnergyStorage.getStored();
+			}
 		}
 
 		return 0;
@@ -169,20 +176,35 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) &&
-				capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
-			ic2.core.block.machine.tileentity.TileEntityElectricMachine
-					electricMachine = (ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
-			Energy capability = electricMachine.getComponent(Energy.class);
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
+			if (capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
+				ic2.core.block.machine.tileentity.TileEntityElectricMachine electricMachine =
+						(ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
+				Energy capability = electricMachine.getComponent(Energy.class);
 
-			// Don't check for enough energy as we did in extract. IC2 api does it for us
-			// Return energy back if it was simulation
-			double added = capability.addEnergy(intVal);
-			if (simulate) {
-				capability.addEnergy(-added);
+				// Don't check for enough energy as we did in extract. IC2 api does it for us
+				// Return energy back if it was simulation
+				double added = capability.addEnergy(intVal);
+				if (simulate) {
+					capability.addEnergy(-added);
+				}
+
+				return (int) added;
+			} else if (capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+				ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+
+				// Don't check for enough energy as we did in extract. IC2 api does it for us
+				int storedBefore = iEnergyStorage.getStored();
+				iEnergyStorage.addEnergy(intVal);
+				int storedAfter = iEnergyStorage.getStored();
+
+				// Return energy back if it was simulation
+				if (simulate) {
+					iEnergyStorage.setStored(storedBefore);
+				}
+
+				return storedAfter - storedBefore;
 			}
-
-			return (int) added;
 		}
 
 		return 0;
@@ -231,25 +253,45 @@ public class CapabilityHelper {
 			}
 		}
 
-		if (IntegrationsHelper.instance.isLoaded(EU, false) &&
-				capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
-			ic2.core.block.machine.tileentity.TileEntityElectricMachine
-					electricMachine = (ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
-			Energy capability = electricMachine.getComponent(Energy.class);
 
-			// Check if we got enough energy to extract
-			if (capability.getEnergy() < intVal) {
-				return 0;
+		if (IntegrationsHelper.instance.isLoaded(EU, false)) {
+			if (capabilityHandler instanceof ic2.core.block.machine.tileentity.TileEntityElectricMachine) {
+				ic2.core.block.machine.tileentity.TileEntityElectricMachine electricMachine =
+						(ic2.core.block.machine.tileentity.TileEntityElectricMachine) capabilityHandler;
+				Energy capability = electricMachine.getComponent(Energy.class);
+
+				// Check if we got enough energy to extract
+				if (capability.getEnergy() < intVal) {
+					return 0;
+				}
+
+				double added = capability.addEnergy(-intVal);
+
+				// Return energy back if it was simulation
+				if (simulate) {
+					capability.addEnergy(-added);
+				}
+
+				return (int) added;
+			} else if (capabilityHandler instanceof ic2.api.tile.IEnergyStorage) {
+				ic2.api.tile.IEnergyStorage iEnergyStorage = (ic2.api.tile.IEnergyStorage) capabilityHandler;
+
+				// Check if we got enough energy to extract
+				if (iEnergyStorage.getStored() < intVal) {
+					return 0;
+				}
+
+				int storedBefore = iEnergyStorage.getStored();
+				iEnergyStorage.addEnergy(-intVal);
+				int storedAfter = iEnergyStorage.getStored();
+
+				// Return energy back if it was simulation
+				if (simulate) {
+					iEnergyStorage.setStored(storedBefore);
+				}
+
+				return storedAfter - storedBefore;
 			}
-
-			double added = capability.addEnergy(-intVal);
-
-			// Return energy back if it was simulation
-			if (simulate) {
-				capability.addEnergy(-added);
-			}
-
-			return (int) added;
 		}
 
 		return 0;
