@@ -1,10 +1,7 @@
 package AppliedIntegrations.Container.part;
-import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.ContainerWithPlayerInventory;
 import AppliedIntegrations.Container.slot.SlotRestrictive;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
-import AppliedIntegrations.Helpers.Energy.Utils;
-import AppliedIntegrations.Inventory.AIGridNodeInventory;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PartGUI.PacketTerminalUpdate;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
@@ -56,16 +53,6 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 
 	public SortOrder sortMode = SortOrder.NAME;
 	public IItemList<IAEEnergyStack> list = new EnergyList();
-
-
-	private AIGridNodeInventory privateInventory = new AIGridNodeInventory(AppliedIntegrations.modid + ".item.energy.cell.inventory",
-			2,
-			64) {
-		@Override
-		public boolean isItemValidForSlot(final int slotID, final ItemStack itemStack) {
-			return Utils.getEnergyFromItemStack(itemStack, terminal.getHostWorld()) != null;
-		}
-	};
 
 	// Create comparator for list
 	public Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {
@@ -148,21 +135,18 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 			terminal.listeners.add(this);
 		}
 
-		this.addSlotToContainer(new SlotRestrictive(privateInventory, 0, INPUT_POSITION_X, INPUT_POSITION_Y));
+		this.addSlotToContainer(new SlotRestrictive(terminal.energyIOInventory, 0, INPUT_POSITION_X, INPUT_POSITION_Y));
 
 		this.addSlotToContainer(new SlotFurnaceOutput(this.player,
-				privateInventory,
-				1,
-				OUTPUT_POSITION_X,
-				OUTPUT_POSITION_Y));
+				terminal.energyIOInventory, 1, OUTPUT_POSITION_X, OUTPUT_POSITION_Y));
 	}
 
 	public void updateList(IItemList<IAEEnergyStack> list) {
 		// Create sorted list
 		List<IAEEnergyStack> sorted = sorter.sortedCopy(list);
 
-		// Iterate for each entry of sorted copy of list
-		// Add entry in order of list
+		// Replace current list with server-sided one
+		this.list = new EnergyList();
 		sorted.forEach(this.list::add);
 
 		// Call update function
@@ -171,19 +155,28 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 
 
 	public void updateStacksPrecise(List<IAEEnergyStack> sorted) {
-		// Iterate until i = list.size
-		for (int i = 0; i < list.size(); i++) {
-			// Get selector at (i)
-			widgetEnergySelectors.get(i).setCurrentStack(new EnergyStack(sorted.get(i).getEnergy(), sorted.get(i).getStackSize()));
+		// Update energies in selectors. Also if size is zero, we need to reset selectors
+		if (sorted.size() > 0) {
+			for (int i = 0; i < list.size(); i++) {
+				widgetEnergySelectors.get(i).setCurrentStack(new EnergyStack(sorted.get(i).getEnergy(), sorted.get(i).getStackSize()));
+			}
+		} else {
+			for (int i = 0; i < widgetEnergySelectors.size(); i++) {
+				widgetEnergySelectors.get(i).setCurrentStack(new EnergyStack(null, 0));
+			}
 		}
 
 		// Now, if stack is selected it should be updated, when monitor changes
 		// Check if both stack size and energy are greater than zero(or not equal null)
-		if (this.selectedStack.getEnergy() != null && this.selectedStack.amount > 0)
-		// Call list to give as precisely equal stack, to stack we have, then convert it to normal Energy stack and set our selected stack to it.
-		// It will update size of monitored stack
-		{
-			selectedStack = list.findPrecise(AEEnergyStack.fromStack(selectedStack)).getStack();
+		if (this.selectedStack.getEnergy() != null && this.selectedStack.amount > 0) {
+			// Call list to give as precisely equal stack, to stack we have, then convert it to normal Energy stack and set our selected stack to it.
+			// It will update size of monitored stack
+			final IAEEnergyStack precise = list.findPrecise(AEEnergyStack.fromStack(selectedStack));
+			if (precise != null) {
+				selectedStack = precise.getStack();
+			} else {
+				selectedStack = new EnergyStack(null, 0);
+			}
 		}
 	}
 

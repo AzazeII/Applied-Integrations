@@ -5,6 +5,7 @@ import AppliedIntegrations.Network.Packets.AIPacket;
 import AppliedIntegrations.Parts.AIPart;
 import AppliedIntegrations.api.Storage.EnergyStack;
 import AppliedIntegrations.api.Storage.IAEEnergyStack;
+import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import AppliedIntegrations.grid.AEEnergyStack;
 import AppliedIntegrations.grid.EnergyList;
 import appeng.api.config.SortOrder;
@@ -12,6 +13,7 @@ import appeng.api.storage.data.IItemList;
 import io.netty.buffer.ByteBuf;
 
 import javax.annotation.Nonnull;
+import java.util.Iterator;
 
 import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
 
@@ -48,7 +50,12 @@ public class PacketTerminalUpdate extends AIPacket {
 		// Iterate until i = size
 		for (int i = 0; i < size; i++) {
 			// Read energy and create stack
-			IAEEnergyStack stack = AEEnergyStack.fromStack(new EnergyStack(readEnergy(buf), 0));
+			final LiquidAIEnergy energy = readEnergy(buf);
+			if (energy == null) {
+				continue;
+			}
+
+			IAEEnergyStack stack = AEEnergyStack.fromStack(new EnergyStack(energy, 0));
 
 			// Read size and set stack size
 			stack.setStackSize(buf.readLong());
@@ -70,17 +77,23 @@ public class PacketTerminalUpdate extends AIPacket {
 	@Override
 	public void toBytes(ByteBuf buf) {
 		// Write size of list
+		int listSizeIndex = buf.writerIndex();
 		buf.writeInt(list.size());
 
-		// Iterate for each list entry
-		list.iterator().forEachRemaining((entry -> {
-			// Write entries' stack
-			writeEnergy(entry.getEnergy(), buf);
+		// Write list into buf
+		int actualSize = 0;
+		final Iterator<IAEEnergyStack> iterator = list.iterator();
+		for (int i = 0; i < list.size(); i++) {
+			if (iterator.hasNext()) {
+				IAEEnergyStack entry = iterator.next();
+				writeEnergy(entry.getEnergy(), buf);
+				buf.writeLong(entry.getStack().amount);
+				actualSize++;
+			}
+		}
 
-
-			// Write entries' count
-			buf.writeLong(entry.getStack().amount);
-		}));
+		// Update size to actual size calculated on iteration
+		buf.setInt(listSizeIndex, actualSize);
 
 		// Write host
 		writeSyncHost(part, buf, false);

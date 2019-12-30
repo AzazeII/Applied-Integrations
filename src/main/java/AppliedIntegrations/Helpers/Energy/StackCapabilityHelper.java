@@ -5,6 +5,7 @@ import AppliedIntegrations.Integration.IntegrationsHelper;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import appeng.api.config.Actionable;
 import cofh.redstoneflux.api.IEnergyContainerItem;
+import ic2.api.item.ElectricItem;
 import ic2.api.item.IElectricItem;
 import mekanism.api.energy.IEnergizedItem;
 import net.minecraft.item.Item;
@@ -19,7 +20,6 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
  * @Author Azazell
  */
 public class StackCapabilityHelper {
-
 	private ItemStack operatedStack;
 
 	public StackCapabilityHelper(ItemStack stack) {
@@ -42,18 +42,47 @@ public class StackCapabilityHelper {
 		if (energy == EU && item instanceof IElectricItem) {
 			return true;
 		}
+
 		if (energy == J && item instanceof IEnergyContainerItem) {
 			return true;
 		}
 		return false;
 	}
 
+	public int getStored(LiquidAIEnergy energy) {
+		// Get item
+		Item item = operatedStack.getItem();
+
+		if (!IntegrationsHelper.instance.isLoaded(energy, true)) {
+			return 0;
+		}
+
+		// RF Capability
+		if (energy == RF && item instanceof IEnergyContainerItem) {
+			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
+			return rfContainer.getEnergyStored(operatedStack);
+		}
+
+		// EU Capability
+		if (energy == EU && item instanceof IElectricItem) {
+			return (int) ElectricItem.manager.getCharge(operatedStack);
+		}
+
+		// Joule Capability
+		if (energy == J && item instanceof IEnergizedItem) {
+			IEnergizedItem jouleContainer = (IEnergizedItem) item;
+			return (int) jouleContainer.getEnergy(operatedStack);
+		}
+
+		// Nothing stored
+		return 0;
+	}
+
 	/**
 	 * Extract energy from operated stack
-	 *
 	 * @param energy         type
 	 * @param energyTransfer energy to extract
-	 * @param action
+	 * @param action         What to do with stack
 	 * @return How many energy was extracted
 	 */
 	public int extractEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
@@ -67,27 +96,22 @@ public class StackCapabilityHelper {
 		// RF Capability
 		if (energy == RF && item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
-
 			return rfContainer.extractEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
 		}
 
 		// EU Capability
 		if (energy == EU && item instanceof IElectricItem) {
-			IElectricItem euContainer = (IElectricItem) item;
-
-			;
+			return (int) ElectricItem.manager.discharge(operatedStack, energyTransfer, 4, true, false, action == Actionable.SIMULATE);
 		}
 
 		// Joule Capability
 		if (energy == J && item instanceof IEnergizedItem) {
 			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
+			// Remove energy and put back if simulate was requested
 			int before = (int) jouleContainer.getEnergy(operatedStack);
-
 			jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) - energyTransfer);
-
 			int current = (int) jouleContainer.getEnergy(operatedStack);
-
 			if (action == Actionable.SIMULATE) {
 				jouleContainer.setEnergy(operatedStack, before);
 			}
@@ -98,7 +122,13 @@ public class StackCapabilityHelper {
 		// Nothing extracted
 		return 0;
 	}
-
+	/**
+	 * Inject energy to operated stack
+	 * @param energy         type
+	 * @param energyTransfer energy to inject
+	 * @param action         What to do with stack
+	 * @return How many energy was injected
+	 */
 	public int injectEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
 		// Get item
 		Item item = operatedStack.getItem();
@@ -106,23 +136,21 @@ public class StackCapabilityHelper {
 		// RF Capability
 		if (IntegrationsHelper.instance.isLoaded(RF, true) && item instanceof IEnergyContainerItem && energy == RF) {
 			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
-
 			return rfContainer.receiveEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
 		}
 
 		// EU Capability
 		if (IntegrationsHelper.instance.isLoaded(EU, true) && item instanceof IElectricItem && energy == EU) {
-			IElectricItem euContainer = (IElectricItem) item;
+			return (int) ElectricItem.manager.charge(operatedStack, energyTransfer, 4, true, action == Actionable.SIMULATE);
 		}
 
 		// Joule Capability
 		if ((IntegrationsHelper.instance.isLoaded(J, true) && item instanceof IEnergizedItem && energy == J)) {
 			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
+			// Add energy and put back afterwards if simulation requested
 			int before = (int) jouleContainer.getEnergy(operatedStack);
-
 			jouleContainer.setEnergy(operatedStack, jouleContainer.getEnergy(operatedStack) - energyTransfer);
-
 			int current = (int) jouleContainer.getEnergy(operatedStack);
 
 			if (action == Actionable.SIMULATE) {

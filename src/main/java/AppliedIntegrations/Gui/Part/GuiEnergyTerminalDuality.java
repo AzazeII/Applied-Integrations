@@ -11,6 +11,7 @@ import AppliedIntegrations.Gui.IEnergySelectorGui;
 import AppliedIntegrations.Gui.Widgets.WidgetEnergySelector;
 import AppliedIntegrations.Network.NetworkHandler;
 import AppliedIntegrations.Network.Packets.PacketEnum;
+import AppliedIntegrations.Network.Packets.PartGUI.PacketSelectedStack;
 import AppliedIntegrations.Parts.Energy.PartEnergyTerminal;
 import AppliedIntegrations.api.IEnergySelectorContainer;
 import AppliedIntegrations.api.ISyncHost;
@@ -41,25 +42,17 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 	private static final int WIDGET_ROWS_PER_PAGE = 4;
 
 	@Nonnull
-	private static ContainerEnergyTerminal linkedContainer;
+	private ContainerEnergyTerminal linkedContainer;
 
 	private ResourceLocation mainTexture = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.terminal.png");
-
-	private EntityPlayer player;
-
 	private PartEnergyTerminal part;
 
-	public GuiEnergyTerminalDuality(ContainerEnergyTerminal container, PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
-
+	public GuiEnergyTerminalDuality(@Nonnull ContainerEnergyTerminal container, PartEnergyTerminal partEnergyTerminal, EntityPlayer player) {
 		super(container, player);
-
-		linkedContainer = container;
-
-		this.player = player;
 		this.part = partEnergyTerminal;
-
 		this.xSize = 195;
 		this.ySize = 204;
+		this.linkedContainer = container;
 
 		// Rows
 		for (int y = 0; y < WIDGET_ROWS_PER_PAGE; y++) {
@@ -77,7 +70,6 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 
 	@Override
 	public void initGui() {
-
 		super.initGui();
 		this.buttonList.add(castContainer().sortButton = new GuiImgButton(this.guiLeft - 18, this.guiTop, Settings.SORT_BY, castContainer().sortMode));
 	}
@@ -118,13 +110,11 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 
 	@Override
 	public ISyncHost getSyncHost() {
-
 		return part;
 	}
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-
 		if (host instanceof PartEnergyTerminal) {
 			part = (PartEnergyTerminal) host;
 		}
@@ -197,7 +187,18 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 
 				// Update current energy stack
 				castContainer().selectedStack = widgetEnergySelector.getCurrentStack();
+				if (castContainer().selectedStack != null) {
+					NetworkHandler.sendToServer(new PacketSelectedStack(castContainer().selectedStack.getEnergy(), this.part));
+				} else {
+					NetworkHandler.sendToServer(new PacketSelectedStack(null, this.part));
+				}
 			}
 		}));
+	}
+
+	@Override
+	public void onGuiClosed() {
+		super.onGuiClosed();
+		NetworkHandler.sendToServer(new PacketSelectedStack(null, this.part));
 	}
 }

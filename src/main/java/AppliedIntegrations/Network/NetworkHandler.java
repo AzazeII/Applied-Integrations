@@ -55,6 +55,7 @@ public class NetworkHandler {
 		handler.registerMessage(HandlerContainerWidgetSync.class, PacketContainerWidgetSync.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerScrollClientToServer.class, PacketScrollClientToServer.class, packetId++, Side.SERVER);
 		handler.registerMessage(HandlerTabChange.class, PacketTabChange.class, packetId++, Side.SERVER);
+		handler.registerMessage(HandlerSelectedStack.class, PacketSelectedStack.class, packetId++, Side.SERVER);
 	}
 
 	public static void sendTo(IMessage message, EntityPlayerMP player) {

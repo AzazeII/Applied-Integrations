@@ -10,14 +10,12 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * @Author Azazell
  */
 public class HandlerTerminalUpdate implements IMessageHandler<PacketTerminalUpdate, PacketTerminalUpdate> {
-
 	public HandlerTerminalUpdate() {
 
 	}
 
 	@Override
 	public PacketTerminalUpdate onMessage(PacketTerminalUpdate message, MessageContext ctx) {
-
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Container container = Minecraft.getMinecraft().player.openContainer;
 			if (container instanceof ContainerEnergyTerminal) {
