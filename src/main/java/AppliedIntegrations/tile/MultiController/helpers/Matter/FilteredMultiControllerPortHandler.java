@@ -28,27 +28,22 @@ import static appeng.api.config.SecurityPermissions.INJECT;
  */
 public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> extends MultiControllerPortHandler<T> implements IMEInventoryHandler<T> {
 	public FilteredMultiControllerPortHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileMultiControllerCore host) {
-
 		super(filteredMatter, filterMode, host);
 	}
 
 	@Override
 	public T injectItems(T input, Actionable type, IActionSource src) {
-		// Check if stack can be accepted
 		if (!canAccept(input)) {
 			return input;
 		}
 
-		// Check not null
 		if (getOuterInventory() == null)
 			return input;
 
-		// Check if channel of inventory equal to channel of this handler
 		if (!getChannel().equals(getOuterInventory().getChannel())) {
 			return input;
 		}
 
-		// Pass to outer handler
 		return getOuterInventory().injectItems(input, type, src);
 	}
 
@@ -58,102 +53,69 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 
 	@Override
 	public T extractItems(T request, Actionable mode, IActionSource src) {
-		// Check if stack can be accepted
 		if (!canExtract(request)) {
 			return null;
 		}
 
-
-		// Check not null
 		if (getOuterInventory() == null)
 			return null;
 
-		// Check if channel of inventory equal to channel of this handler
 		if (!getChannel().equals(getOuterInventory().getChannel())) {
 			return null;
 		}
 
-		// Pass to outer handler
 		return getOuterInventory().extractItems(request, mode, src);
 	}
 
 	private boolean canExtract(T input) {
-
 		return canInteract(input, EXTRACT);
 	}
 
 	@Override
 	public IItemList<T> getAvailableItems(IItemList<T> out) {
-		// Check if handler has at least read access
 		if (getAccess() == AccessRestriction.READ || getAccess() == AccessRestriction.READ_WRITE) {
 			return out;
 		}
 
-		// Check not null
 		if (getOuterInventory() == null)
 			return out;
 
-		// Check if channel of inventory equal to channel of this handler
 		if (!getChannel().equals(getOuterInventory().getChannel())) {
 			return out;
 		}
 
 		// Next iteration will fill up our list with available and
 		// accessible(from this network) stacks from storage grid of main server network.
-		// Iterate for each stack of list from outer inventory(inventory of main network)
 		getOuterInventory().getAvailableItems(getChannel().createList()).forEach((stack) -> {
-			// Check if stack can be operated
 			if (canAccept(stack) || canExtract(stack)) {
-				// Add stack since it can be operated
 				out.add(stack);
 			}
 		});
 
-		// Return filled list
 		return out;
 	}
 
 	@Override
 	public AccessRestriction getAccess() {
-		// Create atomic rule
 		AtomicReference<AccessRestriction> rule = new AtomicReference<>();
-
-		// Initial rule
 		rule.set(AccessRestriction.NO_ACCESS);
-
-		// Iterate for each AE stack in inner list
 		forStackInList((stack, permissions) -> {
-			// Check if stack not null and not empty
 			if (stack != null && stack.getStackSize() == 0) {
-				// Check if current permissions is inject
 				if (permissions == INJECT) {
-					// Check if current rule has no access
-					if (rule.get() == AccessRestriction.NO_ACCESS)
-					// Set write permissions
-					{
+					if (rule.get() == AccessRestriction.NO_ACCESS) {
 						rule.set(AccessRestriction.WRITE);
 					}
 
-					// Check if current rule has read access
-					else if (rule.get() == AccessRestriction.READ)
-					// Set read-write access
-					{
+					else if (rule.get() == AccessRestriction.READ) {
 						rule.set(AccessRestriction.READ_WRITE);
 					}
 
-					// Check if current permissions is extract
 				} else if (permissions == EXTRACT) {
-					// Check if current rule has no access
-					if (rule.get() == AccessRestriction.NO_ACCESS)
-					// Set write permissions
-					{
+					if (rule.get() == AccessRestriction.NO_ACCESS) {
 						rule.set(AccessRestriction.READ);
 					}
 
-					// Check if current rule has read access
-					else if (rule.get() == AccessRestriction.WRITE)
-					// Set read-write access
-					{
+					else if (rule.get() == AccessRestriction.WRITE) {
 						rule.set(AccessRestriction.READ_WRITE);
 					}
 				}
@@ -165,13 +127,9 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 	}
 
 	protected void forStackInList(BiConsumer<IAEStack<? extends IAEStack>, SecurityPermissions> consumer) {
-		// Iterate for each permission
 		for (SecurityPermissions securityPermissions : new SecurityPermissions[]{INJECT, EXTRACT}) {
-			// Iterate for each channel
 			AEApi.instance().storage().storageChannels().forEach((channel -> {
-				// Check not null
 				if (filteredMatter.get(securityPermissions) != null && filteredMatter.get(securityPermissions).get(channel) != null) {
-					// Iterate for each stack
 					filteredMatter.get(securityPermissions).get(channel).forEach(iaeStack -> consumer.accept(iaeStack, securityPermissions));
 				}
 			}));
@@ -180,31 +138,26 @@ public abstract class FilteredMultiControllerPortHandler<T extends IAEStack<T>> 
 
 	@Override
 	public boolean isPrioritized(T input) {
-
 		return false;
 	}
 
 	@Override
 	public boolean canAccept(T input) {
-
 		return canInteract(input, INJECT);
 	}
 
 	@Override
 	public int getPriority() {
-
 		return 0;
 	}
 
 	@Override
 	public int getSlot() {
-
 		return 0;
 	}
 
 	@Override
 	public boolean validForPass(int i) {
-
 		return true;
 	}
 }

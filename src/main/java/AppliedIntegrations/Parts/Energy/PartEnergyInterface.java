@@ -89,12 +89,9 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	private JouleInterfaceStorage JStorage;
 	private TeslaInterfaceStorageDuality TESLAStorage;
 
-	// Interface duality, or interface host
 	private EnergyInterfaceDuality duality = new EnergyInterfaceDuality(this);
-	// Linked array of containers, that syncing this Machine with server
 	private List<ContainerEnergyInterface> linkedListeners = new ArrayList<ContainerEnergyInterface>();
 
-	// Registring Inventory for slots of upgrades
 	private AIGridNodeInventory upgradeInventory = new AIGridNodeInventory("", 1, 1, this) {
 		@Override
 		public boolean isItemValidForSlot(int i, ItemStack itemstack) {
@@ -102,7 +99,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 		}
 	};
 
-	// Make host available as "extendant(class to extend)"
+	// Make host available as "child"
 	// ** IMPORTANT FOR MANA INTERFACE **
 	public PartEnergyInterface(PartEnum corespondingEnumPart) {
 		super(corespondingEnumPart);
@@ -119,7 +116,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 		return upgradeInventory;
 	}
 
-	// hit boxes
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
 		bch.addBox(2.0D, 2.0D, 14.0D, 14.0D, 14.0D, 16.0D);
@@ -178,17 +174,14 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
-		// Activation logic is server sided
 		if (Platform.isServer()) {
 			if (!player.isSneaking()) {
-				// Open GUI
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterface, player, getHostSide(), getHostTile().getPos());
 			}
 		}
 		return true;
 	}
 
-	// drops, when wrenched
 	@Override
 	public void getDrops(List<ItemStack> drops, boolean wrenched) {
 		for (ItemStack stack : upgradeInventory.slots) {
@@ -203,7 +196,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 			EUStorage = new InterfaceSinkSource(this, INTERNAL, getMaxEnergyStored(null, EU), 4, 4);
 		}
 
-		// Update handler
 		((InterfaceSinkSource) getEnergyStorage(EU, INTERNAL)).update();
 	}
 
@@ -282,7 +274,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public final void updateFilter(final LiquidAIEnergy energy, final int index) {
-		// Set the filter
 		this.filteredEnergy = energy;
 	}
 
@@ -294,7 +285,6 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull final IGridNode node, final int TicksSinceLastCall) {
 		if (!getHostTile().getWorld().isRemote) {
-			// Sync stored energy data with GUI
 			if (bar != null) {
 				duality.notifyListenersOfBarFilterChange(bar);
 				duality.notifyListenersOfEnergyBarChange(bar, INTERNAL);
@@ -302,9 +292,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 			try {
 				if (this.isActive()) {
-					// Try injecting energy from buffer
 					doInjectDualityWork(Actionable.MODULATE);
-					// Try extracting energy into buffer
 					doExtractDualityWork(Actionable.MODULATE);
 				}
 			} catch(NullNodeConnectionException | GridAccessException e) {
@@ -317,9 +305,7 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 	}
 
 	private void saveChanges() {
-		// Ensure there is a host
 		if (this.host != null) {
-			// Mark
 			this.host.markForSave();
 		}
 	}
@@ -379,15 +365,12 @@ public class PartEnergyInterface extends AIPart implements IInventory, IEnergyIn
 
 	@Override
 	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> channel) {
-		// Getting Node
 		if (getGridNode(INTERNAL) == null) {
 			return null;
 		}
-		// Getting net of node
+
 		IGrid grid = getGridNode(INTERNAL).getGrid();
-		// Cache of net
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-		// fluidInventory of cache
 		return storage.getInventory(channel);
 	}
 

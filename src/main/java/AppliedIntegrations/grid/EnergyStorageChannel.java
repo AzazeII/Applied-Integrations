@@ -19,14 +19,12 @@ public class EnergyStorageChannel implements IEnergyStorageChannel {
 	@Nonnull
 	@Override
 	public IItemList<IAEEnergyStack> createList() {
-
 		return new EnergyList();
 	}
 
 	@Nullable
 	@Override
 	public IAEEnergyStack createStack(@Nonnull Object o) {
-
 		if (o instanceof LiquidAIEnergy) {
 			return this.createStack(new EnergyStack((LiquidAIEnergy) o, Integer.MAX_VALUE));
 		} else if (o instanceof EnergyStack) {

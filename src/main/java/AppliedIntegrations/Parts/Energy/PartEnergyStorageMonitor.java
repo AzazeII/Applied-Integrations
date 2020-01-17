@@ -65,7 +65,6 @@ import static appeng.parts.reporting.PartStorageMonitor.*;
     4. Packets
 */
 public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackWatcherHost, IPowerChannelState, IPartStorageMonitor {
-
 	private static final String KEY_IS_LOCKED = "#IS_LOCKED";
 	private static final String KEY_STACK_TAG = "#STACK_TAG";
 	private static final String KEY_HAS_STACK = "#HAS_STACK";
@@ -82,55 +81,41 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	}
 
 	private void onStackWatchUpdate() throws GridAccessException {
-		// Check not null
 		if (watcher == null)
 			return;
 
-		// Reset watcher
 		watcher.reset();
-
-		// Check not null
 		if (currentStack == null)
 			return;
 
-		// Add stack to watches
 		watcher.add(currentStack);
-
-		// Update currently watched stack
 		queryStackUpdate();
 	}
 
 	private void queryStackUpdate() throws GridAccessException {
-		// Check not null
 		if (currentStack == null) {
 			return;
 		}
 
-		// Find stack from grid inventory
 		IAEEnergyStack output = getProxy().getStorage().getInventory(AEApi.instance().storage().getStorageChannel(
 				IEnergyStorageChannel.class)).getStorageList().findPrecise(currentStack);
-
-		// Replace stack size with stack size of stack from inventory
 		currentStack.setStackSize(output == null ? 0 : output.getStackSize());
 	}
 
 	@SideOnly(Side.CLIENT)
 	private void renderEnergy(Tessellator tess, IAEEnergyStack energyStack) {
 		try {
-			// Bind lighting ambient
 			int light = 16 << 20 | 16 << 4;
 			int lightU = light % 65536;
 			int lightV = light / 65536;
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit,
 					lightU * 0.8F, lightV * 0.8F);
 
-			// Configure GL constants
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 			GlStateManager.disableLighting();
 			GlStateManager.disableRescaleNormal();
 
-			// Get sprite
 			Minecraft mc = Minecraft.getMinecraft();
 			ResourceLocation liquidEnergyFluidStill = energyStack.getEnergy().getStill();
 
@@ -140,7 +125,6 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 				mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-				// Draw sprite
 				BufferBuilder buffer = tess.getBuffer();
 				buffer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 
@@ -160,10 +144,7 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	@Override
 	public void writeToStream(final ByteBuf stream) throws IOException {
-		// Call super
 		super.writeToStream(stream);
-
-		// Write stack
 		boolean hasStack = currentStack != null;
 
 		stream.writeBoolean(hasStack);
@@ -171,23 +152,18 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 			currentStack.writeToPacket(stream);
 		}
 
-		// Write lock state
 		stream.writeBoolean(isLocked);
 	}
 
 	@Override
 	public boolean readFromStream(final ByteBuf stream) throws IOException {
-		// Pre-read data from stream
 		boolean readFromStream = super.readFromStream(stream);
 
-		// Read stack
 		if (stream.readBoolean()) {
 			currentStack = AEEnergyStack.fromPacket(stream);
 		}
 
-		// Read lock state
 		isLocked = stream.readBoolean();
-
 		return readFromStream;
 	}
 
@@ -199,18 +175,12 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	@Override
 	@SideOnly( Side.CLIENT )
 	public void renderDynamic( double x, double y, double z, float partialTicks, int destroyStage ) {
-		// Get currently displayed stack
 		IAEEnergyStack stack = this.getDisplayed();
-
-		// Check not null
 		if( stack == null ) {
 			return;
 		}
 
-		// Isolate changes
 		GlStateManager.pushMatrix();
-
-		// Translate pointer
 		GlStateManager.translate( x + 0.5, y + 0.5, z + 0.5 );
 
 		// Move to current facing
@@ -220,24 +190,16 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 		final long stackSize = currentStack.getStackSize();
 		final String renderedStackSize = NUMBER_CONVERTER.toWideReadableForm( stackSize );
-
-		// Render the energy amount
 		final FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
 		final int width = fr.getStringWidth( renderedStackSize );
 
-		// Translate
 		GlStateManager.translate( 0.0f, 0.17f, 0 );
 		GlStateManager.scale( 1.0f / 62.0f, 1.0f / 62.0f, 1.0f / 62.0f );
 		GlStateManager.translate( -0.5f * width, 0.0f, 0.5f );
-
-		// Call renderer
 		fr.drawString( renderedStackSize, 0, 0, 0 );
+
 		GlStateManager.translate(0, -0.5f, 0);
-
-		// Render our energy
 		renderEnergy(Tessellator.getInstance(), currentStack);
-
-		// Isolate changes
 		GlStateManager.popMatrix();
 	}
 
@@ -255,23 +217,23 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	public IPartModel getStaticModels() {
 		// First condition -> Is locked---> Locked model
 		//                             |--> Unlocked Model
-		if( this.isActive() ) { // 1. Is active
-			if( this.isLocked() ) { // Is locked
-				return MODELS_LOCKED_HAS_CHANNEL; // Locked model
+		if( this.isActive() ) {
+			if( this.isLocked() ) {
+				return MODELS_LOCKED_HAS_CHANNEL;
 			} else {
-				return MODELS_HAS_CHANNEL; // Unlocked model
+				return MODELS_HAS_CHANNEL;
 			}
-		} else if( this.isPowered() ) { // 2. Is powered
-			if( this.isLocked() ) { // Is locked
-				return MODELS_LOCKED_ON; // Locked model
+		} else if( this.isPowered() ) {
+			if( this.isLocked() ) {
+				return MODELS_LOCKED_ON;
 			} else {
-				return MODELS_ON; // Unlocked model
+				return MODELS_ON;
 			}
-		} else { // 3. Else
-			if( this.isLocked() ) { // Is locked
-				return MODELS_LOCKED_OFF; // Locked model
+		} else {
+			if( this.isLocked() ) {
+				return MODELS_LOCKED_OFF;
 			} else {
-				return MODELS_OFF; // Unlocked model
+				return MODELS_OFF;
 			}
 		}
 	}
@@ -279,31 +241,24 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	@Override
 	public void writeToNBT(NBTTagCompound data) {
 		super.writeToNBT(data);
-
-		// Create stack tag
 		NBTTagCompound stackTag = new NBTTagCompound();
 
-		// Check not null
 		data.setBoolean(KEY_HAS_STACK, currentStack != null && currentStack.getEnergy() != null);
 		if (currentStack != null && currentStack.getEnergy() != null) {
-			// Write stack to sub-nbt tag
 			currentStack.writeToNBT(stackTag);
 		}
 
-		// Write data to nbt
 		data.setTag(KEY_STACK_TAG, stackTag);
-		data.setBoolean(KEY_IS_LOCKED, isLocked); // 2. Is locked
+		data.setBoolean(KEY_IS_LOCKED, isLocked);
 	}
 
 	@Override
 	public void readFromNBT(final NBTTagCompound data) {
 		super.readFromNBT(data);
-
-		// Read data from nbt
 		if (data.getBoolean(KEY_HAS_STACK)) {
-			currentStack = AEEnergyStack.fromNBT(data.getCompoundTag(KEY_STACK_TAG)); // 1. Sub stack tag & Stack
+			currentStack = AEEnergyStack.fromNBT(data.getCompoundTag(KEY_STACK_TAG));
 		}
-		isLocked = data.getBoolean(KEY_IS_LOCKED); // 2. Is locked
+		isLocked = data.getBoolean(KEY_IS_LOCKED);
 	}
 
 
@@ -324,11 +279,9 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 
 	@Override
 	public void updateWatcher(IStackWatcher w) {
-		// Replace existing watcher
 		this.watcher = w;
 
 		try {
-			// Call update
 			onStackWatchUpdate();
 		} catch (GridAccessException ignored) { }
 	}
@@ -337,37 +290,28 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 	public boolean onShiftActivate(EntityPlayer player, EnumHand hand, Vec3d vec3d) {
 		World hostWorld = getHostWorld();
 
-		// Ignored on client && Ignored if player has held item
 		if( hostWorld.isRemote ||  !player.getHeldItem( hand ).isEmpty() ) {
 			return true;
 		}
 
-		// Ignored while inactive && Ignored if player has no permissions
 		if( !this.getProxy().isActive() || !Platform.hasPermissions( this.getLocation(), player )) {
 			return false;
 		}
 
-		// Toggle lock
 		this.isLocked = !this.isLocked;
-
-		// Notify player
 		player.sendMessage((this.isLocked ? PlayerMessages.isNowLocked : PlayerMessages.isNowUnlocked).get());
-
-		// Mark for save & update
-		this.getHost().markForSave(); // 1. Save
-		this.getHost().markForUpdate(); // 2. Update
+		this.getHost().markForSave();
+		this.getHost().markForUpdate();
 
 		return true;
 	}
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d position) {
-		// Ignore all mechanics on client
 		if( getHostWorld().isRemote ) {
 			return true;
 		}
 
-		// Ignore mechanics if part isn't active
 		if( !this.getProxy().isActive() ) {
 			return false;
 		}
@@ -378,28 +322,23 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 			return false;
 		}
 
-		// Check if part isn't locked
 		if( !this.isLocked ) {
-			// Get held stack
 			ItemStack maybeEnergyStack = player.getHeldItem( enumHand );
 			LiquidAIEnergy energy = Utils.getEnergyFromItemStack(maybeEnergyStack, getHostWorld());
 
-			// Check if held stack represents any energy
 			if (energy == null) {
 				return false;
 			}
 
-			// Update stack with new energy stack
 			currentStack = AEEnergyStack.fromStack(new EnergyStack(energy, 1));
 
 			try {
-				// Configure stack watcher
 				onStackWatchUpdate();
 			} catch (GridAccessException ignored) {}
 
-			// Mark host for save & update
-			this.getHost().markForSave(); // 1. Save
-			this.getHost().markForUpdate(); // 2. Update
+			// Now host must be re-rendered in world
+			this.getHost().markForSave();
+			this.getHost().markForUpdate();
 		} else {
 			return super.onActivate( player, enumHand, position );
 		}
@@ -413,18 +352,10 @@ public class PartEnergyStorageMonitor extends AIRotatablePart implements IStackW
 		if (currentStack == null)
 			return;
 
-		// Replace stack size with size of old stack
 		currentStack.setStackSize( oldStack == null ? 0 : oldStack.getStackSize() );
-
-		// Get current stack size and convert it to readable form
 		String humanReadableText = NUMBER_CONVERTER.toWideReadableForm( currentStack.getStackSize() );
-
-		// Check if new human readable text isn't equal to last
 		if( !humanReadableText.equals( lastHumanReadableText ) ) {
-			// Update last text
 			lastHumanReadableText = humanReadableText;
-
-			// Mark for update to render new text
 			getHost().markForUpdate();
 		}
 	}

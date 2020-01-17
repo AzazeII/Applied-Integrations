@@ -16,10 +16,7 @@ public class HandlerScrollServerToClient implements IMessageHandler<PacketScroll
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Container container = Minecraft.getMinecraft().player.openContainer;
 			if (container instanceof ContainerMultiControllerCore) {
-				// Cast container
 				ContainerMultiControllerCore CMCC = (ContainerMultiControllerCore) container;
-
-				// Check if we are updating correct container
 				if (CMCC.getSyncHost().compareTo(message.host, true)) {
 					TileMultiControllerCore host = (TileMultiControllerCore) CMCC.getSyncHost();
 

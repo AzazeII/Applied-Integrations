@@ -33,7 +33,6 @@ public class CommonProxy {
 		NetworkHandler.registerPackets();
 
 		if (AIConfig.enableEnergyFeatures)	{
-			// Register channel
 			AEApi.instance().storage().registerStorageChannel(IEnergyStorageChannel.class, new EnergyStorageChannel());
 		}
 
@@ -54,14 +53,11 @@ public class CommonProxy {
 	public void SidedInit(FMLInitializationEvent init) {
 		IntegrationsHelper.instance.registerTunnelTypes();
 
-		// Register items as upgradable
-		// Interaction bus
 		Upgrades.CAPACITY.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 2);
 		Upgrades.CRAFTING.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
 		Upgrades.FUZZY.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
 		Upgrades.REDSTONE.registerItem(ItemEnum.ITEMPARTINTERACTIONBUS.getStack(), 1);
 
-		// IO buses
 		Upgrades.SPEED.registerItem(ItemEnum.ITEMPARTEXPORT.getStack(), 4);
 		Upgrades.CAPACITY.registerItem(ItemEnum.ITEMPARTEXPORT.getStack(), 2);
 		Upgrades.REDSTONE.registerItem(ItemEnum.ITEMPARTEXPORT.getStack(), 1);
@@ -92,7 +88,6 @@ public class CommonProxy {
 	 * Adds tile entities to the AE2 SpatialIO whitelist
 	 */
 	public void registerSpatialIOMovables() {
-
 		IMovableRegistry movableRegistry = AEApi.instance().registries().movable();
 		for (TileEnum tile : TileEnum.values()) {
 			if (tile.enabled) {
@@ -102,7 +97,6 @@ public class CommonProxy {
 	}
 
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
-
 		return ctx.getServerHandler().player;
 	}
 }

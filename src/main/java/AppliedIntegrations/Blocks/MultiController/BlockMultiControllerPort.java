@@ -14,19 +14,15 @@ import net.minecraft.world.World;
  */
 public class BlockMultiControllerPort extends AIMultiBlock {
 	public BlockMultiControllerPort(String reg, String unloc) {
-
 		super(reg, unloc);
 	}
 
 	@Override
 	public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
-		// Get port
 		TileMultiControllerPort port = (TileMultiControllerPort) worldIn.getTileEntity(pos);
 
-		// Check not null
 		if (port != null) {
 			try {
-				// Pass call to tile
 				port.onNeighborChange();
 			} catch (GridAccessException ignored) {}
 		}

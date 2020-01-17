@@ -59,7 +59,6 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 			this.is = is;
 			this.item = item;
 
-			// Initialize tesla adapter if needed
 			if( Capabilities.TESLA_CONSUMER != null || Capabilities.TESLA_HOLDER != null ) {
 				this.teslaAdapter = new TeslaPowerDelegate();
 			} else {
@@ -75,7 +74,6 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 		@SuppressWarnings( "unchecked" )
 		@Override
 		public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing ) {
-			// Give forge energy or tesla capability
 			if( capability == Capabilities.FORGE_ENERGY ) {
 				return (T) this;
 			} else if( capability == Capabilities.TESLA_CONSUMER || capability == Capabilities.TESLA_HOLDER ) {
@@ -86,7 +84,6 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 
 		@Override
 		public int receiveEnergy( int maxReceive, boolean simulate ) {
-			// Convert energy to AE and receive it
 			final double convertedOffer = PowerUnits.RF.convertTo( PowerUnits.AE, maxReceive );
 			final double overflow = this.item.injectAEPower( this.is, convertedOffer, simulate ? Actionable.SIMULATE : Actionable.MODULATE );
 
@@ -120,7 +117,6 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 			return true;
 		}
 
-		// Our delegate for tesla power
 		private class TeslaPowerDelegate implements ITeslaConsumer, ITeslaHolder {
 			@Override
 			public long givePower( long power, boolean simulated ) {
@@ -158,11 +154,8 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 		ILocatable obj = null;
 
 		try {
-			// Get object from parsed long from nbt tag
 			obj = AEApi.instance().registries().locatable().getLocatableBy( Long.parseLong( getEncryptionKey(stack) ));
-		} catch( final NumberFormatException err ) {
-			// :P
-		}
+		} catch( final NumberFormatException err ) {}
 
 		if( obj instanceof IActionHost) {
 			// Now use object as medium for accessing to grid
@@ -174,7 +167,6 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 	}
 
 	protected boolean isNotInRange(ItemStack stack, IGrid grid, BlockPos pos, int worldID) {
-		// Open tag
 		NBTTagCompound tag = Platform.openNbtData(stack);ToolWirelessTerminal t;
 
 		// Maximize both ranges
@@ -186,8 +178,6 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 			final IMachineSet tw = grid.getMachines( TileWireless.class );
 
 			IWirelessAccessPoint wap = null;
-
-			// Test each WAP in network
 			for( final IGridNode n : tw ) {
 				final IWirelessAccessPoint point = (IWirelessAccessPoint) n.getMachine();
 				if( this.isWapInRange( point, tag, pos, worldID ) ) {
@@ -253,16 +243,11 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
-		// Calculate energy percentage
 		double percent = getAECurrentPower(stack) / getAEMaxPower(stack);
-
-		// Add stored energy quantity
 		lines.add(GuiText.StoredEnergy.getLocal() + ": " + MessageFormat.format( " {0,number,#} ", getAECurrentPower(stack) )
 				+ " - " + MessageFormat.format( " {0,number,#.##%} ", percent ) + "%");
 
-		// Add GUI tip of linked or unlinked terminal
 		if (stack.hasTagCompound()) {
-			// Read key from tag
 			final NBTTagCompound tag = Platform.openNbtData(stack);
 			if (tag != null) {
 				final String encKey = tag.getString(TAG_KEY);
@@ -310,14 +295,12 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 
 	@Override
 	public double injectAEPower( final ItemStack stack, final double v, Actionable actionable ) {
-		// Calculate constants
 		final double maxStorage = this.getAEMaxPower( stack );
 		final double currentStorage = this.getAECurrentPower( stack );
 		final double required = maxStorage - currentStorage;
 		final double overflow = v - required;
 
 		if( actionable == Actionable.MODULATE ) {
-			// Inject energy, calculate energy amount to add
 			final NBTTagCompound data = Platform.openNbtData( stack );
 			final double toAdd = Math.min( v, required );
 
@@ -329,12 +312,10 @@ public class ItemEnergyWirelessTerminal extends AIItemRegistrable implements IWi
 
 	@Override
 	public double extractAEPower(ItemStack stack, double v, Actionable actionable) {
-		// Calculate amount we can extract
 		final double currentStorage = this.getAECurrentPower( stack );
 		final double extractable = Math.min( v, currentStorage );
 
 		if( actionable == Actionable.MODULATE ) {
-			// Extract energy
 			final NBTTagCompound data = Platform.openNbtData( stack );
 
 			data.setDouble(TAG_ENERGY, currentStorage - extractable);

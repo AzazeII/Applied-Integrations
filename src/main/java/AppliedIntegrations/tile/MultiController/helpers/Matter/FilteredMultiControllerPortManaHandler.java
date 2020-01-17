@@ -26,7 +26,6 @@ public class FilteredMultiControllerPortManaHandler extends FilteredMultiControl
 
 	@Override
 	public IStorageChannel<IAEManaStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
 	}
 }

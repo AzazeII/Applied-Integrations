@@ -21,14 +21,12 @@ public abstract class BlockAIRegistrable extends BlockContainer {
 
 	@Override
 	public EnumBlockRenderType getRenderType(IBlockState state) {
-
 		return EnumBlockRenderType.MODEL;
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public BlockRenderLayer getBlockLayer() {
-
 		return BlockRenderLayer.SOLID;
 	}
 }

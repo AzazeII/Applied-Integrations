@@ -63,7 +63,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	public boolean hasCapability(Capability<?> capability) {
-		// Register FE capability
 		if (capability == Capabilities.FORGE_ENERGY) {
 			return true;
 		} else if (IntegrationsHelper.instance.isLoaded(J, false)) {
@@ -73,7 +72,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	public void initStorage(AEPartLocation side) {
-		// Initialize every energy storage on this side
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 			if (IntegrationsHelper.instance.isLoaded(energy, false)) {
 				owner.initEnergyStorage(energy, side);
@@ -81,9 +79,7 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 		}
 	}
 
-	// Synchronize data with all listeners
 	public void notifyListenersOfEnergyBarChange(LiquidAIEnergy energy, AEPartLocation energySide) {
-		// Notify every listener about new energy bar value
 		for (ContainerEnergyInterface listener : owner.getListeners()) {
 			if (listener != null) {
 				TileEntity hostTile = owner instanceof PartEnergyInterface ? ((PartEnergyInterface) owner).getHostTile() : (TileEnergyInterface) owner;
@@ -96,7 +92,6 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 	}
 
 	public void notifyListenersOfBarFilterChange(LiquidAIEnergy bar) {
-		// Notify every listener about new filter value
 		for (ContainerEnergyInterface listener : owner.getListeners()) {
 			if (listener != null) {
 				NetworkHandler.sendTo(new PacketBarChange(bar, owner), (EntityPlayerMP) listener.player);
@@ -177,49 +172,29 @@ public class EnergyInterfaceDuality implements IEnergyInterfaceDuality {
 			throw new NullNodeConnectionException();
 		}
 
-		// Iterate over each sides
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			// Check if action is modulate
 			if (action == Actionable.MODULATE) {
-				// Get filtered energy
 				LiquidAIEnergy filteredEnergy = getFilteredEnergy(side);
 
-				// Check if filtered energy not equal to null
 				if (filteredEnergy != null) {
-					// Get storage class type
 					Class<?> t = getEnergyStorage(filteredEnergy, side).getTypeClass();
-
-					// Get storage duality
 					IInterfaceStorageDuality interfaceStorageDuality = getEnergyStorage(filteredEnergy, side);
 
-					// Check not long
 					if (t != Long.class) {
-						// Get int value from stored amount
 						int stored = interfaceStorageDuality.getStored().intValue();
-
-						// Get int value from capacity
 						int capacity = interfaceStorageDuality.getMaxStored().intValue();
-
-						// minimum value between max transfer and empty space in storage
 						int valuedExtract = Math.min(capacity - stored, (int) getMaxTransfer(side));
-
-						// Simulate energy insertion into our storage duality
 						int injectedAmount = interfaceStorageDuality.receive(interfaceStorageDuality.toNativeValue(
 								valuedExtract), SIMULATE).intValue();
 
-						// Check if any energy was injected
 						if (injectedAmount > 0) {
-							// Simulate energy extraction from cells array
 							int extractedAmount = owner.extractEnergy(new EnergyStack(filteredEnergy,
 									injectedAmount), SIMULATE);
 
-							// Check if any energy was extracted
 							if (extractedAmount > 0) {
-								// Make storage receive extracted amount
 								interfaceStorageDuality.receive((interfaceStorageDuality.toNativeValue(extractedAmount)),
 										MODULATE);
 
-								// Drain extracted amount from network
 								owner.extractEnergy(new EnergyStack(filteredEnergy, extractedAmount),
 										MODULATE);
 

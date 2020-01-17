@@ -17,9 +17,7 @@ import appeng.api.storage.data.IItemList;
  * @Author Azazell
  */
 public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAEEnergyStack> {
-
 	private final IEnergyInterface iEnergyInterface;
-
 	private final PartEnergyStorage owner;
 
 	public HandlerEnergyStorageBusInterface(IEnergyInterface iEnergyInterface, PartEnergyStorage owner) {
@@ -30,7 +28,6 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public IAEEnergyStack injectItems(IAEEnergyStack iaeEnergyStack, Actionable actionable, IActionSource iActionSource) {
-		// Check for permission to read data
 		if (getAccess() == AccessRestriction.READ) {
 			return null;
 		}
@@ -40,19 +37,16 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public AccessRestriction getAccess() {
-
 		return owner.access;
 	}
 
 	@Override
 	public boolean isPrioritized(IAEEnergyStack iaeEnergyStack) {
-
 		return false;
 	}
 
 	@Override
 	public boolean canAccept(IAEEnergyStack iaeEnergyStack) {
-
 		return true;
 	}
 
@@ -64,19 +58,16 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public int getSlot() {
-
 		return 0;
 	}
 
 	@Override
 	public boolean validForPass(int i) {
-
 		return true;
 	}
 
 	@Override
 	public IAEEnergyStack extractItems(IAEEnergyStack iaeEnergyStack, Actionable actionable, IActionSource iActionSource) {
-		// Check for permission to read data
 		if (getAccess() == AccessRestriction.WRITE) {
 			return null;
 		}
@@ -86,7 +77,6 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> iItemList) {
-		// Check for permission to read data
 		if (getAccess() == AccessRestriction.WRITE) {
 			return null;
 		}
@@ -96,7 +86,6 @@ public class HandlerEnergyStorageBusInterface implements IMEInventoryHandler<IAE
 
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 }

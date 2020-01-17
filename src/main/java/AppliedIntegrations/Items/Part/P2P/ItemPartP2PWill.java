@@ -6,6 +6,9 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartP2PWill extends ItemPartP2PTunnel<PartWillP2PTunnel> {
 	public ItemPartP2PWill(String registry) {
 		super(registry);

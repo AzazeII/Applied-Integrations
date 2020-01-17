@@ -9,14 +9,9 @@ import AppliedIntegrations.Items.AIItemRegistrable;
  */
 public class EnergyStorageComponent extends AIItemRegistrable {
 	public EnergyStorageComponent(String regName) {
-
 		super(regName);
-		// No damage
 		this.setMaxDamage(0);
-
-		// Has subtypes
 		this.setHasSubtypes(true);
-
 		this.setCreativeTab(AppliedIntegrations.AI);
 	}
 }

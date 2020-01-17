@@ -9,16 +9,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
  * @Author Azazell
  */
 public class HandlerServerFeedback implements IMessageHandler<PacketServerFeedback, PacketServerFeedback> {
-
 	public HandlerServerFeedback() {
 
 	}
 
 	@Override
 	public PacketServerFeedback onMessage(PacketServerFeedback message, MessageContext ctx) {
-		// Check not null
 		if (message.terminal != null) {
-			// Update data
 			message.terminal.updateCardData(message.tag);
 		}
 

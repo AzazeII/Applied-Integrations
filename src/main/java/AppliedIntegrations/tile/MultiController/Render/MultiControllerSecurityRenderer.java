@@ -13,15 +13,15 @@ import static appeng.api.util.AEPartLocation.*;
 import static net.minecraft.util.EnumFacing.Axis.X;
 import static net.minecraft.util.EnumFacing.Axis.Z;
 
+/**
+ * @Author Azazell
+ */
 public class MultiControllerSecurityRenderer extends AITileFullRenderer<TileMultiControllerTerminal> {
 
 	// Init textures
 	private static final ResourceLocation top = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_top.png"); // (1)
-
 	private static final ResourceLocation topOff = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_top_off.png"); // (2)
-
 	private static final ResourceLocation side = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_side.png"); // (3)
-
 	private static final ResourceLocation bottom = new ResourceLocation(AppliedIntegrations.modid, "textures/blocks/me_server_security_bottom.png"); // (4)
 
 	private static final float[][][] texturePositionMap = new float[][][]{{ // (-y - static) DOWN
@@ -34,19 +34,10 @@ public class MultiControllerSecurityRenderer extends AITileFullRenderer<TileMult
 
 	@Override
 	public void render(TileMultiControllerTerminal te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		// Get tile rotation data
 		AEPartLocation forward = AEPartLocation.fromFacing(te.getForward()); // (1)
-
-		// Save matrix to stack
 		prepareMatrix(x, y, z);
-
-		// Disable lighting
 		GlStateManager.disableLighting();
-
-		// Configure light blend
 		setLightAmbient(te);
-
-		// Rescale render
 		GlStateManager.scale(1, 1, 1);
 
 		// Quad #1 (x - static) EAST
@@ -67,11 +58,7 @@ public class MultiControllerSecurityRenderer extends AITileFullRenderer<TileMult
 		// Quad #6 (-z - static) NORTH
 		drawDirectionalQuadWithUV(NORTH, AEPartLocation.fromFacing(forward.getFacing().rotateAround(X)), te);
 
-
-		// Enable lighting
 		GlStateManager.enableLighting();
-
-		// Push matrix to stack
 		pushMatrix(x, y, z);
 	}
 
@@ -80,28 +67,19 @@ public class MultiControllerSecurityRenderer extends AITileFullRenderer<TileMult
 	 * @param actualSide  Side for texture drawing
 	 */
 	private void drawDirectionalQuadWithUV(AEPartLocation textureSide, AEPartLocation actualSide, TileMultiControllerTerminal te) {
-		// Bind texture depending on side
-		// Check if side is south, west, north or east
 		if (textureSide != UP && textureSide != DOWN) {
-			// Bind side texture
 			Minecraft.getMinecraft().renderEngine.bindTexture(side);
 		}
 
-		// Check if side is up
 		if (textureSide == UP) {
-			// Bind top texture
 			bindTopTexture(te);
 		}
 
-		// Check if side is down
 		if (textureSide == DOWN) {
-			// Bind bottom texture
 			Minecraft.getMinecraft().renderEngine.bindTexture(bottom);
 		}
 
-		// Check if side isn't internal
 		if (textureSide == INTERNAL || actualSide == INTERNAL) {
-			// Illegal state
 			throw new IllegalStateException("Side must be valid");
 		}
 
@@ -109,21 +87,16 @@ public class MultiControllerSecurityRenderer extends AITileFullRenderer<TileMult
 	}
 
 	private void bindTopTexture(TileMultiControllerTerminal te) {
-		// Check not null
 		if (te.getProxy() == null){
-			// Bind off texture
 			Minecraft.getMinecraft().renderEngine.bindTexture(topOff);
 			return;
 		}
 
-		// Check if server terminal has no master
 		if (!te.getProxy().isActive()) {
-			// Bind off texture
 			Minecraft.getMinecraft().renderEngine.bindTexture(topOff);
 			return;
 		}
 
-		// Bind "on" texture
 		Minecraft.getMinecraft().renderEngine.bindTexture(top);
 	}
 }

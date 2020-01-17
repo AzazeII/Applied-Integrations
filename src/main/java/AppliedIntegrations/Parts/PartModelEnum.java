@@ -75,27 +75,19 @@ public enum PartModelEnum implements IPartModel {
 	List<ResourceLocation> locations;
 
 	PartModelEnum(Object... modelNames) {
-		// Create model builder
 		ImmutableList.Builder<ResourceLocation> builder = new ImmutableList.Builder<>();
-
-		// Iterate for each object
 		for (Object o : modelNames) {
-			// Check if object is part model
 			if (o instanceof IPartModel) {
-				// Add all modesl of it
 				builder.addAll(((IPartModel) o).getModels());
 			} else {
-				// Add string representation of object
 				builder.add(new ResourceLocation(AppliedIntegrations.modid, "part/" + o.toString()));
 			}
 		}
 
-		// Set locations
 		locations = builder.build();
 	}
 
 	public static void registerModels() {
-
 		IPartModels partModels = AEApi.instance().registries().partModels();
 		for (PartModelEnum model : values()) {
 			partModels.registerModels(model.getModels());

@@ -47,13 +47,11 @@ public abstract class AIMultiBlock extends BlockAIRegistrable implements ITileEn
 
 	@Override
 	public boolean hasTileEntity(IBlockState blockState) {
-
 		return true;
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World w, int p_149915_2_) {
-
 		for (BlocksEnum b : BlocksEnum.values()) {
 			if (b.b == this) {
 				try {

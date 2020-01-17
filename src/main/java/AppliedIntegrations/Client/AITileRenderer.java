@@ -17,11 +17,7 @@ import static org.lwjgl.opengl.GL11.GL_QUADS;
  * @Author Azazell
  */
 public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
-
-	// Get tessellator instance
 	protected static Tessellator tessellator = Tessellator.getInstance();
-
-	// Get buffered builder
 	protected static BufferBuilder builder = tessellator.getBuffer();
 
 	protected static float[][] defaultUV = {{1, 1}, {1, 0}, {0, 0}, {0, 1}};
@@ -36,15 +32,10 @@ public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRende
 		// Create copy of UV map
 		float[][] copy = uvMap.clone();
 
-		// Iterate until i < length
 		for (int i = 0; i < uvMap.length; i++) {
-			// Avoid index out of bound exception
-			// Check if i = length - 1
 			if (i == uvMap.length - 1) {
-				// Make first element equal to last
 				copy[0] = uvMap[uvMap.length - 1];
 			} else {
-				// Make i+1 element equal to i element
 				copy[i + 1] = uvMap[i];
 			}
 		}
@@ -59,25 +50,15 @@ public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRende
 	 * @param uvTex  array of all texture positions. Inner array MUST have 2 float variables. U, V. Array must have 4 inner arrays
 	 */
 	protected void drawQuadWithUV(float[][] posTex, float[][] uvTex) {
-		// Start drawing quads
 		builder.begin(GL_QUADS, POSITION_TEX);
 
-		// Assert length != 4
-		if (posTex.length != 4 || uvTex.length != 4)
-		// Quit program
-		{
+		if (posTex.length != 4 || uvTex.length != 4) {
 			throw new IllegalStateException("Position and UV vertices array length must be 4");
 		}
 
-		// Iterate for each pos array in posTex
 		for (int i = 0; i < posTex.length; i++) {
-			// Get current position
 			float[] pos = posTex[i];
-
-			// Get current tex
 			float[] tex = uvTex[i];
-
-			// Add position
 			builder.pos(pos[0], pos[1], pos[2]).tex(tex[0], tex[1]).endVertex();
 		}
 
@@ -85,41 +66,26 @@ public class AITileRenderer<T extends TileEntity> extends TileEntitySpecialRende
 	}
 
 	protected void prepareMatrix(double x, double y, double z) {
-		// Save matrix to stack
 		GlStateManager.pushMatrix();
-		// Set color to black
 		GlStateManager.color(1, 1, 1, 1);
-		// Move gl pointer to x,y,z
 		GlStateManager.translate(x + 0.5, y + 0.5, z + 0.5);
-		// Disable cull
 		GlStateManager.disableCull();
-		// Disable 2D texturing
 		GlStateManager.disableTexture2D();
-		// Disable light
 		GlStateManager.disableLighting();
 	}
 
 	protected void pushMatrix(double x, double y, double z) {
-		// Re-enable all states of Opengl:
-		// Cull
 		GlStateManager.enableCull();
-		// Enable lighting
 		GlStateManager.enableLighting();
-		// texture2d
 		GlStateManager.enableTexture2D();
-		// Repick color
 		GlStateManager.color(0, 0, 0);
-		// End drawing
 		GlStateManager.popMatrix();
 	}
 
 	protected void setLightAmbient(TileEntity te) {
-		// Get combined world light near tile
 		int light = Minecraft.getMinecraft().world.getCombinedLight(te.getPos(), 0);
-
-		// Get light UV
-		int u = light % 65536; // U
-		int v = light / 65536; // V
+		int u = light % 65536;
+		int v = light / 65536;
 
 		OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 15 * 16, 15 * 16);
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);

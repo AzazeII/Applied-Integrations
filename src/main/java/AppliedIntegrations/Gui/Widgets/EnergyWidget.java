@@ -15,7 +15,6 @@ public abstract class EnergyWidget extends AIWidget {
 	private EnergyStack currentStack;
 
 	public EnergyWidget(IWidgetHost hostGUI, int xPos, int yPos) {
-
 		super(hostGUI, xPos, yPos);
 	}
 
@@ -28,15 +27,11 @@ public abstract class EnergyWidget extends AIWidget {
 	}
 
 	protected void drawEnergy() {
-		// Check not null
 		if (currentStack == null || currentStack.getEnergy() == null) {
 			return;
 		}
 
-		// Bind energies' texture
 		Minecraft.getMinecraft().renderEngine.bindTexture(currentStack.getEnergy().getImage());
-
-		// Draw energy
 		drawTexturedModalRect(this.xPosition + 1, this.yPosition + 1, 1, 1, 16, 16);
 	}
 
@@ -47,12 +42,10 @@ public abstract class EnergyWidget extends AIWidget {
 
 	@Override
 	public void getTooltip(List<String> tooltip) {
-		// Check not null
 		if (currentStack == null || currentStack.getEnergy() == null) {
 			return;
 		}
 
-		// Add energy name
 		tooltip.add(currentStack.getEnergy().getEnergyName());
 	}
 }

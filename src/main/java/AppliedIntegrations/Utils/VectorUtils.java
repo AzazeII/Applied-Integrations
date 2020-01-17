@@ -9,38 +9,28 @@ import net.minecraft.util.math.Vec3i;
  */
 public class VectorUtils {
 	public static AEPartLocation getVectorFacing(Vec3d relativeVec) {
-		// Gets enum facing of vecB relative to vecA (already calculated as relativeVec)
 		double x = relativeVec.x;
 		double y = relativeVec.y;
 		double z = relativeVec.z;
 
-		// Get greatest component and check if it's greater than zero (positive facing) of less than zero (negative facing)
 		if (x < 0 || y < 0 || z < 0) {
-			// Compare by smallest
 			double smallest = Math.min(x, Math.min(y, z));
 
 			if (smallest == x) {
-				// Negative x
 				return AEPartLocation.WEST;
 			} else if (smallest == z) {
-				// Negative z
 				return AEPartLocation.NORTH;
 			} else if (smallest == y) {
-				// Negative y
 				return AEPartLocation.DOWN;
 			}
 		} else if (x > 0 || y > 0 || z > 0) {
-			// Compare by greatest
 			double greatest = Math.max(x, Math.max(y, z));
 
 			if (greatest == x) {
-				// Positive x
 				return AEPartLocation.EAST;
 			} else if (greatest == z) {
-				// Positive z
 				return AEPartLocation.SOUTH;
 			} else if (greatest == y) {
-				// Positive y
 				return AEPartLocation.UP;
 			}
 		}
@@ -62,7 +52,6 @@ public class VectorUtils {
 		final double y = vec.y;
 		final double z = vec.z;
 		double magnitude = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2));
-
 		return new Vec3d(x / magnitude, y / magnitude, z / magnitude);
 	}
 }

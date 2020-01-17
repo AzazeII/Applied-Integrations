@@ -64,11 +64,9 @@ public class AppliedIntegrations {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		// Init config
 		AIConfig.preInit();
 
 		if (AIConfig.enableEnergyFeatures) {
-			// For all liquidEnergies register it
 			for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
 				FluidRegistry.registerFluid(energy);
 			}
@@ -101,14 +99,12 @@ public class AppliedIntegrations {
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		// Register GuiHandler
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, new AIGuiHandler());
 
 		AILog.info("Post load Completed");
 	}
 
 	public static Side getLogicalSide() {
-
 		Thread thr = Thread.currentThread();
 		if ((thr.getName().equals("Server thread"))) {
 			return Side.SERVER;

@@ -78,13 +78,8 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 		super(PartEnum.EnergyTerminal);
 
 		// Register setting for terminal
-		// Sort mode (default: name)
 		configManager.registerSetting(Settings.SORT_BY, SortOrder.NAME);
-
-		// View mode (default: all)
 		configManager.registerSetting(Settings.VIEW_MODE, ViewItems.ALL);
-
-		// Sort direction (default: ascending)
 		configManager.registerSetting(Settings.SORT_DIRECTION, SortDir.ASCENDING);
 	}
 
@@ -102,14 +97,9 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
-		// Check if terminal is active
 		if (isActive()) {
-			// Open gui
 			AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiTerminalPart, player, getHostSide(), getHostPos());
-
-			// Trigger update request
 			updateRequsted = true;
-
 			return true;
 		}
 
@@ -130,7 +120,6 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	public int getLightLevel() {
-		// Check if active
 		if (isActive()) {
 			return ACTIVE_TERMINAL_LIGHT_LEVEL;
 		}
@@ -169,28 +158,17 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
-		// Check if update was requested
 		if (updateRequsted) {
-			// Check if we have gui to update
 			if (!(Minecraft.getMinecraft().currentScreen instanceof AIGui)) {
-				// Break function
 				return SAME;
 			}
 
-			// Do all AE2 mechanics only on server
 			if (!this.getHostWorld().isRemote) {
-
-				// Get energy inventory
 				IMEMonitor<IAEEnergyStack> inv = this.getEnergyInventory();
-
-				// Check not null
 				if (inv != null) {
 					// Notify GUI first time about list, to make it show current list of all energies
 					for (ContainerEnergyTerminal listener : this.listeners) {
-						// Send packet over network
 						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), sortingOrder, this), (EntityPlayerMP) listener.player);
-
-						// Trigger request
 						updateRequsted = false;
 					}
 				}
@@ -240,29 +218,18 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 
 	@Override
 	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> channel) {
-		// Get node
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
-
-		// Getting Node
 		if (node == null) {
-			// No inventory provided
 			return null;
 		}
 
-		// Getting net of node
 		IGrid grid = node.getGrid();
-
-		// Storage cache of network
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-
-		// Get inventory of cache
 		return storage.getInventory(channel);
 	}
 
 	@Override
-	public void updateSetting(IConfigManager manager, Enum settingName, Enum newValue) {
-		// Ignored
-	}
+	public void updateSetting(IConfigManager manager, Enum settingName, Enum newValue) {}
 
 	@Override
 	public IConfigManager getConfigManager() {

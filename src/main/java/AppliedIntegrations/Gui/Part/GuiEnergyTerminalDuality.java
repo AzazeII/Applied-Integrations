@@ -54,11 +54,8 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 		this.ySize = 204;
 		this.linkedContainer = container;
 
-		// Rows
 		for (int y = 0; y < WIDGET_ROWS_PER_PAGE; y++) {
-			// Columns
 			for (int x = 0; x < WIDGETS_PER_ROW; x++) {
-				// Update widget in array
 				castContainer().widgetEnergySelectors.add(new WidgetEnergySelector(this, 7 + (x * 18), 17 + (y * 18)));
 			}
 		}
@@ -76,13 +73,8 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-		// Full white
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		// Set the texture to the gui's texture
 		Minecraft.getMinecraft().renderEngine.bindTexture(this.mainTexture);
-
-		// Draw the gui
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
 	}
 
@@ -122,10 +114,8 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
-
 		super.onButtonClicked(btn, mouseButton);
 
-		// Toggle sort button and sync it's val with server
 		if (btn == castContainer().sortButton) {
 			byte ordinal = (byte) castContainer().sortButton.getCurrentValue().ordinal();
 			castContainer().sortButton.set(ordinal == 3 ? SortOrder.NAME : SortOrder.values()[ordinal + 1]);
@@ -137,55 +127,37 @@ public class GuiEnergyTerminalDuality extends AIGui implements IEnergySelectorGu
 			sorted.forEach(castContainer().list::add);
 			castContainer().updateStacksPrecise(sorted);
 
-			// Sync with client
 			NetworkHandler.sendToServer(new PacketEnum(castContainer().sortButton.getCurrentValue(), this.part));
 		}
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
-		// Check not null
 		final LiquidAIEnergy energy = castContainer().selectedStack.getEnergy();
 		if (energy != null && energy.getEnergyName() != null) {
-			// Draw energy name
 			this.fontRenderer.drawString("Energy: " + energy.getEnergyName(), 45, 101, 0);
 		}
 
-		// Check stack size greater than zero
 		if (castContainer().selectedStack.amount > 0) {
-			// Draw energy amount
 			this.fontRenderer.drawString("Amount: " + castContainer().selectedStack.amount, 45, 91, 0);
 		}
 
-		// Iterate for each widget
-		// Draw each widget
 		castContainer().widgetEnergySelectors.forEach((WidgetEnergySelector::drawWidget));
-
-		// Draw name of GUI
 		fontRenderer.drawString(I18n.translateToLocal("ME Energy Terminal"), 9, 3, 4210752);
-
-		// Add tooltip to sort button
-		// Check if mouse over sort button
 		if (castContainer().sortButton.isMouseOver()) {
-			// Split messages using regex "\n"
 			tooltip.addAll(Arrays.asList(castContainer().sortButton.getMessage().split("\n")));
 		}
 	}
 
 	@Override
 	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
-		// Call super
 		super.mouseClicked(mouseX, mouseY, mouseButton);
-		// Iterate for each selector
 		castContainer().widgetEnergySelectors.forEach((widgetEnergySelector -> {
-			// Check if mouse is over widget
 			if (widgetEnergySelector.isMouseOverWidget(mouseX, mouseY)) {
-				// Check not null
 				if (widgetEnergySelector.getCurrentStack() == null) {
 					return;
 				}
 
-				// Update current energy stack
 				castContainer().selectedStack = widgetEnergySelector.getCurrentStack();
 				if (castContainer().selectedStack != null) {
 					NetworkHandler.sendToServer(new PacketSelectedStack(castContainer().selectedStack.getEnergy(), this.part));

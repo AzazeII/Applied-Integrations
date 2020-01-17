@@ -19,26 +19,22 @@ import javax.annotation.Nonnull;
  */
 public class PartManaStorageBus extends PartEnergyStorage {
 	public PartManaStorageBus() {
-
 		super(PartEnum.ManaStorage, SecurityPermissions.INJECT, SecurityPermissions.EXTRACT);
 	}
 
 	@Override
 	public TickRateModulation tickingRequest(final IGridNode node, final int ticksSinceLastCall) {
-		// Keep chugging along
 		return TickRateModulation.SAME;
 	}
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand hand, Vec3d position) {
-
 		return false;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
-
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.MANA_STORAGE_BUS_HAS_CHANNEL;

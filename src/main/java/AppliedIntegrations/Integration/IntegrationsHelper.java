@@ -44,30 +44,23 @@ public class IntegrationsHelper {
 	}
 
 	public void registerTunnelTypes() {
-		// Get api
 		final AIApi api = Objects.requireNonNull(AIApi.instance());
-
-		// Check if botania loaded and mana features enabled
 		if (Loader.isModLoaded("botania") && AIConfig.enableManaFeatures) {
 			api.addTunnelAsStack(Item.getItemFromBlock(ModBlocks.dreamwood), ItemEnum.ITEMP2PMANA.getStack());
 		}
 
-		// Check if embers loaded and ember features enabled
 		if (Loader.isModLoaded("embers") && AIConfig.enableEmberFeatures) {
 			api.addTunnelAsStack(RegistryManager.shard_ember, ItemEnum.ITEMP2PEMBER.getStack());
 		}
 
-		// Check if bloodmagic loaded and will features enabled
 		if (Loader.isModLoaded("bloodmagic") && AIConfig.enableWillFeatures) {
 			api.addTunnelAsStack(RegistrarBloodMagicItems.SOUL_GEM, ItemEnum.ITEMP2PWILL.getStack());
 		}
 
-		// Check if astral sorcery loaded and starlight features enabled
 		if (Loader.isModLoaded("astralsorcery") && AIConfig.enableStarlightFeatures) {
 			//api.addTunnelAsStack(Item.getItemFromBlock(RegistryBlocks.customNameItemBlocksToRegister.get(3)), ItemEnum.ITEMP2PSTARLIGHT.getStack());
 		}
 
-		// Check if xnet loaded and xnet features enabled
 		if (Loader.isModLoaded("xnet") && AIConfig.enableXnetFeatures) {
 			//api.addTunnelAsStack(, ItemEnum.ITEMP2PXNET.getStack());
 		}

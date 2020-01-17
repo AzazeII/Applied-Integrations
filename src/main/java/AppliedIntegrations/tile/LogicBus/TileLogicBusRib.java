@@ -24,10 +24,8 @@ import static net.minecraft.util.EnumFacing.UP;
  * @Author Azazell
  */
 public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock {
-
 	public TileLogicBusRib(){
 		super();
-
 		this.getProxy().setValidSides(getValidSides());
 	}
 
@@ -37,9 +35,7 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock 
 	}
 
 	public EnumSet<EnumFacing> getValidSides() {
-		// list of sides
 		List<EnumFacing> sides = new ArrayList<>();
-		// Iterate over all sides
 		for (EnumFacing side : EnumFacing.values()) {
 			// Check if tile in this side is not instance of logic bus port or core, so rib will connect only to
 			// other ribs in multiblock, or outer cable
@@ -48,27 +44,19 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock 
 			}
 		}
 
-		// Temp set
 		EnumSet<EnumFacing> temp = EnumSet.noneOf(EnumFacing.class);
-		// Add sides
 		temp.addAll(sides);
 		return temp;
 	}
 
 	@Override
 	public boolean tryToFindCore(EntityPlayer p) {
-		// Iterate over up and down
 		for (EnumFacing vertical : Arrays.asList(UP, DOWN)) {
-			// Iterate over horizontal sides
 			for (EnumFacing horizontal : EnumFacing.HORIZONTALS) {
-				// Find candidate
 				// OVERRIDEN: Move pos upward to height of port
 				TileEntity candidate = world.getTileEntity(pos.offset(vertical).offset(horizontal));
-				// Check if candidate is LogicBusCore
 				if (candidate instanceof TileLogicBusCore) {
-					// Capture core in variable
 					TileLogicBusCore core = (TileLogicBusCore) candidate;
-					// Try to construct multi-block
 					core.tryConstruct(p);
 					return true;
 				}
@@ -82,14 +70,12 @@ public class TileLogicBusRib extends TileLogicBusSlave implements IAIMultiBlock 
 	 * inject autocrafting items to outer grid
 	 */
 	public IMEInventory<IAEItemStack> getOuterGridInventory() {
-
 		if (getGridNode() == null) {
 			return null;
 		}
+
 		IGrid grid = getGridNode().getGrid();
-
-		IStorageGrid storage = grid.getCache(IStorageGrid.class); // check storage gridnode
-
+		IStorageGrid storage = grid.getCache(IStorageGrid.class);
 		return storage.getInventory(getItemChannel());
 	}
 

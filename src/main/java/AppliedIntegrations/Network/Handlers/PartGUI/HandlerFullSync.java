@@ -17,14 +17,11 @@ public class HandlerFullSync implements IMessageHandler<PacketFullSync, PacketFu
 			if (container instanceof IUpgradeHostContainer) {
 				IUpgradeHostContainer upgradeHostContainer = (IUpgradeHostContainer) container;
 
-				// Check not null
 				if (upgradeHostContainer.getSyncHost() == null) {
 					return;
 				}
 
-				// Compare sync hosts
 				if (upgradeHostContainer.getSyncHost().compareTo(message.part, true)) {
-					// Update each state
 					upgradeHostContainer.updateState(message.redstoneControl, message.compareFuzzy, message.autoCrafting,
 							message.redstoneMode, message.fuzzyMode, message.craftOnly, message.filterSize);
 				}

@@ -55,29 +55,17 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
  * @Author Azazell
  */
 public class TileBlackHole extends TileEntity implements ITickable, ISingularity {
-	// list of size factor
 	public static LinkedHashMap<Long, Float> sizeFactor = new LinkedHashMap<>();
-
-	// list of type factor
 	private static LinkedHashMap<Short, Byte> typeFactor = new LinkedHashMap<>();
 
 	private final double gravitationalConst = 6.7;
 
 	public long mass = (int) Math.ceil(Math.random() * 16384);
-
-	// Count of mass added per any operation
 	public int MASS_ADDED = 10;
 
-	// list of all ae items stored in this singularity
 	public ItemList storedItems = new ItemList();
-
-	// list of all ae fluids stored in this singularity
 	public FluidList storedFluids = new FluidList();
-
-	// list of all ae energies stored in this singularity
 	public EnergyList storedEnergies = new EnergyList();
-
-	// list of all ae mana stored in this singularity
 	public ManaList storedMana = new ManaList();
 
 	private TimeHandler blockDestroyHandler = new TimeHandler();
@@ -121,10 +109,7 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	@Override
 	public void invalidate() {
 		super.invalidate();
-
-		// Iterate over listeners
 		for (IPylon pylon : listeners) {
-			// Invalidate singularity
 			pylon.setSingularity(null);
 		}
 	}
@@ -132,22 +117,17 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	@Override
 	public void update() {
 		if (Platform.isServer()) {
-			// Modulate block gravity only on server
 			modulateBlockGravity();
 		}
 
-		// Check if growth factor changed, or 20 seconds left
+		// Trigger anomaly every 20 seconds or when growth factor changes
 		if (getGrowthFactor() != lastGrowth || anomalyTriggerHandler.hasTimePassed(world, 20)) {
-			// Trigger anomaly
 			onGrowthFactorChange();
-
-			// Trigger factor
 			lastGrowth = getGrowthFactor();
 		}
 
 		// Check if we have linked entity.
 		if (entangledHoleEntity != null && entangledHoleEntity.isDead && entangledHoleEntity.getBornSingularity() != null) {
-			// If entity is dead, then we need to find singularity tile on it's position
 			entangledHole = (TileWhiteHole) entangledHoleEntity.getBornSingularity();
 			entangledHoleEntity = null;
 
@@ -159,13 +139,9 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	// Pull all blocks in range
 	private void modulateBlockGravity() {
-		// Check if time since last modulation passed
 		if (blockDestroyHandler.hasTimePassed(world, 1)) {
 			double range = getMaxDestructionRange();
-
-			//  Iterate over all block candidates and find blocks which can be destructed
 			for (BlockPos b : getBlocksInRadius(range)) {
-				// Create item block
 				createItemBlock(b, world.getBlockState(b).getBlock());
 			}
 		}
@@ -198,17 +174,10 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 		Float sizeFactorVal = 1F;
 		Byte typeFactorVal = 1;
 
-		// Iterate over size factor values until mass will be less than value
 		for (Long value : sizeFactor.keySet()) {
-			// Check if mass greater or equal
-			if (mass >= value)
-			// Set factor
-			{
+			if (mass >= value) {
 				sizeFactorVal = sizeFactor.get(value);
-			} else
-			// Lvl up, what talent you want?
-			// - optimisation
-			{
+			} else {
 				break;
 			}
 		}
@@ -245,34 +214,23 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 		List<BlockPos> blockPositions = new ArrayList<>();
 
 		// Stage #1: Create "iteration square" and find block break candidates for next break stage
-		// Iterate from -range to range x
 		for (int x = -(int) radius; x < radius; x++) {
-			// Iterate from -range to range y
 			for (int y = -(int) radius; y < radius; y++) {
-				// Iterate from -range to range z
 				for (int z = -(int) radius; z < radius; z++) {
-					// Get pos
 					BlockPos blockPos = new BlockPos(pos.getX() + x, pos.getY() + y, pos.getZ() + z);
-
-					// Exclude this.pos
 					if (x == pos.getX() && pos.getY() == y && pos.getZ() == z) {
 						continue;
 					}
 
-					// Get block at pos
 					Block b = world.getBlockState(blockPos).getBlock();
-
-					// Check if block is air
 					if (b instanceof BlockAir) {
 						continue;
 					}
 
-					// Check if block is singularity
 					if (b instanceof ISingularity) {
 						continue;
 					}
 
-					// Check if block is unbreakable
 					if (b.getBlockHardness(b.getDefaultState(), world, pos) == -1) {
 						continue;
 					}
@@ -297,18 +255,13 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
                         continue;
                     }*/
 
-					// Check if point A crosses radius
 					if (crossesRadius(blockPos, pos, getBlackHoleRadius())) {
 						// Delete this object forever
 						world.setBlockToAir(blockPos);
-						// Add mass
 						addStack(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class).createStack(new ItemStack(world.getBlockState(pos).getBlock())), Actionable.MODULATE);
 					}
 
-					// Check if range to this block is lest or equal to break range
-					if (crossesRadius(blockPos, pos, radius))
-					// Add candidate
-					{
+					if (crossesRadius(blockPos, pos, radius)) {
 						blockPositions.add(blockPos);
 					}
 				}
@@ -319,16 +272,12 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 	}
 
 	private void createItemBlock(BlockPos pos, Block b) {
-		// Tell block about breaking
 		b.breakBlock(world, pos, b.getDefaultState());
-		// Destroy normal block
 		world.setBlockState(pos, Blocks.AIR.getDefaultState());
-		// Spawn entity
 		//world.spawnEntity(new EntityItem(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(b)));
 	}
 
 	private boolean crossesRadius(BlockPos posA, BlockPos posB, double radius) {
-		// Check if distance less of equal to given radius
 		return Math.sqrt(posA.distanceSq(posB)) <= radius;
 	}
 
@@ -341,17 +290,12 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	@Override
 	public void addMass(long l) {
-		// Notify client
 		NetworkHandler.sendToAllInRange(new PacketMassChange(this, this.getPos()), new NetworkRegistry.TargetPoint(world.provider.getDimension(), pos.getX(), pos.getY(), pos.getZ(), 64));
-
-		// Add mass
 		mass += l;
 	}
 
 	@Override
 	public IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable) {
-		// 1) Check for stack
-		// 2) Add stack to proper list
 		if (stack == null) {
 			return null;
 		}
@@ -366,23 +310,16 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 			storedEnergies.add((AEEnergyStack) stack);
 		}
 
-		// Iterate over all listeners
 		for (IPylon pylon : listeners) {
-			// Pass to implementation
 			pylon.setDrain(true);
 		}
 
-
-		// Add mass
 		addMass(stack.getStackSize() * MASS_ADDED);
-
-		// Ignored
 		return null;
 	}
 
 	@Override
 	public IItemList<?> getList(IStorageChannel chan) {
-		// Check channel
 		if (chan == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class)) {
 			return storedItems;
 		}
@@ -439,17 +376,11 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 		// Get position vector
 		Vec3d pos = entity.getPositionVector();
 
-		// Check if pos matches conditions
 		if (pos.distanceTo(new Vec3d(getPos())) <= getBlackHoleRadius()) {
-			// Kill entity
 			entity.setDead();
-			// Remove from world
 			world.removeEntity(entity);
-			// Increment hole's mass
 			addMass(MASS_ADDED);
-			// Mark for update
 			markDirty();
-			// return true, as entity was destroyed
 			return true;
 		}
 		return false;
@@ -464,7 +395,6 @@ public class TileBlackHole extends TileEntity implements ITickable, ISingularity
 
 	// ~~Called when radius is growing too much~~
 	private void destroySingularity() {
-		// Set block to air
 		world.setBlockState(pos, Blocks.AIR.getDefaultState());
 	}
 

@@ -25,7 +25,6 @@ import static appeng.api.util.AEPartLocation.INTERNAL;
  */
 public class BlockMultiControllerTerminal extends BlockAIRegistrable implements ITileEntityProvider {
 	public BlockMultiControllerTerminal(String reg, String unloc) {
-
 		super(reg, unloc);
 	}
 
@@ -37,42 +36,27 @@ public class BlockMultiControllerTerminal extends BlockAIRegistrable implements 
 
 	@Override
 	public TileEntity createNewTileEntity(@Nullable World p_149915_1_, int p_149915_2_) {
-
 		return new TileMultiControllerTerminal();
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
 		super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
 
-		// Check if player not sneaking
 		if (!p.isSneaking()) {
-			// Get stack
 			ItemStack stack = p.getHeldItem(hand);
-
-			// Get tile
 			TileMultiControllerTerminal tile = (TileMultiControllerTerminal) world.getTileEntity(pos);
 
-			// Check if stack is wrench
 			if (Platform.isWrench(p, stack, pos)) {
-				// Rotate up of tile around
 				tile.rotateForward(facing);
 			} else {
-				// Call only on server
 				if (world.isRemote) {
-					// Skip client
 					return false;
 				}
 
-				// Check if tile is null
 				if (world.getTileEntity(pos) != null) {
-					// Open gui
 					AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiServerTerminal, p, INTERNAL, pos);
-
-					// Request update
 					tile.updateRequested = true;
-
 					return true;
 				}
 			}

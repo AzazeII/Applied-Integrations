@@ -18,14 +18,10 @@ public class BlackHoleEnergyHandler extends BlackHoleSingularityInventoryHandler
 
 	@Override
 	public IAEEnergyStack injectItems(IAEEnergyStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
-		// Check if there is singularity
 		if (singularity != null) {
-			// Modulate extraction
 			if (actionable == MODULATE) {
-				// Add data to storage list
 				singularity.addStack(iaeItemStack, actionable);
 			}
-			// Return null, as all items was injected
 			return null;
 		}
 		return iaeItemStack;
@@ -33,7 +29,6 @@ public class BlackHoleEnergyHandler extends BlackHoleSingularityInventoryHandler
 
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 }

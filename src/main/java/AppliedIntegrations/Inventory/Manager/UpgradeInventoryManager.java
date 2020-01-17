@@ -79,14 +79,12 @@ public class UpgradeInventoryManager implements IInventoryHost {
 
 	@Override
 	public void onInventoryChanged() {
-		//=========+Reset+=========//
 		this.filterSize = 0;
 		this.redstoneControlled = false;
 		this.inverted = false;
 		this.fuzzyCompare = false;
 		this.autoCrafting = false;
 		this.upgradeSpeedCount = 0;
-		//=========+Reset+=========//
 
 		// Iterate over all items and detect upgrade cards
 		for (int i = 0; i < this.upgradeInventory.getSizeInventory(); i++) {

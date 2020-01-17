@@ -5,12 +5,14 @@ import AppliedIntegrations.api.Botania.IAEManaStack;
 import AppliedIntegrations.api.Storage.IChannelWidget;
 import appeng.api.storage.data.IAEStack;
 
+/**
+ * @Author Azazell
+ */
 public class WidgetManaSlot implements IChannelWidget<IAEManaStack> {
 	private IAEManaStack stack;
 
 	@Override
 	public IAEStack<IAEManaStack> getAEStack() {
-
 		return this.stack;
 	}
 

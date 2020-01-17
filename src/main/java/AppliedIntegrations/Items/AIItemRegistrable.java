@@ -13,7 +13,6 @@ public class AIItemRegistrable extends Item {
 	public String reg;
 
 	public AIItemRegistrable(String registry) {
-
 		this.setRegistryName(registry);
 		this.setUnlocalizedName(registry);
 		this.setCreativeTab(AppliedIntegrations.AI);
@@ -22,6 +21,7 @@ public class AIItemRegistrable extends Item {
 	}
 
 	void registerModel() {
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, 0, new ModelResourceLocation(this.getRegistryName(), "inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(this, 0,
+				new ModelResourceLocation(this.getRegistryName(), "inventory"));
 	}
 }

@@ -17,10 +17,7 @@ public class HandlerAccessModeServerToClient implements IMessageHandler<PacketAc
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Container container = Minecraft.getMinecraft().player.openContainer;
 			if (container instanceof ContainerEnergyStorage) {
-				// Cast container
 				ContainerEnergyStorage CES = (ContainerEnergyStorage) container;
-
-				// Check if we are updating correct container
 				if (CES.getSyncHost().compareTo(message.partEnergyStorage, true)) {
 					CES.accessMode.set(message.access);
 				}

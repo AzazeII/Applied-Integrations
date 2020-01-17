@@ -10,13 +10,15 @@ import appeng.api.storage.data.IAEStack;
 import appeng.me.GridAccessException;
 import appeng.me.helpers.MachineSource;
 
+/**
+ * @Author Azazell
+ */
 public class MEMultiControllerMonitorHandlerReceiver<T extends IAEStack<T>> implements IMEMonitorHandlerReceiver<T> {
 	private final TileMultiControllerCore host;
 
 	private final IStorageChannel<? extends IAEStack<?>> channel;
 
 	public MEMultiControllerMonitorHandlerReceiver(TileMultiControllerCore tileMultiControllerCore, IStorageChannel<? extends IAEStack<?>> channel) {
-
 		this.host = tileMultiControllerCore;
 		this.channel = channel;
 	}

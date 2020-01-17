@@ -54,19 +54,14 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 	public PartEnergyFormation() {
 		super(PartEnum.EnergyFormation);
 
-		// Iterate until filter size
 		for (int index = 0; index < FILTER_SIZE; index++) {
-			// Fill vector
 			this.filteredEnergies.add(null);
-
-			// Fill list
 			this.filteredEnergiesChangeHandler.add(new ChangeHandler<>());
 		}
 	}
 
 	@Override
 	public IPartModel getStaticModels() {
-
 		if (isPowered()) {
 			if (isActive()) {
 				return PartModelEnum.FORMATION_HAS_CHANNEL;
@@ -79,15 +74,10 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 
 	@Override
 	public boolean onActivate(EntityPlayer player, EnumHand enumHand, Vec3d vec3d) {
-		// Activation logic is server sided
 		if (Platform.isServer()) {
 			if (!player.isSneaking()) {
-				// Open gui
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiFormationPlane, player, getHostSide(), getHostTile().getPos());
-
 				updateRequested = true;
-
-				// Render click
 				return true;
 			}
 		}
@@ -97,30 +87,23 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 
 	@Override
 	protected void doWork(int ticksSinceLastCall) {
-		// Iterate over all listeners
+		// Try to extract filtered energies from network to entity next to us
 		for (ContainerEnergyFormation listener : linkedListeners) {
-			// Iterate over all filtered energies
 			for (int i = 0; i < FILTER_SIZE; i++) {
-				// Create effectively final variable
 				int finalI = i;
 
-				// Create on change event
 				filteredEnergiesChangeHandler.get(i).onChange(filteredEnergies.get(i), (energy -> {
-					// Sync with client
 					NetworkHandler.sendTo(new PacketFilterServerToClient(energy, finalI, this),
 							(EntityPlayerMP) listener.player);
 				}));
 
-				// Check if update was requested
 				if (updateRequested) {
-					// Sync with client
 					NetworkHandler.sendTo(new PacketFilterServerToClient(filteredEnergies.get(i), finalI, this),
 							(EntityPlayerMP) listener.player);
 				}
 			}
 		}
 
-		// Reset update request
 		updateRequested = false;
 	}
 
@@ -131,12 +114,10 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 
 	@Override
 	public List<IMEInventoryHandler> getCellArray(IStorageChannel<?> channel) {
-		// Check if channel present working channel, and handler not null
 		if (channel != this.getChannel() || currentEntities.isEmpty()) {
 			return new LinkedList<>();
 		}
 
-		// Return only one handler for tile
 		return singletonList(new IMEInventoryHandler<IAEEnergyStack>() {
 			@Override
 			public AccessRestriction getAccess() {
@@ -164,7 +145,6 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 
 			@Override
 			public int getSlot() {
-				// Ignored
 				return 0;
 			}
 
@@ -176,7 +156,6 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 
 			@Override
 			public IAEEnergyStack injectItems(IAEEnergyStack input, Actionable type, IActionSource src) {
-				// Check not null
 				if (input == null) {
 					return null;
 				}
@@ -185,57 +164,43 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 					return input;
 				}
 
-				// Check has list
 				if (currentEntities.isEmpty()) {
 					return input;
 				}
 
-				// Check smaller or equal to Integer.MAX_VALUE
 				if (input.getStackSize() > Integer.MAX_VALUE) {
 					return input;
 				}
 
-				// Summary injected
 				int amountInjected = 0;
 
-				// input in integer form
 				int request = (int) input.getStackSize();
 
-				// Iterate over all entities
 				for (Entity workingEntity : currentEntities) {
-					// Check if entity is item
 					if (workingEntity instanceof EntityItem) {
 						amountInjected += fillStack(((EntityItem) workingEntity).getItem(), workingEntity, request);
 					} else if (workingEntity instanceof EntityPlayer) {
-						// Get player from working entity
 						EntityPlayer player = (EntityPlayer) workingEntity;
-
-						// Scan player's inventory
 						for (ItemStack stack : player.inventory.mainInventory) {
 							amountInjected += fillStack(stack, workingEntity, request);
 						}
 					}
 				}
 
-				// Check if all energy was injected
 				if (amountInjected == input.getStackSize()) {
-					// Return null, as everything was injected
 					return null;
 				} else {
-					// Return input stack size - all amount injected
 					return input.copy().setStackSize(input.getStackSize() - amountInjected);
 				}
 			}
 
 			@Override
 			public IAEEnergyStack extractItems(IAEEnergyStack request, Actionable mode, IActionSource src) {
-				// No items can be extracted
 				return null;
 			}
 
 			@Override
 			public IItemList getAvailableItems(IItemList out) {
-				// Return empty item list
 				return new ItemList();
 			}
 
@@ -247,19 +212,13 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 	}
 
 	private int fillStack(ItemStack stack, Entity ent, int request) {
-		// Check if stack belongs to one of capabilities
 		StackCapabilityHelper helper = new StackCapabilityHelper(stack);
 
-		// Iterate over all energy types
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			// Check if stack has capability
 			if (helper.hasCapability(energy)) {
-				// Simulate extraction
 				int injected = helper.injectEnergy(energy, request, MODULATE);
 
-				// Modulate injection
 				if (injected > 0) {
-					// Spawn lightning
 					spawnLightning(ent);
 				}
 
@@ -278,13 +237,10 @@ public class PartEnergyFormation extends AIPlanePart implements ICellContainer, 
 
 	@Override
 	public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
-		// Check if inventory not null
 		if (iCellInventory != null) {
-			// Persist inventory
 			iCellInventory.persist();
 		}
 
-		// Mark dirty
 		getHostTile().getWorld().markChunkDirty(getHostTile().getPos(), getHostTile());
 	}
 

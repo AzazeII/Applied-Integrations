@@ -22,7 +22,6 @@ import java.util.List;
  */
 public class BlockEnergyInterface extends BlockAIRegistrable {
 	public BlockEnergyInterface(String reg, String unloc) {
-
 		super(reg, unloc);
 		this.setCreativeTab(AppliedIntegrations.AI);
 		this.setHardness(5F);
@@ -30,7 +29,6 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 
 	@Override
 	public TileEnergyInterface createNewTileEntity(World world, int metadata) {
-
 		return new TileEnergyInterface();
 	}
 
@@ -38,13 +36,6 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		TileEntity entity = world.getTileEntity(pos);
 
-		if (!p.isSneaking()) {
-			if (entity instanceof TileEnergyInterface) {
-				((TileEnergyInterface) entity).onActivate(p, AEPartLocation.fromFacing(facing));
-			}
-		}
-
-		// Ignore on client
 		if (Platform.isServer()) {
 			if (Platform.isWrench(p, p.inventory.getCurrentItem(), pos)) {
 				if (p.isSneaking()) {
@@ -56,6 +47,11 @@ public class BlockEnergyInterface extends BlockAIRegistrable {
 			}
 		}
 
+		if (!p.isSneaking()) {
+			if (entity instanceof TileEnergyInterface) {
+				((TileEnergyInterface) entity).onActivate(p, AEPartLocation.fromFacing(facing));
+			}
+		}
 		return false;
 	}
 

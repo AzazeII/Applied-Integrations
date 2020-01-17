@@ -12,7 +12,6 @@ import static org.lwjgl.opengl.GL11.*;
 public class TileMETurretRenderer extends AITileRenderer<TileMETurretFoundation> {
 	@Override
 	public void render(TileMETurretFoundation te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
-		// Pass preparing to super function. Increase Y by one moving renderer to turret head
 		prepareMatrix(x, y + 1, z);
 		GlStateManager.scale(3, 3, 3);
 
@@ -41,7 +40,6 @@ public class TileMETurretRenderer extends AITileRenderer<TileMETurretFoundation>
 		}
 		glEnd();
 
-		// Re-enable all states of after super function
 		GlStateManager.enableCull();
 		GlStateManager.enableLighting();
 		GlStateManager.enableTexture2D();

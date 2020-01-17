@@ -12,14 +12,12 @@ import javax.annotation.Nullable;
  */
 public class ItemPartEnergyTerminal extends ItemPartAIBase<PartEnergyTerminal> {
 	public ItemPartEnergyTerminal(String id) {
-
 		super(id);
 	}
 
 	@Nullable
 	@Override
 	public PartEnergyTerminal createPartFromItemStack(ItemStack itemStack) {
-
 		return new PartEnergyTerminal();
 	}
 }

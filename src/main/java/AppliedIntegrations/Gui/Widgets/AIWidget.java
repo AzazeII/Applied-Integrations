@@ -21,20 +21,14 @@ public abstract class AIWidget extends Gui {
 	protected IWidgetHost hostGUI;
 
 	public AIWidget(final IWidgetHost hostGUI, final int xPos, final int yPos) {
-
 		this.hostGUI = hostGUI;
-
 		this.xPosition = xPos;
-
 		this.yPosition = yPos;
 	}
 
 	public void drawMouseHoverUnderlay() {
-
 		GL11.glDisable(GL11.GL_LIGHTING);
-
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
-
 		this.drawGradientRect(this.xPosition + 1,
 				this.yPosition + 1,
 				this.xPosition + 17,
@@ -43,7 +37,6 @@ public abstract class AIWidget extends Gui {
 				0x80FFFFFF);
 
 		GL11.glEnable(GL11.GL_LIGHTING);
-
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 	}
 

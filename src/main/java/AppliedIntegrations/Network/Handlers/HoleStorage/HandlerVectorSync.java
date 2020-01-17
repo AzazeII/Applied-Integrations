@@ -13,7 +13,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class HandlerVectorSync implements IMessageHandler<PacketVectorSync, PacketVectorSync> {
 	@Override
 	public PacketVectorSync onMessage(PacketVectorSync message, MessageContext ctx) {
-		// Update client sided tile
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			TileMETurretFoundation te = (TileMETurretFoundation) Minecraft.getMinecraft().world.getTileEntity(message.tilePos);
 			te.direction = message.direction;

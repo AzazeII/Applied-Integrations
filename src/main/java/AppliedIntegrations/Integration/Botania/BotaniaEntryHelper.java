@@ -15,13 +15,8 @@ import vazkii.botania.common.lexicon.BasicLexiconEntry;
 public class BotaniaEntryHelper {
 	private LexiconCategory appliedIntegrations;
 
-	// Botania and ae2 cross
 	private LexiconEntry crossover;
-
-	// Alfheim recipes
 	private LexiconEntry crystals;
-
-	// Machines
 	private LexiconEntry manaManipulation;
 
 	public void createPages() {

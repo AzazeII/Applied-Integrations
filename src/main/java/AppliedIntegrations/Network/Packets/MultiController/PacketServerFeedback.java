@@ -13,9 +13,7 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * @Usage This packet needed to update network card tag data on server from client
  */
 public class PacketServerFeedback extends AIPacket {
-
 	public NBTTagCompound tag;
-
 	public TileMultiControllerTerminal terminal;
 
 	public PacketServerFeedback() {

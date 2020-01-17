@@ -23,27 +23,19 @@ import static appeng.api.config.Actionable.SIMULATE;
  */
 public class PartEnergyAnnihilation extends AIPlanePart {
 	public PartEnergyAnnihilation() {
-
 		super(PartEnum.EnergyAnnihilation);
 	}
 
 	private void voidStack(ItemStack stack, Entity workingEntity) {
-		// Check if stack belongs to one of capabilities
+		// Consumes energy inside stack and puts into storage channel
 		StackCapabilityHelper helper = new StackCapabilityHelper(stack);
 
-		// Iterate over all energy types
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			// Check if stack has capability
 			if (helper.hasCapability(energy)) {
-				// Simulate extraction
 				int extracted = helper.extractEnergy(energy, ENERGY_TRANSFER, SIMULATE);
 
-				// Simulate injection
 				int injected = injectEnergy(new EnergyStack(energy, extracted), SIMULATE);
-
-				// Modulate injection
 				if (injectEnergy(new EnergyStack(energy, helper.extractEnergy(energy, injected, MODULATE)), MODULATE) > 0) {
-					// Spawn lightning
 					super.spawnLightning(workingEntity);
 				}
 			}
@@ -65,17 +57,12 @@ public class PartEnergyAnnihilation extends AIPlanePart {
 
 	@Override
 	protected void doWork(int ticksSinceLastCall) {
-		// Iterate over all entities
 		currentEntities.forEach((workingEntity) -> {
-			// Check if entity is item
 			if (workingEntity instanceof EntityItem) {
-				// Check if stack belongs to one of capabilities
 				voidStack(((EntityItem) workingEntity).getItem(), workingEntity);
 			} else if (workingEntity instanceof EntityPlayer) {
-				// Get player from working entity
 				EntityPlayer player = (EntityPlayer) workingEntity;
 
-				// Scan player's inventory
 				player.inventory.mainInventory.iterator().forEachRemaining(stack -> voidStack(stack, workingEntity));
 			}
 		});

@@ -63,9 +63,7 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	};
 
 	public TileEnergyInterface() {
-		// Iterate foreach side
 		for (AEPartLocation dir : AEPartLocation.SIDE_LOCATIONS) {
-			// Init storage from this side
 			duality.initStorage(dir);
 		}
 	}
@@ -89,14 +87,9 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	}
 
 	public void onActivate(EntityPlayer player, AEPartLocation side) {
-		// Activation logic is server sided
 		if (Platform.isServer()) {
-			// Don't activate GUI if player isn't sneaking
 			if (!player.isSneaking()) {
-				// Open GUI
 				AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiInterface, player, getHostSide(), getPos());
-
-				// Request gui update
 				updateRequested = true;
 			}
 		}
@@ -111,52 +104,32 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 
-		// Iterate for each side
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			// Get tag from NBT
 			NBTTagCompound energyTag = nbt.getCompoundTag(NBT_KEY_ENERGY_TAG + side.name());
 
-			// Get index from tag
 			int energyIndex = energyTag.getInteger("#AIEnergy");
 
-			// Check not -1
 			if (energyIndex == -1) {
-				// Put null in map
 				filteredEnergies.put(side, null);
 			} else {
-				// Put new entry in map using val from nbt
 				filteredEnergies.put(side, LiquidAIEnergy.readFromNBT(energyTag));
 			}
 
-			// Get tag from NBT
 			NBTTagCompound barTag = nbt.getCompoundTag(NBT_KEY_ENERGY_TAG + side.name());
-
-			// Get index from tag
 			int barIndex = barTag.getInteger("#AIEnergy");
 
-			// Check not -1
 			if (barIndex == -1) {
-				// Put null in map
 				filteredEnergies.put(side, null);
 			} else {
-				// Put new entry in map using val from nbt
 				filteredEnergies.put(side, LiquidAIEnergy.readFromNBT(barTag));
 			}
 
-			// Iterate for each energy
 			for (LiquidAIEnergy next : LiquidAIEnergy.energies.values()) {
-				// Get tag from NBT
 				NBTTagCompound storageTag = nbt.getCompoundTag(NBT_KEY_ENERGY_TAG + side.name() + next.getEnergyName());
-
-				// Get storage
 				IInterfaceStorageDuality storage = getEnergyStorage(next, side);
-
-				// Check not null & instanceof NBT storage
 				if (storage instanceof INBTStorage) {
-					// Cast to storage
 					INBTStorage inbtStorage = (INBTStorage) storage;
 
-					// Write to NBT
 					inbtStorage.readFromNBT(storageTag);
 				}
 			}
@@ -167,62 +140,35 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
 
-		// Iterate for each side
 		for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-			// Create separated tag from main tag
 			NBTTagCompound energyTag = new NBTTagCompound();
-
-			// Get energy from map
 			LiquidAIEnergy energy = filteredEnergies.get(side);
 
-			// Check not null
 			if (energy != null) {
-				// Put energy in tag
 				energy.writeToNBT(energyTag);
 			} else {
-				// Put null in tag
 				energyTag.setInteger("#AIEnergy", -1);
 			}
 
-			// Put tag in tag
 			nbt.setTag(NBT_KEY_ENERGY_TAG + side.name(), energyTag);
-
-			// Create separated tag from main tag
 			NBTTagCompound barTag = new NBTTagCompound();
-
-			// Get energy from map
 			LiquidAIEnergy bar = barMap.get(side);
 
-			// Check not null
 			if (bar != null) {
-				// Put energy in tag
 				bar.writeToNBT(barTag);
 			} else {
-				// Put null in tag
 				barTag.setInteger("#AIEnergy", -1);
 			}
 
-			// Put tag in tag
 			nbt.setTag(NBT_KEY_BAR_TAG + side.name(), barTag);
-
-			// Iterate for each energy
 			for (LiquidAIEnergy next : LiquidAIEnergy.energies.values()) {
-				// Create sub tag
 				NBTTagCompound storageTag = new NBTTagCompound();
-
-				// Get storage
 				IInterfaceStorageDuality storage = getEnergyStorage(next, side);
-
-				// Check not null & instanceof NBT storage
 				if (storage instanceof INBTStorage) {
-					// Cast to storage
 					INBTStorage inbtStorage = (INBTStorage) storage;
-
-					// Write to NBT
 					inbtStorage.writeToNBT(storageTag);
 				}
 
-				// Put tag into tag
 				nbt.setTag(NBT_KEY_ENERGY_TAG + side.name() + next.getEnergyName(), storageTag);
 			}
 		}
@@ -290,20 +236,15 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public int getMaxEnergyStored(AEPartLocation side, LiquidAIEnergy linkedMetric) {
-		// Check not null
 		if (getEnergyStorage(linkedMetric, side) == null) {
 			return 0;
 		}
 
-		// Get max energy stored number
 		Number num = getEnergyStorage(linkedMetric, side).getMaxStored();
-
-		// Check not null
 		if (num == null) {
 			return 0;
 		}
 
-		// Extract int value
 		return num.intValue();
 	}
 
@@ -325,8 +266,6 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 	@Override
 	public void update() {
 		super.update();
-
-		// Iterate for each side of part location
 		for (AEPartLocation side : AEPartLocation.values()) {
 			if (barMap.get(side) != null) {
 				duality.notifyListenersOfEnergyBarChange(barMap.get(side), side);
@@ -350,21 +289,17 @@ public class TileEnergyInterface extends AITile implements IEnergyMachine, INetw
 
 	@Override
 	public void updateFilter(LiquidAIEnergy energyInArray, int index) {
-		// Update filtered energy
 		this.filteredEnergies.put(AEPartLocation.fromOrdinal(index), energyInArray);
 	}
 
 	@Override
 	public <T extends IAEStack<T>> IMEMonitor<T> getInventory(IStorageChannel<T> iStorageChannel) {
-		// Getting Node
 		if (getGridNode(INTERNAL) == null) {
 			return null;
 		}
-		// Getting net of node
+
 		IGrid grid = getGridNode(INTERNAL).getGrid();
-		// Cache of net
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-		// fluidInventory of cache
 		return storage.getInventory(iStorageChannel);
 	}
 

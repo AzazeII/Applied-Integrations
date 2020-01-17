@@ -23,7 +23,6 @@ import static net.minecraft.util.EnumFacing.*;
  * @Author Azazell
  */
 public class BlockMEPylon extends BlockAIRegistrable {
-	// Facing in world
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 
 	public BlockMEPylon(String registryName, String unlocalizedName) {
@@ -39,13 +38,8 @@ public class BlockMEPylon extends BlockAIRegistrable {
 
 	@Override
 	public IBlockState getStateFromMeta(int meta) {
-
-		// Get facing from meta
 		EnumFacing enumfacing = EnumFacing.getFront(meta);
-
-		// Check if axis present X, or Z axis
 		if (enumfacing.getAxis() == EnumFacing.Axis.Y) {
-			// else set facing to north
 			enumfacing = EnumFacing.NORTH;
 		}
 
@@ -70,11 +64,8 @@ public class BlockMEPylon extends BlockAIRegistrable {
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
 		TileEntity tile = world.getTileEntity(pos);
-		// Pass activated to tile entity ( nothing new :) )
 		if (tile instanceof TileMEPylon) {
-			// Pass activate to tile
 			return ((TileMEPylon) tile).activate(hand, p);
 		}
 		return false;
@@ -82,19 +73,14 @@ public class BlockMEPylon extends BlockAIRegistrable {
 
 	@Override
 	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-		// Pre check for up or down facing
-		if (facing == UP || facing == DOWN)
-		// Return state with south as facing
-		{
+		if (facing == UP || facing == DOWN) {
 			return getDefaultState().withProperty(FACING, SOUTH);
 		}
-		// Return state with facing
 		return getDefaultState().withProperty(FACING, facing);
 	}
 
 	@Override
 	protected BlockStateContainer createBlockState() {
-		// Add block state
 		return new BlockStateContainer(this, FACING);
 	}
 }

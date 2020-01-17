@@ -40,15 +40,11 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 	private LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> permissionChannelWidgetMap = new LinkedHashMap<>();
 
 	public ContainerMultiControllerTerminal(TileMultiControllerTerminal terminal, EntityPlayer player) {
-
 		super(player);
 
-		// Bind inventory of player
 		super.bindPlayerInventory(player.inventory, 119, 177);
 
-		// Add network card editor slot
 		super.addSlotToContainer(this.cardSlot = new SlotRestrictive(terminal.editorInv, 0, 37, 86) {
-			// Override icon getter for this slot
 			@SideOnly(Side.CLIENT)
 			public String getSlotTexture() {
 
@@ -56,56 +52,35 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 			}
 		});
 
-		// Write terminal
 		this.terminal = terminal;
-
-		// Add listener
 		this.terminal.listeners.add(this);
-
-		// Ignored on server
 		if (isServer()) {
 			return;
 		}
 
-		// Add widgets
 		this.initWidgets(terminal);
 	}
 
 	public void initWidgets(TileMultiControllerTerminal terminal) {
-		// ************# Add Filter Slots #************ //
-		// Iterate for each security permission
+		// Here we initialize widget for each operation, for each AE2 storage channel
 		GuiSecurityPermissionsButton.getPermissionList().forEach((permissions -> {
-			// Temp map
 			LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>> tempMap = new LinkedHashMap<>();
-
-			// Iterate for each storage channel is list
 			AEApi.instance().storage().storageChannels().forEach((chan) -> {
-				// Get widget from API
 				Constructor<? extends IChannelWidget> channelWidgetConstructor = Objects.requireNonNull(AIApi.instance()).getWidgetFromChannel(chan);
-
-				// Check not null
 				if (channelWidgetConstructor != null) {
-					// List of widget for this channel
 					List<IChannelContainerWidget<?>> widgetList = new LinkedList<>();
 
-					// Iterate for each row as X
 					for (int x = 0; x < SLOT_COLUMNS; x++) {
-						// Iterate for each column as Y
 						for (int y = 0; y < SLOT_ROWS; y++) {
 							try {
 								// Try to construct with item slot constructor:
 								// I.E: public WidgetItemSlot(IWidgetHost host, int x, int y)
 								IChannelWidget widget = channelWidgetConstructor.newInstance(SLOT_X + 18 * x, SLOT_Y + 18 * y);
-
-								// Check if widget is slot
 								if (!(widget instanceof IChannelContainerWidget)) {
 									continue;
 								}
 
-								// Add to widget list
 								widgetList.add((IChannelContainerWidget<?>) widget);
-
-								// Add to slot list
 								addSlotToContainer(((IChannelContainerWidget<?>) widget).getSlotWrapper());
 							} catch (InstantiationException | IllegalAccessException | InvocationTargetException | IllegalArgumentException ignore) {
 
@@ -113,20 +88,16 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 						}
 					}
 
-					// Map list to permissionChannelWidgetMap
 					tempMap.put(chan, widgetList);
 				}
 			});
 
-			// Add temp map to main map
 			permissionChannelWidgetMap.put(permissions, tempMap);
 		}));
 
-		// Iterate for each widget
 		// Add slot link for packets. Now packets are able to sync
 		// Slots using sync host as identifier
 		forEachWidget(terminal::addWidgetSlotLink);
-		// ************# Add Filter Slots #************ //
 	}
 
 	public void forEachWidget(Consumer<IChannelContainerWidget<?>> function) {
@@ -136,39 +107,31 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 	}
 
 	public boolean hasCard() {
-
 		return !cardSlot.getStack().isEmpty();
 	}
 
 	public ItemStack getCard() {
-
 		return cardSlot.getStack();
 	}
 
 	public LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IChannelContainerWidget<?>>>> getOuterMap() {
-
 		return this.permissionChannelWidgetMap;
 	}
 
 	@Override
 	public void onContainerClosed(@Nonnull final EntityPlayer player) {
-
 		super.onContainerClosed(player);
-
-		// Remove listener
 		this.terminal.listeners.remove(this);
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer p_75145_1_) {
-
 		return true;
 	}
 
 	@Nonnull
 	@Override
 	public ItemStack transferStackInSlot(final EntityPlayer player, final int slotNumber) {
-
 		return ItemStack.EMPTY;
 	}
 
@@ -179,9 +142,7 @@ public class ContainerMultiControllerTerminal extends ContainerWithPlayerInvento
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		// Check if host match terminal class
 		if (host instanceof TileMultiControllerTerminal) {
-			// Update current terminal
 			this.terminal = (TileMultiControllerTerminal) host;
 		}
 	}

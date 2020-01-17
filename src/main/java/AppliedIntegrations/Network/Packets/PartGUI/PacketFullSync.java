@@ -40,7 +40,6 @@ public class PacketFullSync extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		// Read everything
 		part = readSyncHostClient(buf);
 
 		filterSize = buf.readByte();
@@ -56,7 +55,6 @@ public class PacketFullSync extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		// Write everything
 		writeSyncHost(part, buf, false);
 
 		buf.writeByte(filterSize);

@@ -15,7 +15,6 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public void addStorage(IAEManaStack option) {
-
 		if (option == null) {
 			return;
 		}
@@ -32,7 +31,6 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public void addCrafting(IAEManaStack option) {
-
 		if (option == null) {
 			return;
 		}
@@ -51,7 +49,6 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public void addRequestable(IAEManaStack option) {
-
 		if (option == null) {
 			return;
 		}
@@ -78,7 +75,6 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public int size() {
-
 		return this.records.values().size();
 	}
 
@@ -89,24 +85,20 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public void resetStatus() {
-
 		for (IAEManaStack s : this)
 			s.reset();
 	}
 
 	private IAEManaStack getManaRecord(IAEManaStack stack) {
-
 		return this.records.get(stack);
 	}
 
 	private IAEManaStack putManaRecord(IAEManaStack stack) {
-
 		return this.records.put(stack, stack);
 	}
 
 	@Override
 	public void add(IAEManaStack option) {
-
 		if (option == null) {
 			return;
 		}
@@ -123,19 +115,16 @@ public class ManaList implements IItemList<IAEManaStack> {
 
 	@Override
 	public IAEManaStack findPrecise(IAEManaStack stack) {
-
 		return stack == null ? null : this.getManaRecord(stack);
 	}
 
 	@Override
 	public Collection<IAEManaStack> findFuzzy(IAEManaStack stack, FuzzyMode mode) {
-
 		return stack == null ? Collections.emptyList() : Collections.singletonList(this.findPrecise(stack));
 	}
 
 	@Override
 	public boolean isEmpty() {
-
 		return !this.iterator().hasNext();
 	}
 }

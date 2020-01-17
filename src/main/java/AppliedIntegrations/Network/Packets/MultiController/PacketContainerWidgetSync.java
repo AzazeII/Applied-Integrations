@@ -14,13 +14,9 @@ import net.minecraftforge.fml.common.network.ByteBufUtils;
  * @Side Client -> Server
  */
 public class PacketContainerWidgetSync extends AIPacket {
-
 	public int slotY;
-
 	public int slotX;
-
 	public ISyncHost host;
-
 	public ItemStack itemStack;
 
 	public PacketContainerWidgetSync() {
@@ -36,7 +32,6 @@ public class PacketContainerWidgetSync extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		slotX = buf.readInt();
 		slotY = buf.readInt();
 
@@ -46,7 +41,6 @@ public class PacketContainerWidgetSync extends AIPacket {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
 		buf.writeInt(slotX);
 		buf.writeInt(slotY);
 

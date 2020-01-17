@@ -23,11 +23,8 @@ public class AEEnergyStack implements IAEEnergyStack, Comparable<IAEEnergyStack>
 	private LiquidAIEnergy energy;
 
 	private long stackSize;
-
 	private long countRequestable;
-
 	private boolean isCraftable;
-
 	private int hash;
 
 	private AEEnergyStack(LiquidAIEnergy energy, long amount) {

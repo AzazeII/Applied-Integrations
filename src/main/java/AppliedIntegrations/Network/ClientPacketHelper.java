@@ -10,8 +10,8 @@ import net.minecraft.util.math.BlockPos;
  * @Author Azazell
  */
 public class ClientPacketHelper {
-
-	// Separate r/w method for server and client
+	// Separate read method for server and client
+	// If we would put this inside AIPakcet, it'll cause exception
 	public static ISyncHost readSyncHostClient(ByteBuf buf) {
 		ISyncHost host;
 

@@ -68,21 +68,17 @@ public enum BlocksEnum {
 	public static void register() {
 
 		for (BlocksEnum blocksEnum : values()) {
-			// Check if feature enabled
 			if (!blocksEnum.enabled) {
 				continue;
 			}
+
 			ForgeRegistries.BLOCKS.register(blocksEnum.b);
-
 			ItemBlock block = new ItemBlock(blocksEnum.b);
-
 			block.setRegistryName(blocksEnum.b.getRegistryName());
-
 			ForgeRegistries.ITEMS.register(block);
 			itemBlocks.put(blocksEnum.b, block);
 
 			blocksEnum.itemBlock = block;
-
 			blocksEnum.tileEnum.register(blocksEnum.b.getRegistryName());
 		}
 	}
@@ -98,11 +94,5 @@ public enum BlocksEnum {
 		for (ItemBlock itemBlk : itemBlocks.values()) {
 			Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(itemBlk, 0, new ModelResourceLocation(itemBlk.getRegistryName(), "inventory"));
 		}
-	}
-
-	// Do not call until Common.preInit:37
-	public ItemBlock getItemBlock() {
-
-		return this.itemBlock;
 	}
 }

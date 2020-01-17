@@ -355,19 +355,13 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 
 	private void processTick() throws GridAccessException {
 		BlockPos facingPos = getHostPos().offset(getHostSide().getFacing());
-
-		// Nullify player's main hand for this run
 		fakePlayer.setHeldItem(MAIN_HAND, ItemStack.EMPTY);
-
-		// Get fuzzy compared list of items from ME inventory
 		List<ItemStack> list = upgradeInventoryManager.fuzzyCompare ? getFuzzyComparedItemList(filterInventory.slots) : Arrays.asList(
 				filterInventory.slots);
 
 		// Try to extract filtered item(s) from ME inventory and use it on operated tile and then inject output items(if any)
 		for (int i = 0; i < list.size(); i++) {
 			ItemStack stack = list.get(i);
-
-			// Don't operate with empty stack
 			if (stack.isEmpty()) {
 				continue;
 			}
@@ -440,8 +434,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	@Override
 	public void readFromNBT(final NBTTagCompound data) {
 		super.readFromNBT(data);
-
-		// Read inventories from NBT
 		this.filterInventory.readFromNBT(data.getTagList(KEY_FILTER_INVENTORY, 10));
 		this.upgradeInventoryManager.upgradeInventory.readFromNBT(data.getTagList(KEY_UPGRADE_INVENTORY, 10));
 
@@ -449,16 +441,12 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		this.armorInventory.readFromNBT(data.getTagList(KEY_ARMOR_INVENTORY, 10));
 		this.offhandInventory.readFromNBT(data.getTagList(KEY_OFFHAND_INVENTORY, 10));
 		this.sneaking = data.getBoolean(KEY_SNEAKING);
-
-		// Pass call to UIM
 		this.upgradeInventoryManager.readFromNBT(data);
 	}
 
 	@Override
 	public void writeToNBT(final NBTTagCompound data, final PartItemStack saveType) {
 		super.writeToNBT(data, saveType);
-
-		// Write inventories to NBT
 		data.setTag(KEY_FILTER_INVENTORY, this.filterInventory.writeToNBT());
 		data.setTag(KEY_UPGRADE_INVENTORY, this.upgradeInventoryManager.upgradeInventory.writeToNBT());
 
@@ -466,8 +454,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		data.setTag(KEY_ARMOR_INVENTORY, this.armorInventory.writeToNBT());
 		data.setTag(KEY_OFFHAND_INVENTORY, this.offhandInventory.writeToNBT());
 		data.setBoolean(KEY_SNEAKING, this.fakePlayer.isSneaking());
-
-		// Pass call to UIM
 		this.upgradeInventoryManager.writeToNBT(data);
 	}
 
@@ -529,7 +515,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 		this.createFakePlayer();
 
 		try {
-			// Process ticking request
 			if (this.canDoWork(upgradeInventoryManager.redstoneMode)) {
 				this.processTick();
 			}
@@ -568,14 +553,11 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	public ImmutableSet<ICraftingLink> getRequestedJobs() {
 		List<ICraftingLink> nonnullLinks = new ArrayList<>(links);
 		nonnullLinks.removeAll(Collections.singletonList(null));
-
-		// Create immutable list of links without nulls
 		return ImmutableSet.copyOf(nonnullLinks);
 	}
 
 	@Override
 	public void jobStateChange(ICraftingLink link) {
-		// Find link and remove it
 		for(int i = 0; i < links.size(); i++) {
 			if (links.get(i) == link) {
 				links.set(i, null);
@@ -587,7 +569,6 @@ public class PartInteraction extends AIPart implements IGridTickable, IInventory
 	public IAEItemStack injectCraftedItems(ICraftingLink link, IAEItemStack items, Actionable mode) {
 		// Modulate click with crafted items(honestly it is always only one item :D)
 		BiConsumer<FakePlayer, BlockPos> method = jobMethodMap.get(link);
-
 		if (method == null) {
 			return null;
 		}

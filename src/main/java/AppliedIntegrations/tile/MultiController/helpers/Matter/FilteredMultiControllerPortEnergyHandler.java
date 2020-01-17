@@ -18,13 +18,11 @@ import java.util.List;
  */
 public class FilteredMultiControllerPortEnergyHandler extends FilteredMultiControllerPortHandler<IAEEnergyStack> {
 	public FilteredMultiControllerPortEnergyHandler(LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, List<IAEStack<? extends IAEStack>>>> filteredMatter, LinkedHashMap<SecurityPermissions, LinkedHashMap<IStorageChannel<? extends IAEStack<?>>, IncludeExclude>> filterMode, TileMultiControllerCore host) {
-
 		super(filteredMatter, filterMode, host);
 	}
 
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 }

@@ -62,10 +62,8 @@ public class EntitySingularity extends EntitySnowball {
 			setDead();
 		}
 
-		// Get tile on position
 		TileEntity tile = world.getTileEntity(map.getBlockPos());
 		if (tile instanceof ISingularity) {
-			// Passing linked singularity to tile
 			this.bornTile = (ISingularity) tile;
 			((ISingularity)tile).setEntangledHoleEntity(linkedSingularity);
 		}

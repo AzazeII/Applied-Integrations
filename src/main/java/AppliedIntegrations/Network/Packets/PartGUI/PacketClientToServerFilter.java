@@ -14,12 +14,9 @@ import javax.annotation.Nonnull;
  * @see AppliedIntegrations.Network.Handlers.PartGUI.HandlerClientToServerFilter
  */
 public class PacketClientToServerFilter extends AIPacket {
-
 	public LiquidAIEnergy energy;
-
-	public int index;
-
 	public ISyncHost host;
+	public int index;
 
 	public PacketClientToServerFilter() {
 
@@ -31,7 +28,6 @@ public class PacketClientToServerFilter extends AIPacket {
 		this.host = host;
 	}
 
-	// Decode serialized data
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		host = readSyncHost(buf);
@@ -40,7 +36,6 @@ public class PacketClientToServerFilter extends AIPacket {
 	}
 
 
-	// Encode data from client to server
 	@Override
 	public void toBytes(ByteBuf buf) {
 		writeSyncHost(host, buf, true);
