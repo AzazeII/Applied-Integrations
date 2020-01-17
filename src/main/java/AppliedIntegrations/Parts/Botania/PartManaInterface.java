@@ -45,9 +45,7 @@ import static appeng.api.networking.ticking.TickRateModulation.IDLE;
 public class PartManaInterface extends PartEnergyInterface implements IManaReceiver, ISparkAttachable, IManaInterface {
 	private static final String TAG_MANA = "#mana";
 	private final int capacity = 100000;
-
 	private int currentMana = 0;
-
 	private boolean isManaFiltered = false;
 
 	public PartManaInterface() {
@@ -175,7 +173,7 @@ public class PartManaInterface extends PartEnergyInterface implements IManaRecei
 		IAEManaStack notRemoved = storage.getInventory(getManaChannel()).extractItems(new AEManaStack(resource), actionable, new MachineSource(this));
 
 		if (notRemoved == null) {
-			return (int) resource;
+			return resource;
 		}
 		return (int) (resource - notRemoved.getStackSize());
 	}

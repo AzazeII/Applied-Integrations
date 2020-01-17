@@ -13,14 +13,12 @@ import javax.annotation.Nullable;
  */
 public class ItemPartManaInterface extends ItemPartAIBase<PartManaInterface> implements IBotaniaIntegrated {
 	public ItemPartManaInterface(String id) {
-
 		super(id);
 	}
 
 	@Nullable
 	@Override
 	public PartManaInterface createPartFromItemStack(ItemStack itemStack) {
-
 		return new PartManaInterface();
 	}
 }

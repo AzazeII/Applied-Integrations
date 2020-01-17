@@ -12,14 +12,12 @@ import javax.annotation.Nullable;
  */
 public class ItemPartEnergyExport extends ItemPartAIBase<PartEnergyExport> {
 	public ItemPartEnergyExport(String id) {
-
 		super(id);
 	}
 
 	@Nullable
 	@Override
 	public PartEnergyExport createPartFromItemStack(ItemStack itemStack) {
-
 		return new PartEnergyExport();
 	}
 }

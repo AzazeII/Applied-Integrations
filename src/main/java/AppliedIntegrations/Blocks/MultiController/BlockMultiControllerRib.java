@@ -32,23 +32,15 @@ public class BlockMultiControllerRib extends AIMultiBlock {
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 		super.onBlockActivated(world, pos, state, p, hand, facing, hitX, hitY, hitZ);
-
-		// Check if item held is wrench
 		if (Platform.isWrench(p, p.getHeldItem(hand), pos)) {
 			return false;
 		}
 
-		// Check if player isn't sneaking
+		// Delegate call to core when we get formed
 		if (!p.isSneaking()) {
-			// Get rib
 			TileMultiControllerRib rib = (TileMultiControllerRib) world.getTileEntity(pos);
-
-			// Check not null, has master and call only on server
 			if (rib != null && rib.hasMaster() && Platform.isServer()) {
-				// Get master
 				TileMultiControllerCore core = (TileMultiControllerCore) rib.getMaster();
-
-				// Activate
 				core.activate(p);
 
 				return true;

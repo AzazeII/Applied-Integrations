@@ -22,7 +22,6 @@ public abstract class AIContainer extends Container implements ISyncHostHolder {
 	private final List<Slot> slotMap = new ArrayList<>();
 
 	public AIContainer(final EntityPlayer player) {
-		// Set the player
 		this.player = player;
 	}
 
@@ -34,7 +33,6 @@ public abstract class AIContainer extends Container implements ISyncHostHolder {
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
 
-		// Ignore on client
 		if (Platform.isClient())
 			return;
 
@@ -43,10 +41,7 @@ public abstract class AIContainer extends Container implements ISyncHostHolder {
 
 	@Override
 	protected Slot addSlotToContainer(@Nonnull final Slot slot) {
-		// Call super
 		super.addSlotToContainer(slot);
-
-		// Map the slot
 		this.slotMap.add(slot.slotNumber, slot);
 
 		return slot;
@@ -54,22 +49,17 @@ public abstract class AIContainer extends Container implements ISyncHostHolder {
 
 	@Override
 	public void onContainerClosed(@Nonnull final EntityPlayer player) {
-		// Call super
 		super.onContainerClosed(player);
-
-		// Clear the map
 		this.slotMap.clear();
 	}
 
 	@Override
 	public boolean canInteractWith(EntityPlayer playerIn) {
-
 		return true;
 	}
 
 	@Nullable
 	public Slot getSlotOrNull(final int slotNumber) {
-
 		return this.slotMap.get(slotNumber);
 	}
 }

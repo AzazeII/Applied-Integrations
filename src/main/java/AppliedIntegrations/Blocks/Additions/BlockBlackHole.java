@@ -48,9 +48,7 @@ public class BlockBlackHole extends BlockAIRegistrable {
 
 	@Override
 	public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
-
 		final float shave = 4.0f / 16.0f;
-		// cut out 4 first and 4 final pixels at x, y and z
 		return new AxisAlignedBB(shave, shave, shave, 1.0f - shave, 1.0f - shave, 1.0f - shave);
 	}
 
@@ -63,17 +61,13 @@ public class BlockBlackHole extends BlockAIRegistrable {
 
 	@Override
 	public boolean isOpaqueCube(IBlockState iBlockState) {
-
 		return false;
 	}
 
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
 		TileEntity tile = world.getTileEntity(pos);
-		// Pass activated to tile entity ( nothing new :) )
 		if (tile instanceof TileBlackHole) {
-			// Pass activate to tile
 			return ((TileBlackHole) tile).activate(world, pos, state, p, hand);
 		}
 		return false;

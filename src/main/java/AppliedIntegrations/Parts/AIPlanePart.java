@@ -41,26 +41,22 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 
 	@Override
 	public float getCableConnectionLength(AECableType cable) {
-
 		return 2.0F;
 	}
 
 	@Override
 	protected AIGridNodeInventory getUpgradeInventory() {
-
 		return null;
 	}
 
 	@Override
 	public void getBoxes(IPartCollisionHelper bch) {
-
 		bch.addBox(5, 5, 14, 11, 11, 15);
 		bch.addBox(1, 1, 15, 15, 15, 16);
 	}
 
 	@Override
 	public int getLightLevel() {
-
 		return 0;
 	}
 
@@ -73,37 +69,24 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 	@Nonnull
 	@Override
 	public final TickRateModulation tickingRequest(@Nonnull IGridNode iGridNode, int i) {
-		// Get the world
 		World world = this.hostTile.getWorld();
-
-		// Get our location
 		AEPartLocation hostSide = getHostSide();
 		BlockPos offset = this.hostTile.getPos().offset(hostSide.getFacing());
-
 		int x = offset.getX();
 		int y = offset.getY();
 		int z = offset.getZ();
 
-		// Get box
 		AxisAlignedBB bb = new AxisAlignedBB(x, y, z, x + 0.5, y + 0.5, z + 0.5);
 
-		// Get current entities
 		currentEntities = world.getEntitiesWithinAABB(Entity.class, bb);
-
-		// Check if entity list not empty
 		if (!currentEntities.isEmpty()) {
-			// Get node
 			IGridNode node = getGridNode(AEPartLocation.INTERNAL);
-			// Check notNull
 			if (node != null) {
-				// Get grid
 				IGrid grid = node.getGrid();
-				// Post update
 				grid.postEvent(new MENetworkCellArrayUpdate());
 			}
 		}
 
-		// Pass func to child classes
 		doWork(i);
 
 		return TickRateModulation.SAME;
@@ -112,9 +95,7 @@ public abstract class AIPlanePart extends AIPart implements IGridTickable {
 	protected abstract void doWork(int ticksSinceLastCall);
 
 	protected void spawnLightning(Entity workingEntity) {
-		// If time passed
 		if (lightningHandler.hasTimePassed(getHostTile().getWorld(), 1)) {
-			// Spawn effect
 			AppEng.proxy.spawnEffect(EffectType.Lightning, hostTile.getWorld(), workingEntity.posX, workingEntity.posY, workingEntity.posZ, null);
 		}
 	}

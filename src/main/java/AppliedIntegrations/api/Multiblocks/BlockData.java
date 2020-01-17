@@ -24,7 +24,6 @@ public class BlockData {
 		this(x, y, z, type, b);
 	}
 
-	@SuppressWarnings("unchecked")
 	public BlockData(int x, int y, int z, BlockType type, Block... blockOptions) {
 		this(x, y, z, Arrays.asList(blockOptions));
 		this.type = type;
@@ -34,7 +33,6 @@ public class BlockData {
 		this(x, y, z, b, b);
 	}
 
-	@SuppressWarnings("unchecked")
 	public BlockData(int x, int y, int z, Block... blockOptions) {
 		this(x, y, z, Arrays.asList(blockOptions));
 	}
@@ -51,23 +49,19 @@ public class BlockData {
 	}
 
 	public BlockPos getPos() {
-
 		return new BlockPos(x, y, z);
 	}
 
 	public BlockData offset(EnumFacing facing) {
-		// Add offset to our position
-		this.x += facing.getFrontOffsetX(); // X
-		this.y += facing.getFrontOffsetY(); // Y
-		this.z += facing.getFrontOffsetZ(); // Z
+		this.x += facing.getFrontOffsetX();
+		this.y += facing.getFrontOffsetY();
+		this.z += facing.getFrontOffsetZ();
 
 		return this;
 	}
 
 	public BlockData offset(EnumFacing facing, Integer length) {
-		// Iterate until i = length
 		for (int i = 0; i < length; i++){
-			// Offset this
 			offset(facing);
 		}
 

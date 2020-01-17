@@ -11,11 +11,9 @@ import java.util.NoSuchElementException;
  */
 public class ManaIterator<T extends IAEStack> implements Iterator<T> {
 	private Iterator<T> parent;
-
 	private T next;
 
 	public ManaIterator(Iterator<T> iterator) {
-
 		this.parent = iterator;
 	}
 
@@ -45,7 +43,6 @@ public class ManaIterator<T extends IAEStack> implements Iterator<T> {
 
 	@Override
 	public void remove() {
-
 		this.parent.remove();
 	}
 }

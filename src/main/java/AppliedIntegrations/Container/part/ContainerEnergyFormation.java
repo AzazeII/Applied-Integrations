@@ -41,14 +41,8 @@ public class ContainerEnergyFormation extends ContainerWithUpgradeSlots implemen
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		// Check if host match our host class
 		if (host instanceof PartEnergyFormation) {
-			// Update current host
 			this.plane = (PartEnergyFormation) host;
 		}
 	}
 }
-
-/*
-
- */

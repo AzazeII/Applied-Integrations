@@ -19,13 +19,9 @@ public class HandlerBarChange implements IMessageHandler<PacketBarChange, Packet
 	public PacketBarChange onMessage(PacketBarChange message, MessageContext ctx) {
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Container container = Minecraft.getMinecraft().player.openContainer;
-
 			if (container instanceof ContainerEnergyInterface) {
 				ContainerEnergyInterface CEI = (ContainerEnergyInterface) container;
-
-				// Check if we are updating correct container
 				if (CEI.getSyncHost().compareTo(message.host, false)) {
-					// Update linked energy
 					CEI.linkedMetric = message.energy;
 				}
 			}

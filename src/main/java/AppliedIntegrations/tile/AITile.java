@@ -59,53 +59,39 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	private AENetworkProxy proxy = new AENetworkProxy(this, "AITileProxy", getMachineStack(), true);
 
 	public void postCellInventoryEvent() {
-		// Pass call to overridden function
 		postGridEvent(new MENetworkCellArrayUpdate());
 	}
 
 	public void postGridEvent(MENetworkEvent event) {
-		// Get node
 		IGridNode node = getGridNode(AEPartLocation.INTERNAL);
-
-		// Check not null
 		if (node != null) {
-			// Get grid
 			IGrid grid = node.getGrid();
-
-			// Post update
 			postGridEvent(grid, event);
 		}
 	}
 
 	public void postGridEvent(IGrid iGrid, MENetworkEvent event) {
-		// Check not null
 		if (iGrid == null) {
 			return;
 		}
 
-		// Notify listeners of event change
 		iGrid.postEvent(event);
 	}
 
 	public void postCellInventoryEvent(IGrid iGrid) {
-		// Check not null
 		if (iGrid == null) {
 			return;
 		}
 
-		// Pass call to overridden function
 		postGridEvent(iGrid, new MENetworkCellArrayUpdate());
 	}
 
 	public void createProxyNode() {
-		// Configure proxy states
-		this.proxy.setFlags(GridFlags.REQUIRE_CHANNEL); // (1) Flags
-		this.proxy.setColor(AEColor.TRANSPARENT); // (2) Color
-		this.proxy.setValidSides(EnumSet.allOf(EnumFacing.class)); // (3) Sides
-		this.proxy.setIdlePowerUsage(1); // (4) Power usage
-		this.proxy.onReady(); // (5) Make node ready
-
-		// Save changes to node
+		this.proxy.setFlags(GridFlags.REQUIRE_CHANNEL);
+		this.proxy.setColor(AEColor.TRANSPARENT);
+		this.proxy.setValidSides(EnumSet.allOf(EnumFacing.class));
+		this.proxy.setIdlePowerUsage(1);
+		this.proxy.onReady();
 		this.proxy.getNode().updateState();
 	}
 
@@ -114,9 +100,7 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	}
 
 	private ItemStack getMachineStack() {
-		// Iterate for each block enum value
 		for (BlocksEnum block : BlocksEnum.values()) {
-			// Check if class of tile in enum equal to class of this tile
 			if (block.tileEnum.clazz == this.getClass()) {
 				return new ItemStack(block.itemBlock);
 			}
@@ -146,13 +130,10 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 		// Extract energy from MEInventory
 		IAEEnergyStack extracted = getProxy().getStorage().getInventory(getEnergyChannel())
 				.extractItems(AEEnergyStack.fromStack(resource), actionable, new MachineSource(this));
-
-		// Check not null
 		if (extracted == null) {
 			return 0;
 		}
 
-		// Return amount extracted
 		return (int) (extracted.getStackSize());
 	}
 
@@ -171,7 +152,6 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 		}
 
 		IStorageGrid storage = getProxy().getStorage();
-
 		IAEEnergyStack returnAmount = storage.getInventory(this.getEnergyChannel()).injectItems(getEnergyChannel().createStack(
 				resource), actionable, new MachineSource(this));
 
@@ -183,9 +163,7 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 	@Override
 	public IGridNode getGridNode(@Nonnull AEPartLocation dir) {
-		// Check not null
 		if (getProxy().getNode() == null) {
-			// Load node
 			getProxy().getNode();
 		}
 
@@ -205,17 +183,13 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 	@Override
 	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-		// Write proxy
 		this.getProxy().writeToNBT(compound);
-
 		return super.writeToNBT(compound);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-
-		// Read proxy
 		this.getProxy().readFromNBT(compound);
 	}
 
@@ -240,7 +214,6 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	@Override
 	public void invalidate() {
 		super.invalidate();
-
 		destroyProxyNode();
 	}
 
@@ -252,7 +225,6 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 	@Nonnull
 	@Override
 	public IGridNode getActionableNode() {
-		// Check not null
 		if (this.getProxy().getNode() == null) {
 			createProxyNode();
 		}
@@ -262,12 +234,8 @@ public abstract class AITile extends TileEntity implements IActionHost, ITickabl
 
 	@Override
 	public void update() {
-		// Check if grid node isn't loaded yet
 		if (!loaded && hasWorld() && Platform.isServer()) {
-			// Toggle load
 			loaded = true;
-
-			// Create proxy node
 			createProxyNode();
 		}
 	}

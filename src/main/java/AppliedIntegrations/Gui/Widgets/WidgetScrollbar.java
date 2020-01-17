@@ -22,13 +22,8 @@ public class WidgetScrollbar extends AIWidget {
 	}
 
 	public double onWheel(double diff) {
-		// Calculate difference
 		diff = Math.max( Math.min( -diff, step ), -step );
-
-		// Memorize old position
 		double oldPos = yPosition;
-
-		// Change current scroll value
 		yPosition = (int) Math.min( Math.max(yPosition + diff, minScroll), maxScroll);
 
 		return oldPos != yPosition ? diff : 0;
@@ -46,22 +41,12 @@ public class WidgetScrollbar extends AIWidget {
 
 	@Override
 	public void drawWidget() {
-		// Disable lighting
 		GL11.glDisable(GL11.GL_LIGHTING);
-
-		// Full white
 		GL11.glColor3f(1.0F, 1.0F, 1.0F);
-
-		// Bind texture of scrollbar in creative tab
 		Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation("textures/gui/container/creative_inventory/tabs.png"));
 
-		// Nullify color
 		GlStateManager.color( 1.0f, 1.0f, 1.0f, 1.0f );
-
-		// Draw bound texture
 		drawTexturedModalRect(xPosition, yPosition, 244, 0, 12, 15);
-
-		// Re-enable lighting
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 

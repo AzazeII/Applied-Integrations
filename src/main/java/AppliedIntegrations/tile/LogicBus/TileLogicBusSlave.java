@@ -31,24 +31,19 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 	private TileLogicBusCore master;
 
 	public boolean activate(World world, BlockPos pos, IBlockState state, EntityPlayer p, EnumHand hand) {
-
 		if (Platform.isServer()) {
-			// Check if it's wrench
 			if (Platform.isWrench(p, p.getHeldItem(hand), pos)) {
-				// Destroy tile
 				if (p.isSneaking()) {
 					final List<ItemStack> itemsToDrop = Lists.newArrayList(new ItemStack(world.getBlockState(pos).getBlock()));
 					Platform.spawnDrops(world, pos, itemsToDrop);
 					world.setBlockToAir(pos);
 					return true;
-					// Try to form logic bus
 				} else {
+					// Try to form logic bus
 					return tryToFindCore(p);
 				}
 			} else {
-				// Check if player not sneaking, and tile has core
 				if (!p.isSneaking() && hasMaster()) {
-					// Open gui of logic bus
 					AIGuiHandler.open(AIGuiHandler.GuiEnum.GuiLogicBus, p, AEPartLocation.INTERNAL, getLogicMaster().getPos());
 					return true;
 				}
@@ -58,15 +53,10 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 	}
 
 	public boolean tryToFindCore(EntityPlayer p) {
-		// Iterate over all sides
 		for (EnumFacing facing : EnumFacing.HORIZONTALS) {
-			// Find candidate
 			TileEntity candidate = world.getTileEntity(pos.offset(facing));
-			// Check if candidate is LogicBusCore
 			if (candidate instanceof TileLogicBusCore) {
-				// Capture core in variable
 				TileLogicBusCore core = (TileLogicBusCore) candidate;
-				// Try to construct multi-block
 				core.tryConstruct(p);
 				return true;
 			}
@@ -80,62 +70,45 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 		return master != null;
 	}
 
-	// "Logic master" you get ;)
+	// "Logic master" you got it ;)
 	protected TileLogicBusCore getLogicMaster() {
-
 		return (TileLogicBusCore) getMaster();
 	}
 
 	@Override
 	public IMaster getMaster() {
-
 		return master;
 	}
 
 	@Override
 	public void setMaster(IMaster master) {
-
 		this.master = (TileLogicBusCore) master;
 	}
 
 	@Override
 	public void createProxyNode() {
-		// Check if host has master
 		if (hasMaster()) {
-			// Create node
 			super.createProxyNode();
 		}
 	}
 
 	public EnumSet<EnumFacing> getSidesWithSlaves() {
-		// list of sides
 		List<EnumFacing> sides = new ArrayList<>();
-		// Iterate over all sides
 		for (EnumFacing side : EnumFacing.values()) {
-			// Check if tile in this side is instance of logic bus port or core
 			if (world.getTileEntity(pos.offset(side)) instanceof TileLogicBusSlave) {
 				sides.add(side);
 			}
 		}
 
-		// Temp set
 		EnumSet<EnumFacing> temp = EnumSet.noneOf(EnumFacing.class);
-		// Add sides
 		temp.addAll(sides);
 		return temp;
 	}
 
-
-
-
 	@Override
 	public void update() {
-		// Check if node isn't loaded and host has master
 		if (!loaded && hasWorld() && Platform.isServer() && hasMaster()) {
-			// Toggle load
 			loaded = true;
-
-			// Create node
 			createProxyNode();
 		}
 	}
@@ -143,12 +116,10 @@ public abstract class TileLogicBusSlave extends AITile implements IAIMultiBlock 
 
 	@Override
 	public void notifyBlock() {
-
 		world.setBlockState(pos, world.getBlockState(pos).withProperty(ModeledLogicBus.valid, hasMaster() && !isCorner()));
 	}
 
 	public boolean isCorner() {
-
 		return isCorner;
 	}
 }

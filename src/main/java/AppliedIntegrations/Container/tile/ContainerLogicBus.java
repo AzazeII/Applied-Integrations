@@ -11,7 +11,6 @@ public class ContainerLogicBus extends ContainerWithPlayerInventory {
 	private TileLogicBusCore core;
 
 	public ContainerLogicBus(EntityPlayer player, TileLogicBusCore core) {
-
 		super(player);
 
 		this.core = core;
@@ -37,9 +36,7 @@ public class ContainerLogicBus extends ContainerWithPlayerInventory {
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		// Check if host match our host class
 		if (host instanceof TileLogicBusCore) {
-			// Update current host
 			this.core = (TileLogicBusCore) host;
 		}
 	}

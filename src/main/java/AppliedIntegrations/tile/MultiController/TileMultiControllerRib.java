@@ -21,15 +21,10 @@ import java.util.EnumSet;
  * @Author Azazell
  */
 public class TileMultiControllerRib extends AIMultiControllerTile implements IAIMultiBlock, ITickable {
-
-	// Used only client
 	public boolean isActive;
-
-	// Did activity of grid node changed?
 	private ChangeHandler<Boolean> activityChangeHandler = new ChangeHandler<>();
 
 	public IGrid getMainNetwork() {
-		// Check not null
 		if (getGridNode() == null) {
 			return null;
 		}
@@ -38,21 +33,14 @@ public class TileMultiControllerRib extends AIMultiControllerTile implements IAI
 	}
 
 	private void notifyListeners() {
-		// Sync with client
 		NetworkHandler.sendToDimension(new PacketRibSync(this, getGridNode().isActive()), world.provider.getDimension());
 	}
 
 	@Override
 	public void createProxyNode() {
-		// Configure proxy only if host has master
 		if (hasMaster()) {
-			// Pass to parent
 			super.createProxyNode();
-
-			// Set dense capacity flag to make rib conduct 32 channels
 			this.getProxy().setFlags(GridFlags.DENSE_CAPACITY);
-
-			// Notify node
 			this.getProxy().getNode().updateState();
 		}
 	}
@@ -66,11 +54,8 @@ public class TileMultiControllerRib extends AIMultiControllerTile implements IAI
 	public void update() {
 		super.update();
 
-		// Check if grid node is not null
 		if (getGridNode() != null) {
-			// Call onchange of handler
 			activityChangeHandler.onChange(getGridNode().isActive(), (activity -> {
-				// Pass call to function
 				notifyListeners();
 			}));
 		}
@@ -78,7 +63,6 @@ public class TileMultiControllerRib extends AIMultiControllerTile implements IAI
 
 	@Override
 	public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-		// Check if capability is item handler capability and rib has master
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && hasMaster()) {
 			return true;
 		}
@@ -91,9 +75,9 @@ public class TileMultiControllerRib extends AIMultiControllerTile implements IAI
 	public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
 		// Check if capability is item handler capability and rib has master
 		if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && hasMaster())
-		// Wrapper for card inventory of server core. Now subnetwork(ad-hoc network) with storage bus and
-		// ME terminal can access card storage of server core
 		{
+			// Wrapper for card inventory of server core. Now subnetwork(ad-hoc network) with storage bus and
+			// ME terminal can access card storage of server core
 			return (T) new InvWrapper(((TileMultiControllerCore) getMaster()).cardInv);
 		}
 		return super.getCapability(capability, facing);

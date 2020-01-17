@@ -8,7 +8,6 @@ import AppliedIntegrations.Items.AIItemRegistrable;
  */
 public class EnergyStorageCasing extends AIItemRegistrable {
 	public EnergyStorageCasing() {
-
 		super("EnergyStorageCasing");
 	}
 }

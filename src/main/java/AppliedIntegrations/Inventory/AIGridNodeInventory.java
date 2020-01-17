@@ -20,11 +20,8 @@ public class AIGridNodeInventory implements IInventory {
 
 	public ItemStack[] slots;
 	private String customName;
-
 	private int stackLimit;
-
 	private IInventoryHost receiver;
-
 	private ItemStackHandler capabilityWrapper;
 
 	public AIGridNodeInventory(String _customName, int _size, int _stackLimit) {
@@ -38,9 +35,7 @@ public class AIGridNodeInventory implements IInventory {
 		this.receiver = _receiver;
 		this.capabilityWrapper = new ItemStackHandler(_size);
 
-		// Iterate until i >= size
 		for (int i = 0; i < _size; i++) {
-			// Fill up slots with air
 			slots[i] = new ItemStack(AIR);
 		}
 	}

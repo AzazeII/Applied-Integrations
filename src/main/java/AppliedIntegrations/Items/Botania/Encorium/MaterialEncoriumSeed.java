@@ -38,7 +38,6 @@ public class MaterialEncoriumSeed extends AIItemRegistrable implements IBotaniaI
 	}
 
 	private int getProgress( final ItemStack is ) {
-		// Check if tag exists and return data from tag or open tag and write data in it
 		if( is.hasTagCompound() ) {
 			return is.getTagCompound().getInteger( "progress" );
 		} else {
@@ -53,7 +52,6 @@ public class MaterialEncoriumSeed extends AIItemRegistrable implements IBotaniaI
 	}
 
 	private void setProgress( final ItemStack is, final int newDamage ) {
-		// Write damage in tag
 		final NBTTagCompound tag = Platform.openNbtData( is );
 		tag.setInteger( "progress", newDamage );
 		is.setItemDamage( is.getItemDamage() / SINGLE_STEP * SINGLE_STEP );
@@ -66,7 +64,6 @@ public class MaterialEncoriumSeed extends AIItemRegistrable implements IBotaniaI
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void addInformation(final ItemStack stack, final World world, final List<String> lines, final ITooltipFlag advancedTooltips) {
-		// Add data about seed
 		lines.add( ButtonToolTips.DoesntDespawn.getLocal() );
 		lines.add( getProgressPercent(stack) + "%" ); // Growth percentage
 		lines.add("");
@@ -111,7 +108,6 @@ public class MaterialEncoriumSeed extends AIItemRegistrable implements IBotaniaI
 
 	@Override
 	public Entity createEntity(final World world, final Entity location, final ItemStack itemstack ) {
-		// Create custom entity
 		final EntityGrowingCrystal egc = new EntityGrowingCrystal( world, location.posX, location.posY, location.posZ, itemstack );
 
 		egc.motionX = location.motionX;

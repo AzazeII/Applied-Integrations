@@ -127,15 +127,12 @@ public class AIGuiHandler implements IGuiHandler {
 		AEPartLocation side = getSide(ID);
 		GuiEnum gui = getGui(ID);
 
-		// Energy interface container
 		if (gui == GuiEnum.GuiInterface) {
 			ISyncHost host = Utils.getSyncHostByParams(new BlockPos(x, y, z), side, world);
 
 			return new ContainerEnergyInterface(player, (IEnergyInterface) host);
 		} else if (gui == GuiEnum.GuiLogicBus) {
-			// Find tile candidate for core
 			TileEntity maybeCore = world.getTileEntity(new BlockPos(x, y, z));
-			// Check if it is logic bus core
 			if (maybeCore instanceof TileLogicBusCore) {
 				return new ContainerLogicBus(player, (TileLogicBusCore) maybeCore);
 			}
@@ -185,13 +182,9 @@ public class AIGuiHandler implements IGuiHandler {
 
 		// Energy interface gui
 		if (gui == GuiEnum.GuiInterface) {
-			ISyncHost host = Utils.getSyncHostByParams(new BlockPos(x, y, z), side, world);
-
 			return new GuiEnergyInterface((ContainerEnergyInterface) getServerGuiElement(ID, player, world, x, y, z), player);
 		} else if (gui == GuiEnum.GuiLogicBus) {
-			// Find tile candidate for core
 			TileEntity maybeCore = world.getTileEntity(new BlockPos(x, y, z));
-			// Check if it is logic bus core
 			if (maybeCore instanceof TileLogicBusCore) {
 				return new GuiLogicBus(player, (TileLogicBusCore) maybeCore, (ContainerLogicBus) getServerGuiElement(ID, player, world, x, y, z));
 			}

@@ -18,14 +18,10 @@ public class BlackHoleManaHandler extends BlackHoleSingularityInventoryHandler<I
 
 	@Override
 	public IAEManaStack injectItems(IAEManaStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
-		// Check if there is singularity
 		if (singularity != null) {
-			// Modulate extraction
 			if (actionable == MODULATE) {
-				// Add data to storage list
 				singularity.addStack(iaeItemStack, actionable);
 			}
-			// Return null, as all items was extracted
 			return null;
 		}
 		return iaeItemStack;
@@ -33,7 +29,6 @@ public class BlackHoleManaHandler extends BlackHoleSingularityInventoryHandler<I
 
 	@Override
 	public IStorageChannel<IAEManaStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class);
 	}
 }

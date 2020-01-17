@@ -17,13 +17,8 @@ public class HandlerContainerWidgetSync implements IMessageHandler<PacketContain
 
 	@Override
 	public PacketContainerWidgetSync onMessage(PacketContainerWidgetSync message, MessageContext ctx) {
-		// Get host and request slot update
-		// Cast host
 		TileMultiControllerTerminal host = (TileMultiControllerTerminal) message.host;
-
-		// Request update
 		host.updateWidgetSlotLink(message.slotX, message.slotY, message.itemStack);
-
 		return null;
 	}
 }

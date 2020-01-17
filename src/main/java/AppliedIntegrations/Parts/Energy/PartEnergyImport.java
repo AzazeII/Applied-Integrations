@@ -50,33 +50,23 @@ public class PartEnergyImport extends AIOPart {
 
 	@Override
 	public TickRateModulation doWork(int valuedTransfer, IGridNode node) {
-		// Create helper
 		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getHostSide().getOpposite());
 
-		// Iterate over all energies
+		// Importing energy from world into network
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			// Check if filter contains any values
 			if (!IterableHelpers.containsOnlyNulls(filteredEnergies)) {
-				// Check if filter not contains current energy
 				if (!filteredEnergies.contains(energy)) {
 					continue;
 				}
 			}
 
-			// Check if tile can operate given energy
 			if (helper.operatesEnergy(energy)) {
-				// Simulate injection
 				int injected = injectEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
-
-				// Modulate extraction
 				int extracted = helper.extractEnergy(injected, false, energy);
-
-				// Modulate injection
 				injectEnergy(new EnergyStack(energy, extracted), Actionable.MODULATE);
 
-				// Check if energy was actually injected
 				if (injected > 0) {
-					// Tick faster
+					// Speed up if energy was injected
 					return TickRateModulation.FASTER;
 				}
 			}
@@ -92,14 +82,12 @@ public class PartEnergyImport extends AIOPart {
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
-
 		return 0;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
-
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.IMPORT_HAS_CHANNEL;

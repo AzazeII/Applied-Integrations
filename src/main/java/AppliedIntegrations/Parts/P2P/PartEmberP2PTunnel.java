@@ -247,21 +247,14 @@ public class PartEmberP2PTunnel extends AIPartP2PTunnel<PartEmberP2PTunnel> {
 
 	@Nonnull
 	private IEmberCapability getAdjacentEmberStorage() {
-		// Check if part is active
 		if( this.isActive() ) {
-			// Get self
 			final TileEntity self = this.getTile();
-
-			// Get facing tile
 			final TileEntity te = self.getWorld().getTileEntity( self.getPos().offset( this.getSide().getFacing() ) );
-
-			// Check if facing tile has ember capability
 			if( te != null && te.hasCapability( EmbersCapabilities.EMBER_CAPABILITY, this.getSide().getOpposite().getFacing() ) ) {
 				return te.getCapability( EmbersCapabilities.EMBER_CAPABILITY, this.getSide().getOpposite().getFacing() );
 			}
 		}
 
-		// Null handler
 		return NULL_HANDLER;
 	}
 
@@ -272,7 +265,6 @@ public class PartEmberP2PTunnel extends AIPartP2PTunnel<PartEmberP2PTunnel> {
 
 	@Override
 	public boolean hasCapability(Capability<?> capability) {
-		// Check if requested capability is ember interface
 		if (capability == EmbersCapabilities.EMBER_CAPABILITY )
 			return true;
 		return super.hasCapability(capability);
@@ -281,9 +273,7 @@ public class PartEmberP2PTunnel extends AIPartP2PTunnel<PartEmberP2PTunnel> {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> T getCapability(Capability<T> capability) {
-		// Check if requested capability is ember interface
 		if (capability == EmbersCapabilities.EMBER_CAPABILITY ) {
-			// Check if this part is output
 			if (this.isOutput()) {
 				return (T) this.outputHandler;
 			}

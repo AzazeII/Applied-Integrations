@@ -15,7 +15,6 @@ public class LiquidAIEnergy extends Fluid {
 	private String tag;
 	private int index;
 	private ResourceLocation image;
-	private LiquidAIEnergy lastEnergy;
 	private String modid;
 
 	static {
@@ -24,8 +23,6 @@ public class LiquidAIEnergy extends Fluid {
 
 	public LiquidAIEnergy(String modid, Integer index, String tag, ResourceLocation image) {
 		super(tag, image, image);
-
-		// Check if energy is already registered
 		if (energies.containsKey(tag)) {
 			throw new IllegalArgumentException(tag + " already registered!");
 		}

@@ -27,7 +27,6 @@ public class LogicBusPattern implements IAIPattern {
 				new BlockData(-1, -1, -1, BLBRibs.b),
 
 				// up crest
-				// up
 				new BlockData(0, 1, 0, BLBRibs.b),
 
 				// corners
@@ -37,7 +36,6 @@ public class LogicBusPattern implements IAIPattern {
 				new BlockData(-1, 1, 0, BLBRibs.b),
 
 				// down crest
-				// down
 				new BlockData(0, -1, 0, BLBRibs.b),
 
 				// corners

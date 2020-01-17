@@ -32,13 +32,9 @@ import java.util.List;
  * @Author Azazell
  */
 public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implements IEnergySelectorContainer {
-	// X of output
 	private static final int OUTPUT_POSITION_X = 26;
-	// Y of output
 	private static final int OUTPUT_POSITION_Y = 92;
-	// X of input
 	private static final int INPUT_POSITION_X = 8;
-	// Y of input
 	private static final int INPUT_POSITION_Y = OUTPUT_POSITION_Y;
 	private static int INPUT_INV_INDEX = 37;
 
@@ -58,48 +54,31 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 	public Ordering<IAEEnergyStack> sorter = new Ordering<IAEEnergyStack>() {
 		@Override
 		public int compare(@Nullable IAEEnergyStack left, @Nullable IAEEnergyStack right) {
-			// Check both energies not null
-			if (left == null || right == null)
-			// Same place in slots
-			{
+			if (left == null || right == null) {
 				return 0;
 			}
 
-			//------------ Alphabet Sorting ------------//
 			if (sortMode == SortOrder.NAME) {
-				// Get left energy name or "null"
+				//------------ Alphabet Sorting ------------//
 				String leftEnergyName = left.getEnergy() == null ? "null" : left.getEnergy().getEnergyName();
-
-				// Get right energy name or "null"
 				String rightEnergyName = right.getEnergy() == null ? "null" : right.getEnergy().getEnergyName();
-
-				// Compare first energy to second by default method of class String
 				return leftEnergyName.compareTo(rightEnergyName);
 
-				//------------ Amount Sorting ------------//
 			} else if (sortMode == SortOrder.AMOUNT) {
+				//------------ Amount Sorting ------------//
 				// Get left energy amount
 				Long leftAmount = left.getStackSize();
-
-				// Get right energy amount
 				Long rightAmount = right.getStackSize();
-
-				// Compare first energy to second by default method of class Long
 				return leftAmount.compareTo(rightAmount);
 
-				//------------ Mod Sorting ------------//
 			} else if (sortMode == SortOrder.MOD) {
-				// Get mod id of left energy
+				//------------ Mod Sorting ------------//
 				String leftModid = left.getEnergy() == null ? "null" : left.getEnergy().getModid();
-
-				// Get mod id of right energy
 				String rightModid = right.getEnergy() == null ? "null" : right.getEnergy().getModid();
-
-
 				return leftModid.compareTo(rightModid);
 			}
 
-			// Random sorting
+
 			return 0;
 		}
 	};
@@ -111,51 +90,36 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 		this.terminal = terminal;
 		this.player = player;
 
-		// Do all AE2 mechanics only on server
 		if (!terminal.getHostWorld().isRemote) {
-
-			// Get energy inventory
 			IMEMonitor<IAEEnergyStack> inv = terminal.getEnergyInventory();
-
-			// Check not null
 			if (inv != null) {
-				// Add listener for ME monitor
 				inv.addListener(terminal, null);
 
-				// Notify GUI first time about list, to make it show current list of all energies
 				for (ContainerEnergyTerminal listener : terminal.listeners) {
-					// Send packet over network
 					NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(),
 							terminal.getSortOrder(),
 							terminal), (EntityPlayerMP) listener.player);
 				}
 			}
 
-			// Add listener
 			terminal.listeners.add(this);
 		}
 
 		this.addSlotToContainer(new SlotRestrictive(terminal.energyIOInventory, 0, INPUT_POSITION_X, INPUT_POSITION_Y));
-
 		this.addSlotToContainer(new SlotFurnaceOutput(this.player,
 				terminal.energyIOInventory, 1, OUTPUT_POSITION_X, OUTPUT_POSITION_Y));
 	}
 
 	public void updateList(IItemList<IAEEnergyStack> list) {
-		// Create sorted list
 		List<IAEEnergyStack> sorted = sorter.sortedCopy(list);
 
-		// Replace current list with server-sided one
 		this.list = new EnergyList();
 		sorted.forEach(this.list::add);
-
-		// Call update function
 		updateStacksPrecise(sorted);
 	}
 
 
 	public void updateStacksPrecise(List<IAEEnergyStack> sorted) {
-		// Update energies in selectors. Also if size is zero, we need to reset selectors
 		if (sorted.size() > 0) {
 			for (int i = 0; i < list.size(); i++) {
 				widgetEnergySelectors.get(i).setCurrentStack(new EnergyStack(sorted.get(i).getEnergy(), sorted.get(i).getStackSize()));
@@ -182,21 +146,12 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-		// Create empty stack
 		ItemStack itemstack = ItemStack.EMPTY;
-
-		// Get slot at index
 		Slot slot = this.inventorySlots.get(index);
 
-		// Check not null and has stack
 		if (slot != null && slot.getHasStack()) {
-			// Get stack in slot
 			ItemStack itemstack1 = slot.getStack();
-
-			// Copy stack
 			itemstack = itemstack1.copy();
-
-			// Check if index
 			if (index < INPUT_INV_INDEX - 1) {
 				if (!this.mergeItemStack(itemstack1, INPUT_INV_INDEX - 1, this.inventorySlots.size(), true)) {
 					return ItemStack.EMPTY;
@@ -216,27 +171,20 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 	}
 
 	@Override
-	public void setSelectedEnergy(LiquidAIEnergy _energy) {
+	public void setSelectedEnergy(LiquidAIEnergy energy) {
 
 	}
 
 	@Override
 	public void onContainerClosed(@Nonnull final EntityPlayer player) {
-		// Call super
 		super.onContainerClosed(player);
 
-		// Get inventory
 		IMEMonitor<IAEEnergyStack> inv = terminal.getEnergyInventory();
-
-		// Check not null
 		if (inv == null) {
 			return;
 		}
 
-		// Remove terminal from listeners list from ME monitor of energy terminal
 		inv.removeListener(terminal);
-
-		// Remove listener from terminal
 		terminal.listeners.remove(this);
 	}
 
@@ -252,9 +200,7 @@ public class ContainerEnergyTerminal extends ContainerWithPlayerInventory implem
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		// Check if host match our host class
 		if (host instanceof PartEnergyTerminal) {
-			// Update current host
 			this.terminal = (PartEnergyTerminal) host;
 		}
 	}

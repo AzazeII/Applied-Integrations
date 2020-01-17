@@ -33,14 +33,12 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 	private PartEnergyStorage owner;
 
 	public HandlerEnergyStorageBusContainer(PartEnergyStorage owner, TileEntity operand, EnumCapabilityType type) {
-
 		this.storage = operand;
 		this.type = type;
 		this.owner = owner;
 	}
 
 	public static boolean listContainsNonNullValues(List<LiquidAIEnergy> filteredEnergies) {
-		// Create stream from list and check if each element is null trough Objects::isNull predicate
 		return filteredEnergies.stream().allMatch(Objects::isNull);
 	}
 
@@ -54,47 +52,32 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 	 */
 	@Override
 	public IAEEnergyStack injectItems(IAEEnergyStack input, Actionable type, IActionSource src) {
-
-		// Check for permission to write data
 		if (getAccess() == AccessRestriction.READ) {
 			return input;
 		}
 
-		// Check not null
 		if (input == null) {
 			return null;
 		}
 
-		// Check meaningful
 		if (!input.isMeaningful()) {
 			return input;
 		}
 
-		// Check if filtered energies has any energies
 		if (!listContainsNonNullValues(owner.filteredEnergies)) {
-			// Check if one of filtered energies is equal to input energy
 			if (!owner.filteredEnergies.contains(input.getEnergy())) {
-				// Ignore
 				return input;
 			}
 		}
 
-		// Create helper
 		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide().getOpposite());
-
-		// Get number injected
 		int added = helper.receiveEnergy(input.getStackSize(), type == Actionable.SIMULATE, this.type.energy);
-
-		// Calculate not added
 		int notAdded = (int) input.getStackSize() - added;
 
-		// Check greater than 0
 		if (notAdded > 0) {
-			// Return value not added
 			return input.copy().setStackSize(notAdded);
 		}
 
-		// Don't return value at all
 		return null;
 	}
 
@@ -107,39 +90,28 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 	 */
 	@Override
 	public IAEEnergyStack extractItems(IAEEnergyStack request, Actionable mode, IActionSource src) {
-		// Check for permission to read data
 		if (getAccess() == AccessRestriction.WRITE) {
 			return null;
 		}
 
-		// Check not null
 		if (request == null) {
 			return null;
 		}
 
-		// Check meaningful
 		if (!request.isMeaningful()) {
 			return null;
 		}
 
-		// Check if filtered energies has any energies
 		if (!listContainsNonNullValues(owner.filteredEnergies)){
-			// Check if one of filtered energies is equal to input energy
 			if (!owner.filteredEnergies.contains(request.getEnergy())) {
-				// Ignore
 				return null;
 			}
 		}
 
-		// Create capability helper
 		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide().getOpposite());
-
-		// Get extracted value
 		int extracted = helper.extractEnergy(request.getStackSize(), mode == Actionable.SIMULATE, this.type.energy);
 
-		// Check greater than 0
 		if (extracted > 0) {
-			// Return extracted amount
 			return request.copy().setStackSize(extracted);
 		}
 		return null;
@@ -153,27 +125,18 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 	 */
 	@Override
 	public IItemList<IAEEnergyStack> getAvailableItems(IItemList<IAEEnergyStack> out) {
-		// Check for permission to read data
 		if (getAccess() == AccessRestriction.WRITE) {
 			return null;
 		}
 
-		// Create capability helper
 		CapabilityHelper helper = new CapabilityHelper(storage, owner.getHostSide().getOpposite());
-
-		// Get stored energy
 		int stored = helper.getStored(type.energy);
-
-		// Add stored energy to output
 		out.add(AEEnergyStack.fromStack(new EnergyStack(type.energy, stored)));
-
-		// Return given list
 		return out;
 	}
 
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 
@@ -185,13 +148,11 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 
 	@Override
 	public boolean isPrioritized(IAEEnergyStack input) {
-		// TODO: check line 147
 		return false;
 	}
 
 	@Override
 	public boolean canAccept(IAEEnergyStack input) {
-
 		if (this.storage == null) {
 			return false;
 		}
@@ -206,13 +167,11 @@ public class HandlerEnergyStorageBusContainer implements IMEInventoryHandler<IAE
 
 	@Override
 	public int getSlot() {
-
 		return 0;
 	}
 
 	@Override
 	public boolean validForPass(int i) {
-
 		return true;
 	}
 }

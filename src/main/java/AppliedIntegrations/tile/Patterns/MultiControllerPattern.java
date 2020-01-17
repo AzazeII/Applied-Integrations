@@ -35,16 +35,13 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 
 	@Nonnull
 	private static BlockPos resizeVector(@Nonnull BlockPos size, @Nonnull EnumFacing facing) {
-		// Check if axis is X
 		if (facing.getAxis() == X) {
 			return new BlockPos(size.getX(), size.getY() - 1, size.getZ() - 1);
 
-		// Check if axis is Y
-		}else if (facing.getAxis() == Y){
+		} else if (facing.getAxis() == Y){
 			return new BlockPos(size.getX() - 1, size.getY(), size.getZ() - 1);
 
-		// Check if axis is Z
-		}else if (facing.getAxis() == Z) {
+		} else if (facing.getAxis() == Z) {
 			return new BlockPos(size.getX() - 1, size.getY() - 1, size.getZ());
 		}
 
@@ -52,37 +49,25 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	}
 
 	private static void forPosOnAxis(BlockPos sizeVec, BlockPos inverted, Consumer<BlockPos> func, EnumFacing.Axis axis) {
-		// Check if axis is X
 		if (axis == X) {
-			// Iterate from -Y to Y
 			for (int y = inverted.getY(); y < sizeVec.getY() + 1; ++y) {
-				// Iterate from -Z to Z
 				for (int z = inverted.getZ(); z < sizeVec.getZ() + 1; ++z) {
-					// Call lambda
 					func.accept(new BlockPos(sizeVec.getX(), y, z));
 				}
 			}
 		}
 
-		// Check if axis is Y
 		if (axis == Y) {
-			// Iterate from -X to X
 			for (int x = inverted.getX(); x < sizeVec.getX() + 1; ++x) {
-				// Iterate from -Z to Z
 				for (int z = inverted.getZ(); z < sizeVec.getZ() + 1; ++z) {
-					// Call lambda
 					func.accept(new BlockPos(x, sizeVec.getY(), z));
 				}
 			}
 		}
 
-		// Check if axis is Z
 		if (axis == Z) {
-			// Iterate from -X to X
 			for (int x = inverted.getX(); x < sizeVec.getX() + 1; ++x) {
-				// Iterate from -Y to Y
 				for (int y = inverted.getY(); y < sizeVec.getY() + 1; ++y) {
-					// Call lambda
 					func.accept(new BlockPos(x, y, sizeVec.getZ()));
 				}
 			}
@@ -97,23 +82,15 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	 */
 	@Nonnull
 	private static List<BlockData> inverseEmptySpace(BlockPos size, Block[] options) {
-		// Create initial list
 		List<BlockData> list = new ArrayList<>();
-
-		// Fully inverse position vector
 		BlockPos inverted = size.subtract(size).subtract(size);
 
-		// Iterate from -Z to Z
 		for (int z = inverted.getZ(); z < size.getZ() + 1; ++z){
-			// Iterate from -Y to Y
 			for (int y = inverted.getY(); y < size.getY() + 1; ++y){
-				// Iterate from -X to X
 				for (int x = inverted.getX(); x < size.getX() + 1; ++x){
-					// Check if x, y and z is zero
 					if (x == 0 && y == 0 && z == 0)
 						continue;
 
-					// Add position
 					list.add(new BlockData(x, y, z, options));
 				}
 			}
@@ -131,18 +108,13 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	 */
 	@Nonnull
 	private static List<BlockData> fillEdge(BlockPos sizeVec, Block[] options, EnumFacing.Axis axis) {
-		// Create initial list
 		List<BlockData> list = new ArrayList<>();
-
-		// Invert positions components that not on given axis
 		BlockPos inverted = new BlockPos(
 				axis == X ? sizeVec.getX() : -sizeVec.getX(),
 				axis == Y ? sizeVec.getY() : -sizeVec.getY(),
 				axis == Z ? sizeVec.getZ() : -sizeVec.getZ());
 
-		// Iterate for each position on 2d plane on given axis
 		forPosOnAxis(sizeVec, inverted, (BlockPos pos) -> list.add(new BlockData(pos, options)), axis);
-
 		return list;
 	}
 
@@ -155,31 +127,21 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	 */
 	@Nonnull
 	private static List<BlockData> getDataMatrixVector(BlockPos size, BlockPos inverted, Block[] options) {
-		// Create initial data list
 		List<BlockData> list = new LinkedList<>();
 
-		// Iterate |size.x| + |inverted.x| times
 		for (int x = inverted.getX(); x < size.getX(); x++) {
-			// Add block data at fixed y and z, dynamic X
 			list.add(new BlockData(x, size.getY(), size.getZ(), options));
 		}
 
-		// Iterate |size.y| + |inverted.y| times
 		for (int y = inverted.getY(); y < size.getY(); y++) {
-			// Add block data at fixed x and z, dynamic Y
 			list.add(new BlockData(size.getX(), y, size.getZ(), options));
 		}
 
-		// Iterate |size.z| + |inverted.z| times
 		for (int z = inverted.getZ(); z < size.getZ(); z++) {
-			// Add block data at fixed x and y, dynamic Z
 			list.add(new BlockData(size.getX(), size.getY(), z, options));
 		}
 
-		// Add size vector itself
 		list.add(new BlockData(size, options));
-
-		// Line (matrix-vector) created!
 		return list;
 	}
 
@@ -188,42 +150,23 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	 * @return Generated pattern, (0,0,0) is always empty
 	 */
 	public static IAIPatternExtendable generateMultiController(BlockPos size) {
-		/*
-			Pattern creation plan:
-			* Fill ribs of multi-block: ::getDataMatrixVector (1)
-			* Fill edges if multi-block: ::fillEdge (2)
-			* Fill inner space of multi-block: ::inverseEmptySpace (3)
-			* Remove Central block from pattern (3.1)
-		 */
-
-		// 1
-		// Create initial data list
+		// Fill ribs of multi-block: ::getDataMatrixVector
 		List<BlockData> list = new ArrayList<>();
-
-		// Create initial map
 		Map<AEPartLocation, List<BlockPos>> edgeMap = new HashMap<AEPartLocation, List<BlockPos>>() {{
-			// Iterate for each side
 			for (AEPartLocation side : AEPartLocation.SIDE_LOCATIONS) {
-				// Put new array list
 				put(side, new ArrayList<>());
 			}
 		}};
 
-		// Iterate for each corner
 		for (BlockPos corner : corners) {
-			// Get valued size, which is size multiplied by corner
 			BlockPos valuedSize = new BlockPos(
 					size.getX() * corner.getX(),
 					size.getY() * corner.getY(),
 					size.getZ() * corner.getZ());
 
 
-			// Iterate for each axis
 			for (EnumFacing.Axis axis : EnumFacing.Axis.values()) {
-				// Get negative side
 				EnumFacing negative = EnumFacing.getFacingFromAxis(EnumFacing.AxisDirection.NEGATIVE, axis);
-
-				// Invert one ordinal of size and create new halfInverted size
 				BlockPos halfInverted = new BlockPos(
 						negative.getFrontOffsetX() == 0 ? valuedSize.getX() : valuedSize.getX() * negative.getFrontOffsetX(),
 						negative.getFrontOffsetY() == 0 ? valuedSize.getY() : valuedSize.getY() * negative.getFrontOffsetY(),
@@ -234,49 +177,32 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 			}
 		}
 
-		// 2
-		// Iterate for each facing
+		// Fill edges if multi-block: ::fillEdge
 		for (EnumFacing facing : EnumFacing.VALUES){
-			// Remove one block for all axises not equal to axis of current facing
 			BlockPos valuedSize = resizeVector(size, facing);
-
-			// Check if facing is negative
 			if (facing.getAxisDirection() == EnumFacing.AxisDirection.NEGATIVE) {
-				// Flip axis of block pos
 				valuedSize = new BlockPos(
 						facing.getFrontOffsetX() == 0 ? valuedSize.getX() : valuedSize.getX() * facing.getFrontOffsetX(),
 						facing.getFrontOffsetY() == 0 ? valuedSize.getY() : valuedSize.getY() * facing.getFrontOffsetY(),
 						facing.getFrontOffsetZ() == 0 ? valuedSize.getZ() : valuedSize.getZ() * facing.getFrontOffsetZ());
 			}
 
-			// Crete edge list
 			List<BlockData> edge = fillEdge(valuedSize, new Block[]{BlocksEnum.BMCHousing.b, BlocksEnum.BMCPort.b}, facing.getAxis());
-
-			// Fill edge with array of housing and port
 			list.addAll(edge);
-
-			// Iterate for each data in edge
 			for (BlockData data : edge) {
-				// Put position in edge map
 				edgeMap.get(AEPartLocation.fromFacing(facing)).add(data.getPos());
 			}
 		}
 
-		// 3
-		// Add inverted empty space to list
+		// Fill inner space of multi-block: ::inverseEmptySpace
+		// Remove Central block from pattern
 		list.addAll(inverseEmptySpace(size.add(-1, -1, -1), new Block[]{BlocksEnum.BMCHousing.b}));
-
-		// Remove duplicated list entries
 		list = list.stream().distinct().collect(Collectors.toList());
-
-		// Create final list
 		List<BlockData> finalList = list;
 
-		// Create new anonymous instance of pattern extendable
 		return new IAIPatternExtendable() {
 			@Override
 			public BlockPos getMinimalFrameSize() {
-				// Updated size value
 				return size;
 			}
 
@@ -296,7 +222,6 @@ public class MultiControllerPattern implements IAIPatternExtendable {
 	@Deprecated
 	@Override
 	public List<BlockData> getPatternData() {
-		// Create initial list from main data block
 		return new ArrayList<>();
 	}
 

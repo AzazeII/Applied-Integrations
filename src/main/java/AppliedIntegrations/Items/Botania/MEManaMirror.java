@@ -70,11 +70,9 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 	@Override
 	public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		if (entityIn instanceof EntityPlayer) {
-			// Cast player and open tag
 			EntityPlayer player = (EntityPlayer) entityIn;
 			NBTTagCompound tag = Platform.openNbtData(stack);
 
-			// Here we update x,y,z and world of our player for range check
 			tag.setDouble(TAG_X, player.posX);
 			tag.setDouble(TAG_Y, player.posY);
 			tag.setDouble(TAG_Z, player.posZ);
@@ -84,9 +82,7 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 
 	@Override
 	public int getMana(ItemStack stack) {
-		// Tunnel network mana to this method
 		IGrid grid = getGrid(stack);
-
 		if (grid == null) {
 			return 0;
 		}
@@ -95,11 +91,8 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 			return 0;
 		}
 
-		// Read mana quantity from inventory into new mana list
 		IMEMonitor<IAEManaStack> inventory = getManaInventory(grid);
 		IItemList<IAEManaStack> list = inventory.getStorageList();
-
-		// Get first and only(since we have only one type of mana) stack
 		IAEManaStack manaStack = list.getFirstItem();
 
 		if (manaStack != null) {
@@ -126,22 +119,14 @@ public class MEManaMirror extends ItemEnergyWirelessTerminal implements IAEItemP
 			return;
 		}
 
-		// Extract energy for operation
 		double extracted = extractAEPower(stack, Math.abs(mana) * ENERGY_CONSUMPTION_PER_MANA, Actionable.SIMULATE);
-
-		// Check if we have enough energy
 		if (extracted > 0) {
-			// Consume energy for operation
 			extractAEPower(stack, Math.abs(mana) * ENERGY_CONSUMPTION_PER_MANA, Actionable.MODULATE);
-
-			// Extract only that amount of mana, which mirror can power
 			mana = (mana < 0 ? -1 : 1) * (int) (extracted / ENERGY_CONSUMPTION_PER_MANA);
 
 			// Tunnel network mana to this method
 			// Read mana quantity from inventory into new mana list
 			IMEInventory<IAEManaStack> inventory = getManaInventory(grid);
-
-			// Inject (or extract if it's value is negative) mana
 			if (mana < 0) {
 				inventory.extractItems(getChannel().createStack(Math.abs(mana)), Actionable.MODULATE, new BaseActionSource());
 			} else if (mana > 0) {

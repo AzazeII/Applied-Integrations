@@ -52,13 +52,11 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 		super(player);
 		this.interaction = interaction;
 
-		// Bind inventories
 		this.bindPlayerInventory(player.inventory, 102, 160);
 		this.bindPlayerInventory(interaction.mainInventory, 84, 142);
 		this.addUpgradeSlots(interaction.upgradeInventoryManager.upgradeInventory, ContainerPartEnergyIOBus.NUMBER_OF_UPGRADE_SLOTS, ContainerPartEnergyIOBus.UPGRADE_X_POS,
 																					ContainerPartEnergyIOBus.UPGRADE_Y_POS);
 
-		// Filter slots
 		int index = 0;
 		for (int x = 0; x < SLOT_AREA; x++ ) {
 			for (int y = 0; y < SLOT_AREA; y++) {
@@ -134,7 +132,6 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 	@Override
 	public void updateState(boolean redstoneControl, boolean compareFuzzy, boolean autoCrafting, RedstoneMode redstoneMode, FuzzyMode fuzzyMode,
 	                        YesNo craftOnly, byte filterSize) {
-		// Change slot matrix depending on filter size
 		if (interaction.upgradeInventoryManager.filterSize == 0) {
 			slotMatrix = new boolean[] {
 					false, false, false,
@@ -181,11 +178,8 @@ public class ContainerInteractionBus extends ContainerWithUpgradeSlots implement
 		EnumInteractionPlaneTabs planeTab = (EnumInteractionPlaneTabs) tabEnum;
 
 		if (planeTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
-			// Make slots from first tab enabled
 			toggleInvSlots(true);
-
 		} else if (planeTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_INVENTORY) {
-			// Make slots from first tab disabled
 			toggleInvSlots(false);
 		}
 	}

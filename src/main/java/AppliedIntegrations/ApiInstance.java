@@ -38,13 +38,10 @@ public class ApiInstance extends AIApi {
 	private static final LinkedHashMap<Item, ItemStack> tunnelMap = new LinkedHashMap<>();
 
 	public static AIApi staticInstance() {
-		// Check not null
 		if (instance == null) {
-			// Update instance
 			instance = new ApiInstance();
 		}
 
-		// Return instance
 		return instance;
 	}
 
@@ -117,7 +114,6 @@ public class ApiInstance extends AIApi {
 
 	@Override
 	public void addTunnelAsStack(Item item, ItemStack tunnel) {
-		// Put map in stack
 		tunnelMap.put(item, tunnel);
 	}
 }

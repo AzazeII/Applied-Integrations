@@ -18,7 +18,6 @@ public class HandlerSingularitySync implements IMessageHandler<PacketPylonSingul
 
 	@Override
 	public PacketPylonSingularitySync onMessage(PacketPylonSingularitySync message, MessageContext ctx) {
-		// Update client sided tile
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			TileMEPylon te = (TileMEPylon) Minecraft.getMinecraft().world.getTileEntity(message.pos);
 			te.operatedTile = message.operatedTile;

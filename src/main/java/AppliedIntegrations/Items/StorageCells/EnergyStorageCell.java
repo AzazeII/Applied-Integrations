@@ -28,7 +28,6 @@ import java.util.List;
  * @Author Azazell
  */
 public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell<IAEEnergyStack> {
-
 	private int maxBytes;
 
 	public EnergyStorageCell(String registry, int maxBytes) {
@@ -49,12 +48,10 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 		}
 
 		if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT) || (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT))) {
-			// Get the list of stored energies
 			IItemList<IAEEnergyStack> cellEnergies = inventoryHandler.getAvailableItems(getChannel().createList());
 			for (IAEEnergyStack currentStack : cellEnergies) {
 				final String energyName = currentStack.getStack().getEnergyName();
 				if (!energyName.equals("null")) {
-					// Add to the list
 					String energyInfo = TextFormatting.RED.toString() + energyName + " x " + currentStack.getStackSize();
 					lines.add(energyInfo.toUpperCase());
 				}
@@ -72,68 +69,57 @@ public class EnergyStorageCell extends AIItemRegistrable implements IStorageCell
 
 	@Override
 	public int getBytesPerType(@Nonnull ItemStack itemStack) {
-
 		return 1;
 	}
 
 	@Override
 	public int getTotalTypes(@Nonnull ItemStack itemStack) {
-
 		return 1;
 	}
 
 	@Override
 	public boolean isBlackListed(@Nonnull ItemStack itemStack, @Nonnull IAEEnergyStack iaeEnergyStack) {
-
 		return false;
 	}
 
 	@Override
 	public boolean storableInStorageCell() {
-
 		return false;
 	}
 
 	@Override
 	public boolean isStorageCell(@Nonnull ItemStack itemStack) {
-
 		return true;
 	}
 
 	@Override
 	public double getIdleDrain() {
-
 		return 1;
 	}
 
 	@Nonnull
 	@Override
 	public IStorageChannel<IAEEnergyStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class);
 	}
 
 	@Override
 	public boolean isEditable(ItemStack itemStack) {
-
 		return true;
 	}
 
 	@Override
 	public IItemHandler getUpgradesInventory(ItemStack itemStack) {
-
 		return new CellUpgrades(itemStack, 2);
 	}
 
 	@Override
 	public IItemHandler getConfigInventory(ItemStack itemStack) {
-
 		return new CellConfig(itemStack);
 	}
 
 	@Override
 	public FuzzyMode getFuzzyMode(ItemStack itemStack) {
-
 		return FuzzyMode.IGNORE_ALL;
 	}
 

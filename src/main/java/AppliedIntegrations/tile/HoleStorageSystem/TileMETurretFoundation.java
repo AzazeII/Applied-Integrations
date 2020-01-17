@@ -137,13 +137,12 @@ public class TileMETurretFoundation extends AITileStorageCell implements ICellCo
 	}
 
 	private void setDirection(Vec3d pos, boolean inverse) {
-		// Normalize vector to unit vector. Make direction relative to our pos +y:1
+		// Calculate black/white hole positions from facing of player to our pos
+		// For each facing we have predefined direction case
 		this.direction = VectorUtils.getUnitVector(pos.subtract(VectorUtils.getFractionalVector(getHostPos())));
 
-		// Calculate black/white hole positions from facing of player to our pos
 		AEPartLocation facing = VectorUtils.getVectorFacing(direction);
 
-		// For each facing we have predefined direction case
 		final int id = facing.ordinal();
 		this.blackHolePos = inverse ? BLACK_HOLE_VECTORS[id] : WHITE_HOLE_VECTORS[id];
 		this.whiteHolePos = inverse ? WHITE_HOLE_VECTORS[id] : BLACK_HOLE_VECTORS[id];
@@ -262,24 +261,19 @@ public class TileMETurretFoundation extends AITileStorageCell implements ICellCo
 			return singletonList(new IMEInventoryHandler<IAEItemStack>() {
 				@Override
 				public IAEItemStack injectItems(IAEItemStack input, Actionable actionable, IActionSource iActionSource) {
-					// Check not null
 					if (input == null) {
 						return null;
 					}
 
-					// Check stack size
 					if (input.getStackSize() == 0) {
 						return null;
 					}
 
-					// Check can accept
 					if (!canAccept(input)) {
 						return input;
 					}
 
-					// Modulate inject
 					if (actionable == Actionable.MODULATE) {
-						// Add stack
 						ammo = Ammo.fromStack(input);
 						storedAmmo.add(input);
 					}
@@ -314,10 +308,7 @@ public class TileMETurretFoundation extends AITileStorageCell implements ICellCo
 
 				@Override
 				public boolean canAccept(IAEItemStack iaeItemStack) {
-					// Get item stack's item
 					Item item = iaeItemStack.getItem();
-
-					// Get optional items
 					Optional<Item> optionalMatterBall = AEApi.instance().definitions().materials().matterBall().maybeItem();
 					Optional<Item> optionalBlackHoleBall = AEApi.instance().definitions().materials().singularity().maybeItem();
 
@@ -333,13 +324,11 @@ public class TileMETurretFoundation extends AITileStorageCell implements ICellCo
 
 				@Override
 				public int getSlot() {
-					// Ignored
 					return 0;
 				}
 
 				@Override
 				public boolean validForPass(int i) {
-					// Ignored
 					return true;
 				}
 			});

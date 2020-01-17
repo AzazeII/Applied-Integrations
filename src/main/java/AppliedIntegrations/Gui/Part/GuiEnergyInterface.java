@@ -61,9 +61,7 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	public void initGui() {
 		super.initGui();
 
-		// Check if interface is bus
 		if (energyInterface instanceof PartEnergyInterface) {
-			// Add central slot
 			getContainer().energySlotList.add(new WidgetEnergySlot(this, 0, 79, 111, true));
 		} else if (energyInterface instanceof TileEnergyInterface) {
 			getContainer().energySlotList.add(new WidgetEnergySlot(this, DOWN.ordinal(), 34, 111, true));
@@ -74,44 +72,32 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 			getContainer().energySlotList.add(new WidgetEnergySlot(this, EAST.ordinal(), 124, 111, true));
 		}
 
-		// Add priority button
 		addPriorityButton();
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float partialTick, int mouseX, int mouseY) {
-		// Default BG
 		drawDefaultBackground();
 
-		// Pick color
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		// Check if interface is part
 		if (this.energyInterface instanceof PartEnergyInterface) {
-			// Bind texture for part
 			Minecraft.getMinecraft().renderEngine.bindTexture(texturePart);
 		} else if (this.energyInterface instanceof TileEnergyInterface) {
-			// Bind texture for tile
 			Minecraft.getMinecraft().renderEngine.bindTexture(textureTile);
 		}
 
-		// Draw texture
 		drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize + 75);
-
-		// Draw upgrade slots
 		this.drawTexturedModalRect(this.guiLeft + GUI_MAIN_WIDTH, this.guiTop, GUI_MAIN_WIDTH, 0, GUI_UPGRADES_WIDTH, GUI_UPGRADES_HEIGHT);
 	}
 
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
-		// Avoid null pointer exception in packet
 		if ( !(energyInterface instanceof PartEnergyInterface) ) {
 			return;
 		}
 
-		// Check if click was performed on priority button
 		if (btn == priorityButton) {
-			// Send packet to client
 			NetworkHandler.sendToServer(new PacketGuiShift(GuiAIPriority, (IPriorityHostExtended) energyInterface));
 		}
 	}
@@ -119,22 +105,17 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float pOpacity) {
 		tooltip.clear();
-
-		// Draw screen
 		super.drawScreen(mouseX, mouseY, pOpacity);
 
-		// Draw current tip
 		drawHoveringText(tooltip, mouseX, mouseY, fontRenderer);
 		if (AIGuiHelper.INSTANCE.isPointInGuiRegion(this.guiLeft - 18, this.guiTop + 8, 16, 16, mouseX, mouseY, this.guiLeft, this.guiTop)) {
 			drawHoveringText(buttonTooltip, mouseX, mouseY, fontRenderer);
 		}
 
-		// Iterate over all energy widgets
 		for (WidgetEnergySlot slot : getContainer().energySlotList) {
 			if (slot.isMouseOverWidget(mouseX, mouseY)) {
 				List<String> tip = new ArrayList<String>();
 
-				// Check if slot has energy stack
 				if (slot.getCurrentStack() != null && !slot.getStackTip().equals("")) {
 					tip.add(slot.getStackTip());
 					drawHoveringText(tip, mouseX, mouseY, fontRenderer);
@@ -146,18 +127,12 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
-		//binding correct Gui
 		if (getContainer().linkedMetric == RF || getContainer().linkedMetric == J || getContainer().linkedMetric == EU) {
 			energybar = new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy." + getContainer().linkedMetric.getTag() + ".bar.png");
 		}
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
-
-		// Drawing Name
 		this.fontRenderer.drawString(I18n.translateToLocal("ME Energy Interface"), 9, 3, 4210752);
-
-		// Drawing Tooltips
 		if (this.energyInterface instanceof TileEnergyInterface) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(energybar);
 			drawPower(35, 14, mouseX - 10, mouseY - 10, 16, DOWN);
@@ -174,24 +149,20 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 			}
 		}
 
-		// Push filter from container to slots + draw slots
 		for (int i = 0; i < getContainer().energySlotList.size(); i++) {
 			WidgetEnergySlot slot = getContainer().energySlotList.get(i);
-
 			slot.drawWidget();
 		}
 	}
 
 	@Override
 	protected void mouseClicked(final int mouseX, final int mouseY, final int mouseButton) {
-		// Call super
 		super.mouseClicked(mouseX, mouseY, mouseButton);
 		/*if (this.priority.isMouseOverButton(mouseX, mouseY)) {
 			NetworkHandler.sendToServer(new PacketGuiChange(new GuiPriority(this.player.inventory, this.host),
 					getX(),getY(),getZ(),player));
 		}*/
 
-		// When mouse clicked GUI will try to find slot(s) over mouse and populate click on them(if any)
 		getContainer().energySlotList.forEach((energySlot) -> {
 			if (energySlot.isMouseOverWidget(mouseX, mouseY)) {
 				LiquidAIEnergy energyItem = Utils.getEnergyFromItemStack(this.player.inventory.getItemStack(), energyInterface.getHostWorld());
@@ -206,33 +177,21 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	}
 
 	private void drawPower(int pLeft, int pTop, int pMouseX, int pMouseY, int width, AEPartLocation side) {
-		// Height (in pixels) of energy bar
 		int height = this.getStorage(side) / (energyInterface.getMaxEnergyStored(side, getContainer().linkedMetric) / 83);
 
 		int v = 0;
 
-		// Draw Bar
 		boolean hover = drawPowerBar(pLeft, pTop, pMouseX, pMouseY, width, height, v, v);
-
-		// Check not null
 		if (energyInterface != null) {
-			// Check if storage at linked metric has storage at all
 			if (energyInterface.getMaxEnergyStored(side, getContainer().linkedMetric) != 0) {
-				// Check if mouse is over widget
 				if (hover) {
-					// Add bar tooltip
 					addBarTooltip(side);
 				}
 			} else {
-				// Mouse over widget or not?
 				hover = AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
 
-				// Check if moues over widget
 				if (hover) {
-					// Write unknown energy & storage t. tip
 					String str = "Energy Stored: ? / ?";
-
-					// Add tooltip
 					drawMouseOver(str);
 				}
 			}
@@ -240,34 +199,22 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 	}
 
 	private int getStorage(AEPartLocation side) {
-		// Returns one storage if interface is part and selected storage if interface is tile
-		// Check if interface is part
 		if (energyInterface instanceof PartEnergyInterface) {
-			// One storage for only bar
 			return getContainer().storage == null ? 0 : getContainer().storage.intValue();
 		} else {
-			// Select storage from map (if any)
 			return getContainer().sideStorageMap.get(side) == null ? 0 : getContainer().sideStorageMap.get(side).intValue();
 		}
 	}
 
 	private boolean drawPowerBar(int pLeft, int pTop, int pMouseX, int pMouseY, int width, int height, int v, int u) {
-		// Draw power bar
 		drawTexturedModalRect(pLeft, pTop + (83 - height), v, u, width, height);
-
-		// Return true if mouse over widget
 		return AIGuiHelper.INSTANCE.isPointInGuiRegion(pTop - 9, pLeft - 10, 83, width, pMouseX, pMouseY, this.guiLeft, this.guiTop);
 	}
 
-	// Adds tooltip on hover to bar
 	private void addBarTooltip(AEPartLocation side) {
-		// If current interface is part or tile, get regex for interface and put into t.tip
-		// Create string
 		String str = null;
 
-		// Check if current interface is tile
 		if (energyInterface instanceof PartEnergyInterface) {
-			// Format string
 			str = String.format("%s: %,d %s/%,d %s",
 					I18n.translateToLocal("Energy Stored"),
 					this.getStorage(side),
@@ -275,7 +222,6 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 					this.energyInterface.getMaxEnergyStored(side, getContainer().linkedMetric),
 					this.getContainer().linkedMetric.getEnergyName());
 		} else if (energyInterface instanceof TileEnergyInterface) {
-			// Format string
 			str = String.format("%s\n%s: %,d %s/%,d %s",
 					side.name(),
 					I18n.translateToLocal("Energy Stored"),
@@ -285,17 +231,12 @@ public class GuiEnergyInterface extends AIGui implements IWidgetHost {
 					this.getContainer().linkedMetric.getEnergyName());
 		}
 
-		// Draw tooltip
 		drawMouseOver(str);
 	}
 
 	public void drawMouseOver(String tip) {
-		// Check not null
 		if (tip != null) {
-			// Clear tooltip
 			tooltip.clear();
-
-			// Add tooltip
 			tooltip.add(tip);
 		}
 	}

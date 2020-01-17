@@ -19,10 +19,8 @@ public class HandlerTerminalUpdate implements IMessageHandler<PacketTerminalUpda
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			Container container = Minecraft.getMinecraft().player.openContainer;
 			if (container instanceof ContainerEnergyTerminal) {
-				// Get terminal container
 				ContainerEnergyTerminal dualityTerminal = (ContainerEnergyTerminal) container;
 
-				// Check if we are updating correct GUI
 				if ((dualityTerminal.getSyncHost().compareTo(message.part, true))) {
 					dualityTerminal.updateList(message.list);
 					dualityTerminal.sortMode = message.order;

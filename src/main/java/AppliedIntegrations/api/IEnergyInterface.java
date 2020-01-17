@@ -34,17 +34,12 @@ public interface IEnergyInterface extends IEnergyInterfaceDuality, INetworkManip
 	 * @return Outer grid inventory of this host. Used by AppliedIntegrations.Inventory.Handlers#HandlerEnergyStorageBusInterface
 	 */
 	default IMEInventory<IAEEnergyStack> getOuterGridInventory() {
-		// Check not null
 		if (getGridNode() == null) {
 			return null;
 		}
 
-		// Create grid
 		IGrid grid = getGridNode().getGrid();
-
-		// Create storage grid
 		IStorageGrid storage = grid.getCache(IStorageGrid.class);
-
 		return storage.getInventory(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class));
 	}
 

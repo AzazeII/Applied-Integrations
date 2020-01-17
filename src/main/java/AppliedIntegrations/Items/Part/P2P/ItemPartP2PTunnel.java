@@ -12,6 +12,9 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+/**
+ * @Author Azazell
+ */
 public abstract class ItemPartP2PTunnel<Tunnel extends PartP2PTunnel<Tunnel>> extends AIItemRegistrable implements IPartItem<Tunnel> {
 	public ItemPartP2PTunnel(String registry) {
 		super(registry);

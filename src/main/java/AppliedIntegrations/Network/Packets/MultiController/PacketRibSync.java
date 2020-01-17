@@ -13,9 +13,7 @@ import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
  * @Usage This packet needed to sync server states of server rib with client states
  */
 public class PacketRibSync extends AIPacket {
-
 	public boolean nodeActivity;
-
 	public TileMultiControllerRib rib;
 
 	public PacketRibSync() {
@@ -23,14 +21,12 @@ public class PacketRibSync extends AIPacket {
 	}
 
 	public PacketRibSync(TileMultiControllerRib rib, boolean activity) {
-
 		this.rib = rib;
 		this.nodeActivity = activity;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-
 		this.rib = (TileMultiControllerRib) readSyncHostClient(buf);
 		this.nodeActivity = buf.readBoolean();
 	}

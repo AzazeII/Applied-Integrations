@@ -30,7 +30,6 @@ public class GuiClickModeButton extends AIGuiButton {
 	}
 
 	public void cycleMode() {
-		// Toggle click mode
 		if (mode == ClickMode.CLICK) {
 			mode = ClickMode.SHIFT_CLICK;
 		} else {

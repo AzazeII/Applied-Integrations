@@ -6,11 +6,7 @@ import net.minecraft.item.ItemStack;
  * @Author Azazell
  */
 public class SlotRestrictive extends SlotToggle {
-	/**
-	 * @see net.minecraft.inventory.Slot#Slot
-	 */
 	public SlotRestrictive(final IInventory inventory, final int index, final int x, final int y) {
-		// Pass to super
 		super(inventory, index, x, y);
 	}
 

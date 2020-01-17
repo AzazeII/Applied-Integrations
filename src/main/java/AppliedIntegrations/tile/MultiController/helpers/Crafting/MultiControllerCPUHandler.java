@@ -20,22 +20,14 @@ public class MultiControllerCPUHandler extends TileCraftingStorageTile {
 
 	@Override
 	public IAECluster getCluster() {
-		// Get crafting grid from host
 		ICraftingGrid craftingGrid = host.getMainNetworkCraftingGrid();
-
-		// Check not null
 		if (craftingGrid == null) {
 			return null;
 		}
 
-		// Get list of all CPU in grid
 		ImmutableList<ICraftingCPU> cpuList = craftingGrid.getCpus().asList();
-
-		// Iterate for each CPU in list
 		for (ICraftingCPU cpu : cpuList) {
-			// Check if CPU is cluster
 			if (cpu instanceof IAECluster) {
-				// Use this CPU
 				return (IAECluster) cpu;
 			}
 		}

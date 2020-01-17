@@ -13,9 +13,7 @@ import static AppliedIntegrations.Network.ClientPacketHelper.readSyncHostClient;
  * @Side Server -> Client
  */
 public class PacketAccessModeServerToClient extends AIPacket {
-
 	public AccessRestriction access;
-
 	public PartEnergyStorage partEnergyStorage;
 
 	public PacketAccessModeServerToClient() {

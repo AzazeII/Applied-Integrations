@@ -16,10 +16,7 @@ import java.io.IOException;
  * @Author Azazell
  */
 public abstract class AIRotatablePart extends AIPart {
-
 	private static final String NBT_KEY_ROT_DIR = "partRotation";
-
-	// Rotation value. Each byte gives +90 degree to rotation
 	protected byte renderRotation = 0;
 
 	public AIRotatablePart(final PartEnum associatedPart) {
@@ -29,10 +26,8 @@ public abstract class AIRotatablePart extends AIPart {
 
 	@Override
 	public void readFromNBT(final NBTTagCompound data) {
-		// Call super
 		super.readFromNBT(data);
 
-		// Read rotation
 		if (data.hasKey(NBT_KEY_ROT_DIR)) {
 			this.renderRotation = data.getByte(NBT_KEY_ROT_DIR);
 		}
@@ -40,10 +35,7 @@ public abstract class AIRotatablePart extends AIPart {
 
 	@Override
 	public void writeToStream(final ByteBuf stream) throws IOException {
-		// Call super
 		super.writeToStream(stream);
-
-		// Write the rotation
 		stream.writeByte(this.renderRotation);
 	}
 
@@ -51,13 +43,9 @@ public abstract class AIRotatablePart extends AIPart {
 	public boolean readFromStream(final ByteBuf stream) throws IOException {
 		boolean redraw;
 
-		// Call super
 		redraw = super.readFromStream(stream);
-
-		// Read the rotation
 		byte streamRot = stream.readByte();
 
-		// Did the rotaion change?
 		if (this.renderRotation != streamRot) {
 			this.renderRotation = streamRot;
 			redraw = true;
@@ -68,20 +56,14 @@ public abstract class AIRotatablePart extends AIPart {
 
 	@Override
 	public boolean onActivate(final EntityPlayer player, EnumHand hand, final Vec3d position) {
-		// Get the host tile entity
 		TileEntity hte = this.getHostTile();
 
-		// Is the player not sneaking and using a wrench
 		if (!player.isSneaking() && Platform.isWrench(player, player.getHeldItem(hand), hte.getPos())) {
-			// Call only on server
 			if (Platform.isServer()) {
-				// Bounds check the rotation
 				if ((this.renderRotation > 3) || (this.renderRotation < 0)) {
-					// Move to first rotation value
 					this.renderRotation = 0;
 				}
 
-				// Switch for current rotation
 				switch (this.renderRotation) {
 					case 0:
 						this.renderRotation = 1;
@@ -97,9 +79,8 @@ public abstract class AIRotatablePart extends AIPart {
 						break;
 				}
 
-				// Mark for sync & save
-				this.markForUpdate(); // Sync
-				this.markForSave(); // Save
+				this.markForUpdate();
+				this.markForSave();
 			}
 			return true;
 		}
@@ -109,12 +90,9 @@ public abstract class AIRotatablePart extends AIPart {
 
 	@Override
 	public void writeToNBT(final NBTTagCompound data, final PartItemStack saveType) {
-		// Call super
 		super.writeToNBT(data, saveType);
-
-		// Write the rotation
 		if ((saveType == PartItemStack.WORLD) && (this.renderRotation != 0)) {
-			data.setByte(this.NBT_KEY_ROT_DIR, this.renderRotation);
+			data.setByte(NBT_KEY_ROT_DIR, this.renderRotation);
 		}
 	}
 }

@@ -13,11 +13,8 @@ import net.minecraft.util.math.BlockPos;
  */
 public class AdvancedNetworkTool extends AIItemRegistrable implements IAEWrench {
 	public AdvancedNetworkTool(String reg) {
-
 		super(reg);
-
 		this.setCreativeTab(AppliedIntegrations.AI);
-
 		this.setMaxStackSize(1);
 	}
 

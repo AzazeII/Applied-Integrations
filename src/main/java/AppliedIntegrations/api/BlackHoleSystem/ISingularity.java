@@ -23,20 +23,13 @@ import static net.minecraftforge.fml.relauncher.Side.CLIENT;
  */
 public interface ISingularity extends ISyncHost {
 	static ISingularity readFromNBT(NBTTagCompound compound) {
-		// Deserialize positions
 		BlockPos p = BlockPos.fromLong(compound.getLong("#POS"));
-
-		// Deserialize world
 		World w = DimensionManager.getWorld(compound.getInteger("#WORLD"));
-
 		return (ISingularity) w.getTileEntity(p);
 	}
 
 	static void writeNBTTag(ISingularity operatedTile, NBTTagCompound compound) {
-		// Serialize position
 		compound.setLong("#POS", ((TileEntity) operatedTile).getPos().toLong());
-
-		// Serialize world
 		compound.setInteger("#WORLD", ((TileEntity) operatedTile).getWorld().provider.getDimension());
 	}
 

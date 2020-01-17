@@ -52,8 +52,6 @@ public class GuiInteractionBus extends AIGui {
 	private void drawFilterSlotsBackground() {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_FILTER);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-		// Make slot background highlighted if it's enabled
 		for (SlotFilter filter : getContainer().filters) {
 			int x = filter.xPos - 1;
 			int y = filter.yPos - 1;
@@ -70,7 +68,6 @@ public class GuiInteractionBus extends AIGui {
 
 	@Override
 	public void onButtonClicked(final GuiButton btn, final int mouseButton) {
-		// Transfer click on button under mouse
 		if (btn == getContainer().shiftClickButton && currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
 			getContainer().shiftClickButton.cycleMode();
 		}
@@ -127,7 +124,6 @@ public class GuiInteractionBus extends AIGui {
 		}
 
 		if(getContainer().redstoneControlButton.isMouseOver()) {
-			// Switch mode and sync with server
 			short ordinal = (short) getContainer().redstoneControlButton.getCurrentValue().ordinal();
 			getContainer().redstoneControlButton.set(ordinal == 3 ? RedstoneMode.IGNORE : RedstoneMode.values()[ordinal + 1]);
 			NetworkHandler.sendToServer(new PacketEnum(getContainer().redstoneControlButton.getCurrentValue(),
@@ -136,7 +132,6 @@ public class GuiInteractionBus extends AIGui {
 		}
 
 		if(getContainer().fuzzyModeButton.isMouseOver()) {
-			// Switch mode and sync with server
 			short ordinal = (short) getContainer().fuzzyModeButton.getCurrentValue().ordinal();
 			getContainer().fuzzyModeButton.set(ordinal == 4 ? FuzzyMode.IGNORE_ALL : FuzzyMode.values()[ordinal + 1]);
 			NetworkHandler.sendToServer(new PacketEnum(getContainer().fuzzyModeButton.getCurrentValue(),
@@ -145,7 +140,6 @@ public class GuiInteractionBus extends AIGui {
 		}
 
 		if(getContainer().craftingModeButton.isMouseOver()) {
-			// Switch mode and sync with server
 			getContainer().craftingModeButton.set(getContainer().craftingModeButton.getCurrentValue() == YesNo.NO ? YesNo.YES : YesNo.NO);
 			NetworkHandler.sendToServer(new PacketEnum(getContainer().craftingModeButton.getCurrentValue(),
 					(IEnumHost) getContainer().getSyncHost()));
@@ -155,7 +149,6 @@ public class GuiInteractionBus extends AIGui {
 
 	@Override
 	protected boolean hasClickedOutside(int mouseX, int mouseY, int guiLeft, int guiTop) {
-		// Don't drop item stack if it is over tab
 		for (WidgetGuiTab tab : tabs) {
 			if (tab.isMouseOverWidget(mouseX, mouseY)) {
 				return false;
@@ -169,7 +162,6 @@ public class GuiInteractionBus extends AIGui {
 	public void drawScreen(int mouseX, int mouseY, float pOpacity) {
 		super.drawScreen(mouseX, mouseY, pOpacity);
 
-		// Draw tab names over them
 		for (WidgetGuiTab tab : tabs) {
 			if (tab.isMouseOverWidget(mouseX, mouseY)) {
 				List<String> tip = new ArrayList<>();
@@ -185,7 +177,6 @@ public class GuiInteractionBus extends AIGui {
 		drawDefaultBackground();
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
-		// Draw background depending on current tab
 		if (currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(TEXTURE_FILTER);
 
@@ -205,13 +196,10 @@ public class GuiInteractionBus extends AIGui {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
-
-		// Draw foreground depending on current tab
 		if (currentTab == EnumInteractionPlaneTabs.PLANE_FAKE_PLAYER_FILTER) {
 			this.fontRenderer.drawString(I18n.translateToLocal("ME Interaction Bus"), 9, 3, 4210752);
 			this.drawFilterSlotsBackground();
 
-			// Add tip from buttons
 			if (getContainer().redstoneControlButton.isMouseOver()) {
 				tooltip.addAll(Arrays.asList(getContainer().redstoneControlButton.getMessage().split("\n")));
 			}
@@ -225,7 +213,6 @@ public class GuiInteractionBus extends AIGui {
 			}
 		}
 
-		// Draw tabs
 		tabs.forEach(WidgetGuiTab::drawWidget);
 	}
 }

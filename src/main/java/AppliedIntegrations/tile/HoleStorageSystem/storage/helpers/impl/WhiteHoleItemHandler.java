@@ -17,9 +17,7 @@ import appeng.api.storage.data.IItemList;
 public class WhiteHoleItemHandler extends WhiteHoleSingularityInventoryHandler<IAEItemStack> {
 	@Override
 	public IAEItemStack extractItems(IAEItemStack iaeItemStack, Actionable actionable, IActionSource iActionSource) {
-		// Check if there is singularity
 		if (singularity != null) {
-			// Remove data from storage list, and return extracted amount
 			return (IAEItemStack) singularity.addStack(iaeItemStack, actionable);
 		}
 		return null;
@@ -27,11 +25,8 @@ public class WhiteHoleItemHandler extends WhiteHoleSingularityInventoryHandler<I
 
 	@Override
 	public IItemList<IAEItemStack> getAvailableItems(IItemList<IAEItemStack> iItemList) {
-		// Check if there is singularity
 		if (singularity != null) {
-			// Iterate over all items in stack
 			for (IAEStack<?> stack : singularity.getList(getChannel())) {
-				// Add stack to already existed
 				iItemList.add((IAEItemStack) stack);
 			}
 		}
@@ -40,7 +35,6 @@ public class WhiteHoleItemHandler extends WhiteHoleSingularityInventoryHandler<I
 
 	@Override
 	public IStorageChannel<IAEItemStack> getChannel() {
-
 		return AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class);
 	}
 }

@@ -46,35 +46,31 @@ public class StackCapabilityHelper {
 		if (energy == J && item instanceof IEnergyContainerItem) {
 			return true;
 		}
+
 		return false;
 	}
 
 	public int getStored(LiquidAIEnergy energy) {
-		// Get item
 		Item item = operatedStack.getItem();
 
 		if (!IntegrationsHelper.instance.isLoaded(energy, true)) {
 			return 0;
 		}
 
-		// RF Capability
 		if (energy == RF && item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
 			return rfContainer.getEnergyStored(operatedStack);
 		}
 
-		// EU Capability
 		if (energy == EU && item instanceof IElectricItem) {
 			return (int) ElectricItem.manager.getCharge(operatedStack);
 		}
 
-		// Joule Capability
 		if (energy == J && item instanceof IEnergizedItem) {
 			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 			return (int) jouleContainer.getEnergy(operatedStack);
 		}
 
-		// Nothing stored
 		return 0;
 	}
 
@@ -86,25 +82,20 @@ public class StackCapabilityHelper {
 	 * @return How many energy was extracted
 	 */
 	public int extractEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
-		// Get item
 		Item item = operatedStack.getItem();
-
 		if (!IntegrationsHelper.instance.isLoaded(energy, true)) {
 			return 0;
 		}
 
-		// RF Capability
 		if (energy == RF && item instanceof IEnergyContainerItem) {
 			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
 			return rfContainer.extractEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
 		}
 
-		// EU Capability
 		if (energy == EU && item instanceof IElectricItem) {
 			return (int) ElectricItem.manager.discharge(operatedStack, energyTransfer, 4, true, false, action == Actionable.SIMULATE);
 		}
 
-		// Joule Capability
 		if (energy == J && item instanceof IEnergizedItem) {
 			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
@@ -119,7 +110,6 @@ public class StackCapabilityHelper {
 			return before - current;
 		}
 
-		// Nothing extracted
 		return 0;
 	}
 	/**
@@ -130,21 +120,17 @@ public class StackCapabilityHelper {
 	 * @return How many energy was injected
 	 */
 	public int injectEnergy(LiquidAIEnergy energy, int energyTransfer, Actionable action) {
-		// Get item
 		Item item = operatedStack.getItem();
 
-		// RF Capability
 		if (IntegrationsHelper.instance.isLoaded(RF, true) && item instanceof IEnergyContainerItem && energy == RF) {
 			IEnergyContainerItem rfContainer = (IEnergyContainerItem) item;
 			return rfContainer.receiveEnergy(operatedStack, energyTransfer, action == Actionable.SIMULATE);
 		}
 
-		// EU Capability
 		if (IntegrationsHelper.instance.isLoaded(EU, true) && item instanceof IElectricItem && energy == EU) {
 			return (int) ElectricItem.manager.charge(operatedStack, energyTransfer, 4, true, action == Actionable.SIMULATE);
 		}
 
-		// Joule Capability
 		if ((IntegrationsHelper.instance.isLoaded(J, true) && item instanceof IEnergizedItem && energy == J)) {
 			IEnergizedItem jouleContainer = (IEnergizedItem) item;
 
@@ -160,7 +146,6 @@ public class StackCapabilityHelper {
 			return (int) jouleContainer.getEnergy(operatedStack) - current;
 		}
 
-		// Nothing injected
 		return 0;
 	}
 }

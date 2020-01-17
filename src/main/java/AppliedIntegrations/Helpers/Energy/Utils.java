@@ -41,8 +41,6 @@ import static AppliedIntegrations.grid.Implementation.AIEnergy.*;
 public class Utils {
 	public static IAEStack<IAEEnergyStack> getEnergyStackFromItemStack(ItemStack itemStack, World world) {
 		EnergyStack stack = new EnergyStack(getEnergyFromItemStack(itemStack, world), 1);
-
-		// Check not null and meaningful
 		if (stack.getEnergy() == null) {
 			return null;
 		}
@@ -82,28 +80,19 @@ public class Utils {
 	 * @return first energy handled by IPart
 	 */
 	private static LiquidAIEnergy getEnergyFromPart(IPart part) {
-		// Iterate over all energies, to get handled one
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			// Get capability enum type from energy
 			if (EnumCapabilityType.fromEnergy(energy) != null) {
-				// Record type
 				EnumCapabilityType type = EnumCapabilityType.fromEnergy(energy);
-
-				// Check not null
 				if (type == null) {
 					return null;
 				}
 
-				// Check has capability
 				if (type.getCapabilityWithModCheck() == null) {
 					return null;
 				}
 
-				// Iterate over
 				for (Capability capability : type.getCapabilityWithModCheck()) {
-					// Check if host has capability
 					if (part.hasCapability(capability)) {
-						// return
 						return type.energy;
 					}
 				}
@@ -118,11 +107,8 @@ public class Utils {
 	 * @return first energy handled by TileEntity
 	 */
 	private static LiquidAIEnergy getEnergyFromContainer(TileEntity tile) {
-		// Iterate over all energies, to get handled one
 		for (LiquidAIEnergy energy : LiquidAIEnergy.energies.values()) {
-			// Get capability enum type from energy
 			if (EnumCapabilityType.fromEnergy(energy) != null) {
-				// Record type
 				EnumCapabilityType type = EnumCapabilityType.fromEnergy(energy);
 				if (type == null) {
 					continue;
@@ -139,11 +125,8 @@ public class Utils {
 					continue;
 				}
 
-				// Iterate over
 				for (Capability capability : type.getCapabilityWithModCheck()) {
-					// Check if host has capability
 					if (tile.hasCapability(capability, null)) {
-						// return
 						return type.energy;
 					}
 				}
@@ -154,7 +137,6 @@ public class Utils {
 	}
 
 	private static LiquidAIEnergy getEnergyFromItem(Item item) {
-		// For RF one we need to actually check for loaded COFH|API, so FE determination is for top-layer methods under this
 		if (IntegrationsHelper.instance.isLoaded(EU, false) && item instanceof IElectricItem) {
 			return EU;
 		} else if (IntegrationsHelper.instance.isLoaded(J, false) && item instanceof IEnergizedItem) {
@@ -174,7 +156,6 @@ public class Utils {
 	}
 
 	public static AITile getTileByParams(BlockPos pos, World world) {
-		// Check if tile instance of AITile, depending on it return null or tile
 		return world.getTileEntity(pos) instanceof AITile ? (AITile) world.getTileEntity(pos) : null;
 	}
 

@@ -33,16 +33,12 @@ import static java.util.EnumSet.noneOf;
  */
 public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	private boolean isFormed = false;
-
 	private TileLogicBusPort mainNetworkPort;
-
 	private Vector<TileLogicBusPort> subNetworkPorts = new Vector<>();
-
 	private Vector<TileLogicBusSlave> slaves = new Vector<>();
 
 	public TileLogicBusCore(){
 		super();
-
 		this.getProxy().setValidSides(noneOf(EnumFacing.class));
 	}
 
@@ -57,30 +53,19 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 	// Called on invalidate()
 	public void destroyMultiBlock() {
-		// Release slaves
 		for (TileLogicBusSlave slave : slaves) {
-			// Set master to null
 			slave.setMaster(null);
-			// Notify block
 			slave.notifyBlock();
-			// destroy node ( very cruel moment in code )
 			slave.destroyProxyNode();
-			// Notify grid node
 			slave.getGridNode().updateState();
-			// Remove from slave list
 			slaves.remove(slave);
 		}
 
-		// Iterate over all sub - network ports
 		for (TileLogicBusPort port : subNetworkPorts) {
-			// Set state to main port state
 			port.isSubPort = false;
 		}
 
-		// Nullify ports
 		subNetworkPorts = new Vector<>();
-
-		// Nullify main network port
 		mainNetworkPort = null;
 	}
 
@@ -92,7 +77,6 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 	@Override
 	public void update() {
-
 		super.update();
 
 		if (slaves.size() > 0) {
@@ -104,9 +88,7 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 		}
 	}
 
-	// Return IMEInventory of network which belongs to ribs of multiblock
 	private IMEInventory<IAEItemStack> getOuterGridInventory() {
-
 		for (TileLogicBusSlave slave : slaves) {
 			if (slave instanceof TileLogicBusRib) {
 				return ((TileLogicBusRib) slave).getOuterGridInventory();
@@ -122,34 +104,20 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 	@Override
 	public void tryConstruct(EntityPlayer p) {
-
 		if (!isFormed() && Platform.isServer()) {
-			// Create list of tiles which may be slaves
 			Vector<TileLogicBusSlave> slaveCandidates = new Vector<>();
-
-			// list of tiles that should become corners
 			Vector<TileLogicBusRib> corners = new Vector<>();
-
-			// Count all slaves
 			AtomicInteger count = new AtomicInteger();
 
 			MultiBlockUtils.fillListWithPattern(AIPatterns.ME_LOGIC_BUS.getPatternData(), this, (data) -> {
-				// Increment count
 				count.getAndIncrement();
-
-				// Add tile to candidate list
 				slaveCandidates.add((TileLogicBusSlave) world.getTileEntity(pos.add(data.getPos())));
-
-				// Check if block is corner
-				if (data.type == BlockType.Corner)
-				// Add to corner list
-				{
+				if (data.type == BlockType.Corner) {
 					corners.add((TileLogicBusRib) world.getTileEntity(pos.add(data.getPos())));
 				}
 			});
 
 
-			// Check if count is equal to pattern's block count
 			if (count.get() == AIPatterns.ME_LOGIC_BUS.getPatternData().size()) {
 
 				// Count of ribs in layer two of structure ( should be 4)
@@ -163,101 +131,61 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 				// Is line of ports formed?
 				boolean lineFormed = false;
-
-				// Iterate over horizontal sides
 				for (EnumFacing side : EnumFacing.HORIZONTALS) {
-					// Get tile entity with offset
 					TileEntity tile = world.getTileEntity(pos.offset(side));
-					// Found port
 					if (tile instanceof TileLogicBusPort) {
-						// Add to tile counter
 						portCounter++;
 
-						// Right tile from first tile
-						TileEntity edgeTileA = world.getTileEntity(tile.getPos().offset(side.rotateY()));
-						// Left tile from first tile
-						TileEntity edgeTileB = world.getTileEntity(tile.getPos().offset(side.rotateY().getOpposite()));
-
-						// Check if this line of tiles is ports
-						if (!lineFormed && edgeTileA instanceof TileLogicBusPort && edgeTileB instanceof TileLogicBusPort) {
-							// Add port-slave candidates
+						TileEntity edgeTileRight = world.getTileEntity(tile.getPos().offset(side.rotateY()));
+						TileEntity edgeTileLeft = world.getTileEntity(tile.getPos().offset(side.rotateY().getOpposite()));
+						if (!lineFormed && edgeTileRight instanceof TileLogicBusPort && edgeTileLeft instanceof TileLogicBusPort) {
 							subNetworkPortsCandidates.add((TileLogicBusPort) tile);
-							subNetworkPortsCandidates.add((TileLogicBusPort) edgeTileA);
-							subNetworkPortsCandidates.add((TileLogicBusPort) edgeTileB);
+							subNetworkPortsCandidates.add((TileLogicBusPort) edgeTileRight);
+							subNetworkPortsCandidates.add((TileLogicBusPort) edgeTileLeft);
 
-							// Change lineFormed to true
 							lineFormed = true;
-
-							// Add port-slave candidates to slave candidates
 							slaveCandidates.addAll(subNetworkPortsCandidates);
-
-							// Add to counter
 							portCounter += 2;
-
-							// get opposite side
 							EnumFacing opposite = side.getOpposite();
-
-							// Check for ribs in corners with double offset at opposite side
-							TileEntity mayBeRibA = world.getTileEntity(edgeTileA.getPos().offset(opposite).offset(opposite));
-							TileEntity mayBeRibB = world.getTileEntity(edgeTileB.getPos().offset(opposite).offset(opposite));
+							TileEntity mayBeRibA = world.getTileEntity(edgeTileRight.getPos().offset(opposite).offset(opposite));
+							TileEntity mayBeRibB = world.getTileEntity(edgeTileLeft.getPos().offset(opposite).offset(opposite));
 
 							if (mayBeRibA instanceof TileLogicBusRib && mayBeRibB instanceof TileLogicBusRib) {
-								// Add to counter
 								ribCounter += 2;
-
-								// Add ribs to candidates
 								slaveCandidates.add((TileLogicBusRib) mayBeRibA);
 								slaveCandidates.add((TileLogicBusRib) mayBeRibB);
 							}
 						} else {
-							// Record main network candidate
 							mainNetworkCandidatePort = (TileLogicBusPort) tile;
-							// Add main network candidate to slave candidates
 							slaveCandidates.add(mainNetworkCandidatePort);
 						}
-						// Check if tile is rib
 					} else if (tile instanceof TileLogicBusRib) {
-						// Add to counter
 						ribCounter++;
-						// Add candidate
 						slaveCandidates.add((TileLogicBusRib) tile);
 					}
 				}
 
-				// Check if there is 4 ribs and 4 ports
 				if (ribCounter == 4 && ribCounter == portCounter && mainNetworkCandidatePort != null) {
-					// Record ports
 					subNetworkPorts = subNetworkPortsCandidates;
 					mainNetworkPort = mainNetworkCandidatePort;
 
-					// Make corners know they are corners
 					for (TileLogicBusRib corner : corners) {
 						corner.isCorner = true;
 					}
 
-					// Set master for each slave
 					for (TileLogicBusSlave slave : slaveCandidates) {
-						// Update master
 						slave.setMaster(this);
-						// Notify block state
 						slave.notifyBlock();
-
-						// Update node
 						slave.createProxyNode();
 
-						// Add to slave list
 						slaves.add(slave);
-						// Mark to update
 						slave.markDirty();
 					}
 
-					// Iterate over all sub - network ports
 					for (TileLogicBusPort port : subNetworkPorts) {
-						// Set state to sub port state
 						port.isSubPort = true;
 					}
 
-					// Now formed
 					isFormed = true;
 				}
 			}
@@ -265,19 +193,16 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 	}
 
 	public boolean isFormed() {
-
 		return isFormed;
 	}
 
 	@Override
 	public boolean hasMaster() {
-
 		return true;
 	}
 
 	@Override
 	public IMaster getMaster() {
-
 		return this;
 	}
 
@@ -288,24 +213,17 @@ public class TileLogicBusCore extends AITile implements IMaster, IAIMultiBlock {
 
 	@Override
 	public Iterator<IGridNode> getMultiblockNodes() {
-		// Check for size of slave list
 		if (slaves.size() > 0) {
-			// Create list
 			List<IGridNode> list = new ArrayList<>();
-			// Iterate over slaves
 			for (TileLogicBusSlave slave : slaves) {
-				// Get node
 				IGridNode node = slave.getGridNode();
-				// Add node
 				list.add(node);
 			}
-			// Add this
+
 			list.add(this.getGridNode());
-			// Return list
 			return list.iterator();
 		}
 
-		// Create list, which only contains this tile
 		List<IGridNode> list = new ArrayList<>();
 		list.add(this.getGridNode());
 		return list.iterator();

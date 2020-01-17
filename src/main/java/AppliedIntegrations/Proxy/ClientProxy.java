@@ -68,17 +68,14 @@ public class ClientProxy extends CommonProxy {
 	public void SidedPreInit() {
 		super.SidedPreInit();
 
-		// Register texture manager to event bus
 		FMLCommonHandler.instance().bus().register(new TextureEventManager());
 
 		if (AIConfig.enableMEServer) {
-			// Register custom renderers
 			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerRib.class, new MultiControllerRibRenderer()); // (1)
 			ClientRegistry.bindTileEntitySpecialRenderer(TileMultiControllerTerminal.class, new MultiControllerSecurityRenderer()); // (2)
 		}
 
 		if (AIConfig.enableBlackHoleStorage) {
-			// Register custom renderers
 			ClientRegistry.bindTileEntitySpecialRenderer(TileBlackHole.class, new TileBlackHoleRenderer()); // (1)
 			ClientRegistry.bindTileEntitySpecialRenderer(TileWhiteHole.class, new TileWhiteHoleRenderer()); // (2)
 			ClientRegistry.bindTileEntitySpecialRenderer(TileMEPylon.class, new TileMEPylonRenderer()); // (3)
@@ -101,9 +98,8 @@ public class ClientProxy extends CommonProxy {
 		} catch (NoSuchMethodException ignored) {
 		}
 
-		// Check if web server enabled
 		if (AIConfig.enableWebServer) {
-			// Init web server
+			// Enables web serer
 			WebManager.init();
 		}
 	}
@@ -114,37 +110,18 @@ public class ClientProxy extends CommonProxy {
 
 		// Register channel'sprite pair
 		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class),
-				// Sprite
 				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png"),
-
-				// Constructor
 				WidgetItemSlot.class.getConstructor(int.class, int.class),
-
-				// Handler
 				FilteredMultiControllerPortItemHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
-
-				// Converter and UV
 				((stack1, world) -> AEItemStack.fromItemStack(stack1)), Pair.of(0, 0),
-
-				// Encoder and decoder
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEItemStack::fromNBT)); // (1) Item channel
 
 		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class),
-				// Sprite
 				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png"),
-
-				// Constructor
 				WidgetFluidSlot.class.getConstructor(IAEFluidTank.class, int.class, int.class, int.class, int.class, IWidgetHost.class),
-
-				// Handler
 				FilteredMultiControllerPortFluidHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
-
-				// Converter and UV
 				(stack, world) -> {
-					// Get stack
 					FluidStack fluidStack = FluidUtil.getFluidContained(stack);
-
-					// Check not null and meaningful
 					if (fluidStack == null || fluidStack.amount == 0 || fluidStack.getFluid() == null) {
 						return null;
 					}
@@ -152,20 +129,12 @@ public class ClientProxy extends CommonProxy {
 					return AEFluidStack.fromFluidStack(fluidStack);
 				}, Pair.of(16, 0),
 
-				// Encoder and decoder
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEFluidStack::fromNBT)); // (2) Fluid channel
 
 		instance.addChannelToServerFilterList(AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class),
-				// Sprite
 				new ResourceLocation(AppliedIntegrations.modid, "textures/gui/states.png"),
-
-				// Constructor
 				WidgetEnergySlot.class.getConstructor(IWidgetHost.class, int.class, int.class, int.class, boolean.class),
-
-				// Handler
 				FilteredMultiControllerPortEnergyHandler.class.getConstructor(LinkedHashMap.class, LinkedHashMap.class, TileMultiControllerCore.class),
-
-				// Converters and UV
 				Utils::getEnergyStackFromItemStack, Pair.of(0, 16),
 				Pair.of((nbt, stack) -> stack.writeToNBT(nbt), AEEnergyStack::fromNBT)); // (3) Energy channel
 
@@ -183,7 +152,6 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public EntityPlayer getPlayerEntity(MessageContext ctx) {
-
 		return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
 	}
 }

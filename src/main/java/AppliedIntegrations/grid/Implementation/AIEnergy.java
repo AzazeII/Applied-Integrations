@@ -5,6 +5,9 @@ import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.api.Storage.LiquidAIEnergy;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * @Author Azazell
+ */
 public class AIEnergy {
 	public static final LiquidAIEnergy RF = new LiquidAIEnergy("minecraft", 1, "RF", new ResourceLocation(AppliedIntegrations.modid, "textures/gui/energy.rf.bar.png")); // Redstone flux
 

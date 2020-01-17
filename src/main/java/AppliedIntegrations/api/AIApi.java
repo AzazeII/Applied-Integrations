@@ -37,7 +37,6 @@ public abstract class AIApi {
 	 */
 	@FunctionalInterface
 	public interface IStackEncoder {
-
 		void encode(NBTTagCompound tag, IAEStack<?> stack) throws IOException;
 	}
 
@@ -46,23 +45,17 @@ public abstract class AIApi {
 	 */
 	@FunctionalInterface
 	public interface IStackDecoder {
-
 		IAEStack<?> decode(NBTTagCompound tag) throws IOException;
 	}
 
 	public static AIApi instance() {
-
 		try {
-			// Create reflection of our api
+			// Access API implementation via reflection.
 			Class apiReflection = Class.forName("AppliedIntegrations.ApiInstance");
-
-			// Create instance reflection of static api
 			Method instanceReflection = apiReflection.getMethod("staticInstance");
-
-			// Get static api and return it
 			return (AIApi) instanceReflection.invoke(null);
-		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException ignored) {
-
+		} catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+			System.out.println("Error when accessing implementation of AIApi: " + e.getMessage());
 		}
 
 		return null;

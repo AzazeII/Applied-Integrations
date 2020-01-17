@@ -31,22 +31,14 @@ public class PacketGuiShift extends AIPacket {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		// Read host
 		part = (AIPart) readSyncHost(buf);
-
-		// Read gui
 		gui = AIGuiHandler.GuiEnum.values()[buf.readInt()];
-
-		// Get player [Client Sided]
 		player = Minecraft.getMinecraft().player;
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		// Write host
 		writeSyncHost(part, buf, true);
-
-		// Write gui
 		buf.writeInt(gui.ordinal());
 	}
 }

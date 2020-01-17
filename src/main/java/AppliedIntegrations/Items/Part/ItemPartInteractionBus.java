@@ -7,8 +7,10 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nullable;
 
+/**
+ * @Author Azazell
+ */
 public class ItemPartInteractionBus extends ItemPartAIBase<PartInteraction> {
-
 	public ItemPartInteractionBus(String registry) {
 		super(registry);
 	}

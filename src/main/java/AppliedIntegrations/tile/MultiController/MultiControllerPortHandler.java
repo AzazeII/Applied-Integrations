@@ -35,28 +35,17 @@ public class MultiControllerPortHandler<T extends IAEStack<T>> {
 	 * @return can requester interact with given stack?
 	 */
 	protected boolean canInteract(T input, SecurityPermissions permissions) {
-		// Atomic result
 		AtomicBoolean canInteract = new AtomicBoolean(false);
-
-		// Check not null
 		if (input == null) {
-			// Can't interact
 			return canInteract.get();
 		}
 
-		// Get channel of stack
 		IStorageChannel<? extends IAEStack<?>> channel = input.getChannel();
-
-		// Get mode
 		IncludeExclude mode = filterMode.get(permissions).get(channel);
-
-		// Set by default
 		canInteract.set(mode == BLACKLIST);
 
 		// For blacklist: make result true if list doesn't contain this stack
 		// For whitelist: make result true if list contain this stack
-
-		// Convert list into stream and check if any stack matches given lambda
 		return (mode == WHITELIST) == filteredMatter.get(permissions).get(channel).stream().anyMatch(input::equals);
 	}
 }

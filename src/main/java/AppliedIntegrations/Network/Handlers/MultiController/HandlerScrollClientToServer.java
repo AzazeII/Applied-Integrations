@@ -11,9 +11,7 @@ public class HandlerScrollClientToServer implements IMessageHandler<PacketScroll
 	@Override
 	public PacketScrollClientToServer onMessage(PacketScrollClientToServer message, MessageContext ctx) {
 		TileMultiControllerCore host = (TileMultiControllerCore) message.host;
-
 		host.setSlotDiff(message.scroll);
-
 		return null;
 	}
 }

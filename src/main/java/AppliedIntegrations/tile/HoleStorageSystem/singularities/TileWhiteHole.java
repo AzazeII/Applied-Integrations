@@ -67,9 +67,7 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 	public void invalidate() {
 		super.invalidate();
 
-		// Iterate over listeners
 		for (IPylon pylon : listeners) {
-			// Invalidate singularity
 			pylon.setSingularity(null);
 		}
 	}
@@ -101,64 +99,46 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 
 	@Override
 	public IAEStack<?> addStack(IAEStack<?> stack, Actionable actionable) {
-		// Check not null
 		if (stack == null) {
 			return null;
 		}
 
-		// Check not null
 		if (entangledHole == null) {
 			return null;
 		}
 
-		// Check stack size
 		if (stack.getStackSize() <= 0) {
 			return null;
 		}
 
-		// Item branch
 		if (stack instanceof IAEItemStack) {
-			// Get pointer value of this stack
 			IAEItemStack pStack = entangledHole.storedItems.findPrecise((IAEItemStack) stack);
-
-			// Create copy
 			IAEItemStack addStackReturn = pStack.copy();
-
-			// Get stack size
 			long size = pStack.getStackSize();
-
-			// Check size greater than 0
 			if (size <= 0) {
 				return null;
 			}
 
-			// Check if size greater then requested
 			if (pStack.getStackSize() <= size) {
-				// Set stack size to current stack size
 				addStackReturn.setStackSize(pStack.getStackSize());
 
 				// Modulate extraction
 				if (actionable == Actionable.MODULATE) {
-					// Decrease current stack size
 					pStack.setStackSize(0);
 				}
 			} else {
-				// Set stack size to new size
 				addStackReturn.setStackSize(size);
 
 				// Modulate extraction
 				if (actionable == Actionable.MODULATE) {
-					// Set current stack size to current stack size - #Var: size
 					pStack.setStackSize(pStack.getStackSize() - size);
 				}
 			}
 
-			// Update cell array
 			for (IPylon pylon : listeners) {
 				pylon.postCellInventoryEvent();
 			}
 
-			// Return stack
 			return addStackReturn;
 		}
 
@@ -167,24 +147,19 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 
 	@Override
 	public IItemList<?> getList(IStorageChannel chan) {
-		// Check channel
 		if (chan == AEApi.instance().storage().getStorageChannel(IItemStorageChannel.class)) {
-			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new ItemList() : entangledHole.getList(chan);
 		}
 
 		if (chan == AEApi.instance().storage().getStorageChannel(IFluidStorageChannel.class)) {
-			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new FluidList() : entangledHole.getList(chan);
 		}
 
 		if (AIConfig.enableEnergyFeatures && chan == AEApi.instance().storage().getStorageChannel(IEnergyStorageChannel.class)) {
-			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new EnergyList() : entangledHole.getList(chan);
 		}
 
 		if (AIConfig.enableManaFeatures && Loader.isModLoaded("botania") && chan == AEApi.instance().storage().getStorageChannel(IManaStorageChannel.class)) {
-			// If not entangled -> return empty list, else return entangled hole's list
 			return !isEntangled() ? new ManaList() : entangledHole.getList(chan);
 		}
 
@@ -212,7 +187,6 @@ public class TileWhiteHole extends TileEntity implements ISingularity, ITickable
 		AILog.chatLog("Setting entangled singularity to " + singularity.toString());
 		entangledHoleEntity = singularity;
 
-		// Update cell array
 		for (IPylon pylon : listeners) {
 			pylon.postCellInventoryEvent();
 		}

@@ -39,20 +39,16 @@ public abstract class AITileStorageCell extends AITile implements IGridTickable,
 	@Nonnull
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
-		// Call only on server
 		if (Platform.isServer()) {
-			// Check if node was active
 			if (!syncActive && node.isActive()) {
 				// Node wasn't active, but now it is active
 				// Fire new cell array update event!
 				postCellInventoryEvent();
-				// Update sync
 				syncActive = true;
 			} else if (syncActive && !node.isActive()) {
 				// Node was active, but now it's not
 				// Fire new cell array update event!
 				postCellInventoryEvent();
-				// Update sync
 				syncActive = false;
 			}
 		}
@@ -71,13 +67,10 @@ public abstract class AITileStorageCell extends AITile implements IGridTickable,
 
 	@Override
 	public void saveChanges(@Nullable ICellInventory<?> iCellInventory) {
-		// Check if inventory not null
 		if (iCellInventory != null) {
-			// Persist inventory
 			iCellInventory.persist();
 		}
 
-		// Mark dirty
 		world.markChunkDirty(pos, this);
 	}
 }

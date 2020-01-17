@@ -41,7 +41,6 @@ public class PartEnergyExport extends AIOPart {
 
 	@Override
 	public TickRateModulation doWork(int valuedTransfer, IGridNode node) {
-		// Create helper
 		CapabilityHelper helper = new CapabilityHelper(adjacentEnergyStorage, getHostSide().getOpposite());
 
 		// Try to extract all filtered energies from network and put them nto container next to us
@@ -51,18 +50,15 @@ public class PartEnergyExport extends AIOPart {
 					int extracted = extractEnergy(new EnergyStack(energy, valuedTransfer), Actionable.SIMULATE);
 					int received = helper.receiveEnergy(extracted, true, energy);
 
-					// Modulate extraction & insertion
 					extractEnergy(new EnergyStack(energy, helper.receiveEnergy(received, false, energy)), Actionable.MODULATE);
 
 					if (extracted > 0) {
-						// tick faster after successfull energy extraction
 						return TickRateModulation.FASTER;
 					}
 				}
 			}
 		}
 
-		// Tick slower
 		return TickRateModulation.SLOWER;
 	}
 
@@ -73,14 +69,12 @@ public class PartEnergyExport extends AIOPart {
 
 	@Override
 	public float getCableConnectionLength(AECableType aeCableType) {
-
 		return 0;
 	}
 
 	@Nonnull
 	@Override
 	public IPartModel getStaticModels() {
-
 		if (this.isPowered()) {
 			if (this.isActive()) {
 				return PartModelEnum.EXPORT_HAS_CHANNEL;

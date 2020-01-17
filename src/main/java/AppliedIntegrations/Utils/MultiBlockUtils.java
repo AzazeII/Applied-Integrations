@@ -32,36 +32,21 @@ public class MultiBlockUtils {
 	 * @return List filled with blocks that matched pattern
 	 */
 	public static List<? extends IAIMultiBlock> fillListWithPattern(List<BlockData> pattern, TileEntity tile, Consumer<BlockData> extra) {
-		// Create initial list
 		List<IAIMultiBlock> blockList = new ArrayList<>();
-
-		// Count of blocks in pattern, not including pivot
 		int blocksToPlace = pattern.size();
 
-		// Iterate until i = pattern.len
 		for (int i = 0; i < pattern.size(); i++) {
-			// Call on server
 			if (!tile.getWorld().isRemote) {
-				// Add x, y and z of block in pattern to our location
 				int x = tile.getPos().getX() + pattern.get(blocksToPlace - 1).x; // (1)
 				int y = tile.getPos().getY() + pattern.get(blocksToPlace - 1).y; // (2)
 				int z = tile.getPos().getZ() + pattern.get(blocksToPlace - 1).z; // (3)
 
-				// Get list of block substitutions in pattern
 				List<Block> variants = pattern.get(blocksToPlace - 1).options;
 
-				// Get block in world, and check if it's equal to block in pattern
 				if (variants.contains(tile.getWorld().getBlockState(new BlockPos(x, y, z)).getBlock())) {
-					// Call extra
 					extra.accept(pattern.get(blocksToPlace - 1));
-
-					// Get tile
 					IAIMultiBlock multiBlock = (IAIMultiBlock) tile.getWorld().getTileEntity(new BlockPos(x, y, z));
-
-					// Add to list
 					blockList.add(multiBlock);
-
-					// Remove one block to place
 					blocksToPlace--;
 				}
 			}
@@ -76,9 +61,7 @@ public class MultiBlockUtils {
 	 * @param pivot center
 	 */
 	public static void fillWorldWithPattern(List<BlockData> pattern, TileEntity pivot) {
-		// Iterate for each data
 		for (BlockData data : pattern) {
-			// Set block from data to world of pivot into relative to pivot coordinates
 			pivot.getWorld().setBlockState(data.getPos().add(pivot.getPos()), data.options.get(0).getDefaultState());
 		}
 	}
@@ -90,16 +73,11 @@ public class MultiBlockUtils {
 	 * @return Extended pattern
 	 */
 	public static IAIPatternExtendable getExtendedPattern(IAIPatternExtendable pattern, Map<EnumFacing.Axis, Integer> axisLengthMap) {
-		// Get minimal frame size of pattern
 		BlockPos minimal = pattern.getMinimalFrameSize();
-
-		// Offset minimal vector
-		minimal = new BlockPos(
-				minimal.getX() + axisLengthMap.get(X),
+		minimal = new BlockPos(minimal.getX() + axisLengthMap.get(X),
 				minimal.getY() + axisLengthMap.get(Y),
 				minimal.getZ() + axisLengthMap.get(Z));
 
-		// Create new pattern from extended minimal size
 		return MultiControllerPattern.generateMultiController(minimal);
 	}
 }

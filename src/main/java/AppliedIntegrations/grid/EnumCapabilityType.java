@@ -62,7 +62,6 @@ public class EnumCapabilityType {
 	private EnumCapabilityType(LiquidAIEnergy energy, @Nullable Capability... capability) {
 		this(energy);
 
-		// Check not null
 		if (capability != null) {
 			this.capabilities.addAll(Arrays.asList(capability));
 		}
@@ -83,7 +82,6 @@ public class EnumCapabilityType {
 	 * @return Null or capabilities used for energy input of this type
 	 */
 	public Capability getInputCapability() {
-		// Check energy api loaded
 		if (IntegrationsHelper.instance.isLoaded(this.energy, false)) {
 			if (capabilities != null && !capabilities.isEmpty()) {
 				return capabilities.firstElement();
@@ -111,7 +109,6 @@ public class EnumCapabilityType {
 	 */
 	public Vector<Capability> getCapabilityWithModCheck() {
 		if (IntegrationsHelper.instance.isLoaded(this.energy, false)) {
-			// Check not null and not empty
 			if (capabilities != null && !capabilities.isEmpty()) {
 				return this.capabilities;
 			}
@@ -124,9 +121,7 @@ public class EnumCapabilityType {
 	 * @return Null or capabilities used for energy output of this type
 	 */
 	public Capability getOutputCapabilities() {
-		// Check energy api loaded
 		if (IntegrationsHelper.instance.isLoaded(this.energy, false)) {
-			// Check not null and not empty
 			if (capabilities != null && !capabilities.isEmpty()) {
 				return capabilities.lastElement();
 			}

@@ -72,22 +72,18 @@ public class WidgetGuiTab extends AIWidget {
 
 	@Override
 	public void drawWidget() {
-		// Render widget background
 		Minecraft.getMinecraft().renderEngine.bindTexture(INV_TABS);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		drawTexturedModalRect(xPosition, yPosition, 0, getTextureY(), width, getHeight());
 
-		// Render item
 		this.itemRenderer.renderItemAndEffectIntoGUI(stack, xPosition + ICON_OFFSET_X, yPosition + ICON_OFFSET_Y);
 		this.itemRenderer.renderItemOverlays(fontRenderer, stack, xPosition + ICON_OFFSET_X, yPosition + ICON_OFFSET_Y);
 		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 
 	@Override
-	public void getTooltip(List<String> tooltip) {
-
-	}
+	public void getTooltip(List<String> tooltip) {}
 
 	@Override
 	public boolean isMouseOverWidget(final int mouseX, final int mouseY) {

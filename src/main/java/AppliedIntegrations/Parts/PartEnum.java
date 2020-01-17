@@ -44,12 +44,7 @@ public enum PartEnum {
 	}
 
 	PartEnum(ItemEnum parent, final String groupName) {
-		// Set the localization string
-
-		// Set the group name
 		this.groupName = groupName;
-
-		// Set item form of host
 		this.parentItem = parent;
 	}
 

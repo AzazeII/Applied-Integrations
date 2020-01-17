@@ -41,7 +41,6 @@ public class SlotFilter extends SlotToggle {
 		return super.onTake(thePlayer, stack);
 	}
 
-
 	@Nonnull
 	@Override
 	public ItemStack decrStackSize(int amount) {

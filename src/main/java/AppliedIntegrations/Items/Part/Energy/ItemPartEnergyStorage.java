@@ -12,14 +12,12 @@ import javax.annotation.Nullable;
  */
 public class ItemPartEnergyStorage extends ItemPartAIBase<PartEnergyStorage> {
 	public ItemPartEnergyStorage(String id) {
-
 		super(id);
 	}
 
 	@Nullable
 	@Override
 	public PartEnergyStorage createPartFromItemStack(ItemStack itemStack) {
-
 		return new PartEnergyStorage();
 	}
 }

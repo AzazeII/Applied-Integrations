@@ -14,9 +14,6 @@ import java.util.List;
  */
 public class TileLogicBusPort extends TileLogicBusSlave implements IAIMultiBlock {
 	public boolean isSubPort = false;
-
-	private boolean isCorner;
-
 	public TileLogicBusPort(){
 		super();
 
@@ -24,20 +21,14 @@ public class TileLogicBusPort extends TileLogicBusSlave implements IAIMultiBlock
 	}
 
 	private EnumSet<EnumFacing> getValidSides() {
-		// list of sides
 		List<EnumFacing> sides = new ArrayList<>();
-		// Iterate only over horizontal sides, as only these sides can be connected to cable
 		for (EnumFacing side : EnumFacing.HORIZONTALS) {
-			// Check if tile in this side is not instance of logic bus port
 			if (!(world.getTileEntity(pos.offset(side)) instanceof TileLogicBusPort)) {
 				sides.add(side);
 			}
 		}
 
-		// Temp set
 		EnumSet<EnumFacing> temp = EnumSet.noneOf(EnumFacing.class);
-
-		// Add sides
 		temp.addAll(sides);
 
 		return temp;

@@ -24,15 +24,9 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 	public ContainerMultiControllerCore(EntityPlayer player, TileMultiControllerCore master) {
 		super(player);
 
-		// Bind card slots
 		this.addCardSlots(master.cardInv.getViewInventory());
-
 		this.master = master;
-
-		// Add listener
 		this.master.listeners.add(this);
-
-		// Bind player slots
 		super.bindPlayerInventory(player.inventory, 107, 165);
 	}
 
@@ -41,24 +35,16 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 			return;
 		}
 
-		// Increase/decrease scroll difference by row size
 		master.setSlotDiff(master.getSlotDiff() + (slotScroll < 0 ? -CARD_SLOT_COLUMNS : CARD_SLOT_COLUMNS));
 	}
 
 	private void addCardSlots(AIGridNodeInventory cardInv) {
-		// Create counter
 		int i = 0;
 
-		// Iterate for Y
 		for (int y = 0; y < CARD_SLOT_VIEW_ROWS; y++) {
-			// Iterate for X
 			for (int x = 0; x < CARD_SLOT_COLUMNS; x++) {
-				// Check not null
 				if (cardInv != null) {
-					// Add ME multi-controller slot
 					this.addSlotToContainer(new SlotRestrictive(cardInv, i, 9 + x * 18, y * 18 + 3));
-
-					// Add to counter
 					i++;
 				}
 			}
@@ -99,9 +85,7 @@ public class ContainerMultiControllerCore extends ContainerWithPlayerInventory {
 
 	@Override
 	public void setSyncHost(ISyncHost host) {
-		// Check if host match our host class
 		if (host instanceof TileMultiControllerCore) {
-			// Update current host
 			this.master = (TileMultiControllerCore) host;
 		}
 	}

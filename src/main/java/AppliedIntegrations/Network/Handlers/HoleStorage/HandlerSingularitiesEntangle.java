@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class HandlerSingularitiesEntangle implements IMessageHandler<PacketSingularitiesEntangle, PacketSingularitiesEntangle> {
 	@Override
 	public PacketSingularitiesEntangle onMessage(PacketSingularitiesEntangle message, MessageContext ctx) {
-		// Update client sided tile
 		Minecraft.getMinecraft().addScheduledTask(() -> {
 			if (message.whiteHole == null || message.blackHole == null) {
 				return;

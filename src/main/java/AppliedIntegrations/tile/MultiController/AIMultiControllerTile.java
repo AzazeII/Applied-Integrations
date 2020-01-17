@@ -24,24 +24,16 @@ public abstract class AIMultiControllerTile extends AITile implements IAIMultiBl
 
 	@Override
 	public void tryConstruct(EntityPlayer p) {
-		// Iterate until i = 5
 		for (int i = 1; i < 5; i++) {
-			// Iterate for each side
 			for (EnumFacing side : EnumFacing.values()) {
-				// Get tile with i blocks offset to side
 				TileEntity tile = world.getTileEntity(new BlockPos(
 						getPos().getX() + side.getFrontOffsetX() * i,
 						getPos().getY() + side.getFrontOffsetY() * i,
 						getPos().getZ() + side.getFrontOffsetZ() * i));
 
-				// Check if tile is core
 				if (tile instanceof TileMultiControllerCore) {
-					// Cast tile
 					TileMultiControllerCore core = (TileMultiControllerCore) tile;
-
-					// Pass call to core
 					core.tryConstruct(p);
-
 					break;
 				}
 			}
@@ -60,22 +52,16 @@ public abstract class AIMultiControllerTile extends AITile implements IAIMultiBl
 
 	@Override
 	public void setMaster(IMaster tileServerCore) {
-		// Update master
 		this.master = (TileMultiControllerCore) tileServerCore;
 	}
 
 	@Override
 	public void createProxyNode() {
-		// Configure proxy only if host has master
 		if (hasMaster()) {
-			// Configure parent
 			super.createProxyNode();
 
-			// Change proxy settings
-			this.getProxy().setFlags(); // (1) Flags
-			this.getProxy().setValidSides(getValidSides()); // (2) Sides
-
-			// Notify node
+			this.getProxy().setFlags();
+			this.getProxy().setValidSides(getValidSides());
 			this.getProxy().getNode().updateState();
 		}
 	}
@@ -97,10 +83,7 @@ public abstract class AIMultiControllerTile extends AITile implements IAIMultiBl
 	@Override
 	public void update() {
 		super.update();
-
-		// Call master change handler
 		masterChangeHandler.onChange(master, (master) -> {
-			// Notify server
 			NetworkHandler.sendToDimension(new PacketMasterSync(this, master), world.provider.getDimension());
 		});
 	}
