@@ -1,7 +1,6 @@
 package AppliedIntegrations.Parts.Energy;
 import AppliedIntegrations.AppliedIntegrations;
 import AppliedIntegrations.Container.part.ContainerEnergyTerminal;
-import AppliedIntegrations.Gui.AIGui;
 import AppliedIntegrations.Gui.AIGuiHandler;
 import AppliedIntegrations.Helpers.Energy.StackCapabilityHelper;
 import AppliedIntegrations.Helpers.Energy.Utils;
@@ -38,7 +37,6 @@ import appeng.api.util.AEPartLocation;
 import appeng.api.util.IConfigManager;
 import appeng.util.ConfigManager;
 import appeng.util.IConfigManagerHost;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -159,16 +157,13 @@ public class PartEnergyTerminal extends AIRotatablePart implements ITerminalHost
 	@Override
 	public TickRateModulation tickingRequest(@Nonnull IGridNode node, int ticksSinceLastCall) {
 		if (updateRequsted) {
-			if (!(Minecraft.getMinecraft().currentScreen instanceof AIGui)) {
-				return SAME;
-			}
-
 			if (!this.getHostWorld().isRemote) {
 				IMEMonitor<IAEEnergyStack> inv = this.getEnergyInventory();
 				if (inv != null) {
 					// Notify GUI first time about list, to make it show current list of all energies
 					for (ContainerEnergyTerminal listener : this.listeners) {
-						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(), sortingOrder, this), (EntityPlayerMP) listener.player);
+						NetworkHandler.sendTo(new PacketTerminalUpdate(inv.getStorageList(),
+								sortingOrder, this), (EntityPlayerMP) listener.player);
 						updateRequsted = false;
 					}
 				}
