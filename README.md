@@ -61,7 +61,7 @@ ME Pylon - Allows you to inject any type of matter (item,fluid,energy,mana) into
 						Cable must be connected down to pylon  
 						
 To entagle 2 holes together you need to shot two singularities from ME defence tower in one tick*.  
-only white and black hole can be entagled  
+only pair of white and black hole can be entagled  
 
 # For developers  
  You can add own matter type to Black/white hole storage system, by typing this in your common proxy*:  
