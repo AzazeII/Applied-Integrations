@@ -74,7 +74,7 @@ only pair of white and black hole can be entagled
 
 
 # Thanks for: 
-Algorithm X2, for creating great mod - Applied energistics and it's great API.  
+Algorithm X2, for creating great mod - Applied energistics and for creating it's great API.  
 Megatech & Jur012, for some textures.  
 DurableBasic, for suggesting some great ideas for mod.  
 
