@@ -1,3 +1,5 @@
+# *This mod is currently unmaintained due to lack of time*
+
 # Applied-Integrations [![CurseForge](http://cf.way2muchnoise.eu/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations) [![](http://cf.way2muchnoise.eu/versions/301924.svg)](https://minecraft.curseforge.com/projects/applied-integrations)
 # About
 Applied integrations is applied energitsics 2 addon, which adds many new features. One of main features is storing energy in storage cells
@@ -11,7 +13,7 @@ Travis CI:
 Circle CI:  
 [![CircleCI](https://circleci.com/gh/AzazeII/Applied-Integrations.svg?style=shield)](https://circleci.com/gh/AzazeII/Applied-Integrations)
 
-(C) Azazell 2018-2019 [![License](https://img.shields.io/badge/License-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+(C) Azazell 2018-2020 [![License](https://img.shields.io/badge/License-MIT-red.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 # Features:  
 Features marked with * is not currently working.  
@@ -58,7 +60,7 @@ ME Pylon - Allows you to inject any type of matter (item,fluid,energy,mana) into
 						And extract any type of matter from white hole entagled with black hole.  
 						Cable must be connected down to pylon  
 						
-To entagle 2 holes together you need to shot two singularities from ME defnce tower in one tick*.  
+To entagle 2 holes together you need to shot two singularities from ME defence tower in one tick*.  
 only white and black hole can be entagled  
 
 # For developers  
