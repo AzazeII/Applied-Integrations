@@ -73,7 +73,7 @@ only pair of white and black hole can be entagled
  AppliedIntegrations.api.Storage.helpers.BlackHoleSingularityInventoryHandler<#your IAEStack#>
 
 
-# Thanks for: 
+# Thanks for
 Algorithm X2, for creating great mod - Applied energistics and for creating it's great API.  
 Megatech & Jur012, for some textures.  
 DurableBasic, for suggesting some great ideas for mod.  
